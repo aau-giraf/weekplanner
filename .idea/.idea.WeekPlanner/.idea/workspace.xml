@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a32f5ff4-1d1c-4e6e-be4c-d783738f674e" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/drawable-hdpi/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/drawable-xhdpi/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/drawable-xxhdpi/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/drawable/icon.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/drawable/xamarin_logo.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/tab_about.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/tab_about@2x.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/tab_about@3x.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/tab_feed.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/tab_feed@2x.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/tab_feed@3x.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/xamarin_logo.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/xamarin_logo@2x.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Resources/xamarin_logo@3x.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.WeekPlanner/.idea/contentModel.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.WeekPlanner/.idea/indexLayout.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.WeekPlanner/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.WeekPlanner/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.idea.WeekPlanner/riderModule.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Assets/AboutAssets.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/MainActivity.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Properties/AndroidManifest.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Properties/AssemblyInfo.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/AboutResources.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/Resource.designer.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/layout/Tabbar.axml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/layout/Toolbar.axml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/Resources/values/styles.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/WeekPlanner.Droid.csproj" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Droid/packages.config" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner.sln" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/App.xaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/App.xaml.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Models/Item.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Services/CloudDataStore.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Services/IDataStore.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Services/MockDataStore.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/ViewModels/AboutViewModel.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/ViewModels/BaseViewModel.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/ViewModels/ItemDetailViewModel.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/ViewModels/ItemsViewModel.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/AboutPage.xaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/AboutPage.xaml.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/ItemDetailPage.xaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/ItemDetailPage.xaml.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/ItemsPage.xaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/ItemsPage.xaml.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/MainPage.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/NewItemPage.xaml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/Views/NewItemPage.xaml.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/WeekPlanner.projitems" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/WeekPlanner/WeekPlanner.shproj" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/AppDelegate.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/AppIcon.appiconset/Contents.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Assets.xcassets/Contents.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Entitlements.plist" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Info.plist" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/LaunchScreen.storyboard" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/Main.cs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/WeekPlanner.iOS.csproj" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/iOS/packages.config" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="LoginPage.xaml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="62" lean-forward="false" selection-start-line="6" selection-start-column="62" selection-end-line="6" selection-end-column="62" />
+              <folding>
+                <marker date="1520432586971" expanded="true" signature="39:515" ph="&lt;&lt;ContentPage.Content&gt;&#10;        &lt;StackLayout Padding=&quot;40&quot;&gt;&#10;            &lt;Entry x:Name=&quot;UsernameEntry&quot; Text=&quot;Brugernavn&quot; /&gt;&#10;            &lt;Entry x:Name=&quot;PasswordEntry&quot; Text=&quot;Kodeord&quot; /&gt;&#10;            &lt;Button x:Name=&quot;LoginButton&quot; Clicked=&quot;OnLoginButtonClicked&quot; /&gt;&#10;        &lt;/StackLayout&gt;&#10;    &lt;/ContentPage.Content&gt;.../&gt;" />
+                <marker date="1520432586971" expanded="true" signature="196:500" ph="&lt;&lt;StackLayout Padding=&quot;40&quot;&gt;&#10;            &lt;Entry x:Name=&quot;UsernameEntry&quot; Text=&quot;Brugernavn&quot; /&gt;&#10;            &lt;Entry x:Name=&quot;PasswordEntry&quot; Text=&quot;Kodeord&quot; /&gt;&#10;            &lt;Button x:Name=&quot;LoginButton&quot; Clicked=&quot;OnLoginButtonClicked&quot; /&gt;&#10;        &lt;/StackLayout&gt;.../&gt;" />
+                <marker date="1520432586971" expanded="true" signature="226:473" ph="&lt;&lt;Entry x:Name=&quot;UsernameEntry&quot; Text=&quot;Brugernavn&quot; /&gt; &lt;Entry x:Name=&quot;PasswordEntry&quot; Text=&quot;Kodeord&quot; /&gt; &lt;Button x:Name=&quot;LoginButton&quot; Clicked=&quot;OnLoginButtonClicked&quot; /&gt;.../&gt;" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoginPage.xaml.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+              <folding>
+                <marker date="1520432806861" expanded="false" signature="6:121" ph="..." />
+                <marker date="1520432806861" expanded="true" signature="150:501" ph="{...}" />
+                <marker date="1520432806861" expanded="true" signature="201:499" ph="{...}" />
+                <marker date="1520432806861" expanded="true" signature="234:289" ph="{...}" />
+                <marker date="1520432806861" expanded="true" signature="360:493" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/WeekPlanner/ViewModels/ItemDetailViewModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1440" />
+    <option name="height" value="827" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="WeekPlanner (3 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="WeekPlanner (3 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="WeekPlanner" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="WeekPlanner (3 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="WeekPlanner" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="ViewModels" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="WeekPlanner (3 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="WeekPlanner" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Views" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-file-system" value="false" />
+        <option name="show-all-items" value="false" />
+      </pane>
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Xamarin.iOS.iOS Default">
+    <configuration name="Android Default" type="XamarinAndroidProject" factoryName="Xamarin.Android">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="DEPLOY_BEHAVIOUR_NAME" value="Default" />
+      <option name="DEPLOY_TARGET_BEHAVIOUR_NAME" value="Ask" />
+      <option name="DEFAULT_DEVICE_TO_RUN" value="" />
+      <option name="DEFAULT_EMULATOR_TO_RUN" value="" />
+    </configuration>
+    <configuration name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="PROJECT_TFM" value="" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="USE_MONO" value="0" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <envs />
+    </configuration>
+    <configuration name="iOS Default" type="XamarinIOSProject" factoryName="Xamarin.iOS">
+      <option name="PROJECT_PATH" value="" />
+      <option name="DEFAULT_IPHONE_DEVICE" value="" />
+      <option name="DEFAULT_IPHONE_SIMULATOR" value="" />
+    </configuration>
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue=".NET Project.Default" />
+      <item index="1" class="java.lang.String" itemvalue="Xamarin.Android.Android Default" />
+      <item index="2" class="java.lang.String" itemvalue="Xamarin.iOS.iOS Default" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a32f5ff4-1d1c-4e6e-be4c-d783738f674e" name="Default" comment="" />
+      <created>1520432605775</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1520432605775</updated>
+      <workItem from="1520432608271" duration="439000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="439000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1440" height="827" extended-state="0" />
+    <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Errors In Solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Unit Tests" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="62" lean-forward="false" selection-start-line="6" selection-start-column="62" selection-end-line="6" selection-end-column="62" />
+          <folding>
+            <marker date="1520432586971" expanded="true" signature="39:515" ph="&lt;&lt;ContentPage.Content&gt;&#10;        &lt;StackLayout Padding=&quot;40&quot;&gt;&#10;            &lt;Entry x:Name=&quot;UsernameEntry&quot; Text=&quot;Brugernavn&quot; /&gt;&#10;            &lt;Entry x:Name=&quot;PasswordEntry&quot; Text=&quot;Kodeord&quot; /&gt;&#10;            &lt;Button x:Name=&quot;LoginButton&quot; Clicked=&quot;OnLoginButtonClicked&quot; /&gt;&#10;        &lt;/StackLayout&gt;&#10;    &lt;/ContentPage.Content&gt;.../&gt;" />
+            <marker date="1520432586971" expanded="true" signature="196:500" ph="&lt;&lt;StackLayout Padding=&quot;40&quot;&gt;&#10;            &lt;Entry x:Name=&quot;UsernameEntry&quot; Text=&quot;Brugernavn&quot; /&gt;&#10;            &lt;Entry x:Name=&quot;PasswordEntry&quot; Text=&quot;Kodeord&quot; /&gt;&#10;            &lt;Button x:Name=&quot;LoginButton&quot; Clicked=&quot;OnLoginButtonClicked&quot; /&gt;&#10;        &lt;/StackLayout&gt;.../&gt;" />
+            <marker date="1520432586971" expanded="true" signature="226:473" ph="&lt;&lt;Entry x:Name=&quot;UsernameEntry&quot; Text=&quot;Brugernavn&quot; /&gt; &lt;Entry x:Name=&quot;PasswordEntry&quot; Text=&quot;Kodeord&quot; /&gt; &lt;Button x:Name=&quot;LoginButton&quot; Clicked=&quot;OnLoginButtonClicked&quot; /&gt;.../&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WeekPlanner/ViewModels/ItemDetailViewModel.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="9" lean-forward="true" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+          <folding>
+            <marker date="1520432269149" expanded="true" signature="36:274" ph="{...}" />
+            <marker date="1520432269149" expanded="true" signature="91:272" ph="{...}" />
+            <marker date="1520432269149" expanded="true" signature="189:266" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WeekPlanner/Views/LoginPage.xaml.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding>
+            <marker date="1520432806861" expanded="false" signature="6:121" ph="..." />
+            <marker date="1520432806861" expanded="true" signature="150:501" ph="{...}" />
+            <marker date="1520432806861" expanded="true" signature="201:499" ph="{...}" />
+            <marker date="1520432806861" expanded="true" signature="234:289" ph="{...}" />
+            <marker date="1520432806861" expanded="true" signature="360:493" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
