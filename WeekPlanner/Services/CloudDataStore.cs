@@ -33,6 +33,18 @@ namespace WeekPlanner
             return items;
         }
 
+        public async Task<bool> SendLoginRequest(string username, string password)
+        {
+//            if (item == null || !CrossConnectivity.Current.IsConnected)
+//                return false;
+
+            var serializedItem = JsonConvert.SerializeObject(new {Username = username, Password = password});
+
+            var response = await client.PostAsync("Account/login", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
+
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<Item> GetItemAsync(string id)
         {
             if (id != null && CrossConnectivity.Current.IsConnected)

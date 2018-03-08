@@ -61,5 +61,10 @@ namespace WeekPlanner
         {
             return await Task.FromResult(items);
         }
+
+        public Task<bool> SendLoginRequest(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

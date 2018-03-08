@@ -1,13 +1,13 @@
 ﻿using System;
-
+using WeekPlanner.Views;
 using Xamarin.Forms;
 
 namespace WeekPlanner
 {
     public partial class App : Application
     {
-        public static bool UseMockDataStore = true;
-        public static string BackendUrl = "https://localhost:5000";
+        public static bool UseMockDataStore = false;
+        public static string BackendUrl = "http://localhost:5000/v1";
 
         public App()
         {
@@ -21,7 +21,7 @@ namespace WeekPlanner
             if (Device.RuntimePlatform == Device.iOS)
                 MainPage = new MainPage();
             else
-                MainPage = new NavigationPage(new MainPage());
+                MainPage = new NavigationPage(new LoginPage());
         }
     }
 }

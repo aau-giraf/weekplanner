@@ -8,16 +8,11 @@ namespace WeekPlanner.Views
 {
     public partial class LoginPage : ContentPage
     {
+
         public LoginPage()
         {
             InitializeComponent();
         }
 
-        private void OnLoginButtonClicked(object sender, EventArgs e)
-        {
-            string username = UsernameEntry.Text;
-            string password = PasswordEntry.Text;
-            
-        }
     }
 }
