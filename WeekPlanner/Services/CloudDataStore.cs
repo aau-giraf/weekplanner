@@ -16,8 +16,7 @@ namespace WeekPlanner
 
         public CloudDataStore()
         {
-            client = new HttpClient();
-            client.BaseAddress = new Uri($"{App.BackendUrl}/");
+            client = new HttpClient {BaseAddress = new Uri($"{App.BackendUrl}/")};
 
             items = new List<Item>();
         }
@@ -38,9 +37,9 @@ namespace WeekPlanner
 //            if (item == null || !CrossConnectivity.Current.IsConnected)
 //                return false;
 
-            var serializedItem = JsonConvert.SerializeObject(new {Username = username, Password = password});
+            var content = $"{{\"username\": \"{username}\", \"password\": \"{password}\" }}";
 
-            var response = await client.PostAsync("Account/login", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync("Account/login", new StringContent(content, Encoding.UTF8, "application/json"));
 
             return response.IsSuccessStatusCode;
         }
