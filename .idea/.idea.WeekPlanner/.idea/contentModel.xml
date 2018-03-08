@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
+    <e p="$USER_HOME$/Library/Caches/Rider2017.2/resharper-host/local/Transient/ReSharperHost/v10/SolutionCaches/_Weekplanner.68041253.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="Droid" t="IncludeRecursive">
         <e p="Assets" t="Include">
@@ -38,6 +39,7 @@
             <e p="styles.xml" t="Include" />
           </e>
         </e>
+        <e p="Views" t="Include" />
         <e p="WeekPlanner.Droid.csproj" t="IncludeRecursive" />
       </e>
       <e p="iOS" t="IncludeRecursive">
@@ -69,21 +71,8 @@
         <e p="Views" t="Include" />
         <e p="WeekPlanner.iOS.csproj" t="IncludeRecursive" />
       </e>
-      <e p="packages" t="ExcludeRecursive">
-        <e p="Xamarin.Android.Support.Animated.Vector.Drawable.25.4.0.2/proguard" t="Include">
-          <e p="proguard.txt" t="Include" />
-        </e>
-        <e p="Xamarin.Android.Support.Core.UI.25.4.0.2/proguard" t="Include">
-          <e p="proguard.txt" t="Include" />
-        </e>
-        <e p="Xamarin.Android.Support.Design.25.4.0.2/proguard" t="Include">
-          <e p="proguard.txt" t="Include" />
-        </e>
-        <e p="Xamarin.Android.Support.v7.RecyclerView.25.4.0.2/proguard" t="Include">
-          <e p="proguard.txt" t="Include" />
-        </e>
-      </e>
-      <e p="WeekPlanner" t="IncludeRecursive">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="weekplanner" t="IncludeRecursive">
         <e p="App.xaml" t="Include" />
         <e p="App.xaml.cs" t="Include" />
         <e p="Models" t="Include">
@@ -118,6 +107,5 @@
       </e>
       <e p="WeekPlanner.sln" t="IncludeFlat" />
     </e>
-    <e p="$USER_HOME$/Library/Caches/Rider2017.2/resharper-host/local/Transient/ReSharperHost/v10/SolutionCaches/_WeekPlanner.-34638770.00" t="ExcludeRecursive" />
   </component>
 </project>
