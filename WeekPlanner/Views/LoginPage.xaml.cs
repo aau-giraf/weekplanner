@@ -15,7 +15,7 @@ namespace WeekPlanner.Views
             MessagingCenter.Subscribe<LoginViewModel, string>(this, "MyAlertName", async (obj, message) => {
                 if (message == "Godkendt")
                 {
-                    await Navigation.PushAsync(new NewItemPage());
+                    await Navigation.PushAsync(new MainPage());
                 }
                 await DisplayAlert("Log ind", message, "Luk");
             });

@@ -21,7 +21,7 @@ namespace WeekPlanner
             if (Device.RuntimePlatform == Device.iOS)
                 MainPage = new LoginPage();
             else
-                MainPage = new NavigationPage(new LoginPage());
+                MainPage = new NavigationPage(new TestingPage());
         }
     }
 }
