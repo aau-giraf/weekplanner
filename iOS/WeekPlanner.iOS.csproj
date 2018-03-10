@@ -136,6 +136,12 @@
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj">
+      <Project>{3F5B49BB-7EE3-4CD8-B64F-CF0A25C71A6A}</Project>
+      <Name>Swagger.IO</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\WeekPlanner\WeekPlanner.projitems" Label="Shared" Condition="Exists('..\WeekPlanner\WeekPlanner.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.targets')" />

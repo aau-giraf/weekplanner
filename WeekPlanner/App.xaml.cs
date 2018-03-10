@@ -6,7 +6,7 @@ namespace WeekPlanner
 {
     public partial class App : Application
     {
-        public static bool UseMockDataStore = true;
+        public static bool UseMockDataStore = false;
         public static string BackendUrl = "http://localhost:5000/v1";
 
         public App()

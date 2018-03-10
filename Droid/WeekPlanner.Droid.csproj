@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.props')" />
   <PropertyGroup>
@@ -137,6 +137,12 @@
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
     <AndroidResource Include="Resources\values\styles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj">
+      <Project>{3f5b49bb-7ee3-4cd8-b64f-cf0a25c71a6a}</Project>
+      <Name>Swagger.IO</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\WeekPlanner\WeekPlanner.projitems" Label="Shared" Condition="Exists('..\WeekPlanner\WeekPlanner.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

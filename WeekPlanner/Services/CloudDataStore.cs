@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-
+using IO.Swagger.Model;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
 
@@ -16,7 +16,7 @@ namespace WeekPlanner
 
         public CloudDataStore()
         {
-            client = new HttpClient {BaseAddress = new Uri($"{App.BackendUrl}/")};
+            client = new HttpClient { BaseAddress = new Uri($"{App.BackendUrl}/") };
 
             items = new List<Item>();
         }
@@ -35,12 +35,14 @@ namespace WeekPlanner
 
         public async Task<bool> SendLoginRequest(string username, string password)
         {
-//            if (item == null || !CrossConnectivity.Current.IsConnected)
-//                return false;
+            //            if (item == null || !CrossConnectivity.Current.IsConnected)
+            //                return false;
 
-            var serializedItem = JsonConvert.SerializeObject(new {Username = username, Password = password});
+            var serializedItem = JsonConvert.SerializeObject(new { Username = username, Password = password });
 
             var response = await client.PostAsync("Account/login", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
+            var json = await response.Content.ReadAsStringAsync();
+            var user = JsonConvert.DeserializeObject<ResponseGirafUserDTO>(json);
 
             return response.IsSuccessStatusCode;
         }
