@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using IO.Swagger.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
 using Xamarin.Forms;
@@ -12,12 +13,13 @@ namespace WeekPlanner.Views
         public LoginPage()
         {
             InitializeComponent();
-            MessagingCenter.Subscribe<LoginViewModel, string>(this, "MyAlertName", async (obj, message) => {
-                if (message == "Godkendt")
-                {
-                    await Navigation.PushAsync(new MainPage());
-                }
-                await DisplayAlert("Log ind", message, "Luk");
+            MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, "LoginSuccess", async (sender, user) => {
+                // TODO handle user
+                await Navigation.PushAsync(new MainPage());
+            });
+
+            MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", async (sender, message) => {
+                await DisplayAlert("Fejl", message, "Luk");
             });
         }
 

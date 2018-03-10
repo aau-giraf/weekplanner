@@ -65,13 +65,26 @@ namespace WeekPlanner
 
         public Task<ResponseGirafUserDTO> SendLoginRequest(string username, string password)
         {
-            var result = new ResponseGirafUserDTO
-            {
-                Data = new GirafUserDTO(),
-            };
+            ResponseGirafUserDTO result;
+            
             if (username == "Graatand" && password == "password")
             {
-                result.Data.Username = "Graatand";
+                result = new ResponseGirafUserDTO
+                {
+                    Success = true,
+                    ErrorKey = ResponseGirafUserDTO.ErrorKeyEnum.NoError,
+                    Data = new GirafUserDTO
+                    {
+                        Username = "Graatand",
+                    }
+                };
+            } else
+            {
+                result = new ResponseGirafUserDTO
+                {
+                    Success = false,
+                    ErrorKey = ResponseGirafUserDTO.ErrorKeyEnum.InvalidProperties,
+                };
             }
             return Task.FromResult(result);
         }

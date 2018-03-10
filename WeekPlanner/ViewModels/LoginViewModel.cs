@@ -18,16 +18,17 @@ namespace WeekPlanner
         private async Task SendLoginRequest()
         {
             var result = await DataStore.SendLoginRequest(Username, Password);
+            if (result.Success == null)
+                result.Success = false;
 
-            if (result.Data.Username != null)
+            if ((bool)result.Success)
             {
-                MessagingCenter.Send(this, "MyAlertName", "Godkendt");
-
+                MessagingCenter.Send(this, "LoginSuccess", result.Data);
             } else
             {
-                MessagingCenter.Send(this, "MyAlertName", "Nægtet");
+                MessagingCenter.Send(this, "LoginFailed", result.ErrorKey.ToString());
             }
-
+            
         }
     }
 }
