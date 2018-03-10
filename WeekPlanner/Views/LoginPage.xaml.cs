@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
@@ -12,6 +12,13 @@ namespace WeekPlanner.Views
         public LoginPage()
         {
             InitializeComponent();
+            MessagingCenter.Subscribe<LoginViewModel, string>(this, "MyAlertName", async (obj, message) => {
+                if (message == "Godkendt")
+                {
+                    await Navigation.PushAsync(new NewItemPage());
+                }
+                await DisplayAlert("Log ind", message, "Luk");
+            });
         }
 
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,7 +64,11 @@ namespace WeekPlanner
 
         public Task<bool> SendLoginRequest(string username, string password)
         {
-            throw new NotImplementedException();
+            if (username == "Graatand" && password == "password")
+            {
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
     }
 }

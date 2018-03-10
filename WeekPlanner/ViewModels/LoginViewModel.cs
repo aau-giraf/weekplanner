@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace WeekPlanner
@@ -8,17 +8,27 @@ namespace WeekPlanner
         public string Username { get; set; }
         public string Password { get; set; }
         public Command LoginCommand { get; set; }
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>() ?? new MockDataStore();
 
         public LoginViewModel()
         {
-            Title = "Login";
+            Title = "Log ind";
             LoginCommand = new Command(async () => await SendLoginRequest());
         }
 
         private async Task SendLoginRequest()
         {
             var result = await DataStore.SendLoginRequest(Username, Password);
+
+
+            if (result == true)
+            {
+                MessagingCenter.Send(this, "MyAlertName", "Godkendt");
+
+            } else
+            {
+                MessagingCenter.Send(this, "MyAlertName", "Nægtet");
+            }
+
         }
     }
 }
