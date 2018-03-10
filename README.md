@@ -10,6 +10,18 @@ We are using the Gitflow brancing pattern so all development must be done in eit
 2. `git checkout develop`
 3. Go to Phabricator to see which user stories need to be implemented
 
+## Implementing a User Story
+
+- Create a new View (ContentPage)
+- Create a button in TestingPage.xaml and make it navigate to your new View
+- Create a ViewModel and make it inherit from BaseViewModel then hook it up to the View through BindingContext
+- Use DataBinding (MVVM) to synchronize between the View and ViewModel
+- Use MessagingCenter to communicate between pages
+- Use Commands to execute actions eg. when clicking a button
+- Use Navigation.PushAsync for navigation
+- Use DependencyService for dependency injection
+- [Xamarin Forms Documentation](https://developer.xamarin.com/guides/xamarin-forms/)
+
 ## License
 
 Copyright [yyyy] [name of copyright owner]
