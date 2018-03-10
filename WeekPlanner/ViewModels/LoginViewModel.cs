@@ -19,8 +19,7 @@ namespace WeekPlanner
         {
             var result = await DataStore.SendLoginRequest(Username, Password);
 
-
-            if (result == true)
+            if (result.Data.Username != null)
             {
                 MessagingCenter.Send(this, "MyAlertName", "Godkendt");
 

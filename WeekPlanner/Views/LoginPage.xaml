@@ -6,6 +6,9 @@
     <ContentPage.BindingContext>
         <vm:LoginViewModel />
     </ContentPage.BindingContext>
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem Text="Hey"></ToolbarItem>
+    </ContentPage.ToolbarItems>-->
     <ContentPage.Content>
         <StackLayout Padding="40" VerticalOptions="Center">
             <Label Text="Brugernavn"></Label>

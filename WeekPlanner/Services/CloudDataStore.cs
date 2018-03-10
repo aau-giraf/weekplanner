@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using IO.Swagger.Api;
 using IO.Swagger.Model;
 using Newtonsoft.Json;
 using Plugin.Connectivity;
@@ -33,18 +34,15 @@ namespace WeekPlanner
         }
 
 
-        public async Task<bool> SendLoginRequest(string username, string password)
+        public async Task<ResponseGirafUserDTO> SendLoginRequest(string username, string password)
         {
-            //            if (item == null || !CrossConnectivity.Current.IsConnected)
-            //                return false;
-
+            //TODO handle user being offline
             var serializedItem = JsonConvert.SerializeObject(new { Username = username, Password = password });
-
             var response = await client.PostAsync("Account/login", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
+            // TODO handle HttpRequestException, happens when the server is down
             var json = await response.Content.ReadAsStringAsync();
-            var user = JsonConvert.DeserializeObject<ResponseGirafUserDTO>(json);
-
-            return response.IsSuccessStatusCode;
+            var responseGirafUserDTO = JsonConvert.DeserializeObject<ResponseGirafUserDTO>(json);
+            return responseGirafUserDTO;
         }
 
         public async Task<Item> GetItemAsync(string id)

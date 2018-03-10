@@ -63,6 +63,7 @@ namespace IO.Swagger.Model
             SuperUser
         }
 
+
         /// <summary>
         /// List of the roles the current user is defined as in the system.
         /// </summary>
@@ -73,7 +74,7 @@ namespace IO.Swagger.Model
         /// Initializes a new instance of the <see cref="GirafUserDTO" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected GirafUserDTO() { }
+        public GirafUserDTO() { }
         /// <summary>
         /// Initializes a new instance of the <see cref="GirafUserDTO" /> class.
         /// </summary>

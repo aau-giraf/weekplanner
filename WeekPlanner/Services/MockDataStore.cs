@@ -1,3 +1,4 @@
+using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,13 +63,17 @@ namespace WeekPlanner
             return await Task.FromResult(items);
         }
 
-        public Task<bool> SendLoginRequest(string username, string password)
+        public Task<ResponseGirafUserDTO> SendLoginRequest(string username, string password)
         {
+            var result = new ResponseGirafUserDTO
+            {
+                Data = new GirafUserDTO(),
+            };
             if (username == "Graatand" && password == "password")
             {
-                return Task.FromResult(true);
+                result.Data.Username = "Graatand";
             }
-            return Task.FromResult(false);
+            return Task.FromResult(result);
         }
     }
 }
