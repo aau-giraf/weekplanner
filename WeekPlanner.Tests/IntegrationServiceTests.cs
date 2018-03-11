@@ -1,4 +1,5 @@
 using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
@@ -62,15 +63,24 @@ namespace WeekPlanner.Tests
         [Fact]
         public async void Integration_Swagger_ServerDown() {
             // Arrange
+            bool exceptionCaught = false;
             var api = new AccountApi();
-            var basePath = "awudihawduu";
+            var basePath = "http://localhost:1234/NotAnAddress";
             api.Configuration.ApiClient = new IO.Swagger.Client.ApiClient(basePath);
 
             // Act
-            var result = await api.V1AccountLoginPostAsync(
-                new LoginDTO("username", "password")
-                );
+            try
+            {
+                var result = await api.V1AccountLoginPostAsync(
+                    new LoginDTO("username", "password")
+                    );
+            } catch (ApiException)
+            {
+                exceptionCaught = true;
+            }
 
+            // Assert
+            Assert.True(exceptionCaught);
         }
                
     }

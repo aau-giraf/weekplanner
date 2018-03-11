@@ -25,9 +25,10 @@
                    Text="{Binding Password}"
                    Placeholder="Adgangskode"
                    IsPassword="True"
-                   Completed="Handle_Completed"/>
+                   Completed="Password_Completed"/>
 
             <Button x:Name="LoginButton" Command="{Binding LoginCommand}" Text="Log ind" />
+            <Button Text="Test Happy Path" Clicked="Clicked_HappyPath"></Button>
 
         </StackLayout>
     </ContentPage.Content>

@@ -66,7 +66,6 @@ namespace WeekPlanner
         public Task<ResponseGirafUserDTO> SendLoginRequest(string username, string password)
         {
             ResponseGirafUserDTO result;
-            
             if (username == "Graatand" && password == "password")
             {
                 result = new ResponseGirafUserDTO
@@ -76,6 +75,16 @@ namespace WeekPlanner
                     Data = new GirafUserDTO
                     {
                         Username = "Graatand",
+                        GuardianOf = new List<GirafUserDTO>
+                        {
+                            new GirafUserDTO { Username = "Kurt"},
+                            new GirafUserDTO { Username = "Søren"},
+                            new GirafUserDTO { Username = "Flemming"},
+                            new GirafUserDTO { Username = "Else"},
+                            new GirafUserDTO { Username = "Gertrud"},
+                            new GirafUserDTO { Username = "Elisabeth"},
+                            new GirafUserDTO { Username = "Hans"},
+                        }
                     }
                 };
             } else

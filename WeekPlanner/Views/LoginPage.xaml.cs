@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using IO.Swagger.Model;
 using Newtonsoft.Json;
@@ -15,8 +15,11 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
             MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, "LoginSuccess", async (sender, user) => {
-                var vm = new ChooseCitizenViewModel(null);
-                vm.Username = user.Username;
+                var vm = new ChooseCitizenViewModel(user.GuardianOf)
+                {
+                    Username = user.Username
+                };
+                // TODO save all the user information
                 await Navigation.PushAsync(new ChooseCitizenPage(vm));
             });
 
@@ -35,8 +38,15 @@ namespace WeekPlanner.Views
             PasswordEntry.Focus();
         }
 
-        void Handle_Completed(object sender, System.EventArgs e)
+        void Password_Completed(object sender, System.EventArgs e)
         {
+            LoginButton.Command.Execute(null);
+        }
+
+        void Clicked_HappyPath(object sender, EventArgs e)
+        {
+            UsernameEntry.Text = "Graatand";
+            PasswordEntry.Text = "password";
             LoginButton.Command.Execute(null);
         }
     }
