@@ -12,39 +12,65 @@ namespace WeekPlanner.Tests
         [Fact]
         public async void Integration_SendLoginRequest_CorrectLogin()
         {
+            // Arrange
             var service = new CloudDataStore();
+            
+            // Act
             var result = await service.SendLoginRequest("Graatand", "password");
+            
+            // Assert
             Assert.True(result.Data.Username == "Graatand");
         }
 
         [Fact]
         public async void Integration_SendLoginRequest_ServerDown()
         {
+            // Arrange
             var service = new CloudDataStore();
+            
+            // Act
             var result = await service.SendLoginRequest("Graatand", "password");
+            
+            // Assert
             Assert.True(result.Data.Username == "Graatand");
         }
 
         [Fact]
         public async void Integration_Swagger_CorrectLogin()
         {
+            // Arrange
             var api = new AccountApi();
             var basePath = "http://localhost:5000";
             api.Configuration.ApiClient = new IO.Swagger.Client.ApiClient(basePath);
-            var user = await api.V1AccountLoginPostAsync(
+            
+            // Act
+            var result = await api.V1AccountLoginPostAsync(
                 new LoginDTO("Graatand", "password")
                 );
-            Assert.True(user.Data.Username == "Graatand");
+            
+            // Assert
+            Assert.True(result.Data.Username == "Graatand");
         }
-        [Fact]
-        public async void Integration_Swagger_BadLogin()
+        
+        [Theory]
+        [InlineData("13uej912389u", "adw89u129363")]
+        [InlineData("00000", "222222")]
+        [InlineData("asd", "s$$$$")]
+        public async void Integration_Swagger_BadLogin(string username, string password)
         {
+            // Arrange
             var api = new AccountApi();
             var basePath = "http://localhost:5000";
             api.Configuration.ApiClient = new IO.Swagger.Client.ApiClient(basePath);
-            var user = await api.V1AccountLoginPostAsync(
-                new LoginDTO("13uej912389u", "adw89u129363")
+            
+            // Act
+            var result = await api.V1AccountLoginPostAsync(
+                new LoginDTO(username, password)
                 );
+
+            // Assert
+            Assert.True(result.ErrorKey.ToString() == Response.ErrorKeyEnum.InvalidCredentials.ToString());
         }
+               
     }
 }

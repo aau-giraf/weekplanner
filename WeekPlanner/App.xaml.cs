@@ -19,7 +19,7 @@ namespace WeekPlanner
                 DependencyService.Register<CloudDataStore>();
 
             if (Device.RuntimePlatform == Device.iOS)
-                MainPage = new LoginPage();
+                MainPage = new NavigationPage(new TestingPage());
             else
                 MainPage = new NavigationPage(new TestingPage());
         }
