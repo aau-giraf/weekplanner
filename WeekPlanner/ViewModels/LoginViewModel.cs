@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Xamarin.Forms;
 using WeekPlanner.Services.Networking;
@@ -22,8 +23,18 @@ namespace WeekPlanner
 
         private async Task SendLoginRequest()
         {
-            var result = await _networkingService.SendLoginRequest(Username, Password);
-            
+            ResponseGirafUserDTO result = new ResponseGirafUserDTO();
+            try
+            {
+                result = await _networkingService.SendLoginRequest(Username, Password);
+            }
+            catch (ApiException)
+            {
+                // TODO make a "ServerDownError"
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
+                MessagingCenter.Send(this, "LoginFailed", friendlyErrorMessage);
+                return;
+            }
             if (result.Success == null)
                 result.Success = false;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using static IO.Swagger.Model.ResponseGirafUserDTO;
 
 namespace WeekPlanner
@@ -16,7 +16,7 @@ namespace WeekPlanner
                 case ErrorKeyEnum.UserMustBeGuardian:
                     return "Brugeren skal være en værge.";
                 default:
-                    return "Der skete en fejl.";
+                    return "Der skete en fejl, serveren er muligvis nede.";
             }
         }
     }

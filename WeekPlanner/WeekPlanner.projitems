@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\WeekPlannerViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -27,6 +28,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChooseCitizenViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorCodeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GlobalSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\WeekPlannerPage.xaml.cs">
+      <DependentUpon>WeekPlannerPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\Networking\INetworkingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Networking\NetworkingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Networking\MockNetworkingService.cs" />
@@ -49,6 +54,12 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TestingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\WeekPlannerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
