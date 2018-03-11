@@ -4,6 +4,7 @@ using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WeekPlanner.Services.Networking;
 using Xunit;
 
 namespace WeekPlanner.Tests
@@ -14,11 +15,11 @@ namespace WeekPlanner.Tests
         public async void Integration_SendLoginRequest_CorrectLogin()
         {
             // Arrange
-            var service = new CloudDataStore();
-            
+            var service = new NetworkingService();
+
             // Act
             var result = await service.SendLoginRequest("Graatand", "password");
-            
+
             // Assert
             Assert.True(result.Data.Username == "Graatand");
         }
@@ -30,16 +31,16 @@ namespace WeekPlanner.Tests
             var api = new AccountApi();
             var basePath = "http://localhost:5000";
             api.Configuration.ApiClient = new IO.Swagger.Client.ApiClient(basePath);
-            
+
             // Act
             var result = await api.V1AccountLoginPostAsync(
                 new LoginDTO("Graatand", "password")
                 );
-            
+
             // Assert
             Assert.True(result.Data.Username == "Graatand");
         }
-        
+
         [Theory]
         [InlineData("13uej912389u", "adw89u129363")]
         [InlineData("00000", "222222")]
@@ -50,7 +51,7 @@ namespace WeekPlanner.Tests
             var api = new AccountApi();
             var basePath = "http://localhost:5000";
             api.Configuration.ApiClient = new IO.Swagger.Client.ApiClient(basePath);
-            
+
             // Act
             var result = await api.V1AccountLoginPostAsync(
                 new LoginDTO(username, password)
@@ -82,6 +83,6 @@ namespace WeekPlanner.Tests
             // Assert
             Assert.True(exceptionCaught);
         }
-               
+
     }
 }

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Xamarin.Forms;
+using WeekPlanner.Services.Networking;
 
 namespace WeekPlanner
 {
@@ -11,10 +12,13 @@ namespace WeekPlanner
         public string Password { get; set; }
         public Command LoginCommand { get; set; }
 
-        public LoginViewModel()
+        private readonly INetworkingService _networkingService;
+
+        public LoginViewModel(INetworkingService networkingService)
         {
             Title = "Log ind";
             LoginCommand = new Command(async () => await SendLoginRequest());
+            _networkingService = networkingService;
         }
 
         private async Task SendLoginRequest()
@@ -22,7 +26,7 @@ namespace WeekPlanner
             ResponseGirafUserDTO result = new ResponseGirafUserDTO();
             try
             {
-                result = await DataStore.SendLoginRequest(Username, Password);
+                result = await _networkingService.SendLoginRequest(Username, Password);
             }
             catch (ApiException)
             {

@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using WeekPlanner.ApplicationObjects;
+using Autofac;
 
 namespace WeekPlanner.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TestingPage : ContentPage
 	{
-		public TestingPage ()
+        private readonly LoginPage _loginPage;
+        public TestingPage (LoginPage loginPage)
 		{
-			InitializeComponent ();
+            InitializeComponent ();
+           
             Title = "Navigering";
+
+            _loginPage = loginPage;
 		}
 
         private async void Login_Button_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new LoginPage());
+            await Navigation.PushAsync(_loginPage);
         }
     }
 }

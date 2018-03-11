@@ -10,10 +10,12 @@ namespace WeekPlanner.Views
 {
     public partial class LoginPage : ContentPage
     {
-
-        public LoginPage()
+        public LoginPage(LoginViewModel loginViewModel)
         {
             InitializeComponent();
+
+            BindingContext = loginViewModel;
+
             MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, "LoginSuccess", async (sender, user) => {
                 var vm = new ChooseCitizenViewModel(user.GuardianOf)
                 {
@@ -26,6 +28,9 @@ namespace WeekPlanner.Views
             MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", async (sender, errorMessage) => {
                 await DisplayAlert("Fejl", errorMessage, "Luk");
             });
+
+
+
         }
 
         private void MenuItem_OnClicked(object sender, EventArgs e)

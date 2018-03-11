@@ -1,6 +1,7 @@
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System;
+using WeekPlanner.Services.Networking;
 using Xunit;
 
 namespace WeekPlanner.Tests
@@ -13,7 +14,7 @@ namespace WeekPlanner.Tests
         public async void SendLoginRequest_Success()
         {
             // Arrange
-            var service = new MockDataStore();
+            var service = new MockNetworkingService();
 
             // Act
             var result = await service.SendLoginRequest("Graatand", "password");
