@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using IO.Swagger.Model;
+using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.ViewModels
 {

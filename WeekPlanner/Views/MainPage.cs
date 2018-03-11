@@ -2,7 +2,7 @@
 
 using Xamarin.Forms;
 
-namespace WeekPlanner
+namespace WeekPlanner.Views
 {
     public class MainPage : TabbedPage
     {

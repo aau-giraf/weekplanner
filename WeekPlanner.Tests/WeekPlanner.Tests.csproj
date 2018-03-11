@@ -28,5 +28,6 @@
     <Folder Include="IntegrationTests\Services\Networking\" />
     <Folder Include="IntegrationTests\Swagger.IO\" />
     <Folder Include="IntegrationTests\Swagger.IO\Api\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>

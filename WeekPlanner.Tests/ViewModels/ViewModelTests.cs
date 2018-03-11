@@ -20,7 +20,7 @@ namespace WeekPlanner.Tests
         // Use the naming convention MethodName_StateUnderTest_ExpectedBehavior
 
         [Fact]
-        public void Login_Success()
+        public void LoginCommand_Condition_Success()
         {
             // Arrange
             bool messageReceived = false;
@@ -43,7 +43,7 @@ namespace WeekPlanner.Tests
         }
 
         [Fact]
-        public void Login_Fail()
+        public void LoginCommand_Condition_Fail()
         {
             // Arrange
             bool messageReceived = false;

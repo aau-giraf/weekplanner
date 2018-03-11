@@ -1,7 +1,7 @@
 using System;
 using static IO.Swagger.Model.ResponseGirafUserDTO;
 
-namespace WeekPlanner
+namespace WeekPlanner.Helpers
 {
     public static class ErrorCodeHelper
     {

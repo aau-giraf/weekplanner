@@ -3,8 +3,10 @@ using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Xamarin.Forms;
 using WeekPlanner.Services.Networking;
+using WeekPlanner.ViewModels.Base;
+using WeekPlanner.Helpers;
 
-namespace WeekPlanner
+namespace WeekPlanner.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {

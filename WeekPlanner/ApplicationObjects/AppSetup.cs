@@ -4,7 +4,7 @@ using WeekPlanner.Services.Networking;
 using WeekPlanner.Views;
 using WeekPlanner.ViewModels;
 
-namespace WeekPlanner
+namespace WeekPlanner.ApplicationObjects
 {
     public class AppSetup
     {

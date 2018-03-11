@@ -6,7 +6,7 @@ using WeekPlanner.Services.Networking;
 
 using Xamarin.Forms;
 
-namespace WeekPlanner
+namespace WeekPlanner.ViewModels.Base
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
