@@ -9,16 +9,26 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Secondary" Text="Indstillinger" Clicked="MenuItem_OnClicked" />
     </ContentPage.ToolbarItems>
-    <!--<ContentPage.ToolbarItems>
-        <ToolbarItem Text="Hey"></ToolbarItem>
-    </ContentPage.ToolbarItems>-->
     <ContentPage.Content>
         <StackLayout Padding="40" VerticalOptions="Center">
+
             <Label Text="Brugernavn"></Label>
-            <Entry x:Name="UsernameEntry" Text="{Binding Username}" Placeholder="Brugernavn" />
+
+            <Entry x:Name="UsernameEntry"
+                   Text="{Binding Username}"
+                   Placeholder="Brugernavn"
+                   Completed="Username_Completed"/>
+
             <Label Text="Adgangskode"></Label>
-            <Entry x:Name="PasswordEntry" Text="{Binding Password}" Placeholder="Adgangskode" IsPassword="True" />
+
+            <Entry x:Name="PasswordEntry"
+                   Text="{Binding Password}"
+                   Placeholder="Adgangskode"
+                   IsPassword="True"
+                   Completed="Handle_Completed"/>
+
             <Button x:Name="LoginButton" Command="{Binding LoginCommand}" Text="Log ind" />
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
