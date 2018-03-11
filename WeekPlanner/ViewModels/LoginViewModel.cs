@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using WeekPlanner.Services.Networking;
 using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Helpers;
+using System.Windows.Input;
 
 namespace WeekPlanner.ViewModels
 {
@@ -12,14 +13,13 @@ namespace WeekPlanner.ViewModels
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public Command LoginCommand { get; set; }
+        public ICommand LoginCommand => new Command(async () => await SendLoginRequest());
 
         private readonly INetworkingService _networkingService;
 
         public LoginViewModel(INetworkingService networkingService)
         {
             Title = "Log ind";
-            LoginCommand = new Command(async () => await SendLoginRequest());
             _networkingService = networkingService;
         }
 

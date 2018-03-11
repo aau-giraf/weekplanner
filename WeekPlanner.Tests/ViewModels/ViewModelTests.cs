@@ -8,6 +8,7 @@ using AutoFixture.AutoMoq;
 using WeekPlanner.Services.Networking;
 using Moq;
 using IO.Swagger.Client;
+using System.Threading.Tasks;
 
 namespace WeekPlanner.Tests
 {
@@ -51,7 +52,7 @@ namespace WeekPlanner.Tests
         }
 
         [Fact]
-        public void LoginCommand_ServerDown_SendsLoginFailMsg()
+        public async void LoginCommand_ServerDown_SendsLoginFailMsg()
         {
             // Arrange
             bool messageReceived = false;
@@ -66,13 +67,13 @@ namespace WeekPlanner.Tests
                                          .With(l => l.Password, "password")
                                          .Create();
 
-            MessagingCenter.Subscribe<LoginViewModel>(this, "LoginFailed", _ =>
+            MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", (sender, args) =>
             {
                 messageReceived = true;
             });
 
             // Act
-            loginViewModel.LoginCommand.Execute(null);
+            await Task.Run(() => loginViewModel.LoginCommand.Execute(null));
 
             // Assert
             Assert.True(messageReceived);
