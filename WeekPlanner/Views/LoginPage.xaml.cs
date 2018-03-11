@@ -15,14 +15,13 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
             MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, "LoginSuccess", async (sender, user) => {
-                // TODO handle user
                 var vm = new ChooseCitizenViewModel(null);
                 vm.Username = user.Username;
                 await Navigation.PushAsync(new ChooseCitizenPage(vm));
             });
 
-            MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", async (sender, message) => {
-                await DisplayAlert("Fejl", message, "Luk");
+            MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", async (sender, errorMessage) => {
+                await DisplayAlert("Fejl", errorMessage, "Luk");
             });
         }
 

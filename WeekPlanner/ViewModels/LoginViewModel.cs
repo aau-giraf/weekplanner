@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using IO.Swagger.Model;
 using Xamarin.Forms;
 
 namespace WeekPlanner
@@ -18,18 +19,20 @@ namespace WeekPlanner
         private async Task SendLoginRequest()
         {
             var result = await DataStore.SendLoginRequest(Username, Password);
+
             if (result.Success == null)
                 result.Success = false;
 
             if ((bool)result.Success)
             {
                 MessagingCenter.Send(this, "LoginSuccess", result.Data);
-            } else
+            }
+            else
             {
                 var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
                 MessagingCenter.Send(this, "LoginFailed", friendlyErrorMessage);
             }
-            
+
         }
     }
 }
