@@ -25,6 +25,7 @@
                    Completed="Password_Completed"/>
 
             <Button x:Name="LoginButton" Command="{Binding LoginCommand}" Text="Log ind" />
+            <Button x:Name="Autofill" Text="Autofill" Clicked="Autofill_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

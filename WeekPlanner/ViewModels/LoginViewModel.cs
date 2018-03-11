@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using WeekPlanner.Services.Networking;
 using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Helpers;
+using System.Linq;
 
 namespace WeekPlanner.ViewModels
 {
@@ -43,6 +44,7 @@ namespace WeekPlanner.ViewModels
             if ((bool)result.Success)
             {
                 MessagingCenter.Send(this, "LoginSuccess", result.Data);
+                result.Data.GuardianOf.OrderBy(x => x.Username);
             }
             else
             {
