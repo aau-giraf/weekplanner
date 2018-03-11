@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using IO.Swagger.Model;
 
@@ -19,6 +20,16 @@ namespace WeekPlanner.Services.Networking
                     Data = new GirafUserDTO
                     {
                         Username = "Graatand",
+                        GuardianOf = new List<GirafUserDTO>
+                        {
+                            new GirafUserDTO { Username = "Kurt"},
+                            new GirafUserDTO { Username = "Søren"},
+                            new GirafUserDTO { Username = "Elisabeth"},
+                            new GirafUserDTO { Username = "Ulrik"},
+                            new GirafUserDTO { Username = "Thomas"},
+                            new GirafUserDTO { Username = "Elise"},
+                            new GirafUserDTO { Username = "Maria"},
+                        }
                     }
                 };
             }

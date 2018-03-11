@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace WeekPlanner
 {
     public class GlobalSettings
@@ -28,7 +28,7 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = false;
+        public bool UseMocks = true;
 
         public string LoginEndpoint { get; set; }
 
