@@ -20,8 +20,6 @@ namespace WeekPlanner
             {
                 MainPage = new NavigationPage(scope.Resolve<TestingPage>());
             }
-
-
         }
     }
 }

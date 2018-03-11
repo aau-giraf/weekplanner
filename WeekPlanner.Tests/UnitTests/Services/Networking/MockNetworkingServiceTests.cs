@@ -6,12 +6,12 @@ using Xunit;
 
 namespace WeekPlanner.Tests
 {
-    public class ServiceTests
+    public class MockNetworkingServiceTests
     {
-        
+        // Use the naming convention MethodName_StateUnderTest_ExpectedBehavior
 
         [Fact]
-        public async void SendLoginRequest_Success()
+        public async void SendLoginRequest_ValidCredentials_UserData()
         {
             // Arrange
             var service = new MockNetworkingService();
