@@ -83,7 +83,7 @@ namespace WeekPlanner
                 result = new ResponseGirafUserDTO
                 {
                     Success = false,
-                    ErrorKey = ResponseGirafUserDTO.ErrorKeyEnum.InvalidProperties,
+                    ErrorKey = ResponseGirafUserDTO.ErrorKeyEnum.InvalidCredentials,
                 };
             }
             return Task.FromResult(result);

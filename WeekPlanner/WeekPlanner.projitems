@@ -45,6 +45,7 @@
       <DependentUpon>ChooseCitizenPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChooseCitizenViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorCodeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\AboutPage.xaml" />

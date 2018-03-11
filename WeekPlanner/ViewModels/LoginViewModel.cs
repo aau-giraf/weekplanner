@@ -26,7 +26,8 @@ namespace WeekPlanner
                 MessagingCenter.Send(this, "LoginSuccess", result.Data);
             } else
             {
-                MessagingCenter.Send(this, "LoginFailed", result.ErrorKey.ToString());
+                var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
+                MessagingCenter.Send(this, "LoginFailed", friendlyErrorMessage);
             }
             
         }
