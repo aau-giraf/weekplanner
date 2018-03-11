@@ -6,6 +6,9 @@
     <ContentPage.BindingContext>
         <vm:LoginViewModel />
     </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Secondary" Text="Indstillinger" Clicked="MenuItem_OnClicked" />
+    </ContentPage.ToolbarItems>
     <!--<ContentPage.ToolbarItems>
         <ToolbarItem Text="Hey"></ToolbarItem>
     </ContentPage.ToolbarItems>-->

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using IO.Swagger.Model;
 using Newtonsoft.Json;
@@ -23,5 +23,9 @@ namespace WeekPlanner.Views
             });
         }
 
+        private void MenuItem_OnClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Indstillinger", "Du trykkede på indstillinger!", "Luk");
+        }
     }
 }
