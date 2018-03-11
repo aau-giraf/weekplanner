@@ -12,7 +12,6 @@ namespace WeekPlanner.ViewModels
         public ChooseCitizenViewModel(IEnumerable<GirafUserDTO> citizens)
         {
             Citizens = citizens;
-            Username = citizens.First().Username;
         }
     }
 }

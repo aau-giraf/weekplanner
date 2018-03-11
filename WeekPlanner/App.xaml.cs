@@ -6,14 +6,11 @@ namespace WeekPlanner
 {
     public partial class App : Application
     {
-        public static bool UseMockDataStore = true;
-        public static string BackendUrl = "http://localhost:5000/v1";
-
         public App()
         {
             InitializeComponent();
 
-            if (UseMockDataStore)
+            if (GlobalSettings.Instance.UseMocks)
                 DependencyService.Register<MockDataStore>();
             else
                 DependencyService.Register<CloudDataStore>();

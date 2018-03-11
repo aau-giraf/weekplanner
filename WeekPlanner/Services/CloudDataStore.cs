@@ -17,7 +17,7 @@ namespace WeekPlanner
 
         public CloudDataStore()
         {
-            client = new HttpClient { BaseAddress = new Uri($"{App.BackendUrl}/") };
+            client = new HttpClient();
 
             items = new List<Item>();
         }
@@ -38,7 +38,7 @@ namespace WeekPlanner
         {
             //TODO handle user being offline
             var serializedItem = JsonConvert.SerializeObject(new { Username = username, Password = password });
-            var response = await client.PostAsync("Account/login", new StringContent(serializedItem, Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync(GlobalSettings.Instance.LoginEndpoint, new StringContent(serializedItem, Encoding.UTF8, "application/json"));
             // TODO handle HttpRequestException, happens when the server is down
             var json = await response.Content.ReadAsStringAsync();
             var responseGirafUserDTO = JsonConvert.DeserializeObject<ResponseGirafUserDTO>(json);
