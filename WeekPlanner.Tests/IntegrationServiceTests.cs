@@ -23,19 +23,6 @@ namespace WeekPlanner.Tests
         }
 
         [Fact]
-        public async void Integration_SendLoginRequest_ServerDown()
-        {
-            // Arrange
-            var service = new CloudDataStore();
-            
-            // Act
-            var result = await service.SendLoginRequest("Graatand", "password");
-            
-            // Assert
-            Assert.True(result.Data.Username == "Graatand");
-        }
-
-        [Fact]
         public async void Integration_Swagger_CorrectLogin()
         {
             // Arrange
@@ -70,6 +57,20 @@ namespace WeekPlanner.Tests
 
             // Assert
             Assert.True(result.ErrorKey.ToString() == Response.ErrorKeyEnum.InvalidCredentials.ToString());
+        }
+
+        [Fact]
+        public async void Integration_Swagger_ServerDown() {
+            // Arrange
+            var api = new AccountApi();
+            var basePath = "awudihawduu";
+            api.Configuration.ApiClient = new IO.Swagger.Client.ApiClient(basePath);
+
+            // Act
+            var result = await api.V1AccountLoginPostAsync(
+                new LoginDTO("username", "password")
+                );
+
         }
                
     }

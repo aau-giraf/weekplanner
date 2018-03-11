@@ -10,7 +10,7 @@ namespace WeekPlanner.Tests
         
 
         [Fact]
-        public async void SendLoginRequest_CorrectLogin()
+        public async void SendLoginRequest_Success()
         {
             // Arrange
             var service = new MockDataStore();

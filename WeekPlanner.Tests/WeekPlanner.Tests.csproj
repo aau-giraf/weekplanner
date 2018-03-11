@@ -15,5 +15,4 @@
     <ProjectReference Include="..\Droid\WeekPlanner.Droid.csproj" />
     <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj" />
   </ItemGroup>
-  <Import Project="..\WeekPlanner\WeekPlanner.projitems" Label="Shared" />
 </Project>
