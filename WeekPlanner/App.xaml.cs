@@ -2,6 +2,8 @@ using System;
 using WeekPlanner.Views;
 using Xamarin.Forms;
 using WeekPlanner.Services.Networking;
+using WeekPlanner.ApplicationObjects;
+using Autofac;
 
 namespace WeekPlanner
 {
@@ -11,15 +13,15 @@ namespace WeekPlanner
         {
             InitializeComponent();
 
-            if (GlobalSettings.Instance.UseMocks)
-                DependencyService.Register<MockNetworkingService>();
-            else
-                DependencyService.Register<NetworkingService>();
+            AppSetup setup = new AppSetup();
+            AppContainer.Container = setup.CreateContainer();
 
-            if (Device.RuntimePlatform == Device.iOS)
-                MainPage = new NavigationPage(new TestingPage());
-            else
-                MainPage = new NavigationPage(new TestingPage());
+            using(var scope = AppContainer.Container.BeginLifetimeScope())
+            {
+                MainPage = new NavigationPage(scope.Resolve<TestingPage>());
+            }
+
+
         }
     }
 }

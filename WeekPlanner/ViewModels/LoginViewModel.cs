@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using IO.Swagger.Model;
 using Xamarin.Forms;
+using WeekPlanner.Services.Networking;
 
 namespace WeekPlanner
 {
@@ -10,15 +11,18 @@ namespace WeekPlanner
         public string Password { get; set; }
         public Command LoginCommand { get; set; }
 
-        public LoginViewModel()
+        private readonly INetworkingService _networkingService;
+
+        public LoginViewModel(INetworkingService networkingService)
         {
             Title = "Log ind";
             LoginCommand = new Command(async () => await SendLoginRequest());
+            _networkingService = networkingService;
         }
 
         private async Task SendLoginRequest()
         {
-            var result = await NetworkingService.SendLoginRequest(Username, Password);
+            var result = await _networkingService.SendLoginRequest(Username, Password);
             
             if (result.Success == null)
                 result.Success = false;

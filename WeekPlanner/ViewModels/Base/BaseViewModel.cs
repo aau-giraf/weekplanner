@@ -10,8 +10,6 @@ namespace WeekPlanner
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public INetworkingService NetworkingService => DependencyService.Get<INetworkingService>();
-
         bool isBusy = false;
         public bool IsBusy
         {

@@ -3,9 +3,6 @@
              xmlns:vm="clr-namespace:WeekPlanner;"
              x:Class="WeekPlanner.Views.LoginPage"
              Title="{Binding Title}">
-    <ContentPage.BindingContext>
-        <vm:LoginViewModel />
-    </ContentPage.BindingContext>
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Secondary" Text="Indstillinger" Clicked="MenuItem_OnClicked" />
     </ContentPage.ToolbarItems>

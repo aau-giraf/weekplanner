@@ -9,7 +9,6 @@
     <Import_RootNamespace>WeekPlanner</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -31,6 +30,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Networking\INetworkingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Networking\NetworkingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\Networking\MockNetworkingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ApplicationObjects\AppSetup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ApplicationObjects\AppContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Base\BaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
@@ -52,5 +54,7 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Models" />
     <Folder Include="$(MSBuildThisFileDirectory)Services\Networking\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ApplicationObjects\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ViewModels\Base\" />
   </ItemGroup>
 </Project>
