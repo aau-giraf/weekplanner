@@ -3,6 +3,7 @@ using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WeekPlanner.Services.Networking;
 using Xunit;
 
 namespace WeekPlanner.Tests
@@ -13,7 +14,7 @@ namespace WeekPlanner.Tests
         public async void Integration_SendLoginRequest_CorrectLogin()
         {
             // Arrange
-            var service = new CloudDataStore();
+            var service = new NetworkingService();
             
             // Act
             var result = await service.SendLoginRequest("Graatand", "password");
@@ -70,6 +71,8 @@ namespace WeekPlanner.Tests
             var result = await api.V1AccountLoginPostAsync(
                 new LoginDTO("username", "password")
                 );
+
+            // Assert ?
 
         }
                

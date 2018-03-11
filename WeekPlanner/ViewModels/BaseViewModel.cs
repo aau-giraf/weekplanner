@@ -10,7 +10,6 @@ namespace WeekPlanner
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>() ?? new MockDataStore();
         public INetworkingService NetworkingService => DependencyService.Get<INetworkingService>();
 
         bool isBusy = false;
