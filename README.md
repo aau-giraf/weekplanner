@@ -19,12 +19,15 @@ We are using the Gitflow brancing pattern so all development must be done in eit
 - Use MessagingCenter to communicate between pages
 - Use Commands to execute actions eg. when clicking a button
 - Use Navigation.PushAsync for navigation
-- Use DependencyService for dependency injection
+- Use Autofac for dependency injection by registering in WeekPlanner.ApplicationObjects.AppSetup
+- Use AutoFixture with Moq for testing when possible, to avoid brittle tests
 - [Xamarin Forms Documentation](https://developer.xamarin.com/guides/xamarin-forms/)
+- [Autofac Documentation](http://autofac.readthedocs.io/en/latest/getting-started/index.html)
+- [AutoFixture Documentation](https://github.com/AutoFixture/AutoFixture/wiki/Cheat-Sheet)
 
 ## License
 
-Copyright [yyyy] [name of copyright owner]
+Copyright [2018] [Aalborg University]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
