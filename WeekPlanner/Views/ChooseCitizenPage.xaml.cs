@@ -16,5 +16,17 @@ namespace WeekPlanner.Views
             InitializeComponent();
             BindingContext = this.viewModel = viewModel;
         }
+
+        private async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            var citizen = args.SelectedItem as GirafUserDTO;
+            if (citizen == null)
+                return;
+
+            await Navigation.PushAsync(new WeekPlannerPage(new WeekPlannerViewModel(citizen)));
+
+            // Manually deselect item
+            CitizensListView.SelectedItem = null;
+        }
     }
 }

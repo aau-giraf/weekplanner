@@ -12,7 +12,7 @@ namespace WeekPlanner.ViewModels
         public string Username { get; set; }
         public ChooseCitizenViewModel(IEnumerable<GirafUserDTO> citizens)
         {
-            Title = "Vælg bruger";
+            Title = "Vælg Borger";
             Citizens = new ObservableCollection<GirafUserDTO>(citizens);
         }
     }

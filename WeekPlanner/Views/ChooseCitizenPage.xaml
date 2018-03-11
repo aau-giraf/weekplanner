@@ -4,8 +4,9 @@
              x:Class="WeekPlanner.Views.ChooseCitizenPage"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
-            <ListView ItemsSource="{Binding Citizens}">
+        <StackLayout Margin="40">
+            <Label Text="Vælg den border som du ønsker at administrere ugeplaner for"></Label>
+            <ListView x:Name="CitizensListView" ItemsSource="{Binding Citizens}" VerticalOptions="FillAndExpand" HasUnevenRows="true" ItemSelected="OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
