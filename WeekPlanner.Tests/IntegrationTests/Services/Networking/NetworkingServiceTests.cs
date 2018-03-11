@@ -8,13 +8,13 @@ using Xunit;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 
-namespace WeekPlanner.Tests
+namespace WeekPlanner.Tests.Services.Networking
 {
-    public class IntegrationServiceTests
+    public class NetworkingServiceTests
     {
         private readonly IFixture _fixture;
 
-        public IntegrationServiceTests()
+        public NetworkingServiceTests()
         {
             _fixture = new Fixture().Customize(new AutoMoqCustomization());
         }

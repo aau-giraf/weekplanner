@@ -5,6 +5,9 @@ using Xamarin.Forms;
 using Xunit;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using WeekPlanner.Services.Networking;
+using Moq;
+using IO.Swagger.Client;
 
 namespace WeekPlanner.Tests
 {
@@ -25,12 +28,17 @@ namespace WeekPlanner.Tests
             // Arrange
             bool messageReceived = false;
 
+            // Fails due to circular dependency in ReponseGirafUserDTO
+            var networkServiceMock = _fixture.Freeze<Mock<INetworkingService>>();
+            networkServiceMock.Setup(n => n.SendLoginRequest(It.IsAny<string>(), It.IsAny<string>()))
+                              .ReturnsAsync(_fixture.Create<ResponseGirafUserDTO>());
+
             var loginViewModel = _fixture.Build<LoginViewModel>()
                                          .With(l => l.Username, "Graatand")
                                          .With(l => l.Password, "password")
                                          .Create();
 
-            MessagingCenter.Subscribe<LoginViewModel>(this, "LoginSuccess", (sender) =>
+            MessagingCenter.Subscribe<LoginViewModel>(this, "LoginSuccess", _ =>
             {
                 messageReceived = true;
             });
@@ -43,17 +51,22 @@ namespace WeekPlanner.Tests
         }
 
         [Fact]
-        public void LoginCommand_Condition_Fail()
+        public void LoginCommand_ServerDown_SendsLoginFailMsg()
         {
             // Arrange
             bool messageReceived = false;
+
+            // Freeze makes it so AutoFixture uses this particular object if it is needed
+            var networkServiceMock = _fixture.Freeze<Mock<INetworkingService>>();
+            networkServiceMock.Setup(n => n.SendLoginRequest(It.IsAny<string>(), It.IsAny<string>()))
+                              .Throws<ApiException>();
 
             var loginViewModel = _fixture.Build<LoginViewModel>()
                                          .With(l => l.Username, "Graatand")
                                          .With(l => l.Password, "password")
                                          .Create();
 
-            MessagingCenter.Subscribe<LoginViewModel>(this, "LoginFail", (sender) =>
+            MessagingCenter.Subscribe<LoginViewModel>(this, "LoginFailed", _ =>
             {
                 messageReceived = true;
             });
