@@ -29,8 +29,6 @@ namespace WeekPlanner.Views
                 await DisplayAlert("Fejl", errorMessage, "Luk");
             });
 
-
-
         }
 
         private void MenuItem_OnClicked(object sender, EventArgs e)
@@ -48,7 +46,7 @@ namespace WeekPlanner.Views
             LoginButton.Command.Execute(null);
         }
 
-        void Clicked_HappyPath(object sender, EventArgs e)
+        private void Autofill_Clicked(object sender, EventArgs e)
         {
             UsernameEntry.Text = "Graatand";
             PasswordEntry.Text = "password";
