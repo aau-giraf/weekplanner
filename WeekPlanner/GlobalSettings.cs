@@ -28,7 +28,7 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = true;
+        public bool UseMocks = false;
 
         public string LoginEndpoint { get; set; }
 

@@ -1,6 +1,7 @@
 using System;
 using WeekPlanner.Views;
 using Xamarin.Forms;
+using WeekPlanner.Services.Networking;
 
 namespace WeekPlanner
 {
@@ -11,9 +12,9 @@ namespace WeekPlanner
             InitializeComponent();
 
             if (GlobalSettings.Instance.UseMocks)
-                DependencyService.Register<MockDataStore>();
+                DependencyService.Register<MockNetworkingService>();
             else
-                DependencyService.Register<CloudDataStore>();
+                DependencyService.Register<NetworkingService>();
 
             if (Device.RuntimePlatform == Device.iOS)
                 MainPage = new NavigationPage(new TestingPage());

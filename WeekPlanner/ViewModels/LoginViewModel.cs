@@ -17,7 +17,7 @@ namespace WeekPlanner
 
         private async Task SendLoginRequest()
         {
-            var result = await DataStore.SendLoginRequest(Username, Password);
+            var result = await NetworkingService.SendLoginRequest(Username, Password);
             if (result.Success == null)
                 result.Success = false;
 
