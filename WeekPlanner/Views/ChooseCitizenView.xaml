@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WeekPlanner.Views.ChooseCitizenPage"
+             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner.iOS"
+             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner.iOS"
+             x:Class="WeekPlanner.Views.ChooseCitizenView"
+             base:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Vælg den borger som du ønsker at administrere ugeplaner for" />
             <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
-            <ListView x:Name="CitizensListView" ItemsSource="{Binding Citizens}" VerticalOptions="FillAndExpand" HasUnevenRows="true" ItemSelected="OnItemSelected">
+            <ListView x:Name="CitizensListView" ItemsSource="{Binding Citizens}" VerticalOptions="FillAndExpand" HasUnevenRows="true">
+                <ListView.Behaviors>
+                    <behaviors:EventToCommandBehavior           
+                        EventName="ItemTapped"
+                        Command="{Binding ChooseCitizenCommand}"
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
+                </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

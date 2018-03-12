@@ -8,21 +8,16 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class LoginPage : ContentPage
+    public partial class LoginView : ContentPage
     {
-        public LoginPage(LoginViewModel loginViewModel)
+        public LoginView(LoginViewModel loginViewModel)
         {
             InitializeComponent();
 
             BindingContext = loginViewModel;
 
             MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, "LoginSuccess", async (sender, user) => {
-                var vm = new ChooseCitizenViewModel(user.GuardianOf)
-                {
-                    Username = user.Username
-                };
                 // TODO save all the user information
-                await Navigation.PushAsync(new ChooseCitizenPage(vm));
             });
 
             MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", async (sender, errorMessage) => {

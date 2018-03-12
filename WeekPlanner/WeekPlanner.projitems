@@ -9,25 +9,30 @@
     <Import_RootNamespace>WeekPlanner</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\Base\BindableBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\EventToCommandBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ItemTappedEventArgsConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Base\ViewModelLocator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TestingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\WeekPlannerViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml.cs">
-      <DependentUpon>LoginPage.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\TestingPage.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Views\TestingView.xaml.cs">
       <DependentUpon>TestingPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\ChooseCitizenPage.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ChooseCitizenView.xaml.cs">
       <DependentUpon>ChooseCitizenPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ChooseCitizenViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GlobalSettings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\WeekPlannerPage.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Views\WeekPlannerView.xaml.cs">
       <DependentUpon>WeekPlannerPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -38,35 +43,46 @@
     <Compile Include="$(MSBuildThisFileDirectory)ApplicationObjects\AppContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ErrorCodeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Navigation\INavigationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Navigation\NavigationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Base\ExtendedBindableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\CustomNavigationView.xaml.cs">
+      <DependentUpon>CustomNavigationView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ChooseCitizenPage.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ChooseCitizenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TestingPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\WeekPlannerPage.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\CustomNavigationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Models" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TestingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\WeekPlannerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Services\Networking\" />
     <Folder Include="$(MSBuildThisFileDirectory)ApplicationObjects\" />
     <Folder Include="$(MSBuildThisFileDirectory)ViewModels\Base\" />
     <Folder Include="$(MSBuildThisFileDirectory)Helpers\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Services\Navigation\" />
   </ItemGroup>
 </Project>

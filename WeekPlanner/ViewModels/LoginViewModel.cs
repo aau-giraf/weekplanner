@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace WeekPlanner.ViewModels
 {
-    public class LoginViewModel : BaseViewModel
+    public class LoginViewModel : ViewModelBase
     {
         public string Username { get; set; }
         public string Password { get; set; }
@@ -21,7 +21,6 @@ namespace WeekPlanner.ViewModels
 
         public LoginViewModel(INetworkingService networkingService)
         {
-            Title = "Log ind";
             _networkingService = networkingService;
         }
 
@@ -46,6 +45,8 @@ namespace WeekPlanner.ViewModels
             {
                 MessagingCenter.Send(this, "LoginSuccess", result.Data);
                 result.Data.GuardianOf.OrderBy(x => x.Username);
+                var dto = result.Data.GuardianOf;
+                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
             }
             else
             {

@@ -11,14 +11,11 @@ namespace WeekPlanner.Views
 {
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class WeekPlannerPage : ContentPage
+	public partial class WeekPlannerView : ContentPage
 	{
-        WeekPlannerViewModel viewModel;
-
-        public WeekPlannerPage(WeekPlannerViewModel viewModel)
+		public WeekPlannerView()
 		{
 			InitializeComponent();
-            BindingContext = this.viewModel = viewModel;
 		}
 
         private void Settings_OnClicked(object sender, EventArgs e)

@@ -8,27 +8,22 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class ChooseCitizenPage : ContentPage
+    public partial class ChooseCitizenView : ContentPage
     {
-        ChooseCitizenViewModel viewModel;
-
-        public ChooseCitizenPage(ChooseCitizenViewModel viewModel)
+        public ChooseCitizenView()
         {
             InitializeComponent();
-            BindingContext = this.viewModel = viewModel;
         }
 
-        private async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        /*private async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
             var citizen = args.SelectedItem as GirafUserDTO;
             if (citizen == null)
                 return;
-
-            await Navigation.PushAsync(new WeekPlannerPage(new WeekPlannerViewModel(citizen)));
-
+            
             // Manually deselect item
             CitizensListView.SelectedItem = null;
-        }
+        }*/
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {

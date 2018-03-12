@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Networking;
 using WeekPlanner.Views;
 using WeekPlanner.ViewModels;
@@ -17,17 +18,22 @@ namespace WeekPlanner.ApplicationObjects
 
         protected virtual void RegisterDependencies(ContainerBuilder cb)
         {
-            // Constant Registrations
-            // ViewModel
+            // *** Constant Registrations ***
+            // ViewModels
             cb.RegisterType<ChooseCitizenViewModel>();
             cb.RegisterType<LoginViewModel>();
+            cb.RegisterType<TestingViewModel>();
+            cb.RegisterType<WeekPlannerViewModel>();
 
             // Views
-            cb.RegisterType<LoginPage>();
-            cb.RegisterType<TestingPage>();
-            cb.RegisterType<ChooseCitizenPage>();
+            cb.RegisterType<TestingView>();
+            cb.RegisterType<LoginView>();
+            cb.RegisterType<ChooseCitizenView>();
 
-           // Conditional Registrations
+            // Services
+            cb.RegisterType<NavigationService>().As<INavigationService>();
+
+            // *** Conditional Registrations ***
             if(GlobalSettings.Instance.UseMocks)
             {
                 cb.RegisterType<MockNetworkingService>().As<INetworkingService>();
