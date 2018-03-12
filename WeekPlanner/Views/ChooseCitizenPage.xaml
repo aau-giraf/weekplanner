@@ -5,10 +5,9 @@
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.ChooseCitizenPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
-             Title="{Binding Title}">
+             Title="Vælg Borger">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Vælg den borger som du ønsker at administrere ugeplaner for" />
+        <StackLayout Margin="12">
             <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
             <ListView x:Name="CitizensListView" ItemsSource="{Binding Citizens}" VerticalOptions="FillAndExpand" HasUnevenRows="true">
                 <ListView.Behaviors>

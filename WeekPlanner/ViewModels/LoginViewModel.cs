@@ -15,14 +15,13 @@ namespace WeekPlanner.ViewModels
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        
+
         public ICommand LoginCommand => new Command(async () => await SendLoginRequest());
 
         private readonly INetworkingService _networkingService;
 
         public LoginViewModel(INetworkingService networkingService)
         {
-            Title = "Log ind";
             _networkingService = networkingService;
         }
 

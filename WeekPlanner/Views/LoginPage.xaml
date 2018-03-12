@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:WeekPlanner;"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.LoginPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
-             Title="{Binding Title}">
+             Title="Log ind">
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout VerticalOptions="Center">
+        <StackLayout VerticalOptions="Center"
+                     Margin="12">
 
             <Label Text="Brugernavn" />
 
@@ -20,11 +20,15 @@
 
             <Label Text="Adgangskode"></Label>
 
+            <Label Text="{Binding PasswordError}" />
+
             <Entry x:Name="PasswordEntry"
                    Text="{Binding Password}"
                    Placeholder="Adgangskode"
                    IsPassword="True"
                    Completed="Password_Completed"/>
+
+            <Label Text="{Binding PasswordError}" />
 
             <Button x:Name="LoginButton" Command="{Binding LoginCommand}" Text="Log ind" />
             <Button x:Name="Autofill" Text="Autofill" Clicked="Autofill_Clicked"/>

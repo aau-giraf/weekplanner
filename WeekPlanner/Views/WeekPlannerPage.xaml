@@ -4,16 +4,17 @@
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.WeekPlannerPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
-             Title="{Binding Title}">
+             Title="Ugeplan">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Clicked="Edit_OnClicked" />
         <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" Clicked="ChangeCitizen_OnClicked" />
         <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="WeekPlannerView"/>
-            <Label Text="{Binding Citizen.Username}"></Label>
+        <StackLayout Margin="12">
+            <Label Text="WeekPlannerView" />
+            <Image Source="{Binding PictogramSource}"></Image>
+            <Label Text="{Binding Citizen.Username}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
