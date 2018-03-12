@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner.iOS"
-             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner.iOS"
+             xmlns:behaviors1="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.ChooseCitizenView"
-             base:ViewModelLocator.AutoWireViewModel="true"
+             base1:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout>
@@ -12,7 +12,7 @@
             <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
             <ListView x:Name="CitizensListView" ItemsSource="{Binding Citizens}" VerticalOptions="FillAndExpand" HasUnevenRows="true">
                 <ListView.Behaviors>
-                    <behaviors:EventToCommandBehavior           
+                    <behaviors1:EventToCommandBehavior           
                         EventName="ItemTapped"
                         Command="{Binding ChooseCitizenCommand}"
                         EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />

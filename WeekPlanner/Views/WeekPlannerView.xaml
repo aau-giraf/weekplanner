@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner.iOS"
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.WeekPlannerView"
-             base:ViewModelLocator.AutoWireViewModel="true"
+             base1:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Clicked="Edit_OnClicked" />
