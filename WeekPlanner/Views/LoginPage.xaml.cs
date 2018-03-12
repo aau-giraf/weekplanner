@@ -31,7 +31,7 @@ namespace WeekPlanner.Views
 
         }
 
-        private void MenuItem_OnClicked(object sender, EventArgs e)
+        private void Settings_OnClicked(object sender, EventArgs e)
         {
             DisplayAlert("Indstillinger", "Du trykkede på indstillinger!", "Luk");
         }

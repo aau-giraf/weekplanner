@@ -33,7 +33,6 @@ namespace WeekPlanner.Views
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {
             var vm = BindingContext as ChooseCitizenViewModel;
-            CitizensListView.BeginRefresh();
 
             if (string.IsNullOrWhiteSpace(e.NewTextValue))
 
@@ -41,7 +40,6 @@ namespace WeekPlanner.Views
             else
                 CitizensListView.ItemsSource = vm.Citizens.Where(x => x.Username.ToLower().StartsWith(e.NewTextValue.ToLower()));
 
-            CitizensListView.EndRefresh();
         }
     }
 }

@@ -24,6 +24,7 @@ We are using the Gitflow brancing pattern so all development must be done in eit
 - [Xamarin Forms Documentation](https://developer.xamarin.com/guides/xamarin-forms/)
 - [Autofac Documentation](http://autofac.readthedocs.io/en/latest/getting-started/index.html)
 - [AutoFixture Documentation](https://github.com/AutoFixture/AutoFixture/wiki/Cheat-Sheet)
+- Good sample application: [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers/)
 
 ## License
 

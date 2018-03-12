@@ -4,7 +4,7 @@
              x:Class="WeekPlanner.Views.LoginPage"
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Order="Secondary" Text="Indstillinger" Clicked="MenuItem_OnClicked" />
+        <ToolbarItem Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center">

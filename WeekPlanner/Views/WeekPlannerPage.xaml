@@ -4,6 +4,11 @@
              x:Class="WeekPlanner.Views.WeekPlannerPage"
              Title="{Binding Title}">
     <ContentPage.Content>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Clicked="Edit_OnClicked" />
+        <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" Clicked="ChangeCitizen_OnClicked" />
+        <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
+    </ContentPage.ToolbarItems>
         <StackLayout>
             <Label Text="WeekPlannerPage"/>
             <Label Text="{Binding Citizen.Username}"></Label>

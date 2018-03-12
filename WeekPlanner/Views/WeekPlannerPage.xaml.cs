@@ -20,5 +20,18 @@ namespace WeekPlanner.Views
 			InitializeComponent();
             BindingContext = this.viewModel = viewModel;
 		}
+
+        private void Settings_OnClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Indstillinger", "Du trykkede på indstillinger!", "Luk");
+        }
+
+        private void Edit_OnClicked(object sender, EventArgs e)
+        {
+        }
+
+        private void ChangeCitizen_OnClicked(object sender, EventArgs e)
+        {
+        }
 	}
 }
