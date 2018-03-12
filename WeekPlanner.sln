@@ -2,22 +2,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WeekPlanner", "WeekPlanner\WeekPlanner.shproj", "{60C3A2C5-8B12-4A41-8F16-41E086FD2C7A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.iOS", "iOS\WeekPlanner.iOS.csproj", "{BCCF6B87-D71B-4229-B149-101788089824}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.Droid", "Droid\WeekPlanner.Droid.csproj", "{11497380-0CCF-43E6-B8AB-29A2691761ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swagger.IO", "Swagger.IO\Swagger.IO.csproj", "{3F5B49BB-7EE3-4CD8-B64F-CF0A25C71A6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swagger.IO", "Swagger.IO\Swagger.IO.csproj", "{3F5B49BB-7EE3-4CD8-B64F-CF0A25C71A6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.Tests", "WeekPlanner.Tests\WeekPlanner.Tests.csproj", "{937B5DC1-B63A-4B89-91EF-BC1450555AA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeekPlanner.Tests", "WeekPlanner.Tests\WeekPlanner.Tests.csproj", "{937B5DC1-B63A-4B89-91EF-BC1450555AA9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeekPlanner", "WeekPlanner\WeekPlanner.csproj", "{303B436C-5647-49F8-AB19-7F19A13F304A}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WeekPlanner\WeekPlanner.projitems*{11497380-0ccf-43e6-b8ab-29a2691761ed}*SharedItemsImports = 4
-		WeekPlanner\WeekPlanner.projitems*{60c3a2c5-8b12-4a41-8f16-41e086fd2c7a}*SharedItemsImports = 13
-		WeekPlanner\WeekPlanner.projitems*{bccf6b87-d71b-4229-b149-101788089824}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|iPhone = Debug|iPhone
@@ -76,6 +71,18 @@ Global
 		{937B5DC1-B63A-4B89-91EF-BC1450555AA9}.Release|iPhone.Build.0 = Release|Any CPU
 		{937B5DC1-B63A-4B89-91EF-BC1450555AA9}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{937B5DC1-B63A-4B89-91EF-BC1450555AA9}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Release|iPhone.Build.0 = Release|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{303B436C-5647-49F8-AB19-7F19A13F304A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

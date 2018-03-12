@@ -146,9 +146,9 @@
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj">
-      <Project>{3f5b49bb-7ee3-4cd8-b64f-cf0a25c71a6a}</Project>
-      <Name>Swagger.IO</Name>
+    <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj">
+      <Project>{303b436c-5647-49f8-ab19-7f19a13f304a}</Project>
+      <Name>WeekPlanner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\WeekPlanner\WeekPlanner.projitems" Label="Shared" Condition="Exists('..\WeekPlanner\WeekPlanner.projitems')" />

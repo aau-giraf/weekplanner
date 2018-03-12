@@ -141,9 +141,9 @@
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj">
-      <Project>{3F5B49BB-7EE3-4CD8-B64F-CF0A25C71A6A}</Project>
-      <Name>Swagger.IO</Name>
+    <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj">
+      <Project>{303b436c-5647-49f8-ab19-7f19a13f304a}</Project>
+      <Name>WeekPlanner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\WeekPlanner\WeekPlanner.projitems" Label="Shared" Condition="Exists('..\WeekPlanner\WeekPlanner.projitems')" />
