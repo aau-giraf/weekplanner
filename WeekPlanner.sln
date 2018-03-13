@@ -6,11 +6,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.iOS", "iOS\Week
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.Droid", "Droid\WeekPlanner.Droid.csproj", "{11497380-0CCF-43E6-B8AB-29A2691761ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swagger.IO", "Swagger.IO\Swagger.IO.csproj", "{3F5B49BB-7EE3-4CD8-B64F-CF0A25C71A6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swagger.IO", "Swagger.IO\Swagger.IO.csproj", "{3F5B49BB-7EE3-4CD8-B64F-CF0A25C71A6A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeekPlanner.Tests", "WeekPlanner.Tests\WeekPlanner.Tests.csproj", "{937B5DC1-B63A-4B89-91EF-BC1450555AA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.Tests", "WeekPlanner.Tests\WeekPlanner.Tests.csproj", "{937B5DC1-B63A-4B89-91EF-BC1450555AA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeekPlanner", "WeekPlanner\WeekPlanner.csproj", "{303B436C-5647-49F8-AB19-7F19A13F304A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner", "WeekPlanner\WeekPlanner.csproj", "{303B436C-5647-49F8-AB19-7F19A13F304A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

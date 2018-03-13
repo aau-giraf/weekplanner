@@ -2,12 +2,11 @@ using System.Threading.Tasks;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Xamarin.Forms;
-using WeekPlanner.Services.Networking;
 using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Helpers;
 using System.Windows.Input;
 using System.Linq;
-
+using IO.Swagger.Api;
 
 namespace WeekPlanner.ViewModels
 {
@@ -18,11 +17,11 @@ namespace WeekPlanner.ViewModels
 
         public ICommand LoginCommand => new Command(async () => await SendLoginRequest());
 
-        private readonly INetworkingService _networkingService;
+        private readonly IAccountApi _service;
 
-        public LoginViewModel(INetworkingService networkingService)
+        public LoginViewModel(IAccountApi service)
         {
-            _networkingService = networkingService;
+            _service = service;
         }
 
         private async Task SendLoginRequest()
@@ -30,7 +29,8 @@ namespace WeekPlanner.ViewModels
             ResponseGirafUserDTO result;
             try
             {
-                result = await _networkingService.SendLoginRequest(Username, Password);
+                var loginDTO = new LoginDTO(Username, Password);
+                result = await _service.V1AccountLoginPostAsync(loginDTO);
             }
             catch (ApiException)
             {

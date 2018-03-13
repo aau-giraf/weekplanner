@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using WeekPlanner.Services.Navigation;
-using WeekPlanner.Services.Networking;
 using WeekPlanner.Views;
 using WeekPlanner.ViewModels;
+using IO.Swagger.Api;
+using WeekPlanner.Services.Mocks;
+using IO.Swagger.Client;
 
 namespace WeekPlanner.ApplicationObjects
 {
@@ -28,13 +30,23 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<NavigationService>().As<INavigationService>();
 
             // *** Conditional Registrations ***
-            if(GlobalSettings.Instance.UseMocks)
+            if (GlobalSettings.Instance.UseMocks)
             {
-                cb.RegisterType<MockNetworkingService>().As<INetworkingService>();
+                cb.RegisterType<AccountMockService>().As<IAccountApi>();
             }
-            else 
+            else
             {
-                cb.RegisterType<NetworkingService>().As<INetworkingService>();
+                cb.Register(x =>
+                {
+                    var baseUrl = GlobalSettings.Instance.BaseEndpoint;
+                    var configuration = new Configuration
+                    {
+                        ApiClient = new ApiClient(baseUrl)
+                    };
+                    return new AccountApi(configuration);
+                }).As<IAccountApi>();
+
+                cb.RegisterType<AccountApi>().As<IAccountApi>();
             }
         }
     }

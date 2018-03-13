@@ -10,4 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Mocks\" />
+  </ItemGroup>
 </Project>

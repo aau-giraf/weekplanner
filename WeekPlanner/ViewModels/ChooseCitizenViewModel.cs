@@ -3,7 +3,8 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Model;
-using WeekPlanner.Services.Networking;
+using WeekPlanner.ApplicationObjects;
+using WeekPlanner.Services.Mocks;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
@@ -29,8 +30,8 @@ namespace WeekPlanner.ViewModels
 			{
 				Citizens = new ObservableCollection<GirafUserDTO>(dtos);
 			} else if (GlobalSettings.Instance.UseMocks) {
-                var service = new MockNetworkingService();
-                var result = await service.SendLoginRequest("Graatand", "password");
+                var service = new AccountMockService();
+                var result = await service.V1AccountLoginPostAsync(new LoginDTO("Graatand", "password"));
 			    Citizens = new ObservableCollection<GirafUserDTO>(result.Data.GuardianOf);
 			}
 		}
