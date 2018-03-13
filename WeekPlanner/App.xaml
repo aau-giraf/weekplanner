@@ -5,6 +5,7 @@
              x:Class="WeekPlanner.App">
     <Application.Resources>
         <ResourceDictionary>
+            <!--COLORS-->
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="PrimaryDark">#1976D2</Color>
             <Color x:Key="Accent">#96d1ff</Color>
@@ -13,7 +14,14 @@
             <Color x:Key="MediumGrayTextColor">#4d4d4d</Color>
             <Color x:Key="LightTextColor">#999999</Color>
             <Color x:Key="RegularButton">#FFCD59</Color>
-
+            <Color x:Key="ErrorColor">#ff5252</Color>
+            
+            <Style x:Key="ValidationErrorLabelStyle"
+                   TargetType="{x:Type Label}">
+                <Setter Property="TextColor"
+                        Value="{StaticResource ErrorColor}" />
+            </Style>
+            
             <Style TargetType="views:CustomNavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="BarTextColor" Value="White" />
@@ -23,8 +31,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="TextColor" Value="White" />
             </Style>
-            
-            
+
             <!-- CONVERTERS -->
             <converters1:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
            

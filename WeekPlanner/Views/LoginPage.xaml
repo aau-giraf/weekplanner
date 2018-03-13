@@ -1,37 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+             xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.LoginPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
              Title="Log ind">
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
     </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:FirstValidationErrorConverter x:Key="FirstValidationErrorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center"
                      Margin="12">
-
+            <!--USERNAME-->
             <Label Text="Brugernavn" />
-
             <Entry x:Name="UsernameEntry"
-                   Text="{Binding Username}"
+                   Text="{Binding UserName.Value}"
                    Placeholder="Brugernavn"
-                   Completed="Username_Completed"/>
-
+                   Completed="Username_Completed">
+                <Entry.Behaviors>
+                        <behaviors:EventToCommandBehavior
+                            EventName="TextChanged"
+                            Command="{Binding ValidateUserNameCommand}" />
+                    </Entry.Behaviors>
+            </Entry>
+            <Label 
+                Text="{Binding UserName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                Style="{StaticResource ValidationErrorLabelStyle}" />
+            <!--PASSWORD-->
             <Label Text="Adgangskode"></Label>
-
-            <Label Text="{Binding PasswordError}" />
-
             <Entry x:Name="PasswordEntry"
-                   Text="{Binding Password}"
+                   Text="{Binding Password.Value}"
                    Placeholder="Adgangskode"
                    IsPassword="True"
-                   Completed="Password_Completed"/>
-
-            <Label Text="{Binding PasswordError}" />
-
+                   Completed="Password_Completed">
+                <Entry.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="TextChanged"
+                        Command="{Binding ValidatePasswordCommand}" />
+                </Entry.Behaviors>
+            </Entry>
+            <Label 
+                Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                Style="{StaticResource ValidationErrorLabelStyle}" />
             <Button x:Name="LoginButton" Command="{Binding LoginCommand}" Text="Log ind" />
-            <Button x:Name="Autofill" Text="Autofill" Clicked="Autofill_Clicked"/>
+            <Button Text="Autofill" Clicked="Autofill_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
