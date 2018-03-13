@@ -15,7 +15,7 @@ namespace WeekPlanner.Services.Navigation
         {
             get
             {
-                var mainPage = Application.Current.MainPage as CustomNavigationView;
+                var mainPage = Application.Current.MainPage as CustomNavigationPage;
                 var viewModel = mainPage.Navigation.NavigationStack[mainPage.Navigation.NavigationStack.Count - 2].BindingContext;
                 return viewModel as ViewModelBase;
             }
@@ -42,7 +42,7 @@ namespace WeekPlanner.Services.Navigation
 
         public Task RemoveLastFromBackStackAsync()
         {
-            var mainPage = Application.Current.MainPage as CustomNavigationView;
+            var mainPage = Application.Current.MainPage as CustomNavigationPage;
 
             if (mainPage != null)
             {
@@ -55,7 +55,7 @@ namespace WeekPlanner.Services.Navigation
 
         public Task RemoveBackStackAsync()
         {
-            var mainPage = Application.Current.MainPage as CustomNavigationView;
+            var mainPage = Application.Current.MainPage as CustomNavigationPage;
 
             if (mainPage != null)
             {
@@ -73,20 +73,20 @@ namespace WeekPlanner.Services.Navigation
         {
             Page page = CreatePage(viewModelType, parameter);
 
-            if (page is LoginView)
+            if (page is LoginPage)
             {
-                Application.Current.MainPage = new CustomNavigationView(page);
+                Application.Current.MainPage = new CustomNavigationPage(page);
             }
             else
             {
-                var navigationPage = Application.Current.MainPage as CustomNavigationView;
+                var navigationPage = Application.Current.MainPage as CustomNavigationPage;
                 if (navigationPage != null)
                 {
                     await navigationPage.PushAsync(page);
                 }
                 else
                 {
-                    Application.Current.MainPage = new CustomNavigationView(page);
+                    Application.Current.MainPage = new CustomNavigationPage(page);
                 }
             }
 
@@ -95,7 +95,7 @@ namespace WeekPlanner.Services.Navigation
 
         private Type GetPageTypeForViewModel(Type viewModelType)
         {
-            var viewName = viewModelType.FullName.Replace("Model", string.Empty);
+            var viewName = viewModelType.FullName.Replace("ViewModels", "Views").Replace("ViewModel", "Page");
             var viewModelAssemblyName = viewModelType.GetTypeInfo().Assembly.FullName;
             var viewAssemblyName = string.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelAssemblyName);
             var viewType = Type.GetType(viewAssemblyName);

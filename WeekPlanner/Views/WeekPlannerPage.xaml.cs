@@ -11,9 +11,9 @@ namespace WeekPlanner.Views
 {
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class WeekPlannerView : ContentPage
+	public partial class WeekPlannerPage : ContentPage
 	{
-		public WeekPlannerView()
+		public WeekPlannerPage()
 		{
 			InitializeComponent();
 		}

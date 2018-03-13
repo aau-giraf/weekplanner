@@ -8,9 +8,9 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class LoginView : ContentPage
+    public partial class LoginPage : ContentPage
     {
-        public LoginView(LoginViewModel loginViewModel)
+        public LoginPage(LoginViewModel loginViewModel)
         {
             InitializeComponent();
 

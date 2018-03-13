@@ -22,7 +22,7 @@ namespace WeekPlanner
 
             using (var scope = AppContainer.Container.BeginLifetimeScope())
             {
-                MainPage = new CustomNavigationView(scope.Resolve<TestingView>());
+                MainPage = new CustomNavigationPage(scope.Resolve<TestingPage>());
                 var navigationService = scope.Resolve<INavigationService>();
                 navigationService.InitializeAsync();
             }

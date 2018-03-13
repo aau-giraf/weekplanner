@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-             x:Class="WeekPlanner.Views.WeekPlannerView"
+             x:Class="WeekPlanner.Views.WeekPlannerPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>

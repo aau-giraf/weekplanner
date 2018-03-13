@@ -12,10 +12,10 @@ using Autofac;
 namespace WeekPlanner.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class TestingView : ContentPage
+	public partial class TestingPage : ContentPage
 	{
-        private readonly LoginView _loginPage;
-        public TestingView (LoginView loginPage)
+        private readonly LoginPage _loginPage;
+        public TestingPage (LoginPage loginPage)
 		{
             InitializeComponent ();
            

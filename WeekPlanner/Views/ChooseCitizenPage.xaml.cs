@@ -8,9 +8,9 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class ChooseCitizenView : ContentPage
+    public partial class ChooseCitizenPage : ContentPage
     {
-        public ChooseCitizenView()
+        public ChooseCitizenPage()
         {
             InitializeComponent();
         }

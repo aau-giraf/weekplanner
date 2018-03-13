@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors1="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-             x:Class="WeekPlanner.Views.ChooseCitizenView"
+             x:Class="WeekPlanner.Views.ChooseCitizenPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Title}">
     <ContentPage.Content>

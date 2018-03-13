@@ -5,14 +5,14 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class CustomNavigationView : NavigationPage
+    public partial class CustomNavigationPage : NavigationPage
     {
-        public CustomNavigationView() : base()
+        public CustomNavigationPage() : base()
         {
             InitializeComponent();
         }
 
-        public CustomNavigationView(Page root) : base(root)
+        public CustomNavigationPage(Page root) : base(root)
         {
             InitializeComponent();
         }

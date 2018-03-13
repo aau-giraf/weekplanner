@@ -33,7 +33,8 @@ namespace WeekPlanner.ViewModels.Base
             var viewType = view.GetType();
             var viewName = viewType.FullName.Replace(".Views.", ".ViewModels.");
             var viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-            var viewModelName = string.Format(CultureInfo.InvariantCulture, "{0}Model, {1}", viewName, viewAssemblyName);
+            var viewBaseName = viewName.Replace("Page", string.Empty);
+            var viewModelName = string.Format(CultureInfo.InvariantCulture, "{0}ViewModel, {1}", viewBaseName, viewAssemblyName);
 
             var viewModelType = Type.GetType(viewModelName);
             if (viewModelType == null)
