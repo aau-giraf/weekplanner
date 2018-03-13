@@ -1,6 +1,7 @@
 using System;
 using IO.Swagger.Model;
 using WeekPlanner.ViewModels;
+using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.Views
@@ -11,11 +12,11 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
 
-            MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, "LoginSuccess", async (sender, user) => {
+            MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, MessageKeys.LoginSucceeded, async (sender, user) => {
                 // TODO save all the user information
             });
 
-            MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", async (sender, errorMessage) => {
+            MessagingCenter.Subscribe<LoginViewModel, string>(this, MessageKeys.LoginFailed, async (sender, errorMessage) => {
                 await DisplayAlert("Fejl", errorMessage, "Luk");
             });
         }

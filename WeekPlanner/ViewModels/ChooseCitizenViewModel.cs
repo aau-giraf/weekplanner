@@ -22,6 +22,7 @@ namespace WeekPlanner.ViewModels
 	    
         public ChooseCitizenViewModel()
         {
+	        Title = "Vælg Borger";
 	        Citizens = new ObservableCollection<GirafUserDTO>();
         }
 

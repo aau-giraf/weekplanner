@@ -1,13 +1,15 @@
-﻿using IO.Swagger.Model;
-using Xamarin.Forms;
-using Xunit;
+﻿using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using Moq;
 using IO.Swagger.Client;
-using System.Threading.Tasks;
+using IO.Swagger.Model;
+using Moq;
+using WeekPlanner.Services.Networking;
+using WeekPlanner.ViewModels;
+using Xamarin.Forms;
+using Xunit;
 
-namespace WeekPlanner.Tests
+namespace WeekPlanner.Tests.ViewModels
 {
     public class ViewModelTests
     {

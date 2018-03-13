@@ -22,6 +22,7 @@ namespace WeekPlanner.ViewModels
 
         public LoginViewModel(INetworkingService networkingService)
         {
+            Title = "Log ind";
             _networkingService = networkingService;
         }
 
@@ -36,27 +37,25 @@ namespace WeekPlanner.ViewModels
             {
                 // TODO make a "ServerDownError"
                 var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
-                MessagingCenter.Send(this, "LoginFailed", friendlyErrorMessage);
+                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
                 return;
             }
-            if (result.Success == null)
-                result.Success = false;
 
-            if ((bool)result.Success)
+            if (result.Success == true)
             {
-                MessagingCenter.Send(this, "LoginSuccess", result.Data);
+                MessagingCenter.Send(this, MessageKeys.LoginSucceeded, result.Data);
                 result.Data.GuardianOf.OrderBy(x => x.Username);
                 var dto = result.Data.GuardianOf;
 
                 // Switch this to an actual token once implemented in backend
                 GlobalSettings.Instance.AuthToken = result.Data.Id;
-                
+
                 await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
             }
             else
             {
                 var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
-                MessagingCenter.Send(this, "LoginFailed", friendlyErrorMessage);
+                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
             }
 
         }

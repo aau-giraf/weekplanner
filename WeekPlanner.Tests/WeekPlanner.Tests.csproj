@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Droid\WeekPlanner.Droid.csproj" />
     <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj" />
+    <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UnitTests\" />

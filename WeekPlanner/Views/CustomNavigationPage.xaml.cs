@@ -4,7 +4,7 @@ namespace WeekPlanner.Views
 {
     public partial class CustomNavigationPage : NavigationPage
     {
-        public CustomNavigationPage() : base()
+        public CustomNavigationPage()
         {
             InitializeComponent();
         }

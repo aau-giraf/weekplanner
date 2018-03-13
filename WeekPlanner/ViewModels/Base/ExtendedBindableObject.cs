@@ -17,9 +17,8 @@ namespace WeekPlanner.ViewModels.Base
         {
             MemberExpression operand;
             LambdaExpression lambdaExpression = (LambdaExpression)expression;
-            if (lambdaExpression.Body as UnaryExpression != null)
+            if (lambdaExpression.Body is UnaryExpression body)
             {
-                UnaryExpression body = (UnaryExpression)lambdaExpression.Body;
                 operand = (MemberExpression)body.Operand;
             }
             else

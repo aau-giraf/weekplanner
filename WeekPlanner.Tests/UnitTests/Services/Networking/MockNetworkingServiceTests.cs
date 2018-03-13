@@ -1,6 +1,7 @@
+using WeekPlanner.Services.Networking;
 using Xunit;
 
-namespace WeekPlanner.Tests
+namespace WeekPlanner.Tests.UnitTests.Services.Networking
 {
     public class MockNetworkingServiceTests
     {

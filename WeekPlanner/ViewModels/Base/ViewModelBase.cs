@@ -9,14 +9,23 @@ namespace WeekPlanner.ViewModels.Base
     {
         protected readonly INavigationService NavigationService;
 
+        private string _title;
+
+        protected string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                RaisePropertyChanged(() => Title);
+            }
+        }
+
         private bool _isBusy;
 
         public bool IsBusy
         {
-            get
-            {
-                return _isBusy;
-            }
+            get => _isBusy;
 
             set
             {

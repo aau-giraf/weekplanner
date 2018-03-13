@@ -72,7 +72,7 @@ namespace WeekPlanner.Services.Navigation
         {
             Page page = CreatePage(viewModelType, parameter);
 
-            if (page is LoginPage)
+            if (page is TestingPage)
             {
                 Application.Current.MainPage = new CustomNavigationPage(page);
             }

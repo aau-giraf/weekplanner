@@ -1,8 +1,9 @@
-using Xunit;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using WeekPlanner.Services.Networking;
+using Xunit;
 
-namespace WeekPlanner.Tests.Services.Networking
+namespace WeekPlanner.Tests.IntegrationTests.Services.Networking
 {
     public class NetworkingServiceTests
     {

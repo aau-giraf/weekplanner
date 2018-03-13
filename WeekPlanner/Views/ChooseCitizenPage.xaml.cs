@@ -11,16 +11,6 @@ namespace WeekPlanner.Views
             InitializeComponent();
         }
 
-        /*private async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
-        {
-            var citizen = args.SelectedItem as GirafUserDTO;
-            if (citizen == null)
-                return;
-            
-            // Manually deselect item
-            CitizensListView.SelectedItem = null;
-        }*/
-
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {
             var vm = BindingContext as ChooseCitizenViewModel;

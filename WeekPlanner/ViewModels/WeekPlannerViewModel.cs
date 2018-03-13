@@ -17,6 +17,11 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        public WeekPlannerViewModel()
+        {
+            Title = "Ugeplan";
+        }
+
         public override async Task InitializeAsync(object navigationData)
         {
             if (navigationData is GirafUserDTO citizen)
