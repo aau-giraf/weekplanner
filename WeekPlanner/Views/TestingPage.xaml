@@ -10,6 +10,7 @@
             <Button Text="Log ind" Command="{Binding NavigateToLoginCommand}" />
             <Button Text="Vælg borger" Command="{Binding NavigateToChooseCitizenCommand}" />
             <Button Text="Ugeplan" Command="{Binding NavigateToWeekPlannerCommand}" />
+            <Button Text="Vælg skabelon" Command="{Binding NavigateToChooseTemplateCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
