@@ -15,6 +15,7 @@ namespace WeekPlanner.ViewModels
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        
         public ICommand LoginCommand => new Command(async () => await SendLoginRequest());
 
         private readonly INetworkingService _networkingService;
@@ -26,7 +27,7 @@ namespace WeekPlanner.ViewModels
 
         private async Task SendLoginRequest()
         {
-            ResponseGirafUserDTO result = new ResponseGirafUserDTO();
+            ResponseGirafUserDTO result;
             try
             {
                 result = await _networkingService.SendLoginRequest(Username, Password);
@@ -46,6 +47,10 @@ namespace WeekPlanner.ViewModels
                 MessagingCenter.Send(this, "LoginSuccess", result.Data);
                 result.Data.GuardianOf.OrderBy(x => x.Username);
                 var dto = result.Data.GuardianOf;
+
+                // Switch this to an actual token once implemented in backend
+                GlobalSettings.Instance.AuthToken = result.Data.Id;
+                
                 await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
             }
             else

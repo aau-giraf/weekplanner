@@ -1,9 +1,3 @@
-using IO.Swagger.Api;
-using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using WeekPlanner.Services.Networking;
 using Xunit;
 using AutoFixture;
 using AutoFixture.AutoMoq;

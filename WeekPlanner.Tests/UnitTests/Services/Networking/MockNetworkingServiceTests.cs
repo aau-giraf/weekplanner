@@ -1,7 +1,3 @@
-using IO.Swagger.Api;
-using IO.Swagger.Model;
-using System;
-using WeekPlanner.Services.Networking;
 using Xunit;
 
 namespace WeekPlanner.Tests

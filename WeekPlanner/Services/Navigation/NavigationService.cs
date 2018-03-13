@@ -23,11 +23,15 @@ namespace WeekPlanner.Services.Navigation
 
         public Task InitializeAsync()
         {
-            return NavigateToAsync<LoginViewModel>();
-            /*if (string.IsNullOrEmpty(_settingsService.AuthAccessToken))
-                return NavigateToAsync<LoginViewModel>();
+
+            if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
+            {
+                return NavigateToAsync<TestingViewModel>();
+            }
             else
-                return NavigateToAsync<MainViewModel>();*/
+            {
+                return NavigateToAsync<ChooseCitizenViewModel>();
+            }
         }
 
         public Task NavigateToAsync<TViewModel>() where TViewModel : ViewModelBase
@@ -44,20 +48,15 @@ namespace WeekPlanner.Services.Navigation
         {
             var mainPage = Application.Current.MainPage as CustomNavigationPage;
 
-            if (mainPage != null)
-            {
-                mainPage.Navigation.RemovePage(
-                    mainPage.Navigation.NavigationStack[mainPage.Navigation.NavigationStack.Count - 2]);
-            }
+            mainPage?.Navigation.RemovePage(
+                mainPage.Navigation.NavigationStack[mainPage.Navigation.NavigationStack.Count - 2]);
 
             return Task.FromResult(true);
         }
 
         public Task RemoveBackStackAsync()
         {
-            var mainPage = Application.Current.MainPage as CustomNavigationPage;
-
-            if (mainPage != null)
+            if (Application.Current.MainPage is CustomNavigationPage mainPage)
             {
                 for (int i = 0; i < mainPage.Navigation.NavigationStack.Count - 1; i++)
                 {
@@ -79,8 +78,7 @@ namespace WeekPlanner.Services.Navigation
             }
             else
             {
-                var navigationPage = Application.Current.MainPage as CustomNavigationPage;
-                if (navigationPage != null)
+                if (Application.Current.MainPage is CustomNavigationPage navigationPage)
                 {
                     await navigationPage.PushAsync(page);
                 }
@@ -90,7 +88,15 @@ namespace WeekPlanner.Services.Navigation
                 }
             }
 
-            await (page.BindingContext as ViewModelBase).InitializeAsync(parameter);
+            if (page.BindingContext is ViewModelBase vmBase)
+            {
+                await vmBase.InitializeAsync(parameter);
+            }
+            else
+            {
+                throw new Exception($"{page.BindingContext} does not inherit ViewModelBase");
+            }
+            
         }
 
         private Type GetPageTypeForViewModel(Type viewModelType)

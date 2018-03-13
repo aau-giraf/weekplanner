@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Reflection;
 using Autofac;
 using WeekPlanner.ApplicationObjects;
-using WeekPlanner.Services.Navigation;
 using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels.Base

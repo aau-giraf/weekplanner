@@ -1,4 +1,3 @@
-using System;
 using static IO.Swagger.Model.ResponseGirafUserDTO;
 
 namespace WeekPlanner.Helpers

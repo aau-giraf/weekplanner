@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using WeekPlanner.ApplicationObjects;
 using WeekPlanner.Services.Navigation;
@@ -26,7 +25,7 @@ namespace WeekPlanner.ViewModels.Base
             }
         }
 
-        public ViewModelBase()
+        protected ViewModelBase()
         {
             using (var scope = AppContainer.Container.BeginLifetimeScope())
             {

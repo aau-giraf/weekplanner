@@ -1,5 +1,4 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Networking;
 using WeekPlanner.Views;
@@ -24,11 +23,6 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<LoginViewModel>();
             cb.RegisterType<TestingViewModel>();
             cb.RegisterType<WeekPlannerViewModel>();
-
-            // Views
-            cb.RegisterType<TestingPage>();
-            cb.RegisterType<LoginPage>();
-            cb.RegisterType<ChooseCitizenPage>();
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();

@@ -1,4 +1,3 @@
-using System;
 namespace WeekPlanner
 {
     public class GlobalSettings
@@ -33,6 +32,8 @@ namespace WeekPlanner
         public string LoginEndpoint { get; set; }
 
         public string LogoutEndpoint { get; set; }
+        
+        public string AuthToken { get; set; }
 
         private void UpdateEndpoint(string baseEndpoint)
         {

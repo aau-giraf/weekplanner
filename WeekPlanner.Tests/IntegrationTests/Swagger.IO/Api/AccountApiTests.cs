@@ -1,6 +1,5 @@
 ﻿using IO.Swagger.Api;
 using IO.Swagger.Model;
-using IO.Swagger;
 using IO.Swagger.Client;
 using Xunit;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using IO.Swagger.Model;
+﻿using IO.Swagger.Model;
 using System.Threading.Tasks;
 
 namespace WeekPlanner.Services.Networking

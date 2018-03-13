@@ -1,7 +1,4 @@
 using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using WeekPlanner.ViewModels.Base;
 
@@ -20,13 +17,12 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public override Task InitializeAsync(object navigationData)
+        public override async Task InitializeAsync(object navigationData)
         {
             if (navigationData is GirafUserDTO citizen)
             {
                 Citizen = citizen;
             }
-            return Task.Delay(1);
         }
     }
 }

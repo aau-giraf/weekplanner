@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using IO.Swagger.Model;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Schema;
 using WeekPlanner.ViewModels;
 using Xamarin.Forms;
 
@@ -10,11 +7,9 @@ namespace WeekPlanner.Views
 {
     public partial class LoginPage : ContentPage
     {
-        public LoginPage(LoginViewModel loginViewModel)
+        public LoginPage()
         {
             InitializeComponent();
-
-            BindingContext = loginViewModel;
 
             MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, "LoginSuccess", async (sender, user) => {
                 // TODO save all the user information
@@ -23,7 +18,6 @@ namespace WeekPlanner.Views
             MessagingCenter.Subscribe<LoginViewModel, string>(this, "LoginFailed", async (sender, errorMessage) => {
                 await DisplayAlert("Fejl", errorMessage, "Luk");
             });
-
         }
 
         private void Settings_OnClicked(object sender, EventArgs e)

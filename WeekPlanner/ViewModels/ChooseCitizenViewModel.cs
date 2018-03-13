@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Model;
@@ -18,7 +16,6 @@ namespace WeekPlanner.ViewModels
             set { RaisePropertyChanged(() => Citizens); 
                 _citizens = value; }
         }
-        public string Username { get; set; }
 
 	    public ICommand ChooseCitizenCommand => new Command<GirafUserDTO>(async citizen =>
 		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(citizen));
@@ -28,13 +25,12 @@ namespace WeekPlanner.ViewModels
 	        Citizens = new ObservableCollection<GirafUserDTO>();
         }
 
-		public override Task InitializeAsync(object navigationData)
+		public override async Task InitializeAsync(object navigationData)
 		{
 			if (navigationData is IEnumerable<GirafUserDTO> dtos)
 			{
 				Citizens = new ObservableCollection<GirafUserDTO>(dtos);
 			}
-            return Task.Delay(1);
 		}
 	}
 }
