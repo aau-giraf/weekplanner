@@ -5,6 +5,7 @@ using WeekPlanner.ViewModels;
 using IO.Swagger.Api;
 using WeekPlanner.Services.Mocks;
 using IO.Swagger.Client;
+using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.ApplicationObjects
 {
@@ -36,15 +37,8 @@ namespace WeekPlanner.ApplicationObjects
             }
             else
             {
-                cb.Register(x =>
-                {
-                    var baseUrl = GlobalSettings.Instance.BaseEndpoint;
-                    var configuration = new Configuration
-                    {
-                        ApiClient = new ApiClient(baseUrl)
-                    };
-                    return new AccountApi(configuration);
-                }).As<IAccountApi>();
+                var accountApi = new AccountApi();
+                accountApi.Configuration.ApiClient = new ApiClient(GlobalSettings.DefaultEndpoint);
 
                 cb.RegisterType<AccountApi>().As<IAccountApi>();
             }

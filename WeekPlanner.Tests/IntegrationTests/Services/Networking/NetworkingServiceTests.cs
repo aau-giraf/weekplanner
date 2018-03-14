@@ -1,6 +1,5 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using WeekPlanner.Services.Networking;
 using Xunit;
 
 namespace WeekPlanner.Tests.IntegrationTests.Services.Networking
@@ -16,7 +15,7 @@ namespace WeekPlanner.Tests.IntegrationTests.Services.Networking
 
         // Use the naming convention MethodName_StateUnderTest_ExpectedBehavior
 
-        [Theory]
+        /*[Theory]
         [InlineData("Graatand", "password")]
         [InlineData("Kurt", "password")]
         public async void SendLoginRequest_ValidCredentials_UserData(string username, string password)
@@ -29,6 +28,6 @@ namespace WeekPlanner.Tests.IntegrationTests.Services.Networking
             
             // Assert
             Assert.True(result.Data.Username == username);
-        }
+        }*/
     }
 }

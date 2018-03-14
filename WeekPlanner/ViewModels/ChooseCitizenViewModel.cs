@@ -5,6 +5,7 @@ using System.Windows.Input;
 using IO.Swagger.Model;
 using WeekPlanner.ApplicationObjects;
 using WeekPlanner.Services.Mocks;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
@@ -13,6 +14,11 @@ namespace WeekPlanner.ViewModels
     public class ChooseCitizenViewModel : ViewModelBase
     {
         private ObservableCollection<GirafUserDTO> _citizens;
+
+        public ChooseCitizenViewModel(INavigationService navigationService) : base(navigationService)
+        {
+        }
+
         public ObservableCollection<GirafUserDTO> Citizens {
             get => _citizens;
             set {

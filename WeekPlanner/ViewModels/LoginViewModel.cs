@@ -5,6 +5,7 @@ using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using WeekPlanner.Helpers;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -13,14 +14,14 @@ namespace WeekPlanner.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        private readonly IAccountApi _service;
+        private readonly IAccountApi _accountApi;
         private bool _isValid;
         private ValidatableObject<string> _password;
         private ValidatableObject<string> _userName;
 
-        public LoginViewModel(IAccountApi service)
+        public LoginViewModel(IAccountApi accountApi, INavigationService navigationService) : base(navigationService)
         {
-            _service = service;
+            _accountApi = accountApi;
             _userName = new ValidatableObject<string>();
             _password = new ValidatableObject<string>();
             AddValidations();
@@ -68,7 +69,7 @@ namespace WeekPlanner.ViewModels
             try
             {
                 var loginDTO = new LoginDTO(UserName.Value, Password.Value);
-                result = await _service.V1AccountLoginPostAsync(loginDTO);
+                result = await _accountApi.V1AccountLoginPostAsync(loginDTO);
             }
             catch (ApiException)
             {
@@ -85,7 +86,7 @@ namespace WeekPlanner.ViewModels
                 var dto = result.Data.GuardianOf;
 
                 // Switch this to an actual token once implemented in backend
-                GlobalSettings.Instance.AuthToken = result.Data.Id;
+                //GlobalSettings.Instance.AuthToken = result.Data.Id;
 
                 await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
             }
