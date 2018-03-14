@@ -16,6 +16,9 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToWeekPlannerCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<WeekPlannerViewModel>());
 
+		public ICommand NavigateToUserModeSwitchCommand =>
+			new Command(async () => await NavigationService.NavigateToAsync<UserModeSwitchViewModel>());
 
-    }
+
+	}
 }

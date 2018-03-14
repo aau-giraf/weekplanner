@@ -13,4 +13,9 @@
   <ItemGroup>
     <Folder Include="Services\Mocks\" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\UserModeSwitchPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
