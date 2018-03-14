@@ -2,6 +2,10 @@
 
 This repository contains the rewritten Weekplanner built with Xamarin.
 
+## Prerequisites
+- .NET Core 2.0 or newer
+- Xamarin SDK
+
 ## Contributing
 
 We are using the Gitflow brancing pattern so all development must be done in either a feature branch or the `develop` branch.
@@ -13,13 +17,14 @@ We are using the Gitflow brancing pattern so all development must be done in eit
 ## Implementing a User Story
 
 - Create a new View (ContentPage)
-- Create a button in TestingPage.xaml and make it navigate to your new View
-- Create a ViewModel and make it inherit from BaseViewModel then hook it up to the View through BindingContext
+    - Set `ViewModelLocator.AutoWireViewModel="true"` at the top of the .xaml page
+- Create a ViewModel and make it inherit from ViewModelBase
+    - Register the ViewModel inside AppSetup.cs
+- Create a button in TestingPage.xaml and make it navigate to your new View by using a Command
+    - Use NavigationService.NavigateToAsync<xxxViewModel>() for navigation. All navigation logic should reside in the ViewModels.
+    - Use Commands to execute actions eg. when clicking a button
 - Use DataBinding (MVVM) to synchronize between the View and ViewModel
 - Use MessagingCenter to communicate between pages
-- Use Commands to execute actions eg. when clicking a button
-- Use NavigationService.NavigateToAsync<xxxViewModel>() for navigation. All navigation logic should reside in the ViewModels.
-- Use Autofac for dependency injection by registering in WeekPlanner.ApplicationObjects.AppSetup
 - Use AutoFixture with Moq for testing when possible, to avoid brittle tests
 - [Xamarin Forms Documentation](https://developer.xamarin.com/guides/xamarin-forms/)
 - [Autofac Documentation](http://autofac.readthedocs.io/en/latest/getting-started/index.html)

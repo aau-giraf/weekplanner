@@ -7,6 +7,7 @@ namespace WeekPlanner.ViewModels
 {
     public class TestingViewModel : ViewModelBase
     {
+
         public TestingViewModel(INavigationService navigationService) : base(navigationService)
         {
         }
@@ -19,6 +20,9 @@ namespace WeekPlanner.ViewModels
 
         public ICommand NavigateToWeekPlannerCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<WeekPlannerViewModel>());
+        
+        public ICommand NavigateToChooseTemplateCommand =>
+            new Command(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
 
     }
