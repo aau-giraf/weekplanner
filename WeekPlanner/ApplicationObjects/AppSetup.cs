@@ -25,6 +25,7 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<LoginViewModel>();
             cb.RegisterType<TestingViewModel>();
             cb.RegisterType<WeekPlannerViewModel>();
+            cb.RegisterType<UserModeSwitchViewModel>();
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
