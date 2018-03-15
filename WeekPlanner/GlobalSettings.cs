@@ -27,12 +27,12 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = false;
+        public bool UseMocks = true;
 
         public string LoginEndpoint { get; set; }
 
         public string LogoutEndpoint { get; set; }
-        
+
         public string AuthToken { get; set; }
 
         private void UpdateEndpoint(string baseEndpoint)
