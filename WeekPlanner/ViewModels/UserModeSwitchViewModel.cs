@@ -14,20 +14,28 @@ namespace WeekPlanner.ViewModels
     {
 		private GirafUserDTO _citizen;
 
-		//public GirafUserDTO Citizen
-		//{
-		//	get => _citizen;
-		//	set
-		//	{
-		//		_citizen = new GirafUserDTO() { Username = "Kurt" };
 
-		//	}
-		//}
+        public ICommand SwitchUserModeCommand => new Command(() => SwitchUserMode());
 
 
-		//public override Task InitializeAsync(object navigationData)
-		//{
-		//	return base.InitializeAsync(navigationData);
-		//}
-	}
+        private void SwitchUserMode()
+        {
+            
+        }
+        //public GirafUserDTO Citizen
+        //{
+        //	get => _citizen;
+        //	set
+        //	{
+        //		_citizen = new GirafUserDTO() { Username = "Kurt" };
+
+        //	}
+        //}
+
+
+        //public override Task InitializeAsync(object navigationData)
+        //{
+        //	return base.InitializeAsync(navigationData);
+        //}
+    }
 }

@@ -28,5 +28,6 @@ namespace WeekPlanner.Views
 		private void ChangeCitizen_OnClicked(object sender, EventArgs e)
 		{
 		}
-	}
+
+    }
 }
