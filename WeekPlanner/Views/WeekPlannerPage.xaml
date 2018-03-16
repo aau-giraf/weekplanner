@@ -12,6 +12,8 @@
             <Color x:Key="WednesdayColor">#ff7f00</Color>
             <Color x:Key="ThursdayColor">#0017ff</Color>
             <Color x:Key="FridayColor">#ffdd00</Color>
+            <Color x:Key="SaturdayColor">#ff0102</Color>
+            <Color x:Key="SundayColor">#ffffff</Color>
             <Color x:Key="WhiteColor">#000</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -19,6 +21,8 @@
         <ScrollView Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -57,7 +61,7 @@
                              BackgroundColor="{StaticResource WednesdayColor}">
                 </StackLayout>
 
-                <!-- TORSDAG -->
+                <!-- THURSDAY -->
                 <Grid Grid.Row="0" Grid.Column="3">
                     <Label Text="Torsdag"
                            TextColor="{StaticResource WhiteColor}" />
@@ -73,6 +77,24 @@
                 </Grid>
                 <StackLayout Grid.Column="4" Grid.Row="1"
                              BackgroundColor="{StaticResource FridayColor}">
+                </StackLayout>
+
+                <!-- SATURDAY -->
+                <Grid Grid.Row="0" Grid.Column="5">
+                    <Label Text="Lørdag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="5" Grid.Row="1"
+                             BackgroundColor="{StaticResource SaturdayColor}">
+                </StackLayout>
+
+                <!-- SUNDAY -->
+                <Grid Grid.Row="0" Grid.Column="6">
+                    <Label Text="Søndag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="6" Grid.Row="1"
+                             BackgroundColor="{StaticResource SundayColor}">
                 </StackLayout>
             </Grid>
         </ScrollView>
