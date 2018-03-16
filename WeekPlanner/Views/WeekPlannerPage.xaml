@@ -10,11 +10,52 @@
         <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" Clicked="ChangeCitizen_OnClicked" />
         <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
     </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="MondayColor">#067700</Color>
+            <Color x:Key="TuesdayColor">#8c1086</Color>
+            <Color x:Key="WednesdayColor">#ff7f00</Color>
+            <Color x:Key="ThursdayColor">#0017ff</Color>
+            <Color x:Key="FridayColor">#ffdd00</Color>
+            <Color x:Key="WhiteColor">#efefef</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout Margin="12">
+        <ScrollView>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackLayout Grid.Column="0"
+                             BackgroundColor="{StaticResource MondayColor}">
+                    <Label Text="Mandag" TextColor="{StaticResource WhiteColor}"/>
+                </StackLayout>
+                <StackLayout Grid.Column="1"
+                             BackgroundColor="{StaticResource TuesdayColor}">
+                    <Label Text="Tirsdag" TextColor="{StaticResource WhiteColor}"/>
+                </StackLayout>
+                <StackLayout Grid.Column="2"
+                             BackgroundColor="{StaticResource WednesdayColor}">
+                    <Label Text="Onsdag" TextColor="{StaticResource WhiteColor}"/>
+                </StackLayout>
+                <StackLayout Grid.Column="3"
+                             BackgroundColor="{StaticResource ThursdayColor}">
+                    <Label Text="Torsdag" TextColor="{StaticResource WhiteColor}"/>
+                </StackLayout>
+                <StackLayout Grid.Column="4"
+                             BackgroundColor="{StaticResource FridayColor}">
+                    <Label Text="Fredag" TextColor="{StaticResource WhiteColor}"/>
+                </StackLayout>
+            </Grid>
+        </ScrollView>
+        <!--<StackLayout Margin="12">
             <Label Text="WeekPlannerView" />
             <Image Source="{Binding PictogramSource}"></Image>
             <Label Text="{Binding Citizen.Username}" />
-        </StackLayout>
+        </StackLayout>-->
     </ContentPage.Content>
 </ContentPage>
