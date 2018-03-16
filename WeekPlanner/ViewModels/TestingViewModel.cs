@@ -24,6 +24,9 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseTemplateCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
+        public ICommand NavigateToPictogramSearchCommand =>
+            new Command(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
+
 
     }
 }

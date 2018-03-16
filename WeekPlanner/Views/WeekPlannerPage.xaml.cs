@@ -20,6 +20,7 @@ namespace WeekPlanner.Views
 
         private void Edit_OnClicked(object sender, EventArgs e)
         {
+            DisplayAlert("Rediger", "Du trykkede på rediger!", "Luk");
         }
 
         private void ChangeCitizen_OnClicked(object sender, EventArgs e)
