@@ -7,24 +7,24 @@ namespace WeekPlanner.Validations
     public class ValidatableObject<T> : ExtendedBindableObject, IValidity
     {
         private readonly IEnumerable<IValidationRule<T>> _validations;
-		private IReadOnlyList<string> _errors;
+        private IReadOnlyList<string> _errors;
         private T _value;
         private bool _isValid;
 
         public IEnumerable<IValidationRule<T>> Validations => _validations;
 
-		public IReadOnlyList<string> Errors
-		{
-			get
-			{
-				return _errors;
-			}
-			set
-			{
-				_errors = value;
-				RaisePropertyChanged(() => Errors);
-			}
-		}
+        public IReadOnlyList<string> Errors
+        {
+            get
+            {
+                return _errors;
+            }
+            set
+            {
+                _errors = value;
+                RaisePropertyChanged(() => Errors);
+            }
+        }
 
         public T Value
         {
@@ -61,10 +61,10 @@ namespace WeekPlanner.Validations
 
         public bool Validate()
         {
-            IEnumerable<string> errors = _validations.Where(v => !v.Check(Value))                             
+            IEnumerable<string> errors = _validations.Where(v => !v.Check(Value))
                 .Select(v => v.ValidationMessage);
 
-			Errors = errors.ToList();
+            Errors = errors.ToList();
             IsValid = !Errors.Any();
 
             return this.IsValid;

@@ -23,8 +23,8 @@ namespace WeekPlanner.ViewModels
         public LoginViewModel(IAccountApi accountApi, INavigationService navigationService) : base(navigationService)
         {
             _accountApi = accountApi;
-            _userName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() {ValidationMessage = "Et brugernavn er påkrævet."});
-            _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() {ValidationMessage = "En adgangskode er påkrævet."});
+            _userName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() { ValidationMessage = "Et brugernavn er påkrævet." });
+            _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() { ValidationMessage = "En adgangskode er påkrævet." });
         }
 
         public ValidatableObject<string> UserName
