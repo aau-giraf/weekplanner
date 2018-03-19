@@ -9,7 +9,7 @@ namespace WeekPlanner.Services.Navigation
 
         Task InitializeAsync();
 
-        Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : ViewModelBase;
+        Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase;
 
         Task RemoveLastFromBackStackAsync();
 
