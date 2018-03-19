@@ -8,6 +8,7 @@ using WeekPlanner.Helpers;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
+using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
@@ -22,9 +23,8 @@ namespace WeekPlanner.ViewModels
         public LoginViewModel(IAccountApi accountApi, INavigationService navigationService) : base(navigationService)
         {
             _accountApi = accountApi;
-            _userName = new ValidatableObject<string>();
-            _password = new ValidatableObject<string>();
-            AddValidations();
+            _userName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() {ValidationMessage = "Et brugernavn er påkrævet."});
+            _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() {ValidationMessage = "En adgangskode er påkrævet."});
         }
 
         public ValidatableObject<string> UserName
@@ -113,14 +113,6 @@ namespace WeekPlanner.ViewModels
         private bool ValidatePassword()
         {
             return _password.Validate();
-        }
-
-        private void AddValidations()
-        {
-            _userName.Validations.Add(
-                new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et brugernavn er påkrævet."});
-            _password.Validations.Add(
-                new IsNotNullOrEmptyRule<string> {ValidationMessage = "En adgangskode er påkrævet."});
         }
     }
 }
