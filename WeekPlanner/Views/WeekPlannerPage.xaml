@@ -6,9 +6,7 @@
              base1:ViewModelLocator.AutoWireViewModel="true" 
              Title="Ugeplan">
     <ContentPage.ToolbarItems>
-        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Command="{Binding ToggleEditModeCommand}" >
-            Visibility="Visible"
-        </ToolbarItem>
+        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Command="{Binding ToggleEditModeCommand}" />
         <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" />
         <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
     </ContentPage.ToolbarItems>
