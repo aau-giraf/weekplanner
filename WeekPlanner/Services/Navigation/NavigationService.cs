@@ -99,6 +99,12 @@ namespace WeekPlanner.Services.Navigation
             
         }
 
+        public Task PopAsync()
+        {
+            return Application.Current.MainPage.Navigation.PopAsync();
+
+        }
+
         private Type GetPageTypeForViewModel(Type viewModelType)
         {
             var viewName = viewModelType.FullName.Replace("ViewModels", "Views").Replace("ViewModel", "Page");

@@ -44,11 +44,21 @@ namespace WeekPlanner.ViewModels
 
         
 
-        private void SwitchUserMode()
+        private async Task SwitchUserMode()
         {
-            Mode = (Mode == UserMode.Guardian) ? UserMode.Citizen : UserMode.Guardian;
+            //Mode = (Mode == UserMode.Guardian) ? UserMode.Citizen : UserMode.Guardian;
 
-           // await NavigationService.NavigateToAsync<LoginViewModel>();
+            if (Mode == UserMode.Guardian)
+            {
+                Mode = UserMode.Citizen;
+
+            } else if(Mode == UserMode.Citizen)
+            {
+                await NavigationService.NavigateToAsync<LoginViewModel>(this);
+                Mode = UserMode.Guardian;
+            }
+
+           
         }
     }
 }

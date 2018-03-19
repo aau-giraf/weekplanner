@@ -17,6 +17,7 @@ namespace WeekPlanner.ViewModels
         private bool _isValid;
         private ValidatableObject<string> _password;
         private ValidatableObject<string> _userName;
+        private bool _userModeSwitch = false;
 
         public LoginViewModel(IAccountApi service)
         {
@@ -86,8 +87,15 @@ namespace WeekPlanner.ViewModels
 
                 // Switch this to an actual token once implemented in backend
                 GlobalSettings.Instance.AuthToken = result.Data.Id;
-
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
+                if(_userModeSwitch)
+                {
+                    await NavigationService.PopAsync();
+                }
+                else
+                {
+                    await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
+                }
+                
             }
             else
             {
@@ -120,6 +128,14 @@ namespace WeekPlanner.ViewModels
                 new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et brugernavn er påkrævet."});
             _password.Validations.Add(
                 new IsNotNullOrEmptyRule<string> {ValidationMessage = "En adgangskode er påkrævet."});
+        }
+
+        public override async Task InitializeAsync(object navigationData)
+        {
+            if (navigationData is UserModeSwitchViewModel)
+            {
+                _userModeSwitch = true;
+            } 
         }
     }
 }

@@ -15,6 +15,8 @@ namespace WeekPlanner.Services.Navigation
 
         Task RemoveLastFromBackStackAsync();
 
+        Task PopAsync();
+
         Task RemoveBackStackAsync();
     }
 }
