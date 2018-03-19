@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using WeekPlanner.Services.Navigation;
+using System.Collections.ObjectModel;
 
 namespace WeekPlanner.ViewModels
 {
@@ -16,8 +17,15 @@ namespace WeekPlanner.ViewModels
 
         public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
         {
-
+            ImageSources = new ObservableCollection<ImageSource>();
+            var imgSource = ImageSource.FromUri(new Uri("https://xamarin.com/content/images/pages/forms/example-app.png"));
+            for (int i = 0; i < 10; i++)
+            {
+                ImageSources.Add(imgSource);
+            }
         }
+
+        public ObservableCollection<ImageSource> ImageSources { get;  set;}
 
         public ImageSource PictogramSource
         {
