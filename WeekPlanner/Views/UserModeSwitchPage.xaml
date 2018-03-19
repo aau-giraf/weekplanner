@@ -8,9 +8,9 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="ChangeMode" Order="Primary" Text="{Binding Mode}" Command="{Binding SwitchUserModeCommand}"/>
-        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Clicked="Edit_OnClicked" />
-        <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" Clicked="ChangeCitizen_OnClicked" />
-        <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
+        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" />
+        <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" />
+        <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>

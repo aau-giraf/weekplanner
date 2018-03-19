@@ -12,10 +12,11 @@ namespace WeekPlanner.ViewModels
 {
     class UserModeSwitchViewModel : ViewModelBase
     {
+        public enum UserMode { Guardian, Citizen };
 
         private GirafUserDTO _citizen;
-        public enum UserMode { Guardian, Citizen };
         private UserMode _userMode;
+        public ICommand SwitchUserModeCommand => new Command(() => SwitchUserMode());
         public GirafUserDTO Citizen
         {
             get => _citizen;
@@ -36,26 +37,18 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        
-
         public UserModeSwitchViewModel()
         {
             Mode = UserMode.Guardian;
         }
 
-        public ICommand SwitchUserModeCommand => new Command(() => SwitchUserMode());
+        
 
         private void SwitchUserMode()
         {
-            if (_userMode == UserMode.Guardian)
-            {
-                Mode = UserMode.Citizen;
+            Mode = (Mode == UserMode.Guardian) ? UserMode.Citizen : UserMode.Guardian;
 
-            }
-            else
-            {
-                Mode = UserMode.Guardian;
-            }
+           // await NavigationService.NavigateToAsync<LoginViewModel>();
         }
     }
 }
