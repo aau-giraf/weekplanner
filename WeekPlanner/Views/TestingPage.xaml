@@ -11,6 +11,7 @@
             <Button Text="Vælg borger" Command="{Binding NavigateToChooseCitizenCommand}" />
             <Button Text="Ugeplan" Command="{Binding NavigateToWeekPlannerCommand}" />
             <Button Text="Vælg skabelon" Command="{Binding NavigateToChooseTemplateCommand}" />
+            <Button Text="Modify Schedule" Command="{Binding NavigateToModifyScheduleCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
