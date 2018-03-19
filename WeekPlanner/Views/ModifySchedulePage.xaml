@@ -80,6 +80,7 @@
                 </Grid>
                 <StackLayout Grid.Column="4" Grid.Row="1"
                              BackgroundColor="{StaticResource FridayColor}">
+                    <Button Text="hej" IsVisible="False"/>
                 </StackLayout>
 
                 <!-- SATURDAY -->

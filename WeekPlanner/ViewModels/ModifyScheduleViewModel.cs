@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using WeekPlanner.Services.Navigation;
+using System.Windows.Input;
 
 namespace WeekPlanner.ViewModels
 {
@@ -23,7 +24,6 @@ namespace WeekPlanner.ViewModels
         {
             
         }
-
 
     }
 }

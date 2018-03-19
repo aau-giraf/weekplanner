@@ -4,19 +4,38 @@ using System.Net;
 using System.Text;
 using IO.Swagger.Model;
 using System.Threading.Tasks;
+using WeekPlanner.Helpers;
+using WeekPlanner.Services.Navigation;
+using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
-using WeekPlanner.Services.Navigation;
+using System.Windows.Input;
+using System.Windows;
 
 namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
         private GirafUserDTO _citizen;
+        private bool isEnabled;
+        private bool _editModeEnabled;
+
+        public bool EditModeEnabled
+        {
+            get
+            {
+                return _editModeEnabled;
+            }
+            set
+            {
+                _editModeEnabled = value;
+                RaisePropertyChanged(() => EditModeEnabled);
+            }
+        }
 
         public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
         {
-
+            
         }
 
         public ImageSource PictogramSource
@@ -48,5 +67,13 @@ namespace WeekPlanner.ViewModels
                 Citizen = citizen;
             }
         }
+
+
+      
+
+
+
+        public ICommand ToggleEditModeCommand => new Command( () => EditModeEnabled = !EditModeEnabled);
+
     }
 }
