@@ -17,15 +17,10 @@ namespace WeekPlanner.ViewModels
 
         public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
         {
-            ImageSources = new ObservableCollection<ImageSource>();
-            var imgSource = ImageSource.FromUri(new Uri("https://xamarin.com/content/images/pages/forms/example-app.png"));
-            for (int i = 0; i < 10; i++)
-            {
-                ImageSources.Add(imgSource);
-            }
         }
 
-        public ObservableCollection<ImageSource> ImageSources {
+        public ObservableCollection<ImageSource> ImageSources
+        {
             get
             {
                 var imageSources = new ObservableCollection<ImageSource>();

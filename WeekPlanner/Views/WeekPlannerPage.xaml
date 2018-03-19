@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-             x:Class="WeekPlanner.Views.WeekPlannerPage"
-             base1:ViewModelLocator.AutoWireViewModel="true"
-             Title="Ugeplan">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner" x:Class="WeekPlanner.Views.WeekPlannerPage" base1:ViewModelLocator.AutoWireViewModel="true" Title="Ugeplan">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Clicked="Edit_OnClicked" />
         <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" Clicked="ChangeCitizen_OnClicked" />
@@ -23,88 +18,100 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ScrollView Grid.Row="1">
-            <Grid HeightRequest="1200">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="AUTO" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <!-- MONDAY -->
-                <Grid Grid.Row="0" Grid.Column="0">
-                    <Label Text="Mandag"
-                           TextColor="{StaticResource WhiteColor}" />
-                </Grid>
-                <ListView ItemsSource="{Binding ImageSources}" Grid.Row="1" Grid.Column="0" BackgroundColor="{Binding MondayColor}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ImageCell ImageSource="{Binding}" />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <!-- TUESDAY -->
-                <Grid Grid.Row="0" Grid.Column="1">
-                    <Label Text="Tirsdag"
-                           TextColor="{StaticResource WhiteColor}" />
-                </Grid>
-                <StackLayout Grid.Column="1" Grid.Row="1"
-                             BackgroundColor="{StaticResource TuesdayColor}">
-                </StackLayout>
-
-                <!-- WEDNESDAY -->
-                <Grid Grid.Row="0" Grid.Column="2">
-                    <Label Text="Onsdag"
-                           TextColor="{StaticResource WhiteColor}" />
-                </Grid>
-                <StackLayout Grid.Column="2" Grid.Row="1"
-                             BackgroundColor="{StaticResource WednesdayColor}">
-                </StackLayout>
-
-                <!-- THURSDAY -->
-                <Grid Grid.Row="0" Grid.Column="3">
-                    <Label Text="Torsdag"
-                           TextColor="{StaticResource WhiteColor}" />
-                </Grid>
-                <StackLayout Grid.Column="3" Grid.Row="1"
-                             BackgroundColor="{StaticResource ThursdayColor}">
-                </StackLayout>
-
-                <!-- FRIDAY -->
-                <Grid Grid.Row="0" Grid.Column="4">
-                    <Label Text="Fredag"
-                           TextColor="{StaticResource WhiteColor}" />
-                </Grid>
-                <StackLayout Grid.Column="4" Grid.Row="1"
-                             BackgroundColor="{StaticResource FridayColor}">
-                </StackLayout>
-
-                <!-- SATURDAY -->
-                <Grid Grid.Row="0" Grid.Column="5">
-                    <Label Text="Lørdag"
-                           TextColor="{StaticResource WhiteColor}" />
-                </Grid>
-                <StackLayout Grid.Column="5" Grid.Row="1"
-                             BackgroundColor="{StaticResource SaturdayColor}">
-                </StackLayout>
-
-                <!-- SUNDAY -->
-                <Grid Grid.Row="0" Grid.Column="6">
-                    <Label Text="Søndag"
-                           TextColor="{StaticResource WhiteColor}" />
-                </Grid>
-                <StackLayout Grid.Column="6" Grid.Row="1"
-                             BackgroundColor="{StaticResource SundayColor}">
-                </StackLayout>
+        <!-- The HeightRequest is set to make the Grid's height larger
+        than the ListViews height in effect disabling their scrolling.
+        Seems to only work in landscape mode-->
+        <Grid HeightRequest="3000">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!-- WEEKDAYS TITLEBAR -->
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Label Text="Mandag" TextColor="{StaticResource WhiteColor}" />
             </Grid>
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Label Text="Tirsdag" TextColor="{StaticResource WhiteColor}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="2">
+                <Label Text="Onsdag" TextColor="{StaticResource WhiteColor}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="3">
+                <Label Text="Torsdag" TextColor="{StaticResource WhiteColor}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="4">
+                <Label Text="Fredag" TextColor="{StaticResource WhiteColor}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="5">
+                <Label Text="Lørdag" TextColor="{StaticResource WhiteColor}" />
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="6">
+                <Label Text="Søndag" TextColor="{StaticResource WhiteColor}" />
+            </Grid>
+            <!-- WEEKDAY LISTS -->
+            <!-- TODO, if someone knows how to each day a custom component that could be reused that would be great :-) -->
+            <ScrollView Grid.Row="1" Grid.ColumnSpan="7">
+                <Grid>
+                    <ListView ItemsSource="{Binding ImageSources}" Grid.Column="0" BackgroundColor="{StaticResource MondayColor}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ImageCell ImageSource="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView ItemsSource="{Binding ImageSources}" Grid.Column="1" BackgroundColor="{StaticResource TuesdayColor}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ImageCell ImageSource="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView ItemsSource="{Binding ImageSources}" Grid.Column="2" BackgroundColor="{StaticResource WednesdayColor}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ImageCell ImageSource="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView ItemsSource="{Binding ImageSources}" Grid.Column="3" BackgroundColor="{StaticResource ThursdayColor}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ImageCell ImageSource="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView ItemsSource="{Binding ImageSources}" Grid.Column="4" BackgroundColor="{StaticResource FridayColor}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ImageCell ImageSource="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView ItemsSource="{Binding ImageSources}" Grid.Column="5" BackgroundColor="{StaticResource SaturdayColor}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ImageCell ImageSource="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView ItemsSource="{Binding ImageSources}" Grid.Column="6" BackgroundColor="{StaticResource SundayColor}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ImageCell ImageSource="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </ScrollView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
