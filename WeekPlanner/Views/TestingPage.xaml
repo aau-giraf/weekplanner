@@ -11,6 +11,7 @@
             <Button Text="Vælg borger" Command="{Binding NavigateToChooseCitizenCommand}" />
             <Button Text="Ugeplan" Command="{Binding NavigateToWeekPlannerCommand}" />
             <Button Text="Brugermode skift" Command="{Binding NavigateToUserModeSwitchCommand}" />
+            <Button Text="Vælg skabelon" Command="{Binding NavigateToChooseTemplateCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

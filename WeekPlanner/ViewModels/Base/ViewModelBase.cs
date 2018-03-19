@@ -22,13 +22,9 @@ namespace WeekPlanner.ViewModels.Base
             }
         }
 
-        protected ViewModelBase()
+        public ViewModelBase(INavigationService navigationService)
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
-            {
-                NavigationService = scope.Resolve<INavigationService>();
-            }
-            
+            NavigationService = navigationService;
         }
 
         public virtual Task InitializeAsync(object navigationData)

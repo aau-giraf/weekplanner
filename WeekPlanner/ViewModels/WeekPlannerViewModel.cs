@@ -6,12 +6,18 @@ using IO.Swagger.Model;
 using System.Threading.Tasks;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
+using WeekPlanner.Services.Navigation;
 
 namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
         private GirafUserDTO _citizen;
+
+        public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
+        {
+
+        }
 
         public ImageSource PictogramSource
         {
