@@ -13,5 +13,10 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
         }
+
+        private void Safe_OnClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Gem ugeplan", "Du gemte ugeplanen", "Luk");
+        }
     }
 }
