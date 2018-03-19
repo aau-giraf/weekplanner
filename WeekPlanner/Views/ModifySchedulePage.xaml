@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner" 
-             x:Class="WeekPlanner.Views.WeekPlannerPage" 
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             x:Class="WeekPlanner.Views.ModifySchedulePage"
              base1:ViewModelLocator.AutoWireViewModel="true" 
              Title="Ugeplan">
     <ContentPage.ToolbarItems>
-        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Clicked="Edit_OnClicked" />
-        <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger" Clicked="ChangeCitizen_OnClicked" />
-        <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger" Clicked="Settings_OnClicked" />
+        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" />
+        <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger"  />
+        <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger"  />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
