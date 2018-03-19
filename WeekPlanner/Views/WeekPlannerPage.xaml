@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner" 
-             x:Class="WeekPlanner.Views.WeekPlannerPage" 
-             base1:ViewModelLocator.AutoWireViewModel="true" 
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             x:Class="WeekPlanner.Views.WeekPlannerPage"
+             base1:ViewModelLocator.AutoWireViewModel="true"
              Title="Ugeplan">
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" Clicked="Edit_OnClicked" />
@@ -23,8 +23,8 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid Grid.Row="1">
-            <Grid>
+        <ScrollView Grid.Row="1">
+            <Grid HeightRequest="1200">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -44,15 +44,13 @@
                     <Label Text="Mandag"
                            TextColor="{StaticResource WhiteColor}" />
                 </Grid>
-                <ListView ItemsSource="{Binding ImageSources}" Grid.Column="0" Grid.Row="1"
-                             BackgroundColor="{StaticResource MondayColor}">
+                <ListView ItemsSource="{Binding ImageSources}" Grid.Row="1" Grid.Column="0" BackgroundColor="{Binding MondayColor}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <ImageCell ImageSource="{Binding}" Height="20" />
+                            <ImageCell ImageSource="{Binding}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-
                 <!-- TUESDAY -->
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Label Text="Tirsdag"

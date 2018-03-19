@@ -25,7 +25,18 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ObservableCollection<ImageSource> ImageSources { get;  set;}
+        public ObservableCollection<ImageSource> ImageSources {
+            get
+            {
+                var imageSources = new ObservableCollection<ImageSource>();
+                for (int i = 0; i < 10; i++)
+                {
+                    var imageSource = ImageSource.FromUri(new Uri("https://xamarin.com/content/images/pages/forms/example-app.png"));
+                    imageSources.Add(imageSource);
+                }
+                return imageSources;
+            }
+        }
 
         public ImageSource PictogramSource
         {
