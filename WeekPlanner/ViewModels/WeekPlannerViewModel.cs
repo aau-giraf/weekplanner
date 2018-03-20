@@ -69,11 +69,14 @@ namespace WeekPlanner.ViewModels
         }
 
 
-      
 
 
 
-        public ICommand ToggleEditModeCommand => new Command( () => EditModeEnabled = !EditModeEnabled);
+
+        //public ICommand ToggleEditModeCommand => new Command( () => EditModeEnabled = !EditModeEnabled);
+
+        public ICommand NavigateToModifyScheduleCommand =>
+            new Command(async () => await NavigationService.NavigateToAsync<ModifyScheduleViewModel>());
 
     }
 }

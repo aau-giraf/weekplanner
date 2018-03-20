@@ -20,11 +20,14 @@ namespace WeekPlanner.ViewModels
 
         public ModifyScheduleViewModel(INavigationService navigationService, IWeekApi weekApi) : base(navigationService)
         {
-            _weekApi = weekApi;   
+            _weekApi = weekApi;
         }
 
         public WeekDTO Schedule;
 
+        public string ScheduleName {get; set; }
+
+        /*
         public async void SaveSchedule()
         {
             ResponseWeekDTO result;
@@ -75,7 +78,7 @@ namespace WeekPlanner.ViewModels
                 Schedule = new WeekDTO();
             }
 		}
-
+        */
 
 	}
 }
