@@ -31,6 +31,7 @@ namespace WeekPlanner.ApplicationObjects
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
+            cb.RegisterType<WeekApi>().As<IWeekApi>();
 
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)
