@@ -8,19 +8,27 @@
              Title="Vælg Borger">
     <ContentPage.Content>
         <StackLayout Margin="12">
-            <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
-            <ListView x:Name="CitizensListView" ItemsSource="{Binding Citizens}" VerticalOptions="FillAndExpand" HasUnevenRows="true">
+            <SearchBar x:Name="Search"
+                       Placeholder="Søg"
+                       TextChanged="SearchBar_TextChanged" />
+            <ListView x:Name="CitizensListView"
+                      ItemsSource="{Binding Citizens}"
+                      VerticalOptions="FillAndExpand"
+                      HasUnevenRows="true"
+                      ItemSelected="Handle_ItemSelected">
                 <ListView.Behaviors>
-                    <behaviors1:EventToCommandBehavior           
-                        EventName="ItemTapped"
-                        Command="{Binding ChooseCitizenCommand}"
-                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
+                    <behaviors1:EventToCommandBehavior EventName="ItemTapped"
+                                                       Command="{Binding ChooseCitizenCommand}"
+                                                       EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
                 </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Padding="10">
-                                <Label Text="{Binding Username}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemTextStyle}" FontSize="16" />
+                                <Label Text="{Binding Username}"
+                                       LineBreakMode="NoWrap"
+                                       Style="{DynamicResource ListItemTextStyle}"
+                                       FontSize="16" />
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

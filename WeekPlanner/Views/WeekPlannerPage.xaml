@@ -95,67 +95,110 @@
                         Grid.ColumnSpan="7">
                 <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                <Grid HeightRequest="2000">
+                <Grid HeightRequest="1500">
+                <!-- HeightRequest="{Binding BasketItems.Count, Converter={StaticResource ItemsToHeightConverter}}" -->
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="0"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalOptions="FillAndExpand"
+                              CachingStrategy="RecycleElement"
                               BackgroundColor="{StaticResource MondayColor}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ImageCell ImageSource="{Binding}" />
+                                <ViewCell>
+                                    <Image Source="{Binding}" Margin="0,10" />
+                                </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="1"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalOptions="FillAndExpand"
+                              CachingStrategy="RecycleElement"
                               BackgroundColor="{StaticResource TuesdayColor}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ImageCell ImageSource="{Binding}" />
+                                <ViewCell>
+                                    <Image Source="{Binding}" Margin="0,10" />
+                                </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="2"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalOptions="FillAndExpand"
+                              CachingStrategy="RecycleElement"
                               BackgroundColor="{StaticResource WednesdayColor}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ImageCell ImageSource="{Binding}" />
+                                <ViewCell>
+                                    <Image Source="{Binding}" Margin="0,10" />
+                                </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="3"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalOptions="FillAndExpand"
+                              CachingStrategy="RecycleElement"
                               BackgroundColor="{StaticResource ThursdayColor}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ImageCell ImageSource="{Binding}" />
+                                <ViewCell>
+                                    <Image Source="{Binding}" Margin="0,10" />
+                                </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="4"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalOptions="FillAndExpand"
+                              CachingStrategy="RecycleElement"
                               BackgroundColor="{StaticResource FridayColor}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ImageCell ImageSource="{Binding}" />
+                                <ViewCell>
+                                    <Image Source="{Binding}" Margin="0,10" />
+                                </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="5"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalOptions="FillAndExpand"
+                              CachingStrategy="RecycleElement"
                               BackgroundColor="{StaticResource SaturdayColor}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ImageCell ImageSource="{Binding}" />
+                                <ViewCell>
+                                    <Image Source="{Binding}" Margin="0,10" />
+                                </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="6"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalOptions="FillAndExpand"
+                              CachingStrategy="RecycleElement"
                               BackgroundColor="{StaticResource SundayColor}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <ImageCell ImageSource="{Binding}" />
+                                <ViewCell>
+                                    <Image Source="{Binding}" Margin="0,10" />
+                                </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

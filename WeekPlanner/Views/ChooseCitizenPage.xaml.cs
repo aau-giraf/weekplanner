@@ -19,8 +19,13 @@ namespace WeekPlanner.Views
 
                 CitizensListView.ItemsSource = vm.Citizens;
             else
-                CitizensListView.ItemsSource = vm.Citizens.Where(x => x.Username.ToLower().StartsWith(e.NewTextValue.ToLower()));
+                CitizensListView.ItemsSource = vm.Citizens.Where(x => x.Username.StartsWith(e.NewTextValue, System.StringComparison.InvariantCultureIgnoreCase));
 
+        }
+
+        void Handle_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            ((ListView)sender).SelectedItem = null;
         }
     }
 }
