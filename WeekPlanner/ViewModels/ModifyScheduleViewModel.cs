@@ -39,7 +39,7 @@ namespace WeekPlanner.ViewModels
                 catch (ApiException)
                 {
                     // TODO make a "ServerDownError"
-                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKey);
+                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
                     MessagingCenter.Send(this, MessageKeys.ScheduleSaveFailed, friendlyErrorMessage);
                     return;   
                 }
