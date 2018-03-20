@@ -14,6 +14,7 @@
     <PackageReference Include="AutoFixture" Version="4.1.0" />
     <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.1.0" />
+    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Droid\WeekPlanner.Droid.csproj" />

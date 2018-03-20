@@ -33,7 +33,7 @@ namespace WeekPlanner.ViewModels
 		public override async Task InitializeAsync(object navigationData)
 		{
 			if (navigationData is IEnumerable<GirafUserDTO> dtos)
-			{
+			{ 
 				Citizens = new ObservableCollection<GirafUserDTO>(dtos);
 			} else if (GlobalSettings.Instance.UseMocks) {
                 var service = new AccountMockService();

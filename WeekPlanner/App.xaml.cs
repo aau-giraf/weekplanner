@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using WeekPlanner.ApplicationObjects;
 using Autofac;
 using WeekPlanner.Services.Navigation;
+using DLToolkit.Forms.Controls;
 
 namespace WeekPlanner
 {
@@ -17,6 +18,7 @@ namespace WeekPlanner
             AppContainer.Container = setup.CreateContainer();
             
             InitNavigation();
+            FlowListView.Init(); 
         }
         
         private Task InitNavigation()

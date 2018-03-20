@@ -2,10 +2,76 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
              base1:ViewModelLocator.AutoWireViewModel="true"
              x:Class="WeekPlanner.Views.PictogramSearchPage"
              Title="Søg efter pictogrammer">
-    <ContentPage.Content>
+   <ContentPage.Content>
+    <StackLayout>
+        <SearchBar x:Name="searchField" Placeholder="Søg"/>
+            <StackLayout>
+                <flv:FlowListView SeparatorVisibility="None" HasUnevenRows="true"
+                    FlowItemTappedCommand="{Binding ItemTappedCommand}" FlowLastTappedItem="{Binding LastTappedItem}"
+                    FlowColumnMinWidth="210" FlowItemsSource="{Binding ImageSources}">
+           
+                    <flv:FlowListView.FlowColumnTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10">
+                        
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                        
+                               <ffimageloading:CachedImage HeightRequest="200" Aspect="AspectFit"
+                                  
+                                 LoadingPlaceholder="image_loading.png" ErrorPlaceholder="image_error.png"
+                                 Source="{Binding}"/>
+
+                              <!--<Label x:Name="Label" HorizontalOptions="Fill" HorizontalTextAlignment="Center" VerticalOptions="End"
+                                  BackgroundColor="Silver" Opacity="0.35" Text="BilledTekst"/>-->
+                         </Grid>
+                     </DataTemplate>
+                  </flv:FlowListView.FlowColumnTemplate>
         
+             </flv:FlowListView>
+             </StackLayout>
+         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
+
+
+
+<!-- <ImageCell ImageSource="{Binding}" Text="VIRKNU!"></ImageCell> 
+
+
+            <ListView ItemsSource="{Binding ImageSources}" HasUnevenRows="true">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ImageCell ImageSource="{Binding}" Text="VIRKNU!"></ImageCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+            <GridView>
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Border Background="Black" Height="200" Width="200">
+                                <Image Source="{Binding}"></Image>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.Items>
+                    
+                </GridView.Items>
+            </GridView>
+
+
+
+-->

@@ -1,4 +1,5 @@
-﻿using Foundation;
+﻿using FFImageLoading.Forms.Touch;
+using Foundation;
 using UIKit;
 
 namespace WeekPlanner.iOS
@@ -11,7 +12,7 @@ namespace WeekPlanner.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
-
+            CachedImageRenderer.Init();
 
             return base.FinishedLaunching(app, options);
         }

@@ -9,7 +9,7 @@ namespace WeekPlanner.Views
     {
         public PictogramSearchPage()
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
     }
 }
