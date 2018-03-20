@@ -95,8 +95,8 @@
                         Grid.ColumnSpan="7">
                 <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                <Grid HeightRequest="1500">
-                <!-- HeightRequest="{Binding BasketItems.Count, Converter={StaticResource ItemsToHeightConverter}}" -->
+                <!-- TODO: Make a ItemsToHeightConverter so we can do HeightRequest="{Binding Collection.Count, Converter={StaticResource ItemsToHeightConverter}}" -->
+                <Grid HeightRequest="{Binding ImageSources.Count, Converter={StaticResource ItemsToHeightConverter}}">
                     <ListView ItemsSource="{Binding ImageSources}"
                               Grid.Column="0"
                               HasUnevenRows="True"
