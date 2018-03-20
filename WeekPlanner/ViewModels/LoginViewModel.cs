@@ -74,7 +74,8 @@ namespace WeekPlanner.ViewModels
             catch (ApiException)
             {
                 // TODO make a "ServerDownError"
-                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
+                ResponseGirafUserDTO.ErrorKeyEnum? a = null;
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(a);
                 MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
                 return;
             }
