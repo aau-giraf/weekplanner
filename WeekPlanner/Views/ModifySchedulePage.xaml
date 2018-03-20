@@ -60,11 +60,6 @@
                 <StackLayout Grid.Column="0" Grid.Row="1"
                              BackgroundColor="{StaticResource MondayColor}">
                     <Button x:Name="mandag" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                        <Button x:Name="fdfd" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                        <Button x:Name="mansdfsdfsdfdag" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                        <Button x:Name="manfdssdag" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                        <Button x:Name="mafdfndag" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                        <Button x:Name="madfdfndag" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
                     </StackLayout>
 
                 <!-- TUESDAY -->
