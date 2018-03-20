@@ -6,7 +6,7 @@
              base1:ViewModelLocator.AutoWireViewModel="true" 
              Title="Rediger ugeplan">
     <ContentPage.ToolbarItems>
-        <ToolbarItem x:Name="Safe" Order="Secondary" Text="Gem ugeplan" Clicked="Safe_OnClicked" />
+        <ToolbarItem x:Name="Save" Order="Secondary" Text="Gem ugeplan" Clicked="Save_OnClicked" />
         <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger"  />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
@@ -24,7 +24,7 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand">
         <StackLayout>
-        <Entry x:Name="scheduleName"
+        <Entry x:Name="scheduleName" HorizontalTextAlignment="Center"
                    Text="{Binding SheduleName.Value}"
                    Placeholder="Unavngivet skema"
                    TextColor="{StaticResource WhiteColor}">
@@ -36,8 +36,8 @@
             </Entry>
          </StackLayout>
         
-        <ScrollView Grid.Row="2">
-            <Grid>
+        <ScrollView Grid.Row="2" VerticalOptions="FillAndExpand">
+            <Grid VerticalOptions="FillAndExpand">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition  />
                     <ColumnDefinition />
