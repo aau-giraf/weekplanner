@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Api;
@@ -11,6 +13,7 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace WeekPlanner.ViewModels
 {

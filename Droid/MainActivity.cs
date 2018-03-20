@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using FFImageLoading.Forms.Droid;
 
 namespace WeekPlanner.Droid
 {
@@ -16,6 +17,8 @@ namespace WeekPlanner.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            
+            CachedImageRenderer.Init(enableFastRenderer: true);
 
             LoadApplication(new App());
         }

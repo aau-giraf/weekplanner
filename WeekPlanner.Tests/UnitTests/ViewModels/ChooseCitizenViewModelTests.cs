@@ -92,8 +92,5 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert
             navServiceMock.Verify(n => n.NavigateToAsync<WeekPlannerViewModel>(It.IsAny<GirafUserDTO>()));
         }
-        
-        
-        
     }
 }

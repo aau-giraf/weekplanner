@@ -22,5 +22,7 @@ namespace WeekPlanner.Views
                 CitizensListView.ItemsSource = vm.Citizens.Where(x => x.Username.ToLower().StartsWith(e.NewTextValue.ToLower()));
 
         }
+        
+        
     }
 }
