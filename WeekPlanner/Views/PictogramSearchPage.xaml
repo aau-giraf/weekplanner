@@ -9,11 +9,12 @@
              Title="Søg efter pictogrammer">
    <ContentPage.Content>
     <StackLayout>
-        <SearchBar x:Name="searchField" Placeholder="Søg"/>
+        <SearchBar x:Name="searchField" Placeholder="Søg" SearchCommand="{Binding SearchCommand}" 
+                   SearchCommandParameter="{Binding Text, Source={x:Reference searchField}}"/>
             <StackLayout>
                 <flv:FlowListView SeparatorVisibility="None" HasUnevenRows="true"
                     FlowItemTappedCommand="{Binding ItemTappedCommand}" FlowLastTappedItem="{Binding LastTappedItem}"
-                    FlowColumnMinWidth="210" FlowItemsSource="{Binding ImageSources}">
+                    FlowColumnMinWidth="210" FlowItemsSource="{Binding ImageSources}" >
            
                     <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>

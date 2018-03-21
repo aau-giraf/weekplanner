@@ -12,6 +12,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Linq;
 using Xamarin.Forms.Internals;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WeekPlanner.ViewModels
 {
@@ -20,19 +22,7 @@ namespace WeekPlanner.ViewModels
         private ObservableCollection<ImageSource> _imageSources;
         public ObservableCollection<ImageSource> ImageSources
         {
-            get
-            {
-                var imageSources = new ObservableCollection<ImageSource>();
-
-                //ImageSource f = ImageSource.FromResource("drawable");
-
-                for (int i = 0; i < 100; i++)
-                {
-                    var imageSource = ImageSource.FromFile("add_to_cart.png");
-                    imageSources.Add(imageSource);
-                 }
-                return imageSources;
-            }
+            get => _imageSources;
             set
             {
                 _imageSources = value;
@@ -40,26 +30,9 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public string SearchTerm
-        {
-            get;
-            set;
-        }
 
 
-        public string output
-        {
-            get => _output;
-            set
-            {
-                _output = value;
-                RaisePropertyChanged(() => output);
-            }
-        }
-        private string _output;
-
-
-        public ICommand SearchCommand => new Command(() => onSearchGetPictograms());
+        public ICommand SearchCommand => new Command((searchTerm) => onSearchGetPictograms((String)searchTerm));
 
         public PictogramSearchViewModel(INavigationService navigationService) : base(navigationService)
         {
@@ -69,13 +42,29 @@ namespace WeekPlanner.ViewModels
             //ImageSources.Add(imageToAdd);
         }
 
-        public void onSearchGetPictograms()
+
+        //HUSK AT IMPLEMENTERE BESKED VED INGEN RESULTATER OG LOADING ICON
+        public void onSearchGetPictograms(String searchTerm)
         {
-            //var imgSource = "https://upload.wikimedia.org/wikipedia/commons/1/1b/Square_200x200.png";
-            //for (int i = 0; i < 10; i++){
-            //        ImageSources.Add("icon.png");
+
+            String ngrok = "http://9bde2cf5.ngrok.io/";
+            String url = ngrok + "v1/pictogram?q=" + searchTerm + "&p=0&n=30";
+
+            dynamic jsonResult = JObject.Parse(url);
+                
+            Console.WriteLine(jsonResult.image.toString());
+            var searchResults = new ObservableCollection<ImageSource>();
 
 
+            //foreach( in jsonResult){
+            //    Console.WriteLine(key);
+                //byte[] byteArray = Convert.FromBase64String(subset);
+                //var stream = new MemoryStream(byteArray);
+                //return ImageSource.FromStream(() => stream);
+            //}
+
+
+            //ImageSources = searchResults;
         }
     }
 }
