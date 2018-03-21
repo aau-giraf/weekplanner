@@ -43,7 +43,7 @@ namespace WeekPlanner.ApplicationObjects
                 var accountApi = new AccountApi();
                 accountApi.Configuration.ApiClient = new ApiClient(GlobalSettings.DefaultEndpoint);
 
-                cb.RegisterType<AccountApi>().As<IAccountApi>();
+                cb.RegisterInstance<IAccountApi>(accountApi);
             }
         }
     }
