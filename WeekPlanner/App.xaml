@@ -34,6 +34,7 @@
 
             <!-- CONVERTERS -->
             <converters1:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
+            <converters1:NegateBooleanConverter x:Key="NegateBooleanConverter" />
            
             
         </ResourceDictionary>

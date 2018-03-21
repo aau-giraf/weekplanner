@@ -6,19 +6,23 @@ using IO.Swagger.Model;
 using System.Threading.Tasks;
 using WeekPlanner.Helpers;
 using WeekPlanner.Services.Navigation;
+using IO.Swagger.Api;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using System.Windows.Input;
 using System.Windows;
+using IO.Swagger.Client;
 
 namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
+        public WeekDTO Schedule;
         private GirafUserDTO _citizen;
         private bool isEnabled;
         private bool _editModeEnabled;
+        private readonly IWeekApi _weekApi;
 
         public bool EditModeEnabled
         {
@@ -33,9 +37,82 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
+
+        public WeekPlannerViewModel(INavigationService navigationService, IWeekApi weekApi) : base(navigationService)
         {
-            
+            _weekApi = weekApi;
+            MessagingCenter.Subscribe<ModifyScheduleViewModel, string>(this, MessageKeys.ScheduleSaveRequest, async (sender, args) => await SaveSchedule());
+        }
+
+        
+
+        public ICommand SaveCommand => new Command(async () => await SaveSchedule());
+
+        public async override Task InitializeAsync(object navigationData)
+        {
+            if (navigationData is GirafUserDTO citizen)
+            {
+                Citizen = citizen;
+            }
+            if (navigationData is WeekDTO week)
+            {
+                // Modifying an existing schedule
+                Schedule = week;
+            }
+            else
+            {
+                // Creating a new schedule
+                Schedule = new WeekDTO();
+            }
+        }
+
+        // Saves a the schedule 
+        public async Task SaveSchedule()
+        {
+            if (Schedule.Id is null)
+            {
+                await SaveNewSchedule();
+            }
+            else
+            {
+                await UpdateExistingSchedule();
+            }
+        }
+
+        private async Task SaveNewSchedule()
+        {
+            ResponseWeekDTO result;
+
+            try
+            {
+                // Saves new schedule
+                result = await _weekApi.V1WeekPostAsync(Schedule);
+            }
+            catch (ApiException)
+            {
+                // TODO make a "ServerDownError"
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
+                MessagingCenter.Send(this, MessageKeys.ScheduleSaveFailed, friendlyErrorMessage);
+                return;
+            }
+        }
+
+        private async Task UpdateExistingSchedule()
+        {
+            ResponseWeekDTO result;
+
+            try
+            {
+                // Updates an existing schedule
+                result = await _weekApi.V1WeekByIdPutAsync((int)Schedule.Id, Schedule); // TODO remove cast to int when backend has been fixed
+            }
+            catch (ApiException)
+            {
+                // TODO make a "ServerDownError"
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
+                MessagingCenter.Send(this, MessageKeys.ScheduleUpdateFailed, friendlyErrorMessage);
+                return;
+            }
         }
 
         public ImageSource PictogramSource
@@ -60,23 +137,18 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public override async Task InitializeAsync(object navigationData)
-        {
-            if (navigationData is GirafUserDTO citizen)
-            {
-                Citizen = citizen;
-            }
-        }
-
-
-
-
-
-
-        //public ICommand ToggleEditModeCommand => new Command( () => EditModeEnabled = !EditModeEnabled);
+        //public override async Task InitializeAsync(object navigationData)
+        //{
+        //    if (navigationData is GirafUserDTO citizen)
+        //    {
+        //        Citizen = citizen;
+        //    }
+        //}
 
         public ICommand NavigateToModifyScheduleCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ModifyScheduleViewModel>());
+
+        public ICommand ToggleEditModeCommand => new Command(() => EditModeEnabled = !EditModeEnabled);
 
     }
 }
