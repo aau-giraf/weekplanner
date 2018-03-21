@@ -16,7 +16,8 @@ namespace WeekPlanner.Views
 
         private void Save_OnClicked(object sender, EventArgs e)
         {
-            DisplayAlert("Gem ugeplan", "Du gemte ugeplanen", "Luk");
+            //Save.Command.Execute(null);  
+            DisplayAlert("Gem ugeplan", "Vil du gemme ugeplanen?", "Gem", "Luk");
         }
     }
 }

@@ -27,8 +27,10 @@ namespace WeekPlanner.ViewModels
 
         public string ScheduleName {get; set; }
 
-        /*
-        public async void SaveSchedule()
+        public ICommand SaveCommand => new Command(async () => await SaveSchedule());
+
+        // Saves a the schedule 
+        public async Task SaveSchedule()
         {
             ResponseWeekDTO result;
 
@@ -36,7 +38,7 @@ namespace WeekPlanner.ViewModels
             {
                 try
                 {
-                    // Save new schedule
+                    // Saves new schedule
                     result = await _weekApi.V1WeekPostAsync(Schedule);
                 }
                 catch (ApiException)
@@ -51,8 +53,8 @@ namespace WeekPlanner.ViewModels
             {
                 try
                 {
-                    // update an existing schedule
-                    result = await _weekApi.V1WeekByIdPutAsync (2, Schedule);
+                    // Updates an existing schedule
+                    result = await _weekApi.V1WeekByIdPutAsync ((int)Schedule.Id, Schedule); // TODO remove cast to int when backend has been fixed
                 }
                 catch (ApiException)
                 {
@@ -69,16 +71,16 @@ namespace WeekPlanner.ViewModels
 		{
             if(navigationData is WeekDTO week)
             {
-                // Modifying a schedule
+                // Modifying an existing schedule
                 Schedule = week;
             }
             else
             {
-                // Create new schedule
+                // Creating a new schedule
                 Schedule = new WeekDTO();
             }
 		}
-        */
+        
 
 	}
 }
