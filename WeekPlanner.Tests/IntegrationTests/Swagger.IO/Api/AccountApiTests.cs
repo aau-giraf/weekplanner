@@ -30,6 +30,10 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
         [InlineData("13uej912389u", "adw89u129363")]
         [InlineData("00000", "222222")]
         [InlineData("asd", "s$$$$")]
+        [InlineData("' or 1=1", "password=1")]
+        [InlineData("SELECT * FROM Users WHERE User_Name = ‘Graatand’","")]
+        [InlineData("SELECT * FROM Users WHERE User_Name = ‘Graatand’", "SELCT * FROM Users WHERE Password = 'password'")]
+        [InlineData("", "SELCT * FROM Users WHERE Password = 'password'")]
         public async void V1AccountLoginPostAsync_InvalidCredentials_Error(string username, string password)
         {
             // Arrange
