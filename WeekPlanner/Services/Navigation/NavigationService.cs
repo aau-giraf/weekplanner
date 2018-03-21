@@ -34,12 +34,7 @@ namespace WeekPlanner.Services.Navigation
             }
         }
 
-        public Task NavigateToAsync<TViewModel>() where TViewModel : ViewModelBase
-        {
-            return InternalNavigateToAsync(typeof(TViewModel), null);
-        }
-
-        public Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : ViewModelBase
+        public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
         {
             return InternalNavigateToAsync(typeof(TViewModel), parameter);
         }
@@ -125,5 +120,7 @@ namespace WeekPlanner.Services.Navigation
             Page page = Activator.CreateInstance(pageType) as Page;
             return page;
         }
+
+
     }
 }

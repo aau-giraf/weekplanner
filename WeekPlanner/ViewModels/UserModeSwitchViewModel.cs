@@ -5,6 +5,7 @@ using System.Windows.Input;
 using IO.Swagger.Model;
 using WeekPlanner.ApplicationObjects;
 using WeekPlanner.Services.Mocks;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
@@ -37,7 +38,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public UserModeSwitchViewModel()
+        public UserModeSwitchViewModel(INavigationService navigationService) : base(navigationService)
         {
             Mode = UserMode.Guardian;
         }
