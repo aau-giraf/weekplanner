@@ -51,7 +51,7 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
         {
             // Arrange
             var api = new AccountApi();
-            var basePath = "http://awudihawduu.comasdmasd:5000";
+            var basePath = "http://ThisIsAnUnreachableLocation.WhichShouldEnsureExceptionThrow:5000";
             api.Configuration.ApiClient = new ApiClient(basePath);
 
             // Act and Assert
