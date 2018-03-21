@@ -21,55 +21,16 @@ namespace WeekPlanner.ViewModels
         public ModifyScheduleViewModel(INavigationService navigationService, IWeekApi weekApi) : base(navigationService)
         {
             _weekApi = weekApi;
+            MessagingCenter.Subscribe<ModifyScheduleViewModel, string>(this, MessageKeys.ScheduleSaveRequest, async (sender, args) => await SaveSchedule());
         }
 
         public WeekDTO Schedule;
 
-        public string ScheduleName {get; set; }
-
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
 
-        // Saves a the schedule 
-        public async Task SaveSchedule()
+        public async override Task InitializeAsync(object navigationData)
         {
-            ResponseWeekDTO result;
-
-            if (Schedule.Id is null)
-            {
-                try
-                {
-                    // Saves new schedule
-                    result = await _weekApi.V1WeekPostAsync(Schedule);
-                }
-                catch (ApiException)
-                {
-                    // TODO make a "ServerDownError"
-                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
-                    MessagingCenter.Send(this, MessageKeys.ScheduleSaveFailed, friendlyErrorMessage);
-                    return;   
-                }
-            }
-            else
-            {
-                try
-                {
-                    // Updates an existing schedule
-                    result = await _weekApi.V1WeekByIdPutAsync ((int)Schedule.Id, Schedule); // TODO remove cast to int when backend has been fixed
-                }
-                catch (ApiException)
-                {
-                    // TODO make a "ServerDownError"
-                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
-                    MessagingCenter.Send(this, MessageKeys.ScheduleUpdateFailed, friendlyErrorMessage);
-                    return;
-                }
-            }
-
-        }
-
-		public async override Task InitializeAsync(object navigationData)
-		{
-            if(navigationData is WeekDTO week)
+            if (navigationData is WeekDTO week)
             {
                 // Modifying an existing schedule
                 Schedule = week;
@@ -79,8 +40,56 @@ namespace WeekPlanner.ViewModels
                 // Creating a new schedule
                 Schedule = new WeekDTO();
             }
-		}
-        
+        }
+
+        // Saves a the schedule 
+        public async Task SaveSchedule()
+        {
+            if (Schedule.Id is null)
+            {
+                await SaveNewSchedule();
+            }
+            else
+            {
+                await UpdateExistingSchedule();
+            }
+        }
+
+        private async Task SaveNewSchedule()
+        {
+            ResponseWeekDTO result;
+
+            try
+            {
+                // Saves new schedule
+                result = await _weekApi.V1WeekPostAsync(Schedule);
+            }
+            catch (ApiException)
+            {
+                // TODO make a "ServerDownError"
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
+                MessagingCenter.Send(this, MessageKeys.ScheduleSaveFailed, friendlyErrorMessage);
+                return;
+            }
+        }
+
+        private async Task UpdateExistingSchedule()
+        {
+            ResponseWeekDTO result;
+
+            try
+            {
+                // Updates an existing schedule
+                result = await _weekApi.V1WeekByIdPutAsync((int)Schedule.Id, Schedule); // TODO remove cast to int when backend has been fixed
+            }
+            catch (ApiException)
+            {
+                // TODO make a "ServerDownError"
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
+                MessagingCenter.Send(this, MessageKeys.ScheduleUpdateFailed, friendlyErrorMessage);
+                return;
+            }
+        }
 
 	}
 }

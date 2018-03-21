@@ -1,4 +1,5 @@
 ﻿using System;
+using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,10 +15,14 @@ namespace WeekPlanner.Views
             InitializeComponent();
         }
 
-        private void Save_OnClicked(object sender, EventArgs e)
+
+        private async void Save_OnClicked(object sender, EventArgs e)
         {
-            //Save.Command.Execute(null);  
-            DisplayAlert("Gem ugeplan", "Vil du gemme ugeplanen?", "Gem", "Luk");
+            bool result = await DisplayAlert("Gem ugeplan", "Vil du gemme ugeplanen?", "Gem", "Annuller");
+            if(result)
+            {
+                MessagingCenter.Send(this, MessageKeys.ScheduleSaveRequest);
+            }
         }
     }
 }

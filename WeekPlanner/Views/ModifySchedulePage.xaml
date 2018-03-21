@@ -6,7 +6,7 @@
              base1:ViewModelLocator.AutoWireViewModel="true" 
              Title="Rediger ugeplan">
     <ContentPage.ToolbarItems>
-        <ToolbarItem x:Name="Save" Order="Secondary" Text="Gem ugeplan" Clicked="Save_OnClicked" Command="{Binding SaveCommand}"/>
+        <ToolbarItem x:Name="Save" Order="Secondary" Text="Gem ugeplan" Clicked="Save_OnClicked"/>
         <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger"  />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
