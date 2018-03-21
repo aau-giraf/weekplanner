@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using WeekPlanner.ViewModels;
+using AutoFixture;
+using Xunit;
+using WeekPlanner.Services.Navigation;
+using Moq;
 
-
-namespace WeekPlanner.Tests.ViewModels
+namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    class UserModeSwitchViewModelTests : ViewModelTestsBase
+    public class UserModeSwitchViewModelTests : ViewModelTestsBase
     {
         [Fact]
         public void UserModeProperty_OnChange_RaisePropertyChanged()
@@ -26,6 +29,21 @@ namespace WeekPlanner.Tests.ViewModels
 
             //Assert
             Assert.True(invoked);
+        }
+
+        [Fact]
+        public void ChooseCitizenCommand_Executed_InvokesNavigateToWeekPlanner()
+        {
+            // Arrange
+            var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
+            var sut = Fixture.Create<UserModeSwitchViewModel>();
+
+            // Act
+            sut.SwitchUserModeCommand.Execute(true);
+            sut.SwitchUserModeCommand.Execute(true);
+
+            // Assert
+            navServiceMock.Verify(n => n.NavigateToAsync<LoginViewModel>(It.IsAny<UserModeSwitchViewModel>()));
         }
 
         /*

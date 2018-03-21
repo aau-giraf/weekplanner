@@ -22,7 +22,6 @@
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UnitTests\" />
     <Folder Include="UnitTests\Services\" />
     <Folder Include="UnitTests\Services\Networking\" />
     <Folder Include="IntegrationTests\" />

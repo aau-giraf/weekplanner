@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
 {
-    class UserModeSwitchViewModel : ViewModelBase
+    public class UserModeSwitchViewModel : ViewModelBase
     {
         public enum UserMode { Guardian, Citizen };
 
