@@ -19,7 +19,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var dtos = Fixture.CreateMany<GirafUserDTO>();
             var sut = Fixture.Build<ChooseCitizenViewModel>()
                 .OmitAutoProperties().Create();
-            
+
             // Act
             await sut.InitializeAsync(dtos);
             
