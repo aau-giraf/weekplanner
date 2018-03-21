@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
-using AutoFixture.AutoMoq;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
@@ -10,26 +9,11 @@ using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using Xunit;
-using WeekPlanner.ApplicationObjects;
-using WeekPlanner.Services.Navigation;
-using Autofac;
-using System.Linq;
 
-namespace WeekPlanner.Tests.ViewModels
+namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class ViewModelTests
+    public class ViewModelTestses : ViewModelTestsBase
     {
-        private readonly IFixture _fixture;
-
-        public ViewModelTests()
-        {
-            _fixture = new Fixture().Customize(new AutoMoqCustomization());
-            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
-                     .ForEach(b => _fixture.Behaviors.Remove(b));
-            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());//recursionDepth
-
-        }
-
         // Use the naming convention MethodName_StateUnderTest_ExpectedBehavior
 
         [Fact]
@@ -38,12 +22,12 @@ namespace WeekPlanner.Tests.ViewModels
             // Arrange
             bool messageReceived = false;
 
-            var response = _fixture.Build<ResponseGirafUserDTO>().With(r => r.Success, true).Create();
-            var accountApiMock = _fixture.Freeze<Mock<IAccountApi>>();
+            var response = Fixture.Build<ResponseGirafUserDTO>().With(r => r.Success, true).Create();
+            var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>();
             accountApiMock.Setup(n => n.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()))
                               .ReturnsAsync(response);
 
-            var loginViewModel = _fixture.Create<LoginViewModel>();
+            var loginViewModel = Fixture.Create<LoginViewModel>();
 
             MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, MessageKeys.LoginSucceeded, (sender, args) =>
             {
@@ -65,16 +49,16 @@ namespace WeekPlanner.Tests.ViewModels
             bool messageReceived = false;
 
             // Freeze makes it so AutoFixture uses this particular object if it is needed
-            var accountApiMock = _fixture.Freeze<Mock<IAccountApi>>();
+            var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>();
             accountApiMock.Setup(n => n.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()))
                               .Throws<ApiException>();
 
-            var username = _fixture.Build<ValidatableObject<string>>()
+            var username = Fixture.Build<ValidatableObject<string>>()
                 .With(v => v.Value, "Graatand").Create();
-            var password = _fixture.Build<ValidatableObject<string>>()
+            var password = Fixture.Build<ValidatableObject<string>>()
                 .With(v => v.Value, "password").Create();
             
-            var loginViewModel = _fixture.Build<LoginViewModel>()
+            var loginViewModel = Fixture.Build<LoginViewModel>()
                 .With(l => l.UserName, username)
                 .With(l => l.Password, password)
                 .Create();
