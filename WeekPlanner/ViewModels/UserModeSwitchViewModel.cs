@@ -47,8 +47,6 @@ namespace WeekPlanner.ViewModels
 
         private async Task SwitchUserMode()
         {
-            //Mode = (Mode == UserMode.Guardian) ? UserMode.Citizen : UserMode.Guardian;
-
             if (Mode == UserMode.Guardian)
             {
                 Mode = UserMode.Citizen;
