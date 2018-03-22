@@ -30,7 +30,7 @@
                                <ffimageloading:CachedImage HeightRequest="200" Aspect="AspectFit"
                                   
                                  LoadingPlaceholder="image_loading.png" ErrorPlaceholder="image_error.png"
-                                 Source="{Binding}"/>
+                                 Source="{Binding}" BackgroundColor="Silver"/>
 
                               <!--<Label x:Name="Label" HorizontalOptions="Fill" HorizontalTextAlignment="Center" VerticalOptions="End"
                                   BackgroundColor="Silver" Opacity="0.35" Text="BilledTekst"/>-->
