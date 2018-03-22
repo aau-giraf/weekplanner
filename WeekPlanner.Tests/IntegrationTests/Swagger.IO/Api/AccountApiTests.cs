@@ -14,7 +14,7 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
         {
             // Arrange
             var api = new AccountApi();
-            var basePath = "http://localhost:5000";
+            var basePath = "http://web.giraf.cs.aau.dk:5050";
             api.Configuration.ApiClient = new ApiClient(basePath);
 
             // Act
@@ -26,6 +26,10 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
             Assert.True(result.Data.Username == "Graatand");
         }
 
+
+        /*  Test if the login in page returns the correct error when the user sends a login request
+            Each InlineData is a test with the specified data as test data, run seperately 
+            the test also contain supposedly test for simple SQL injection in the entries */
         [Theory]
         [InlineData("13uej912389u", "adw89u129363")]
         [InlineData("00000", "222222")]
@@ -38,7 +42,7 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
         {
             // Arrange
             var api = new AccountApi();
-            var basePath = "http://localhost:5000";
+            var basePath = "http://web.giraf.cs.aau.dk:5050";
             api.Configuration.ApiClient = new ApiClient(basePath);
 
             // Act
