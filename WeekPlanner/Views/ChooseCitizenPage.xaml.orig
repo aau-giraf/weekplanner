@@ -8,7 +8,22 @@
              base1:ViewModelLocator.AutoWireViewModel="true"
              Title="Vælg Borger">
     <ContentPage.Content>
-       <StackLayout>
+<<<<<<< HEAD
+        <StackLayout Margin="12">
+            <SearchBar x:Name="Search"
+                       Placeholder="Søg"
+                       TextChanged="SearchBar_TextChanged" />
+            <ListView x:Name="CitizensListView"
+                      ItemsSource="{Binding Citizens}"
+                      VerticalOptions="FillAndExpand"
+                      HasUnevenRows="true"
+                      ItemSelected="Handle_ItemSelected">
+                <ListView.Behaviors>
+                    <behaviors1:EventToCommandBehavior EventName="ItemTapped"
+                                                       Command="{Binding ChooseCitizenCommand}"
+                                                       EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
+=======
+        <StackLayout>
             <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
             <ListView 
                 x:Name="CitizensListView" 
@@ -22,10 +37,18 @@
                         Command="{Binding ChooseCitizenCommand}"
                         EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
                     <behaviors1:ListViewDeselectSelectedItemBehavior />
+>>>>>>> develop
                 </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
+<<<<<<< HEAD
+                            <StackLayout Padding="10">
+                                <Label Text="{Binding Username}"
+                                       LineBreakMode="NoWrap"
+                                       Style="{DynamicResource ListItemTextStyle}"
+                                       FontSize="16" />
+=======
                             <StackLayout Orientation="Horizontal">
                                 <!-- https://github.com/luberda-molinet/FFImageLoading/wiki/Xamarin.Forms-API -->
                                 <ffimageloading:CachedImage VerticalOptions="Center"
@@ -37,6 +60,7 @@
                                     <!-- Source will change to UserIcon when backend has switched to using images -->
                                 </ffimageloading:CachedImage>
                                 <Label FontSize="18" Margin="5, 0, 0, 0" Text="{Binding Username}" VerticalTextAlignment="Center"/>
+>>>>>>> develop
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

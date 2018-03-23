@@ -160,7 +160,11 @@
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
     <AndroidResource Include="Resources\values\styles.xml" />
-   <AndroidResource Include="Resources\drawable\default_profile_picture.jpg" />
+<<<<<<< HEAD
+    <AndroidResource Include="Resources\drawable\etnisk.png" />
+=======
+    <AndroidResource Include="Resources\drawable\default_profile_picture.jpg" />
+>>>>>>> develop
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj">

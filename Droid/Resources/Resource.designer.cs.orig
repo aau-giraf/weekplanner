@@ -2232,7 +2232,11 @@ namespace WeekPlanner.Droid
 			public const int design_password_eye = 2130837594;
 			
 			// aapt resource value: 0x7f02005b
+<<<<<<< HEAD
+			public const int etnisk = 2130837595;
+=======
 			public const int design_snackbar_background = 2130837595;
+>>>>>>> develop
 			
 			// aapt resource value: 0x7f02005c
 			public const int ic_audiotrack_dark = 2130837596;

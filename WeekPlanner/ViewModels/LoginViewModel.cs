@@ -56,11 +56,11 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand LoginCommand => new Command(async () => await SendLoginRequest());
+        public ICommand LoginCommand => new Command(async () => { if (Validate()) await SendLoginRequest(); });
 
-        public ICommand ValidateUserNameCommand => new Command(() => ValidateUserName());
+        public ICommand ValidateUserNameCommand => new Command(() => _userName.Validate());
 
-        public ICommand ValidatePasswordCommand => new Command(() => ValidatePassword());
+        public ICommand ValidatePasswordCommand => new Command(() => _password.Validate());
 
         private async Task SendLoginRequest()
         {
@@ -98,20 +98,10 @@ namespace WeekPlanner.ViewModels
 
         private bool Validate()
         {
-            var isValidUser = ValidateUserName();
-            var isValidPassword = ValidatePassword();
+            var isValidUser = _userName.Validate();
+            var isValidPassword = _password.Validate();
 
             return isValidUser && isValidPassword;
-        }
-
-        private bool ValidateUserName()
-        {
-            return _userName.Validate();
-        }
-
-        private bool ValidatePassword()
-        {
-            return _password.Validate();
         }
     }
 }
