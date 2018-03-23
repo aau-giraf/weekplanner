@@ -9,12 +9,18 @@
  */
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -96,35 +102,33 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Returns true if objects are equal
         /// </summary>
-        /// <param name="obj">Object to be compared</param>
+        /// <param name="input">Object to be compared</param>
         /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as ForgotPasswordDTO);
+            return this.Equals(input as ForgotPasswordDTO);
         }
 
         /// <summary>
         /// Returns true if ForgotPasswordDTO instances are equal
         /// </summary>
-        /// <param name="other">Instance of ForgotPasswordDTO to be compared</param>
+        /// <param name="input">Instance of ForgotPasswordDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ForgotPasswordDTO other)
+        public bool Equals(ForgotPasswordDTO input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            if (other == null)
+            if (input == null)
                 return false;
 
             return 
                 (
-                    this.Username == other.Username ||
-                    this.Username != null &&
-                    this.Username.Equals(other.Username)
+                    this.Username == input.Username ||
+                    (this.Username != null &&
+                    this.Username.Equals(input.Username))
                 ) && 
                 (
-                    this.Email == other.Email ||
-                    this.Email != null &&
-                    this.Email.Equals(other.Email)
+                    this.Email == input.Email ||
+                    (this.Email != null &&
+                    this.Email.Equals(input.Email))
                 );
         }
 
@@ -134,16 +138,14 @@ namespace IO.Swagger.Model
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
-                // Suitable nullity checks etc, of course :)
+                int hashCode = 41;
                 if (this.Username != null)
-                    hash = hash * 59 + this.Username.GetHashCode();
+                    hashCode = hashCode * 59 + this.Username.GetHashCode();
                 if (this.Email != null)
-                    hash = hash * 59 + this.Email.GetHashCode();
-                return hash;
+                    hashCode = hashCode * 59 + this.Email.GetHashCode();
+                return hashCode;
             }
         }
 

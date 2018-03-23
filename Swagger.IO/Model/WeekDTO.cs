@@ -10,11 +10,17 @@
 
 using System;
 using System.Linq;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -28,11 +34,13 @@ namespace IO.Swagger.Model
         /// Initializes a new instance of the <see cref="WeekDTO" /> class.
         /// </summary>
         /// <param name="Thumbnail">The weeks thumbnail..</param>
+        /// <param name="Name">A Name describing the week..</param>
         /// <param name="Id">The id of the week..</param>
         /// <param name="Days">A list of the days in the week schedule..</param>
-        public WeekDTO(PictogramDTO Thumbnail = default(PictogramDTO), long? Id = default(long?), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
+        public WeekDTO(PictogramDTO Thumbnail = default(PictogramDTO), string Name = default(string), long? Id = default(long?), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
         {
             this.Thumbnail = Thumbnail;
+            this.Name = Name;
             this.Id = Id;
             this.Days = Days;
         }
@@ -43,6 +51,13 @@ namespace IO.Swagger.Model
         /// <value>The weeks thumbnail.</value>
         [DataMember(Name="thumbnail", EmitDefaultValue=false)]
         public PictogramDTO Thumbnail { get; set; }
+
+        /// <summary>
+        /// A Name describing the week.
+        /// </summary>
+        /// <value>A Name describing the week.</value>
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
 
         /// <summary>
         /// The id of the week.
@@ -67,6 +82,7 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class WeekDTO {\n");
             sb.Append("  Thumbnail: ").Append(Thumbnail).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Days: ").Append(Days).Append("\n");
             sb.Append("}\n");
@@ -85,40 +101,43 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Returns true if objects are equal
         /// </summary>
-        /// <param name="obj">Object to be compared</param>
+        /// <param name="input">Object to be compared</param>
         /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as WeekDTO);
+            return this.Equals(input as WeekDTO);
         }
 
         /// <summary>
         /// Returns true if WeekDTO instances are equal
         /// </summary>
-        /// <param name="other">Instance of WeekDTO to be compared</param>
+        /// <param name="input">Instance of WeekDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(WeekDTO other)
+        public bool Equals(WeekDTO input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            if (other == null)
+            if (input == null)
                 return false;
 
             return 
                 (
-                    this.Thumbnail == other.Thumbnail ||
-                    this.Thumbnail != null &&
-                    this.Thumbnail.Equals(other.Thumbnail)
+                    this.Thumbnail == input.Thumbnail ||
+                    (this.Thumbnail != null &&
+                    this.Thumbnail.Equals(input.Thumbnail))
                 ) && 
                 (
-                    this.Id == other.Id ||
-                    this.Id != null &&
-                    this.Id.Equals(other.Id)
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
                 ) && 
                 (
-                    this.Days == other.Days ||
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
+                (
+                    this.Days == input.Days ||
                     this.Days != null &&
-                    this.Days.SequenceEqual(other.Days)
+                    this.Days.SequenceEqual(input.Days)
                 );
         }
 
@@ -128,18 +147,18 @@ namespace IO.Swagger.Model
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
-                // Suitable nullity checks etc, of course :)
+                int hashCode = 41;
                 if (this.Thumbnail != null)
-                    hash = hash * 59 + this.Thumbnail.GetHashCode();
+                    hashCode = hashCode * 59 + this.Thumbnail.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Id != null)
-                    hash = hash * 59 + this.Id.GetHashCode();
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.Days != null)
-                    hash = hash * 59 + this.Days.GetHashCode();
-                return hash;
+                    hashCode = hashCode * 59 + this.Days.GetHashCode();
+                return hashCode;
             }
         }
 

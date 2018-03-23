@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using RestSharp;
 using IO.Swagger.Client;
@@ -73,9 +74,9 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>ResponseChoiceDTO</returns>
-        ResponseChoiceDTO V1ChoiceByIdPut (long? id, ChoiceDTO choice = null);
+        ResponseChoiceDTO V1ChoiceByIdPut (long? id, ChoiceDTO newValues = null);
 
         /// <summary>
         /// Update info of a GirafRest.Models.Choice choice.
@@ -85,9 +86,9 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>ApiResponse of ResponseChoiceDTO</returns>
-        ApiResponse<ResponseChoiceDTO> V1ChoiceByIdPutWithHttpInfo (long? id, ChoiceDTO choice = null);
+        ApiResponse<ResponseChoiceDTO> V1ChoiceByIdPutWithHttpInfo (long? id, ChoiceDTO newValues = null);
         /// <summary>
         /// Create a new GirafRest.Models.Choice choice.
         /// </summary>
@@ -95,7 +96,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>ResponseChoiceDTO</returns>
         ResponseChoiceDTO V1ChoicePost (ChoiceDTO choice = null);
 
@@ -106,7 +107,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>ApiResponse of ResponseChoiceDTO</returns>
         ApiResponse<ResponseChoiceDTO> V1ChoicePostWithHttpInfo (ChoiceDTO choice = null);
         #endregion Synchronous Operations
@@ -161,9 +162,9 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>Task of ResponseChoiceDTO</returns>
-        System.Threading.Tasks.Task<ResponseChoiceDTO> V1ChoiceByIdPutAsync (long? id, ChoiceDTO choice = null);
+        System.Threading.Tasks.Task<ResponseChoiceDTO> V1ChoiceByIdPutAsync (long? id, ChoiceDTO newValues = null);
 
         /// <summary>
         /// Update info of a GirafRest.Models.Choice choice.
@@ -173,9 +174,9 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseChoiceDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseChoiceDTO>> V1ChoiceByIdPutAsyncWithHttpInfo (long? id, ChoiceDTO choice = null);
+        System.Threading.Tasks.Task<ApiResponse<ResponseChoiceDTO>> V1ChoiceByIdPutAsyncWithHttpInfo (long? id, ChoiceDTO newValues = null);
         /// <summary>
         /// Create a new GirafRest.Models.Choice choice.
         /// </summary>
@@ -183,7 +184,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>Task of ResponseChoiceDTO</returns>
         System.Threading.Tasks.Task<ResponseChoiceDTO> V1ChoicePostAsync (ChoiceDTO choice = null);
 
@@ -194,7 +195,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseChoiceDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseChoiceDTO>> V1ChoicePostAsyncWithHttpInfo (ChoiceDTO choice = null);
         #endregion Asynchronous Operations
@@ -213,15 +214,9 @@ namespace IO.Swagger.Api
         /// <returns></returns>
         public ChoiceApi(String basePath)
         {
-            this.Configuration = new Configuration(new ApiClient(basePath));
+            this.Configuration = new Configuration { BasePath = basePath };
 
             ExceptionFactory = IO.Swagger.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
         }
 
         /// <summary>
@@ -238,12 +233,6 @@ namespace IO.Swagger.Api
                 this.Configuration = configuration;
 
             ExceptionFactory = IO.Swagger.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
         }
 
         /// <summary>
@@ -292,9 +281,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <returns>Dictionary of HTTP header</returns>
         [Obsolete("DefaultHeader is deprecated, please use Configuration.DefaultHeader instead.")]
-        public Dictionary<String, String> DefaultHeader()
+        public IDictionary<String, String> DefaultHeader()
         {
-            return this.Configuration.DefaultHeader;
+            return new ReadOnlyDictionary<string, string>(this.Configuration.DefaultHeader);
         }
 
         /// <summary>
@@ -335,7 +324,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Choice/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -358,6 +347,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -404,7 +398,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Choice/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -427,6 +421,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -472,7 +471,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Choice/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -495,6 +494,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -541,7 +545,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Choice/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -564,6 +568,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -588,11 +597,11 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>ResponseChoiceDTO</returns>
-        public ResponseChoiceDTO V1ChoiceByIdPut (long? id, ChoiceDTO choice = null)
+        public ResponseChoiceDTO V1ChoiceByIdPut (long? id, ChoiceDTO newValues = null)
         {
-             ApiResponse<ResponseChoiceDTO> localVarResponse = V1ChoiceByIdPutWithHttpInfo(id, choice);
+             ApiResponse<ResponseChoiceDTO> localVarResponse = V1ChoiceByIdPutWithHttpInfo(id, newValues);
              return localVarResponse.Data;
         }
 
@@ -601,9 +610,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>ApiResponse of ResponseChoiceDTO</returns>
-        public ApiResponse< ResponseChoiceDTO > V1ChoiceByIdPutWithHttpInfo (long? id, ChoiceDTO choice = null)
+        public ApiResponse< ResponseChoiceDTO > V1ChoiceByIdPutWithHttpInfo (long? id, ChoiceDTO newValues = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -611,7 +620,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Choice/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -637,15 +646,20 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            if (choice != null && choice.GetType() != typeof(byte[]))
+            if (newValues != null && newValues.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(choice); // http body (model) parameter
+                localVarPostBody = Configuration.ApiClient.Serialize(newValues); // http body (model) parameter
             }
             else
             {
-                localVarPostBody = choice; // byte array
+                localVarPostBody = newValues; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -670,11 +684,11 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>Task of ResponseChoiceDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseChoiceDTO> V1ChoiceByIdPutAsync (long? id, ChoiceDTO choice = null)
+        public async System.Threading.Tasks.Task<ResponseChoiceDTO> V1ChoiceByIdPutAsync (long? id, ChoiceDTO newValues = null)
         {
-             ApiResponse<ResponseChoiceDTO> localVarResponse = await V1ChoiceByIdPutAsyncWithHttpInfo(id, choice);
+             ApiResponse<ResponseChoiceDTO> localVarResponse = await V1ChoiceByIdPutAsyncWithHttpInfo(id, newValues);
              return localVarResponse.Data;
 
         }
@@ -684,9 +698,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
+        /// <param name="newValues">A GirafRest.Models.DTOs.ChoiceDTO with all new information to update with.             The Id found in this DTO is the target choice. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseChoiceDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseChoiceDTO>> V1ChoiceByIdPutAsyncWithHttpInfo (long? id, ChoiceDTO choice = null)
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseChoiceDTO>> V1ChoiceByIdPutAsyncWithHttpInfo (long? id, ChoiceDTO newValues = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -694,7 +708,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Choice/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -720,15 +734,20 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            if (choice != null && choice.GetType() != typeof(byte[]))
+            if (newValues != null && newValues.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(choice); // http body (model) parameter
+                localVarPostBody = Configuration.ApiClient.Serialize(newValues); // http body (model) parameter
             }
             else
             {
-                localVarPostBody = choice; // byte array
+                localVarPostBody = newValues; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -752,7 +771,7 @@ namespace IO.Swagger.Api
         /// Create a new GirafRest.Models.Choice choice. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>ResponseChoiceDTO</returns>
         public ResponseChoiceDTO V1ChoicePost (ChoiceDTO choice = null)
         {
@@ -764,14 +783,14 @@ namespace IO.Swagger.Api
         /// Create a new GirafRest.Models.Choice choice. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>ApiResponse of ResponseChoiceDTO</returns>
         public ApiResponse< ResponseChoiceDTO > V1ChoicePostWithHttpInfo (ChoiceDTO choice = null)
         {
 
             var localVarPath = "/v1/Choice";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -805,6 +824,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = choice; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -828,7 +852,7 @@ namespace IO.Swagger.Api
         /// Create a new GirafRest.Models.Choice choice. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>Task of ResponseChoiceDTO</returns>
         public async System.Threading.Tasks.Task<ResponseChoiceDTO> V1ChoicePostAsync (ChoiceDTO choice = null)
         {
@@ -841,14 +865,14 @@ namespace IO.Swagger.Api
         /// Create a new GirafRest.Models.Choice choice. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new cho�ce. (optional)</param>
+        /// <param name="choice">A GirafRest.Models.DTOs.ChoiceDTO with all relevant information about the new choice. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseChoiceDTO)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<ResponseChoiceDTO>> V1ChoicePostAsyncWithHttpInfo (ChoiceDTO choice = null)
         {
 
             var localVarPath = "/v1/Choice";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -882,6 +906,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = choice; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,

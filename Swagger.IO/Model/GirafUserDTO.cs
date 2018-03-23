@@ -12,11 +12,15 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -35,30 +39,29 @@ namespace IO.Swagger.Model
         {
             
             /// <summary>
-            /// Enum Citizen for "Citizen"
+            /// Enum Citizen for value: Citizen
             /// </summary>
             [EnumMember(Value = "Citizen")]
-            Citizen,
+            Citizen = 1,
             
             /// <summary>
-            /// Enum Department for "Department"
+            /// Enum Department for value: Department
             /// </summary>
             [EnumMember(Value = "Department")]
-            Department,
+            Department = 2,
             
             /// <summary>
-            /// Enum Guardian for "Guardian"
+            /// Enum Guardian for value: Guardian
             /// </summary>
             [EnumMember(Value = "Guardian")]
-            Guardian,
+            Guardian = 3,
             
             /// <summary>
-            /// Enum SuperUser for "SuperUser"
+            /// Enum SuperUser for value: SuperUser
             /// </summary>
             [EnumMember(Value = "SuperUser")]
-            SuperUser
+            SuperUser = 4
         }
-
 
         /// <summary>
         /// List of the roles the current user is defined as in the system.
@@ -70,12 +73,13 @@ namespace IO.Swagger.Model
         /// Initializes a new instance of the <see cref="GirafUserDTO" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        public GirafUserDTO() { }
+        protected GirafUserDTO() { }
         /// <summary>
         /// Initializes a new instance of the <see cref="GirafUserDTO" /> class.
         /// </summary>
         /// <param name="Role">List of the roles the current user is defined as in the system..</param>
-        /// <param name="GuardianOf">List of users the user is guardian of. Is simply null if the user isn&#39;t a guardian. Contains guardians if the user is a Department.</param>
+        /// <param name="Citizens">List of users the user is guardian of. Is simply null if the user isn&#39;t a guardian. Contains guardians if the user is a Department.</param>
+        /// <param name="Guardians">Gets or sets guardians of a user..</param>
         /// <param name="Id">Id (required).</param>
         /// <param name="Username">Username (required).</param>
         /// <param name="ScreenName">The display name of the user..</param>
@@ -84,7 +88,7 @@ namespace IO.Swagger.Model
         /// <param name="WeekScheduleIds">WeekScheduleIds (required).</param>
         /// <param name="Resources">Resources (required).</param>
         /// <param name="Settings">Settings (required).</param>
-        public GirafUserDTO(RoleEnum? Role = default(RoleEnum?), List<GirafUserDTO> GuardianOf = default(List<GirafUserDTO>), string Id = default(string), string Username = default(string), string ScreenName = default(string), byte[] UserIcon = default(byte[]), long? Department = default(long?), List<WeekDTO> WeekScheduleIds = default(List<WeekDTO>), List<ResourceDTO> Resources = default(List<ResourceDTO>), LauncherOptionsDTO Settings = default(LauncherOptionsDTO))
+        public GirafUserDTO(RoleEnum? Role = default(RoleEnum?), List<GirafUserDTO> Citizens = default(List<GirafUserDTO>), List<GirafUserDTO> Guardians = default(List<GirafUserDTO>), string Id = default(string), string Username = default(string), string ScreenName = default(string), byte[] UserIcon = default(byte[]), long? Department = default(long?), List<WeekDTO> WeekScheduleIds = default(List<WeekDTO>), List<ResourceDTO> Resources = default(List<ResourceDTO>), LauncherOptionsDTO Settings = default(LauncherOptionsDTO))
         {
             // to ensure "Id" is required (not null)
             if (Id == null)
@@ -132,7 +136,8 @@ namespace IO.Swagger.Model
                 this.Settings = Settings;
             }
             this.Role = Role;
-            this.GuardianOf = GuardianOf;
+            this.Citizens = Citizens;
+            this.Guardians = Guardians;
             this.ScreenName = ScreenName;
             this.UserIcon = UserIcon;
             this.Department = Department;
@@ -143,8 +148,15 @@ namespace IO.Swagger.Model
         /// List of users the user is guardian of. Is simply null if the user isn&#39;t a guardian. Contains guardians if the user is a Department
         /// </summary>
         /// <value>List of users the user is guardian of. Is simply null if the user isn&#39;t a guardian. Contains guardians if the user is a Department</value>
-        [DataMember(Name="guardianOf", EmitDefaultValue=false)]
-        public List<GirafUserDTO> GuardianOf { get; set; }
+        [DataMember(Name="citizens", EmitDefaultValue=false)]
+        public List<GirafUserDTO> Citizens { get; set; }
+
+        /// <summary>
+        /// Gets or sets guardians of a user.
+        /// </summary>
+        /// <value>Gets or sets guardians of a user.</value>
+        [DataMember(Name="guardians", EmitDefaultValue=false)]
+        public List<GirafUserDTO> Guardians { get; set; }
 
         /// <summary>
         /// Gets or Sets Id
@@ -206,7 +218,8 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class GirafUserDTO {\n");
             sb.Append("  Role: ").Append(Role).Append("\n");
-            sb.Append("  GuardianOf: ").Append(GuardianOf).Append("\n");
+            sb.Append("  Citizens: ").Append(Citizens).Append("\n");
+            sb.Append("  Guardians: ").Append(Guardians).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Username: ").Append(Username).Append("\n");
             sb.Append("  ScreenName: ").Append(ScreenName).Append("\n");
@@ -231,75 +244,78 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Returns true if objects are equal
         /// </summary>
-        /// <param name="obj">Object to be compared</param>
+        /// <param name="input">Object to be compared</param>
         /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as GirafUserDTO);
+            return this.Equals(input as GirafUserDTO);
         }
 
         /// <summary>
         /// Returns true if GirafUserDTO instances are equal
         /// </summary>
-        /// <param name="other">Instance of GirafUserDTO to be compared</param>
+        /// <param name="input">Instance of GirafUserDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(GirafUserDTO other)
+        public bool Equals(GirafUserDTO input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            if (other == null)
+            if (input == null)
                 return false;
 
             return 
                 (
-                    this.Role == other.Role ||
-                    this.Role != null &&
-                    this.Role.Equals(other.Role)
+                    this.Role == input.Role ||
+                    (this.Role != null &&
+                    this.Role.Equals(input.Role))
                 ) && 
                 (
-                    this.GuardianOf == other.GuardianOf ||
-                    this.GuardianOf != null &&
-                    this.GuardianOf.SequenceEqual(other.GuardianOf)
+                    this.Citizens == input.Citizens ||
+                    this.Citizens != null &&
+                    this.Citizens.SequenceEqual(input.Citizens)
                 ) && 
                 (
-                    this.Id == other.Id ||
-                    this.Id != null &&
-                    this.Id.Equals(other.Id)
+                    this.Guardians == input.Guardians ||
+                    this.Guardians != null &&
+                    this.Guardians.SequenceEqual(input.Guardians)
                 ) && 
                 (
-                    this.Username == other.Username ||
-                    this.Username != null &&
-                    this.Username.Equals(other.Username)
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
                 ) && 
                 (
-                    this.ScreenName == other.ScreenName ||
-                    this.ScreenName != null &&
-                    this.ScreenName.Equals(other.ScreenName)
+                    this.Username == input.Username ||
+                    (this.Username != null &&
+                    this.Username.Equals(input.Username))
                 ) && 
                 (
-                    this.UserIcon == other.UserIcon ||
-                    this.UserIcon != null &&
-                    this.UserIcon.Equals(other.UserIcon)
+                    this.ScreenName == input.ScreenName ||
+                    (this.ScreenName != null &&
+                    this.ScreenName.Equals(input.ScreenName))
                 ) && 
                 (
-                    this.Department == other.Department ||
-                    this.Department != null &&
-                    this.Department.Equals(other.Department)
+                    this.UserIcon == input.UserIcon ||
+                    (this.UserIcon != null &&
+                    this.UserIcon.Equals(input.UserIcon))
                 ) && 
                 (
-                    this.WeekScheduleIds == other.WeekScheduleIds ||
+                    this.Department == input.Department ||
+                    (this.Department != null &&
+                    this.Department.Equals(input.Department))
+                ) && 
+                (
+                    this.WeekScheduleIds == input.WeekScheduleIds ||
                     this.WeekScheduleIds != null &&
-                    this.WeekScheduleIds.SequenceEqual(other.WeekScheduleIds)
+                    this.WeekScheduleIds.SequenceEqual(input.WeekScheduleIds)
                 ) && 
                 (
-                    this.Resources == other.Resources ||
+                    this.Resources == input.Resources ||
                     this.Resources != null &&
-                    this.Resources.SequenceEqual(other.Resources)
+                    this.Resources.SequenceEqual(input.Resources)
                 ) && 
                 (
-                    this.Settings == other.Settings ||
-                    this.Settings != null &&
-                    this.Settings.Equals(other.Settings)
+                    this.Settings == input.Settings ||
+                    (this.Settings != null &&
+                    this.Settings.Equals(input.Settings))
                 );
         }
 
@@ -309,32 +325,32 @@ namespace IO.Swagger.Model
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
-                // Suitable nullity checks etc, of course :)
+                int hashCode = 41;
                 if (this.Role != null)
-                    hash = hash * 59 + this.Role.GetHashCode();
-                if (this.GuardianOf != null)
-                    hash = hash * 59 + this.GuardianOf.GetHashCode();
+                    hashCode = hashCode * 59 + this.Role.GetHashCode();
+                if (this.Citizens != null)
+                    hashCode = hashCode * 59 + this.Citizens.GetHashCode();
+                if (this.Guardians != null)
+                    hashCode = hashCode * 59 + this.Guardians.GetHashCode();
                 if (this.Id != null)
-                    hash = hash * 59 + this.Id.GetHashCode();
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.Username != null)
-                    hash = hash * 59 + this.Username.GetHashCode();
+                    hashCode = hashCode * 59 + this.Username.GetHashCode();
                 if (this.ScreenName != null)
-                    hash = hash * 59 + this.ScreenName.GetHashCode();
+                    hashCode = hashCode * 59 + this.ScreenName.GetHashCode();
                 if (this.UserIcon != null)
-                    hash = hash * 59 + this.UserIcon.GetHashCode();
+                    hashCode = hashCode * 59 + this.UserIcon.GetHashCode();
                 if (this.Department != null)
-                    hash = hash * 59 + this.Department.GetHashCode();
+                    hashCode = hashCode * 59 + this.Department.GetHashCode();
                 if (this.WeekScheduleIds != null)
-                    hash = hash * 59 + this.WeekScheduleIds.GetHashCode();
+                    hashCode = hashCode * 59 + this.WeekScheduleIds.GetHashCode();
                 if (this.Resources != null)
-                    hash = hash * 59 + this.Resources.GetHashCode();
+                    hashCode = hashCode * 59 + this.Resources.GetHashCode();
                 if (this.Settings != null)
-                    hash = hash * 59 + this.Settings.GetHashCode();
-                return hash;
+                    hashCode = hashCode * 59 + this.Settings.GetHashCode();
+                return hashCode;
             }
         }
 

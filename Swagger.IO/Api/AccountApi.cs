@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using RestSharp;
 using IO.Swagger.Client;
@@ -51,9 +52,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Response</returns>
-        Response V1AccountChangePasswordPost (string oldPassword, string newPassword, string confirmPassword = null);
+        Response V1AccountChangePasswordPost (string oldPassword, string newPassword);
 
         /// <summary>
         /// Allows the user to change his password.
@@ -64,9 +64,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1AccountChangePasswordPostWithHttpInfo (string oldPassword, string newPassword, string confirmPassword = null);
+        ApiResponse<Response> V1AccountChangePasswordPostWithHttpInfo (string oldPassword, string newPassword);
         /// <summary>
         /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address.
         /// </summary>
@@ -96,8 +95,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1AccountLoginPost (LoginDTO model = null);
+        /// <returns>ResponseString</returns>
+        ResponseString V1AccountLoginPost (LoginDTO model = null);
 
         /// <summary>
         /// This endpoint allows the user to sign in to his account by providing valid username and password.
@@ -107,8 +106,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1AccountLoginPostWithHttpInfo (LoginDTO model = null);
+        /// <returns>ApiResponse of ResponseString</returns>
+        ApiResponse<ResponseString> V1AccountLoginPostWithHttpInfo (LoginDTO model = null);
         /// <summary>
         /// Logs the currently authenticated user out of the system.
         /// </summary>
@@ -129,24 +128,24 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of Response</returns>
         ApiResponse<Response> V1AccountLogoutPostWithHttpInfo ();
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword.
+        /// Register a new user in the REST-API
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>ResponseGirafUserDTO</returns>
         ResponseGirafUserDTO V1AccountRegisterPost (RegisterDTO model = null);
 
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword.
+        /// Register a new user in the REST-API
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
         ApiResponse<ResponseGirafUserDTO> V1AccountRegisterPostWithHttpInfo (RegisterDTO model = null);
         /// <summary>
@@ -269,9 +268,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1AccountChangePasswordPostAsync (string oldPassword, string newPassword, string confirmPassword = null);
+        System.Threading.Tasks.Task<Response> V1AccountChangePasswordPostAsync (string oldPassword, string newPassword);
 
         /// <summary>
         /// Allows the user to change his password.
@@ -282,9 +280,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountChangePasswordPostAsyncWithHttpInfo (string oldPassword, string newPassword, string confirmPassword = null);
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountChangePasswordPostAsyncWithHttpInfo (string oldPassword, string newPassword);
         /// <summary>
         /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address.
         /// </summary>
@@ -314,8 +311,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1AccountLoginPostAsync (LoginDTO model = null);
+        /// <returns>Task of ResponseString</returns>
+        System.Threading.Tasks.Task<ResponseString> V1AccountLoginPostAsync (LoginDTO model = null);
 
         /// <summary>
         /// This endpoint allows the user to sign in to his account by providing valid username and password.
@@ -325,8 +322,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1AccountLoginPostAsyncWithHttpInfo (LoginDTO model = null);
+        /// <returns>Task of ApiResponse (ResponseString)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseString>> V1AccountLoginPostAsyncWithHttpInfo (LoginDTO model = null);
         /// <summary>
         /// Logs the currently authenticated user out of the system.
         /// </summary>
@@ -347,24 +344,24 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (Response)</returns>
         System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountLogoutPostAsyncWithHttpInfo ();
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword.
+        /// Register a new user in the REST-API
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>Task of ResponseGirafUserDTO</returns>
         System.Threading.Tasks.Task<ResponseGirafUserDTO> V1AccountRegisterPostAsync (RegisterDTO model = null);
 
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword.
+        /// Register a new user in the REST-API
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1AccountRegisterPostAsyncWithHttpInfo (RegisterDTO model = null);
         /// <summary>
@@ -473,15 +470,9 @@ namespace IO.Swagger.Api
         /// <returns></returns>
         public AccountApi(String basePath)
         {
-            this.Configuration = new Configuration(new ApiClient(basePath));
+            this.Configuration = new Configuration { BasePath = basePath };
 
             ExceptionFactory = IO.Swagger.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
         }
 
         /// <summary>
@@ -498,12 +489,6 @@ namespace IO.Swagger.Api
                 this.Configuration = configuration;
 
             ExceptionFactory = IO.Swagger.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
         }
 
         /// <summary>
@@ -552,9 +537,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <returns>Dictionary of HTTP header</returns>
         [Obsolete("DefaultHeader is deprecated, please use Configuration.DefaultHeader instead.")]
-        public Dictionary<String, String> DefaultHeader()
+        public IDictionary<String, String> DefaultHeader()
         {
-            return this.Configuration.DefaultHeader;
+            return new ReadOnlyDictionary<string, string>(this.Configuration.DefaultHeader);
         }
 
         /// <summary>
@@ -589,7 +574,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/access-denied";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -608,6 +593,11 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -648,7 +638,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/access-denied";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -667,6 +657,11 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -692,11 +687,10 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Response</returns>
-        public Response V1AccountChangePasswordPost (string oldPassword, string newPassword, string confirmPassword = null)
+        public Response V1AccountChangePasswordPost (string oldPassword, string newPassword)
         {
-             ApiResponse<Response> localVarResponse = V1AccountChangePasswordPostWithHttpInfo(oldPassword, newPassword, confirmPassword);
+             ApiResponse<Response> localVarResponse = V1AccountChangePasswordPostWithHttpInfo(oldPassword, newPassword);
              return localVarResponse.Data;
         }
 
@@ -706,9 +700,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1AccountChangePasswordPostWithHttpInfo (string oldPassword, string newPassword, string confirmPassword = null)
+        public ApiResponse< Response > V1AccountChangePasswordPostWithHttpInfo (string oldPassword, string newPassword)
         {
             // verify the required parameter 'oldPassword' is set
             if (oldPassword == null)
@@ -719,7 +712,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/change-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -740,10 +733,14 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (oldPassword != null) localVarQueryParams.Add("OldPassword", Configuration.ApiClient.ParameterToString(oldPassword)); // query parameter
-            if (newPassword != null) localVarQueryParams.Add("NewPassword", Configuration.ApiClient.ParameterToString(newPassword)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.Add("ConfirmPassword", Configuration.ApiClient.ParameterToString(confirmPassword)); // query parameter
+            if (oldPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "OldPassword", oldPassword)); // query parameter
+            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -769,11 +766,10 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1AccountChangePasswordPostAsync (string oldPassword, string newPassword, string confirmPassword = null)
+        public async System.Threading.Tasks.Task<Response> V1AccountChangePasswordPostAsync (string oldPassword, string newPassword)
         {
-             ApiResponse<Response> localVarResponse = await V1AccountChangePasswordPostAsyncWithHttpInfo(oldPassword, newPassword, confirmPassword);
+             ApiResponse<Response> localVarResponse = await V1AccountChangePasswordPostAsyncWithHttpInfo(oldPassword, newPassword);
              return localVarResponse.Data;
 
         }
@@ -784,9 +780,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountChangePasswordPostAsyncWithHttpInfo (string oldPassword, string newPassword, string confirmPassword = null)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountChangePasswordPostAsyncWithHttpInfo (string oldPassword, string newPassword)
         {
             // verify the required parameter 'oldPassword' is set
             if (oldPassword == null)
@@ -797,7 +792,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/change-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -818,10 +813,14 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (oldPassword != null) localVarQueryParams.Add("OldPassword", Configuration.ApiClient.ParameterToString(oldPassword)); // query parameter
-            if (newPassword != null) localVarQueryParams.Add("NewPassword", Configuration.ApiClient.ParameterToString(newPassword)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.Add("ConfirmPassword", Configuration.ApiClient.ParameterToString(confirmPassword)); // query parameter
+            if (oldPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "OldPassword", oldPassword)); // query parameter
+            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -864,7 +863,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/forgot-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -898,6 +897,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = model; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -941,7 +945,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/forgot-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -975,6 +979,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = model; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -999,10 +1008,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1AccountLoginPost (LoginDTO model = null)
+        /// <returns>ResponseString</returns>
+        public ResponseString V1AccountLoginPost (LoginDTO model = null)
         {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1AccountLoginPostWithHttpInfo(model);
+             ApiResponse<ResponseString> localVarResponse = V1AccountLoginPostWithHttpInfo(model);
              return localVarResponse.Data;
         }
 
@@ -1011,13 +1020,13 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1AccountLoginPostWithHttpInfo (LoginDTO model = null)
+        /// <returns>ApiResponse of ResponseString</returns>
+        public ApiResponse< ResponseString > V1AccountLoginPostWithHttpInfo (LoginDTO model = null)
         {
 
             var localVarPath = "/v1/Account/login";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1051,6 +1060,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = model; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1065,9 +1079,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseString>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+                (ResponseString) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseString)));
         }
 
         /// <summary>
@@ -1075,10 +1089,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1AccountLoginPostAsync (LoginDTO model = null)
+        /// <returns>Task of ResponseString</returns>
+        public async System.Threading.Tasks.Task<ResponseString> V1AccountLoginPostAsync (LoginDTO model = null)
         {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1AccountLoginPostAsyncWithHttpInfo(model);
+             ApiResponse<ResponseString> localVarResponse = await V1AccountLoginPostAsyncWithHttpInfo(model);
              return localVarResponse.Data;
 
         }
@@ -1088,13 +1102,13 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1AccountLoginPostAsyncWithHttpInfo (LoginDTO model = null)
+        /// <returns>Task of ApiResponse (ResponseString)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseString>> V1AccountLoginPostAsyncWithHttpInfo (LoginDTO model = null)
         {
 
             var localVarPath = "/v1/Account/login";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1128,6 +1142,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = model; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1142,9 +1161,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseString>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+                (ResponseString) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseString)));
         }
 
         /// <summary>
@@ -1168,7 +1187,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/logout";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1190,6 +1209,11 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1231,7 +1255,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/logout";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1253,6 +1277,11 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1273,10 +1302,10 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword. 
+        /// Register a new user in the REST-API 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>ResponseGirafUserDTO</returns>
         public ResponseGirafUserDTO V1AccountRegisterPost (RegisterDTO model = null)
         {
@@ -1285,17 +1314,17 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword. 
+        /// Register a new user in the REST-API 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
         public ApiResponse< ResponseGirafUserDTO > V1AccountRegisterPostWithHttpInfo (RegisterDTO model = null)
         {
 
             var localVarPath = "/v1/Account/register";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1329,6 +1358,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = model; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1349,10 +1383,10 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword. 
+        /// Register a new user in the REST-API 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>Task of ResponseGirafUserDTO</returns>
         public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1AccountRegisterPostAsync (RegisterDTO model = null)
         {
@@ -1362,17 +1396,17 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Register a new user in the REST-API. The caller must supply a username, a password and a ConfirmPassword. 
+        /// Register a new user in the REST-API 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username, Password and ConfirmPassword. (optional)</param>
+        /// <param name="model">A reference to a RegisterDTO(RegisterViewModelDTO), i.e. a json string containing three strings;              Username and Password. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1AccountRegisterPostAsyncWithHttpInfo (RegisterDTO model = null)
         {
 
             var localVarPath = "/v1/Account/register";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1406,6 +1440,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = model; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1445,7 +1484,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/reset-password-confirmation";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1464,6 +1503,11 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1504,7 +1548,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/reset-password-confirmation";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1523,6 +1567,11 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1564,7 +1613,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/reset-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1582,8 +1631,13 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (code != null) localVarQueryParams.Add("code", Configuration.ApiClient.ParameterToString(code)); // query parameter
+            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "code", code)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1626,7 +1680,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/reset-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1644,8 +1698,13 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (code != null) localVarQueryParams.Add("code", Configuration.ApiClient.ParameterToString(code)); // query parameter
+            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "code", code)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1702,7 +1761,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/reset-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1720,11 +1779,16 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (username != null) localVarQueryParams.Add("Username", Configuration.ApiClient.ParameterToString(username)); // query parameter
-            if (password != null) localVarQueryParams.Add("Password", Configuration.ApiClient.ParameterToString(password)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.Add("ConfirmPassword", Configuration.ApiClient.ParameterToString(confirmPassword)); // query parameter
-            if (code != null) localVarQueryParams.Add("Code", Configuration.ApiClient.ParameterToString(code)); // query parameter
+            if (username != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Username", username)); // query parameter
+            if (password != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Password", password)); // query parameter
+            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
+            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Code", code)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1782,7 +1846,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/reset-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1800,11 +1864,16 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (username != null) localVarQueryParams.Add("Username", Configuration.ApiClient.ParameterToString(username)); // query parameter
-            if (password != null) localVarQueryParams.Add("Password", Configuration.ApiClient.ParameterToString(password)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.Add("ConfirmPassword", Configuration.ApiClient.ParameterToString(confirmPassword)); // query parameter
-            if (code != null) localVarQueryParams.Add("Code", Configuration.ApiClient.ParameterToString(code)); // query parameter
+            if (username != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Username", username)); // query parameter
+            if (password != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Password", password)); // query parameter
+            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
+            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Code", code)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1852,7 +1921,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/set-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1873,9 +1942,14 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (newPassword != null) localVarQueryParams.Add("NewPassword", Configuration.ApiClient.ParameterToString(newPassword)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.Add("ConfirmPassword", Configuration.ApiClient.ParameterToString(confirmPassword)); // query parameter
+            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
+            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1924,7 +1998,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Account/set-password";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1945,9 +2019,14 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (newPassword != null) localVarQueryParams.Add("NewPassword", Configuration.ApiClient.ParameterToString(newPassword)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.Add("ConfirmPassword", Configuration.ApiClient.ParameterToString(confirmPassword)); // query parameter
+            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
+            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,

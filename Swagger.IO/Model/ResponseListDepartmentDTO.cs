@@ -10,12 +10,17 @@
 
 using System;
 using System.Linq;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -26,287 +31,317 @@ namespace IO.Swagger.Model
     public partial class ResponseListDepartmentDTO :  IEquatable<ResponseListDepartmentDTO>, IValidatableObject
     {
         /// <summary>
-        /// Gets or Sets ErrorKey
+        /// Defines ErrorKey
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum ErrorKeyEnum
         {
             
             /// <summary>
-            /// Enum Error for "Error"
+            /// Enum Error for value: Error
             /// </summary>
             [EnumMember(Value = "Error")]
-            Error,
+            Error = 1,
             
             /// <summary>
-            /// Enum FormatError for "FormatError"
+            /// Enum FormatError for value: FormatError
             /// </summary>
             [EnumMember(Value = "FormatError")]
-            FormatError,
+            FormatError = 2,
             
             /// <summary>
-            /// Enum NoError for "NoError"
+            /// Enum NoError for value: NoError
             /// </summary>
             [EnumMember(Value = "NoError")]
-            NoError,
+            NoError = 3,
             
             /// <summary>
-            /// Enum NotAuthorized for "NotAuthorized"
+            /// Enum NotAuthorized for value: NotAuthorized
             /// </summary>
             [EnumMember(Value = "NotAuthorized")]
-            NotAuthorized,
+            NotAuthorized = 4,
             
             /// <summary>
-            /// Enum NotFound for "NotFound"
+            /// Enum NotFound for value: NotFound
             /// </summary>
             [EnumMember(Value = "NotFound")]
-            NotFound,
+            NotFound = 5,
             
             /// <summary>
-            /// Enum ApplicationNotFound for "ApplicationNotFound"
+            /// Enum ApplicationNotFound for value: ApplicationNotFound
             /// </summary>
             [EnumMember(Value = "ApplicationNotFound")]
-            ApplicationNotFound,
+            ApplicationNotFound = 6,
             
             /// <summary>
-            /// Enum ChoiceContainsInvalidPictogramId for "ChoiceContainsInvalidPictogramId"
+            /// Enum ChoiceContainsInvalidPictogramId for value: ChoiceContainsInvalidPictogramId
             /// </summary>
             [EnumMember(Value = "ChoiceContainsInvalidPictogramId")]
-            ChoiceContainsInvalidPictogramId,
+            ChoiceContainsInvalidPictogramId = 7,
             
             /// <summary>
-            /// Enum CitizinAlreadyHasGuardian for "CitizinAlreadyHasGuardian"
+            /// Enum CitizinAlreadyHasGuardian for value: CitizinAlreadyHasGuardian
             /// </summary>
             [EnumMember(Value = "CitizinAlreadyHasGuardian")]
-            CitizinAlreadyHasGuardian,
+            CitizinAlreadyHasGuardian = 8,
             
             /// <summary>
-            /// Enum CitizinNotFound for "CitizinNotFound"
+            /// Enum CitizinNotFound for value: CitizinNotFound
             /// </summary>
             [EnumMember(Value = "CitizinNotFound")]
-            CitizinNotFound,
+            CitizinNotFound = 9,
             
             /// <summary>
-            /// Enum DepartmentAlreadyOwnsResource for "DepartmentAlreadyOwnsResource"
+            /// Enum DepartmentAlreadyOwnsResource for value: DepartmentAlreadyOwnsResource
             /// </summary>
             [EnumMember(Value = "DepartmentAlreadyOwnsResource")]
-            DepartmentAlreadyOwnsResource,
+            DepartmentAlreadyOwnsResource = 10,
             
             /// <summary>
-            /// Enum DepartmentNotFound for "DepartmentNotFound"
+            /// Enum DepartmentNotFound for value: DepartmentNotFound
             /// </summary>
             [EnumMember(Value = "DepartmentNotFound")]
-            DepartmentNotFound,
+            DepartmentNotFound = 11,
             
             /// <summary>
-            /// Enum EmailServiceUnavailable for "EmailServiceUnavailable"
+            /// Enum EmailServiceUnavailable for value: EmailServiceUnavailable
             /// </summary>
             [EnumMember(Value = "EmailServiceUnavailable")]
-            EmailServiceUnavailable,
+            EmailServiceUnavailable = 12,
             
             /// <summary>
-            /// Enum ImageAlreadyExistOnPictogram for "ImageAlreadyExistOnPictogram"
+            /// Enum ImageAlreadyExistOnPictogram for value: ImageAlreadyExistOnPictogram
             /// </summary>
             [EnumMember(Value = "ImageAlreadyExistOnPictogram")]
-            ImageAlreadyExistOnPictogram,
+            ImageAlreadyExistOnPictogram = 13,
             
             /// <summary>
-            /// Enum ImageNotContainedInRequest for "ImageNotContainedInRequest"
+            /// Enum ImageNotContainedInRequest for value: ImageNotContainedInRequest
             /// </summary>
             [EnumMember(Value = "ImageNotContainedInRequest")]
-            ImageNotContainedInRequest,
+            ImageNotContainedInRequest = 14,
             
             /// <summary>
-            /// Enum InvalidCredentials for "InvalidCredentials"
+            /// Enum InvalidCredentials for value: InvalidCredentials
             /// </summary>
             [EnumMember(Value = "InvalidCredentials")]
-            InvalidCredentials,
+            InvalidCredentials = 15,
             
             /// <summary>
-            /// Enum InvalidModelState for "InvalidModelState"
+            /// Enum InvalidModelState for value: InvalidModelState
             /// </summary>
             [EnumMember(Value = "InvalidModelState")]
-            InvalidModelState,
+            InvalidModelState = 16,
             
             /// <summary>
-            /// Enum InvalidProperties for "InvalidProperties"
+            /// Enum InvalidProperties for value: InvalidProperties
             /// </summary>
             [EnumMember(Value = "InvalidProperties")]
-            InvalidProperties,
+            InvalidProperties = 17,
             
             /// <summary>
-            /// Enum MissingProperties for "MissingProperties"
+            /// Enum MissingProperties for value: MissingProperties
             /// </summary>
             [EnumMember(Value = "MissingProperties")]
-            MissingProperties,
+            MissingProperties = 18,
             
             /// <summary>
-            /// Enum NoWeekScheduleFound for "NoWeekScheduleFound"
+            /// Enum NoWeekScheduleFound for value: NoWeekScheduleFound
             /// </summary>
             [EnumMember(Value = "NoWeekScheduleFound")]
-            NoWeekScheduleFound,
+            NoWeekScheduleFound = 19,
             
             /// <summary>
-            /// Enum PasswordNotUpdated for "PasswordNotUpdated"
+            /// Enum PasswordNotUpdated for value: PasswordNotUpdated
             /// </summary>
             [EnumMember(Value = "PasswordNotUpdated")]
-            PasswordNotUpdated,
+            PasswordNotUpdated = 20,
             
             /// <summary>
-            /// Enum PictogramHasNoImage for "PictogramHasNoImage"
+            /// Enum PictogramHasNoImage for value: PictogramHasNoImage
             /// </summary>
             [EnumMember(Value = "PictogramHasNoImage")]
-            PictogramHasNoImage,
+            PictogramHasNoImage = 21,
             
             /// <summary>
-            /// Enum PictogramNotFound for "PictogramNotFound"
+            /// Enum PictogramNotFound for value: PictogramNotFound
             /// </summary>
             [EnumMember(Value = "PictogramNotFound")]
-            PictogramNotFound,
+            PictogramNotFound = 22,
             
             /// <summary>
-            /// Enum QueryFailed for "QueryFailed"
+            /// Enum QueryFailed for value: QueryFailed
             /// </summary>
             [EnumMember(Value = "QueryFailed")]
-            QueryFailed,
+            QueryFailed = 23,
             
             /// <summary>
-            /// Enum ResourceMustBePrivate for "ResourceMustBePrivate"
+            /// Enum ResourceMustBePrivate for value: ResourceMustBePrivate
             /// </summary>
             [EnumMember(Value = "ResourceMustBePrivate")]
-            ResourceMustBePrivate,
+            ResourceMustBePrivate = 24,
             
             /// <summary>
-            /// Enum ResourceNotFound for "ResourceNotFound"
+            /// Enum ResourceNotFound for value: ResourceNotFound
             /// </summary>
             [EnumMember(Value = "ResourceNotFound")]
-            ResourceNotFound,
+            ResourceNotFound = 25,
             
             /// <summary>
-            /// Enum ResourceNotOwnedByDepartment for "ResourceNotOwnedByDepartment"
+            /// Enum ResourceNotOwnedByDepartment for value: ResourceNotOwnedByDepartment
             /// </summary>
             [EnumMember(Value = "ResourceNotOwnedByDepartment")]
-            ResourceNotOwnedByDepartment,
+            ResourceNotOwnedByDepartment = 26,
             
             /// <summary>
-            /// Enum ResourceIDUnreadable for "ResourceIDUnreadable"
+            /// Enum ResourceIDUnreadable for value: ResourceIDUnreadable
             /// </summary>
             [EnumMember(Value = "ResourceIDUnreadable")]
-            ResourceIDUnreadable,
+            ResourceIDUnreadable = 27,
             
             /// <summary>
-            /// Enum RoleMustBeCitizin for "RoleMustBeCitizin"
+            /// Enum RoleMustBeCitizin for value: RoleMustBeCitizin
             /// </summary>
             [EnumMember(Value = "RoleMustBeCitizin")]
-            RoleMustBeCitizin,
+            RoleMustBeCitizin = 28,
             
             /// <summary>
-            /// Enum RoleNotFound for "RoleNotFound"
+            /// Enum RoleNotFound for value: RoleNotFound
             /// </summary>
             [EnumMember(Value = "RoleNotFound")]
-            RoleNotFound,
+            RoleNotFound = 29,
             
             /// <summary>
-            /// Enum ThumbnailDoesNotExist for "ThumbnailDoesNotExist"
+            /// Enum ThumbnailDoesNotExist for value: ThumbnailDoesNotExist
             /// </summary>
             [EnumMember(Value = "ThumbnailDoesNotExist")]
-            ThumbnailDoesNotExist,
+            ThumbnailDoesNotExist = 30,
             
             /// <summary>
-            /// Enum UserAlreadyExists for "UserAlreadyExists"
+            /// Enum UserAlreadyExists for value: UserAlreadyExists
             /// </summary>
             [EnumMember(Value = "UserAlreadyExists")]
-            UserAlreadyExists,
+            UserAlreadyExists = 31,
             
             /// <summary>
-            /// Enum UserNameAlreadyTakenWithinDepartment for "UserNameAlreadyTakenWithinDepartment"
+            /// Enum UserNameAlreadyTakenWithinDepartment for value: UserNameAlreadyTakenWithinDepartment
             /// </summary>
             [EnumMember(Value = "UserNameAlreadyTakenWithinDepartment")]
-            UserNameAlreadyTakenWithinDepartment,
+            UserNameAlreadyTakenWithinDepartment = 32,
             
             /// <summary>
-            /// Enum UserAlreadyHasAccess for "UserAlreadyHasAccess"
+            /// Enum UserAlreadyHasAccess for value: UserAlreadyHasAccess
             /// </summary>
             [EnumMember(Value = "UserAlreadyHasAccess")]
-            UserAlreadyHasAccess,
+            UserAlreadyHasAccess = 33,
             
             /// <summary>
-            /// Enum UserAlreadyHasIconUsePut for "UserAlreadyHasIconUsePut"
+            /// Enum UserAlreadyHasIconUsePut for value: UserAlreadyHasIconUsePut
             /// </summary>
             [EnumMember(Value = "UserAlreadyHasIconUsePut")]
-            UserAlreadyHasIconUsePut,
+            UserAlreadyHasIconUsePut = 34,
             
             /// <summary>
-            /// Enum UserAlreadyOwnsResource for "UserAlreadyOwnsResource"
+            /// Enum UserAlreadyOwnsResource for value: UserAlreadyOwnsResource
             /// </summary>
             [EnumMember(Value = "UserAlreadyOwnsResource")]
-            UserAlreadyOwnsResource,
+            UserAlreadyOwnsResource = 35,
             
             /// <summary>
-            /// Enum UserAndCitizinMustBeInSameDepartment for "UserAndCitizinMustBeInSameDepartment"
+            /// Enum UserAndCitizinMustBeInSameDepartment for value: UserAndCitizinMustBeInSameDepartment
             /// </summary>
             [EnumMember(Value = "UserAndCitizinMustBeInSameDepartment")]
-            UserAndCitizinMustBeInSameDepartment,
+            UserAndCitizinMustBeInSameDepartment = 36,
             
             /// <summary>
-            /// Enum UserCannotBeGuardianOfYourself for "UserCannotBeGuardianOfYourself"
+            /// Enum UserCannotBeGuardianOfYourself for value: UserCannotBeGuardianOfYourself
             /// </summary>
             [EnumMember(Value = "UserCannotBeGuardianOfYourself")]
-            UserCannotBeGuardianOfYourself,
+            UserCannotBeGuardianOfYourself = 37,
             
             /// <summary>
-            /// Enum UserDoesNotOwnResource for "UserDoesNotOwnResource"
+            /// Enum UserDoesNotOwnResource for value: UserDoesNotOwnResource
             /// </summary>
             [EnumMember(Value = "UserDoesNotOwnResource")]
-            UserDoesNotOwnResource,
+            UserDoesNotOwnResource = 38,
             
             /// <summary>
-            /// Enum UserHasNoIcon for "UserHasNoIcon"
+            /// Enum UserHasNoIcon for value: UserHasNoIcon
             /// </summary>
             [EnumMember(Value = "UserHasNoIcon")]
-            UserHasNoIcon,
+            UserHasNoIcon = 39,
             
             /// <summary>
-            /// Enum UserHasNoIconUsePost for "UserHasNoIconUsePost"
+            /// Enum UserHasNoIconUsePost for value: UserHasNoIconUsePost
             /// </summary>
             [EnumMember(Value = "UserHasNoIconUsePost")]
-            UserHasNoIconUsePost,
+            UserHasNoIconUsePost = 40,
             
             /// <summary>
-            /// Enum UserMustBeGuardian for "UserMustBeGuardian"
+            /// Enum UserMustBeGuardian for value: UserMustBeGuardian
             /// </summary>
             [EnumMember(Value = "UserMustBeGuardian")]
-            UserMustBeGuardian,
+            UserMustBeGuardian = 41,
             
             /// <summary>
-            /// Enum UserNotFound for "UserNotFound"
+            /// Enum UserNotFound for value: UserNotFound
             /// </summary>
             [EnumMember(Value = "UserNotFound")]
-            UserNotFound,
+            UserNotFound = 42,
             
             /// <summary>
-            /// Enum WeekScheduleNotFound for "WeekScheduleNotFound"
+            /// Enum WeekScheduleNotFound for value: WeekScheduleNotFound
             /// </summary>
             [EnumMember(Value = "WeekScheduleNotFound")]
-            WeekScheduleNotFound,
+            WeekScheduleNotFound = 43,
             
             /// <summary>
-            /// Enum Forbidden for "Forbidden"
+            /// Enum Forbidden for value: Forbidden
             /// </summary>
             [EnumMember(Value = "Forbidden")]
-            Forbidden,
+            Forbidden = 44,
             
             /// <summary>
-            /// Enum PasswordMissMatch for "PasswordMissMatch"
+            /// Enum PasswordMissMatch for value: PasswordMissMatch
             /// </summary>
             [EnumMember(Value = "PasswordMissMatch")]
-            PasswordMissMatch,
+            PasswordMissMatch = 45,
             
             /// <summary>
-            /// Enum TwoDaysCannotHaveSameDayProperty for "TwoDaysCannotHaveSameDayProperty"
+            /// Enum TwoDaysCannotHaveSameDayProperty for value: TwoDaysCannotHaveSameDayProperty
             /// </summary>
             [EnumMember(Value = "TwoDaysCannotHaveSameDayProperty")]
-            TwoDaysCannotHaveSameDayProperty
+            TwoDaysCannotHaveSameDayProperty = 46,
+            
+            /// <summary>
+            /// Enum UserHasNoCitizens for value: UserHasNoCitizens
+            /// </summary>
+            [EnumMember(Value = "UserHasNoCitizens")]
+            UserHasNoCitizens = 47,
+            
+            /// <summary>
+            /// Enum UserHasNoGuardians for value: UserHasNoGuardians
+            /// </summary>
+            [EnumMember(Value = "UserHasNoGuardians")]
+            UserHasNoGuardians = 48,
+            
+            /// <summary>
+            /// Enum DepartmentHasNoCitizens for value: DepartmentHasNoCitizens
+            /// </summary>
+            [EnumMember(Value = "DepartmentHasNoCitizens")]
+            DepartmentHasNoCitizens = 49,
+            
+            /// <summary>
+            /// Enum UnkonwnError for value: UnkonwnError
+            /// </summary>
+            [EnumMember(Value = "UnkonwnError")]
+            UnkonwnError = 50,
+            
+            /// <summary>
+            /// Enum CouldNotCreateDepartmentUser for value: CouldNotCreateDepartmentUser
+            /// </summary>
+            [EnumMember(Value = "CouldNotCreateDepartmentUser")]
+            CouldNotCreateDepartmentUser = 51
         }
 
         /// <summary>
@@ -374,45 +409,43 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Returns true if objects are equal
         /// </summary>
-        /// <param name="obj">Object to be compared</param>
+        /// <param name="input">Object to be compared</param>
         /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as ResponseListDepartmentDTO);
+            return this.Equals(input as ResponseListDepartmentDTO);
         }
 
         /// <summary>
         /// Returns true if ResponseListDepartmentDTO instances are equal
         /// </summary>
-        /// <param name="other">Instance of ResponseListDepartmentDTO to be compared</param>
+        /// <param name="input">Instance of ResponseListDepartmentDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ResponseListDepartmentDTO other)
+        public bool Equals(ResponseListDepartmentDTO input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            if (other == null)
+            if (input == null)
                 return false;
 
             return 
                 (
-                    this.Data == other.Data ||
+                    this.Data == input.Data ||
                     this.Data != null &&
-                    this.Data.SequenceEqual(other.Data)
+                    this.Data.SequenceEqual(input.Data)
                 ) && 
                 (
-                    this.Success == other.Success ||
-                    this.Success != null &&
-                    this.Success.Equals(other.Success)
+                    this.Success == input.Success ||
+                    (this.Success != null &&
+                    this.Success.Equals(input.Success))
                 ) && 
                 (
-                    this.ErrorProperties == other.ErrorProperties ||
+                    this.ErrorProperties == input.ErrorProperties ||
                     this.ErrorProperties != null &&
-                    this.ErrorProperties.SequenceEqual(other.ErrorProperties)
+                    this.ErrorProperties.SequenceEqual(input.ErrorProperties)
                 ) && 
                 (
-                    this.ErrorKey == other.ErrorKey ||
-                    this.ErrorKey != null &&
-                    this.ErrorKey.Equals(other.ErrorKey)
+                    this.ErrorKey == input.ErrorKey ||
+                    (this.ErrorKey != null &&
+                    this.ErrorKey.Equals(input.ErrorKey))
                 );
         }
 
@@ -422,20 +455,18 @@ namespace IO.Swagger.Model
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
-                // Suitable nullity checks etc, of course :)
+                int hashCode = 41;
                 if (this.Data != null)
-                    hash = hash * 59 + this.Data.GetHashCode();
+                    hashCode = hashCode * 59 + this.Data.GetHashCode();
                 if (this.Success != null)
-                    hash = hash * 59 + this.Success.GetHashCode();
+                    hashCode = hashCode * 59 + this.Success.GetHashCode();
                 if (this.ErrorProperties != null)
-                    hash = hash * 59 + this.ErrorProperties.GetHashCode();
+                    hashCode = hashCode * 59 + this.ErrorProperties.GetHashCode();
                 if (this.ErrorKey != null)
-                    hash = hash * 59 + this.ErrorKey.GetHashCode();
-                return hash;
+                    hashCode = hashCode * 59 + this.ErrorKey.GetHashCode();
+                return hashCode;
             }
         }
 

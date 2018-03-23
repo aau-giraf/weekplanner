@@ -9,13 +9,18 @@
  */
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -26,36 +31,36 @@ namespace IO.Swagger.Model
     public partial class PictogramDTO :  IEquatable<PictogramDTO>, IValidatableObject
     {
         /// <summary>
-        /// Gets or Sets AccessLevel
+        /// Defines AccessLevel
         /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum AccessLevelEnum
         {
             
             /// <summary>
-            /// Enum PUBLIC for "PUBLIC"
+            /// Enum PUBLIC for value: PUBLIC
             /// </summary>
             [EnumMember(Value = "PUBLIC")]
-            PUBLIC,
+            PUBLIC = 1,
             
             /// <summary>
-            /// Enum PROTECTED for "PROTECTED"
+            /// Enum PROTECTED for value: PROTECTED
             /// </summary>
             [EnumMember(Value = "PROTECTED")]
-            PROTECTED,
+            PROTECTED = 2,
             
             /// <summary>
-            /// Enum PRIVATE for "PRIVATE"
+            /// Enum PRIVATE for value: PRIVATE
             /// </summary>
             [EnumMember(Value = "PRIVATE")]
-            PRIVATE
+            PRIVATE = 3
         }
 
         /// <summary>
         /// Gets or Sets AccessLevel
         /// </summary>
         [DataMember(Name="accessLevel", EmitDefaultValue=false)]
-        public AccessLevelEnum? AccessLevel { get; set; }
+        public AccessLevelEnum AccessLevel { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="PictogramDTO" /> class.
         /// </summary>
@@ -65,11 +70,10 @@ namespace IO.Swagger.Model
         /// Initializes a new instance of the <see cref="PictogramDTO" /> class.
         /// </summary>
         /// <param name="AccessLevel">AccessLevel (required).</param>
-        /// <param name="Image">An array of bytes containing the pictogram&#39;s image..</param>
         /// <param name="Title">Title (required).</param>
         /// <param name="Id">The id of the resource..</param>
         /// <param name="LastEdit">The last time the resource was edited..</param>
-        public PictogramDTO(AccessLevelEnum? AccessLevel = default(AccessLevelEnum?), byte[] Image = default(byte[]), string Title = default(string), long? Id = default(long?), DateTime? LastEdit = default(DateTime?))
+        public PictogramDTO(AccessLevelEnum AccessLevel = default(AccessLevelEnum), string Title = default(string), long? Id = default(long?), DateTime? LastEdit = default(DateTime?))
         {
             // to ensure "AccessLevel" is required (not null)
             if (AccessLevel == null)
@@ -89,18 +93,22 @@ namespace IO.Swagger.Model
             {
                 this.Title = Title;
             }
-            this.Image = Image;
             this.Id = Id;
             this.LastEdit = LastEdit;
         }
         
 
         /// <summary>
-        /// An array of bytes containing the pictogram&#39;s image.
+        /// Gets or Sets ImageUrl
         /// </summary>
-        /// <value>An array of bytes containing the pictogram&#39;s image.</value>
-        [DataMember(Name="image", EmitDefaultValue=false)]
-        public byte[] Image { get; set; }
+        [DataMember(Name="imageUrl", EmitDefaultValue=false)]
+        public string ImageUrl { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets ImageHash
+        /// </summary>
+        [DataMember(Name="imageHash", EmitDefaultValue=false)]
+        public string ImageHash { get; private set; }
 
         /// <summary>
         /// Gets or Sets Title
@@ -131,7 +139,8 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class PictogramDTO {\n");
             sb.Append("  AccessLevel: ").Append(AccessLevel).Append("\n");
-            sb.Append("  Image: ").Append(Image).Append("\n");
+            sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
+            sb.Append("  ImageHash: ").Append(ImageHash).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  LastEdit: ").Append(LastEdit).Append("\n");
@@ -151,50 +160,53 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Returns true if objects are equal
         /// </summary>
-        /// <param name="obj">Object to be compared</param>
+        /// <param name="input">Object to be compared</param>
         /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as PictogramDTO);
+            return this.Equals(input as PictogramDTO);
         }
 
         /// <summary>
         /// Returns true if PictogramDTO instances are equal
         /// </summary>
-        /// <param name="other">Instance of PictogramDTO to be compared</param>
+        /// <param name="input">Instance of PictogramDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(PictogramDTO other)
+        public bool Equals(PictogramDTO input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            if (other == null)
+            if (input == null)
                 return false;
 
             return 
                 (
-                    this.AccessLevel == other.AccessLevel ||
-                    this.AccessLevel != null &&
-                    this.AccessLevel.Equals(other.AccessLevel)
+                    this.AccessLevel == input.AccessLevel ||
+                    (this.AccessLevel != null &&
+                    this.AccessLevel.Equals(input.AccessLevel))
                 ) && 
                 (
-                    this.Image == other.Image ||
-                    this.Image != null &&
-                    this.Image.Equals(other.Image)
+                    this.ImageUrl == input.ImageUrl ||
+                    (this.ImageUrl != null &&
+                    this.ImageUrl.Equals(input.ImageUrl))
                 ) && 
                 (
-                    this.Title == other.Title ||
-                    this.Title != null &&
-                    this.Title.Equals(other.Title)
+                    this.ImageHash == input.ImageHash ||
+                    (this.ImageHash != null &&
+                    this.ImageHash.Equals(input.ImageHash))
                 ) && 
                 (
-                    this.Id == other.Id ||
-                    this.Id != null &&
-                    this.Id.Equals(other.Id)
+                    this.Title == input.Title ||
+                    (this.Title != null &&
+                    this.Title.Equals(input.Title))
                 ) && 
                 (
-                    this.LastEdit == other.LastEdit ||
-                    this.LastEdit != null &&
-                    this.LastEdit.Equals(other.LastEdit)
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
+                (
+                    this.LastEdit == input.LastEdit ||
+                    (this.LastEdit != null &&
+                    this.LastEdit.Equals(input.LastEdit))
                 );
         }
 
@@ -204,22 +216,22 @@ namespace IO.Swagger.Model
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
-                // Suitable nullity checks etc, of course :)
+                int hashCode = 41;
                 if (this.AccessLevel != null)
-                    hash = hash * 59 + this.AccessLevel.GetHashCode();
-                if (this.Image != null)
-                    hash = hash * 59 + this.Image.GetHashCode();
+                    hashCode = hashCode * 59 + this.AccessLevel.GetHashCode();
+                if (this.ImageUrl != null)
+                    hashCode = hashCode * 59 + this.ImageUrl.GetHashCode();
+                if (this.ImageHash != null)
+                    hashCode = hashCode * 59 + this.ImageHash.GetHashCode();
                 if (this.Title != null)
-                    hash = hash * 59 + this.Title.GetHashCode();
+                    hashCode = hashCode * 59 + this.Title.GetHashCode();
                 if (this.Id != null)
-                    hash = hash * 59 + this.Id.GetHashCode();
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.LastEdit != null)
-                    hash = hash * 59 + this.LastEdit.GetHashCode();
-                return hash;
+                    hashCode = hashCode * 59 + this.LastEdit.GetHashCode();
+                return hashCode;
             }
         }
 

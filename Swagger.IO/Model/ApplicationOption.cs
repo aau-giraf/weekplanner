@@ -9,12 +9,18 @@
  */
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -106,40 +112,38 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Returns true if objects are equal
         /// </summary>
-        /// <param name="obj">Object to be compared</param>
+        /// <param name="input">Object to be compared</param>
         /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as ApplicationOption);
+            return this.Equals(input as ApplicationOption);
         }
 
         /// <summary>
         /// Returns true if ApplicationOption instances are equal
         /// </summary>
-        /// <param name="other">Instance of ApplicationOption to be compared</param>
+        /// <param name="input">Instance of ApplicationOption to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ApplicationOption other)
+        public bool Equals(ApplicationOption input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            if (other == null)
+            if (input == null)
                 return false;
 
             return 
                 (
-                    this.Id == other.Id ||
-                    this.Id != null &&
-                    this.Id.Equals(other.Id)
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
                 ) && 
                 (
-                    this.ApplicationName == other.ApplicationName ||
-                    this.ApplicationName != null &&
-                    this.ApplicationName.Equals(other.ApplicationName)
+                    this.ApplicationName == input.ApplicationName ||
+                    (this.ApplicationName != null &&
+                    this.ApplicationName.Equals(input.ApplicationName))
                 ) && 
                 (
-                    this.ApplicationPackage == other.ApplicationPackage ||
-                    this.ApplicationPackage != null &&
-                    this.ApplicationPackage.Equals(other.ApplicationPackage)
+                    this.ApplicationPackage == input.ApplicationPackage ||
+                    (this.ApplicationPackage != null &&
+                    this.ApplicationPackage.Equals(input.ApplicationPackage))
                 );
         }
 
@@ -149,18 +153,16 @@ namespace IO.Swagger.Model
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
-                // Suitable nullity checks etc, of course :)
+                int hashCode = 41;
                 if (this.Id != null)
-                    hash = hash * 59 + this.Id.GetHashCode();
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.ApplicationName != null)
-                    hash = hash * 59 + this.ApplicationName.GetHashCode();
+                    hashCode = hashCode * 59 + this.ApplicationName.GetHashCode();
                 if (this.ApplicationPackage != null)
-                    hash = hash * 59 + this.ApplicationPackage.GetHashCode();
-                return hash;
+                    hashCode = hashCode * 59 + this.ApplicationPackage.GetHashCode();
+                return hashCode;
             }
         }
 

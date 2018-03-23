@@ -12,10 +12,15 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -151,50 +156,48 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Returns true if objects are equal
         /// </summary>
-        /// <param name="obj">Object to be compared</param>
+        /// <param name="input">Object to be compared</param>
         /// <returns>Boolean</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as LauncherOptionsDTO);
+            return this.Equals(input as LauncherOptionsDTO);
         }
 
         /// <summary>
         /// Returns true if LauncherOptionsDTO instances are equal
         /// </summary>
-        /// <param name="other">Instance of LauncherOptionsDTO to be compared</param>
+        /// <param name="input">Instance of LauncherOptionsDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(LauncherOptionsDTO other)
+        public bool Equals(LauncherOptionsDTO input)
         {
-            // credit: http://stackoverflow.com/a/10454552/677735
-            if (other == null)
+            if (input == null)
                 return false;
 
             return 
                 (
-                    this.UseGrayscale == other.UseGrayscale ||
-                    this.UseGrayscale != null &&
-                    this.UseGrayscale.Equals(other.UseGrayscale)
+                    this.UseGrayscale == input.UseGrayscale ||
+                    (this.UseGrayscale != null &&
+                    this.UseGrayscale.Equals(input.UseGrayscale))
                 ) && 
                 (
-                    this.DisplayLauncherAnimations == other.DisplayLauncherAnimations ||
-                    this.DisplayLauncherAnimations != null &&
-                    this.DisplayLauncherAnimations.Equals(other.DisplayLauncherAnimations)
+                    this.DisplayLauncherAnimations == input.DisplayLauncherAnimations ||
+                    (this.DisplayLauncherAnimations != null &&
+                    this.DisplayLauncherAnimations.Equals(input.DisplayLauncherAnimations))
                 ) && 
                 (
-                    this.AppsUserCanAccess == other.AppsUserCanAccess ||
+                    this.AppsUserCanAccess == input.AppsUserCanAccess ||
                     this.AppsUserCanAccess != null &&
-                    this.AppsUserCanAccess.SequenceEqual(other.AppsUserCanAccess)
+                    this.AppsUserCanAccess.SequenceEqual(input.AppsUserCanAccess)
                 ) && 
                 (
-                    this.AppGridSizeRows == other.AppGridSizeRows ||
-                    this.AppGridSizeRows != null &&
-                    this.AppGridSizeRows.Equals(other.AppGridSizeRows)
+                    this.AppGridSizeRows == input.AppGridSizeRows ||
+                    (this.AppGridSizeRows != null &&
+                    this.AppGridSizeRows.Equals(input.AppGridSizeRows))
                 ) && 
                 (
-                    this.AppGridSizeColumns == other.AppGridSizeColumns ||
-                    this.AppGridSizeColumns != null &&
-                    this.AppGridSizeColumns.Equals(other.AppGridSizeColumns)
+                    this.AppGridSizeColumns == input.AppGridSizeColumns ||
+                    (this.AppGridSizeColumns != null &&
+                    this.AppGridSizeColumns.Equals(input.AppGridSizeColumns))
                 );
         }
 
@@ -204,22 +207,20 @@ namespace IO.Swagger.Model
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            // credit: http://stackoverflow.com/a/263416/677735
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 41;
-                // Suitable nullity checks etc, of course :)
+                int hashCode = 41;
                 if (this.UseGrayscale != null)
-                    hash = hash * 59 + this.UseGrayscale.GetHashCode();
+                    hashCode = hashCode * 59 + this.UseGrayscale.GetHashCode();
                 if (this.DisplayLauncherAnimations != null)
-                    hash = hash * 59 + this.DisplayLauncherAnimations.GetHashCode();
+                    hashCode = hashCode * 59 + this.DisplayLauncherAnimations.GetHashCode();
                 if (this.AppsUserCanAccess != null)
-                    hash = hash * 59 + this.AppsUserCanAccess.GetHashCode();
+                    hashCode = hashCode * 59 + this.AppsUserCanAccess.GetHashCode();
                 if (this.AppGridSizeRows != null)
-                    hash = hash * 59 + this.AppGridSizeRows.GetHashCode();
+                    hashCode = hashCode * 59 + this.AppGridSizeRows.GetHashCode();
                 if (this.AppGridSizeColumns != null)
-                    hash = hash * 59 + this.AppGridSizeColumns.GetHashCode();
-                return hash;
+                    hashCode = hashCode * 59 + this.AppGridSizeColumns.GetHashCode();
+                return hashCode;
             }
         }
 

@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using RestSharp;
 using IO.Swagger.Client;
@@ -66,6 +67,69 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponsePictogramDTO</returns>
         ApiResponse<ResponsePictogramDTO> V1PictogramByIdGetWithHttpInfo (long? id);
         /// <summary>
+        /// Read the image of a given pictogram as raw.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>ResponseByte</returns>
+        ResponseByte V1PictogramByIdImageGet (long? id);
+
+        /// <summary>
+        /// Read the image of a given pictogram as raw.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>ApiResponse of ResponseByte</returns>
+        ApiResponse<ResponseByte> V1PictogramByIdImageGetWithHttpInfo (long? id);
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>ResponsePictogramDTO</returns>
+        ResponsePictogramDTO V1PictogramByIdImagePut (long? id);
+
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
+        ApiResponse<ResponsePictogramDTO> V1PictogramByIdImagePutWithHttpInfo (long? id);
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns></returns>
+        void V1PictogramByIdImageRawGet (long? id);
+
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> V1PictogramByIdImageRawGetWithHttpInfo (long? id);
+        /// <summary>
         /// Update info of a GirafRest.Models.Pictogram pictogram.
         /// </summary>
         /// <remarks>
@@ -95,8 +159,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ResponseListPictogramDTO</returns>
-        ResponseListPictogramDTO V1PictogramGet ();
+        ResponseListPictogramDTO V1PictogramGet (int? p, int? n, string q = null);
 
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
@@ -105,71 +172,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ApiResponse of ResponseListPictogramDTO</returns>
-        ApiResponse<ResponseListPictogramDTO> V1PictogramGetWithHttpInfo ();
-        /// <summary>
-        /// Read the image of a given pictogram.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>ResponseByte</returns>
-        ResponseByte V1PictogramImageByIdGet (long? id);
-
-        /// <summary>
-        /// Read the image of a given pictogram.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>ApiResponse of ResponseByte</returns>
-        ApiResponse<ResponseByte> V1PictogramImageByIdGetWithHttpInfo (long? id);
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        ResponsePictogramDTO V1PictogramImageByIdPost (long? id);
-
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        ApiResponse<ResponsePictogramDTO> V1PictogramImageByIdPostWithHttpInfo (long? id);
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        ResponsePictogramDTO V1PictogramImageByIdPut (long? id);
-
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        ApiResponse<ResponsePictogramDTO> V1PictogramImageByIdPutWithHttpInfo (long? id);
+        ApiResponse<ResponseListPictogramDTO> V1PictogramGetWithHttpInfo (int? p, int? n, string q = null);
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
         /// </summary>
@@ -236,6 +243,69 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdGetAsyncWithHttpInfo (long? id);
         /// <summary>
+        /// Read the image of a given pictogram as raw.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>Task of ResponseByte</returns>
+        System.Threading.Tasks.Task<ResponseByte> V1PictogramByIdImageGetAsync (long? id);
+
+        /// <summary>
+        /// Read the image of a given pictogram as raw.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>Task of ApiResponse (ResponseByte)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseByte>> V1PictogramByIdImageGetAsyncWithHttpInfo (long? id);
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>Task of ResponsePictogramDTO</returns>
+        System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdImagePutAsync (long? id);
+
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdImagePutAsyncWithHttpInfo (long? id);
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task V1PictogramByIdImageRawGetAsync (long? id);
+
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> V1PictogramByIdImageRawGetAsyncWithHttpInfo (long? id);
+        /// <summary>
         /// Update info of a GirafRest.Models.Pictogram pictogram.
         /// </summary>
         /// <remarks>
@@ -265,8 +335,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ResponseListPictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync ();
+        System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? p, int? n, string q = null);
 
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
@@ -275,71 +348,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ApiResponse (ResponseListPictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo ();
-        /// <summary>
-        /// Read the image of a given pictogram.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>Task of ResponseByte</returns>
-        System.Threading.Tasks.Task<ResponseByte> V1PictogramImageByIdGetAsync (long? id);
-
-        /// <summary>
-        /// Read the image of a given pictogram.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>Task of ApiResponse (ResponseByte)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseByte>> V1PictogramImageByIdGetAsyncWithHttpInfo (long? id);
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramImageByIdPostAsync (long? id);
-
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramImageByIdPostAsyncWithHttpInfo (long? id);
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramImageByIdPutAsync (long? id);
-
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramImageByIdPutAsyncWithHttpInfo (long? id);
+        System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? p, int? n, string q = null);
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
         /// </summary>
@@ -377,15 +390,9 @@ namespace IO.Swagger.Api
         /// <returns></returns>
         public PictogramApi(String basePath)
         {
-            this.Configuration = new Configuration(new ApiClient(basePath));
+            this.Configuration = new Configuration { BasePath = basePath };
 
             ExceptionFactory = IO.Swagger.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
         }
 
         /// <summary>
@@ -402,12 +409,6 @@ namespace IO.Swagger.Api
                 this.Configuration = configuration;
 
             ExceptionFactory = IO.Swagger.Client.Configuration.DefaultExceptionFactory;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
         }
 
         /// <summary>
@@ -456,9 +457,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <returns>Dictionary of HTTP header</returns>
         [Obsolete("DefaultHeader is deprecated, please use Configuration.DefaultHeader instead.")]
-        public Dictionary<String, String> DefaultHeader()
+        public IDictionary<String, String> DefaultHeader()
         {
-            return this.Configuration.DefaultHeader;
+            return new ReadOnlyDictionary<string, string>(this.Configuration.DefaultHeader);
         }
 
         /// <summary>
@@ -499,7 +500,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -522,6 +523,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -568,7 +574,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -591,6 +597,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -636,7 +647,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -659,6 +670,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -705,7 +721,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -728,6 +744,11 @@ namespace IO.Swagger.Api
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -745,6 +766,439 @@ namespace IO.Swagger.Api
             return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+        }
+
+        /// <summary>
+        /// Read the image of a given pictogram as raw. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>ResponseByte</returns>
+        public ResponseByte V1PictogramByIdImageGet (long? id)
+        {
+             ApiResponse<ResponseByte> localVarResponse = V1PictogramByIdImageGetWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Read the image of a given pictogram as raw. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>ApiResponse of ResponseByte</returns>
+        public ApiResponse< ResponseByte > V1PictogramByIdImageGetWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramByIdImageGet");
+
+            var localVarPath = "/v1/Pictogram/{id}/image";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1PictogramByIdImageGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseByte>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseByte) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseByte)));
+        }
+
+        /// <summary>
+        /// Read the image of a given pictogram as raw. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>Task of ResponseByte</returns>
+        public async System.Threading.Tasks.Task<ResponseByte> V1PictogramByIdImageGetAsync (long? id)
+        {
+             ApiResponse<ResponseByte> localVarResponse = await V1PictogramByIdImageGetAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Read the image of a given pictogram as raw. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">The id of the pictogram to read the image of.</param>
+        /// <returns>Task of ApiResponse (ResponseByte)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseByte>> V1PictogramByIdImageGetAsyncWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramByIdImageGet");
+
+            var localVarPath = "/v1/Pictogram/{id}/image";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1PictogramByIdImageGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseByte>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseByte) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseByte)));
+        }
+
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>ResponsePictogramDTO</returns>
+        public ResponsePictogramDTO V1PictogramByIdImagePut (long? id)
+        {
+             ApiResponse<ResponsePictogramDTO> localVarResponse = V1PictogramByIdImagePutWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
+        public ApiResponse< ResponsePictogramDTO > V1PictogramByIdImagePutWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramByIdImagePut");
+
+            var localVarPath = "/v1/Pictogram/{id}/image";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1PictogramByIdImagePut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+        }
+
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>Task of ResponsePictogramDTO</returns>
+        public async System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdImagePutAsync (long? id)
+        {
+             ApiResponse<ResponsePictogramDTO> localVarResponse = await V1PictogramByIdImagePutAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the pictogram to update the image for.</param>
+        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdImagePutAsyncWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramByIdImagePut");
+
+            var localVarPath = "/v1/Pictogram/{id}/image";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1PictogramByIdImagePut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+        }
+
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns></returns>
+        public void V1PictogramByIdImageRawGet (long? id)
+        {
+             V1PictogramByIdImageRawGetWithHttpInfo(id);
+        }
+
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> V1PictogramByIdImageRawGetWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramByIdImageRawGet");
+
+            var localVarPath = "/v1/Pictogram/{id}/image/raw";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1PictogramByIdImageRawGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task V1PictogramByIdImageRawGetAsync (long? id)
+        {
+             await V1PictogramByIdImageRawGetAsyncWithHttpInfo(id);
+
+        }
+
+        /// <summary>
+        /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Identifier.</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> V1PictogramByIdImageRawGetAsyncWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramByIdImageRawGet");
+
+            var localVarPath = "/v1/Pictogram/{id}/image/raw";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1PictogramByIdImageRawGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
 
         /// <summary>
@@ -775,7 +1229,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -810,6 +1264,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = pictogram; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -858,7 +1317,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram/{id}";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -893,6 +1352,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = pictogram; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -916,10 +1380,13 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ResponseListPictogramDTO</returns>
-        public ResponseListPictogramDTO V1PictogramGet ()
+        public ResponseListPictogramDTO V1PictogramGet (int? p, int? n, string q = null)
         {
-             ApiResponse<ResponseListPictogramDTO> localVarResponse = V1PictogramGetWithHttpInfo();
+             ApiResponse<ResponseListPictogramDTO> localVarResponse = V1PictogramGetWithHttpInfo(p, n, q);
              return localVarResponse.Data;
         }
 
@@ -927,13 +1394,22 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ApiResponse of ResponseListPictogramDTO</returns>
-        public ApiResponse< ResponseListPictogramDTO > V1PictogramGetWithHttpInfo ()
+        public ApiResponse< ResponseListPictogramDTO > V1PictogramGetWithHttpInfo (int? p, int? n, string q = null)
         {
+            // verify the required parameter 'p' is set
+            if (p == null)
+                throw new ApiException(400, "Missing required parameter 'p' when calling PictogramApi->V1PictogramGet");
+            // verify the required parameter 'n' is set
+            if (n == null)
+                throw new ApiException(400, "Missing required parameter 'n' when calling PictogramApi->V1PictogramGet");
 
             var localVarPath = "/v1/Pictogram";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -954,7 +1430,15 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
+            if (q != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "q", q)); // query parameter
+            if (p != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "p", p)); // query parameter
+            if (n != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "n", n)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -978,10 +1462,13 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ResponseListPictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync ()
+        public async System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? p, int? n, string q = null)
         {
-             ApiResponse<ResponseListPictogramDTO> localVarResponse = await V1PictogramGetAsyncWithHttpInfo();
+             ApiResponse<ResponseListPictogramDTO> localVarResponse = await V1PictogramGetAsyncWithHttpInfo(p, n, q);
              return localVarResponse.Data;
 
         }
@@ -990,13 +1477,22 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="p">Page number</param>
+        /// <param name="n">Number of pictograms per page, defaults to 10</param>
+        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ApiResponse (ResponseListPictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? p, int? n, string q = null)
         {
+            // verify the required parameter 'p' is set
+            if (p == null)
+                throw new ApiException(400, "Missing required parameter 'p' when calling PictogramApi->V1PictogramGet");
+            // verify the required parameter 'n' is set
+            if (n == null)
+                throw new ApiException(400, "Missing required parameter 'n' when calling PictogramApi->V1PictogramGet");
 
             var localVarPath = "/v1/Pictogram";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1017,7 +1513,15 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
+            if (q != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "q", q)); // query parameter
+            if (p != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "p", p)); // query parameter
+            if (n != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "n", n)); // query parameter
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1035,417 +1539,6 @@ namespace IO.Swagger.Api
             return new ApiResponse<ResponseListPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (ResponseListPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListPictogramDTO)));
-        }
-
-        /// <summary>
-        /// Read the image of a given pictogram. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>ResponseByte</returns>
-        public ResponseByte V1PictogramImageByIdGet (long? id)
-        {
-             ApiResponse<ResponseByte> localVarResponse = V1PictogramImageByIdGetWithHttpInfo(id);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Read the image of a given pictogram. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>ApiResponse of ResponseByte</returns>
-        public ApiResponse< ResponseByte > V1PictogramImageByIdGetWithHttpInfo (long? id)
-        {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramImageByIdGet");
-
-            var localVarPath = "/v1/Pictogram/image/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1PictogramImageByIdGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseByte>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseByte) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseByte)));
-        }
-
-        /// <summary>
-        /// Read the image of a given pictogram. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>Task of ResponseByte</returns>
-        public async System.Threading.Tasks.Task<ResponseByte> V1PictogramImageByIdGetAsync (long? id)
-        {
-             ApiResponse<ResponseByte> localVarResponse = await V1PictogramImageByIdGetAsyncWithHttpInfo(id);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Read the image of a given pictogram. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the pictogram to read the image of.</param>
-        /// <returns>Task of ApiResponse (ResponseByte)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseByte>> V1PictogramImageByIdGetAsyncWithHttpInfo (long? id)
-        {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramImageByIdGet");
-
-            var localVarPath = "/v1/Pictogram/image/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1PictogramImageByIdGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseByte>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseByte) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseByte)));
-        }
-
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        public ResponsePictogramDTO V1PictogramImageByIdPost (long? id)
-        {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = V1PictogramImageByIdPostWithHttpInfo(id);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        public ApiResponse< ResponsePictogramDTO > V1PictogramImageByIdPostWithHttpInfo (long? id)
-        {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramImageByIdPost");
-
-            var localVarPath = "/v1/Pictogram/image/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1PictogramImageByIdPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
-        }
-
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramImageByIdPostAsync (long? id)
-        {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = await V1PictogramImageByIdPostAsyncWithHttpInfo(id);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Upload an image for the GirafRest.Models.Pictogram pictogram with the given id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to upload an image for.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramImageByIdPostAsyncWithHttpInfo (long? id)
-        {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramImageByIdPost");
-
-            var localVarPath = "/v1/Pictogram/image/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1PictogramImageByIdPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
-        }
-
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        public ResponsePictogramDTO V1PictogramImageByIdPut (long? id)
-        {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = V1PictogramImageByIdPutWithHttpInfo(id);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        public ApiResponse< ResponsePictogramDTO > V1PictogramImageByIdPutWithHttpInfo (long? id)
-        {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramImageByIdPut");
-
-            var localVarPath = "/v1/Pictogram/image/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1PictogramImageByIdPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
-        }
-
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramImageByIdPutAsync (long? id)
-        {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = await V1PictogramImageByIdPutAsyncWithHttpInfo(id);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramImageByIdPutAsyncWithHttpInfo (long? id)
-        {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling PictogramApi->V1PictogramImageByIdPut");
-
-            var localVarPath = "/v1/Pictogram/image/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1PictogramImageByIdPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
         }
 
         /// <summary>
@@ -1471,7 +1564,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1505,6 +1598,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = pictogram; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
@@ -1548,7 +1646,7 @@ namespace IO.Swagger.Api
 
             var localVarPath = "/v1/Pictogram";
             var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var localVarFormParams = new Dictionary<String, String>();
             var localVarFileParams = new Dictionary<String, FileParameter>();
@@ -1582,6 +1680,11 @@ namespace IO.Swagger.Api
                 localVarPostBody = pictogram; // byte array
             }
 
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,

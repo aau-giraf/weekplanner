@@ -9,9 +9,9 @@
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj" />
+    <Folder Include="Services\Mocks\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\Mocks\" />
+    <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
   </ItemGroup>
 </Project>
