@@ -6,6 +6,7 @@ using IO.Swagger.Client;
 using IO.Swagger.Model;
 using WeekPlanner.Helpers;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Settings;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -15,13 +16,18 @@ namespace WeekPlanner.ViewModels
     public class LoginViewModel : ViewModelBase
     {
         private readonly IAccountApi _accountApi;
+        private readonly ISettingsService _settingsService;
         private bool _isValid;
         private ValidatableObject<string> _password;
         private ValidatableObject<string> _userName;
+        private readonly IDepartmentApi _deparmentApi;
 
-        public LoginViewModel(IAccountApi accountApi, INavigationService navigationService) : base(navigationService)
+        public LoginViewModel(IAccountApi accountApi, INavigationService navigationService, 
+            ISettingsService settingService, IDepartmentApi departmentApi) : base(navigationService)
         {
+            _settingsService = settingService;
             _accountApi = accountApi;
+            _deparmentApi = departmentApi;
             _userName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() { ValidationMessage = "Et brugernavn er påkrævet." });
             _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() { ValidationMessage = "En adgangskode er påkrævet." });
         }
@@ -64,11 +70,14 @@ namespace WeekPlanner.ViewModels
 
         private async Task SendLoginRequest()
         {
-            ResponseGirafUserDTO result;
+            ResponseString result;
             try
             {
+                //var loginDTO = new LoginDTO(UserName.Value, Password.Value);
+                
                 var loginDTO = new LoginDTO(UserName.Value, Password.Value);
                 result = await _accountApi.V1AccountLoginPostAsync(loginDTO);
+                
             }
             catch (ApiException)
             {
@@ -81,8 +90,14 @@ namespace WeekPlanner.ViewModels
             if (result.Success == true)
             {
                 MessagingCenter.Send(this, MessageKeys.LoginSucceeded, result.Data);
-                result.Data.GuardianOf.OrderBy(x => x.Username);
-                var dto = result.Data.GuardianOf;
+
+                _settingsService.DepartmentAuthToken = $"bearer {result.Data}";
+                _accountApi.Configuration.AccessToken = _settingsService.DepartmentAuthToken;
+
+                var dto = await _deparmentApi.V1DepartmentByIdCitizensGetAsync(1);
+                
+                //result.Data.GuardianOf.OrderBy(x => x.Username);
+                //var dto = result.Data.GuardianOf;
 
                 // Switch this to an actual token once implemented in backend
                 //GlobalSettings.Instance.AuthToken = result.Data.Id;

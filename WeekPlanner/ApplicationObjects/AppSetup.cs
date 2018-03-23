@@ -37,13 +37,15 @@ namespace WeekPlanner.ApplicationObjects
             if (GlobalSettings.Instance.UseMocks)
             {
                 cb.RegisterType<AccountMockService>().As<IAccountApi>();
+                cb.RegisterType<DepartmentApiMock>().As<IDepartmentApi>();
             }
             else
             {
                 var accountApi = new AccountApi();
-                accountApi.Configuration.ApiClient = new ApiClient(GlobalSettings.DefaultEndpoint);
-
+                // TODO: Use AuthToken currently in use from GlobalSettings
                 cb.RegisterInstance<IAccountApi>(accountApi);
+                
+                cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
             }
         }
     }

@@ -19,13 +19,13 @@ namespace WeekPlanner.ViewModels
 {
     public class ChooseCitizenViewModel : ViewModelBase
     {
-        private ObservableCollection<GirafUserDTO> _citizens;
+        private ObservableCollection<UserNameDTO> _citizenNames;
 	    
-	    public ObservableCollection<GirafUserDTO> Citizens {
-		    get => _citizens;
+	    public ObservableCollection<UserNameDTO> CitizenNames {
+		    get => _citizenNames;
 		    set {
-			    _citizens = value;
-			    RaisePropertyChanged(() => Citizens);
+			    _citizenNames = value;
+			    RaisePropertyChanged(() => CitizenNames);
 		    }
 	    }
 
@@ -38,13 +38,13 @@ namespace WeekPlanner.ViewModels
 
 		public override async Task InitializeAsync(object navigationData)
 		{
-			if (navigationData is IEnumerable<GirafUserDTO> dtos)
+			if (navigationData is ResponseListUserNameDTO dto)
 			{
-				Citizens = new ObservableCollection<GirafUserDTO>(dtos);
+				CitizenNames = new ObservableCollection<UserNameDTO>(dto.Data);
 			}
 			else
 			{
-				throw new ArgumentException("Must be of type IEnumerable<GirafUserDTO>", nameof(navigationData));
+				throw new ArgumentException("Must be of type ResponseListUserNameDTO", nameof(navigationData));
 			}
 		}
 	}

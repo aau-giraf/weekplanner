@@ -24,8 +24,9 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseCitizenCommand =>
             new Command(async () =>
             {
-                var result = await _accountApi.V1AccountLoginPostAsync(new LoginDTO("Graatand", "password"));
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(result.Data.GuardianOf);
+                // TODO: Fix TestingPage -> ChooseCitizenPage
+                //var result = await _accountApi.V1AccountLoginPostAsync(new LoginDTO("Graatand", "password"));
+                //await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(result.Data.GuardianOf);
             });
 
         public ICommand NavigateToWeekPlannerCommand =>
