@@ -42,6 +42,7 @@ namespace WeekPlanner.ApplicationObjects
             else
             {
                 var accountApi = new AccountApi();
+                accountApi.Configuration.BasePath = GlobalSettings.Instance.BaseEndpoint;
                 // TODO: Use AuthToken currently in use from GlobalSettings
                 cb.RegisterInstance<IAccountApi>(accountApi);
                 

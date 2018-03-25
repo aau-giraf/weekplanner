@@ -91,16 +91,12 @@ namespace WeekPlanner.ViewModels
             {
                 MessagingCenter.Send(this, MessageKeys.LoginSucceeded, result.Data);
 
-                _settingsService.DepartmentAuthToken = $"bearer {result.Data}";
-                _accountApi.Configuration.AccessToken = _settingsService.DepartmentAuthToken;
+                _settingsService.DepartmentAuthToken = result.Data;
 
-                var dto = await _deparmentApi.V1DepartmentByIdCitizensGetAsync(1);
-                
-                //result.Data.GuardianOf.OrderBy(x => x.Username);
-                //var dto = result.Data.GuardianOf;
+                // TODO: Make a nice abstraction over authorization
+                _accountApi.Configuration.AddApiKey("Authorization", $"bearer {_settingsService.DepartmentAuthToken}");
 
-                // Switch this to an actual token once implemented in backend
-                //GlobalSettings.Instance.AuthToken = result.Data.Id;
+                var dto = await _deparmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.CurrentDepartment);
 
                 await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
             }

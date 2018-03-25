@@ -2,18 +2,28 @@
 {
     class SettingsService : ISettingsService
     {
-        public bool UseMocks {
+        public bool UseMocks
+        {
             get => GlobalSettings.Instance.UseMocks;
             set => GlobalSettings.Instance.UseMocks = value;
         }
 
-        public string DepartmentAuthToken { 
+        public string DepartmentAuthToken
+        {
             get => GlobalSettings.Instance.DepartmentAuthToken;
             set => GlobalSettings.Instance.DepartmentAuthToken = value;
         }
-        public string CitizenAuthToken { 
+
+        public string CitizenAuthToken
+        {
             get => GlobalSettings.Instance.CitizenAuthToken;
             set => GlobalSettings.Instance.CitizenAuthToken = value;
+        }
+
+        public int CurrentDepartment
+        {
+            get => GlobalSettings.Instance.CurrentDepartment;
+            set => GlobalSettings.Instance.CurrentDepartment = value;
         }
     }
 }

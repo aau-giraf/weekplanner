@@ -6,5 +6,6 @@
         
         string DepartmentAuthToken { get; set; }
         string CitizenAuthToken { get; set; }
+        int CurrentDepartment { get; set; }
     }
 }
