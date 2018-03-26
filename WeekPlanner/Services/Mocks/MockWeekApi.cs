@@ -76,7 +76,12 @@ namespace WeekPlanner.Services.Mocks
 
         public async Task<ResponseWeekDTO> V1WeekByIdGetAsync(long? id)
         {
-            throw new System.NotImplementedException();
+            return new ResponseWeekDTO
+            {
+                Data = new WeekDTO(),
+                Success = true,
+                ErrorKey = ResponseWeekDTO.ErrorKeyEnum.NoError,
+            };
         }
 
         public async Task<ApiResponse<ResponseWeekDTO>> V1WeekByIdGetAsyncWithHttpInfo(long? id)

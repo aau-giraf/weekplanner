@@ -4,9 +4,14 @@ using System.Net;
 using System.Text;
 using IO.Swagger.Model;
 using System.Threading.Tasks;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using WeekPlanner.Helpers;
+using WeekPlanner.Services.Login;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Settings;
 
 namespace WeekPlanner.ViewModels
 {
@@ -14,6 +19,10 @@ namespace WeekPlanner.ViewModels
     {
         private GirafUserDTO _citizen;
         private WeekDTO _weekDto;
+        
+        private readonly IWeekApi _weekApi;
+        private readonly ILoginService _loginService;
+        
         public WeekDTO WeekDTO
         {
             get => _weekDto;
@@ -23,9 +32,11 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => WeekDTO);
             }
         }
-        public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
+        public WeekPlannerViewModel(INavigationService navigationService, IWeekApi weekApi,
+            ILoginService loginService) : base(navigationService)
         {
-
+            _weekApi = weekApi;
+            _loginService = loginService;
         }
 
         public ImageSource PictogramSource
@@ -49,12 +60,48 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => Citizen);
             }
         }
+        
+        // TODO: Cleanup method and rename
+        private async Task GetWeekPlanForCitizenAsync()
+        {
+            ResponseWeekDTO result;
+            try
+            {
+                // TODO: Find the correct id to retrieve
+                result = await _weekApi.V1WeekByIdGetAsync(1);
+            }
+            catch (ApiException)
+            {
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
+                MessagingCenter.Send(this, MessageKeys.ServerError, friendlyErrorMessage);
+                
+                // TODO: Create pop() in NavigationService instead of this, and it doesn't really work right now
+                await NavigationService.RemoveLastFromBackStackAsync();
+                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
+                return;
+            }
+
+            if (result.Success == true)
+            {
+                WeekDTO = result.Data;
+            }
+            else
+            {
+                MessagingCenter.Send(this, MessageKeys.RetrieveWeekPlanFailed, result.ErrorKey.ToFriendlyString());
+
+                // TODO: Create pop() in NavigationService instead of this, and it doesn't really work right now
+                await NavigationService.RemoveLastFromBackStackAsync();
+                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
+                return;
+            }
+        }
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is WeekDTO weekDTO)
+            if (navigationData is UserNameDTO userNameDTO)
             {
-                WeekDTO = weekDTO;
+                await _loginService.LoginAndThenAsync(() => GetWeekPlanForCitizenAsync(), UserType.Citizen,
+                    userNameDTO.UserName);
             }
             else
             {
