@@ -28,7 +28,7 @@ namespace WeekPlanner.ViewModels
             new Command(async () =>
             {
                 var result = await _departmentApi.V1DepartmentByIdCitizensGetAsync(1);
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(result);
+                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(result.Data);
             });
 
         public ICommand NavigateToWeekPlannerCommand =>

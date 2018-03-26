@@ -7,7 +7,7 @@ using IO.Swagger.Model;
 
 namespace WeekPlanner.Services.Mocks
 {
-    public class AccountMockService : IAccountApi
+    public class MockAccountApi : IAccountApi
     {
         public Configuration Configuration { get; set; } = new Configuration();
         public string GetBasePath()

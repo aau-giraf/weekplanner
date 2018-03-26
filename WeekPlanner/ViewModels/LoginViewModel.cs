@@ -96,7 +96,7 @@ namespace WeekPlanner.ViewModels
                 
                 var dto = await _deparmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.CurrentDepartment);
 
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
+                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto.Data);
             }
             else
             {

@@ -13,7 +13,16 @@ namespace WeekPlanner.ViewModels
     public class WeekPlannerViewModel : ViewModelBase
     {
         private GirafUserDTO _citizen;
-
+        private WeekDTO _weekDto;
+        public WeekDTO WeekDTO
+        {
+            get => _weekDto;
+            set
+            {
+                _weekDto = value;
+                RaisePropertyChanged(() => WeekDTO);
+            }
+        }
         public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
         {
 
@@ -43,9 +52,13 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is GirafUserDTO citizen)
+            if (navigationData is WeekDTO weekDTO)
             {
-                Citizen = citizen;
+                WeekDTO = weekDTO;
+            }
+            else
+            {
+                throw new ArgumentException("Must be of type WeekDTO", nameof(navigationData));
             }
         }
     }

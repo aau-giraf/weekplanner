@@ -36,8 +36,9 @@ namespace WeekPlanner.ApplicationObjects
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)
             {
-                cb.RegisterType<AccountMockService>().As<IAccountApi>();
-                cb.RegisterType<DepartmentApiMock>().As<IDepartmentApi>();
+                cb.RegisterType<MockAccountApi>().As<IAccountApi>();
+                cb.RegisterType<MockDepartmentApi>().As<IDepartmentApi>();
+                cb.RegisterType<MockWeekApi>().As<IWeekApi>();
             }
             else
             {
@@ -46,6 +47,7 @@ namespace WeekPlanner.ApplicationObjects
                 // TODO: Use AuthToken currently in use from GlobalSettings
                 cb.RegisterInstance<IAccountApi>(accountApi);
                 
+                cb.RegisterType<WeekApi>().As<IWeekApi>();
                 cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
             }
         }
