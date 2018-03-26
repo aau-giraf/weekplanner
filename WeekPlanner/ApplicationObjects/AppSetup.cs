@@ -38,6 +38,8 @@ namespace WeekPlanner.ApplicationObjects
             if (GlobalSettings.Instance.UseMocks)
             {
                 cb.RegisterType<AccountMockService>().As<IAccountApi>();
+                cb.RegisterType<WeekMockService>().As<IWeekApi>();
+                cb.RegisterType<PictogramMockService>().As<IPictogramApi>();
             }
             else
             {
@@ -45,6 +47,8 @@ namespace WeekPlanner.ApplicationObjects
                 accountApi.Configuration.ApiClient = new ApiClient(GlobalSettings.DefaultEndpoint);
 
                 cb.RegisterType<AccountApi>().As<IAccountApi>();
+                cb.RegisterType<WeekApi>().As<IWeekApi>();
+                cb.RegisterType<PictogramApi>().As<IPictogramApi>();
             }
         }
     }

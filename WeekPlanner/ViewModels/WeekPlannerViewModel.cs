@@ -8,29 +8,43 @@ using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using WeekPlanner.Services.Navigation;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
+        public class Pictogram
+        {
+            public Day Day { get; set; }
+            public ImageSource Source { get; set; }
+        }
+        public enum Day
+        {
+            Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+        }
+
         private GirafUserDTO _citizen;
+        private readonly IReadOnlyList<Pictogram> _pictograms;
+        private bool IsDay(Pictogram p, Day d) => p.Day == d;
+        public ObservableCollection<Pictogram> MondayPictos => new ObservableCollection<Pictogram>(_pictograms.Where(p => IsDay(p, Day.Monday)));
+        public ObservableCollection<Pictogram> TuesdayPictos => new ObservableCollection<Pictogram>(_pictograms.Where(p => IsDay(p, Day.Tuesday)));
+        public ObservableCollection<Pictogram> WednesdayPictos => new ObservableCollection<Pictogram>(_pictograms.Where(p => IsDay(p, Day.Wednesday)));
+        public ObservableCollection<Pictogram> ThursdayPictos => new ObservableCollection<Pictogram>(_pictograms.Where(p => IsDay(p, Day.Thursday)));
+        public ObservableCollection<Pictogram> FridayPictos => new ObservableCollection<Pictogram>(_pictograms.Where(p => IsDay(p, Day.Friday)));
+        public ObservableCollection<Pictogram> SaturdayPictos => new ObservableCollection<Pictogram>(_pictograms.Where(p => IsDay(p, Day.Saturday)));
+        public ObservableCollection<Pictogram> SundayPictos => new ObservableCollection<Pictogram>(_pictograms.Where(p => IsDay(p, Day.Sunday)));
 
         public WeekPlannerViewModel(INavigationService navigationService) : base(navigationService)
         {
-        }
-
-        public ObservableCollection<ImageSource> ImageSources
-        {
-            get
+            var pictos = new List<Pictogram>();
+            for (int i = 0; i < 10; i++)
             {
-                var imageSources = new ObservableCollection<ImageSource>();
-                for (int i = 0; i < 10; i++)
-                {
-                    var imageSource = ImageSource.FromFile("etnisk.png");
-                    imageSources.Add(imageSource);
-                }
-                return imageSources;
+                var picto = new Pictogram() { Source = ImageSource.FromFile("icon.png"), Day = Day.Monday };
+                pictos.Add(picto);
             }
+            _pictograms = pictos;
         }
 
         public ImageSource PictogramSource

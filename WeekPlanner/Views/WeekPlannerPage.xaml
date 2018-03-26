@@ -96,7 +96,7 @@
                 <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
                 <Grid HeightRequest="{Binding ImageSources.Count, Converter={StaticResource ItemsToHeightConverter}}">
-                    <ListView ItemsSource="{Binding ImageSources}"
+                    <ListView ItemsSource="{Binding MondayPictos}"
                               Grid.Column="0"
                               HasUnevenRows="True"
                               SeparatorVisibility="None"
@@ -106,12 +106,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding}" Margin="0,5,0,0" />
+                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView ItemsSource="{Binding ImageSources}"
+                    <ListView ItemsSource="{Binding TuesdayPictos}"
                               Grid.Column="1"
                               HasUnevenRows="True"
                               SeparatorVisibility="None"
@@ -121,12 +121,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding}" Margin="0,5,0,0" />
+                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView ItemsSource="{Binding ImageSources}"
+                    <ListView ItemsSource="{Binding WednesdayPictos}"
                               Grid.Column="2"
                               HasUnevenRows="True"
                               SeparatorVisibility="None"
@@ -136,12 +136,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding}" Margin="0,5,0,0" />
+                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView ItemsSource="{Binding ImageSources}"
+                    <ListView ItemsSource="{Binding ThursdayPictos}"
                               Grid.Column="3"
                               HasUnevenRows="True"
                               SeparatorVisibility="None"
@@ -151,12 +151,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding}" Margin="0,5,0,0" />
+                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView ItemsSource="{Binding ImageSources}"
+                    <ListView ItemsSource="{Binding FridayPictos}"
                               Grid.Column="4"
                               HasUnevenRows="True"
                               SeparatorVisibility="None"
@@ -166,12 +166,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding}" Margin="0,5,0,0" />
+                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView ItemsSource="{Binding ImageSources}"
+                    <ListView ItemsSource="{Binding SaturdayPictos}"
                               Grid.Column="5"
                               HasUnevenRows="True"
                               SeparatorVisibility="None"
@@ -181,12 +181,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding}" Margin="0,5,0,0" />
+                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <ListView ItemsSource="{Binding ImageSources}"
+                    <ListView ItemsSource="{Binding SundayPictos}"
                               Grid.Column="6"
                               HasUnevenRows="True"
                               SeparatorVisibility="None"
@@ -196,7 +196,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding}" Margin="0,5,0,0" />
+                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>

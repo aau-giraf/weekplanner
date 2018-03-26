@@ -19,6 +19,8 @@ namespace WeekPlanner.ViewModels
 {
     public class ChooseCitizenViewModel : ViewModelBase
     {
+        private readonly IWeekApi _weekApi;
+        private readonly IPictogramApi _pictogramApi;
         private ObservableCollection<GirafUserDTO> _citizens;
 	    
 	    public ObservableCollection<GirafUserDTO> Citizens {
@@ -29,12 +31,19 @@ namespace WeekPlanner.ViewModels
 		    }
 	    }
 
-        public ChooseCitizenViewModel(INavigationService navigationService) : base(navigationService)
+        public ChooseCitizenViewModel(IWeekApi weekApi, IPictogramApi pictogramApi, INavigationService navigationService) : base(navigationService)
         {
+            _weekApi = weekApi;
+            _pictogramApi = pictogramApi;
         }
 
-	    public ICommand ChooseCitizenCommand => new Command<GirafUserDTO>(async citizen =>
-		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(citizen));
+	    public ICommand ChooseCitizenCommand => new Command<GirafUserDTO>(async citizen => await ShowWeekSchedule(citizen));
+
+        private async Task ShowWeekSchedule(GirafUserDTO citizen) {
+            var schedule = GetSchedule(citizen);
+            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(citizen);
+        }
+        private GirafUserDTO GetSchedule(GirafUserDTO citizen) { return citizen; }
 
 		public override async Task InitializeAsync(object navigationData)
 		{
