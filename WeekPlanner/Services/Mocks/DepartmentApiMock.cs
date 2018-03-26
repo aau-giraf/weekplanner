@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
@@ -96,7 +98,27 @@ namespace WeekPlanner.Services.Mocks
 
         public async Task<ResponseListUserNameDTO> V1DepartmentByIdCitizensGetAsync(long? id)
         {
-            throw new System.NotImplementedException();
+            ResponseListUserNameDTO result;
+            // TODO: Allow for other departments
+            if (id == 1)
+            {
+                string[] usernames = {"Kurt", "Søren", "Elisabeth", "Ulrik", "Thomas", "Elise", "Maria"};
+                result = new ResponseListUserNameDTO
+                {
+                    Data = usernames.Select(x => new UserNameDTO(x)).ToList(),
+                    Success = true,
+                    ErrorKey = ResponseListUserNameDTO.ErrorKeyEnum.NoError
+                };
+            }
+            else
+            {
+                result = new ResponseListUserNameDTO
+                {
+                    Success = false,
+                    ErrorKey = ResponseListUserNameDTO.ErrorKeyEnum.Error
+                };
+            }
+            return result;
         }
 
         public async Task<ApiResponse<ResponseListUserNameDTO>> V1DepartmentByIdCitizensGetAsyncWithHttpInfo(long? id)

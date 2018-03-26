@@ -9,7 +9,7 @@ namespace WeekPlanner.Services.Mocks
 {
     public class AccountMockService : IAccountApi
     {
-        public Configuration Configuration { get; set; }
+        public Configuration Configuration { get; set; } = new Configuration();
         public string GetBasePath()
         {
             throw new NotImplementedException();
@@ -149,7 +149,24 @@ namespace WeekPlanner.Services.Mocks
 
         public async Task<ResponseString> V1AccountLoginPostAsync(LoginDTO model = null)
         {
-            throw new NotImplementedException();
+            ResponseString result;
+            
+            // TODO: Handle citizen login
+            if (model?.Username == "Graatand" && model.Password == "password")
+            {
+                result = new ResponseString("MySecretMockDepartmentAuthToken", true)
+                {
+                    ErrorKey = ResponseString.ErrorKeyEnum.NoError
+                };
+            }
+            else
+            {
+                result = new ResponseString(null, false, new List<string> {"username", "password"})
+                {
+                    ErrorKey = ResponseString.ErrorKeyEnum.InvalidCredentials
+                };
+            }
+            return await Task.FromResult(result);
         }
 
         public async Task<ApiResponse<ResponseString>> V1AccountLoginPostAsyncWithHttpInfo(LoginDTO model = null)

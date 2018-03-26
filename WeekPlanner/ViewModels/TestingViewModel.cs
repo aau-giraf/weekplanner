@@ -12,10 +12,13 @@ namespace WeekPlanner.ViewModels
     {
 
         private readonly IAccountApi _accountApi;
+        private readonly IDepartmentApi _departmentApi;
         
-        public TestingViewModel(INavigationService navigationService, IAccountApi accountApi) : base(navigationService)
+        public TestingViewModel(INavigationService navigationService, IAccountApi accountApi, 
+            IDepartmentApi departmentApi) : base(navigationService)
         {
             _accountApi = accountApi;
+            _departmentApi = departmentApi;
         }
 
         public ICommand NavigateToLoginCommand =>
@@ -24,9 +27,8 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseCitizenCommand =>
             new Command(async () =>
             {
-                // TODO: Fix TestingPage -> ChooseCitizenPage
-                //var result = await _accountApi.V1AccountLoginPostAsync(new LoginDTO("Graatand", "password"));
-                //await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(result.Data.GuardianOf);
+                var result = await _departmentApi.V1DepartmentByIdCitizensGetAsync(1);
+                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(result);
             });
 
         public ICommand NavigateToWeekPlannerCommand =>
