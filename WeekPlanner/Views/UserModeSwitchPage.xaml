@@ -4,7 +4,10 @@
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.UserModeSwitchPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
-             Title="Ugeplan">
+             Title="Ugeplan"
+             NavigationPage.HasNavigationBar="false"
+             >
+             
 
     <ContentPage.ToolbarItems>
         <ToolbarItem x:Name="ChangeMode" Order="Primary" Text="{Binding Mode}" Command="{Binding SwitchUserModeCommand}"/>
@@ -15,6 +18,53 @@
 
     <ContentPage.Content>
         <StackLayout>
+            <ScrollView>
+                <AbsoluteLayout VerticalOptions="Start" BackgroundColor="Black">
+                    <BoxView BackgroundColor="{StaticResource Key=Primary}" 
+                             AbsoluteLayout.LayoutBounds="0, 0, 1, 56" AbsoluteLayout.LayoutFlags="WidthProportional"/>
+                    
+                    <Label Text="Ugeplan - Kurt" AbsoluteLayout.LayoutBounds="0, 0, 1, 56" AbsoluteLayout.LayoutFlags="WidthProportional" 
+                           TextColor="White" 
+                           VerticalOptions="Center" HorizontalOptions="Center" >
+                        
+                    </Label>
+                    
+                    <Button AbsoluteLayout.LayoutBounds="0, 0, 100, 56" 
+                            FontSize="Micro"
+                            VerticalOptions="Center" HorizontalOptions="Start">                            
+                    </Button>
+                    
+                   
+
+                  
+                    
+                    <StackLayout AbsoluteLayout.LayoutBounds="0, 0, 1, 56" AbsoluteLayout.LayoutFlags="WidthProportional" 
+                                 VerticalOptions="Center" HorizontalOptions="End" Orientation="Horizontal" >
+                        
+                        <Button Text="Filler" 
+                                AbsoluteLayout.LayoutBounds="0, 0, 100, 56"
+                                FontSize="Micro">     
+                        </Button>
+                        
+                        <Button Text="Usermode" 
+                                AbsoluteLayout.LayoutBounds="0, 0, 100, 56"
+                                FontSize="Micro">     
+                        </Button>
+                        
+                        <Button Text="New Schedule" 
+                                AbsoluteLayout.LayoutBounds="0, 0, 100, 56"
+                                FontSize="Micro">     
+                        </Button>
+                        
+                        <Button Text="Trashcan" 
+                                AbsoluteLayout.LayoutBounds="0, 0, 100, 56"
+                                FontSize="Micro">     
+                        </Button>
+                        
+                    </StackLayout>
+
+                </AbsoluteLayout>
+            </ScrollView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
