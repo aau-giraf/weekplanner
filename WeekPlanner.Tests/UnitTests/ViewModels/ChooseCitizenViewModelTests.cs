@@ -24,7 +24,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             await sut.InitializeAsync(dtos);
             
             // Assert
-            Assert.NotNull(sut.Citizens);
+            Assert.NotNull(sut.CitizenNames);
         }
 
         [Theory, AutoData]
@@ -56,11 +56,11 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             bool invoked = false;
             sut.PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName.Equals(nameof(sut.Citizens)))
+                if (e.PropertyName.Equals(nameof(sut.CitizenNames)))
                     invoked = true;
             };
             // Act
-            sut.Citizens = new ObservableCollection<GirafUserDTO>();
+            sut.CitizenNames = new ObservableCollection<GirafUserDTO>();
             
             // Assert
             Assert.True(invoked);

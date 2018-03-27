@@ -27,13 +27,17 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = true;
+        public bool UseMocks = false;
 
         public string LoginEndpoint { get; set; }
 
         public string LogoutEndpoint { get; set; }
 
-        public string AuthToken { get; set; }
+        public string DepartmentAuthToken { get; set; }
+        
+        public string CitizenAuthToken { get; set; }
+
+        public int CurrentDepartment { get; set; } = 1; // TODO: Make dynamic
 
         private void UpdateEndpoint(string baseEndpoint)
         {

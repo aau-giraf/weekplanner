@@ -23,15 +23,17 @@ namespace WeekPlanner.Services.Navigation
 
         public Task InitializeAsync()
         {
-
-            if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
+            return NavigateToAsync<TestingViewModel>();
+            
+            // TODO: Remember chosen department and maybe authtoken
+            /*if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
             {
                 return NavigateToAsync<TestingViewModel>();
             }
             else
             {
                 return NavigateToAsync<ChooseCitizenViewModel>();
-            }
+            }*/
         }
 
         public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase

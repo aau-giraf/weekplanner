@@ -58,6 +58,66 @@ namespace WeekPlanner.Services.Mocks
             throw new NotImplementedException();
         }
 
+        public ResponseByte V1PictogramByIdImageGet(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponseByte> V1PictogramByIdImageGetAsync(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseByte>> V1PictogramByIdImageGetAsyncWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApiResponse<ResponseByte> V1PictogramByIdImageGetWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ResponsePictogramDTO V1PictogramByIdImagePut(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponsePictogramDTO> V1PictogramByIdImagePutAsync(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdImagePutAsyncWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApiResponse<ResponsePictogramDTO> V1PictogramByIdImagePutWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void V1PictogramByIdImageRawGet(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task V1PictogramByIdImageRawGetAsync(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<object>> V1PictogramByIdImageRawGetAsyncWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApiResponse<object> V1PictogramByIdImageRawGetWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
         public ResponsePictogramDTO V1PictogramByIdPut(long? id, PictogramDTO pictogram = null)
         {
             throw new NotImplementedException();
@@ -78,82 +138,22 @@ namespace WeekPlanner.Services.Mocks
             throw new NotImplementedException();
         }
 
-        public ResponseListPictogramDTO V1PictogramGet()
+        public ResponseListPictogramDTO V1PictogramGet(int? p, int? n, string q = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ResponseListPictogramDTO> V1PictogramGetAsync()
+        public Task<ResponseListPictogramDTO> V1PictogramGetAsync(int? p, int? n, string q = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo()
+        public Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo(int? p, int? n, string q = null)
         {
             throw new NotImplementedException();
         }
 
-        public ApiResponse<ResponseListPictogramDTO> V1PictogramGetWithHttpInfo()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ResponseByte V1PictogramImageByIdGet(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponseByte> V1PictogramImageByIdGetAsync(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<ResponseByte>> V1PictogramImageByIdGetAsyncWithHttpInfo(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ApiResponse<ResponseByte> V1PictogramImageByIdGetWithHttpInfo(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ResponsePictogramDTO V1PictogramImageByIdPost(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponsePictogramDTO> V1PictogramImageByIdPostAsync(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<ResponsePictogramDTO>> V1PictogramImageByIdPostAsyncWithHttpInfo(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ApiResponse<ResponsePictogramDTO> V1PictogramImageByIdPostWithHttpInfo(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ResponsePictogramDTO V1PictogramImageByIdPut(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ResponsePictogramDTO> V1PictogramImageByIdPutAsync(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<ResponsePictogramDTO>> V1PictogramImageByIdPutAsyncWithHttpInfo(long? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ApiResponse<ResponsePictogramDTO> V1PictogramImageByIdPutWithHttpInfo(long? id)
+        public ApiResponse<ResponseListPictogramDTO> V1PictogramGetWithHttpInfo(int? p, int? n, string q = null)
         {
             throw new NotImplementedException();
         }

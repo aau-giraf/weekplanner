@@ -16,11 +16,14 @@ namespace WeekPlanner.Views
             var vm = BindingContext as ChooseCitizenViewModel;
 
             if (string.IsNullOrWhiteSpace(e.NewTextValue))
-
-                CitizensListView.ItemsSource = vm.Citizens;
+            {
+                CitizensListView.ItemsSource = vm?.CitizenNames;
+            }
             else
-                CitizensListView.ItemsSource = vm.Citizens.Where(x => x.Username.StartsWith(e.NewTextValue, System.StringComparison.InvariantCultureIgnoreCase));
-
+            {
+                CitizensListView.ItemsSource =
+                    vm?.CitizenNames.Where(x => x.UserName.ToLower().StartsWith(e.NewTextValue.ToLower()));
+            }
         }
         
         

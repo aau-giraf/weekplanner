@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using WeekPlanner.ApplicationObjects;
+using WeekPlanner.Helpers;
 using WeekPlanner.Services.Mocks;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
@@ -19,41 +21,81 @@ namespace WeekPlanner.ViewModels
 {
     public class ChooseCitizenViewModel : ViewModelBase
     {
-        private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
-        private ObservableCollection<GirafUserDTO> _citizens;
-	    
-	    public ObservableCollection<GirafUserDTO> Citizens {
-		    get => _citizens;
+        private ObservableCollection<UserNameDTO> _citizenNames;
+	    private readonly IAccountApi _accountApi;
+	    private readonly ISettingsService _settingsService;
+	    private readonly IWeekApi _weekApi;
+
+	    public ObservableCollection<UserNameDTO> CitizenNames {
+		    get => _citizenNames;
 		    set {
-			    _citizens = value;
-			    RaisePropertyChanged(() => Citizens);
+			    _citizenNames = value;
+			    RaisePropertyChanged(() => CitizenNames);
 		    }
 	    }
 
-        public ChooseCitizenViewModel(IWeekApi weekApi, IPictogramApi pictogramApi, INavigationService navigationService) : base(navigationService)
+        public ChooseCitizenViewModel(INavigationService navigationService, IAccountApi accountApi,
+	        ISettingsService settingsService, IWeekApi weekApi) : base(navigationService)
         {
-            _weekApi = weekApi;
-            _pictogramApi = pictogramApi;
+	        _accountApi = accountApi;
+	        _settingsService = settingsService;
+	        _weekApi = weekApi;
         }
 
-	    public ICommand ChooseCitizenCommand => new Command<GirafUserDTO>(async citizen => await ShowWeekSchedule(citizen));
+	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
+		    await GetWeekPlanForCitizen(usernameDTO));
 
-        private async Task ShowWeekSchedule(GirafUserDTO citizen) {
-            var schedule = GetSchedule(citizen);
-            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(citizen);
-        }
-        private GirafUserDTO GetSchedule(GirafUserDTO citizen) { return citizen; }
+	    // TODO: Cleanup method and rename
+	    private async Task GetWeekPlanForCitizen(UserNameDTO usernameDTO)
+	    {
+		    ResponseString result;
+		    try
+		    {
+			    // TODO: Ask Backend for an endpoint that does not require password
+			    result = await _accountApi.V1AccountLoginPostAsync(new LoginDTO(usernameDTO.UserName, "password"));
+		    }
+		    catch (ApiException e)
+		    {
+			    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
+			    MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
+			    return;
+		    }
 
+		    if (result.Success == true)
+		    {
+			    _settingsService.CitizenAuthToken = result.Data;
+			    _settingsService.UseTokenFor(TokenType.Citizen);
+
+			    ResponseWeekDTO weekDTO;
+			    try
+			    {
+				    weekDTO = await _weekApi.V1WeekByIdGetAsync(1);
+			    }
+			    catch (ApiException )
+			    {
+				    Console.WriteLine("Failed to get weekplan");
+				    return;
+			    }
+
+			    if (weekDTO.Success == true)
+			    {
+				    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(weekDTO.Data);
+			    }
+		    }
+		    
+		    
+	    }
+	    
 		public override async Task InitializeAsync(object navigationData)
 		{
-			if (navigationData is IEnumerable<GirafUserDTO> dtos)
+			if (navigationData is List<UserNameDTO> usernames)
 			{
-				Citizens = new ObservableCollection<GirafUserDTO>(dtos);
+				CitizenNames = new ObservableCollection<UserNameDTO>(usernames);
 			}
 			else
 			{
-				throw new ArgumentException("Must be of type IEnumerable<GirafUserDTO>", nameof(navigationData));
+				throw new ArgumentException("Must be of type List<UserNameDTO>", nameof(navigationData));
 			}
 		}
 	}

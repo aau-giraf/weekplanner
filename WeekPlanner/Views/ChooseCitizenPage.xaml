@@ -12,7 +12,7 @@
             <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
             <ListView 
                 x:Name="CitizensListView" 
-                ItemsSource="{Binding Citizens}" 
+                ItemsSource="{Binding CitizenNames}" 
                 VerticalOptions="FillAndExpand" 
                 HasUnevenRows="true"
                 RowHeight="100">
@@ -36,7 +36,7 @@
                                                             Source = "https://us.123rf.com/450wm/silviemiskova/silviemiskova1604/silviemiskova160400029/55722613-stock-vector-giraffe-colorful-low-poly-design-on-blue-background-with-dark-brown-outline-animal-card-design-backg.jpg?ver=6">
                                     <!-- Source will change to UserIcon when backend has switched to using images -->
                                 </ffimageloading:CachedImage>
-                                <Label FontSize="18" Margin="5, 0, 0, 0" Text="{Binding Username}" VerticalTextAlignment="Center"/>
+                                <Label FontSize="18" Margin="5, 0, 0, 0" Text="{Binding UserName}" VerticalTextAlignment="Center"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

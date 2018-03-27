@@ -18,7 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Droid\WeekPlanner.Droid.csproj" />
-    <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj" />
+    <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj" />
   </ItemGroup>
   <ItemGroup>
