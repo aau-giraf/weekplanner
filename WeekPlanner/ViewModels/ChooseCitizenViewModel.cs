@@ -23,9 +23,8 @@ namespace WeekPlanner.ViewModels
     {
         private readonly IPictogramApi _pictogramApi;
         private ObservableCollection<UserNameDTO> _citizenNames;
-	    private readonly IAccountApi _accountApi;
+	    private readonly IDepartmentApi _departmentApi;
 	    private readonly ISettingsService _settingsService;
-	    private readonly IWeekApi _weekApi;
 
 	    public ObservableCollection<UserNameDTO> CitizenNames {
 		    get => _citizenNames;
@@ -35,68 +34,46 @@ namespace WeekPlanner.ViewModels
 		    }
 	    }
 
-        public ChooseCitizenViewModel(INavigationService navigationService, IAccountApi accountApi,
-	        ISettingsService settingsService, IWeekApi weekApi) : base(navigationService)
+        public ChooseCitizenViewModel(INavigationService navigationService, 
+	        IDepartmentApi departmentApi, ISettingsService settingsService) : base(navigationService)
         {
-	        _accountApi = accountApi;
+	        _departmentApi = departmentApi;
 	        _settingsService = settingsService;
-	        _weekApi = weekApi;
         }
 
 	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
-		    await GetWeekPlanForCitizen(usernameDTO));
+		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(usernameDTO));
 
-	    // TODO: Cleanup method and rename
-	    private async Task GetWeekPlanForCitizen(UserNameDTO usernameDTO)
+	    private async Task GetAndSetCitizenNamesAsync()
 	    {
-		    ResponseString result;
+		    ResponseListUserNameDTO result;
+
+            _settingsService.UseTokenFor(UserType.Department);
+
 		    try
 		    {
-			    // TODO: Ask Backend for an endpoint that does not require password
-			    result = await _accountApi.V1AccountLoginPostAsync(new LoginDTO(usernameDTO.UserName, "password"));
+			    result = await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.CurrentDepartment);
 		    }
-		    catch (ApiException e)
+		    catch (ApiException)
 		    {
 			    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
-			    MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
+			    MessagingCenter.Send(this, MessageKeys.CitizenListRetrievalFailed, friendlyErrorMessage);
 			    return;
 		    }
 
 		    if (result.Success == true)
 		    {
-			    _settingsService.CitizenAuthToken = result.Data;
-			    _settingsService.UseTokenFor(TokenType.Citizen);
-
-			    ResponseWeekDTO weekDTO;
-			    try
-			    {
-				    weekDTO = await _weekApi.V1WeekByIdGetAsync(1);
-			    }
-			    catch (ApiException )
-			    {
-				    Console.WriteLine("Failed to get weekplan");
-				    return;
-			    }
-
-			    if (weekDTO.Success == true)
-			    {
-				    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(weekDTO.Data);
-			    }
+			    CitizenNames = new ObservableCollection<UserNameDTO>(result.Data);
 		    }
-		    
-		    
+		    else
+		    {
+			    MessagingCenter.Send(this, MessageKeys.CitizenListRetrievalFailed, result.ErrorKey.ToFriendlyString());
+		    }
 	    }
-	    
-		public override async Task InitializeAsync(object navigationData)
-		{
-			if (navigationData is List<UserNameDTO> usernames)
-			{
-				CitizenNames = new ObservableCollection<UserNameDTO>(usernames);
-			}
-			else
-			{
-				throw new ArgumentException("Must be of type List<UserNameDTO>", nameof(navigationData));
-			}
-		}
-	}
+
+	    public override async Task InitializeAsync(object navigationData)
+	    {
+		    await GetAndSetCitizenNamesAsync();
+	    }
+    }
 }

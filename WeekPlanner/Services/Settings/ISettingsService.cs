@@ -7,12 +7,12 @@
         string DepartmentAuthToken { get; set; }
         string CitizenAuthToken { get; set; }
 
-        void UseTokenFor(TokenType tokenType);
+        void UseTokenFor(UserType userType);
 
         int CurrentDepartment { get; set; }
     }
 
-    public enum TokenType
+    public enum UserType
     {
         Citizen,
         Department

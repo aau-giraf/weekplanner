@@ -36,18 +36,18 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.CurrentDepartment = value;
         }
 
-        public void UseTokenFor(TokenType tokenType)
+        public void UseTokenFor(UserType userType)
         {
-            switch(tokenType)
+            switch(userType)
             {
-                case TokenType.Citizen:
+                case UserType.Citizen:
                     SetAuthTokenInAccountApi(CitizenAuthToken);
                     break;
-                case TokenType.Department:
+                case UserType.Department:
                     SetAuthTokenInAccountApi(DepartmentAuthToken);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null);
+                    throw new ArgumentOutOfRangeException(nameof(userType), userType, null);
             }
         }
 

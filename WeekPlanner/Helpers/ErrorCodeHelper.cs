@@ -16,8 +16,12 @@ namespace WeekPlanner.Helpers
                     return "Du mangler at udfylde nogle felter.";
                 case nameof(ErrorKeyEnum.UserMustBeGuardian):
                     return "Brugeren skal være en værge."; 
+                case nameof(ErrorKeyEnum.NotAuthorized):
+                    return "Du har ikke rettigheder til denne handling";
                 case nameof(ErrorKeyEnum.Error):
                     return "Ukendt fejl opstod. Måske er serveren nede.";
+                case nameof(ErrorKeyEnum.WeekScheduleNotFound):
+                    return "Ugeplanen kunne ikke findes";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(errorCode), errorCode, null);
             }
@@ -62,6 +66,9 @@ namespace WeekPlanner.Helpers
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponseListPictogramDTO.ErrorKeyEnum? errorKey) =>
+            ToFriendlyString(errorKey.ToString());
+        
+        public static string ToFriendlyString(this ResponseListUserNameDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
     }
 }

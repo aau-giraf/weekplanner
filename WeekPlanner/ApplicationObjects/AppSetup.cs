@@ -7,6 +7,7 @@ using WeekPlanner.Services.Mocks;
 using IO.Swagger.Client;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
+using WeekPlanner.Services.Login;
 
 namespace WeekPlanner.ApplicationObjects
 {
@@ -32,7 +33,9 @@ namespace WeekPlanner.ApplicationObjects
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
-            cb.RegisterType<SettingsService>().As<ISettingsService>();
+            cb.RegisterType<SettingsService>().As<ISettingsService>().InstancePerLifetimeScope();
+            cb.RegisterType<LoginService>().As<ILoginService>();
+
 
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)
