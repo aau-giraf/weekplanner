@@ -32,9 +32,8 @@ namespace WeekPlanner.ApplicationObjects
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
-            cb.RegisterType<SettingsService>().As<ISettingsService>().InstancePerLifetimeScope();
-            cb.RegisterType<LoginService>().As<ILoginService>();
-
+            cb.RegisterType<SettingsService>().As<ISettingsService>();
+            
 
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)
@@ -42,13 +41,13 @@ namespace WeekPlanner.ApplicationObjects
                 cb.RegisterType<MockAccountApi>().As<IAccountApi>();
                 cb.RegisterType<MockDepartmentApi>().As<IDepartmentApi>();
                 cb.RegisterType<MockWeekApi>().As<IWeekApi>();
+                cb.RegisterType<MockLoginService>().As<ILoginService>();
             }
             else
             {
-                var accountApi = new AccountApi();
-                accountApi.Configuration.BasePath = GlobalSettings.Instance.BaseEndpoint;
-                // TODO: Use AuthToken currently in use from GlobalSettings
+                var accountApi = new AccountApi {Configuration = {BasePath = GlobalSettings.Instance.BaseEndpoint}};
                 cb.RegisterInstance<IAccountApi>(accountApi);
+                cb.RegisterType<LoginService>().As<ILoginService>();
                 
                 cb.RegisterType<WeekApi>().As<IWeekApi>();
                 cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();

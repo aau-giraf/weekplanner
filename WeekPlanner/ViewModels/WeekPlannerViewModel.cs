@@ -75,9 +75,7 @@ namespace WeekPlanner.ViewModels
                 var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseWeekDTO.ErrorKeyEnum.Error);
                 MessagingCenter.Send(this, MessageKeys.ServerError, friendlyErrorMessage);
                 
-                // TODO: Create pop() in NavigationService instead of this, and it doesn't really work right now
-                await NavigationService.RemoveLastFromBackStackAsync();
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
+                await NavigationService.PopAsync();
                 return;
             }
 
@@ -89,9 +87,7 @@ namespace WeekPlanner.ViewModels
             {
                 MessagingCenter.Send(this, MessageKeys.RetrieveWeekPlanFailed, result.ErrorKey.ToFriendlyString());
 
-                // TODO: Create pop() in NavigationService instead of this, and it doesn't really work right now
-                await NavigationService.RemoveLastFromBackStackAsync();
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
+                await NavigationService.PopAsync();
                 return;
             }
         }
