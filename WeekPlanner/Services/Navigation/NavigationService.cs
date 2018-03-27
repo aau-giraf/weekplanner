@@ -23,23 +23,20 @@ namespace WeekPlanner.Services.Navigation
 
         public Task InitializeAsync()
         {
-
-            if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
+            return NavigateToAsync<TestingViewModel>();
+            
+            // TODO: Remember chosen department and maybe authtoken
+            /*if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
             {
                 return NavigateToAsync<TestingViewModel>();
             }
             else
             {
                 return NavigateToAsync<ChooseCitizenViewModel>();
-            }
+            }*/
         }
 
-        public Task NavigateToAsync<TViewModel>() where TViewModel : ViewModelBase
-        {
-            return InternalNavigateToAsync(typeof(TViewModel), null);
-        }
-
-        public Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : ViewModelBase
+        public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
         {
             return InternalNavigateToAsync(typeof(TViewModel), parameter);
         }
@@ -99,15 +96,6 @@ namespace WeekPlanner.Services.Navigation
             
         }
 
-        private Type GetPageTypeForViewModel(Type viewModelType)
-        {
-            var viewName = viewModelType.FullName.Replace("ViewModels", "Views").Replace("ViewModel", "Page");
-            var viewModelAssemblyName = viewModelType.GetTypeInfo().Assembly.FullName;
-            var viewAssemblyName = string.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelAssemblyName);
-            var viewType = Type.GetType(viewAssemblyName);
-            return viewType;
-        }
-
         private Page CreatePage(Type viewModelType, object parameter)
         {
             Type pageType = GetPageTypeForViewModel(viewModelType);
@@ -119,5 +107,16 @@ namespace WeekPlanner.Services.Navigation
             Page page = Activator.CreateInstance(pageType) as Page;
             return page;
         }
+
+        private Type GetPageTypeForViewModel(Type viewModelType)
+        {
+            var viewName = viewModelType.FullName.Replace("ViewModels", "Views").Replace("ViewModel", "Page");
+            var viewModelAssemblyName = viewModelType.GetTypeInfo().Assembly.FullName;
+            var viewAssemblyName = string.Format(CultureInfo.InvariantCulture, "{0}, {1}", viewName, viewModelAssemblyName);
+            var viewType = Type.GetType(viewAssemblyName);
+            return viewType;
+        }
+
+
     }
 }

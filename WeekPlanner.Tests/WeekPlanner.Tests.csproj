@@ -4,6 +4,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoFixture.Xunit2" Version="4.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
@@ -18,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Droid\WeekPlanner.Droid.csproj" />
-    <ProjectReference Include="..\Swagger.IO\Swagger.IO.csproj" />
+    <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +31,5 @@
     <Folder Include="IntegrationTests\Services\Networking\" />
     <Folder Include="IntegrationTests\Swagger.IO\" />
     <Folder Include="IntegrationTests\Swagger.IO\Api\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>

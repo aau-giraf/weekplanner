@@ -6,7 +6,9 @@ using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using WeekPlanner.Helpers;
+using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Settings;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -15,17 +17,17 @@ namespace WeekPlanner.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        private readonly IAccountApi _accountApi;
+        private readonly ILoginService _loginService;
         private bool _isValid;
         private ValidatableObject<string> _password;
         private ValidatableObject<string> _userName;
 
-        public LoginViewModel(IAccountApi accountApi, INavigationService navigationService) : base(navigationService)
+        public LoginViewModel(INavigationService navigationService, 
+            ILoginService loginService) : base(navigationService)
         {
-            _accountApi = accountApi;
-            _userName = new ValidatableObject<string>();
-            _password = new ValidatableObject<string>();
-            AddValidations();
+            _loginService = loginService;
+            _userName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
+            _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
         }
 
         public ValidatableObject<string> UserName
@@ -58,70 +60,24 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand LoginCommand => new Command(async () => await SendLoginRequest());
-
-        public ICommand ValidateUserNameCommand => new Command(() => ValidateUserName());
-
-        public ICommand ValidatePasswordCommand => new Command(() => ValidatePassword());
-
-        private async Task SendLoginRequest()
+        public ICommand LoginCommand => new Command(async () =>
         {
-            ResponseGirafUserDTO result;
-            try
+            if (Validate())
             {
-                var loginDTO = new LoginDTO(UserName.Value, Password.Value);
-                result = await _accountApi.V1AccountLoginPostAsync(loginDTO);
+                await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(), UserType.Department, UserName.Value, Password.Value);
             }
-            catch (ApiException)
-            {
-                // TODO make a "ServerDownError"
-                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
-                return;
-            }
+        });
 
-            if (result.Success == true)
-            {
-                MessagingCenter.Send(this, MessageKeys.LoginSucceeded, result.Data);
-                result.Data.GuardianOf.OrderBy(x => x.Username);
-                var dto = result.Data.GuardianOf;
+        public ICommand ValidateUserNameCommand => new Command(() => _userName.Validate());
 
-                // Switch this to an actual token once implemented in backend
-                //GlobalSettings.Instance.AuthToken = result.Data.Id;
-
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
-            }
-            else
-            {
-                var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
-            }
-        }
+        public ICommand ValidatePasswordCommand => new Command(() => _password.Validate());
 
         private bool Validate()
         {
-            var isValidUser = ValidateUserName();
-            var isValidPassword = ValidatePassword();
+            var isValidUser = _userName.Validate();
+            var isValidPassword = _password.Validate();
 
             return isValidUser && isValidPassword;
-        }
-
-        private bool ValidateUserName()
-        {
-            return _userName.Validate();
-        }
-
-        private bool ValidatePassword()
-        {
-            return _password.Validate();
-        }
-
-        private void AddValidations()
-        {
-            _userName.Validations.Add(
-                new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et brugernavn er påkrævet."});
-            _password.Validations.Add(
-                new IsNotNullOrEmptyRule<string> {ValidationMessage = "En adgangskode er påkrævet."});
         }
     }
 }

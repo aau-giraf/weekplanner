@@ -5,7 +5,9 @@ using WeekPlanner.ViewModels;
 using IO.Swagger.Api;
 using WeekPlanner.Services.Mocks;
 using IO.Swagger.Client;
+using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
+using WeekPlanner.Services.Login;
 
 namespace WeekPlanner.ApplicationObjects
 {
@@ -31,18 +33,26 @@ namespace WeekPlanner.ApplicationObjects
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
+            cb.RegisterType<SettingsService>().As<ISettingsService>().InstancePerLifetimeScope();
+            cb.RegisterType<LoginService>().As<ILoginService>();
+
 
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)
             {
-                cb.RegisterType<AccountMockService>().As<IAccountApi>();
+                cb.RegisterType<MockAccountApi>().As<IAccountApi>();
+                cb.RegisterType<MockDepartmentApi>().As<IDepartmentApi>();
+                cb.RegisterType<MockWeekApi>().As<IWeekApi>();
             }
             else
             {
                 var accountApi = new AccountApi();
-                accountApi.Configuration.ApiClient = new ApiClient(GlobalSettings.DefaultEndpoint);
-
-                cb.RegisterType<AccountApi>().As<IAccountApi>();
+                accountApi.Configuration.BasePath = GlobalSettings.Instance.BaseEndpoint;
+                // TODO: Use AuthToken currently in use from GlobalSettings
+                cb.RegisterInstance<IAccountApi>(accountApi);
+                
+                cb.RegisterType<WeekApi>().As<IWeekApi>();
+                cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
             }
         }
     }
