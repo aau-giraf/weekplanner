@@ -72,28 +72,26 @@ namespace WeekPlanner.ViewModels
             }
             catch (ApiException)
             {
-                // TODO make a "ServerDownError"
                 var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
+                MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
                 return;
             }
 
-            if (result.Success == true)
-            {
-                MessagingCenter.Send(this, MessageKeys.LoginSucceeded, result.Data);
-                result.Data.GuardianOf.OrderBy(x => x.Username);
-                var dto = result.Data.GuardianOf;
-
-                // Switch this to an actual token once implemented in backend
-                //GlobalSettings.Instance.AuthToken = result.Data.Id;
-
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
-            }
-            else
+            if (!(bool)result.Success)
             {
                 var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
+                MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
+                return;
             }
+
+            MessagingCenter.Send(this, MessageKeys.RequestSucceeded, result.Data);
+            result.Data.GuardianOf.OrderBy(x => x.Username);
+            var dto = result.Data.GuardianOf;
+
+            // Switch this to an actual token once implemented in backend
+            //GlobalSettings.Instance.AuthToken = result.Data.Id;
+
+            await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
         }
 
         private bool Validate()

@@ -29,7 +29,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
             var loginViewModel = Fixture.Create<LoginViewModel>();
 
-            MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, MessageKeys.LoginSucceeded, (sender, args) =>
+            MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, MessageKeys.RequestSucceeded, (sender, args) =>
             {
                 messageReceived = true;
                });
@@ -63,7 +63,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .With(l => l.Password, password)
                 .Create();
 
-            MessagingCenter.Subscribe<LoginViewModel, string>(this, MessageKeys.LoginFailed, (sender, args) =>
+            MessagingCenter.Subscribe<LoginViewModel, string>(this, MessageKeys.RequestFailed, (sender, args) =>
             {
                 messageReceived = true;
             });

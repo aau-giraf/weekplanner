@@ -28,6 +28,7 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<TestingViewModel>();
             cb.RegisterType<WeekPlannerViewModel>();
             cb.RegisterType<ChooseTemplateViewModel>();
+            cb.RegisterType<ChooseDepartmentViewModel>();
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
@@ -37,13 +38,15 @@ namespace WeekPlanner.ApplicationObjects
             if (GlobalSettings.Instance.UseMocks)
             {
                 cb.RegisterType<AccountMockService>().As<IAccountApi>();
+                cb.RegisterType<DepartmentMockService>().As<IDepartmentApi>();
             }
             else
             {
-                var accountApi = new AccountApi();
-                accountApi.Configuration.ApiClient = new ApiClient(GlobalSettings.DefaultEndpoint);
-
+                var accountApi = new AccountApi(GlobalSettings.DefaultEndpoint);
                 cb.RegisterInstance<IAccountApi>(accountApi);
+
+                var departmentApi = new DepartmentApi(GlobalSettings.DefaultEndpoint);
+                cb.RegisterInstance<IDepartmentApi>(departmentApi);
             }
         }
     }
