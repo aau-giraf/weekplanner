@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using AutoFixture;
 using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Moq;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels;
+using WeekPlanner.ViewModels.Base;
+using Xamarin.Forms;
 using Xunit;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
@@ -15,10 +17,30 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
     public class ChooseCitizenViewModelTests : ViewModelTestsBase
     {
         [Fact]
+        public void CitizenNamesProperty_OnSet_RaisePropertyChanged()
+        {
+            // Arrange
+            var sut = Fixture.Create<ChooseCitizenViewModel>();
+            
+            bool invoked = false;
+            sut.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName.Equals(nameof(sut.CitizenNames)))
+                    invoked = true;
+            };
+            
+            // Act
+            sut.CitizenNames = new ObservableCollection<UserNameDTO>();
+            
+            // Assert
+            Assert.True(invoked);
+        }
+        
+        [Fact]
         public async void CitizenNamesProperty_AfterInitializationWithValidArguments_IsNotNull()
         {
             // Arrange
-            var dto = Fixture.Build<ResponseListUserNameDTO>()
+            var response = Fixture.Build<ResponseListUserNameDTO>()
                 .With(r => r.Data, Fixture.Create<List<UserNameDTO>>())
                 .With(r => r.Success, true)
                 .With(r => r.ErrorKey, ResponseListUserNameDTO.ErrorKeyEnum.NoError)
@@ -26,7 +48,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             
             var departmentApiMock = Fixture.Freeze<Mock<IDepartmentApi>>();
             departmentApiMock.Setup(d => d.V1DepartmentByIdCitizensGetAsync(It.IsAny<long?>()))
-                .ReturnsAsync(dto);
+                .ReturnsAsync(response);
 
             var sut = Fixture.Build<ChooseCitizenViewModel>()
                 .OmitAutoProperties().Create();
@@ -44,15 +66,11 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Arrange
             var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
             
-            // 
-            var dto = Fixture.Create<ResponseListUserNameDTO>();
-                /*.With(r => r.Data, Fixture.Create<List<UserNameDTO>>())
-                .With(r => r.Success, true)
-                .With(r => r.ErrorKey, ResponseListUserNameDTO.ErrorKeyEnum.NoError)
-                .Create();*/
+            // Necessary because AutoFixture can't automatically setup the mock method calls
+            var response = Fixture.Create<ResponseListUserNameDTO>();
             var departmentApiMock = Fixture.Freeze<Mock<IDepartmentApi>>();
             departmentApiMock.Setup(d => d.V1DepartmentByIdCitizensGetAsync(It.IsAny<long?>()))
-                .ReturnsAsync(dto);
+                .ReturnsAsync(response);
             
             var sut = Fixture.Create<ChooseCitizenViewModel>();
             
@@ -64,22 +82,53 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
         
         [Fact]
-        public void CitizenNamesProperty_OnSet_RaisePropertyChanged()
+        public async void InitializeAsync_ResultIsFalse_SendsMessage()
         {
             // Arrange
+            bool messageReceived = false;
+            MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.CitizenListRetrievalFailed, (sender, args) =>
+            {
+                messageReceived = true;
+            });
+            
+            var response = Fixture.Build<ResponseListUserNameDTO>()
+                .With(r => r.Success, false)
+                .Create();
+            
+            Fixture.Freeze<Mock<IDepartmentApi>>()
+                .Setup(d => d.V1DepartmentByIdCitizensGetAsync(It.IsAny<long?>()))
+                .ThrowsAsync(Fixture.Create<ApiException>());
+            
             var sut = Fixture.Create<ChooseCitizenViewModel>();
             
-            bool invoked = false;
-            sut.PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName.Equals(nameof(sut.CitizenNames)))
-                    invoked = true;
-            };
             // Act
-            sut.CitizenNames = new ObservableCollection<UserNameDTO>();
+            await sut.InitializeAsync(null);
             
             // Assert
-            Assert.True(invoked);
+            Assert.True(messageReceived);
+        }
+        
+        [Fact]
+        public async void InitializeAsync_ApiExceptionThrown_SendsMessage()
+        {
+            // Arrange
+            bool messageReceived = false;
+            MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.CitizenListRetrievalFailed, (sender, args) =>
+            {
+                messageReceived = true;
+            });
+            
+            Fixture.Freeze<Mock<IDepartmentApi>>()
+                .Setup(d => d.V1DepartmentByIdCitizensGetAsync(It.IsAny<long?>()))
+                .ThrowsAsync(Fixture.Create<ApiException>());
+            
+            var sut = Fixture.Create<ChooseCitizenViewModel>();
+            
+            // Act
+            await sut.InitializeAsync(null);
+            
+            // Assert
+            Assert.True(messageReceived);
         }
 
         [Fact]
