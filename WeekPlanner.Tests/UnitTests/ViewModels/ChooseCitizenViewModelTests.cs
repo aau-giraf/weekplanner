@@ -17,7 +17,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
     public class ChooseCitizenViewModelTests : ViewModelTestsBase
     {
         [Fact]
-        public void CitizenNamesProperty_OnSet_RaisePropertyChanged()
+        public void CitizenNamesProperty_OnSet_RaisesPropertyChanged()
         {
             // Arrange
             var sut = Fixture.Create<ChooseCitizenViewModel>();
