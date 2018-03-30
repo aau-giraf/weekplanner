@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WeekPlanner.Services.Mocks
 {
-    public class PictogramMockService : IPictogramApi
+    public class MockPictogramApi : IPictogramApi
     {
         public Configuration Configuration { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public ExceptionFactory ExceptionFactory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

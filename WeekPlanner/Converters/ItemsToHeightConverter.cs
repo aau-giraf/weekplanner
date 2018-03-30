@@ -11,9 +11,9 @@ namespace WeekPlanner.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is int)
-            {
-                return System.Convert.ToInt32(value) * ItemHeight;
+            if (value is int c)
+            {   
+                return c * ItemHeight;
             }
 
             return 0;

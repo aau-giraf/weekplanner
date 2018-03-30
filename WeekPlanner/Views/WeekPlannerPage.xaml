@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.WeekPlannerPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
@@ -95,7 +97,8 @@
                         Grid.ColumnSpan="7">
                 <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                <Grid HeightRequest="{Binding ImageSources.Count, Converter={StaticResource ItemsToHeightConverter}}">
+                <Grid
+                    HeightRequest="{Binding CountOfMaxHeightWeekday, Converter={StaticResource ItemsToHeightConverter}}">
                     <ListView ItemsSource="{Binding MondayPictos}"
                               Grid.Column="0"
                               HasUnevenRows="True"
@@ -106,7 +109,11 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
+                                                                DownsampleToViewSize="true"
+                                                                LoadingPlaceholder="default_profile_picture.jpg"
+                                                                ErrorPlaceholder="default_profile_picture.jpg"
+                                                                Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -121,7 +128,11 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
+                                                                DownsampleToViewSize="true"
+                                                                LoadingPlaceholder="default_profile_picture.jpg"
+                                                                ErrorPlaceholder="default_profile_picture.jpg"
+                                                                Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -136,7 +147,11 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
+                                                                DownsampleToViewSize="true"
+                                                                LoadingPlaceholder="default_profile_picture.jpg"
+                                                                ErrorPlaceholder="default_profile_picture.jpg"
+                                                                Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -151,7 +166,11 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
+                                                                DownsampleToViewSize="true"
+                                                                LoadingPlaceholder="default_profile_picture.jpg"
+                                                                ErrorPlaceholder="default_profile_picture.jpg"
+                                                                Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -166,7 +185,11 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
+                                                                DownsampleToViewSize="true"
+                                                                LoadingPlaceholder="default_profile_picture.jpg"
+                                                                ErrorPlaceholder="default_profile_picture.jpg"
+                                                                Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -181,7 +204,11 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
+                                                                DownsampleToViewSize="true"
+                                                                LoadingPlaceholder="default_profile_picture.jpg"
+                                                                ErrorPlaceholder="default_profile_picture.jpg"
+                                                                Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -196,7 +223,11 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Image Source="{Binding Source}" Margin="0,5,0,0" />
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
+                                                                DownsampleToViewSize="true"
+                                                                LoadingPlaceholder="default_profile_picture.jpg"
+                                                                ErrorPlaceholder="default_profile_picture.jpg"
+                                                                Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>

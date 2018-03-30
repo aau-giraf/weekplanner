@@ -43,6 +43,7 @@ namespace WeekPlanner.ApplicationObjects
                 cb.RegisterType<MockAccountApi>().As<IAccountApi>();
                 cb.RegisterType<MockDepartmentApi>().As<IDepartmentApi>();
                 cb.RegisterType<MockWeekApi>().As<IWeekApi>();
+                cb.RegisterType<MockPictogramApi>().As<IPictogramApi>();
             }
             else
             {
@@ -50,8 +51,8 @@ namespace WeekPlanner.ApplicationObjects
                 accountApi.Configuration.BasePath = GlobalSettings.Instance.BaseEndpoint;
                 // TODO: Use AuthToken currently in use from GlobalSettings
                 cb.RegisterInstance<IAccountApi>(accountApi);
-                
                 cb.RegisterType<WeekApi>().As<IWeekApi>();
+                cb.RegisterType<PictogramApi>().As<IPictogramApi>();
                 cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
             }
         }
