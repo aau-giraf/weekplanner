@@ -7,6 +7,8 @@ using System.Text;
 using WeekPlanner.ViewModels;
 using Xunit;
 using Moq;
+using IO.Swagger.Api;
+using System.Linq;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
@@ -35,9 +37,20 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         public async void ListNotEmpty_After_Initializing()
         {
             // Arrange
-            var sut = Fixture.Create<ChooseDepartmentViewModel>();
+            var departmentApiMock = Fixture.Freeze<Mock<IDepartmentApi>>();
+            var departments = Fixture.CreateMany<DepartmentDTO>().ToList();
 
-            // Moq _departmentApi.V1DepartmentGetAsync so it returns a success response with a list of departments
+            var response = Fixture
+                .Build<ResponseListDepartmentDTO>()
+                .With(x => x.Success, true)
+                .With(r => r.Data, departments)
+                .Create();
+
+            departmentApiMock
+                .Setup(n => n.V1DepartmentGetAsync())
+                .ReturnsAsync(response);
+
+            var sut = Fixture.Create<ChooseDepartmentViewModel>();
 
             // Act
             await sut.InitializeAsync(null);
@@ -50,7 +63,18 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         public async void SendsError_When_ResponseNotSuccessful()
         {
             // Arrange
+            var response = Fixture
+                .Build<ResponseListDepartmentDTO>()
+                .With(x => x.Success, false)
+                .Create();
+
+            var departmentApiMock = Fixture
+                .Freeze<Mock<IDepartmentApi>>()
+                .Setup(n => n.V1DepartmentGetAsync())
+                .ReturnsAsync(response);
+
             var sut = Fixture.Create<ChooseDepartmentViewModel>();
+
             bool errorWasSent = false;
 
             // Act
