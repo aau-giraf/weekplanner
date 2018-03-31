@@ -9,6 +9,9 @@ using Xunit;
 using Moq;
 using IO.Swagger.Api;
 using System.Linq;
+using Xamarin.Forms;
+using WeekPlanner.ViewModels.Base;
+using IO.Swagger.Client;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
@@ -60,7 +63,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public async void SendsError_When_ResponseNotSuccessful()
+        public async void SendsErrorMessage_When_ResponseNotSuccessful()
         {
             // Arrange
             var response = Fixture
@@ -74,8 +77,9 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .ReturnsAsync(response);
 
             var sut = Fixture.Create<ChooseDepartmentViewModel>();
-
             bool errorWasSent = false;
+            MessagingCenter.Subscribe<ChooseDepartmentViewModel, string>(this,
+                MessageKeys.RequestFailed, (sender, msg) => errorWasSent = true);
 
             // Act
             await sut.InitializeAsync(null);
@@ -85,11 +89,23 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public async void SendsError_When_ResponseThrowsApiException()
+        public async void SendsErrorMessage_When_ResponseThrowsApiException()
         {
             // Arrange
+            var response = Fixture
+                .Build<ResponseListDepartmentDTO>()
+                .With(x => x.Success, false)
+                .Create();
+
+            var departmentApiMock = Fixture
+                .Freeze<Mock<IDepartmentApi>>()
+                .Setup(n => n.V1DepartmentGetAsync())
+                .Throws(new ApiException());
+
             var sut = Fixture.Create<ChooseDepartmentViewModel>();
             bool errorWasSent = false;
+            MessagingCenter.Subscribe<ChooseDepartmentViewModel, string>(this,
+                MessageKeys.RequestFailed, (sender, msg) => errorWasSent = true);
 
             // Act
             await sut.InitializeAsync(null);
