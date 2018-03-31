@@ -327,11 +327,6 @@ namespace IO.Swagger.Model
             this.ErrorProperties = ErrorProperties;
         }
 
-        public ResponseListDepartmentDTO()
-        {
-            // Is neccessary for tests
-        }
-
         /// <summary>
         /// Gets or Sets Data
         /// </summary>
