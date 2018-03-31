@@ -4,6 +4,11 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="UnitTests\Services\**" />
+    <EmbeddedResource Remove="UnitTests\Services\**" />
+    <None Remove="UnitTests\Services\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AutoFixture.Xunit2" Version="4.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
@@ -22,9 +27,6 @@
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UnitTests\" />
-    <Folder Include="UnitTests\Services\" />
-    <Folder Include="UnitTests\Services\Networking\" />
     <Folder Include="IntegrationTests\" />
     <Folder Include="IntegrationTests\Services\" />
     <Folder Include="IntegrationTests\Services\Networking\" />

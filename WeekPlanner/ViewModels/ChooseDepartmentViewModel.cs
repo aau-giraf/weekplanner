@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -21,7 +21,8 @@ namespace WeekPlanner.ViewModels
         {
             _departmentApi = departmentApi;
         }
-        ObservableCollection<DepartmentDTO> departments;
+
+        private ObservableCollection<DepartmentDTO> departments;
 
         public ObservableCollection<DepartmentDTO> Departments
         {
@@ -34,7 +35,7 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand ChooseDepartmentCommand =>
-            new Command<DepartmentDTO>(department => DepartmentChosen(department));
+            new Command<DepartmentDTO>(d => DepartmentChosen(d));
 
         private void DepartmentChosen(DepartmentDTO department)
         {
@@ -52,7 +53,7 @@ namespace WeekPlanner.ViewModels
             }
             catch (ApiException)
             {
-                SendErrorMessage(null);
+                SendErrorMessage();
                 return;
             }
 
@@ -65,17 +66,20 @@ namespace WeekPlanner.ViewModels
             Departments = new ObservableCollection<DepartmentDTO>(result.Data);
         }
 
-        private void SendErrorMessage(ResponseListDepartmentDTO result) {
+        private void SendErrorMessage(ResponseListDepartmentDTO result = null)
+        {
             string friendlyErrorMessage;
 
-            if(result == null) {
+            if (result == null)
+            {
                 friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
-            } else {
+            }
+            else
+            {
                 friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
             }
 
             MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
         }
-
     }
 }

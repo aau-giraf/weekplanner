@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using AutoFixture;
 using AutoFixture.Xunit2;
@@ -22,7 +22,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
             // Act
             await sut.InitializeAsync(dtos);
-            
+
             // Assert
             Assert.NotNull(sut.Citizens);
         }
@@ -36,7 +36,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert                                                       Act
             await Assert.ThrowsAsync<ArgumentException>(async () => await sut.InitializeAsync(arg));
         }
-        
+
         [Fact]
         public async void InitializeAsync_NullArgument_ThrowsArgumentException()
         {
@@ -46,13 +46,13 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert                                                       Act
             await Assert.ThrowsAsync<ArgumentException>(async () => await sut.InitializeAsync(null));
         }
-        
+
         [Fact]
         public void CitizensProperty_OnSet_RaisePropertyChanged()
         {
             // Arrange
             var sut = Fixture.Create<ChooseCitizenViewModel>();
-            
+
             bool invoked = false;
             sut.PropertyChanged += (sender, e) =>
             {
@@ -61,7 +61,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             };
             // Act
             sut.Citizens = new ObservableCollection<GirafUserDTO>();
-            
+
             // Assert
             Assert.True(invoked);
         }
@@ -73,7 +73,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var sut = Fixture.Build<ChooseCitizenViewModel>()
                 .OmitAutoProperties()
                 .Create();
-            
+
             // Assert
             Assert.NotNull(sut.ChooseCitizenCommand);
         }
@@ -85,10 +85,10 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var arg = Fixture.Create<GirafUserDTO>();
             var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
             var sut = Fixture.Create<ChooseCitizenViewModel>();
-            
+
             // Act
             sut.ChooseCitizenCommand.Execute(arg);
-            
+
             // Assert
             navServiceMock.Verify(n => n.NavigateToAsync<WeekPlannerViewModel>(It.IsAny<GirafUserDTO>()));
         }
