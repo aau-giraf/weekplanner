@@ -7,9 +7,9 @@
              base:ViewModelLocator.AutoWireViewModel="true"
              Title="Vælg Afdeling">
     <ContentPage.Content>
-        <StackLayout>
+        <Grid Padding="12">
             <ListView ItemsSource="{Binding Departments}"
-                      VerticalOptions="CenterAndExpand"
+                      VerticalOptions="FillAndExpand"
                       HasUnevenRows="true"
                       RowHeight="100">
                 <ListView.Behaviors>
@@ -33,6 +33,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

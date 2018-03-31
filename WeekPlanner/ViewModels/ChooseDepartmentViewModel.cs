@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using WeekPlanner.Helpers;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
@@ -17,12 +15,15 @@ namespace WeekPlanner.ViewModels
     {
         private IDepartmentApi _departmentApi;
 
+        private ObservableCollection<DepartmentDTO> departments;
+
         public ChooseDepartmentViewModel(IDepartmentApi departmentApi, INavigationService navigationService) : base(navigationService)
         {
             _departmentApi = departmentApi;
         }
 
-        private ObservableCollection<DepartmentDTO> departments;
+        public ICommand ChooseDepartmentCommand =>
+            new Command<DepartmentDTO>(d => DepartmentChosen(d));
 
         public ObservableCollection<DepartmentDTO> Departments
         {
@@ -34,16 +35,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ChooseDepartmentCommand =>
-            new Command<DepartmentDTO>(d => DepartmentChosen(d));
-
-        private void DepartmentChosen(DepartmentDTO department)
-        {
-            GlobalSettings.Instance.DepartmentId = (long)department.Id;
-            NavigationService.NavigateToAsync<LoginViewModel>();
-        }
-
-        public override async Task InitializeAsync(object navigationData)
+        public override async Task InitializeAsync(object navigationData = null)
         {
             ResponseListDepartmentDTO result;
 
@@ -64,6 +56,12 @@ namespace WeekPlanner.ViewModels
             }
 
             Departments = new ObservableCollection<DepartmentDTO>(result.Data);
+        }
+
+        private void DepartmentChosen(DepartmentDTO department)
+        {
+            GlobalSettings.Instance.DepartmentId = (long)department.Id;
+            NavigationService.NavigateToAsync<LoginViewModel>();
         }
 
         private void SendErrorMessage(ResponseListDepartmentDTO result = null)

@@ -12,6 +12,7 @@ using System.Linq;
 using Xamarin.Forms;
 using WeekPlanner.ViewModels.Base;
 using IO.Swagger.Client;
+using WeekPlanner.Services.Navigation;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
@@ -29,6 +30,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 if (e.PropertyName.Equals(nameof(sut.Departments)))
                     invoked = true;
             };
+
             // Act
             sut.Departments = new ObservableCollection<DepartmentDTO>();
 
@@ -112,6 +114,35 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
             // Assert
             Assert.True(errorWasSent);
+        }
+
+        [Fact]
+        private void DepartmentIdChanged_When_DepartmentChosen()
+        {
+            // Assert
+            var sut = Fixture.Create<ChooseDepartmentViewModel>();
+            long pre = GlobalSettings.Instance.DepartmentId;
+
+            // Act
+            sut.ChooseDepartmentCommand.Execute(new DepartmentDTO { Id = 5 });
+
+            // Assert
+            long post = GlobalSettings.Instance.DepartmentId;
+            Assert.NotEqual(pre, post);
+        }
+
+        [Fact]
+        private void Navigate_When_DepartmentChosen()
+        {
+            // Assert
+            var navigationMock = Fixture.Freeze<Mock<INavigationService>>();
+            var sut = Fixture.Create<ChooseDepartmentViewModel>();
+
+            // Act
+            sut.ChooseDepartmentCommand.Execute(new DepartmentDTO { Id = 5 });
+
+            // Assert
+            navigationMock.Verify(x => x.NavigateToAsync<LoginViewModel>(null));
         }
     }
 }
