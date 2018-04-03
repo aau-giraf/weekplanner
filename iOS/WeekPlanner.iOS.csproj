@@ -134,8 +134,12 @@
     <ImageAsset Include="Assets.xcassets\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\default_profile_picture.jpg" />
+    <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\default_profile_picture.jpg">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\tab_about.png" />

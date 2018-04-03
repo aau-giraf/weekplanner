@@ -35,6 +35,8 @@ namespace WeekPlanner
 
         public string AuthToken { get; set; }
 
+        public long DepartmentId { get; set; }
+
         private void UpdateEndpoint(string baseEndpoint)
         {
             LoginEndpoint = $"{baseEndpoint}/Account/login";

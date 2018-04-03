@@ -6,5 +6,11 @@
             get => GlobalSettings.Instance.UseMocks;
             set => GlobalSettings.Instance.UseMocks = value;
         }
+
+        public long DepartmentId
+        {
+            get => GlobalSettings.Instance.DepartmentId;
+            set => GlobalSettings.Instance.DepartmentId = value;
+        }
     }
 }
