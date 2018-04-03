@@ -1,9 +1,6 @@
 using AutoFixture;
 using IO.Swagger.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using WeekPlanner.ViewModels;
 using Xunit;
 using Moq;
@@ -13,6 +10,7 @@ using Xamarin.Forms;
 using WeekPlanner.ViewModels.Base;
 using IO.Swagger.Client;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Settings;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
@@ -28,9 +26,11 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             sut.PropertyChanged += (sender, e) =>
             {
                 if (e.PropertyName.Equals(nameof(sut.Departments)))
+                {
                     invoked = true;
+                }
             };
-
+            
             // Act
             sut.Departments = new ObservableCollection<DepartmentDTO>();
 
@@ -39,7 +39,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public async void ListNotEmpty_After_Initializing()
+        public async void InitializeAsync_SuccesfulResponse_DepartmentsPropertyIsNotNull()
         {
             // Arrange
             var departmentApiMock = Fixture.Freeze<Mock<IDepartmentApi>>();
@@ -61,11 +61,11 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             await sut.InitializeAsync(null);
 
             // Assert
-            Assert.True(sut.Departments.Count > 0);
+            Assert.NotNull(sut.Departments);
         }
 
         [Fact]
-        public async void SendsErrorMessage_When_ResponseNotSuccessful()
+        public async void InitializeAsync_ApiReturnsNotSuccessful_SendsErrorMessage()
         {
             // Arrange
             var response = Fixture
@@ -73,16 +73,16 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .With(x => x.Success, false)
                 .Create();
 
-            var departmentApiMock = Fixture
-                .Freeze<Mock<IDepartmentApi>>()
+            Fixture.Freeze<Mock<IDepartmentApi>>()
                 .Setup(n => n.V1DepartmentGetAsync())
                 .ReturnsAsync(response);
-
-            var sut = Fixture.Create<ChooseDepartmentViewModel>();
+            
             bool errorWasSent = false;
             MessagingCenter.Subscribe<ChooseDepartmentViewModel, string>(this,
                 MessageKeys.RequestFailed, (sender, msg) => errorWasSent = true);
 
+            var sut = Fixture.Create<ChooseDepartmentViewModel>();
+            
             // Act
             await sut.InitializeAsync(null);
 
@@ -91,23 +91,18 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public async void SendsErrorMessage_When_ResponseThrowsApiException()
+        public async void InitializeAsync_ApiThrowsError_SendsErrorMessage()
         {
             // Arrange
-            var response = Fixture
-                .Build<ResponseListDepartmentDTO>()
-                .With(x => x.Success, false)
-                .Create();
-
-            var departmentApiMock = Fixture
-                .Freeze<Mock<IDepartmentApi>>()
+            Fixture.Freeze<Mock<IDepartmentApi>>()
                 .Setup(n => n.V1DepartmentGetAsync())
                 .Throws(new ApiException());
 
-            var sut = Fixture.Create<ChooseDepartmentViewModel>();
             bool errorWasSent = false;
             MessagingCenter.Subscribe<ChooseDepartmentViewModel, string>(this,
                 MessageKeys.RequestFailed, (sender, msg) => errorWasSent = true);
+            
+            var sut = Fixture.Create<ChooseDepartmentViewModel>();
 
             // Act
             await sut.InitializeAsync(null);
@@ -117,29 +112,34 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        private void DepartmentIdChanged_When_DepartmentChosen()
+        private void ChooseDepartmentCommand_Executed_SetsDepartmentIdInSettings()
         {
             // Assert
+            var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
+            int departmentIdChosen = 5;
+            var departmentDTO = Fixture.Build<DepartmentDTO>()
+                .With(d => d.Id, departmentIdChosen)
+                .Create();
+            
             var sut = Fixture.Create<ChooseDepartmentViewModel>();
-            long pre = GlobalSettings.Instance.DepartmentId;
-
+            
+            
             // Act
-            sut.ChooseDepartmentCommand.Execute(new DepartmentDTO { Id = 5 });
+            sut.ChooseDepartmentCommand.Execute(departmentDTO);
 
             // Assert
-            long post = GlobalSettings.Instance.DepartmentId;
-            Assert.NotEqual(pre, post);
+            settingsServiceMock.VerifySet(s => s.DepartmentId = departmentIdChosen);
         }
 
         [Fact]
-        private void Navigate_When_DepartmentChosen()
+        private void ChooseDepartmentCommand_Executed_InvokesNavigateToLoginViewModel()
         {
             // Assert
             var navigationMock = Fixture.Freeze<Mock<INavigationService>>();
             var sut = Fixture.Create<ChooseDepartmentViewModel>();
 
             // Act
-            sut.ChooseDepartmentCommand.Execute(new DepartmentDTO { Id = 5 });
+            sut.ChooseDepartmentCommand.Execute(Fixture.Create<DepartmentDTO>());
 
             // Assert
             navigationMock.Verify(x => x.NavigateToAsync<LoginViewModel>(null));

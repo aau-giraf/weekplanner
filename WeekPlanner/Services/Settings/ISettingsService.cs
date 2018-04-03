@@ -3,5 +3,6 @@
     public interface ISettingsService
     {
         bool UseMocks { get; set; }
+        long DepartmentId { get; set; }
     }
 }

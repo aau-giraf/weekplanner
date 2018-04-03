@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WeekPlanner.Helpers;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
@@ -13,29 +14,32 @@ namespace WeekPlanner.ViewModels
 {
     public class ChooseDepartmentViewModel : ViewModelBase
     {
-        private IDepartmentApi _departmentApi;
+        private readonly IDepartmentApi _departmentApi;
+        private readonly ISettingsService _settingsService;
 
-        private ObservableCollection<DepartmentDTO> departments;
+        private ObservableCollection<DepartmentDTO> _departments;
 
-        public ChooseDepartmentViewModel(IDepartmentApi departmentApi, INavigationService navigationService) : base(navigationService)
+        public ChooseDepartmentViewModel(IDepartmentApi departmentApi, INavigationService navigationService
+        , ISettingsService settingsService) : base(navigationService)
         {
             _departmentApi = departmentApi;
+            _settingsService = settingsService;
         }
 
         public ICommand ChooseDepartmentCommand =>
-            new Command<DepartmentDTO>(d => DepartmentChosen(d));
+            new Command<DepartmentDTO>(SetDepartmentIdAndNavigateToLogin);
 
         public ObservableCollection<DepartmentDTO> Departments
         {
-            get => departments;
+            get => _departments;
             set
             {
-                departments = value;
+                _departments = value;
                 RaisePropertyChanged(() => Departments);
             }
         }
 
-        public override async Task InitializeAsync(object navigationData = null)
+        public override async Task InitializeAsync(object navigationData)
         {
             ResponseListDepartmentDTO result;
 
@@ -58,9 +62,9 @@ namespace WeekPlanner.ViewModels
             Departments = new ObservableCollection<DepartmentDTO>(result.Data);
         }
 
-        private void DepartmentChosen(DepartmentDTO department)
+        private void SetDepartmentIdAndNavigateToLogin(DepartmentDTO department)
         {
-            GlobalSettings.Instance.DepartmentId = (long)department.Id;
+            if (department.Id != null) _settingsService.DepartmentId = (long) department.Id;
             NavigationService.NavigateToAsync<LoginViewModel>();
         }
 
