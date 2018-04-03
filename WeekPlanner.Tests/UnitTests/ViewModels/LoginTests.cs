@@ -5,13 +5,14 @@ using Moq;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Tests.UnitTests.Base;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels;
 using Xunit;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class LoginViewModelTests : ViewModelTestsBase
+    public class LoginTests : TestsBase
     {
         [Fact]
         public void UserNameProperty_AfterCreation_IsNotNull()

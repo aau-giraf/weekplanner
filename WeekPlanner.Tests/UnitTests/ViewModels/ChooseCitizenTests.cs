@@ -7,6 +7,7 @@ using IO.Swagger.Model;
 using Moq;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Tests.UnitTests.Base;
 using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -14,7 +15,7 @@ using Xunit;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class ChooseCitizenViewModelTests : ViewModelTestsBase
+    public class ChooseCitizenTests : TestsBase
     {
         [Fact]
         public void CitizenNamesProperty_OnSet_RaisesPropertyChanged()

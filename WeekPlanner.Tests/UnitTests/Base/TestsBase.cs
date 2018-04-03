@@ -2,13 +2,13 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 
-namespace WeekPlanner.Tests.UnitTests.ViewModels
+namespace WeekPlanner.Tests.UnitTests.Base
 {
-    public abstract class ViewModelTestsBase
+    public abstract class TestsBase
     {
         protected readonly IFixture Fixture;
 
-        protected ViewModelTestsBase()
+        protected TestsBase()
         {
             Fixture = new Fixture().Customize(new AutoMoqCustomization());
             
