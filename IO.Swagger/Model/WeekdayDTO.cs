@@ -42,43 +42,43 @@ namespace IO.Swagger.Model
             /// Enum Monday for value: Monday
             /// </summary>
             [EnumMember(Value = "Monday")]
-            Monday = 1,
+            Monday = 0,
             
             /// <summary>
             /// Enum Tuesday for value: Tuesday
             /// </summary>
             [EnumMember(Value = "Tuesday")]
-            Tuesday = 2,
+            Tuesday = 1,
             
             /// <summary>
             /// Enum Wednesday for value: Wednesday
             /// </summary>
             [EnumMember(Value = "Wednesday")]
-            Wednesday = 3,
+            Wednesday = 2,
             
             /// <summary>
             /// Enum Thursday for value: Thursday
             /// </summary>
             [EnumMember(Value = "Thursday")]
-            Thursday = 4,
+            Thursday = 3,
             
             /// <summary>
             /// Enum Friday for value: Friday
             /// </summary>
             [EnumMember(Value = "Friday")]
-            Friday = 5,
+            Friday = 4,
             
             /// <summary>
             /// Enum Saturday for value: Saturday
             /// </summary>
             [EnumMember(Value = "Saturday")]
-            Saturday = 6,
+            Saturday = 5,
             
             /// <summary>
             /// Enum Sunday for value: Sunday
             /// </summary>
             [EnumMember(Value = "Sunday")]
-            Sunday = 7
+            Sunday = 6
         }
 
         /// <summary>

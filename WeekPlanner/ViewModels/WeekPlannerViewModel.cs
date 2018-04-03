@@ -37,7 +37,6 @@ namespace WeekPlanner.ViewModels
             _loginService = loginService;
         }
 
-
         #region Boilerplate for each weekday's pictos
 
         private IReadOnlyDictionary<WeekdayDTO.DayEnum, IEnumerable<ImageSource>> _weekdayPictos =
@@ -59,7 +58,6 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => CountOfMaxHeightWeekday);
             }
         }
-
 
         public int CountOfMaxHeightWeekday
         {
@@ -94,7 +92,6 @@ namespace WeekPlanner.ViewModels
 
         #endregion
 
-
         private WeekDTO _weekDto;
 
         public WeekDTO WeekDTO
@@ -107,26 +104,14 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private GirafUserDTO _citizen;
-
-        public GirafUserDTO Citizen
-        {
-            get => _citizen;
-            set
-            {
-                _citizen = value;
-                RaisePropertyChanged(() => Citizen);
-            }
-        }
-
         // TODO: Cleanup method and rename
         private async Task GetWeekPlanForCitizenAsync()
         {
-            ResponseWeekDTO result;
+            ResponseIEnumerableWeekDTO result;
             try
             {
-                // TODO: Find the correct id to retrieve
-                result = await _weekApi.V1WeekByIdGetAsync(1);
+                // TODO: Find the correct id to retrieve : Modal view -> choose what schedule (probably current by default)
+                result = await _weekApi.V1WeekGetAsync();
             }
             catch (ApiException)
             {
@@ -138,7 +123,7 @@ namespace WeekPlanner.ViewModels
 
             if (result.Success == true)
             {
-                WeekDTO = result.Data;
+                WeekDTO = result.Data[0];
                 try
                 {
                     await GetAndSetPictograms(WeekDTO);
@@ -149,9 +134,7 @@ namespace WeekPlanner.ViewModels
                         ErrorCodeHelper.ToFriendlyString(ResponsePictogramDTO.ErrorKeyEnum.Error);
                     MessagingCenter.Send(this, MessageKeys.ServerError, friendlyErrorMessage);
 
-                    // TODO: Create pop() in NavigationService instead of this, and it doesn't really work right now
-                    await NavigationService.RemoveLastFromBackStackAsync();
-                    await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
+                    await NavigationService.PopAsync();
                     return;
                 }
             }
@@ -174,10 +157,10 @@ namespace WeekPlanner.ViewModels
                 foreach (var ele in day.Elements)
                 {
                     ResponsePictogramDTO response = await _pictogramApi.V1PictogramByIdGetAsync(ele.Id);
-
                     if (response?.Success == true)
                     {
-                        pictos.Add(ImageSource.FromUri(new Uri(GlobalSettings.DefaultEndpoint + response.Data.ImageUrl)));
+                        pictos.Add(
+                            ImageSource.FromUri(new Uri(GlobalSettings.DefaultEndpoint + response.Data.ImageUrl)));
                     }
                 }
 
@@ -196,7 +179,7 @@ namespace WeekPlanner.ViewModels
             }
             else
             {
-                throw new ArgumentException("Must be of type WeekDTO", nameof(navigationData));
+                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
             }
         }
     }
