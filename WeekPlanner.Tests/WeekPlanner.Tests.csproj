@@ -25,8 +25,6 @@
   <ItemGroup>
     <Folder Include="UnitTests\" />
     <Folder Include="IntegrationTests\" />
-    <Folder Include="IntegrationTests\Services\" />
-    <Folder Include="IntegrationTests\Services\Networking\" />
     <Folder Include="IntegrationTests\Swagger.IO\" />
     <Folder Include="IntegrationTests\Swagger.IO\Api\" />
   </ItemGroup>

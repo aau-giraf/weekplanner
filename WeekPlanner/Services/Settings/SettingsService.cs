@@ -3,7 +3,7 @@ using IO.Swagger.Api;
 
 namespace WeekPlanner.Services.Settings
 {
-    class SettingsService : ISettingsService
+    public class SettingsService : ISettingsService
     {
         private readonly IAccountApi  _accountApi;
 
