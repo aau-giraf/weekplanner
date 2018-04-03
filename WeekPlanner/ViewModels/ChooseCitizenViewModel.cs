@@ -23,9 +23,10 @@ namespace WeekPlanner.ViewModels
     {
         private readonly IPictogramApi _pictogramApi;
         private ObservableCollection<UserNameDTO> _citizenNames;
-	    private readonly IDepartmentApi _departmentApi;
+        private readonly IDepartmentApi _departmentApi;
 	    private readonly ISettingsService _settingsService;
-
+	    
+	    
 	    public ObservableCollection<UserNameDTO> CitizenNames {
 		    get => _citizenNames;
 		    set {
@@ -42,7 +43,13 @@ namespace WeekPlanner.ViewModels
         }
 
 	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
-		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(usernameDTO));
+		    await UseDepartmentTokenAndNavigateToWeekPlan(usernameDTO));
+
+	    private async Task UseDepartmentTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
+	    {
+		    _settingsService.UseTokenFor(UserType.Department);
+		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(usernameDTO);
+	    }
 
 	    private async Task GetAndSetCitizenNamesAsync()
 	    {

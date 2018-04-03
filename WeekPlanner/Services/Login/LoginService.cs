@@ -36,7 +36,7 @@ namespace WeekPlanner.Services.Login
             {
                 throw new ArgumentException("A password should always be provided for Departments.");
             }
-
+            
             ResponseString result;
             try
             {
@@ -50,7 +50,7 @@ namespace WeekPlanner.Services.Login
                 return;
             }
 
-            if (result.Success == true)
+            if (result?.Success == true)
             {
                 if(userType == UserType.Citizen)
                 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using WeekPlanner.ViewModels;
@@ -34,6 +35,22 @@ namespace WeekPlanner.Services.Navigation
             {
                 return NavigateToAsync<ChooseCitizenViewModel>();
             }*/
+        }
+        
+        /// <summary>
+        /// Pops the current page unless it is the frontpage of the app
+        /// </summary>
+        /// <returns></returns>
+        public Task PopAsync()
+        {
+            var navigationPage = Application.Current.MainPage as CustomNavigationPage;
+            
+            // TODO: Update to use correct frontpage
+            if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))
+            {
+                return navigationPage?.PopAsync();
+            }
+            return Task.FromResult(false);
         }
 
         public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase

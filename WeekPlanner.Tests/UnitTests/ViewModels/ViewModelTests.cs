@@ -12,7 +12,7 @@ using Xunit;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class ViewModelTestses : ViewModelTestsBase
+    /*public class ViewModelTestses : ViewModelTestsBase
     {
         // Use the naming convention MethodName_StateUnderTest_ExpectedBehavior
 
@@ -74,5 +74,5 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert
             Assert.True(messageReceived);
         }
-    }
+    }*/
 }

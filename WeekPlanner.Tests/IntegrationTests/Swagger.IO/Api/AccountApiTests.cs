@@ -6,7 +6,7 @@ using Xunit;
 
 namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
 {
-    public class AccountApiTests
+   /* public class AccountApiTests
     {
         [Theory]
         [InlineData("Graatand", "password")]
@@ -59,5 +59,5 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
                  new LoginDTO("Graatand", "password")
              ));
         }
-    }
+    }*/
 }

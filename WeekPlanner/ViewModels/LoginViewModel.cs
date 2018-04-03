@@ -17,7 +17,7 @@ namespace WeekPlanner.ViewModels
     public class LoginViewModel : ViewModelBase
     {
         private readonly ILoginService _loginService;
-        private bool _isValid;
+        
         private ValidatableObject<string> _password;
         private ValidatableObject<string> _userName;
 
@@ -49,19 +49,9 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public bool IsValid
-        {
-            get => _isValid;
-            set
-            {
-                _isValid = value;
-                RaisePropertyChanged(() => IsValid);
-            }
-        }
-
         public ICommand LoginCommand => new Command(async () =>
         {
-            if (Validate())
+            if (UserNameAndPasswordIsValid())
             {
                 await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(), UserType.Department, UserName.Value, Password.Value);
             }
@@ -71,7 +61,7 @@ namespace WeekPlanner.ViewModels
 
         public ICommand ValidatePasswordCommand => new Command(() => _password.Validate());
 
-        private bool Validate()
+        public bool UserNameAndPasswordIsValid()
         {
             var isValidUser = _userName.Validate();
             var isValidPassword = _password.Validate();
