@@ -1,5 +1,6 @@
 ﻿using System;
 using IO.Swagger.Api;
+﻿using IO.Swagger.Model;
 
 namespace WeekPlanner.Services.Settings
 {
@@ -18,10 +19,10 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.UseMocks = value;
         }
 
-        public long DepartmentId
+        public DepartmentDTO Department
         {
-            get => GlobalSettings.Instance.DepartmentId;
-            set => GlobalSettings.Instance.DepartmentId = value;
+            get => GlobalSettings.Instance.Department;
+            set => GlobalSettings.Instance.Department = value;
         }
 
         public string DepartmentAuthToken

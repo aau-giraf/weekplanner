@@ -1,15 +1,16 @@
-﻿namespace WeekPlanner.Services.Settings
+﻿using IO.Swagger.Model;
+
+namespace WeekPlanner.Services.Settings
 {
     public interface ISettingsService
     {
         bool UseMocks { get; set; }
-        
         string DepartmentAuthToken { get; set; }
         string CitizenAuthToken { get; set; }
 
         void UseTokenFor(UserType userType);
 
-        long DepartmentId { get; set; }
+        DepartmentDTO Department { get; set; }
     }
 
     public enum UserType
