@@ -14,7 +14,7 @@ namespace WeekPlanner.Services.Login
     {
         private readonly IAccountApi _accountApi;
         private readonly ISettingsService _settingsService;
-
+        
         public LoginService(IAccountApi accountApi, ISettingsService settingsService)
         {
             _accountApi = accountApi;

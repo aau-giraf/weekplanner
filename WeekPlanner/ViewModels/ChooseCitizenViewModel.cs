@@ -54,6 +54,8 @@ namespace WeekPlanner.ViewModels
 	    {
 		    ResponseListUserNameDTO result;
 
+		    // Always use the departmentToken when coming to this view.
+		    // It might have been changed to using the citizenToken
             _settingsService.UseTokenFor(UserType.Department);
 
 		    try

@@ -36,6 +36,12 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.CurrentDepartment = value;
         }
 
+        /// <summary>
+        /// Sets the API up to using the specified type of authentication token.
+        /// </summary>
+        /// <param name="userType">The UserType to use a token for.</param>
+        /// <exception cref="ArgumentOutOfRangeException">When given an unknown UserType</exception>
+        /// <exception cref="ArgumentException">If the token for the specified UserType is not already set.</exception>
         public void UseTokenFor(UserType userType)
         {
             switch(userType)
@@ -57,6 +63,8 @@ namespace WeekPlanner.Services.Settings
             {
                 throw new ArgumentException("Can not be null or empty.", nameof(authToken));
             }
+            
+            // The 'bearer' part is necessary, because it uses the Bearer Authentication
             _accountApi.Configuration.AddApiKey("Authorization", $"bearer {authToken}");
         }
     }
