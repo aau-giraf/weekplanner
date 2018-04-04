@@ -28,7 +28,7 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToLoginCommand =>
             new Command(async () =>
             {
-                _settingsService.DepartmentId = 1;
+                _settingsService.Department = new DepartmentDTO { Name = "Birken", Id = 1 };
                 await NavigationService.NavigateToAsync<LoginViewModel>();
             });
 

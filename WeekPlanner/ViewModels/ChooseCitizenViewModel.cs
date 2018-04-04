@@ -60,7 +60,7 @@ namespace WeekPlanner.ViewModels
 
 		    try
 		    {
-			    result = await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.DepartmentId);
+			    result = await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id);
 		    }
 		    catch (ApiException)
 		    {
