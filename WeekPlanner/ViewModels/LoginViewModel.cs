@@ -19,15 +19,15 @@ namespace WeekPlanner.ViewModels
         private readonly ILoginService _loginService;
         
         private ValidatableObject<string> _password;
+        private ISettingsService _settingsService;
 
-        public LoginViewModel(INavigationService navigationService, 
+        public LoginViewModel(ISettingsService settingsService, INavigationService navigationService, 
             ILoginService loginService) : base(navigationService)
         {
             _loginService = loginService;
             _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
+            _settingsService = settingsService;
         }
-
-        public string DepartmentName => GlobalSettings.Instance.Department.Name;
 
         public ValidatableObject<string> Password
         {
@@ -39,7 +39,9 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand LoginCommand => new Command(async () =>
+        public string DepartmentName => _settingsService.Department.Name;
+
+        public bool IsValid
         {
             if (UserNameAndPasswordIsValid())
             {
