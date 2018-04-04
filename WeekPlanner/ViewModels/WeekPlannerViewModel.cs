@@ -100,7 +100,7 @@ namespace WeekPlanner.ViewModels
             set
             {
                 _weekDto = value;
-                RaisePropertyChanged(() => WeekDTO);
+                RaisePropertyChanged(() =>  WeekDTO);
             }
         }
 
@@ -126,7 +126,7 @@ namespace WeekPlanner.ViewModels
                 WeekDTO = result.Data[0];
                 try
                 {
-                    await GetAndSetPictograms(WeekDTO);
+                    await GetAndSetPictograms();
                 }
                 catch (ApiException)
                 {
@@ -147,10 +147,10 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private async Task GetAndSetPictograms(WeekDTO week)
+        private async Task GetAndSetPictograms()
         {
             var tempDict = new Dictionary<WeekdayDTO.DayEnum, IEnumerable<ImageSource>>();
-            foreach (WeekdayDTO day in week.Days)
+            foreach (WeekdayDTO day in WeekDTO.Days)
             {
                 var weekday = day.Day.Value;
                 List<ImageSource> pictos = new List<ImageSource>();

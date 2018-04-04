@@ -45,7 +45,12 @@ namespace WeekPlanner.Services.Mocks
 
         public Task<ResponsePictogramDTO> V1PictogramByIdGetAsync(long? id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new ResponsePictogramDTO
+            {
+                Success = true,
+                Data = new PictogramDTO(Title:id.ToString()){Id = id},
+                ErrorKey = ResponsePictogramDTO.ErrorKeyEnum.NoError
+            });
         }
 
         public Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdGetAsyncWithHttpInfo(long? id)

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
@@ -76,9 +77,20 @@ namespace WeekPlanner.Services.Mocks
 
         public async Task<ResponseWeekDTO> V1WeekByIdGetAsync(long? id)
         {
+            List<WeekdayDTO> days = new List<WeekdayDTO>();
+            for (int i = 0; i < 7; i++)
+            {
+                WeekdayDTO w = new WeekdayDTO() {Day = (WeekdayDTO.DayEnum) i, Elements = new List<ResourceDTO>()};
+                WeekdayDTO.DayEnum d = (WeekdayDTO.DayEnum)i;
+                for (int j = 0; j < 5; j++)
+                {
+                    w.Elements.Add(new ResourceDTO(Title:"asd"){Id = 1+j*i});
+                }
+                days.Add(w);
+            }
             return new ResponseWeekDTO
             {
-                Data = new WeekDTO(),
+                Data = new WeekDTO(){Days = days},
                 Success = true,
                 ErrorKey = ResponseWeekDTO.ErrorKeyEnum.NoError,
             };
@@ -101,7 +113,25 @@ namespace WeekPlanner.Services.Mocks
 
         public async Task<ResponseIEnumerableWeekDTO> V1WeekGetAsync()
         {
-            throw new System.NotImplementedException();
+            List<WeekdayDTO> days = new List<WeekdayDTO>();
+            for (int i = 0; i < 7; i++)
+            {
+                WeekdayDTO w = new WeekdayDTO() {Day = (WeekdayDTO.DayEnum) i, Elements = new List<ResourceDTO>()};
+                WeekdayDTO.DayEnum d = (WeekdayDTO.DayEnum)i;
+                for (int j = 0; j < 5; j++)
+                {
+                    w.Elements.Add(new ResourceDTO(){Id = j+i});
+                }
+                days.Add(w);
+            }
+
+            WeekDTO week = new WeekDTO() {Days = days};
+            return new ResponseIEnumerableWeekDTO()
+            {
+                Success = true,
+                ErrorKey = ResponseIEnumerableWeekDTO.ErrorKeyEnum.NoError,
+                Data = new List<WeekDTO>(){week}
+            };
         }
 
         public async Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekGetAsyncWithHttpInfo()
