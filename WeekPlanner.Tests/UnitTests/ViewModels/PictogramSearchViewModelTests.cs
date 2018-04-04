@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using AutoFixture;
 using IO.Swagger.Model;
 using Moq;
@@ -45,7 +46,25 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             
             // Assert
             navServiceMock.Verify(n => n.PopAsync(), Times.Once);
-            navServiceMock.Verify
+        }
+
+        [Fact]
+        public void ImageSource_OnSet_PropertyOnChanged()
+        {
+            // Arrange
+            var SystemUnderTesting = Fixture.Create<PictogramSearchViewModel>();
+            bool PropertyOnChangedIsInvoked = false;
+
+            SystemUnderTesting.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName.Equals(nameof(SystemUnderTesting.ImageSources)))
+                    PropertyOnChangedIsInvoked = true;
+            };
+            // Act
+            SystemUnderTesting.ImageSources = new ObservableCollection<PictogramDTO>();
+
+            // Assert
+            Assert.True(PropertyOnChangedIsInvoked);
         }
     }
 }

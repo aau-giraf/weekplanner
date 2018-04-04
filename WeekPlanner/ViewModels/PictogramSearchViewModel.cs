@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using IO.Swagger.Model;
+using IO.Swagger.Api;
 using System.Threading.Tasks;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -14,17 +15,19 @@ using System.Linq;
 using Xamarin.Forms.Internals;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using IO.Swagger.Client;
+using WeekPlanner.Helpers;
 
 namespace WeekPlanner.ViewModels
 {
     
     public class PictogramSearchViewModel : ViewModelBase
     {
-        
-        public PictogramSearchViewModel(INavigationService navigationService) : base(navigationService)
+
+        private readonly IPictogramApi _pictogramApi;
+        public PictogramSearchViewModel(INavigationService navigationService, IPictogramApi pictogramApi) : base(navigationService)
         {
-            
+            _pictogramApi = pictogramApi; 
         }
 
         private ObservableCollection<PictogramDTO> _imageSources;
@@ -40,7 +43,7 @@ namespace WeekPlanner.ViewModels
 
         //Command der kalder metoden onSearchGetPictogram. 
         //Variablen 'searchTerm' er binded til SearchCommandParameter i PictogramSearchPage.
-        public ICommand SearchCommand => new Command((searchTerm) => onSearchGetPictograms((String)searchTerm));
+        public ICommand SearchCommand => new Command((searchTerm) => OnSearchGetPictograms((String)searchTerm));
 
 
         //Command der kalder metoden 'ListViewItemTapped når man trykker på et billede i PictoSearch,
@@ -61,23 +64,34 @@ namespace WeekPlanner.ViewModels
         }
 
         //HUSK AT IMPLEMENTERE BESKED VED INGEN RESULTATER OG LOADING ICON
-        public void onSearchGetPictograms(String searchTerm)
+        public void OnSearchGetPictograms(String searchTerm)
         {
             ImageSources = new ObservableCollection<PictogramDTO>();
 
-            String apiUrl = GlobalSettings.DefaultEndpoint + @"/v1/pictogram?q=" + searchTerm + @"&p=1&n=30";
-            var jsonResponseString = new WebClient().DownloadString(apiUrl);
-            ResponseListPictogramDTO jsonResult = JsonConvert.DeserializeObject<ResponseListPictogramDTO>(jsonResponseString);
+            ResponseListPictogramDTO pictograms = new ResponseListPictogramDTO();
 
-            if(jsonResult.Data.Count != 0){
-                foreach (PictogramDTO pictogramDTO in jsonResult.Data)
+            try
+            {
+                pictograms = _pictogramApi.V1PictogramGet(1, 10, searchTerm);
+            }
+            catch(ApiException)
+            {
+                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
+                MessagingCenter.Send(this, MessageKeys.CitizenListRetrievalFailed, friendlyErrorMessage);
+                return;
+            }
+
+            if(pictograms.Data.Count != 0)
+            {
+                foreach (PictogramDTO pictogramDTO in pictograms.Data)
                 {
                     ImageSources.Add(pictogramDTO);
                 }
             }
-            else{
-                //Sæt en eller anden label, der fortæller at der ikke søgeresultat var.
+            else
+            {
+                //Sæt en eller anden label der siger at der ikke er nogen resultat.
             }
         }
-    }
+    } 
 }

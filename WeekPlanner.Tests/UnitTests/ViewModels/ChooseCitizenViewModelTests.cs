@@ -57,10 +57,13 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             sut.PropertyChanged += (sender, e) =>
             {
                 if (e.PropertyName.Equals(nameof(sut.CitizenNames)))
+                {
                     invoked = true;
+                }
+                    
             };
             // Act
-            sut.CitizenNames = new ObservableCollection<GirafUserDTO>();
+            sut.CitizenNames = new ObservableCollection<UserNameDTO>();
             
             // Assert
             Assert.True(invoked);

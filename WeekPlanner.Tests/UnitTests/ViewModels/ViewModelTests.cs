@@ -16,6 +16,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
     {
         // Use the naming convention MethodName_StateUnderTest_ExpectedBehavior
 
+        /*
         [Fact]
         public async void LoginCommand_ApiReturnsSuccess_Success()
         {
@@ -39,7 +40,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
             // Assert
             Assert.True(messageReceived);
-        }
+        }*/
 
 
         [Fact]
