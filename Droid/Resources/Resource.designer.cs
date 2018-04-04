@@ -2190,8 +2190,8 @@ namespace WeekPlanner.Droid
 			public const int abc_vector_test = 2130837586;
 			
 			// aapt resource value: 0x7f020053
-			public const int add_to_cart = 2130837587;
-
+			public const int avd_hide_password = 2130837587;
+			
 			// aapt resource value: 0x7f020110
 			public const int avd_hide_password_1 = 2130837776;
 			
@@ -2201,8 +2201,8 @@ namespace WeekPlanner.Droid
 			// aapt resource value: 0x7f020112
 			public const int avd_hide_password_3 = 2130837778;
 			
-			// aapt resource value: 0x7f020173
-			public const int avd_hide_password_1 = 2130837875;
+			// aapt resource value: 0x7f020054
+			public const int avd_show_password = 2130837588;
 			
 			// aapt resource value: 0x7f020113
 			public const int avd_show_password_1 = 2130837779;
@@ -2773,7 +2773,6 @@ namespace WeekPlanner.Droid
 			
 			// aapt resource value: 0x7f02010d
 			public const int xamarin_logo = 2130837773;
-			
 			
 			static Drawable()
 			{

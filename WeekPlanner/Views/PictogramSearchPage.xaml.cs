@@ -2,6 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+
 namespace WeekPlanner.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -10,6 +11,7 @@ namespace WeekPlanner.Views
         public PictogramSearchPage()
         {
             InitializeComponent(); 
+
         }
     }
 }

@@ -34,6 +34,7 @@
 
             <!-- CONVERTERS -->
             <converters1:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
+            <converters1:RelativeUrlConverter x:Key="RelativeUrlConverter" />
            
             
         </ResourceDictionary>
