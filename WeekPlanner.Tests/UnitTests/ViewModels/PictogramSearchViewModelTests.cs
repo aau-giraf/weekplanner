@@ -66,5 +66,17 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert
             Assert.True(PropertyOnChangedIsInvoked);
         }
+
+        [Fact]
+        public void ImageSource_OnSet_Size()
+        {
+            
+        }
+
+        [Fact] 
+        public void ImageSource_OnSet_ApiFailure()
+        {
+            
+        }
     }
 }
