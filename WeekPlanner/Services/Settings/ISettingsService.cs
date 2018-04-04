@@ -3,6 +3,18 @@
     public interface ISettingsService
     {
         bool UseMocks { get; set; }
+        
+        string DepartmentAuthToken { get; set; }
+        string CitizenAuthToken { get; set; }
+
+        void UseTokenFor(UserType userType);
+
         long DepartmentId { get; set; }
+    }
+
+    public enum UserType
+    {
+        Citizen,
+        Department
     }
 }

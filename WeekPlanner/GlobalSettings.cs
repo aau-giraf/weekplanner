@@ -27,13 +27,15 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = true;
+        public bool UseMocks = false;
 
         public string LoginEndpoint { get; set; }
 
         public string LogoutEndpoint { get; set; }
 
-        public string AuthToken { get; set; }
+        public string DepartmentAuthToken { get; set; }
+        
+        public string CitizenAuthToken { get; set; }
 
         public long DepartmentId { get; set; }
 

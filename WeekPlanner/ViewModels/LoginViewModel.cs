@@ -5,7 +5,9 @@ using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using WeekPlanner.Helpers;
+using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Settings;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -14,16 +16,17 @@ namespace WeekPlanner.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        private readonly IAccountApi _accountApi;
-        private bool _isValid;
+        private readonly ILoginService _loginService;
+        
         private ValidatableObject<string> _password;
         private ValidatableObject<string> _userName;
 
-        public LoginViewModel(IAccountApi accountApi, INavigationService navigationService) : base(navigationService)
+        public LoginViewModel(INavigationService navigationService, 
+            ILoginService loginService) : base(navigationService)
         {
-            _accountApi = accountApi;
-            _userName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() { ValidationMessage = "Et brugernavn er påkrævet." });
-            _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string>() { ValidationMessage = "En adgangskode er påkrævet." });
+            _loginService = loginService;
+            _userName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
+            _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
         }
 
         public ValidatableObject<string> UserName
@@ -46,55 +49,21 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public bool IsValid
+        public ICommand LoginCommand => new Command(async () =>
         {
-            get => _isValid;
-            set
+            if (UserNameAndPasswordIsValid())
             {
-                _isValid = value;
-                RaisePropertyChanged(() => IsValid);
+                await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(), 
+                    UserType.Department, UserName.Value, Password.Value);
             }
-        }
-
-        public ICommand LoginCommand => new Command(async () => { if (Validate()) await SendLoginRequest(); });
+        });
 
         public ICommand ValidateUserNameCommand => new Command(() => _userName.Validate());
 
         public ICommand ValidatePasswordCommand => new Command(() => _password.Validate());
 
-        private async Task SendLoginRequest()
-        {
-            ResponseGirafUserDTO result;
-            try
-            {
-                var loginDTO = new LoginDTO(UserName.Value, Password.Value);
-                result = await _accountApi.V1AccountLoginPostAsync(loginDTO);
-            }
-            catch (ApiException)
-            {
-                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
-                MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
-                return;
-            }
+        public bool UserNameAndPasswordIsValid()
 
-            if (!(bool)result.Success)
-            {
-                var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
-                MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
-                return;
-            }
-
-            MessagingCenter.Send(this, MessageKeys.RequestSucceeded, result.Data);
-            result.Data.GuardianOf.OrderBy(x => x.Username);
-            var dto = result.Data.GuardianOf;
-
-            // Switch this to an actual token once implemented in backend
-            //GlobalSettings.Instance.AuthToken = result.Data.Id;
-
-            await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
-        }
-
-        private bool Validate()
         {
             var isValidUser = _userName.Validate();
             var isValidPassword = _password.Validate();

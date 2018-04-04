@@ -12,11 +12,8 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
 
-            MessagingCenter.Subscribe<LoginViewModel, GirafUserDTO>(this, MessageKeys.RequestSucceeded, async (sender, user) => {
-                // TODO save all the user information
-            });
+            MessagingCenter.Subscribe<LoginViewModel, string>(this, MessageKeys.LoginFailed, async (sender, errorMessage) => {
 
-            MessagingCenter.Subscribe<LoginViewModel, string>(this, MessageKeys.RequestFailed, async (sender, errorMessage) => {
                 await DisplayAlert("Fejl", errorMessage, "Luk");
             });
         }

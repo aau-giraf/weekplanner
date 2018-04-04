@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Views;
 using WeekPlanner.ViewModels;
@@ -7,6 +7,7 @@ using WeekPlanner.Services.Mocks;
 using IO.Swagger.Client;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
+using WeekPlanner.Services.Login;
 
 namespace WeekPlanner.ApplicationObjects
 {
@@ -33,20 +34,25 @@ namespace WeekPlanner.ApplicationObjects
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
             cb.RegisterType<SettingsService>().As<ISettingsService>();
+            
 
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)
             {
-                cb.RegisterType<AccountMockService>().As<IAccountApi>();
-                cb.RegisterType<DepartmentMockService>().As<IDepartmentApi>();
+                cb.RegisterType<MockAccountApi>().As<IAccountApi>();
+                cb.RegisterType<MockDepartmentApi>().As<IDepartmentApi>();
+                cb.RegisterType<MockWeekApi>().As<IWeekApi>();
+                cb.RegisterType<MockLoginService>().As<ILoginService>();
             }
             else
             {
-                var accountApi = new AccountApi(GlobalSettings.DefaultEndpoint);
+                var accountApi = new AccountApi {Configuration = {BasePath = GlobalSettings.Instance.BaseEndpoint}};
                 cb.RegisterInstance<IAccountApi>(accountApi);
+                cb.RegisterType<LoginService>().As<ILoginService>();
+                
+                cb.RegisterType<WeekApi>().As<IWeekApi>();
 
-                var departmentApi = new DepartmentApi(GlobalSettings.DefaultEndpoint);
-                cb.RegisterInstance<IDepartmentApi>(departmentApi);
+                cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
             }
         }
     }

@@ -11,10 +11,11 @@ using WeekPlanner.ViewModels.Base;
 using IO.Swagger.Client;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Tests.UnitTests.Base;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class ChooseDepartmentViewModelTests : ViewModelTestsBase
+    public class ChooseDepartmentViewModelTests : TestsBase
     {
         [Fact]
         public void DepartmentsProperty_OnSet_RaisePropertyChanged()
