@@ -35,9 +35,10 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseCitizenCommand =>
             new Command(async () =>
             {
+                _settingsService.Department = new DepartmentDTO(1);
                 await _loginService.LoginAndThenAsync(async () => 
                         await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(
-                            (await _departmentApi.V1DepartmentByIdCitizensGetAsync(1)).Data),
+                            (await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id)).Data),
                     UserType.Department, "Graatand", "password");
             });
 

@@ -8,7 +8,7 @@
     Title="Navigering">
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
+            <StackLayout VerticalOptions="Center">
                 <Button
                     Text="Log ind"
                     Command="{Binding NavigateToLoginCommand}" />

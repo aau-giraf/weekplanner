@@ -66,7 +66,7 @@ namespace WeekPlanner.ViewModels
 
         private void SetDepartmentIdAndNavigateToLogin(DepartmentDTO department)
         {
-            if (department.Id != null) {
+            if (department != null) {
                 _settingsService.Department = department;
             }
             NavigationService.NavigateToAsync<LoginViewModel>();
