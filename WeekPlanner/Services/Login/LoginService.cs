@@ -10,11 +10,11 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.Services.Login
 {
-    class LoginService : ILoginService
+    public class LoginService : ILoginService
     {
         private readonly IAccountApi _accountApi;
         private readonly ISettingsService _settingsService;
-
+        
         public LoginService(IAccountApi accountApi, ISettingsService settingsService)
         {
             _accountApi = accountApi;
@@ -67,7 +67,7 @@ namespace WeekPlanner.Services.Login
             }
             else
             {
-                var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
+                var friendlyErrorMessage = result?.ErrorKey.ToFriendlyString();
                 MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
             }
         }

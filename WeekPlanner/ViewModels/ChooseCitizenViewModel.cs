@@ -55,11 +55,13 @@ namespace WeekPlanner.ViewModels
 	    {
 		    ResponseListUserNameDTO result;
 
+		    // Always use the departmentToken when coming to this view.
+		    // It might have been changed to using the citizenToken
             _settingsService.UseTokenFor(UserType.Department);
 
 		    try
 		    {
-			    result = await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.CurrentDepartment);
+			    result = await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id);
 		    }
 		    catch (ApiException)
 		    {

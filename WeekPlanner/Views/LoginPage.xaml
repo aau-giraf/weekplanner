@@ -15,8 +15,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout VerticalOptions="Center"
-                     Margin="12">
+        <StackLayout Margin="12" VerticalOptions="Center">
             <!--USERNAME-->
             <Label Text="Brugernavn" />
             <Entry x:Name="UsernameEntry"

@@ -8,5 +8,7 @@ namespace WeekPlanner.ViewModels.Base
         public const string CitizenListRetrievalFailed = "CitizenListRetrievalFailed";
         public const string ServerError = "ServerError";
         public const string RetrieveWeekPlanFailed = "RetrieveWeekPlanFailed";
+        public const string RequestSucceeded = "RequestSucceeded";
+        public const string RequestFailed = "RequestFailed";
     }
 }

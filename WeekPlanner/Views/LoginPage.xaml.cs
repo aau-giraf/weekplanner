@@ -13,6 +13,7 @@ namespace WeekPlanner.Views
             InitializeComponent();
 
             MessagingCenter.Subscribe<LoginViewModel, string>(this, MessageKeys.LoginFailed, async (sender, errorMessage) => {
+
                 await DisplayAlert("Fejl", errorMessage, "Luk");
             });
         }

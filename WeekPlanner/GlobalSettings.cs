@@ -1,3 +1,5 @@
+using IO.Swagger.Model;
+
 namespace WeekPlanner
 {
     public class GlobalSettings
@@ -37,7 +39,7 @@ namespace WeekPlanner
         
         public string CitizenAuthToken { get; set; }
 
-        public int CurrentDepartment { get; set; } = 1; // TODO: Make dynamic
+        public DepartmentDTO Department { get; set; }
 
         private void UpdateEndpoint(string baseEndpoint)
         {
