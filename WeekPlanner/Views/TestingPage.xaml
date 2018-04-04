@@ -6,11 +6,12 @@
              x:Class="WeekPlanner.Views.TestingPage"
              Title="Navigering">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="Center" Padding="40">
+        <StackLayout Padding="40">
             <Button Text="Log ind" Command="{Binding NavigateToLoginCommand}" />
             <Button Text="Vælg borger" Command="{Binding NavigateToChooseCitizenCommand}" />
             <Button Text="Ugeplan" Command="{Binding NavigateToWeekPlannerCommand}" />
             <Button Text="Vælg skabelon" Command="{Binding NavigateToChooseTemplateCommand}" />
+            <Button Text="Vælg afdeling" Command="{Binding NavigateToChooseDepartmentCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

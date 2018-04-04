@@ -9,7 +9,7 @@
 
         void UseTokenFor(UserType userType);
 
-        int CurrentDepartment { get; set; }
+        long DepartmentId { get; set; }
     }
 
     public enum UserType

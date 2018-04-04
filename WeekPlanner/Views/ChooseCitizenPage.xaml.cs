@@ -30,7 +30,5 @@ namespace WeekPlanner.Views
                     vm?.CitizenNames.Where(x => x.UserName.ToLower().StartsWith(e.NewTextValue.ToLower()));
             }
         }
-        
-        
     }
 }

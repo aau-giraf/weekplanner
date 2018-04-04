@@ -38,7 +38,20 @@ namespace WeekPlanner.Services.Mocks
 
         public ResponseListDepartmentDTO V1DepartmentGet()
         {
-            throw new System.NotImplementedException();
+            var departments = new List<DepartmentDTO> {
+                new DepartmentDTO { Name = "Mockstuen", Id = 1 },
+                new DepartmentDTO { Name = "Mocksted", Id = 2 },
+                new DepartmentDTO { Name = "Mockpladsen", Id = 3 },
+                new DepartmentDTO { Name = "Mockborg", Id = 4 },
+                new DepartmentDTO { Name = "Mockvej", Id = 5 },
+            };
+
+            return new ResponseListDepartmentDTO
+            {
+                Success = true,
+                Data = departments,
+                ErrorKey = ResponseListDepartmentDTO.ErrorKeyEnum.NoError,
+            };
         }
 
         public ApiResponse<ResponseListDepartmentDTO> V1DepartmentGetWithHttpInfo()
@@ -98,27 +111,13 @@ namespace WeekPlanner.Services.Mocks
 
         public async Task<ResponseListUserNameDTO> V1DepartmentByIdCitizensGetAsync(long? id)
         {
-            ResponseListUserNameDTO result;
-            // TODO: Allow for other departments
-            if (id == 1)
+            string[] usernames = {"Kurt", "Søren", "Elisabeth", "Ulrik", "Thomas", "Elise", "Maria"};
+            return new ResponseListUserNameDTO
             {
-                string[] usernames = {"Kurt", "Søren", "Elisabeth", "Ulrik", "Thomas", "Elise", "Maria"};
-                result = new ResponseListUserNameDTO
-                {
-                    Data = usernames.Select(x => new UserNameDTO(x)).ToList(),
-                    Success = true,
-                    ErrorKey = ResponseListUserNameDTO.ErrorKeyEnum.NoError
-                };
-            }
-            else
-            {
-                result = new ResponseListUserNameDTO
-                {
-                    Success = false,
-                    ErrorKey = ResponseListUserNameDTO.ErrorKeyEnum.Error
-                };
-            }
-            return result;
+                Data = usernames.Select(x => new UserNameDTO(x)).ToList(),
+                Success = true,
+                ErrorKey = ResponseListUserNameDTO.ErrorKeyEnum.NoError
+            };
         }
 
         public async Task<ApiResponse<ResponseListUserNameDTO>> V1DepartmentByIdCitizensGetAsyncWithHttpInfo(long? id)
@@ -136,9 +135,24 @@ namespace WeekPlanner.Services.Mocks
             throw new System.NotImplementedException();
         }
 
-        public async Task<ResponseListDepartmentDTO> V1DepartmentGetAsync()
+        public Task<ResponseListDepartmentDTO> V1DepartmentGetAsync()
         {
-            throw new System.NotImplementedException();
+            var departments = new List<DepartmentDTO> {
+                new DepartmentDTO { Name = "Mockstuen", Id = 1 },
+                new DepartmentDTO { Name = "Mocksted", Id = 2 },
+                new DepartmentDTO { Name = "Mockpladsen", Id = 3 },
+                new DepartmentDTO { Name = "Mockborg", Id = 4 },
+                new DepartmentDTO { Name = "Mockvej", Id = 5 },
+            };
+
+            var response = new ResponseListDepartmentDTO
+            {
+                Success = true,
+                Data = departments,
+                ErrorKey = ResponseListDepartmentDTO.ErrorKeyEnum.NoError,
+            };
+
+            return Task.FromResult(response);
         }
 
         public async Task<ApiResponse<ResponseListDepartmentDTO>> V1DepartmentGetAsyncWithHttpInfo()

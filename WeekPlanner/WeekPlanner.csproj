@@ -22,4 +22,12 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\ChooseDepartment.xaml.cs">
+      <DependentUpon>ChooseDepartmentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\ChooseDepartmentPage.xaml.cs">
+      <DependentUpon>ChooseDepartmentPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

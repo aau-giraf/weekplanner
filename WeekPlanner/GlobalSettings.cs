@@ -27,7 +27,7 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = true;
+        public bool UseMocks = false;
 
         public string LoginEndpoint { get; set; }
 
@@ -37,7 +37,7 @@ namespace WeekPlanner
         
         public string CitizenAuthToken { get; set; }
 
-        public int CurrentDepartment { get; set; } = 1; // TODO: Make dynamic
+        public long DepartmentId { get; set; }
 
         private void UpdateEndpoint(string baseEndpoint)
         {

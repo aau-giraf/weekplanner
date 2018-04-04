@@ -18,6 +18,12 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.UseMocks = value;
         }
 
+        public long DepartmentId
+        {
+            get => GlobalSettings.Instance.DepartmentId;
+            set => GlobalSettings.Instance.DepartmentId = value;
+        }
+
         public string DepartmentAuthToken
         {
             get => GlobalSettings.Instance.DepartmentAuthToken;
@@ -28,12 +34,6 @@ namespace WeekPlanner.Services.Settings
         {
             get => GlobalSettings.Instance.CitizenAuthToken;
             set => GlobalSettings.Instance.CitizenAuthToken = value;
-        }
-
-        public int CurrentDepartment
-        {
-            get => GlobalSettings.Instance.CurrentDepartment;
-            set => GlobalSettings.Instance.CurrentDepartment = value;
         }
 
         /// <summary>

@@ -53,7 +53,8 @@ namespace WeekPlanner.ViewModels
         {
             if (UserNameAndPasswordIsValid())
             {
-                await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(), UserType.Department, UserName.Value, Password.Value);
+                await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(), 
+                    UserType.Department, UserName.Value, Password.Value);
             }
         });
 
@@ -62,6 +63,7 @@ namespace WeekPlanner.ViewModels
         public ICommand ValidatePasswordCommand => new Command(() => _password.Validate());
 
         public bool UserNameAndPasswordIsValid()
+
         {
             var isValidUser = _userName.Validate();
             var isValidPassword = _password.Validate();

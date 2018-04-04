@@ -15,16 +15,22 @@ namespace WeekPlanner.ViewModels
 
         private readonly IDepartmentApi _departmentApi;
         private readonly ILoginService _loginService;
+        private readonly ISettingsService _settingsService;
         
         public TestingViewModel(INavigationService navigationService, IDepartmentApi departmentApi,
-        ILoginService loginService) : base(navigationService)
+        ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {
             _departmentApi = departmentApi;
             _loginService = loginService;
+            _settingsService = settingsService;
         }
 
         public ICommand NavigateToLoginCommand =>
-            new Command(async () => await NavigationService.NavigateToAsync<LoginViewModel>());
+            new Command(async () =>
+            {
+                _settingsService.DepartmentId = 1;
+                await NavigationService.NavigateToAsync<LoginViewModel>();
+            });
 
         public ICommand NavigateToChooseCitizenCommand =>
             new Command(async () =>
@@ -41,6 +47,8 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseTemplateCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
+        public ICommand NavigateToChooseDepartmentCommand =>
+            new Command(async () => await NavigationService.NavigateToAsync<ChooseDepartmentViewModel>());
 
     }
 }
