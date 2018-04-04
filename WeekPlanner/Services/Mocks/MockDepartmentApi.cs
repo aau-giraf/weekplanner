@@ -39,11 +39,10 @@ namespace WeekPlanner.Services.Mocks
         public ResponseListDepartmentDTO V1DepartmentGet()
         {
             var departments = new List<DepartmentDTO> {
-                new DepartmentDTO { Name = "Mockstuen", Id = 1 },
-                new DepartmentDTO { Name = "Mocksted", Id = 2 },
-                new DepartmentDTO { Name = "Mockpladsen", Id = 3 },
-                new DepartmentDTO { Name = "Mockborg", Id = 4 },
-                new DepartmentDTO { Name = "Mockvej", Id = 5 },
+                new DepartmentDTO { Name = "Birken", Id = 1 },
+                new DepartmentDTO { Name = "Egebakken", Id = 2 },
+                new DepartmentDTO { Name = "Enterne", Id = 3 },
+                new DepartmentDTO { Name = "Fagcenteret", Id = 4 },
             };
 
             return new ResponseListDepartmentDTO
@@ -138,11 +137,10 @@ namespace WeekPlanner.Services.Mocks
         public Task<ResponseListDepartmentDTO> V1DepartmentGetAsync()
         {
             var departments = new List<DepartmentDTO> {
-                new DepartmentDTO { Name = "Mockstuen", Id = 1 },
-                new DepartmentDTO { Name = "Mocksted", Id = 2 },
-                new DepartmentDTO { Name = "Mockpladsen", Id = 3 },
-                new DepartmentDTO { Name = "Mockborg", Id = 4 },
-                new DepartmentDTO { Name = "Mockvej", Id = 5 },
+                new DepartmentDTO { Name = "Birken", Id = 1 },
+                new DepartmentDTO { Name = "Egebakken", Id = 2 },
+                new DepartmentDTO { Name = "Enterne", Id = 3 },
+                new DepartmentDTO { Name = "Fagcenteret", Id = 4 },
             };
 
             var response = new ResponseListDepartmentDTO

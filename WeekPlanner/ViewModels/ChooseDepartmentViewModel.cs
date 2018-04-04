@@ -19,8 +19,10 @@ namespace WeekPlanner.ViewModels
 
         private ObservableCollection<DepartmentDTO> _departments;
 
-        public ChooseDepartmentViewModel(IDepartmentApi departmentApi, INavigationService navigationService
-        , ISettingsService settingsService) : base(navigationService)
+        public ChooseDepartmentViewModel(IDepartmentApi departmentApi, 
+                                         INavigationService navigationService, 
+                                         ISettingsService settingsService) 
+                                         : base(navigationService)
         {
             _departmentApi = departmentApi;
             _settingsService = settingsService;
