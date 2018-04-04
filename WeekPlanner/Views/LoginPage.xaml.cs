@@ -35,7 +35,6 @@ namespace WeekPlanner.Views
 
         private void Autofill_Clicked(object sender, EventArgs e)
         {
-            UsernameEntry.Text = "Graatand";
             PasswordEntry.Text = "password";
             LoginButton.Command.Execute(null);
         }
