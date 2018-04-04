@@ -84,7 +84,7 @@ namespace WeekPlanner.Services.Mocks
                 WeekdayDTO.DayEnum d = (WeekdayDTO.DayEnum)i;
                 for (int j = 0; j < 5; j++)
                 {
-                    w.Elements.Add(new ResourceDTO(Title:"asd"){Id = 1+j*i});
+                    w.Elements.Add(new ResourceDTO(Title:"asd", Id: 1+j*i));
                 }
                 days.Add(w);
             }
