@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutoFixture;
-using AutoFixture.AutoMoq;
 using IO.Swagger.Api;
-using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Moq;
-using WeekPlanner.Services.Mocks;
-using WeekPlanner.Services.Navigation;
-using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels;
-using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 using Xunit;
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {

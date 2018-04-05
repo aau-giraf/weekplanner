@@ -15,6 +15,8 @@
             <Color x:Key="LightTextColor">#999999</Color>
             <Color x:Key="RegularButton">#FFCD59</Color>
             <Color x:Key="ErrorColor">#ff5252</Color>
+            <Color x:Key="SuccessColor">#22CC22</Color>
+            <Color x:Key="CancelColor">#CC6655</Color>
 
             <!--Layouts-->
 
@@ -55,8 +57,9 @@
             <!-- CONVERTERS -->
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
             <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
-
-
+            <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
+           
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

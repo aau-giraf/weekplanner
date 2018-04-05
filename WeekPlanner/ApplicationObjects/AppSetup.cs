@@ -29,13 +29,11 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<TestingViewModel>();
             cb.RegisterType<WeekPlannerViewModel>();
             cb.RegisterType<ChooseTemplateViewModel>();
-            cb.RegisterType<ModifyScheduleViewModel>();
             cb.RegisterType<ChooseDepartmentViewModel>();
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
             cb.RegisterType<SettingsService>().As<ISettingsService>();
-            
 
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)

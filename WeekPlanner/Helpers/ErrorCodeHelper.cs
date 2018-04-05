@@ -70,7 +70,7 @@ namespace WeekPlanner.Helpers
         
         public static string ToFriendlyString(this ResponseListPictogramDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
-        
+
         public static string ToFriendlyString(this ResponseListUserNameDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
     }

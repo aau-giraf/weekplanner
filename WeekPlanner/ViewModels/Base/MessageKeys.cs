@@ -10,5 +10,10 @@ namespace WeekPlanner.ViewModels.Base
         public const string RetrieveWeekPlanFailed = "RetrieveWeekPlanFailed";
         public const string RequestSucceeded = "RequestSucceeded";
         public const string RequestFailed = "RequestFailed";
+        public const string ScheduleSaveRequest = "ScheduleSaveRequest";
+        public const string ScheduleSaveFailed = "SaveFailed";
+        public const string ScheduleSaveSucceeded = "SaveSucceeded";
+        public const string ScheduleUpdateFailed = "UpdateFailed";
+        public const string ScheduleUpdateSucceeded = "UpdateSucceeded";
     }
 }

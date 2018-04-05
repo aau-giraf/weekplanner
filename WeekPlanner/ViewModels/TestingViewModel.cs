@@ -48,8 +48,6 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseTemplateCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
-        public ICommand NavigateToModifyScheduleCommand =>
-            new Command(async () => await NavigationService.NavigateToAsync<ModifyScheduleViewModel>());
         public ICommand NavigateToChooseDepartmentCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ChooseDepartmentViewModel>());
 
