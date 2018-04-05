@@ -15,7 +15,7 @@ using Xunit.Sdk;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class PictogramSearchViewModelTests : ViewModelTestsBase
+    public class PictogramSearchViewModelTests : Base.TestsBase
     {
         // FuncNavn_Conditions_Result
         [Fact]

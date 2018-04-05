@@ -36,24 +36,24 @@ namespace WeekPlanner.Services.Mocks
             throw new System.NotImplementedException();
         }
 
-        public ResponseListDepartmentDTO V1DepartmentGet()
+        public ResponseListDepartmentNameDTO V1DepartmentGet()
         {
-            var departments = new List<DepartmentDTO> {
-                new DepartmentDTO { Name = "Birken", Id = 1 },
-                new DepartmentDTO { Name = "Egebakken", Id = 2 },
-                new DepartmentDTO { Name = "Enterne", Id = 3 },
-                new DepartmentDTO { Name = "Fagcenteret", Id = 4 },
+            var departments = new List<DepartmentNameDTO> {
+                new DepartmentNameDTO { Name = "Birken", Id = 1 },
+                new DepartmentNameDTO { Name = "Egebakken", Id = 2 },
+                new DepartmentNameDTO { Name = "Enterne", Id = 3 },
+                new DepartmentNameDTO { Name = "Fagcenteret", Id = 4 },
             };
 
-            return new ResponseListDepartmentDTO
+            return new ResponseListDepartmentNameDTO
             {
                 Success = true,
                 Data = departments,
-                ErrorKey = ResponseListDepartmentDTO.ErrorKeyEnum.NoError,
+                ErrorKey = ResponseListDepartmentNameDTO.ErrorKeyEnum.NoError,
             };
         }
 
-        public ApiResponse<ResponseListDepartmentDTO> V1DepartmentGetWithHttpInfo()
+        public ApiResponse<ResponseListDepartmentNameDTO> V1DepartmentGetWithHttpInfo()
         {
             throw new System.NotImplementedException();
         }
@@ -134,26 +134,26 @@ namespace WeekPlanner.Services.Mocks
             throw new System.NotImplementedException();
         }
 
-        public Task<ResponseListDepartmentDTO> V1DepartmentGetAsync()
+        public Task<ResponseListDepartmentNameDTO> V1DepartmentGetAsync()
         {
-            var departments = new List<DepartmentDTO> {
-                new DepartmentDTO { Name = "Birken", Id = 1 },
-                new DepartmentDTO { Name = "Egebakken", Id = 2 },
-                new DepartmentDTO { Name = "Enterne", Id = 3 },
-                new DepartmentDTO { Name = "Fagcenteret", Id = 4 },
+            var departments = new List<DepartmentNameDTO> {
+                new DepartmentNameDTO { Name = "Birken", Id = 1 },
+                new DepartmentNameDTO { Name = "Egebakken", Id = 2 },
+                new DepartmentNameDTO { Name = "Enterne", Id = 3 },
+                new DepartmentNameDTO { Name = "Fagcenteret", Id = 4 },
             };
 
-            var response = new ResponseListDepartmentDTO
+            var response = new ResponseListDepartmentNameDTO
             {
                 Success = true,
                 Data = departments,
-                ErrorKey = ResponseListDepartmentDTO.ErrorKeyEnum.NoError,
+                ErrorKey = ResponseListDepartmentNameDTO.ErrorKeyEnum.NoError,
             };
 
             return Task.FromResult(response);
         }
 
-        public async Task<ApiResponse<ResponseListDepartmentDTO>> V1DepartmentGetAsyncWithHttpInfo()
+        public async Task<ApiResponse<ResponseListDepartmentNameDTO>> V1DepartmentGetAsyncWithHttpInfo()
         {
             throw new System.NotImplementedException();
         }
@@ -204,6 +204,26 @@ namespace WeekPlanner.Services.Mocks
         }
 
         public async Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentUserByDepartmentIDPostAsyncWithHttpInfo(long? departmentID, GirafUserDTO usr = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ResponseListDepartmentNameDTO V1DepartmentNamesGet()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseListDepartmentNameDTO> V1DepartmentNamesGetWithHttpInfo()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseListDepartmentNameDTO> V1DepartmentNamesGetAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseListDepartmentNameDTO>> V1DepartmentNamesGetAsyncWithHttpInfo()
         {
             throw new System.NotImplementedException();
         }

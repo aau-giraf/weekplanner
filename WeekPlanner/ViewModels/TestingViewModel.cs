@@ -28,14 +28,14 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToLoginCommand =>
             new Command(async () =>
             {
-                _settingsService.Department = new DepartmentDTO { Name = "Birken", Id = 1 };
+                _settingsService.Department = new DepartmentNameDTO { Name = "Birken", Id = 1 };
                 await NavigationService.NavigateToAsync<LoginViewModel>();
             });
 
         public ICommand NavigateToChooseCitizenCommand =>
             new Command(async () =>
             {
-                _settingsService.Department = new DepartmentDTO(1);
+                _settingsService.Department = new DepartmentNameDTO(1);
                 await _loginService.LoginAndThenAsync(async () => 
                         await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(
                             (await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id)).Data),

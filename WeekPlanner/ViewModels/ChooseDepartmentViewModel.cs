@@ -17,7 +17,7 @@ namespace WeekPlanner.ViewModels
         private readonly IDepartmentApi _departmentApi;
         private readonly ISettingsService _settingsService;
 
-        private ObservableCollection<DepartmentDTO> _departments;
+        private ObservableCollection<DepartmentNameDTO> _departments;
 
         public ChooseDepartmentViewModel(IDepartmentApi departmentApi, 
                                          INavigationService navigationService, 
@@ -29,9 +29,9 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand ChooseDepartmentCommand =>
-            new Command<DepartmentDTO>(SetDepartmentIdAndNavigateToLogin);
+            new Command<DepartmentNameDTO>(SetDepartmentIdAndNavigateToLogin);
 
-        public ObservableCollection<DepartmentDTO> Departments
+        public ObservableCollection<DepartmentNameDTO> Departments
         {
             get => _departments;
             set
@@ -43,11 +43,11 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            ResponseListDepartmentDTO result;
+            ResponseListDepartmentNameDTO result;
 
             try
             {
-                result = await _departmentApi.V1DepartmentGetAsync();
+                result = await _departmentApi.V1DepartmentNamesGetAsync();
             }
             catch (ApiException)
             {
@@ -61,10 +61,10 @@ namespace WeekPlanner.ViewModels
                 return;
             }
 
-            Departments = new ObservableCollection<DepartmentDTO>(result.Data);
+            Departments = new ObservableCollection<DepartmentNameDTO>(result.Data);
         }
 
-        private void SetDepartmentIdAndNavigateToLogin(DepartmentDTO department)
+        private void SetDepartmentIdAndNavigateToLogin(DepartmentNameDTO department)
         {
             if (department != null) {
                 _settingsService.Department = department;
@@ -72,7 +72,7 @@ namespace WeekPlanner.ViewModels
             NavigationService.NavigateToAsync<LoginViewModel>();
         }
 
-        private void SendErrorMessage(ResponseListDepartmentDTO result = null)
+        private void SendErrorMessage(ResponseListDepartmentNameDTO result = null)
         {
             string friendlyErrorMessage;
 

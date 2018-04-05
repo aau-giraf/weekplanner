@@ -55,7 +55,7 @@
             <!-- CONVERTERS -->
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
             <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
-            <converters1:RelativeUrlConverter x:Key="RelativeUrlConverter" />
+            <converters:RelativeUrlConverter x:Key="RelativeUrlConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

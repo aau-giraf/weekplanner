@@ -33,7 +33,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 			};
 
 			// Act
-			sut.Departments = new ObservableCollection<DepartmentDTO>();
+			sut.Departments = new ObservableCollection<DepartmentNameDTO>();
 
 			// Assert
 			Assert.True(invoked);
@@ -44,16 +44,16 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 		{
 			// Arrange
 			var departmentApiMock = Fixture.Freeze<Mock<IDepartmentApi>>();
-			var departments = Fixture.CreateMany<DepartmentDTO>().ToList();
+			var departments = Fixture.CreateMany<DepartmentNameDTO>().ToList();
 
 			var response = Fixture
-				.Build<ResponseListDepartmentDTO>()
+				.Build<ResponseListDepartmentNameDTO>()
 				.With(x => x.Success, true)
 				.With(r => r.Data, departments)
 				.Create();
 
 			departmentApiMock
-				.Setup(n => n.V1DepartmentGetAsync())
+				.Setup(n => n.V1DepartmentNamesGetAsync())
 				.ReturnsAsync(response);
 
 			var sut = Fixture.Create<ChooseDepartmentViewModel>();
@@ -70,12 +70,12 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 		{
 			// Arrange
 			var response = Fixture
-				.Build<ResponseListDepartmentDTO>()
+				.Build<ResponseListDepartmentNameDTO>()
 				.With(x => x.Success, false)
 				.Create();
 
 			Fixture.Freeze<Mock<IDepartmentApi>>()
-				.Setup(n => n.V1DepartmentGetAsync())
+                   .Setup(n => n.V1DepartmentNamesGetAsync())
 				.ReturnsAsync(response);
 
 			bool errorWasSent = false;
@@ -96,7 +96,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 		{
 			// Arrange
 			Fixture.Freeze<Mock<IDepartmentApi>>()
-				.Setup(n => n.V1DepartmentGetAsync())
+				.Setup(n => n.V1DepartmentNamesGetAsync())
 				.Throws(new ApiException());
 
 			bool errorWasSent = false;
@@ -118,7 +118,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 			// Assert
 			var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
 			int departmentIdChosen = 5;
-			var departmentDTO = Fixture.Build<DepartmentDTO>()
+			var DepartmentNameDTO = Fixture.Build<DepartmentNameDTO>()
 				.With(d => d.Id, departmentIdChosen)
 				.Create();
 
@@ -126,7 +126,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
 
 			// Act
-			sut.ChooseDepartmentCommand.Execute(departmentDTO);
+			sut.ChooseDepartmentCommand.Execute(DepartmentNameDTO);
 
 			// Assert
 			settingsServiceMock.VerifySet(s => s.Department.Id = departmentIdChosen);
@@ -140,7 +140,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 			var sut = Fixture.Create<ChooseDepartmentViewModel>();
 
 			// Act
-			sut.ChooseDepartmentCommand.Execute(Fixture.Create<DepartmentDTO>());
+			sut.ChooseDepartmentCommand.Execute(Fixture.Create<DepartmentNameDTO>());
 
 			// Assert
 			navigationMock.Verify(x => x.NavigateToAsync<LoginViewModel>(null));
