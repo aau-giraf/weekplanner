@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AutoFixture;
 using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Moq;
 using WeekPlanner.Services.Navigation;
@@ -10,6 +11,7 @@ using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using Xunit;
+using Xunit.Sdk;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
@@ -90,9 +92,17 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact] 
-        public void ImageSource_OnSet_ApiFailure()
+        public void OnSearchGetPictograms_ThrowsExecption_NoImages()
         {
-            
+            var api = Fixture.Freeze<Mock<IPictogramApi>>()
+                .Setup(a => a.V1PictogramGet(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>()))
+                .Throws<ApiException>();
+            var SystemUnderTest = Fixture.Create<PictogramSearchViewModel>();             
+            //var PictogramDTO = Fixture.Create<PictogramDTO>();             
+            // Act             
+            SystemUnderTest.OnSearchGetPictograms("kat");             
+            // Assert             
+            Assert.Equal(0, SystemUnderTest.ImageSources.Count);
         }
     }
 }
