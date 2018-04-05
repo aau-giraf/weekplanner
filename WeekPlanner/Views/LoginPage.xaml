@@ -8,11 +8,6 @@
     x:Class="WeekPlanner.Views.LoginPage"
     base1:ViewModelLocator.AutoWireViewModel="true"
     Title="Log ind">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Order="Secondary"
-            Text="Indstillinger" />
-    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:FirstValidationErrorConverter

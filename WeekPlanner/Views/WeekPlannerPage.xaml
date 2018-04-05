@@ -254,8 +254,33 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 </Grid>
+                
             </ScrollView>
+            
         </Grid>
+            <Grid IsVisible="{Binding EditModeEnabled}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                    
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="AUTO" />
+                </Grid.RowDefinitions>
+                    
+                <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+                <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+                <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+                <Button Grid.Column="3" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+                <Button Grid.Column="4" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+                <Button Grid.Column="5" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+                <Button Grid.Column="6" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

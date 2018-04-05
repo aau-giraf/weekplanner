@@ -22,6 +22,7 @@ using System.Windows.Input;
 using CarouselView.FormsPlugin.Abstractions;
 using FFImageLoading.Forms.Args;
 using NUnit.Framework;
+using WeekPlanner.Views;
 
 namespace WeekPlanner.ViewModels
 {
@@ -66,7 +67,7 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _pictogramApi = pictogramApi;
             _loginService = loginService;
-            MessagingCenter.Subscribe<WeekPlannerViewModel>(this, MessageKeys.ScheduleSaveRequest, 
+            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest, 
                 async _ => await SaveSchedule());
         }
         
