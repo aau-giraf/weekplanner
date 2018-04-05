@@ -117,19 +117,15 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 		{
 			// Assert
 			var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
-			int departmentIdChosen = 5;
-			var DepartmentNameDTO = Fixture.Build<DepartmentNameDTO>()
-				.With(d => d.Id, departmentIdChosen)
-				.Create();
+            var departmentNameDTO = Fixture.Create<DepartmentNameDTO>();
 
 			var sut = Fixture.Create<ChooseDepartmentViewModel>();
 
-
 			// Act
-			sut.ChooseDepartmentCommand.Execute(DepartmentNameDTO);
+            sut.ChooseDepartmentCommand.Execute(departmentNameDTO);
 
 			// Assert
-			settingsServiceMock.VerifySet(s => s.Department.Id = departmentIdChosen);
+            settingsServiceMock.VerifySet(s => s.Department = departmentNameDTO);
 		}
 
 		[Fact]

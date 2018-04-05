@@ -78,15 +78,9 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Theory]
-        [InlineData("NotEmpty", "")]
-        [InlineData("NotEmpty", null)]
-        [InlineData("", "NotEmpty")]
-        [InlineData("", "")]
-        [InlineData("", null)]
-        [InlineData(null, "NotEmpty")]
-        [InlineData(null, "")]
-        [InlineData(null, null)]
-        public void UserNameAndPasswordIsValid_UserNameOrPasswordIsNullOrEmpty_IsFalse(string username, string password)
+        [InlineData("")]
+        [InlineData(null)]
+        public void UserNameAndPasswordIsValid_UserNameOrPasswordIsNullOrEmpty_IsFalse(string password)
         {
             // Arrange
             var sut = Fixture.Build<LoginViewModel>()
