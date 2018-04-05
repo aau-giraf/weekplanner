@@ -19,7 +19,7 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.UseMocks = value;
         }
 
-        public DepartmentDTO Department
+        public DepartmentNameDTO Department
         {
             get => GlobalSettings.Instance.Department;
             set => GlobalSettings.Instance.Department = value;

@@ -39,7 +39,7 @@ namespace WeekPlanner
         
         public string CitizenAuthToken { get; set; }
 
-        public DepartmentDTO Department { get; set; } = new DepartmentDTO { Name = "Egebakken" };
+        public DepartmentNameDTO Department { get; set; } = new DepartmentNameDTO { Name = "Egebakken" };
 
 		private void UpdateEndpoint(string baseEndpoint)
         {

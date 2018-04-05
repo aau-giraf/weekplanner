@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+    base1:ViewModelLocator.AutoWireViewModel="true"
+    x:Class="WeekPlanner.Views.PictogramSearchPage"
+    Title="Søg efter pictogrammer">
+    <ContentPage.Content>
+        <StackLayout>
+            <SearchBar
+                x:Name="searchField"
+                Placeholder="Søg"
+                SearchCommand="{Binding SearchCommand}"
+                SearchCommandParameter="{Binding Text, Source={x:Reference searchField}}" />
+            
+            <StackLayout>
+                <flv:FlowListView
+                    SeparatorVisibility="None"
+                    HasUnevenRows="true"
+                    FlowItemTappedCommand="{Binding ItemTappedCommand}"
+                    FlowLastTappedItem="{Binding LastTappedItem}"
+                    FlowColumnMinWidth="210"
+                    FlowItemsSource="{Binding ImageSources}">
+                    <flv:FlowListView.FlowColumnTemplate>
+                        <DataTemplate>
+                            <Grid
+                                Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ffimageloading:CachedImage
+                                    HeightRequest="200"
+                                    Aspect="AspectFit"
+                                    LoadingPlaceholder="image_loading.png"
+                                    ErrorPlaceholder="default_profile_picture.jpg"
+                                    Source="{Binding ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                                    BackgroundColor="White" 
+                                    />
+                            </Grid>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowColumnTemplate>
+                </flv:FlowListView>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

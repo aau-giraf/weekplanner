@@ -50,7 +50,7 @@ namespace WeekPlanner.Helpers
         public static string ToFriendlyString(this ResponseByte.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
-        public static string ToFriendlyString(this ResponseListDepartmentDTO.ErrorKeyEnum? errorKey) =>
+        public static string ToFriendlyString(this ResponseListDepartmentNameDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponseDepartmentDTO.ErrorKeyEnum? errorKey) =>

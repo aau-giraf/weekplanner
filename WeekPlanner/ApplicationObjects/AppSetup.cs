@@ -30,6 +30,7 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<WeekPlannerViewModel>();
             cb.RegisterType<ChooseTemplateViewModel>();
             cb.RegisterType<ChooseDepartmentViewModel>();
+            cb.RegisterType<PictogramSearchViewModel>();
 
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
@@ -52,6 +53,7 @@ namespace WeekPlanner.ApplicationObjects
                 cb.RegisterType<WeekApi>().As<IWeekApi>();
                 cb.RegisterType<PictogramApi>().As<IPictogramApi>();
                 cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
+                cb.RegisterType<PictogramApi>().As<IPictogramApi>();
             }
         }
     }
