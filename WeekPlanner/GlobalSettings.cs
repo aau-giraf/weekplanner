@@ -1,8 +1,10 @@
+using IO.Swagger.Model;
+
 namespace WeekPlanner
 {
     public class GlobalSettings
     {
-        public const string DefaultEndpoint = "http://localhost:5000";
+        public const string DefaultEndpoint = "http://web.giraf.cs.aau.dk:5050";
 
         private string _baseEndpoint;
         private static readonly GlobalSettings _instance = new GlobalSettings();
@@ -27,13 +29,17 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = true;
+        public bool UseMocks = false;
 
         public string LoginEndpoint { get; set; }
 
         public string LogoutEndpoint { get; set; }
 
-        public string AuthToken { get; set; }
+        public string DepartmentAuthToken { get; set; }
+        
+        public string CitizenAuthToken { get; set; }
+
+        public DepartmentDTO Department { get; set; }
 
         private void UpdateEndpoint(string baseEndpoint)
         {

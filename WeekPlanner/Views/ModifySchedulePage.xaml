@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             x:Class="WeekPlanner.Views.ModifySchedulePage"
+             base1:ViewModelLocator.AutoWireViewModel="true" 
+             Title="Ugeplan">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="Edit" Order="Secondary" Text="Rediger" />
+        <ToolbarItem x:Name="ChangeCitizen" Order="Secondary" Text="Skift borger"  />
+        <ToolbarItem x:Name="Settings" Order="Secondary" Text="Indstillinger"  />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="MondayColor">#067700</Color>
+            <Color x:Key="TuesdayColor">#8c1086</Color>
+            <Color x:Key="WednesdayColor">#ff7f00</Color>
+            <Color x:Key="ThursdayColor">#0017ff</Color>
+            <Color x:Key="FridayColor">#ffdd00</Color>
+            <Color x:Key="SaturdayColor">#ff0102</Color>
+            <Color x:Key="SundayColor">#ffffff</Color>
+            <Color x:Key="WhiteColor">#000</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ScrollView Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="AUTO" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- MONDAY -->
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Label Text="Mandag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="0" Grid.Row="1"
+                             BackgroundColor="{StaticResource MondayColor}">
+                </StackLayout>
+
+                <!-- TUESDAY -->
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Label Text="Tirsdag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="1" Grid.Row="1"
+                             BackgroundColor="{StaticResource TuesdayColor}">
+                </StackLayout>
+
+                <!-- WEDNESDAY -->
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <Label Text="Onsdag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="2" Grid.Row="1"
+                             BackgroundColor="{StaticResource WednesdayColor}">
+                </StackLayout>
+
+                <!-- THURSDAY -->
+                <Grid Grid.Row="0" Grid.Column="3">
+                    <Label Text="Torsdag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="3" Grid.Row="1"
+                             BackgroundColor="{StaticResource ThursdayColor}">
+                </StackLayout>
+
+                <!-- FRIDAY -->
+                <Grid Grid.Row="0" Grid.Column="4">
+                    <Label Text="Fredag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="4" Grid.Row="1"
+                             BackgroundColor="{StaticResource FridayColor}">
+                </StackLayout>
+
+                <!-- SATURDAY -->
+                <Grid Grid.Row="0" Grid.Column="5">
+                    <Label Text="Lørdag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="5" Grid.Row="1"
+                             BackgroundColor="{StaticResource SaturdayColor}">
+                </StackLayout>
+
+                <!-- SUNDAY -->
+                <Grid Grid.Row="0" Grid.Column="6">
+                    <Label Text="Søndag"
+                           TextColor="{StaticResource WhiteColor}" />
+                </Grid>
+                <StackLayout Grid.Column="6" Grid.Row="1"
+                             BackgroundColor="{StaticResource SundayColor}">
+                </StackLayout>
+            </Grid>
+        </ScrollView>
+        <!--<StackLayout Margin="12">
+            <Label Text="WeekPlannerView" />
+            <Image Source="{Binding PictogramSource}"></Image>
+            <Label Text="{Binding Citizen.Username}" />
+        </StackLayout>-->
+    </ContentPage.Content>
+</ContentPage>
