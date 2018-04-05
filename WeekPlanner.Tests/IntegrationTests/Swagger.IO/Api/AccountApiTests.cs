@@ -1,5 +1,4 @@
-﻿
-//using IO.Swagger.Api;
+﻿//using IO.Swagger.Api;
 //using IO.Swagger.Client;
 //using IO.Swagger.Model;
 //using Xunit;
