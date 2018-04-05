@@ -1,49 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
-             xmlns:local="clr-namespace:IO.Swagger.Model;assembly=IO.Swagger"
-             x:Class="WeekPlanner.Views.WeekPlannerPage"
-             base1:ViewModelLocator.AutoWireViewModel="true"
-             Title="Ugeplan">
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+    xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+    xmlns:controls="clr-namespace:WeekPlanner.Controls"
+    xmlns:local="clr-namespace:IO.Swagger.Model;assembly=IO.Swagger"
+    x:Class="WeekPlanner.Views.WeekPlannerPage"
+    base1:ViewModelLocator.AutoWireViewModel="true"
+    Title="Ugeplan">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Color x:Key="MondayColor">#067700</Color>
-            <Color x:Key="TuesdayColor">#8c1086</Color>
-            <Color x:Key="WednesdayColor">#ff7f00</Color>
-            <Color x:Key="ThursdayColor">#0017ff</Color>
-            <Color x:Key="FridayColor">#ffdd00</Color>
-            <Color x:Key="SaturdayColor">#ff0102</Color>
-            <Color x:Key="SundayColor">#ffffff</Color>
-            <Color x:Key="WhiteColor">#000</Color>
+            <Color
+                x:Key="MondayColor">#067700</Color>
+            <Color
+                x:Key="TuesdayColor">#8c1086</Color>
+            <Color
+                x:Key="WednesdayColor">#ff7f00</Color>
+            <Color
+                x:Key="ThursdayColor">#0017ff</Color>
+            <Color
+                x:Key="FridayColor">#ffdd00</Color>
+            <Color
+                x:Key="SaturdayColor">#ff0102</Color>
+            <Color
+                x:Key="SundayColor">#ffffff</Color>
+            <Color
+                x:Key="WhiteColor">#000</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-    
-    
-        
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout IsVisible="{Binding EditModeEnabled, Converter={StaticResource NegateBooleanConverter}}">
-                <Button Text="Rediger" Command="{Binding ToggleEditModeCommand}"/>
+            <StackLayout
+                IsVisible="{Binding EditModeEnabled, Converter={StaticResource NegateBooleanConverter}}">
+                <Button
+                    Text="Rediger"
+                    Command="{Binding ToggleEditModeCommand}" />
             </StackLayout>
-            <StackLayout IsVisible="{Binding EditModeEnabled}">
+            <StackLayout
+                IsVisible="{Binding EditModeEnabled}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition
+                            Width="1*" />
+                        <ColumnDefinition
+                            Width="2*" />
+                        <ColumnDefinition
+                            Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Clicked="Save_OnClicked"/>
+                    <Grid
+                        Grid.Column="0">
+                        <Button
+                            BackgroundColor="{StaticResource SuccessColor}"
+                            Text="Gem ugeplan"
+                            Clicked="Save_OnClicked" />
                     </Grid>
-                    <Grid Grid.Column="1">
-                        <Entry HorizontalTextAlignment="Center"
-                               Text="{Binding WeekDTO.Name}"
-                               Placeholder="Unavngivet skema"
-                               TextColor="{StaticResource WhiteColor}">
+                    <Grid
+                        Grid.Column="1">
+                        <Entry
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding WeekDTO.Name}"
+                            Placeholder="Unavngivet skema"
+                            TextColor="{StaticResource WhiteColor}">
                             <Entry.Behaviors>
                                 <behaviors:EventToCommandBehavior
                                     EventName="TextChanged"
@@ -51,224 +70,17 @@
                             </Entry.Behaviors>
                         </Entry>
                     </Grid>
-                    <Grid Grid.Column="2">
-                        <Button Text="Annuller" BackgroundColor="{StaticResource CancelColor}" Command="{Binding ToggleEditModeCommand}"/>
+                    <Grid
+                        Grid.Column="2">
+                        <Button
+                            Text="Annuller"
+                            BackgroundColor="{StaticResource CancelColor}"
+                            Command="{Binding ToggleEditModeCommand}" />
                     </Grid>
                 </Grid>
             </StackLayout>
-        <Grid VerticalOptions="FillAndExpand">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="AUTO" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <!-- DAYS TITLEBAR -->
-            <Grid Grid.Row="0"
-                  Grid.Column="0">
-                <Label Text="Mandag"
-                       TextColor="{StaticResource WhiteColor}"
-                       HorizontalTextAlignment="Center" />
-            </Grid>
-            <Grid Grid.Row="0"
-                  Grid.Column="1">
-                <Label Text="Tirsdag"
-                       TextColor="{StaticResource WhiteColor}"
-                       HorizontalTextAlignment="Center" />
-            </Grid>
-            <Grid Grid.Row="0"
-                  Grid.Column="2">
-                <Label Text="Onsdag"
-                       TextColor="{StaticResource WhiteColor}"
-                       HorizontalTextAlignment="Center" />
-            </Grid>
-            <Grid Grid.Row="0"
-                  Grid.Column="3">
-                <Label Text="Torsdag"
-                       TextColor="{StaticResource WhiteColor}"
-                       HorizontalTextAlignment="Center" />
-            </Grid>
-            <Grid Grid.Row="0"
-                  Grid.Column="4">
-                <Label Text="Fredag"
-                       TextColor="{StaticResource WhiteColor}"
-                       HorizontalTextAlignment="Center" />
-            </Grid>
-            <Grid Grid.Row="0"
-                  Grid.Column="5">
-                <Label Text="Lørdag"
-                       TextColor="{StaticResource WhiteColor}"
-                       HorizontalTextAlignment="Center" />
-            </Grid>
-            <Grid Grid.Row="0"
-                  Grid.Column="6">
-                <Label Text="Søndag"
-                       TextColor="{StaticResource WhiteColor}"
-                       HorizontalTextAlignment="Center" />
-            </Grid>
-            <!-- WEEKDAY LISTS -->
-            <!-- TODO: if someone knows how to each day a custom component that could be reused that would be great :-) -->
-            <ScrollView Grid.Row="1"
-                        Grid.ColumnSpan="7">
-                <!-- HACK: The HeightRequest is set to make the Grid's height larger
-                than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                <Grid
-                    HeightRequest="{Binding CountOfMaxHeightWeekday, Converter={StaticResource ItemsToHeightConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <ListView ItemsSource="{Binding MondayPictos}"
-                              Grid.Column="0"
-                              HasUnevenRows="True"
-                              SeparatorVisibility="None"
-                              VerticalOptions="FillAndExpand"
-                              CachingStrategy="RecycleElement"
-                              BackgroundColor="{StaticResource MondayColor}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ffimageloading:CachedImage VerticalOptions="Center"
-                                                                DownsampleToViewSize="true"
-                                                                LoadingPlaceholder="image_loading.png"
-                                                                ErrorPlaceholder="image_loading.png"
-                                                                Source="{Binding}" Margin="0,5,0,0" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <ListView ItemsSource="{Binding TuesdayPictos}"
-                              Grid.Column="1"
-                              HasUnevenRows="True"
-                              SeparatorVisibility="None"
-                              VerticalOptions="FillAndExpand"
-                              CachingStrategy="RecycleElement"
-                              BackgroundColor="{StaticResource TuesdayColor}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ffimageloading:CachedImage VerticalOptions="Center"
-                                                                DownsampleToViewSize="true"
-                                                                LoadingPlaceholder="image_loading.png"
-                                                                ErrorPlaceholder="image_loading.png"
-                                                                Source="{Binding}" Margin="0,5,0,0" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <ListView ItemsSource="{Binding WednesdayPictos}"
-                              Grid.Column="2"
-                              HasUnevenRows="True"
-                              SeparatorVisibility="None"
-                              VerticalOptions="FillAndExpand"
-                              CachingStrategy="RecycleElement"
-                              BackgroundColor="{StaticResource WednesdayColor}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ffimageloading:CachedImage VerticalOptions="Center"
-                                                                DownsampleToViewSize="true"
-                                                                LoadingPlaceholder="image_loading.png"
-                                                                ErrorPlaceholder="image_loading.png"
-                                                                Source="{Binding}" Margin="0,5,0,0" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <ListView ItemsSource="{Binding ThursdayPictos}"
-                              Grid.Column="3"
-                              HasUnevenRows="True"
-                              SeparatorVisibility="None"
-                              VerticalOptions="FillAndExpand"
-                              CachingStrategy="RecycleElement"
-                              BackgroundColor="{StaticResource ThursdayColor}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ffimageloading:CachedImage VerticalOptions="Center"
-                                                                DownsampleToViewSize="true"
-                                                                LoadingPlaceholder="image_loading.png"
-                                                                ErrorPlaceholder="image_loading.png"
-                                                                Source="{Binding}" Margin="0,5,0,0" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <ListView ItemsSource="{Binding FridayPictos}"
-                              Grid.Column="4"
-                              HasUnevenRows="True"
-                              SeparatorVisibility="None"
-                              VerticalOptions="FillAndExpand"
-                              CachingStrategy="RecycleElement"
-                              BackgroundColor="{StaticResource FridayColor}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ffimageloading:CachedImage VerticalOptions="Center"
-                                                                DownsampleToViewSize="true"
-                                                                LoadingPlaceholder="image_loading.png"
-                                                                ErrorPlaceholder="image_loading.png"
-                                                                Source="{Binding}" Margin="0,5,0,0" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <ListView ItemsSource="{Binding SaturdayPictos}"
-                              Grid.Column="5"
-                              HasUnevenRows="True"
-                              SeparatorVisibility="None"
-                              VerticalOptions="FillAndExpand"
-                              CachingStrategy="RecycleElement"
-                              BackgroundColor="{StaticResource SaturdayColor}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ffimageloading:CachedImage VerticalOptions="Center"
-                                                                DownsampleToViewSize="true"
-                                                                LoadingPlaceholder="image_loading.png"
-                                                                ErrorPlaceholder="image_loading.png"
-                                                                Source="{Binding}" Margin="0,5,0,0" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <ListView ItemsSource="{Binding SundayPictos}"
-                              Grid.Column="6"
-                              HasUnevenRows="True"
-                              SeparatorVisibility="None"
-                              VerticalOptions="FillAndExpand"
-                              CachingStrategy="RecycleElement"
-                              BackgroundColor="{StaticResource SundayColor}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ffimageloading:CachedImage VerticalOptions="Center"
-                                                                DownsampleToViewSize="true"
-                                                                LoadingPlaceholder="image_loading.png"
-                                                                ErrorPlaceholder="image_loading.png"
-                                                                Source="{Binding}" Margin="0,5,0,0" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Grid>
-                
-            </ScrollView>
-            
-        </Grid>
-            <Grid IsVisible="{Binding EditModeEnabled}">
+            <Grid
+                VerticalOptions="FillAndExpand">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -278,9 +90,122 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                    
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="AUTO" />
+                    <RowDefinition
+                        Height="AUTO" />
+                    <RowDefinition
+                        Height="*" />
+                </Grid.RowDefinitions>
+                <!-- DAYS TITLEBAR -->
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="0">
+                    <Label
+                        Text="Mandag"
+                        TextColor="{StaticResource WhiteColor}"
+                        HorizontalTextAlignment="Center" />
+                </Grid>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="1">
+                    <Label
+                        Text="Tirsdag"
+                        TextColor="{StaticResource WhiteColor}"
+                        HorizontalTextAlignment="Center" />
+                </Grid>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="2">
+                    <Label
+                        Text="Onsdag"
+                        TextColor="{StaticResource WhiteColor}"
+                        HorizontalTextAlignment="Center" />
+                </Grid>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="3">
+                    <Label
+                        Text="Torsdag"
+                        TextColor="{StaticResource WhiteColor}"
+                        HorizontalTextAlignment="Center" />
+                </Grid>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="4">
+                    <Label
+                        Text="Fredag"
+                        TextColor="{StaticResource WhiteColor}"
+                        HorizontalTextAlignment="Center" />
+                </Grid>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="5">
+                    <Label
+                        Text="Lørdag"
+                        TextColor="{StaticResource WhiteColor}"
+                        HorizontalTextAlignment="Center" />
+                </Grid>
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="6">
+                    <Label
+                        Text="Søndag"
+                        TextColor="{StaticResource WhiteColor}"
+                        HorizontalTextAlignment="Center" />
+                </Grid>
+                <!-- WEEKDAY LISTS -->
+                <ScrollView
+                    Grid.Row="1"
+                    Grid.ColumnSpan="7">
+                    <!-- HACK: The HeightRequest is set to make the Grid's height larger
+                than the ListViews height in effect disabling their scrolling, so all days scroll together -->
+                    <Grid
+                        HeightRequest="{Binding CountOfMaxHeightWeekday, Converter={StaticResource ItemsToHeightConverter}}">
+                        <controls:WeekDayListView
+                            BackgroundColor="{StaticResource MondayColor}"
+                            ItemsSource="{Binding MondayPictos}"
+                            Grid.Column="0" />
+                        <controls:WeekDayListView
+                            BackgroundColor="{StaticResource TuesdayColor}"
+                            ItemsSource="{Binding TuesdayPictos}"
+                            Grid.Column="1" />
+                        <controls:WeekDayListView
+                            BackgroundColor="{StaticResource WednesdayColor}"
+                            ItemsSource="{Binding WednesdayPictos}"
+                            Grid.Column="2" />
+                        <controls:WeekDayListView
+                            BackgroundColor="{StaticResource ThursdayColor}"
+                            ItemsSource="{Binding ThursdayPictos}"
+                            Grid.Column="3" />
+                        <controls:WeekDayListView
+                            BackgroundColor="{StaticResource FridayColor}"
+                            ItemsSource="{Binding FridayPictos}"
+                            Grid.Column="4" />
+                        <controls:WeekDayListView
+                            BackgroundColor="{StaticResource SaturdayColor}"
+                            ItemsSource="{Binding SaturdayPictos}"
+                            Grid.Column="5" />
+                        <controls:WeekDayListView
+                            BackgroundColor="{StaticResource SundayColor}"
+                            ItemsSource="{Binding SundayPictos}"
+                            Grid.Column="6" />
+                    </Grid>
+                </ScrollView>
+            </Grid>
+            <Grid
+                IsVisible="{Binding EditModeEnabled}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="AUTO" />
                 </Grid.RowDefinitions>
                     
                 <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Monday}"/>
