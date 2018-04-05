@@ -1,5 +1,6 @@
 using System;
 using IO.Swagger.Model;
+using WeekPlanner.Services.Login;
 using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -12,7 +13,7 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
 
-            MessagingCenter.Subscribe<LoginViewModel, string>(this, MessageKeys.LoginFailed, async (sender, errorMessage) => {
+            MessagingCenter.Subscribe<LoginService, string>(this, MessageKeys.LoginFailed, async (sender, errorMessage) => {
                 await DisplayAlert("Fejl", errorMessage, "Luk");
             });
         }

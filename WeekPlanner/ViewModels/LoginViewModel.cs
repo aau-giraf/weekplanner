@@ -17,11 +17,11 @@ namespace WeekPlanner.ViewModels
     public class LoginViewModel : ViewModelBase
     {
         private readonly ILoginService _loginService;
-        
+
         private ValidatableObject<string> _password;
         private ISettingsService _settingsService;
 
-        public LoginViewModel(ISettingsService settingsService, INavigationService navigationService, 
+        public LoginViewModel(ISettingsService settingsService, INavigationService navigationService,
             ILoginService loginService) : base(navigationService)
         {
             _loginService = loginService;
@@ -41,12 +41,13 @@ namespace WeekPlanner.ViewModels
 
         public string DepartmentName => _settingsService.Department.Name;
 
-        public bool IsValid
+        public ICommand LoginCommand => new Command(async () =>
         {
             if (UserNameAndPasswordIsValid())
             {
-                await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(), 
-                    UserType.Department, UserName.Value, Password.Value);
+                var username = "Graatand";
+                await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
+                                                      UserType.Department, username, Password.Value);
             }
         });
 
