@@ -31,6 +31,11 @@ We are using the Gitflow brancing pattern so all development must be done in eit
 - [AutoFixture Documentation](https://github.com/AutoFixture/AutoFixture/wiki/Cheat-Sheet)
 - Good sample application: [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers/)
 
+## Pull Requests
+
+Pull Requests are used for code review. Before submitting a Pull Request make sure to merge `develop` into your branch, so your Pull Request can be performed automatically.
+
+
 ## License
 
 Copyright [2018] [Aalborg University]
