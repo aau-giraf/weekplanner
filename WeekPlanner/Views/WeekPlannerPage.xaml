@@ -5,6 +5,7 @@
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+             xmlns:local="clr-namespace:IO.Swagger.Model;assembly=IO.Swagger"
              x:Class="WeekPlanner.Views.WeekPlannerPage"
              base1:ViewModelLocator.AutoWireViewModel="true"
              Title="Ugeplan">
@@ -120,6 +121,15 @@
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
                 <Grid
                     HeightRequest="{Binding CountOfMaxHeightWeekday, Converter={StaticResource ItemsToHeightConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     <ListView ItemsSource="{Binding MondayPictos}"
                               Grid.Column="0"
                               HasUnevenRows="True"
@@ -273,13 +283,13 @@
                     <RowDefinition Height="AUTO" />
                 </Grid.RowDefinitions>
                     
-                <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                <Button Grid.Column="3" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                <Button Grid.Column="4" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                <Button Grid.Column="5" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
-                <Button Grid.Column="6" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}"/>
+                <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Monday}"/>
+                <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Tuesday}"/>
+                <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Wednesday}"/>
+                <Button Grid.Column="3" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Thursday}"/>
+                <Button Grid.Column="4" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Friday}"/>
+                <Button Grid.Column="5" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Saturday}"/>
+                <Button Grid.Column="6" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Sunday}"/>
             </Grid>
         </StackLayout>
     </ContentPage.Content>
