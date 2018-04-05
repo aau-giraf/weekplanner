@@ -75,7 +75,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 				.Create();
 
 			Fixture.Freeze<Mock<IDepartmentApi>>()
-                   .Setup(n => n.V1DepartmentNamesGetAsync())
+				   .Setup(n => n.V1DepartmentNamesGetAsync())
 				.ReturnsAsync(response);
 
 			bool errorWasSent = false;
@@ -117,15 +117,15 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 		{
 			// Assert
 			var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
-            var departmentNameDTO = Fixture.Create<DepartmentNameDTO>();
+			var departmentNameDTO = Fixture.Create<DepartmentNameDTO>();
 
 			var sut = Fixture.Create<ChooseDepartmentViewModel>();
 
 			// Act
-            sut.ChooseDepartmentCommand.Execute(departmentNameDTO);
+			sut.ChooseDepartmentCommand.Execute(departmentNameDTO);
 
 			// Assert
-            settingsServiceMock.VerifySet(s => s.Department = departmentNameDTO);
+			settingsServiceMock.VerifySet(s => s.Department = departmentNameDTO);
 		}
 
 		[Fact]
