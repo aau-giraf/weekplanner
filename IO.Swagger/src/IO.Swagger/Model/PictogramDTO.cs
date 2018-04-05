@@ -60,7 +60,7 @@ namespace IO.Swagger.Model
         /// Gets or Sets AccessLevel
         /// </summary>
         [DataMember(Name="accessLevel", EmitDefaultValue=false)]
-        public AccessLevelEnum AccessLevel { get; set; }
+        public AccessLevelEnum? AccessLevel { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="PictogramDTO" /> class.
         /// </summary>
