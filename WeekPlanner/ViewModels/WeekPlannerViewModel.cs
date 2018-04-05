@@ -15,6 +15,7 @@ using System.Linq;
 using WeekPlanner.Services.Settings;
 using System.Windows.Input;
 using WeekPlanner.Views;
+using static IO.Swagger.Model.WeekdayDTO;
 
 namespace WeekPlanner.ViewModels
 {
@@ -53,9 +54,9 @@ namespace WeekPlanner.ViewModels
         }
         
         public ICommand ToggleEditModeCommand => new Command(() => EditModeEnabled = !EditModeEnabled);
-        public ICommand NavigateToPictoSearchCommand => new Command(async weekday =>
+        public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
-            _weekdayToAddPictogramTo = (WeekdayDTO.DayEnum) weekday;
+            _weekdayToAddPictogramTo = weekday;
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
@@ -69,6 +70,8 @@ namespace WeekPlanner.ViewModels
                 async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 InsertPicto);
+
+            TuesdayPictos = new ObservableCollection<ImageSource>();
         }
 
         private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
@@ -77,7 +80,7 @@ namespace WeekPlanner.ViewModels
                 ImageSource.FromUri(new Uri(GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl));
             WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
             // Add pictogramId to the correct weekday
-            WeekDTO.Days.First(d => d.Day == _weekdayToAddPictogramTo).ElementIDs.Add(pictogramDTO.Id);
+            TuesdayPictos.Add(imgSource);
             
         }
         
@@ -220,10 +223,10 @@ namespace WeekPlanner.ViewModels
         
          #region Boilerplate for each weekday's pictos
 
-        private IReadOnlyDictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>> _weekdayPictos =
+        private Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>> _weekdayPictos =
             new Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>>();
 
-        public IReadOnlyDictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>> WeekdayPictos
+        public Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>> WeekdayPictos
         {
             get => _weekdayPictos;
             set
@@ -251,7 +254,8 @@ namespace WeekPlanner.ViewModels
         
         public ObservableCollection<ImageSource> MondayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Monday);
 
-        public ObservableCollection<ImageSource> TuesdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Tuesday);
+        public ObservableCollection<ImageSource> TuesdayPictos { get; set; }
+            
 
         public ObservableCollection<ImageSource> WednesdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Wednesday);
 
