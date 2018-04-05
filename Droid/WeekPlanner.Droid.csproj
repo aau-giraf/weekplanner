@@ -164,13 +164,16 @@
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
     <AndroidResource Include="Resources\values\styles.xml" />
-   <AndroidResource Include="Resources\drawable\default_profile_picture.jpg" />
+    <AndroidResource Include="Resources\drawable\default_profile_picture.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj">
       <Project>{303b436c-5647-49f8-ab19-7f19a13f304a}</Project>
       <Name>WeekPlanner</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\drawable\image_loading.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />
