@@ -231,7 +231,7 @@
                                                                 ErrorPlaceholder="image_loading.png"
                                                                 Source="{Binding}" Margin="0,5,0,0" />
                                 </ViewCell>
-                            </DataTemplate>x
+                            </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView ItemsSource="{Binding SundayPictos}"
