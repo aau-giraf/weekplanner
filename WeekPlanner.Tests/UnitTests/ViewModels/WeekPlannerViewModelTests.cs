@@ -20,7 +20,7 @@ using Xamarin.Forms.Internals;
 using Xunit;
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class WeekPlannerViewModelTests : ViewModelTestsBase
+    public class WeekPlannerViewModelTests : Base.TestsBase
     {
         [Theory]
         [InlineData("MondayPictos")]
