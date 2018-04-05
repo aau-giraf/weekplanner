@@ -15,18 +15,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
     public class LoginTests : TestsBase
     {
         [Fact]
-        public void UserNameProperty_AfterCreation_IsNotNull()
-        {
-            // Arrange
-            var sut = Fixture.Build<LoginViewModel>()
-                .OmitAutoProperties()
-                .Create();
-            
-            // Assert
-            Assert.NotNull(sut.UserName);
-        }
-        
-        [Fact]
         public void PasswordProperty_AfterCreation_IsNotNull()
         {
             // Arrange
@@ -37,26 +25,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert
             Assert.NotNull(sut.Password);
         }
-        
-       [Fact]
-       public void UserNameProperty_OnSet_RaisesPropertyChanged()
-       {
-           // Arrange
-           var sut = Fixture.Create<LoginViewModel>();
-            
-           bool invoked = false;
-           sut.PropertyChanged += (sender, e) =>
-           {
-               if (e.PropertyName.Equals(nameof(sut.UserName)))
-                   invoked = true;
-           };
-            
-           // Act
-           sut.UserName = Fixture.Create<ValidatableObject<string>>();
-            
-           // Assert
-           Assert.True(invoked);
-       }
         
         [Fact]
         public void PasswordProperty_OnSet_RaisesPropertyChanged()
@@ -79,18 +47,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
         
         [Fact]
-        public void ValidateUserNameCommand_IsNotNull()
-        {
-            // Arrange
-            var sut = Fixture.Build<LoginViewModel>()
-                .OmitAutoProperties()
-                .Create();
-            
-            // Assert
-            Assert.NotNull(sut.ValidateUserNameCommand);
-        }
-        
-        [Fact]
         public void ValidatePasswordCommand_IsNotNull()
         {
             // Arrange
@@ -101,7 +57,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert
             Assert.NotNull(sut.ValidatePasswordCommand);
         }
-
+        
         [Theory]
         [InlineData("NotEmpty", "Also Not Empty")]
         [InlineData("   .", "Not empty")]
@@ -115,7 +71,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .Create();
             
             // Act
-            sut.UserName.Value = username;
             sut.Password.Value = password;
             
             // Assert
@@ -139,7 +94,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .Create();
             
             // Act
-            sut.UserName.Value = username;
             sut.Password.Value = password;
             
             // Assert
@@ -154,7 +108,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var sut = Fixture.Build<LoginViewModel>()
                 .OmitAutoProperties()
                 .Create();
-            sut.UserName.Value = "ValidUsername";
             sut.Password.Value = "ValidPassword";
 
             // Act
@@ -173,7 +126,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var sut = Fixture.Build<LoginViewModel>()
                 .OmitAutoProperties()
                 .Create();
-            sut.UserName.Value = "";
             sut.Password.Value = "";
 
             // Act
@@ -202,7 +154,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .OmitAutoProperties()
                 .Create();
 
-            sut.UserName.Value = "ValidUsername";
             sut.Password.Value = "ValidPassword";
             
             // Act

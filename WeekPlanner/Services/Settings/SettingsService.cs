@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using IO.Swagger.Api;
-﻿using IO.Swagger.Model;
+using IO.Swagger.Model;
 
 namespace WeekPlanner.Services.Settings
 {
