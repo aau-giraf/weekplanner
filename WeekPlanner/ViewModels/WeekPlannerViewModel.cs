@@ -80,6 +80,7 @@ namespace WeekPlanner.ViewModels
                 ImageSource.FromUri(new Uri(GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl));
             WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
             // Add pictogramId to the correct weekday
+            // TODO: Fix
             TuesdayPictos.Add(imgSource);
             
         }
