@@ -108,11 +108,11 @@ namespace WeekPlanner.ViewModels
         // TODO: Cleanup method and rename
         private async Task GetWeekPlanForCitizenAsync()
         {
-            ResponseIEnumerableWeekDTO result;
+            ResponseWeekDTO result;
             try
             {
                 // TODO: Find the correct id to retrieve : Modal view -> choose what schedule (probably current by default)
-                result = await _weekApi.V1WeekGetAsync();
+                result = await _weekApi.V1WeekByIdGetAsync(1);
             }
             catch (ApiException)
             {
@@ -122,9 +122,9 @@ namespace WeekPlanner.ViewModels
                 return;
             }
 
-            if (result.Success == true && result.Data[0].Days != null)
+            if (result.Success == true && result.Data.Days != null)
             {
-                WeekDTO = result.Data[0];
+                WeekDTO = result.Data;
                 try
                 {
                     await GetAndSetPictograms();
@@ -141,7 +141,7 @@ namespace WeekPlanner.ViewModels
             }
             else
             {
-                result.ErrorKey = ResponseIEnumerableWeekDTO.ErrorKeyEnum.WeekScheduleNotFound;
+                result.ErrorKey = ResponseWeekDTO.ErrorKeyEnum.WeekScheduleNotFound;
                 MessagingCenter.Send(this, MessageKeys.RetrieveWeekPlanFailed, result.ErrorKey.ToFriendlyString());
 
                 await NavigationService.PopAsync();

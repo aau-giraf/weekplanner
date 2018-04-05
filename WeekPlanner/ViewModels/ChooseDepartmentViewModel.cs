@@ -76,7 +76,7 @@ namespace WeekPlanner.ViewModels
         {
             string friendlyErrorMessage;
 
-            if (result == null)
+            if (result == null )
             {
                 friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
             }
