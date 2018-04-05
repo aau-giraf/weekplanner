@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using IO.Swagger.Api;
-﻿using IO.Swagger.Model;
+using IO.Swagger.Model;
 
 namespace WeekPlanner.Services.Settings
 {
@@ -19,7 +19,7 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.UseMocks = value;
         }
 
-        public DepartmentDTO Department
+        public DepartmentNameDTO Department
         {
             get => GlobalSettings.Instance.Department;
             set => GlobalSettings.Instance.Department = value;

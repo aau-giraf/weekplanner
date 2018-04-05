@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using IO.Swagger.Model;
 using static IO.Swagger.Model.Response;
 
@@ -22,6 +23,8 @@ namespace WeekPlanner.Helpers
                     return "Ukendt fejl opstod. Måske er serveren nede.";
                 case nameof(ErrorKeyEnum.WeekScheduleNotFound):
                     return "Ugeplanen kunne ikke findes";
+                case nameof(ErrorKeyEnum.NotFound):
+                    return "Ikke fundet";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(errorCode), errorCode, null);
             }
@@ -47,7 +50,7 @@ namespace WeekPlanner.Helpers
         public static string ToFriendlyString(this ResponseByte.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
-        public static string ToFriendlyString(this ResponseListDepartmentDTO.ErrorKeyEnum? errorKey) =>
+        public static string ToFriendlyString(this ResponseListDepartmentNameDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponseDepartmentDTO.ErrorKeyEnum? errorKey) =>

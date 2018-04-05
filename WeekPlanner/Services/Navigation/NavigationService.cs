@@ -7,6 +7,7 @@ using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Views;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace WeekPlanner.Services.Navigation
 {

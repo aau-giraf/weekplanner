@@ -148,5 +148,25 @@ namespace WeekPlanner.Services.Mocks
         {
             throw new System.NotImplementedException();
         }
+
+        ResponseIEnumerableWeekNameDTO IWeekApi.V1WeekGet()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        ApiResponse<ResponseIEnumerableWeekNameDTO> IWeekApi.V1WeekGetWithHttpInfo()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<ResponseIEnumerableWeekNameDTO> IWeekApi.V1WeekGetAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<ApiResponse<ResponseIEnumerableWeekNameDTO>> IWeekApi.V1WeekGetAsyncWithHttpInfo()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

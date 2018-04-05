@@ -27,6 +27,9 @@
                 <Button
                     Text="Vælg afdeling"
                     Command="{Binding NavigateToChooseDepartmentCommand}" />
+                <Button 
+                    Text="Søg efter pictogram" 
+                    Command="{Binding NavigateToPictogramSearchCommand}" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

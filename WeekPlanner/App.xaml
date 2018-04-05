@@ -15,7 +15,6 @@
             <Color x:Key="LightTextColor">#999999</Color>
             <Color x:Key="RegularButton">#FFCD59</Color>
             <Color x:Key="ErrorColor">#ff5252</Color>
-            <Color x:Key="White">#FF0000</Color>
 
             <!--Layouts-->
 
@@ -38,14 +37,14 @@
                         Value="{StaticResource ErrorColor}" />
             </Style>
 
-            <Style TargetType="Label">
+            <!--<Style TargetType="Label">
                 
             </Style>
 
             <Style TargetType="SearchBar">
 
             </Style>
-
+-->
             <Style TargetType="Button">
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
                 <!--<Setter Property="Margin" Value="20" />
@@ -56,7 +55,7 @@
             <!-- CONVERTERS -->
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
             <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
-
+            <converters:RelativeUrlConverter x:Key="RelativeUrlConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

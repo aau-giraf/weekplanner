@@ -88,7 +88,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Arrange
             bool messageReceived = false;
             MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.CitizenListRetrievalFailed, (sender, args) =>
-            {
+            {   
                 messageReceived = true;
             });
             

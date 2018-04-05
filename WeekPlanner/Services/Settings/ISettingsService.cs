@@ -10,7 +10,7 @@ namespace WeekPlanner.Services.Settings
 
         void UseTokenFor(UserType userType);
 
-        DepartmentDTO Department { get; set; }
+        DepartmentNameDTO Department { get; set; }
     }
 
     public enum UserType

@@ -10,5 +10,6 @@ namespace WeekPlanner.ViewModels.Base
         public const string RetrieveWeekPlanFailed = "RetrieveWeekPlanFailed";
         public const string RequestSucceeded = "RequestSucceeded";
         public const string RequestFailed = "RequestFailed";
+        public const string PictoSearchChosenItem = "PictoSearchChosenItem";
     }
 }

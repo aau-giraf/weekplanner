@@ -17,9 +17,7 @@ namespace WeekPlanner.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-            
             CachedImageRenderer.Init(enableFastRenderer: true);
-
             LoadApplication(new App());
         }
 
