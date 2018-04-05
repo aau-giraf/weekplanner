@@ -7,6 +7,7 @@ using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Views;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace WeekPlanner.Services.Navigation
 {
@@ -45,6 +46,22 @@ namespace WeekPlanner.Services.Navigation
         {
             var navigationPage = Application.Current.MainPage as CustomNavigationPage;
             
+            // TODO: Update to use correct frontpage
+            if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))
+            {
+                return navigationPage?.PopAsync();
+            }
+            return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// Pops the current page unless it is the frontpage of the app
+        /// </summary>
+        /// <returns></returns>
+        public Task PopAsync()
+        {
+            var navigationPage = Application.Current.MainPage as CustomNavigationPage;
+
             // TODO: Update to use correct frontpage
             if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))
             {

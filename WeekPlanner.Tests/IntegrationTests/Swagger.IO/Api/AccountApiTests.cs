@@ -7,7 +7,9 @@ using Xunit;
 namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
 {
    /* public class AccountApiTests
+
     {
+        
         [Theory]
         [InlineData("Graatand", "password")]
         public async void V1AccountLoginPostAsync_ValidCredentials_UserData(string username, string password)
@@ -60,4 +62,4 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
              ));
         }
     }*/
-}
+

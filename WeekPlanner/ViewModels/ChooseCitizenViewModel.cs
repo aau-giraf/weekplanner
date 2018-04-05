@@ -80,9 +80,11 @@ namespace WeekPlanner.ViewModels
 		    }
 	    }
 
+
 	    public override async Task InitializeAsync(object navigationData)
 	    {
 		    await GetAndSetCitizenNamesAsync();
 	    }
     }
+
 }
