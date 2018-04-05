@@ -70,8 +70,6 @@ namespace WeekPlanner.ViewModels
                 async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 InsertPicto);
-
-            TuesdayPictos = new ObservableCollection<ImageSource>();
         }
 
         private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
@@ -81,8 +79,16 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
             // Add pictogramId to the correct weekday
             // TODO: Fix
-            TuesdayPictos.Add(imgSource);
-            
+            RaisePropertyChanged(() => MondayPictos);
+            RaisePropertyChanged(() => TuesdayPictos);
+            RaisePropertyChanged(() => WednesdayPictos);
+            RaisePropertyChanged(() => ThursdayPictos);
+            RaisePropertyChanged(() => FridayPictos);
+            RaisePropertyChanged(() => SaturdayPictos);
+            RaisePropertyChanged(() => SundayPictos);
+            RaisePropertyChanged(() => CountOfMaxHeightWeekday);
+            RaisePropertyChanged(() => WeekdayPictos);
+
         }
         
         public override async Task InitializeAsync(object navigationData)
@@ -255,8 +261,7 @@ namespace WeekPlanner.ViewModels
         
         public ObservableCollection<ImageSource> MondayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Monday);
 
-        public ObservableCollection<ImageSource> TuesdayPictos { get; set; }
-            
+        public ObservableCollection<ImageSource> TuesdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Tuesday);
 
         public ObservableCollection<ImageSource> WednesdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Wednesday);
 

@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:IO.Swagger.Model;assembly=IO.Swagger"
     x:Class="WeekPlanner.Views.WeekPlannerPage"
     base1:ViewModelLocator.AutoWireViewModel="true"
-    Title="Ugeplan">
+    Title="{Binding WeekDTO.Name}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color
@@ -38,8 +38,9 @@
                     Text="Rediger"
                     Command="{Binding ToggleEditModeCommand}" />
             </StackLayout>
+            <!--TODO: Fix HeightRequest bug //Lau-->
             <StackLayout
-                IsVisible="{Binding EditModeEnabled}">
+                IsVisible="{Binding EditModeEnabled}" HeightRequest="200">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -160,7 +161,7 @@
                     <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
                     <Grid
-                        HeightRequest="{Binding CountOfMaxHeightWeekday, Converter={StaticResource ItemsToHeightConverter}}">
+                        HeightRequest="1500">
                         <controls:WeekDayListView
                             BackgroundColor="{StaticResource MondayColor}"
                             ItemsSource="{Binding MondayPictos}"
@@ -207,7 +208,7 @@
                     <RowDefinition
                         Height="AUTO" />
                 </Grid.RowDefinitions>
-                    
+
                 <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Monday}"/>
                 <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Tuesday}"/>
                 <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Wednesday}"/>
