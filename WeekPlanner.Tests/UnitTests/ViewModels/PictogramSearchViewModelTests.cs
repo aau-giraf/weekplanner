@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AutoFixture;
+using IO.Swagger.Api;
 using IO.Swagger.Model;
 using Moq;
 using WeekPlanner.Services.Navigation;
@@ -70,7 +72,21 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         [Fact]
         public void ImageSource_OnSet_Size()
         {
-            
+            // Arrange
+            var pictograms = Fixture.Create<List<PictogramDTO>>();
+            var response = Fixture.Build<ResponseListPictogramDTO>()
+                                  .With(r => r.Data, pictograms)
+                                  .Create();
+
+            var api = Fixture.Freeze<Mock<IPictogramApi>>()
+                             .Setup(a => a.V1PictogramGet(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>()))
+                             .Returns(response);
+            var SystemUnderTest = Fixture.Create<PictogramSearchViewModel>();             
+            //var PictogramDTO = Fixture.Create<PictogramDTO>();             
+            // Act             
+            SystemUnderTest.OnSearchGetPictograms("kat");             
+            // Assert             
+            Assert.Equal(pictograms.Count, SystemUnderTest.ImageSources.Count);
         }
 
         [Fact] 
