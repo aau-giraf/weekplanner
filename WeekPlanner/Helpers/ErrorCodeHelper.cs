@@ -25,8 +25,11 @@ namespace WeekPlanner.Helpers
                     return "Ugeplanen kunne ikke findes";
                 case nameof(ErrorKeyEnum.NotFound):
                     return "Ikke fundet";
+                case nameof(ErrorKeyEnum.TwoDaysCannotHaveSameDayProperty):
+                    return "Der skete en fejl i forhold til gemning.";
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(errorCode), errorCode, null);
+                    return "Der skete en ukendt fejl";
+                    //throw new ArgumentOutOfRangeException(nameof(errorCode), errorCode, null);
             }
         }
         
