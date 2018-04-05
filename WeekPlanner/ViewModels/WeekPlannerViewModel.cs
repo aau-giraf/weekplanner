@@ -18,6 +18,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using WeekPlanner.Services.Settings;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using CarouselView.FormsPlugin.Abstractions;
 using FFImageLoading.Forms.Args;
@@ -60,6 +61,10 @@ namespace WeekPlanner.ViewModels
         }
         
         public ICommand ToggleEditModeCommand => new Command(() => EditModeEnabled = !EditModeEnabled);
+        public ICommand NavigateToPictoSearchCommand => new Command(async () =>
+        {
+            await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
+        });
 
         public WeekPlannerViewModel(INavigationService navigationService, IWeekApi weekApi,
             ILoginService loginService, IPictogramApi pictogramApi) : base(navigationService)
@@ -69,8 +74,14 @@ namespace WeekPlanner.ViewModels
             _loginService = loginService;
             MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest, 
                 async _ => await SaveSchedule());
+            //MessagingCenter.Subscribe(subscriber:this, message:MessageKeys.PictoSearchChosenItem, callback:InsertPicto, source:null);
         }
-        
+
+        private void InsertPicto(object arg1, object arg2)
+        {
+            throw new NotImplementedException();
+        }
+
         public override async Task InitializeAsync(object navigationData)
         {
             if (navigationData is UserNameDTO userNameDTO)
