@@ -21,6 +21,9 @@
                 <Button
                     Text="Vælg skabelon"
                     Command="{Binding NavigateToChooseTemplateCommand}" />
+                <Button 
+                    Text="Brugermode skift" 
+                    Command="{Binding NavigateToUserModeSwitchCommand}" />
                 <Button
                     Text="Vælg afdeling"
                     Command="{Binding NavigateToChooseDepartmentCommand}" />

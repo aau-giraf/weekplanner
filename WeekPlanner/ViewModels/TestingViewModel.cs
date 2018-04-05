@@ -48,14 +48,19 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseTemplateCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
+
+		public ICommand NavigateToUserModeSwitchCommand =>
+			new Command(async () => await NavigationService.NavigateToAsync<UserModeSwitchViewModel>());
+
         public ICommand NavigateToModifyScheduleCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ModifyScheduleViewModel>());
-        
+
         public ICommand NavigateToChooseDepartmentCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ChooseDepartmentViewModel>());
         
         public ICommand NavigateToPictogramSearchCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
 
-    }
+
+	}
 }

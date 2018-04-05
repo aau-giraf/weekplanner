@@ -20,7 +20,10 @@ namespace WeekPlanner.ViewModels
         private readonly ILoginService _loginService;
 
         private ValidatableObject<string> _password;
+
+        private bool _userModeSwitch = false;
         private ISettingsService _settingsService;
+
 
         public LoginViewModel(ISettingsService settingsService, INavigationService navigationService,
             ILoginService loginService) : base(navigationService)
@@ -46,9 +49,16 @@ namespace WeekPlanner.ViewModels
         {
             if (UserNameAndPasswordIsValid())
             {
-                var username = "Graatand";
-                await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
-                                                      UserType.Department, username, Password.Value);
+                if (_userModeSwitch)
+                {
+                    await NavigationService.PopAsync();
+                }
+                else
+                {
+                    var username = "Graatand";
+                    await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
+                                                          UserType.Department, username, Password.Value);
+                }
             }
         });
 
@@ -58,6 +68,14 @@ namespace WeekPlanner.ViewModels
         {
             var isValidPassword = _password.Validate();
             return isValidPassword;
+        }
+
+        public override async Task InitializeAsync(object navigationData)
+        {
+            if (navigationData is UserModeSwitchViewModel)
+            {
+                _userModeSwitch = true;
+            } 
         }
     }
 }
