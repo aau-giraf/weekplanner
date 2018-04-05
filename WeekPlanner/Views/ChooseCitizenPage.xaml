@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors1="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
              xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             base1:ViewModelLocator.AutoWireViewModel="true"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="WeekPlanner.Views.ChooseCitizenPage"
-             base1:ViewModelLocator.AutoWireViewModel="true"
              Title="Vælg Borger">
     <ContentPage.Content>
-        <StackLayout>
+       <StackLayout>
             <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
             <ListView 
                 x:Name="CitizensListView" 
-                ItemsSource="{Binding Citizens}" 
+                ItemsSource="{Binding CitizenNames}" 
                 VerticalOptions="FillAndExpand" 
                 HasUnevenRows="true"
                 RowHeight="100">
@@ -27,6 +27,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
+                                <!-- https://github.com/luberda-molinet/FFImageLoading/wiki/Xamarin.Forms-API -->
                                 <ffimageloading:CachedImage VerticalOptions="Center"
                                                             HeightRequest="95"
                                                             DownsampleToViewSize="true"
@@ -35,7 +36,7 @@
                                                             Source = "https://us.123rf.com/450wm/silviemiskova/silviemiskova1604/silviemiskova160400029/55722613-stock-vector-giraffe-colorful-low-poly-design-on-blue-background-with-dark-brown-outline-animal-card-design-backg.jpg?ver=6">
                                     <!-- Source will change to UserIcon when backend has switched to using images -->
                                 </ffimageloading:CachedImage>
-                                <Label FontSize="18" Margin="5, 0, 0, 0" Text="{Binding Username}" VerticalTextAlignment="Center"/>
+                                <Label FontSize="18" Margin="5, 0, 0, 0" Text="{Binding UserName}" VerticalTextAlignment="Center"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

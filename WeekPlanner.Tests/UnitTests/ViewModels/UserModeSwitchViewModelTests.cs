@@ -6,10 +6,11 @@ using AutoFixture;
 using Xunit;
 using WeekPlanner.Services.Navigation;
 using Moq;
+using WeekPlanner.Tests.UnitTests.Base;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
-    public class UserModeSwitchViewModelTests : ViewModelTestsBase
+    public class UserModeSwitchViewModelTests : TestsBase
     {
         [Fact]
         public void UserModeProperty_OnChange_RaisePropertyChanged()

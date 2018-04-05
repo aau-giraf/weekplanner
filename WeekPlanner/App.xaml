@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters1="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
+             xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
              xmlns:views="clr-namespace:WeekPlanner.Views;assembly=WeekPlanner"
              x:Class="WeekPlanner.App">
     <Application.Resources>
@@ -15,27 +15,49 @@
             <Color x:Key="LightTextColor">#999999</Color>
             <Color x:Key="RegularButton">#FFCD59</Color>
             <Color x:Key="ErrorColor">#ff5252</Color>
-            
-            <Style x:Key="ValidationErrorLabelStyle"
-                   TargetType="{x:Type Label}">
-                <Setter Property="TextColor"
-                        Value="{StaticResource ErrorColor}" />
-            </Style>
-            
+            <Color x:Key="White">#FF0000</Color>
+
+            <!--Layouts-->
+
+            <!--<Style TargetType="ContentPage">
+                <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+            </Style>-->
+
+            <!--<Style TargetType="ContentPage.ToolbarItems">
+                <Setter Property="BackgroundColor" Value="{staticResource White}" />
+            </Style>-->
+
             <Style TargetType="views:CustomNavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
 
+            <Style x:Key="ValidationErrorLabelStyle"
+                   TargetType="{x:Type Label}">
+                <Setter Property="TextColor"
+                        Value="{StaticResource ErrorColor}" />
+            </Style>
+
+            <Style TargetType="Label">
+                
+            </Style>
+
+            <Style TargetType="SearchBar">
+
+            </Style>
+
             <Style TargetType="Button">
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <!--<Setter Property="Margin" Value="20" />
+                <Setter Property="VerticalOptions" Value="CenterAndExpand" />-->
                 <Setter Property="TextColor" Value="White" />
             </Style>
 
             <!-- CONVERTERS -->
-            <converters1:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
-           
-            
+            <converters:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
+            <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using WeekPlanner.ViewModels;
@@ -23,15 +24,33 @@ namespace WeekPlanner.Services.Navigation
 
         public Task InitializeAsync()
         {
-
-            if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
+            return NavigateToAsync<TestingViewModel>();
+            
+            // TODO: Remember chosen department and maybe authtoken
+            /*if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
             {
                 return NavigateToAsync<TestingViewModel>();
             }
             else
             {
                 return NavigateToAsync<ChooseCitizenViewModel>();
+            }*/
+        }
+        
+        /// <summary>
+        /// Pops the current page unless it is the frontpage of the app
+        /// </summary>
+        /// <returns></returns>
+        public Task PopAsync()
+        {
+            var navigationPage = Application.Current.MainPage as CustomNavigationPage;
+            
+            // TODO: Update to use correct frontpage
+            if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))
+            {
+                return navigationPage?.PopAsync();
             }
+            return Task.FromResult(false);
         }
 
         public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
@@ -92,12 +111,6 @@ namespace WeekPlanner.Services.Navigation
                 throw new Exception($"{page.BindingContext} does not inherit ViewModelBase");
             }
             
-        }
-
-        public Task PopAsync()
-        {
-            return Application.Current.MainPage.Navigation.PopAsync();
-
         }
 
         private Type GetPageTypeForViewModel(Type viewModelType)

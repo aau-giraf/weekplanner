@@ -6,7 +6,7 @@ using Xunit;
 
 namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
 {
-    public class AccountApiTests
+   /* public class AccountApiTests
     {
         [Theory]
         [InlineData("Graatand", "password")]
@@ -29,7 +29,7 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
 
         /*  Test if the login in page returns the correct error when the user sends a login request
             Each InlineData is a test with the specified data as test data, run seperately 
-            the test also contain supposedly test for simple SQL injection in the entries */
+            the test also contain supposedly test for simple SQL injection in the entries 
         [Theory]
         [InlineData("13uej912389u", "adw89u129363")]
         [InlineData("00000", "222222")]
@@ -67,5 +67,5 @@ namespace WeekPlanner.Tests.IntegrationTests.Swagger.IO.Api
                  new LoginDTO("Graatand", "password")
              ));
         }
-    }
+    }*/
 }
