@@ -20,6 +20,7 @@ using WeekPlanner.Services.Settings;
 using System.Reflection;
 using CarouselView.FormsPlugin.Abstractions;
 using FFImageLoading.Forms.Args;
+using NUnit.Framework;
 
 namespace WeekPlanner.ViewModels
 {
@@ -121,7 +122,7 @@ namespace WeekPlanner.ViewModels
                 return;
             }
 
-            if (result.Success == true)
+            if (result.Success == true && result.Data[0].Days != null)
             {
                 WeekDTO = result.Data[0];
                 try
@@ -140,6 +141,7 @@ namespace WeekPlanner.ViewModels
             }
             else
             {
+                result.ErrorKey = ResponseIEnumerableWeekDTO.ErrorKeyEnum.WeekScheduleNotFound;
                 MessagingCenter.Send(this, MessageKeys.RetrieveWeekPlanFailed, result.ErrorKey.ToFriendlyString());
 
                 await NavigationService.PopAsync();
