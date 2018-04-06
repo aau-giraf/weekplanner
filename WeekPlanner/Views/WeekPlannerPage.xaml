@@ -98,62 +98,41 @@
                         Height="*" />
                 </Grid.RowDefinitions>
                 <!-- DAYS TITLEBAR -->
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="0">
                     <Label
                         Text="Mandag"
+                        Grid.Column="0"
                         TextColor="{StaticResource WhiteColor}"
                         HorizontalTextAlignment="Center" />
-                </Grid>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="1">
                     <Label
                         Text="Tirsdag"
+                        Grid.Column="1"
                         TextColor="{StaticResource WhiteColor}"
                         HorizontalTextAlignment="Center" />
-                </Grid>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="2">
                     <Label
                         Text="Onsdag"
+                        Grid.Column="2"
                         TextColor="{StaticResource WhiteColor}"
                         HorizontalTextAlignment="Center" />
-                </Grid>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="3">
                     <Label
                         Text="Torsdag"
+                        Grid.Column="3"
                         TextColor="{StaticResource WhiteColor}"
                         HorizontalTextAlignment="Center" />
-                </Grid>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="4">
                     <Label
                         Text="Fredag"
+                        Grid.Column="4"
                         TextColor="{StaticResource WhiteColor}"
                         HorizontalTextAlignment="Center" />
-                </Grid>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="5">
                     <Label
                         Text="Lørdag"
+                        Grid.Column="5"
                         TextColor="{StaticResource WhiteColor}"
                         HorizontalTextAlignment="Center" />
-                </Grid>
-                <Grid
-                    Grid.Row="0"
-                    Grid.Column="6">
                     <Label
                         Text="Søndag"
+                        Grid.Column="6"
                         TextColor="{StaticResource WhiteColor}"
                         HorizontalTextAlignment="Center" />
-                </Grid>
                 <!-- WEEKDAY LISTS -->
                 <ScrollView
                     Grid.Row="1"

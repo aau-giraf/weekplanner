@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutoFixture;
@@ -35,7 +36,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             };
             
             //Act
-            sut.WeekdayPictos = new Dictionary<WeekdayDTO.DayEnum, IEnumerable<ImageSource>>();
+            sut.WeekdayPictos = new Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>>();
             
             //Assert
             Assert.True(invoked);
