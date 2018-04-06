@@ -28,7 +28,7 @@ namespace WeekPlanner.ViewModels
         
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
-        private WeekdayDTO.DayEnum _weekdayToAddPictogramTo;
+        private DayEnum _weekdayToAddPictogramTo;
         
         public bool EditModeEnabled
         {
@@ -207,7 +207,7 @@ namespace WeekPlanner.ViewModels
 
         private async Task GetAndSetPictograms()
         {
-            var tempDict = new Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>>();
+            var tempDict = new Dictionary<DayEnum, ObservableCollection<ImageSource>>();
             foreach (WeekdayDTO day in WeekDTO.Days)
             {
                 var weekday = day.Day.Value;
@@ -230,10 +230,10 @@ namespace WeekPlanner.ViewModels
         
          #region Boilerplate for each weekday's pictos
 
-        private Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>> _weekdayPictos =
-            new Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>>();
+        private Dictionary<DayEnum, ObservableCollection<ImageSource>> _weekdayPictos =
+            new Dictionary<DayEnum, ObservableCollection<ImageSource>>();
 
-        public Dictionary<WeekdayDTO.DayEnum, ObservableCollection<ImageSource>> WeekdayPictos
+        public Dictionary<DayEnum, ObservableCollection<ImageSource>> WeekdayPictos
         {
             get => _weekdayPictos;
             set
@@ -259,21 +259,21 @@ namespace WeekPlanner.ViewModels
             }
         }
         
-        public ObservableCollection<ImageSource> MondayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Monday);
+        public ObservableCollection<ImageSource> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
 
-        public ObservableCollection<ImageSource> TuesdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Tuesday);
+        public ObservableCollection<ImageSource> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
 
-        public ObservableCollection<ImageSource> WednesdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Wednesday);
+        public ObservableCollection<ImageSource> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
 
-        public ObservableCollection<ImageSource> ThursdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Thursday);
+        public ObservableCollection<ImageSource> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
 
-        public ObservableCollection<ImageSource> FridayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Friday);
+        public ObservableCollection<ImageSource> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
 
-        public ObservableCollection<ImageSource> SaturdayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Saturday);
+        public ObservableCollection<ImageSource> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
 
-        public ObservableCollection<ImageSource> SundayPictos => GetPictosOrEmptyList(WeekdayDTO.DayEnum.Sunday);
+        public ObservableCollection<ImageSource> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
 
-        private ObservableCollection<ImageSource> GetPictosOrEmptyList(WeekdayDTO.DayEnum day)
+        private ObservableCollection<ImageSource> GetPictosOrEmptyList(DayEnum day)
         {
             if (!WeekdayPictos.TryGetValue(day, out var pictoSources))
                 pictoSources = new ObservableCollection<ImageSource>();
