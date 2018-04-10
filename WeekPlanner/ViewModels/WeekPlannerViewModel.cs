@@ -29,6 +29,7 @@ namespace WeekPlanner.ViewModels
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
+        private ImageSource _userModeImage;
         
         public bool EditModeEnabled
         {
@@ -52,8 +53,17 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() =>  WeekDTO);
             }
         }
-        
-        public ICommand ToggleEditModeCommand => new Command(() => EditModeEnabled = !EditModeEnabled);
+        public ImageSource UserModeImage
+        {
+            get => _userModeImage;
+            set
+            {
+                _userModeImage = value;
+                RaisePropertyChanged(() => UserModeImage);
+            }
+        }
+
+        public ICommand ToggleEditModeCommand => new Command(() => SwitchUserMode());
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
             _weekdayToAddPictogramTo = weekday;
@@ -66,6 +76,7 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _pictogramApi = pictogramApi;
             _loginService = loginService;
+            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest, 
                 async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
@@ -287,6 +298,21 @@ namespace WeekPlanner.ViewModels
             var friendlyErrorMessage = errorKeyEnum.ToFriendlyString();
             MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
         }
-        
+
+        private async Task SwitchUserMode()
+        {
+            if (EditModeEnabled)
+            {
+                EditModeEnabled = false;
+                UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+            }
+            else
+            {
+                await NavigationService.NavigateToAsync<LoginViewModel>(this);
+                EditModeEnabled = true;
+                UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png"); 
+            }
+        }
+
     }
 }

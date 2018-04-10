@@ -30,13 +30,13 @@
                 x:Key="WhiteColor">#000</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="{Binding UserModeImage}" Command="{Binding ToggleEditModeCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
             <StackLayout
                 IsVisible="{Binding EditModeEnabled, Converter={StaticResource NegateBooleanConverter}}">
-                <Button
-                    Text="Rediger"
-                    Command="{Binding ToggleEditModeCommand}" />
             </StackLayout>
             <!--TODO: Fix HeightRequest bug //Lau-->
             <StackLayout

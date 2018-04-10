@@ -72,7 +72,7 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is UserModeSwitchViewModel)
+            if (navigationData is WeekPlannerViewModel)
             {
                 _userModeSwitch = true;
             } 

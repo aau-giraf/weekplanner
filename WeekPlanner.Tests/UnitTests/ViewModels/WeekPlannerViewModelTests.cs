@@ -7,6 +7,7 @@ using AutoFixture;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using Moq;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels;
 using Xamarin.Forms;
 using Xunit;
@@ -135,6 +136,61 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             //Assert
             Assert.Equal(sut.CountOfMaxHeightWeekday, weekResponse.Data.Days.Max(d => d.ElementIDs.Count));
         }
-        
+
+        [Fact]
+        public void EditModeProperty_OnChange_RaisePropertyChanged()
+        {
+            //Arrange
+            var sut = Fixture.Create<WeekPlannerViewModel>();
+
+            bool invoked = false;
+            sut.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName.Equals(nameof(sut.EditModeEnabled)))
+                    invoked = true;
+            };
+
+            //Act
+            sut.ToggleEditModeCommand.Execute(true);
+
+            //Assert
+            Assert.True(invoked);
+        }
+
+        [Fact]
+        public void ModeImageProperty_OnChange_RaisePropertyChanged()
+        {
+            //Arrange
+            var sut = Fixture.Create<WeekPlannerViewModel>();
+
+            bool invoked = false;
+            sut.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName.Equals(nameof(sut.UserModeImage)))
+                    invoked = true;
+            };
+
+            //Act
+            sut.ToggleEditModeCommand.Execute(true);
+
+            //Assert
+            Assert.True(invoked);
+        }
+
+        [Fact]
+        public void ToogleEditModeCommand_Executed_InvokesNavigateToLoginPage()
+        {
+            // Arrange
+            var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
+            var sut = Fixture.Create<WeekPlannerViewModel>();
+
+            // Act
+            sut.ToggleEditModeCommand.Execute(true);
+            sut.ToggleEditModeCommand.Execute(true);
+
+            // Assert
+            navServiceMock.Verify(n => n.NavigateToAsync<LoginViewModel>(It.IsAny<WeekPlannerViewModel>()));
+        }
+
     }
 }
