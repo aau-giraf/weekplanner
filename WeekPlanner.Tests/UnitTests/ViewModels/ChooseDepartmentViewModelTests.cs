@@ -53,7 +53,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 				.Create();
 
 			departmentApiMock
-				.Setup(n => n.V1DepartmentNamesGetAsync())
+				.Setup(n => n.V1DepartmentGetAsync())
 				.ReturnsAsync(response);
 
 			var sut = Fixture.Create<ChooseDepartmentViewModel>();
@@ -75,7 +75,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 				.Create();
 
 			Fixture.Freeze<Mock<IDepartmentApi>>()
-				   .Setup(n => n.V1DepartmentNamesGetAsync())
+				   .Setup(n => n.V1DepartmentGetAsync())
 				.ReturnsAsync(response);
 
 			bool errorWasSent = false;
@@ -96,7 +96,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 		{
 			// Arrange
 			Fixture.Freeze<Mock<IDepartmentApi>>()
-				.Setup(n => n.V1DepartmentNamesGetAsync())
+				.Setup(n => n.V1DepartmentGetAsync())
 				.Throws(new ApiException());
 
 			bool errorWasSent = false;

@@ -234,5 +234,45 @@ namespace WeekPlanner.Services.Mocks
         {
             throw new NotImplementedException();
         }
+
+        public void V1AccountResetPasswordPost(string username, string password, string code = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApiResponse<object> V1AccountResetPasswordPostWithHttpInfo(string username, string password, string code = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Response V1AccountSetPasswordPost(string newPassword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ApiResponse<Response> V1AccountSetPasswordPostWithHttpInfo(string newPassword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task V1AccountResetPasswordPostAsync(string username, string password, string code = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<object>> V1AccountResetPasswordPostAsyncWithHttpInfo(string username, string password, string code = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Response> V1AccountSetPasswordPostAsync(string newPassword)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<Response>> V1AccountSetPasswordPostAsyncWithHttpInfo(string newPassword)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
