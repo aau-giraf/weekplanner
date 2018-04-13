@@ -10,7 +10,51 @@
     Title="Aktivitet">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{Binding Hello}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <!--Left Side-->
+                <StackLayout
+                    Grid.Column="0">
+                    <ffimageloading:CachedImage
+                        Source="{Binding ImageSource}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Grid.Column="0"
+                            Text="Ændre" />
+                        <Button
+                            Grid.Column="1"
+                            Text="Aflys" />
+                        <Button
+                            Grid.Column="2"
+                            Text="Slet" />
+                    </Grid>
+                </StackLayout>
+                <!--Right Side-->
+                <StackLayout
+                    Grid.Column="1">
+                    <!--Timer-->
+                    <ffimageloading:CachedImage
+                        LoadingPlaceholder="image_loading.png"
+                        ErrorPlaceholder="image_loading.png"
+                        Source="image_loading.png" />
+                    <Entry
+                        Placeholder="Tid" />
+                    <Button
+                        Text="Slet" />
+                </StackLayout>
+            </Grid>
+            <Button
+                Text="Luk" />
+            <Button
+                Text="Gem" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
