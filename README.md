@@ -14,6 +14,11 @@ We are using the Gitflow brancing pattern so all development must be done in eit
 2. `git checkout develop`
 3. Go to Phabricator to see which user stories need to be implemented
 
+## Swagger
+TODO: How to generate swagger etc.
+
+Swagger has a problem generating enums, which is problem in the generated WeekDayDTO. Following hack solves it:
+Start the enum from 0 instead of 1 to reflect the actully backend
 ## Implementing a User Story
 
 - Create a new View (ContentPage)
