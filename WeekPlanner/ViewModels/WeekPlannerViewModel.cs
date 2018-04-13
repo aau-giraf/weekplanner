@@ -21,21 +21,17 @@ namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
-
         private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
         private readonly ILoginService _loginService;
-        
+
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
-        
+
         public bool EditModeEnabled
         {
-            get
-            {
-                return _editModeEnabled;
-            }
+            get { return _editModeEnabled; }
             set
             {
                 _editModeEnabled = value;
@@ -49,11 +45,12 @@ namespace WeekPlanner.ViewModels
             set
             {
                 _weekDto = value;
-                RaisePropertyChanged(() =>  WeekDTO);
+                RaisePropertyChanged(() => WeekDTO);
             }
         }
-        
+
         public ICommand ToggleEditModeCommand => new Command(() => EditModeEnabled = !EditModeEnabled);
+
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
             _weekdayToAddPictogramTo = weekday;
@@ -66,7 +63,7 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _pictogramApi = pictogramApi;
             _loginService = loginService;
-            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest, 
+            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
                 async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 InsertPicto);
@@ -88,9 +85,8 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => SundayPictos);
             RaisePropertyChanged(() => CountOfMaxHeightWeekday);
             RaisePropertyChanged(() => WeekdayPictos);
-
         }
-        
+
         public override async Task InitializeAsync(object navigationData)
         {
             if (navigationData is UserNameDTO userNameDTO)
@@ -133,7 +129,8 @@ namespace WeekPlanner.ViewModels
 
             if (result.Success == true)
             {
-                MessagingCenter.Send(this, MessageKeys.RequestSucceeded, $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
+                MessagingCenter.Send(this, MessageKeys.RequestSucceeded,
+                    $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
             }
             else
             {
@@ -147,18 +144,19 @@ namespace WeekPlanner.ViewModels
             {
                 throw new InvalidDataException("WeekDTO should always have an Id when updating.");
             }
+
             ResponseWeekDTO result;
             try
             {
                 // TODO remove cast to int when backend has been fixed
-                result = await _weekApi.V1WeekByIdPutAsync((int) WeekDTO.Id, WeekDTO); 
+                result = await _weekApi.V1WeekByIdPutAsync((int) WeekDTO.Id, WeekDTO);
             }
             catch (ApiException)
             {
                 SendRequestFailedMessage();
                 return;
             }
-            
+
             if (result.Success == true)
             {
                 MessagingCenter.Send(this, MessageKeys.RequestSucceeded, $"Ugeplanen '{result.Data.Name}' blev gemt.");
@@ -188,15 +186,7 @@ namespace WeekPlanner.ViewModels
             if (result.Success == true && result.Data.Days != null)
             {
                 WeekDTO = result.Data;
-                try
-                {
-                    await GetAndSetPictograms();
-                }
-                catch (ApiException)
-                {
-                    SendRequestFailedMessage();
-                    await NavigationService.PopAsync();
-                }
+                SetPictograms();
             }
             else
             {
@@ -205,7 +195,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private async Task GetAndSetPictograms()
+        private void SetPictograms()
         {
             var tempDict = new Dictionary<DayEnum, ObservableCollection<ImageSource>>();
             foreach (WeekdayDTO day in WeekDTO.Days)
@@ -214,12 +204,8 @@ namespace WeekPlanner.ViewModels
                 ObservableCollection<ImageSource> pictos = new ObservableCollection<ImageSource>();
                 foreach (var eleID in day.ElementIDs)
                 {
-                    ResponsePictogramDTO response = await _pictogramApi.V1PictogramByIdGetAsync(eleID);
-                    if (response?.Success == true)
-                    {
-                        pictos.Add(
-                            ImageSource.FromUri(new Uri(GlobalSettings.DefaultEndpoint + response.Data.ImageUrl)));
-                    }
+                    pictos.Add(ImageSource.FromUri(
+                        new Uri(GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw")));
                 }
 
                 tempDict.Add(weekday, pictos);
@@ -227,8 +213,8 @@ namespace WeekPlanner.ViewModels
 
             WeekdayPictos = tempDict;
         }
-        
-         #region Boilerplate for each weekday's pictos
+
+        #region Boilerplate for each weekday's pictos
 
         private Dictionary<DayEnum, ObservableCollection<ImageSource>> _weekdayPictos =
             new Dictionary<DayEnum, ObservableCollection<ImageSource>>();
@@ -250,15 +236,12 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => WeekdayPictos);
             }
         }
-        
+
         public int CountOfMaxHeightWeekday
         {
-            get
-            {
-                return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0;
-            }
+            get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
         }
-        
+
         public ObservableCollection<ImageSource> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
 
         public ObservableCollection<ImageSource> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
@@ -282,11 +265,11 @@ namespace WeekPlanner.ViewModels
 
         #endregion
 
-        private void SendRequestFailedMessage(ResponseWeekDTO.ErrorKeyEnum? errorKeyEnum = ResponseWeekDTO.ErrorKeyEnum.Error)
+        private void SendRequestFailedMessage(
+            ResponseWeekDTO.ErrorKeyEnum? errorKeyEnum = ResponseWeekDTO.ErrorKeyEnum.Error)
         {
             var friendlyErrorMessage = errorKeyEnum.ToFriendlyString();
             MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
         }
-        
     }
 }
