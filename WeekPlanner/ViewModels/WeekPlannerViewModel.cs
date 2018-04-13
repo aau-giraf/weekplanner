@@ -21,7 +21,6 @@ namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
-
         private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
         private readonly ILoginService _loginService;
@@ -59,6 +58,9 @@ namespace WeekPlanner.ViewModels
             _weekdayToAddPictogramTo = weekday;
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
+
+        public ICommand PictoClickedCommand => new Command<ImageSource>(async imageSource => 
+            await NavigationService.NavigateToAsync<ActivityViewModel>());
 
         public WeekPlannerViewModel(INavigationService navigationService, IWeekApi weekApi,
             ILoginService loginService, IPictogramApi pictogramApi) : base(navigationService)
