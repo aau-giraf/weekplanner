@@ -47,7 +47,7 @@ namespace WeekPlanner.ViewModels
 
             try
             {
-                result = await _departmentApi.V1DepartmentNamesGetAsync();
+                result = await _departmentApi.V1DepartmentGetAsync();
             }
             catch (ApiException)
             {
