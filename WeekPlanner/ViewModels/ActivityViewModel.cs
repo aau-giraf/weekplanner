@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using IO.Swagger.Model;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -12,7 +14,8 @@ namespace WeekPlanner.ViewModels
 
         public ActivityViewModel(INavigationService navigationService) : base(navigationService)
         {
-
+            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
+                ChangePicto);
         }
 
         override public async Task InitializeAsync(object navigationData)
@@ -32,6 +35,14 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ImageSource);
             }
         }
-        public string Hello { get; set; } = "The One";
+
+        public ICommand ChangePictoCommand => new Command(async () => {
+            await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
+        });
+
+        private void ChangePicto(PictogramSearchViewModel pictoVM, PictogramDTO pictogramDTO)
+        {
+            ImageSource = pictogramDTO.ImageUrl;
+        }
     }
 }
