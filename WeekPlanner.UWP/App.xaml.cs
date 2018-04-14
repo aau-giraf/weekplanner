@@ -1,4 +1,5 @@
-﻿using System;
+using FFImageLoading.Forms.WinUWP;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,7 +50,9 @@ namespace WeekPlanner.UWP
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-                Xamarin.Forms.Forms.Init(e); 
+                Xamarin.Forms.Forms.Init(e);
+                CachedImageRenderer.Init();
+
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
