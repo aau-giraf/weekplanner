@@ -13,7 +13,7 @@
                 <!--Left Side-->
                 <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
-                    <ffimageloading:CachedImage Source="{Binding ImageSource}" />
+                    <Image Source="{Binding ImageSource}" />
                     <Grid Padding="30">
                         <Button Grid.Column="0"
                                 Text="Ændre"
@@ -21,14 +21,15 @@
                         <Button Grid.Column="1"
                                 Text="Aflys" />
                         <Button Grid.Column="2"
-                                Text="Slet" />
+                                Text="Slet"
+                                Command="{Binding DeleteActivityCommand}"/>
                     </Grid>
                 </StackLayout>
                 <!--Right Side-->
                 <StackLayout Grid.Column="1"
                              VerticalOptions="CenterAndExpand">
                     <!--Timer-->
-                    <ffimageloading:CachedImage Source="image_loading.png" />
+                    <Image Source="image_loading.png" />
                     <Grid Padding="30">
                         <Entry Placeholder="Tid"
                                Grid.Column="0" />

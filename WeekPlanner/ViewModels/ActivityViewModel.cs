@@ -40,6 +40,13 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
+        public ICommand DeleteActivityCommand=> new Command(async () => {
+            // TODO: send message delete with resource.Id
+            int activityID = 42;
+            MessagingCenter.Send(this, MessageKeys.DeleteActivity, activityID);
+            await NavigationService.PopAsync();
+        });
+
         private void ChangePicto(PictogramSearchViewModel pictoVM, PictogramDTO pictogramDTO)
         {
             ImageSource = pictogramDTO.ImageUrl;

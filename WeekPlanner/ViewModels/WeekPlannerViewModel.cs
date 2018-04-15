@@ -72,6 +72,8 @@ namespace WeekPlanner.ViewModels
                 async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 InsertPicto);
+            MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
+                DeleteActivity);
         }
 
         private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
@@ -205,6 +207,10 @@ namespace WeekPlanner.ViewModels
                 SendRequestFailedMessage(result.ErrorKey);
                 await NavigationService.PopAsync();
             }
+        }
+
+        private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
+            // TODO: Remove activityID from List<Resource> 
         }
 
         private async Task GetAndSetPictograms()
