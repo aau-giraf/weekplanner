@@ -159,11 +159,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ResponseListPictogramDTO</returns>
-        ResponseListPictogramDTO V1PictogramGet (int? p, int? n, string q = null);
+        ResponseListPictogramDTO V1PictogramGet (int? page, int? pageSize, string query = null);
 
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
@@ -172,11 +172,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ApiResponse of ResponseListPictogramDTO</returns>
-        ApiResponse<ResponseListPictogramDTO> V1PictogramGetWithHttpInfo (int? p, int? n, string q = null);
+        ApiResponse<ResponseListPictogramDTO> V1PictogramGetWithHttpInfo (int? page, int? pageSize, string query = null);
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
         /// </summary>
@@ -335,11 +335,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ResponseListPictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? p, int? n, string q = null);
+        System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? page, int? pageSize, string query = null);
 
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
@@ -348,11 +348,11 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ApiResponse (ResponseListPictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? p, int? n, string q = null);
+        System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? page, int? pageSize, string query = null);
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
         /// </summary>
@@ -1380,13 +1380,13 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ResponseListPictogramDTO</returns>
-        public ResponseListPictogramDTO V1PictogramGet (int? p, int? n, string q = null)
+        public ResponseListPictogramDTO V1PictogramGet (int? page, int? pageSize, string query = null)
         {
-             ApiResponse<ResponseListPictogramDTO> localVarResponse = V1PictogramGetWithHttpInfo(p, n, q);
+             ApiResponse<ResponseListPictogramDTO> localVarResponse = V1PictogramGetWithHttpInfo(page, pageSize, query);
              return localVarResponse.Data;
         }
 
@@ -1394,18 +1394,18 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>ApiResponse of ResponseListPictogramDTO</returns>
-        public ApiResponse< ResponseListPictogramDTO > V1PictogramGetWithHttpInfo (int? p, int? n, string q = null)
+        public ApiResponse< ResponseListPictogramDTO > V1PictogramGetWithHttpInfo (int? page, int? pageSize, string query = null)
         {
-            // verify the required parameter 'p' is set
-            if (p == null)
-                throw new ApiException(400, "Missing required parameter 'p' when calling PictogramApi->V1PictogramGet");
-            // verify the required parameter 'n' is set
-            if (n == null)
-                throw new ApiException(400, "Missing required parameter 'n' when calling PictogramApi->V1PictogramGet");
+            // verify the required parameter 'page' is set
+            if (page == null)
+                throw new ApiException(400, "Missing required parameter 'page' when calling PictogramApi->V1PictogramGet");
+            // verify the required parameter 'pageSize' is set
+            if (pageSize == null)
+                throw new ApiException(400, "Missing required parameter 'pageSize' when calling PictogramApi->V1PictogramGet");
 
             var localVarPath = "/v1/Pictogram";
             var localVarPathParams = new Dictionary<String, String>();
@@ -1430,9 +1430,9 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (q != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "q", q)); // query parameter
-            if (p != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "p", p)); // query parameter
-            if (n != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "n", n)); // query parameter
+            if (query != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "query", query)); // query parameter
+            if (page != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "page", page)); // query parameter
+            if (pageSize != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "pageSize", pageSize)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -1462,13 +1462,13 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ResponseListPictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? p, int? n, string q = null)
+        public async System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? page, int? pageSize, string query = null)
         {
-             ApiResponse<ResponseListPictogramDTO> localVarResponse = await V1PictogramGetAsyncWithHttpInfo(p, n, q);
+             ApiResponse<ResponseListPictogramDTO> localVarResponse = await V1PictogramGetAsyncWithHttpInfo(page, pageSize, query);
              return localVarResponse.Data;
 
         }
@@ -1477,18 +1477,18 @@ namespace IO.Swagger.Api
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)). 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="p">Page number</param>
-        /// <param name="n">Number of pictograms per page, defaults to 10</param>
-        /// <param name="q">The query string. pictograms are filtered based on this string if passed (optional)</param>
+        /// <param name="page">Page number</param>
+        /// <param name="pageSize">Number of pictograms per page</param>
+        /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
         /// <returns>Task of ApiResponse (ResponseListPictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? p, int? n, string q = null)
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? page, int? pageSize, string query = null)
         {
-            // verify the required parameter 'p' is set
-            if (p == null)
-                throw new ApiException(400, "Missing required parameter 'p' when calling PictogramApi->V1PictogramGet");
-            // verify the required parameter 'n' is set
-            if (n == null)
-                throw new ApiException(400, "Missing required parameter 'n' when calling PictogramApi->V1PictogramGet");
+            // verify the required parameter 'page' is set
+            if (page == null)
+                throw new ApiException(400, "Missing required parameter 'page' when calling PictogramApi->V1PictogramGet");
+            // verify the required parameter 'pageSize' is set
+            if (pageSize == null)
+                throw new ApiException(400, "Missing required parameter 'pageSize' when calling PictogramApi->V1PictogramGet");
 
             var localVarPath = "/v1/Pictogram";
             var localVarPathParams = new Dictionary<String, String>();
@@ -1513,9 +1513,9 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (q != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "q", q)); // query parameter
-            if (p != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "p", p)); // query parameter
-            if (n != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "n", n)); // query parameter
+            if (query != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "query", query)); // query parameter
+            if (page != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "page", page)); // query parameter
+            if (pageSize != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "pageSize", pageSize)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
