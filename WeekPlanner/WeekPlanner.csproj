@@ -32,4 +32,4 @@
       <DependentUpon>ChooseDepartmentPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
- </Project>
+</Project>

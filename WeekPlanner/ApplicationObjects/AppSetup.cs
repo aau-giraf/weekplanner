@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Views;
 using WeekPlanner.ViewModels;
