@@ -159,6 +159,27 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
         ApiResponse<ResponseListUserNameDTO> V1UserByUsernameCitizensGetWithHttpInfo (string username);
         /// <summary>
+        /// Removes a user from its department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>ResponseDepartmentDTO</returns>
+        ResponseDepartmentDTO V1UserByUsernameDepartmentDelete (string username);
+
+        /// <summary>
+        /// Removes a user from its department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
+        ApiResponse<ResponseDepartmentDTO> V1UserByUsernameDepartmentDeleteWithHttpInfo (string username);
+        /// <summary>
         /// Find information on the user with the username supplied as a url query parameter or the current user.
         /// </summary>
         /// <remarks>
@@ -626,6 +647,27 @@ namespace IO.Swagger.Api
         /// <param name="username">Username.</param>
         /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByUsernameCitizensGetAsyncWithHttpInfo (string username);
+        /// <summary>
+        /// Removes a user from its department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>Task of ResponseDepartmentDTO</returns>
+        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1UserByUsernameDepartmentDeleteAsync (string username);
+
+        /// <summary>
+        /// Removes a user from its department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1UserByUsernameDepartmentDeleteAsyncWithHttpInfo (string username);
         /// <summary>
         /// Find information on the user with the username supplied as a url query parameter or the current user.
         /// </summary>
@@ -2026,6 +2068,153 @@ namespace IO.Swagger.Api
             return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
+        }
+
+        /// <summary>
+        /// Removes a user from its department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>ResponseDepartmentDTO</returns>
+        public ResponseDepartmentDTO V1UserByUsernameDepartmentDelete (string username)
+        {
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1UserByUsernameDepartmentDeleteWithHttpInfo(username);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Removes a user from its department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
+        public ApiResponse< ResponseDepartmentDTO > V1UserByUsernameDepartmentDeleteWithHttpInfo (string username)
+        {
+            // verify the required parameter 'username' is set
+            if (username == null)
+                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameDepartmentDelete");
+
+            var localVarPath = "/v1/User/{username}/department";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByUsernameDepartmentDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
+        }
+
+        /// <summary>
+        /// Removes a user from its department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>Task of ResponseDepartmentDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1UserByUsernameDepartmentDeleteAsync (string username)
+        {
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1UserByUsernameDepartmentDeleteAsyncWithHttpInfo(username);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Removes a user from its department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="username">Username.</param>
+        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1UserByUsernameDepartmentDeleteAsyncWithHttpInfo (string username)
+        {
+            // verify the required parameter 'username' is set
+            if (username == null)
+                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameDepartmentDelete");
+
+            var localVarPath = "/v1/User/{username}/department";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByUsernameDepartmentDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
         }
 
         /// <summary>

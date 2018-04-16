@@ -37,7 +37,7 @@ namespace IO.Swagger.Model
         /// <param name="Name">The name of the department..</param>
         /// <param name="Members">A list of the usernames of all members of the department..</param>
         /// <param name="Resources">A list of ids of all resources owned by the department..</param>
-        public DepartmentDTO(long? Id = default(long?), string Name = default(string), List<string> Members = default(List<string>), List<long?> Resources = default(List<long?>))
+        public DepartmentDTO(long? Id = default(long?), string Name = default(string), List<UserNameDTO> Members = default(List<UserNameDTO>), List<long?> Resources = default(List<long?>))
         {
             this.Id = Id;
             this.Name = Name;
@@ -64,7 +64,7 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <value>A list of the usernames of all members of the department.</value>
         [DataMember(Name="members", EmitDefaultValue=false)]
-        public List<string> Members { get; set; }
+        public List<UserNameDTO> Members { get; set; }
 
         /// <summary>
         /// A list of ids of all resources owned by the department.
