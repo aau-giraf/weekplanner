@@ -22,10 +22,7 @@
                     Text="Vælg skabelon"
                     Command="{Binding NavigateToChooseTemplateCommand}" />
                 <Button
-                    Text="Vælg afdeling"
-                    Command="{Binding NavigateToChooseDepartmentCommand}" />
-                <Button 
-                    Text="Søg efter pictogram" 
+                    Text="Søg efter pictogram"
                     Command="{Binding NavigateToPictogramSearchCommand}" />
             </StackLayout>
         </ScrollView>

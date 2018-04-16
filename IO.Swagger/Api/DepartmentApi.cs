@@ -25,13 +25,59 @@ namespace IO.Swagger.Api
     {
         #region Synchronous Operations
         /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>ResponseDepartmentDTO</returns>
+        ResponseDepartmentDTO V1DepartmentByDepartmentIdResourceByResourceIdPost (long? departmentId, long? resourceId);
+
+        /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
+        ApiResponse<ResponseDepartmentDTO> V1DepartmentByDepartmentIdResourceByResourceIdPostWithHttpInfo (long? departmentId, long? resourceId);
+        /// <summary>
+        /// Add a user to the given department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>ResponseDepartmentDTO</returns>
+        ResponseDepartmentDTO V1DepartmentByDepartmentIdUserByUserIdPost (long? departmentId, string userId);
+
+        /// <summary>
+        /// Add a user to the given department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
+        ApiResponse<ResponseDepartmentDTO> V1DepartmentByDepartmentIdUserByUserIdPostWithHttpInfo (long? departmentId, string userId);
+        /// <summary>
         /// Gets the citizen names.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>ResponseListUserNameDTO</returns>
         ResponseListUserNameDTO V1DepartmentByIdCitizensGet (long? id);
 
@@ -42,7 +88,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
         ApiResponse<ResponseListUserNameDTO> V1DepartmentByIdCitizensGetWithHttpInfo (long? id);
         /// <summary>
@@ -52,7 +98,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>ResponseDepartmentDTO</returns>
         ResponseDepartmentDTO V1DepartmentByIdGet (long? id);
 
@@ -63,7 +109,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
         ApiResponse<ResponseDepartmentDTO> V1DepartmentByIdGetWithHttpInfo (long? id);
         /// <summary>
@@ -74,7 +120,7 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ResponseListDepartmentNameDTO</returns>
-        ResponseListDepartmentNameDTO V1DepartmentNamesGet ();
+        ResponseListDepartmentNameDTO V1DepartmentGet ();
 
         /// <summary>
         /// Gets the department names.
@@ -84,7 +130,7 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseListDepartmentNameDTO</returns>
-        ApiResponse<ResponseListDepartmentNameDTO> V1DepartmentNamesGetWithHttpInfo ();
+        ApiResponse<ResponseListDepartmentNameDTO> V1DepartmentGetWithHttpInfo ();
         /// <summary>
         /// Create a new department. it&#39;s only necesary to supply the departments name
         /// </summary>
@@ -107,38 +153,15 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
         ApiResponse<ResponseDepartmentDTO> V1DepartmentPostWithHttpInfo (DepartmentDTO depDTO = null);
         /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        ResponseDepartmentDTO V1DepartmentResourceByDepartmentIDPost (long? departmentId, ResourceIdDTO resourceDTO = null);
-
-        /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        ApiResponse<ResponseDepartmentDTO> V1DepartmentResourceByDepartmentIDPostWithHttpInfo (long? departmentId, ResourceIdDTO resourceDTO = null);
-        /// <summary>
         /// Removes a resource from the users department.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>ResponseDepartmentDTO</returns>
-        ResponseDepartmentDTO V1DepartmentResourceDelete (ResourceIdDTO resourceDTO = null);
+        ResponseDepartmentDTO V1DepartmentResourceByResourceIdDelete (long? resourceId);
 
         /// <summary>
         /// Removes a resource from the users department.
@@ -147,57 +170,57 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        ApiResponse<ResponseDepartmentDTO> V1DepartmentResourceDeleteWithHttpInfo (ResourceIdDTO resourceDTO = null);
-        /// <summary>
-        /// Removes a user from a given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        ResponseDepartmentDTO V1DepartmentUserByDepartmentIDDelete (long? departmentId, GirafUserDTO usr = null);
-
-        /// <summary>
-        /// Removes a user from a given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        ApiResponse<ResponseDepartmentDTO> V1DepartmentUserByDepartmentIDDeleteWithHttpInfo (long? departmentId, GirafUserDTO usr = null);
-        /// <summary>
-        /// Add a user to the given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        ResponseDepartmentDTO V1DepartmentUserByDepartmentIDPost (long? departmentId, GirafUserDTO usr = null);
-
-        /// <summary>
-        /// Add a user to the given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        ApiResponse<ResponseDepartmentDTO> V1DepartmentUserByDepartmentIDPostWithHttpInfo (long? departmentId, GirafUserDTO usr = null);
+        ApiResponse<ResponseDepartmentDTO> V1DepartmentResourceByResourceIdDeleteWithHttpInfo (long? resourceId);
         #endregion Synchronous Operations
         #region Asynchronous Operations
+        /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>Task of ResponseDepartmentDTO</returns>
+        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentByDepartmentIdResourceByResourceIdPostAsync (long? departmentId, long? resourceId);
+
+        /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByDepartmentIdResourceByResourceIdPostAsyncWithHttpInfo (long? departmentId, long? resourceId);
+        /// <summary>
+        /// Add a user to the given department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>Task of ResponseDepartmentDTO</returns>
+        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentByDepartmentIdUserByUserIdPostAsync (long? departmentId, string userId);
+
+        /// <summary>
+        /// Add a user to the given department.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByDepartmentIdUserByUserIdPostAsyncWithHttpInfo (long? departmentId, string userId);
         /// <summary>
         /// Gets the citizen names.
         /// </summary>
@@ -205,7 +228,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>Task of ResponseListUserNameDTO</returns>
         System.Threading.Tasks.Task<ResponseListUserNameDTO> V1DepartmentByIdCitizensGetAsync (long? id);
 
@@ -216,7 +239,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1DepartmentByIdCitizensGetAsyncWithHttpInfo (long? id);
         /// <summary>
@@ -226,7 +249,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>Task of ResponseDepartmentDTO</returns>
         System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentByIdGetAsync (long? id);
 
@@ -237,7 +260,7 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByIdGetAsyncWithHttpInfo (long? id);
         /// <summary>
@@ -248,7 +271,7 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ResponseListDepartmentNameDTO</returns>
-        System.Threading.Tasks.Task<ResponseListDepartmentNameDTO> V1DepartmentNamesGetAsync ();
+        System.Threading.Tasks.Task<ResponseListDepartmentNameDTO> V1DepartmentGetAsync ();
 
         /// <summary>
         /// Gets the department names.
@@ -258,7 +281,7 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseListDepartmentNameDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseListDepartmentNameDTO>> V1DepartmentNamesGetAsyncWithHttpInfo ();
+        System.Threading.Tasks.Task<ApiResponse<ResponseListDepartmentNameDTO>> V1DepartmentGetAsyncWithHttpInfo ();
         /// <summary>
         /// Create a new department. it&#39;s only necesary to supply the departments name
         /// </summary>
@@ -281,38 +304,15 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentPostAsyncWithHttpInfo (DepartmentDTO depDTO = null);
         /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentResourceByDepartmentIDPostAsync (long? departmentId, ResourceIdDTO resourceDTO = null);
-
-        /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentResourceByDepartmentIDPostAsyncWithHttpInfo (long? departmentId, ResourceIdDTO resourceDTO = null);
-        /// <summary>
         /// Removes a resource from the users department.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>Task of ResponseDepartmentDTO</returns>
-        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentResourceDeleteAsync (ResourceIdDTO resourceDTO = null);
+        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentResourceByResourceIdDeleteAsync (long? resourceId);
 
         /// <summary>
         /// Removes a resource from the users department.
@@ -321,55 +321,9 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentResourceDeleteAsyncWithHttpInfo (ResourceIdDTO resourceDTO = null);
-        /// <summary>
-        /// Removes a user from a given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentUserByDepartmentIDDeleteAsync (long? departmentId, GirafUserDTO usr = null);
-
-        /// <summary>
-        /// Removes a user from a given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentUserByDepartmentIDDeleteAsyncWithHttpInfo (long? departmentId, GirafUserDTO usr = null);
-        /// <summary>
-        /// Add a user to the given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentUserByDepartmentIDPostAsync (long? departmentId, GirafUserDTO usr = null);
-
-        /// <summary>
-        /// Add a user to the given department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentUserByDepartmentIDPostAsyncWithHttpInfo (long? departmentId, GirafUserDTO usr = null);
+        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentResourceByResourceIdDeleteAsyncWithHttpInfo (long? resourceId);
         #endregion Asynchronous Operations
     }
 
@@ -471,10 +425,328 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>ResponseDepartmentDTO</returns>
+        public ResponseDepartmentDTO V1DepartmentByDepartmentIdResourceByResourceIdPost (long? departmentId, long? resourceId)
+        {
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1DepartmentByDepartmentIdResourceByResourceIdPostWithHttpInfo(departmentId, resourceId);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
+        public ApiResponse< ResponseDepartmentDTO > V1DepartmentByDepartmentIdResourceByResourceIdPostWithHttpInfo (long? departmentId, long? resourceId)
+        {
+            // verify the required parameter 'departmentId' is set
+            if (departmentId == null)
+                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentByDepartmentIdResourceByResourceIdPost");
+            // verify the required parameter 'resourceId' is set
+            if (resourceId == null)
+                throw new ApiException(400, "Missing required parameter 'resourceId' when calling DepartmentApi->V1DepartmentByDepartmentIdResourceByResourceIdPost");
+
+            var localVarPath = "/v1/Department/{departmentId}/resource/{resourceId}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
+            if (resourceId != null) localVarPathParams.Add("resourceId", Configuration.ApiClient.ParameterToString(resourceId)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1DepartmentByDepartmentIdResourceByResourceIdPost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
+        }
+
+        /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>Task of ResponseDepartmentDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentByDepartmentIdResourceByResourceIdPostAsync (long? departmentId, long? resourceId)
+        {
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1DepartmentByDepartmentIdResourceByResourceIdPostAsyncWithHttpInfo(departmentId, resourceId);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId">Id of the department to add the resource to.</param>
+        /// <param name="resourceId">Id of the resource to add to the department.</param>
+        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByDepartmentIdResourceByResourceIdPostAsyncWithHttpInfo (long? departmentId, long? resourceId)
+        {
+            // verify the required parameter 'departmentId' is set
+            if (departmentId == null)
+                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentByDepartmentIdResourceByResourceIdPost");
+            // verify the required parameter 'resourceId' is set
+            if (resourceId == null)
+                throw new ApiException(400, "Missing required parameter 'resourceId' when calling DepartmentApi->V1DepartmentByDepartmentIdResourceByResourceIdPost");
+
+            var localVarPath = "/v1/Department/{departmentId}/resource/{resourceId}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
+            if (resourceId != null) localVarPathParams.Add("resourceId", Configuration.ApiClient.ParameterToString(resourceId)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1DepartmentByDepartmentIdResourceByResourceIdPost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
+        }
+
+        /// <summary>
+        /// Add a user to the given department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>ResponseDepartmentDTO</returns>
+        public ResponseDepartmentDTO V1DepartmentByDepartmentIdUserByUserIdPost (long? departmentId, string userId)
+        {
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1DepartmentByDepartmentIdUserByUserIdPostWithHttpInfo(departmentId, userId);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Add a user to the given department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
+        public ApiResponse< ResponseDepartmentDTO > V1DepartmentByDepartmentIdUserByUserIdPostWithHttpInfo (long? departmentId, string userId)
+        {
+            // verify the required parameter 'departmentId' is set
+            if (departmentId == null)
+                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentByDepartmentIdUserByUserIdPost");
+            // verify the required parameter 'userId' is set
+            if (userId == null)
+                throw new ApiException(400, "Missing required parameter 'userId' when calling DepartmentApi->V1DepartmentByDepartmentIdUserByUserIdPost");
+
+            var localVarPath = "/v1/Department/{departmentId}/user/{userId}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
+            if (userId != null) localVarPathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1DepartmentByDepartmentIdUserByUserIdPost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
+        }
+
+        /// <summary>
+        /// Add a user to the given department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>Task of ResponseDepartmentDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentByDepartmentIdUserByUserIdPostAsync (long? departmentId, string userId)
+        {
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1DepartmentByDepartmentIdUserByUserIdPostAsyncWithHttpInfo(departmentId, userId);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Add a user to the given department. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="departmentId"></param>
+        /// <param name="userId">The ID of a GirafUser to be added to the department.</param>
+        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByDepartmentIdUserByUserIdPostAsyncWithHttpInfo (long? departmentId, string userId)
+        {
+            // verify the required parameter 'departmentId' is set
+            if (departmentId == null)
+                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentByDepartmentIdUserByUserIdPost");
+            // verify the required parameter 'userId' is set
+            if (userId == null)
+                throw new ApiException(400, "Missing required parameter 'userId' when calling DepartmentApi->V1DepartmentByDepartmentIdUserByUserIdPost");
+
+            var localVarPath = "/v1/Department/{departmentId}/user/{userId}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
+            if (userId != null) localVarPathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1DepartmentByDepartmentIdUserByUserIdPost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
+        }
+
+        /// <summary>
         /// Gets the citizen names. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>ResponseListUserNameDTO</returns>
         public ResponseListUserNameDTO V1DepartmentByIdCitizensGet (long? id)
         {
@@ -486,7 +758,7 @@ namespace IO.Swagger.Api
         /// Gets the citizen names. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
         public ApiResponse< ResponseListUserNameDTO > V1DepartmentByIdCitizensGetWithHttpInfo (long? id)
         {
@@ -547,7 +819,7 @@ namespace IO.Swagger.Api
         /// Gets the citizen names. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>Task of ResponseListUserNameDTO</returns>
         public async System.Threading.Tasks.Task<ResponseListUserNameDTO> V1DepartmentByIdCitizensGetAsync (long? id)
         {
@@ -560,7 +832,7 @@ namespace IO.Swagger.Api
         /// Gets the citizen names. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Identifier.</param>
+        /// <param name="id">Department ID.</param>
         /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1DepartmentByIdCitizensGetAsyncWithHttpInfo (long? id)
         {
@@ -621,7 +893,7 @@ namespace IO.Swagger.Api
         /// Get the department with the specified id. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>ResponseDepartmentDTO</returns>
         public ResponseDepartmentDTO V1DepartmentByIdGet (long? id)
         {
@@ -633,7 +905,7 @@ namespace IO.Swagger.Api
         /// Get the department with the specified id. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
         public ApiResponse< ResponseDepartmentDTO > V1DepartmentByIdGetWithHttpInfo (long? id)
         {
@@ -694,7 +966,7 @@ namespace IO.Swagger.Api
         /// Get the department with the specified id. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>Task of ResponseDepartmentDTO</returns>
         public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentByIdGetAsync (long? id)
         {
@@ -707,7 +979,7 @@ namespace IO.Swagger.Api
         /// Get the department with the specified id. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the department to search for.</param>
+        /// <param name="id">The id of the department to retrieve.</param>
         /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByIdGetAsyncWithHttpInfo (long? id)
         {
@@ -769,9 +1041,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ResponseListDepartmentNameDTO</returns>
-        public ResponseListDepartmentNameDTO V1DepartmentNamesGet ()
+        public ResponseListDepartmentNameDTO V1DepartmentGet ()
         {
-             ApiResponse<ResponseListDepartmentNameDTO> localVarResponse = V1DepartmentNamesGetWithHttpInfo();
+             ApiResponse<ResponseListDepartmentNameDTO> localVarResponse = V1DepartmentGetWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -780,10 +1052,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseListDepartmentNameDTO</returns>
-        public ApiResponse< ResponseListDepartmentNameDTO > V1DepartmentNamesGetWithHttpInfo ()
+        public ApiResponse< ResponseListDepartmentNameDTO > V1DepartmentGetWithHttpInfo ()
         {
 
-            var localVarPath = "/v1/Department/names";
+            var localVarPath = "/v1/Department";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -822,7 +1094,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1DepartmentNamesGet", localVarResponse);
+                Exception exception = ExceptionFactory("V1DepartmentGet", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -836,9 +1108,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ResponseListDepartmentNameDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseListDepartmentNameDTO> V1DepartmentNamesGetAsync ()
+        public async System.Threading.Tasks.Task<ResponseListDepartmentNameDTO> V1DepartmentGetAsync ()
         {
-             ApiResponse<ResponseListDepartmentNameDTO> localVarResponse = await V1DepartmentNamesGetAsyncWithHttpInfo();
+             ApiResponse<ResponseListDepartmentNameDTO> localVarResponse = await V1DepartmentGetAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -848,10 +1120,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseListDepartmentNameDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseListDepartmentNameDTO>> V1DepartmentNamesGetAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseListDepartmentNameDTO>> V1DepartmentGetAsyncWithHttpInfo ()
         {
 
-            var localVarPath = "/v1/Department/names";
+            var localVarPath = "/v1/Department";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -890,7 +1162,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1DepartmentNamesGet", localVarResponse);
+                Exception exception = ExceptionFactory("V1DepartmentGet", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -1063,189 +1335,14 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        public ResponseDepartmentDTO V1DepartmentResourceByDepartmentIDPost (long? departmentId, ResourceIdDTO resourceDTO = null)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1DepartmentResourceByDepartmentIDPostWithHttpInfo(departmentId, resourceDTO);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        public ApiResponse< ResponseDepartmentDTO > V1DepartmentResourceByDepartmentIDPostWithHttpInfo (long? departmentId, ResourceIdDTO resourceDTO = null)
-        {
-            // verify the required parameter 'departmentId' is set
-            if (departmentId == null)
-                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentResourceByDepartmentIDPost");
-
-            var localVarPath = "/v1/Department/resource/{departmentID}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
-            if (resourceDTO != null && resourceDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceDTO; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1DepartmentResourceByDepartmentIDPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentResourceByDepartmentIDPostAsync (long? departmentId, ResourceIdDTO resourceDTO = null)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1DepartmentResourceByDepartmentIDPostAsyncWithHttpInfo(departmentId, resourceDTO);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Add a resource to the given department. After this call, the department owns the resource and it is available to all its members. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department to add the resource to.</param>
-        /// <param name="resourceDTO"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentResourceByDepartmentIDPostAsyncWithHttpInfo (long? departmentId, ResourceIdDTO resourceDTO = null)
-        {
-            // verify the required parameter 'departmentId' is set
-            if (departmentId == null)
-                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentResourceByDepartmentIDPost");
-
-            var localVarPath = "/v1/Department/resource/{departmentID}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
-            if (resourceDTO != null && resourceDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceDTO; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1DepartmentResourceByDepartmentIDPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
         /// Removes a resource from the users department. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>ResponseDepartmentDTO</returns>
-        public ResponseDepartmentDTO V1DepartmentResourceDelete (ResourceIdDTO resourceDTO = null)
+        public ResponseDepartmentDTO V1DepartmentResourceByResourceIdDelete (long? resourceId)
         {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1DepartmentResourceDeleteWithHttpInfo(resourceDTO);
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1DepartmentResourceByResourceIdDeleteWithHttpInfo(resourceId);
              return localVarResponse.Data;
         }
 
@@ -1253,12 +1350,15 @@ namespace IO.Swagger.Api
         /// Removes a resource from the users department. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        public ApiResponse< ResponseDepartmentDTO > V1DepartmentResourceDeleteWithHttpInfo (ResourceIdDTO resourceDTO = null)
+        public ApiResponse< ResponseDepartmentDTO > V1DepartmentResourceByResourceIdDeleteWithHttpInfo (long? resourceId)
         {
+            // verify the required parameter 'resourceId' is set
+            if (resourceId == null)
+                throw new ApiException(400, "Missing required parameter 'resourceId' when calling DepartmentApi->V1DepartmentResourceByResourceIdDelete");
 
-            var localVarPath = "/v1/Department/resource";
+            var localVarPath = "/v1/Department/resource/{resourceId}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1268,10 +1368,6 @@ namespace IO.Swagger.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
@@ -1285,14 +1381,7 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (resourceDTO != null && resourceDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceDTO; // byte array
-            }
+            if (resourceId != null) localVarPathParams.Add("resourceId", Configuration.ApiClient.ParameterToString(resourceId)); // path parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -1309,7 +1398,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1DepartmentResourceDelete", localVarResponse);
+                Exception exception = ExceptionFactory("V1DepartmentResourceByResourceIdDelete", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -1322,11 +1411,11 @@ namespace IO.Swagger.Api
         /// Removes a resource from the users department. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>Task of ResponseDepartmentDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentResourceDeleteAsync (ResourceIdDTO resourceDTO = null)
+        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentResourceByResourceIdDeleteAsync (long? resourceId)
         {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1DepartmentResourceDeleteAsyncWithHttpInfo(resourceDTO);
+             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1DepartmentResourceByResourceIdDeleteAsyncWithHttpInfo(resourceId);
              return localVarResponse.Data;
 
         }
@@ -1335,12 +1424,15 @@ namespace IO.Swagger.Api
         /// Removes a resource from the users department. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceDTO"> (optional)</param>
+        /// <param name="resourceId"></param>
         /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentResourceDeleteAsyncWithHttpInfo (ResourceIdDTO resourceDTO = null)
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentResourceByResourceIdDeleteAsyncWithHttpInfo (long? resourceId)
         {
+            // verify the required parameter 'resourceId' is set
+            if (resourceId == null)
+                throw new ApiException(400, "Missing required parameter 'resourceId' when calling DepartmentApi->V1DepartmentResourceByResourceIdDelete");
 
-            var localVarPath = "/v1/Department/resource";
+            var localVarPath = "/v1/Department/resource/{resourceId}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1350,10 +1442,6 @@ namespace IO.Swagger.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
@@ -1367,14 +1455,7 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (resourceDTO != null && resourceDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceDTO; // byte array
-            }
+            if (resourceId != null) localVarPathParams.Add("resourceId", Configuration.ApiClient.ParameterToString(resourceId)); // path parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -1391,357 +1472,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1DepartmentResourceDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
-        /// Removes a user from a given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        public ResponseDepartmentDTO V1DepartmentUserByDepartmentIDDelete (long? departmentId, GirafUserDTO usr = null)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1DepartmentUserByDepartmentIDDeleteWithHttpInfo(departmentId, usr);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Removes a user from a given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        public ApiResponse< ResponseDepartmentDTO > V1DepartmentUserByDepartmentIDDeleteWithHttpInfo (long? departmentId, GirafUserDTO usr = null)
-        {
-            // verify the required parameter 'departmentId' is set
-            if (departmentId == null)
-                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentUserByDepartmentIDDelete");
-
-            var localVarPath = "/v1/Department/user/{departmentID}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
-            if (usr != null && usr.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(usr); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = usr; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1DepartmentUserByDepartmentIDDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
-        /// Removes a user from a given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentUserByDepartmentIDDeleteAsync (long? departmentId, GirafUserDTO usr = null)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1DepartmentUserByDepartmentIDDeleteAsyncWithHttpInfo(departmentId, usr);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Removes a user from a given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId">Id of the department from which the user should be removed</param>
-        /// <param name="usr">A serialized instance of a GirafRest.Models.GirafUser user. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentUserByDepartmentIDDeleteAsyncWithHttpInfo (long? departmentId, GirafUserDTO usr = null)
-        {
-            // verify the required parameter 'departmentId' is set
-            if (departmentId == null)
-                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentUserByDepartmentIDDelete");
-
-            var localVarPath = "/v1/Department/user/{departmentID}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
-            if (usr != null && usr.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(usr); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = usr; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1DepartmentUserByDepartmentIDDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
-        /// Add a user to the given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        public ResponseDepartmentDTO V1DepartmentUserByDepartmentIDPost (long? departmentId, GirafUserDTO usr = null)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1DepartmentUserByDepartmentIDPostWithHttpInfo(departmentId, usr);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Add a user to the given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        public ApiResponse< ResponseDepartmentDTO > V1DepartmentUserByDepartmentIDPostWithHttpInfo (long? departmentId, GirafUserDTO usr = null)
-        {
-            // verify the required parameter 'departmentId' is set
-            if (departmentId == null)
-                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentUserByDepartmentIDPost");
-
-            var localVarPath = "/v1/Department/user/{departmentID}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
-            if (usr != null && usr.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(usr); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = usr; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1DepartmentUserByDepartmentIDPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
-        /// Add a user to the given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1DepartmentUserByDepartmentIDPostAsync (long? departmentId, GirafUserDTO usr = null)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1DepartmentUserByDepartmentIDPostAsyncWithHttpInfo(departmentId, usr);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Add a user to the given department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="departmentId"></param>
-        /// <param name="usr">An existing GirafUser instance to be added to the department. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentUserByDepartmentIDPostAsyncWithHttpInfo (long? departmentId, GirafUserDTO usr = null)
-        {
-            // verify the required parameter 'departmentId' is set
-            if (departmentId == null)
-                throw new ApiException(400, "Missing required parameter 'departmentId' when calling DepartmentApi->V1DepartmentUserByDepartmentIDPost");
-
-            var localVarPath = "/v1/Department/user/{departmentID}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (departmentId != null) localVarPathParams.Add("departmentId", Configuration.ApiClient.ParameterToString(departmentId)); // path parameter
-            if (usr != null && usr.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(usr); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = usr; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1DepartmentUserByDepartmentIDPost", localVarResponse);
+                Exception exception = ExceptionFactory("V1DepartmentResourceByResourceIdDelete", localVarResponse);
                 if (exception != null) throw exception;
             }
 

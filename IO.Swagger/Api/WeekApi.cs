@@ -109,24 +109,24 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseIEnumerableWeekNameDTO</returns>
         ApiResponse<ResponseIEnumerableWeekNameDTO> V1WeekGetWithHttpInfo ();
         /// <summary>
-        /// Creates an entirely new week for the current user.
+        /// Creates the week.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>ResponseWeekDTO</returns>
         ResponseWeekDTO V1WeekPost (WeekDTO newWeek = null);
 
         /// <summary>
-        /// Creates an entirely new week for the current user.
+        /// Creates the week.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
         ApiResponse<ResponseWeekDTO> V1WeekPostWithHttpInfo (WeekDTO newWeek = null);
         #endregion Synchronous Operations
@@ -216,24 +216,24 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekNameDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekNameDTO>> V1WeekGetAsyncWithHttpInfo ();
         /// <summary>
-        /// Creates an entirely new week for the current user.
+        /// Creates the week.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>Task of ResponseWeekDTO</returns>
         System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekPostAsync (WeekDTO newWeek = null);
 
         /// <summary>
-        /// Creates an entirely new week for the current user.
+        /// Creates the week.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekPostAsyncWithHttpInfo (WeekDTO newWeek = null);
         #endregion Asynchronous Operations
@@ -941,10 +941,10 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Creates an entirely new week for the current user. 
+        /// Creates the week. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>ResponseWeekDTO</returns>
         public ResponseWeekDTO V1WeekPost (WeekDTO newWeek = null)
         {
@@ -953,10 +953,10 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Creates an entirely new week for the current user. 
+        /// Creates the week. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
         public ApiResponse< ResponseWeekDTO > V1WeekPostWithHttpInfo (WeekDTO newWeek = null)
         {
@@ -1022,10 +1022,10 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Creates an entirely new week for the current user. 
+        /// Creates the week. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>Task of ResponseWeekDTO</returns>
         public async System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekPostAsync (WeekDTO newWeek = null)
         {
@@ -1035,10 +1035,10 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Creates an entirely new week for the current user. 
+        /// Creates the week. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">A serialized version of the new week. (optional)</param>
+        /// <param name="newWeek">New week. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekPostAsyncWithHttpInfo (WeekDTO newWeek = null)
         {

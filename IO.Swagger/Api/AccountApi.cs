@@ -197,10 +197,9 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns></returns>
-        void V1AccountResetPasswordPost (string username, string password, string confirmPassword, string code = null);
+        void V1AccountResetPasswordPost (string username, string password, string code = null);
 
         /// <summary>
         /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified.
@@ -211,10 +210,9 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> V1AccountResetPasswordPostWithHttpInfo (string username, string password, string confirmPassword, string code = null);
+        ApiResponse<Object> V1AccountResetPasswordPostWithHttpInfo (string username, string password, string code = null);
         /// <summary>
         /// Creates a new password for the currently authenticated user.
         /// </summary>
@@ -223,9 +221,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Response</returns>
-        Response V1AccountSetPasswordPost (string newPassword, string confirmPassword = null);
+        Response V1AccountSetPasswordPost (string newPassword);
 
         /// <summary>
         /// Creates a new password for the currently authenticated user.
@@ -235,9 +232,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1AccountSetPasswordPostWithHttpInfo (string newPassword, string confirmPassword = null);
+        ApiResponse<Response> V1AccountSetPasswordPostWithHttpInfo (string newPassword);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -413,10 +409,9 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task V1AccountResetPasswordPostAsync (string username, string password, string confirmPassword, string code = null);
+        System.Threading.Tasks.Task V1AccountResetPasswordPostAsync (string username, string password, string code = null);
 
         /// <summary>
         /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified.
@@ -427,10 +422,9 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordPostAsyncWithHttpInfo (string username, string password, string confirmPassword, string code = null);
+        System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordPostAsyncWithHttpInfo (string username, string password, string code = null);
         /// <summary>
         /// Creates a new password for the currently authenticated user.
         /// </summary>
@@ -439,9 +433,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1AccountSetPasswordPostAsync (string newPassword, string confirmPassword = null);
+        System.Threading.Tasks.Task<Response> V1AccountSetPasswordPostAsync (string newPassword);
 
         /// <summary>
         /// Creates a new password for the currently authenticated user.
@@ -451,9 +444,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountSetPasswordPostAsyncWithHttpInfo (string newPassword, string confirmPassword = null);
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountSetPasswordPostAsyncWithHttpInfo (string newPassword);
         #endregion Asynchronous Operations
     }
 
@@ -1730,12 +1722,11 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns></returns>
-        public void V1AccountResetPasswordPost (string username, string password, string confirmPassword, string code = null)
+        public void V1AccountResetPasswordPost (string username, string password, string code = null)
         {
-             V1AccountResetPasswordPostWithHttpInfo(username, password, confirmPassword, code);
+             V1AccountResetPasswordPostWithHttpInfo(username, password, code);
         }
 
         /// <summary>
@@ -1744,10 +1735,9 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> V1AccountResetPasswordPostWithHttpInfo (string username, string password, string confirmPassword, string code = null)
+        public ApiResponse<Object> V1AccountResetPasswordPostWithHttpInfo (string username, string password, string code = null)
         {
             // verify the required parameter 'username' is set
             if (username == null)
@@ -1755,9 +1745,6 @@ namespace IO.Swagger.Api
             // verify the required parameter 'password' is set
             if (password == null)
                 throw new ApiException(400, "Missing required parameter 'password' when calling AccountApi->V1AccountResetPasswordPost");
-            // verify the required parameter 'confirmPassword' is set
-            if (confirmPassword == null)
-                throw new ApiException(400, "Missing required parameter 'confirmPassword' when calling AccountApi->V1AccountResetPasswordPost");
 
             var localVarPath = "/v1/Account/reset-password";
             var localVarPathParams = new Dictionary<String, String>();
@@ -1781,7 +1768,6 @@ namespace IO.Swagger.Api
 
             if (username != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Username", username)); // query parameter
             if (password != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Password", password)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
             if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Code", code)); // query parameter
 
             // authentication (Bearer) required
@@ -1814,12 +1800,11 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task V1AccountResetPasswordPostAsync (string username, string password, string confirmPassword, string code = null)
+        public async System.Threading.Tasks.Task V1AccountResetPasswordPostAsync (string username, string password, string code = null)
         {
-             await V1AccountResetPasswordPostAsyncWithHttpInfo(username, password, confirmPassword, code);
+             await V1AccountResetPasswordPostAsyncWithHttpInfo(username, password, code);
 
         }
 
@@ -1829,10 +1814,9 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="username">The users username.</param>
         /// <param name="password">The users password.</param>
-        /// <param name="confirmPassword">The users password again to avoid typos/mistakes.</param>
         /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordPostAsyncWithHttpInfo (string username, string password, string confirmPassword, string code = null)
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordPostAsyncWithHttpInfo (string username, string password, string code = null)
         {
             // verify the required parameter 'username' is set
             if (username == null)
@@ -1840,9 +1824,6 @@ namespace IO.Swagger.Api
             // verify the required parameter 'password' is set
             if (password == null)
                 throw new ApiException(400, "Missing required parameter 'password' when calling AccountApi->V1AccountResetPasswordPost");
-            // verify the required parameter 'confirmPassword' is set
-            if (confirmPassword == null)
-                throw new ApiException(400, "Missing required parameter 'confirmPassword' when calling AccountApi->V1AccountResetPasswordPost");
 
             var localVarPath = "/v1/Account/reset-password";
             var localVarPathParams = new Dictionary<String, String>();
@@ -1866,7 +1847,6 @@ namespace IO.Swagger.Api
 
             if (username != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Username", username)); // query parameter
             if (password != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Password", password)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
             if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Code", code)); // query parameter
 
             // authentication (Bearer) required
@@ -1898,11 +1878,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Response</returns>
-        public Response V1AccountSetPasswordPost (string newPassword, string confirmPassword = null)
+        public Response V1AccountSetPasswordPost (string newPassword)
         {
-             ApiResponse<Response> localVarResponse = V1AccountSetPasswordPostWithHttpInfo(newPassword, confirmPassword);
+             ApiResponse<Response> localVarResponse = V1AccountSetPasswordPostWithHttpInfo(newPassword);
              return localVarResponse.Data;
         }
 
@@ -1911,9 +1890,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1AccountSetPasswordPostWithHttpInfo (string newPassword, string confirmPassword = null)
+        public ApiResponse< Response > V1AccountSetPasswordPostWithHttpInfo (string newPassword)
         {
             // verify the required parameter 'newPassword' is set
             if (newPassword == null)
@@ -1943,7 +1921,6 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -1974,11 +1951,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1AccountSetPasswordPostAsync (string newPassword, string confirmPassword = null)
+        public async System.Threading.Tasks.Task<Response> V1AccountSetPasswordPostAsync (string newPassword)
         {
-             ApiResponse<Response> localVarResponse = await V1AccountSetPasswordPostAsyncWithHttpInfo(newPassword, confirmPassword);
+             ApiResponse<Response> localVarResponse = await V1AccountSetPasswordPostAsyncWithHttpInfo(newPassword);
              return localVarResponse.Data;
 
         }
@@ -1988,9 +1964,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="newPassword">The desired password.</param>
-        /// <param name="confirmPassword">The desired password again to avoid typos/mistakes. (optional)</param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountSetPasswordPostAsyncWithHttpInfo (string newPassword, string confirmPassword = null)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountSetPasswordPostAsyncWithHttpInfo (string newPassword)
         {
             // verify the required parameter 'newPassword' is set
             if (newPassword == null)
@@ -2020,7 +1995,6 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
-            if (confirmPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "ConfirmPassword", confirmPassword)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))

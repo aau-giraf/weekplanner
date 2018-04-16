@@ -227,5 +227,65 @@ namespace WeekPlanner.Services.Mocks
         {
             throw new System.NotImplementedException();
         }
+
+        public ResponseDepartmentDTO V1DepartmentByDepartmentIdResourceByResourceIdPost(long? departmentId, long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseDepartmentDTO> V1DepartmentByDepartmentIdResourceByResourceIdPostWithHttpInfo(long? departmentId, long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ResponseDepartmentDTO V1DepartmentByDepartmentIdUserByUserIdPost(long? departmentId, string userId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseDepartmentDTO> V1DepartmentByDepartmentIdUserByUserIdPostWithHttpInfo(long? departmentId, string userId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ResponseDepartmentDTO V1DepartmentResourceByResourceIdDelete(long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseDepartmentDTO> V1DepartmentResourceByResourceIdDeleteWithHttpInfo(long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseDepartmentDTO> V1DepartmentByDepartmentIdResourceByResourceIdPostAsync(long? departmentId, long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByDepartmentIdResourceByResourceIdPostAsyncWithHttpInfo(long? departmentId, long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseDepartmentDTO> V1DepartmentByDepartmentIdUserByUserIdPostAsync(long? departmentId, string userId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentByDepartmentIdUserByUserIdPostAsyncWithHttpInfo(long? departmentId, string userId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseDepartmentDTO> V1DepartmentResourceByResourceIdDeleteAsync(long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseDepartmentDTO>> V1DepartmentResourceByResourceIdDeleteAsyncWithHttpInfo(long? resourceId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
