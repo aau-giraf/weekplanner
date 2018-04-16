@@ -4,7 +4,7 @@ namespace WeekPlanner
 {
     public class GlobalSettings
     {
-        // If you want to use localhost in the Android emulator you must use your IPv4 address
+        // If you want to use localhost in the Android emulator you must use your local IP address
         // Windows: ipconfg 
         // UNIX: ifconfig | grep inet
         public const string DefaultEndpoint = "http://172.25.115.203:5000";
@@ -28,7 +28,6 @@ namespace WeekPlanner
             set
             {
                 _baseEndpoint = value;
-                UpdateEndpoint(_baseEndpoint);
             }
         }
 

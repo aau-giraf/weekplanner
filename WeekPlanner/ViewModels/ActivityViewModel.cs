@@ -11,6 +11,7 @@ namespace WeekPlanner.ViewModels
     public class ActivityViewModel : ViewModelBase
     {
         private ImageSource _imageSource;
+        private bool _isGuardianMode = false;
 
         public ActivityViewModel(INavigationService navigationService) : base(navigationService)
         {
@@ -28,7 +29,7 @@ namespace WeekPlanner.ViewModels
 
         public ImageSource ImageSource
         {
-            get => _imageSource; 
+            get => _imageSource;
             set
             {
                 _imageSource = value;
@@ -36,11 +37,13 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ChangePictoCommand => new Command(async () => {
+        public ICommand ChangePictoCommand => new Command(async () =>
+        {
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand DeleteActivityCommand=> new Command(async () => {
+        public ICommand DeleteActivityCommand => new Command(async () =>
+        {
             // TODO: send message delete with resource.Id
             int activityID = 42;
             MessagingCenter.Send(this, MessageKeys.DeleteActivity, activityID);
@@ -50,6 +53,14 @@ namespace WeekPlanner.ViewModels
         private void ChangePicto(PictogramSearchViewModel pictoVM, PictogramDTO pictogramDTO)
         {
             ImageSource = pictogramDTO.ImageUrl;
+        }
+
+        public bool IsGuardianMode { 
+            get => _isGuardianMode; 
+            set {
+                _isGuardianMode = value;
+                RaisePropertyChanged(() => IsGuardianMode);
+            } 
         }
     }
 }

@@ -17,7 +17,7 @@ namespace WeekPlanner.ViewModels
 
         private GirafUserDTO _citizen;
         private UserMode _userMode;
-        public ICommand SwitchUserModeCommand => new Command(() => SwitchUserMode());
+        public ICommand SwitchUserModeCommand => new Command(async () => await SwitchUserMode());
         public GirafUserDTO Citizen
         {
             get => _citizen;

@@ -7,7 +7,6 @@ using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Views;
 using Xamarin.Forms;
-using System.Linq;
 
 namespace WeekPlanner.Services.Navigation
 {
@@ -25,7 +24,7 @@ namespace WeekPlanner.Services.Navigation
 
         public Task InitializeAsync()
         {
-            return NavigateToAsync<TestingViewModel>();
+            return NavigateToAsync<ActivityViewModel>();
             
             // TODO: Remember chosen department and maybe authtoken
             /*if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
