@@ -12,6 +12,7 @@ using WeekPlanner.Services.Navigation;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using WeekPlanner.Services.Settings;
 using System.Windows.Input;
 using WeekPlanner.Views;
@@ -71,8 +72,8 @@ namespace WeekPlanner.ViewModels
 
         private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
         {
-            ImageSource imgSource =
-                ImageSource.FromUri(new Uri(GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl));
+            String imgSource = 
+                GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl;
             WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
             // Add pictogramId to the correct weekday
             // TODO: Fix
@@ -87,18 +88,6 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => WeekdayPictos);
         }
 
-        public override async Task InitializeAsync(object navigationData)
-        {
-            if (navigationData is UserNameDTO userNameDTO)
-            {
-                await _loginService.LoginAndThenAsync(GetWeekPlanForCitizenAsync, UserType.Citizen,
-                    userNameDTO.UserName);
-            }
-            else
-            {
-                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
-            }
-        }
 
         private async Task SaveSchedule()
         {
@@ -167,6 +156,19 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        public override async Task InitializeAsync(object navigationData)
+        {
+            if (navigationData is UserNameDTO userNameDTO)
+            {
+                await _loginService.LoginAndThenAsync(GetWeekPlanForCitizenAsync, UserType.Citizen,
+                   userNameDTO.UserName);
+            }
+            else
+            {
+                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
+            }
+        }
+
         // TODO: Cleanup method and rename
         private async Task GetWeekPlanForCitizenAsync()
         {
@@ -197,15 +199,15 @@ namespace WeekPlanner.ViewModels
 
         private void SetPictograms()
         {
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<ImageSource>>();
+            var tempDict = new Dictionary<DayEnum, ObservableCollection<String>>();
             foreach (WeekdayDTO day in WeekDTO.Days)
             {
                 var weekday = day.Day.Value;
-                ObservableCollection<ImageSource> pictos = new ObservableCollection<ImageSource>();
+                ObservableCollection<String> pictos = new ObservableCollection<String>();
                 foreach (var eleID in day.ElementIDs)
                 {
-                    pictos.Add(ImageSource.FromUri(
-                        new Uri(GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw")));
+                    pictos.Add(
+                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
                 }
 
                 tempDict.Add(weekday, pictos);
@@ -216,10 +218,10 @@ namespace WeekPlanner.ViewModels
 
         #region Boilerplate for each weekday's pictos
 
-        private Dictionary<DayEnum, ObservableCollection<ImageSource>> _weekdayPictos =
-            new Dictionary<DayEnum, ObservableCollection<ImageSource>>();
+        private Dictionary<DayEnum, ObservableCollection<String>> _weekdayPictos =
+            new Dictionary<DayEnum, ObservableCollection<String>>();
 
-        public Dictionary<DayEnum, ObservableCollection<ImageSource>> WeekdayPictos
+        public Dictionary<DayEnum, ObservableCollection<String>> WeekdayPictos
         {
             get => _weekdayPictos;
             set
@@ -242,25 +244,25 @@ namespace WeekPlanner.ViewModels
             get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
         }
 
-        public ObservableCollection<ImageSource> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
+        public ObservableCollection<String> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
 
-        public ObservableCollection<ImageSource> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
+        public ObservableCollection<String> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
 
-        public ObservableCollection<ImageSource> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
+        public ObservableCollection<String> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
 
-        public ObservableCollection<ImageSource> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
+        public ObservableCollection<String> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
 
-        public ObservableCollection<ImageSource> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
+        public ObservableCollection<String> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
 
-        public ObservableCollection<ImageSource> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
+        public ObservableCollection<String> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
 
-        public ObservableCollection<ImageSource> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
+        public ObservableCollection<String> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
 
-        private ObservableCollection<ImageSource> GetPictosOrEmptyList(DayEnum day)
+        private ObservableCollection<String> GetPictosOrEmptyList(DayEnum day)
         {
             if (!WeekdayPictos.TryGetValue(day, out var pictoSources))
-                pictoSources = new ObservableCollection<ImageSource>();
-            return new ObservableCollection<ImageSource>(pictoSources);
+                pictoSources = new ObservableCollection<String>();
+            return new ObservableCollection<String>(pictoSources);
         }
 
         #endregion
