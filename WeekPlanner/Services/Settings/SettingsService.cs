@@ -1,4 +1,6 @@
 using System;
+using System.Security.Principal;
+using System.Threading.Tasks;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 
@@ -7,6 +9,13 @@ namespace WeekPlanner.Services.Settings
     public class SettingsService : ISettingsService
     {
         private readonly IAccountApi  _accountApi;
+
+        private static string Token;
+        public static Task<string> GetToken()
+        {
+            return Task.FromResult(Token);
+        }
+
 
         public SettingsService(IAccountApi accountApi)
         {
@@ -49,14 +58,17 @@ namespace WeekPlanner.Services.Settings
             {
                 case UserType.Citizen:
                     SetAuthTokenInAccountApi(CitizenAuthToken);
+                    Token = CitizenAuthToken;
                     break;
                 case UserType.Department:
                     SetAuthTokenInAccountApi(DepartmentAuthToken);
+                    Token = DepartmentAuthToken;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(userType), userType, null);
             }
         }
+        
 
         private void SetAuthTokenInAccountApi(string authToken)
         {
