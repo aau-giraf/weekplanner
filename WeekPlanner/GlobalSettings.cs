@@ -4,7 +4,7 @@ namespace WeekPlanner
 {
     public class GlobalSettings
     {
-        public const string DefaultEndpoint = "http://web.giraf.cs.aau.dk:5050";
+        public const string DefaultEndpoint = "http://localhost:5000";
 
         private string _baseEndpoint;
         private static readonly GlobalSettings _instance = new GlobalSettings();

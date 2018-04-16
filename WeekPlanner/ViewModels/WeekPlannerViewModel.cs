@@ -188,7 +188,7 @@ namespace WeekPlanner.ViewModels
             if (result.Success == true && result.Data.Days != null)
             {
                 WeekDTO = result.Data;
-                SetPictograms();
+                SetWeekdayPictos();
             }
             else
             {
@@ -197,7 +197,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private void SetPictograms()
+        private void SetWeekdayPictos()
         {
             var tempDict = new Dictionary<DayEnum, ObservableCollection<String>>();
             foreach (WeekdayDTO day in WeekDTO.Days)

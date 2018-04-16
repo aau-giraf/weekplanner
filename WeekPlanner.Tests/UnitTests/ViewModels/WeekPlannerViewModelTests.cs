@@ -86,12 +86,13 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         {
             //Arrange
             var mockUsernameDTO = Fixture.Create<UserNameDTO>();
-            Func<Func<Task>, UserType, string, string, Task> loginAndThenMock =
-                async (onSuccess, userType, username, password) => await onSuccess.Invoke();
+
+            async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
+                await onSuccess.Invoke();
 
             var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
                     l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, mockUsernameDTO.UserName, ""))
-                .Returns(loginAndThenMock);
+                .Returns((Func<Func<Task>, UserType, string, string, Task>) LoginAndThenMock);
 
             var weekResponse = Fixture.Build<ResponseWeekDTO>()
                 .With(r => r.Success, true)
