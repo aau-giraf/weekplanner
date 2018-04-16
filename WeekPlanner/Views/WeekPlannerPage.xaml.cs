@@ -30,5 +30,18 @@ namespace WeekPlanner.Views
 				MessagingCenter.Send(this, MessageKeys.ScheduleSaveRequest);
 			}
 		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+
+			// TODO: 
+			/*
+			 * The following allows for specification of the orientation of the WeekPlannerPage. 
+			 * This, however, is dependent on the not yet implemented user story regarding prefered citizen orientation 
+			 * and should be set accordingly once this has been implemented. 
+			 */
+			MessagingCenter.Send(this, "allowPortrait");
+		}
 	}
 }
