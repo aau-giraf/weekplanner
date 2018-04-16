@@ -4,7 +4,7 @@ namespace WeekPlanner
 {
     public class GlobalSettings
     {
-        public const string DefaultEndpoint = "http://localhost:5000";
+        public const string DefaultEndpoint = "http://10.0.2.2:5000";
 
         private string _baseEndpoint;
         private static readonly GlobalSettings _instance = new GlobalSettings();
