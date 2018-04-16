@@ -22,9 +22,6 @@
                     Text="Vælg skabelon"
                     Command="{Binding NavigateToChooseTemplateCommand}" />
                 <Button
-                    Text="Brugermode skift"
-                    Command="{Binding NavigateToUserModeSwitchCommand}" />
-                <Button
                     Text="Søg efter pictogram"
                     Command="{Binding NavigateToPictogramSearchCommand}" />
             </StackLayout>
