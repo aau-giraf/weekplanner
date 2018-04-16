@@ -4,7 +4,10 @@ namespace WeekPlanner
 {
     public class GlobalSettings
     {
-        public const string DefaultEndpoint = "http://web.giraf.cs.aau.dk:5050";
+        // If you want to use localhost in the Android emulator you must use your IPv4 address
+        // Windows: ipconfg 
+        // UNIX: ifconfig | grep inet
+        public const string DefaultEndpoint = "http://172.25.115.203:5000";
 
         private string _baseEndpoint;
         private static readonly GlobalSettings _instance = new GlobalSettings();
