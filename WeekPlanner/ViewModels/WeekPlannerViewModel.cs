@@ -309,9 +309,15 @@ namespace WeekPlanner.ViewModels
             else
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
-                EditModeEnabled = true;
-                UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png"); 
+
+                MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
             }
+        }
+
+        private void SetToGuardianMode()
+        {
+            EditModeEnabled = true;
+            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
         }
 
     }

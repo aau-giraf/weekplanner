@@ -27,9 +27,6 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout IsVisible="{Binding EditModeEnabled, Converter={StaticResource NegateBooleanConverter}}">
-                <Button Text="Rediger" Command="{Binding ToggleEditModeCommand}" />
-            </StackLayout>
             <Grid IsVisible="{Binding EditModeEnabled}">
                     <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />

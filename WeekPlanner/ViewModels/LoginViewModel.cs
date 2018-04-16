@@ -51,6 +51,7 @@ namespace WeekPlanner.ViewModels
             {
                 if (_userModeSwitch)
                 {
+                    MessagingCenter.Send(this, MessageKeys.LoginSucceeded);
                     await NavigationService.PopAsync();
                 }
                 else
