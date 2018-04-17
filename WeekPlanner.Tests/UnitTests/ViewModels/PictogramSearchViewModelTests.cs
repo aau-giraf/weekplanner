@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AutoFixture;
 using IO.Swagger.Api;
@@ -11,7 +10,6 @@ using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using Xunit;
-using Xunit.Sdk;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {

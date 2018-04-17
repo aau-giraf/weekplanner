@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
+             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
+             x:Class="WeekPlanner.Views.ActivityPage"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             Title="Aktivitet">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid VerticalOptions="CenterAndExpand">
+                <!--Left Side-->
+                <StackLayout Grid.Column="0"
+                             VerticalOptions="Center">
+                    <Image Source="{Binding ImageSource}" />
+                    <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
+                        <Button Grid.Column="0"
+                                Text="Ændre"
+                                Command="{Binding ChangePictoCommand}" />
+                        <Button Grid.Column="1"
+                                Text="Aflys" />
+                        <Button Grid.Column="2"
+                                Text="Slet"
+                                Command="{Binding DeleteActivityCommand}"/>
+                    </Grid>
+                </StackLayout>
+                <!--Right Side-->
+                <StackLayout Grid.Column="1"
+                             VerticalOptions="CenterAndExpand">
+                    <!--Timer-->
+                    <Image Source="image_loading.png" />
+                    <Grid Padding="30">
+                        <Entry Placeholder="Tid"
+                               Grid.Column="0" />
+                        <Button Text="Start"
+                                Grid.Column="1"
+                                IsVisible="{Binding IsGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/>
+                        <Button Text="Slet"
+                                Grid.Column="1"
+                                IsVisible="{Binding IsGuardianMode}"/>
+                    </Grid>
+                </StackLayout>
+            </Grid>
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="Center"
+                         Padding="12"
+                         VerticalOptions="End"
+                         IsVisible="{Binding IsGuardianMode}">
+                <Button Text="Gem"
+                        WidthRequest="300" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

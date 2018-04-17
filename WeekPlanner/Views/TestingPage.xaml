@@ -24,6 +24,9 @@
                 <Button
                     Text="Søg efter pictogram"
                     Command="{Binding NavigateToPictogramSearchCommand}" />
+                <Button 
+                    Text="Aktivitet" 
+                    Command="{Binding NavigateToActivityCommand}" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

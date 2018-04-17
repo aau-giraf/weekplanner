@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IO.Swagger.Api;
-using IO.Swagger.Client;
 using IO.Swagger.Model;
-using WeekPlanner.Helpers;
+using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
-using WeekPlanner.ViewModels.Base;
-using Xamarin.Forms;
 
 namespace WeekPlanner.Services.Login
 {
     public class LoginService : ILoginService
     {
         private readonly IAccountApi _accountApi;
+        private readonly IRequestService _requestService;
         private readonly ISettingsService _settingsService;
         
-        public LoginService(IAccountApi accountApi, ISettingsService settingsService)
+        public LoginService(IAccountApi accountApi, IRequestService requestService, ISettingsService settingsService)
         {
             _accountApi = accountApi;
+            _requestService = requestService;
             _settingsService = settingsService;
         }
 
@@ -36,23 +35,10 @@ namespace WeekPlanner.Services.Login
             {
                 throw new ArgumentException("A password should always be provided for Departments.");
             }
-            
-            ResponseString result;
-            try
-            {
-                var loginDTO = new LoginDTO(username, password);
-                result = await _accountApi.V1AccountLoginPostAsync(loginDTO);
-            }
-            catch (ApiException)
-            {
-                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
-                return;
-            }
 
-            if (result?.Success == true)
+            async Task OnRequestSuccess(ResponseString result)
             {
-                if(userType == UserType.Citizen)
+                if (userType == UserType.Citizen)
                 {
                     _settingsService.CitizenAuthToken = result.Data;
                 }
@@ -62,14 +48,13 @@ namespace WeekPlanner.Services.Login
                 }
 
                 _settingsService.UseTokenFor(userType);
-                
+
                 await onSuccess.Invoke();
             }
-            else
-            {
-                var friendlyErrorMessage = result?.ErrorKey.ToFriendlyString();
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
-            }
+
+            await _requestService.SendRequestAndThenAsync(this,
+                async () => await _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
+                OnRequestSuccess);
         }
     }
 }

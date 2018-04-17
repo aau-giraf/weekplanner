@@ -4,6 +4,12 @@ namespace WeekPlanner
 {
     public class GlobalSettings
     {
+<<<<<<< HEAD
+=======
+        // If you want to use localhost in the Android emulator you must use your local IP address
+        // Windows: ipconfg 
+        // UNIX: ifconfig | grep inet
+>>>>>>> develop
         public const string DefaultEndpoint = "http://web.giraf.cs.aau.dk:5050";
 
         private string _baseEndpoint;
@@ -25,26 +31,15 @@ namespace WeekPlanner
             set
             {
                 _baseEndpoint = value;
-                UpdateEndpoint(_baseEndpoint);
             }
         }
 
         public bool UseMocks = false;
 
-        public string LoginEndpoint { get; set; }
-
-        public string LogoutEndpoint { get; set; }
-
         public string DepartmentAuthToken { get; set; }
-        
+
         public string CitizenAuthToken { get; set; }
 
         public DepartmentNameDTO Department { get; set; } = new DepartmentNameDTO { Name = "Egebakken" };
-
-		private void UpdateEndpoint(string baseEndpoint)
-        {
-            LoginEndpoint = $"{baseEndpoint}/Account/login";
-            LogoutEndpoint = $"{baseEndpoint}/Account/logout";
-        }
     }
 }

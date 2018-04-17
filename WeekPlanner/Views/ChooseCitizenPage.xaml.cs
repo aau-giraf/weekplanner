@@ -11,7 +11,7 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
 
-            MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.CitizenListRetrievalFailed,
+            MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.RequestFailed,
                 async (sender, message) =>
                     await DisplayAlert("Fejl", message, "Luk"));
         }
