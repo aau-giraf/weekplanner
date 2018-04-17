@@ -29,9 +29,9 @@ namespace WeekPlanner.ViewModels
 
         override public async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is string imgSource)
+            if (navigationData is string imgUrl)
             {
-                ImageSource = imgSource;
+                ImageSource = imgUrl;
             }
         }
 
@@ -131,6 +131,7 @@ namespace WeekPlanner.ViewModels
         public override void Popped(object navigationData) {
             if (navigationData is PictogramDTO newPicto) {
                 pictogramDTO = newPicto;
+                ImageSource = GlobalSettings.Instance.BaseEndpoint + newPicto.ImageUrl;
             }
         }
 

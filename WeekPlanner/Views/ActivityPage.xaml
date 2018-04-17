@@ -19,7 +19,7 @@
                 <!--Left Side-->
                 <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
-                    <Image Source="image_loading.png" />
+                    <ffimageloading:CachedImage Source="{Binding ImageSource}" />
                     <Grid Padding="30">
                         <Button Grid.Column="0"
                                 Text="Ændre"
@@ -38,7 +38,7 @@
                 <!--Right Side-->
                 <StackLayout Grid.Column="1"
                              VerticalOptions="CenterAndExpand">
-                    <Image Source="image_loading.png" />
+                    <ffimageloading:CachedImage Source="image_loading.png" />
                     <Grid Padding="30">
                         <Entry Placeholder="Tid"
                                Grid.Column="0" />

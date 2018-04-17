@@ -69,8 +69,8 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand PictoClickedCommand => new Command<ImageSource>(async imageSource => 
-            await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
+        public ICommand PictoClickedCommand => new Command<string>(async imageUrl => 
+            await NavigationService.NavigateToAsync<ActivityViewModel>(imageUrl));
 
         public WeekPlannerViewModel(INavigationService navigationService, IWeekApi weekApi,
             ILoginService loginService, IPictogramApi pictogramApi) : base(navigationService)
@@ -231,10 +231,10 @@ namespace WeekPlanner.ViewModels
             {
                 var weekday = day.Day.Value;
                 ObservableCollection<String> pictos = new ObservableCollection<String>();
-                foreach (var eleID in day.ElementIDs)
+                foreach (var element in day.Elements)
                 {
                     pictos.Add(
-                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
+                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{element.Id}/image/raw");
                 }
 
                 tempDict.Add(weekday, pictos);
