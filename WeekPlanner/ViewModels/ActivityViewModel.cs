@@ -8,10 +8,17 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
 {
+    public enum State
+    {
+        Normal, Checked, Cancelled
+    }
+
+
     public class ActivityViewModel : ViewModelBase
     {
-        private ImageSource _imageSource;
+        private string _imageSource;
         private bool _isGuardianMode = false;
+        private State _state = State.Checked;
 
         public ActivityViewModel(INavigationService navigationService) : base(navigationService)
         {
@@ -21,13 +28,13 @@ namespace WeekPlanner.ViewModels
 
         override public async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is ImageSource imgSource)
+            if (navigationData is string imgSource)
             {
                 ImageSource = imgSource;
             }
         }
 
-        public ImageSource ImageSource
+        public string ImageSource
         {
             get => _imageSource;
             set
@@ -62,5 +69,16 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => IsGuardianMode);
             } 
         }
+
+        public State State
+        {
+            get => _state;
+            set 
+            {
+                _state = value;
+                RaisePropertyChanged(() => State);
+            }
+        }
+        
     }
 }

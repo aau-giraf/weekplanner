@@ -24,7 +24,7 @@ namespace WeekPlanner.Services.Navigation
 
         public Task InitializeAsync()
         {
-            return NavigateToAsync<ActivityViewModel>();
+            return NavigateToAsync<TestingViewModel>();
             
             // TODO: Remember chosen department and maybe authtoken
             /*if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
