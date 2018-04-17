@@ -182,19 +182,24 @@ namespace WeekPlanner.ViewModels
 
         private void SetWeekdayPictos()
         {
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
-            foreach (WeekdayDTO day in WeekDTO.Days)
+            var tempDict = new Dictionary<DayEnum, ObservableCollection<String>>();
+            
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
-                if (day.Day == null) continue;
-                var weekday = day.Day.Value;
-                ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleID in day.ElementIDs)
+                tempDict.Add(day, new ObservableCollection<string>());
+            }
+            
+            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
+            {
+                if(dayDTO.Day == null) continue;
+                var weekday = dayDTO.Day.Value;
+                ObservableCollection<String> pictos = new ObservableCollection<String>();
+                foreach (var eleID in dayDTO.ElementIDs)
                 {
                     pictos.Add(
                         GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
                 }
-
-                tempDict.Add(weekday, pictos);
+                tempDict[weekday] = pictos;
             }
 
             WeekdayPictos = tempDict;
