@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -41,7 +41,7 @@ namespace WeekPlanner.Services.Navigation
         /// Pops the current page unless it is the frontpage of the app
         /// </summary>
         /// <returns></returns>
-        public Task PopAsync()
+        public Task PopAsync(object navigationData = null)
         {
             var navigationPage = Application.Current.MainPage as CustomNavigationPage;
             
@@ -50,7 +50,8 @@ namespace WeekPlanner.Services.Navigation
             {
                 return navigationPage?.PopAsync();
             }
-            return Task.FromResult(false);
+
+            return PreviousPageViewModel.PoppedAsync(navigationData);
         }
 
         public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
