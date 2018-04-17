@@ -41,7 +41,7 @@ namespace WeekPlanner.ViewModels
 
 	    private async Task UseDepartmentTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
 	    {
-		    _settingsService.UseTokenFor(UserType.Department);
+		    _settingsService.UseTokenFor(UserType.Guardian);
 		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(usernameDTO);
 	    }
 
@@ -49,7 +49,7 @@ namespace WeekPlanner.ViewModels
 	    {
 		    // Always use the departmentToken when coming to this view.
 		    // It might have been changed to using the citizenToken
-            _settingsService.UseTokenFor(UserType.Department);
+            _settingsService.UseTokenFor(UserType.Guardian);
 
 		    await _requestService.SendRequestAndThenAsync(this,
 			    requestAsync: async () => await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id),

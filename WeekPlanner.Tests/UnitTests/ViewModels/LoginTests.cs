@@ -108,7 +108,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             await Task.Run(() => sut.LoginCommand.Execute(null));
 
             // Assert
-            loginServiceMock.Verify(ls => ls.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Department, 
+            loginServiceMock.Verify(ls => ls.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Guardian, 
                 It.IsAny<string>(), It.IsAny<string>()));
         }
 
@@ -126,7 +126,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             await Task.Run(() => sut.LoginCommand.Execute(null));
 
             // Assert
-            loginServiceMock.Verify(ls => ls.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Department, 
+            loginServiceMock.Verify(ls => ls.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Guardian, 
                 It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
@@ -140,7 +140,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var navigationServiceMock = Fixture.Freeze<Mock<INavigationService>>();
             
             var loginServiceMock = Fixture.Freeze<Mock<ILoginService>>()
-                .Setup(l => l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Department, It.IsAny<string>(),
+                .Setup(l => l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Guardian, It.IsAny<string>(),
                     It.IsAny<string>()))
                 .Returns(loginAndThenMock);
             

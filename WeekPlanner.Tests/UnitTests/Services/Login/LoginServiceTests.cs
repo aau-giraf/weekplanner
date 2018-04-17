@@ -24,7 +24,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
         {
             // Arrange
             var sut = Fixture.Create<LoginService>();
-            var userType = UserType.Department;
+            var userType = UserType.Guardian;
             var username = "NotEmpty";
             var onSuccess = Fixture.Create<Func<Task>>();
             
@@ -33,7 +33,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
         }
 
         [Theory]
-        [InlineData(UserType.Department, "NotEmpty", "NotEmpty")]
+        [InlineData(UserType.Guardian, "NotEmpty", "NotEmpty")]
         [InlineData(UserType.Citizen, "NotEmpty", "")]
         public async void LoginAndThenAsync_ValidInput_InvokesV1AccountLoginPostAsync(UserType userType, string username,
             string password)
@@ -66,7 +66,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 (sender, args) => { messageReceived = true;});
 
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Department, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
             
             // Assert
             Assert.True(messageReceived);
@@ -78,7 +78,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             // Arrange
             var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
             
-            var token = "DepartmentAuthToken";
+            var token = "GuardianAuthToken";
             var response = Fixture.Build<ResponseString>()
                 .With(r => r.Success, true)
                 .With(r => r.Data, token)
@@ -91,10 +91,10 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var sut = Fixture.Create<LoginService>();
             
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Department, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
             
             // Assert
-            settingsServiceMock.VerifySet(s => s.DepartmentAuthToken = token);
+            settingsServiceMock.VerifySet(s => s.GuardianAuthToken = token);
         }
         
         [Fact]
@@ -190,7 +190,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 (sender, args) => { messageReceived = true;});
 
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Department, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
             
             // Assert
             Assert.True(messageReceived);

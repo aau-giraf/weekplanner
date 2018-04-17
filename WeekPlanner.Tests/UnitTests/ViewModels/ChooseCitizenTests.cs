@@ -80,7 +80,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             await sut.InitializeAsync(null);
             
             // Assert
-            settingsServiceMock.Verify(s => s.UseTokenFor(UserType.Department));
+            settingsServiceMock.Verify(s => s.UseTokenFor(UserType.Guardian));
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             sut.ChooseCitizenCommand.Execute(usernameDTO);
             
             // Assert
-            settingsServiceMock.Verify(s => s.UseTokenFor(UserType.Department));
+            settingsServiceMock.Verify(s => s.UseTokenFor(UserType.Guardian));
         }
     }
 }

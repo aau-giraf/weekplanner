@@ -7,7 +7,6 @@ namespace WeekPlanner
         // If you want to use localhost in the Android emulator you must use your local IP address
         // Windows: ipconfg 
         // UNIX: ifconfig | grep inet
-
         public const string DefaultEndpoint = "http://web.giraf.cs.aau.dk:5050";
 
         private string _baseEndpoint;

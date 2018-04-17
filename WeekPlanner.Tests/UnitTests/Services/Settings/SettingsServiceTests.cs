@@ -34,11 +34,11 @@ namespace WeekPlanner.Tests.UnitTests.Services.Settings
             var token = "ValidDepartmentToken";
             var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>();
             var sut = Fixture.Build<SettingsService>()
-                .With(s => s.DepartmentAuthToken, token)
+                .With(s => s.GuardianAuthToken, token)
                 .Create();
 
             // Act
-            sut.UseTokenFor(UserType.Department);
+            sut.UseTokenFor(UserType.Guardian);
             
             // Assert
             Assert.Equal($"bearer {token}", accountApiMock.Object.Configuration.ApiKey["Authorization"]);
@@ -65,11 +65,11 @@ namespace WeekPlanner.Tests.UnitTests.Services.Settings
         {
             // Arrange
             var sut = Fixture.Build<SettingsService>()
-                .With(s => s.DepartmentAuthToken, token)
+                .With(s => s.GuardianAuthToken, token)
                 .Create();
             
             // Assert & Act
-            Assert.Throws<ArgumentException>(() => sut.UseTokenFor(UserType.Department));
+            Assert.Throws<ArgumentException>(() => sut.UseTokenFor(UserType.Guardian));
         }
         
     }
