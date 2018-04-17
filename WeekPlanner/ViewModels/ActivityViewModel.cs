@@ -25,8 +25,6 @@ namespace WeekPlanner.ViewModels
         public ActivityViewModel(INavigationService navigationService, IPictogramApi pictogramApi) : base(navigationService)
         {
             _pictogramApi = pictogramApi;
-            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
-                ChangePicto);
         }
 
         override public async Task InitializeAsync(object navigationData)
@@ -129,6 +127,12 @@ namespace WeekPlanner.ViewModels
             // TODO: error handling - use RequestService
             await _pictogramApi.V1PictogramByIdPutAsync(pictogramDTO.Id, pictogramDTO);
         });
+
+        public override void Popped(object navigationData) {
+            if (navigationData is PictogramDTO newPicto) {
+                pictogramDTO = newPicto;
+            }
+        }
 
     }
 }

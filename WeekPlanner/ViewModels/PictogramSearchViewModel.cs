@@ -59,8 +59,7 @@ namespace WeekPlanner.ViewModels
         //view ved at subscribe til den messagekey der hedder 'PictoSearchChosenItem'.
         //På den måde kommunikerer man mellem views.
         async void ListViewItemTapped(PictogramDTO tappedItem){
-            MessagingCenter.Send(this, MessageKeys.PictoSearchChosenItem, tappedItem);
-            await NavigationService.PopAsync();
+            await NavigationService.PopAsync(tappedItem);
         }
 
         //HUSK AT IMPLEMENTERE BESKED VED INGEN RESULTATER OG LOADING ICON

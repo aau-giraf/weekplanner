@@ -83,13 +83,11 @@ namespace WeekPlanner.ViewModels
 
             MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
                 async _ => await SaveSchedule());
-            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
-                InsertPicto);
             MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
                 DeleteActivity);
         }
 
-        private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
+        private void InsertPicto(PictogramDTO pictogramDTO)
         {
             String imgSource = 
                 GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl;
@@ -185,6 +183,12 @@ namespace WeekPlanner.ViewModels
             else
             {
                 throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
+            }
+        }
+
+        public override void Popped(object navigationData) {
+            if (navigationData is PictogramDTO pictogramDTO) {
+                InsertPicto(pictogramDTO);
             }
         }
 

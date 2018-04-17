@@ -44,14 +44,14 @@ namespace WeekPlanner.Services.Navigation
         public Task PopAsync(object navigationData = null)
         {
             var navigationPage = Application.Current.MainPage as CustomNavigationPage;
+            PreviousPageViewModel.Popped(navigationData);
             
             // TODO: Update to use correct frontpage
             if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))
             {
                 return navigationPage?.PopAsync();
             }
-
-            return PreviousPageViewModel.PoppedAsync(navigationData);
+            return Task.FromResult(false);
         }
 
         public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
