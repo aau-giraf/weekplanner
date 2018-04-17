@@ -69,6 +69,9 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
+        public ICommand PictoClickedCommand => new Command<ImageSource>(async imageSource => 
+            await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
+
         public WeekPlannerViewModel(INavigationService navigationService, IWeekApi weekApi,
             ILoginService loginService, IPictogramApi pictogramApi) : base(navigationService)
         {
@@ -82,6 +85,8 @@ namespace WeekPlanner.ViewModels
                 async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 InsertPicto);
+            MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
+                DeleteActivity);
         }
 
         private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
@@ -209,6 +214,10 @@ namespace WeekPlanner.ViewModels
                 SendRequestFailedMessage(result.ErrorKey);
                 await NavigationService.PopAsync();
             }
+        }
+
+        private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
+            // TODO: Remove activityID from List<Resource> 
         }
 
         private void SetWeekdayPictos()
