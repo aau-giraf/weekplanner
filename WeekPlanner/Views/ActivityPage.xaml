@@ -62,7 +62,8 @@
                          VerticalOptions="End"
                          IsVisible="{Binding IsGuardianMode}">
                 <Button Text="Gem"
-                        WidthRequest="300" />
+                        WidthRequest="300"
+                        Command="{Binding SaveCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

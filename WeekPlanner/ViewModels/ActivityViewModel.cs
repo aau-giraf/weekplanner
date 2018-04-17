@@ -5,6 +5,7 @@ using IO.Swagger.Model;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
+using IO.Swagger.Api;
 
 namespace WeekPlanner.ViewModels
 {
@@ -19,9 +20,11 @@ namespace WeekPlanner.ViewModels
         private string _imageSource;
         private bool _isGuardianMode = true;
         private State _state = State.Checked;
+        readonly IPictogramApi _pictogramApi;
 
-        public ActivityViewModel(INavigationService navigationService) : base(navigationService)
+        public ActivityViewModel(INavigationService navigationService, IPictogramApi pictogramApi) : base(navigationService)
         {
+            _pictogramApi = pictogramApi;
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 ChangePicto);
         }
@@ -117,6 +120,15 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        // TODO: Replace with real model when backend is updated
+        private PictogramDTO pictogramDTO;
+
         public ICommand ToggleGuardianMode => new Command(() => IsGuardianMode = !IsGuardianMode);
+        public ICommand SaveCommand => new Command(async () =>
+        {
+            // TODO: error handling - use RequestService
+            await _pictogramApi.V1PictogramByIdPutAsync(pictogramDTO.Id, pictogramDTO);
+        });
+
     }
 }
