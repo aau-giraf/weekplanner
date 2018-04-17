@@ -31,24 +31,18 @@ namespace WeekPlanner.Views
 			}
 		}
 
-		protected override void OnAppearing()
-		{
-			base.OnAppearing();
+		//TODO: 
+		/*
+		* The following allows for specification of the orientation of the WeekPlannerPage. 
+		* This, however, is dependent on the not yet implemented user story regarding citizen orientation setting
+		* and should be set accordingly once this has been implemented. 
+		*/
+		//protected override void OnAppearing()
+		//{
+		//	base.OnAppearing();
 
-			// TODO: 
-			/*
-			 * The following allows for specification of the orientation of the WeekPlannerPage. 
-			 * This, however, is dependent on the not yet implemented user story regarding prefered citizen orientation 
-			 * and should be set accordingly once this has been implemented. 
-			 */
-			MessagingCenter.Send(this, "allowPortrait");
-		}
-
-		protected override void OnDisappearing()
-		{
-			base.OnDisappearing();
-
-			MessagingCenter.Send(this, "forceLandscape");
-		}
+		//	
+		//	MessagingCenter.Send(this, "allowPortrait");
+		//}
 	}
 }

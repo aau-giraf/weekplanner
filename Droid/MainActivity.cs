@@ -16,15 +16,11 @@ namespace WeekPlanner.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-			MessagingCenter.Subscribe<WeekPlannerPage>(this, "allowPortrait", (sender) =>
-			{
-				RequestedOrientation = ScreenOrientation.Unspecified;
-			});
-
-			MessagingCenter.Subscribe<WeekPlannerPage>(this, "forceLandscape", (sender) =>
-			{
-				RequestedOrientation = ScreenOrientation.Landscape;
-			});
+			// Subscription for the sent message regarding orientation setting
+			//MessagingCenter.Subscribe<WeekPlannerPage>(this, "allowPortrait", (sender) =>
+			//{
+			//	RequestedOrientation = ScreenOrientation.Unspecified;
+			//});
 
 			base.OnCreate(bundle);
 
