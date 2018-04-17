@@ -16,14 +16,19 @@ namespace WeekPlanner.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-			MessagingCenter.Subscribe<WeekPlannerPage>(this, "allowPortrait", (sender) => 
+			MessagingCenter.Subscribe<WeekPlannerPage>(this, "allowPortrait", (sender) =>
 			{
 				RequestedOrientation = ScreenOrientation.Unspecified;
 			});
 
-            base.OnCreate(bundle);
+			MessagingCenter.Subscribe<WeekPlannerPage>(this, "forceLandscape", (sender) =>
+			{
+				RequestedOrientation = ScreenOrientation.Landscape;
+			});
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+			base.OnCreate(bundle);
+
+			Forms.Init(this, bundle);
             CachedImageRenderer.Init(enableFastRenderer: true);
             LoadApplication(new App());
         }

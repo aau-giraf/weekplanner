@@ -43,5 +43,12 @@ namespace WeekPlanner.Views
 			 */
 			MessagingCenter.Send(this, "allowPortrait");
 		}
+
+		protected override void OnDisappearing()
+		{
+			base.OnDisappearing();
+
+			MessagingCenter.Send(this, "forceLandscape");
+		}
 	}
 }
