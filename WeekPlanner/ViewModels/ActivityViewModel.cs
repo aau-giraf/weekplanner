@@ -17,7 +17,7 @@ namespace WeekPlanner.ViewModels
     public class ActivityViewModel : ViewModelBase
     {
         private string _imageSource;
-        private bool _isGuardianMode = false;
+        private bool _isGuardianMode = true;
         private State _state = State.Checked;
 
         public ActivityViewModel(INavigationService navigationService) : base(navigationService)
@@ -57,28 +57,66 @@ namespace WeekPlanner.ViewModels
             await NavigationService.PopAsync();
         });
 
+        public ICommand ToggleStateCommand => new Command(() =>
+        {
+            switch (State)
+            {
+                case State.Normal:
+                    State = State.Checked;
+                    break;
+                case State.Checked:
+                    State = State.Cancelled;
+                    break;
+                case State.Cancelled:
+                    State = State.Normal;
+                    break;
+            }
+        });
+
         private void ChangePicto(PictogramSearchViewModel pictoVM, PictogramDTO pictogramDTO)
         {
             ImageSource = pictogramDTO.ImageUrl;
         }
 
-        public bool IsGuardianMode { 
-            get => _isGuardianMode; 
-            set {
+        public bool IsGuardianMode
+        {
+            get => _isGuardianMode;
+            set
+            {
                 _isGuardianMode = value;
                 RaisePropertyChanged(() => IsGuardianMode);
-            } 
+            }
         }
 
         public State State
         {
             get => _state;
-            set 
+            set
             {
                 _state = value;
                 RaisePropertyChanged(() => State);
+                RaisePropertyChanged(() => FriendlyStateString);
             }
         }
-        
+
+        public string FriendlyStateString
+        {
+            get
+            {
+                switch (State)
+                {
+                    case State.Normal:
+                        return "Normal";
+                    case State.Checked:
+                        return "Udført";
+                    case State.Cancelled:
+                        return "Aflyst";
+                    default:
+                        return State.ToString();
+                }
+            }
+        }
+
+        public ICommand ToggleGuardianMode => new Command(() => IsGuardianMode = !IsGuardianMode);
     }
 }
