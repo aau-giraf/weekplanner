@@ -27,7 +27,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         [InlineData("FridayPictos")]
         [InlineData("SaturdayPictos")]
         [InlineData("SundayPictos")]
-        [InlineData("SundayPictos")]
         [InlineData("CountOfMaxHeightWeekday")]
         public void WeekdayPictos_OnSet_RaisesPropertiesChanged(string property)
         {
@@ -83,7 +82,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public async void CountOfMaxHeightWeekday_AfterInitAsync_returnsCorrectCount()
+        public async Task CountOfMaxHeightWeekday_AfterInitAsync_returnsCorrectCount()
         {
             //Arrange
             var mockUsernameDTO = Fixture.Create<UserNameDTO>();
@@ -111,7 +110,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public void WeekdayPictos_AfterInitAsync_IsNotNull()
+        public async Task WeekdayPictos_AfterInitAsync_IsNotNullAsync()
         {
             //Arrange
             var weekResponse = Fixture.Build<ResponseWeekDTO>()
@@ -131,7 +130,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
             var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
             //Act
-            sut.InitializeAsync(null);
+            await sut.InitializeAsync(null);
             //Assert
             Assert.NotNull(sut.WeekdayPictos);
         }

@@ -17,7 +17,7 @@ namespace WeekPlanner.ViewModels
 
     public class ActivityViewModel : ViewModelBase
     {
-        private string _imageSource;
+        private string _imageUrl;
         private bool _isGuardianMode = true;
         private State _state = State.Checked;
         readonly IPictogramApi _pictogramApi;
@@ -31,17 +31,17 @@ namespace WeekPlanner.ViewModels
         {
             if (navigationData is string imgUrl)
             {
-                ImageSource = imgUrl;
+                ImageUrl = imgUrl;
             }
         }
 
-        public string ImageSource
+        public string ImageUrl
         {
-            get => _imageSource;
+            get => _imageUrl;
             set
             {
-                _imageSource = value;
-                RaisePropertyChanged(() => ImageSource);
+                _imageUrl = value;
+                RaisePropertyChanged(() => ImageUrl);
             }
         }
 
@@ -76,7 +76,7 @@ namespace WeekPlanner.ViewModels
 
         private void ChangePicto(PictogramSearchViewModel pictoVM, PictogramDTO pictogramDTO)
         {
-            ImageSource = pictogramDTO.ImageUrl;
+            ImageUrl = pictogramDTO.ImageUrl;
         }
 
         public bool IsGuardianMode
@@ -131,7 +131,7 @@ namespace WeekPlanner.ViewModels
         public override void Popped(object navigationData) {
             if (navigationData is PictogramDTO newPicto) {
                 pictogramDTO = newPicto;
-                ImageSource = GlobalSettings.Instance.BaseEndpoint + newPicto.ImageUrl;
+                ImageUrl = GlobalSettings.Instance.BaseEndpoint + newPicto.ImageUrl;
             }
         }
 
