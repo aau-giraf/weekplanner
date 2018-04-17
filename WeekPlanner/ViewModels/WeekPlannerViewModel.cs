@@ -224,6 +224,26 @@ namespace WeekPlanner.ViewModels
         {
             EditModeEnabled = true;
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
+            var tempDict = new Dictionary<DayEnum, ObservableCollection<String>>();
+            
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+            {
+                tempDict.Add(day, new ObservableCollection<string>());
+            }
+            
+            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
+            {
+                var weekday = dayDTO.Day.Value;
+                ObservableCollection<String> pictos = new ObservableCollection<String>();
+                foreach (var eleID in dayDTO.ElementIDs)
+                {
+                    pictos.Add(
+                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
+                }
+                tempDict[weekday] = pictos;
+            }
+
+            WeekdayPictos = tempDict;
         }
 
 
