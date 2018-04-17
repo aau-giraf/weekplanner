@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using IO.Swagger.Model;
+﻿using System.Collections.ObjectModel;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 

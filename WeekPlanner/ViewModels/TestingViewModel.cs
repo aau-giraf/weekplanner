@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using WeekPlanner.Services.Login;

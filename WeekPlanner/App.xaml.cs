@@ -1,6 +1,5 @@
 using System.Net.Http;
 using System.Threading.Tasks;
-using WeekPlanner.Views;
 using Xamarin.Forms;
 using WeekPlanner.ApplicationObjects;
 using Autofac;

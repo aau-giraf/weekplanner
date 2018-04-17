@@ -1,13 +1,11 @@
 ﻿using Autofac;
 using WeekPlanner.Services.Navigation;
-using WeekPlanner.Views;
 using WeekPlanner.ViewModels;
 using IO.Swagger.Api;
 using WeekPlanner.Services.Mocks;
-using IO.Swagger.Client;
 using WeekPlanner.Services.Settings;
-using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Services.Login;
+using WeekPlanner.Services.Request;
 
 namespace WeekPlanner.ApplicationObjects
 {
@@ -35,6 +33,7 @@ namespace WeekPlanner.ApplicationObjects
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
             cb.RegisterType<SettingsService>().As<ISettingsService>();
+            cb.RegisterType<RequestService>().As<IRequestService>();
 
             // *** Conditional Registrations ***
             if (GlobalSettings.Instance.UseMocks)
