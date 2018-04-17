@@ -22,21 +22,28 @@
                     <RowDefinition Height="AUTO"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <!-- SETTINGS TITLEBAR -->
+                <Label Text="Tema" Grid.Column="0" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                <Label Text="Dage Farver" Grid.Column="1" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                <Label Text="Uge Dage" Grid.Column="2" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                <Label Text="Orientering" Grid.Column="3" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                <Label Text="Viste Aktiviteter" Grid.Column="4" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                <Label Text="Udført Tegn" Grid.Column="5" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
                 <ScrollView Grid.Row="1" Grid.ColumnSpan="6">
                     <!-- HACK: The HeightRequest is set to make the Grid's height larger
                     than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                    <Grid HeightRequest="1500">
-                        <StackLayout BackgroundColor="#000" Grid.Column="0"> 
+                    <Grid HeightRequest="1500" ColumnSpacing="5">
+                        <StackLayout BackgroundColor="#000" Grid.Column="0"> <!-- Tema -->
                         </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="1"> 
+                        <StackLayout BackgroundColor="#000" Grid.Column="1"> <!-- Dage farver -->
                         </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="2"> 
+                        <StackLayout BackgroundColor="#000" Grid.Column="2"> <!-- Uge Dage -->
                         </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="3"> 
+                        <StackLayout BackgroundColor="#000" Grid.Column="3"> <!-- Orientering -->
                         </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="4"> 
+                        <StackLayout BackgroundColor="#000" Grid.Column="4"> <!-- Viste Aktiviteter -->
                         </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="5"> 
+                        <StackLayout BackgroundColor="#000" Grid.Column="5"> <!-- Udført Tegn -->
                         </StackLayout>
                     </Grid>
                 </ScrollView>
