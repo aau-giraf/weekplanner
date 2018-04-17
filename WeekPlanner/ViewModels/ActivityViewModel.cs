@@ -11,7 +11,7 @@ namespace WeekPlanner.ViewModels
     public class ActivityViewModel : ViewModelBase
     {
         private ImageSource _imageSource;
-        private bool _isGuardianMode = false;
+        private bool _isGuardianMode = true;
 
         public ActivityViewModel(INavigationService navigationService) : base(navigationService)
         {
