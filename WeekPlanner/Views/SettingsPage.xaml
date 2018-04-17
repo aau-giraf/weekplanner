@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="WeekPlanner.Views.SettingsPage">
+     <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="{Binding UserModeImage}" Command="{Binding ToggleEditModeCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid ColumnSpacing="5"> <!-- Defines the white space between columns -->
+                <Grid.ColumnDefinitions>
+                    <!-- There needs to be a column definition for each column in the view -->
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <!-- Should assign all available space for the height of the columns -->
+                    <RowDefinition Height="AUTO"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ScrollView Grid.Row="1" Grid.ColumnSpan="6">
+                    <!-- HACK: The HeightRequest is set to make the Grid's height larger
+                    than the ListViews height in effect disabling their scrolling, so all days scroll together -->
+                    <Grid HeightRequest="1500">
+                        <StackLayout BackgroundColor="#000" Grid.Column="0"> 
+                        </StackLayout>
+                        <StackLayout BackgroundColor="#000" Grid.Column="1"> 
+                        </StackLayout>
+                        <StackLayout BackgroundColor="#000" Grid.Column="2"> 
+                        </StackLayout>
+                        <StackLayout BackgroundColor="#000" Grid.Column="3"> 
+                        </StackLayout>
+                        <StackLayout BackgroundColor="#000" Grid.Column="4"> 
+                        </StackLayout>
+                        <StackLayout BackgroundColor="#000" Grid.Column="5"> 
+                        </StackLayout>
+                    </Grid>
+                </ScrollView>
+             </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
