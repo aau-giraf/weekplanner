@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using WeekPlanner.Views;
 using Xamarin.Forms;
@@ -5,6 +6,8 @@ using WeekPlanner.ApplicationObjects;
 using Autofac;
 using WeekPlanner.Services.Navigation;
 using DLToolkit.Forms.Controls;
+using FFImageLoading.Config;
+using WeekPlanner.Services.Settings;
 
 namespace WeekPlanner
 {
@@ -12,6 +15,14 @@ namespace WeekPlanner
     {
         public App()
         {
+            
+            FFImageLoading.ImageService.Instance.Initialize(new Configuration()
+            {
+                HttpClient =
+                    new HttpClient(
+                        new GirafAuthenticatedHttpImageClientHelper(SettingsService.GetToken))
+            });
+            
             InitializeComponent();
 
             AppSetup setup = new AppSetup();
