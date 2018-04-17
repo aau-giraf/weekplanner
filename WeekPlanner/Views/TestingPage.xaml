@@ -27,6 +27,9 @@
                 <Button 
                     Text="Aktivitet" 
                     Command="{Binding NavigateToActivityCommand}" />
+                <Button
+                    Text="Gem Prompt"
+                    Command="{Binding NavigateToSavePromptCommand}" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
