@@ -15,12 +15,19 @@
         <DataTemplate>
             <ViewCell>
                 <!--DownsampleToViewSize="true"-->
+				<Frame 
+					OutlineColor="{Binding Border}"
+					BackgroundColor="{Binding Border}"
+					Margin="5"
+					VerticalOptions="Center"
+					>
                 <ffimageloading:CachedImage
                     VerticalOptions="Center"
                     LoadingPlaceholder="image_loading.png"
                     ErrorPlaceholder="image_loading.png"
-                    Source="{Binding}"
-                    Margin="5" />
+                    Source="{Binding URL}"
+					Scale="1"/>
+				</Frame>
             </ViewCell>
         </DataTemplate>
     </ListView.ItemTemplate>
