@@ -10,10 +10,6 @@ namespace WeekPlanner.Views
         public ChooseCitizenPage()
         {
             InitializeComponent();
-
-            MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.RequestFailed,
-                async (sender, message) =>
-                    await DisplayAlert("Fejl", message, "Luk"));
         }
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)

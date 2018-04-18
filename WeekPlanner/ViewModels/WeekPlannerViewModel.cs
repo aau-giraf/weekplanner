@@ -16,6 +16,7 @@ using System.Windows.Input;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Views;
 using static IO.Swagger.Model.WeekdayDTO;
+using WeekPlanner.Services;
 
 namespace WeekPlanner.ViewModels
 {
@@ -24,7 +25,7 @@ namespace WeekPlanner.ViewModels
         private readonly ILoginService _loginService;
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
-
+        private readonly IDialogService _dialogService;
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
@@ -62,6 +63,8 @@ namespace WeekPlanner.ViewModels
 
         public ICommand ToggleEditModeCommand => new Command(() => SwitchUserMode());
 
+        public ICommand SaveCommand => new Command(async () => await SaveSchedule());
+
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
             _weekdayToAddPictogramTo = weekday;
@@ -72,17 +75,15 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
 
         public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
-            IRequestService requestService, IWeekApi weekApi) : base(navigationService)
+            IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
         {
+            _requestService = requestService;
+            _weekApi = weekApi;
+            _dialogService = dialogService;
             _loginService = loginService;
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-
-            _requestService = requestService;
-            _weekApi = weekApi;
             
-            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
-                async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 InsertPicto);
             MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
@@ -139,6 +140,16 @@ namespace WeekPlanner.ViewModels
 
         private async Task SaveSchedule()
         {
+            bool confirmed = await _dialogService.ConfirmAsync(
+                title: "Gem ugeplan", 
+                message: "Vil du gemme ugeplanen?", 
+                okText: "Gem", 
+                cancelText: "Annuller");
+
+			if(!confirmed){
+                return;   
+            }
+            
             if (WeekDTO.Id is null)
             {
                 await SaveNewSchedule();

@@ -10,10 +10,6 @@ namespace WeekPlanner.Views
         public LoginPage()
         {
             InitializeComponent();
-
-            MessagingCenter.Subscribe<LoginService, string>(this, MessageKeys.RequestFailed, async (sender, errorMessage) => {
-                await DisplayAlert("Fejl", errorMessage, "Luk");
-            });
         }
 
         void Username_Completed(object sender, System.EventArgs e)
