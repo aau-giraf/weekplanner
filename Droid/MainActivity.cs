@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
@@ -17,7 +18,11 @@ namespace WeekPlanner.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            // Load ffimageloading
             CachedImageRenderer.Init(enableFastRenderer: true);
+            // Load Acr.UserDialogs
+            UserDialogs.Init(this);
+
             LoadApplication(new App());
         }
 
