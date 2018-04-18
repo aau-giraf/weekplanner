@@ -11,15 +11,7 @@ namespace WeekPlanner.iOS
     {
 		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(UIApplication application, [Transient] UIWindow forWindow)
 		{
-			var mainPage = Xamarin.Forms.Application.Current.MainPage;
-			var last = mainPage.Navigation.NavigationStack.Count - 1;
-
-			if (mainPage.Navigation.NavigationStack[last] is WeekPlannerPage)
-			{
-				return UIInterfaceOrientationMask.AllButUpsideDown;
-			}
-
-			return UIInterfaceOrientationMask.Portrait;
+			return UIInterfaceOrientationMask.AllButUpsideDown;
 		}
 
 		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
