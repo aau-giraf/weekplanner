@@ -31,7 +31,7 @@ namespace WeekPlanner
             }
         }
 
-        public bool UseMocks = false;
+        public bool UseMocks = true;
 
         public string DepartmentAuthToken { get; set; }
 
