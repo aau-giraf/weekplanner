@@ -27,7 +27,6 @@ namespace WeekPlanner.Services.Login
         /// <param name="userType"></param>
         /// <param name="username"></param>
         /// <param name="password">Provide for Departments, but not Citizens</param>
-        /// <returns>Sends a LoginFailed or LoginSucceed message through MessagingCenter</returns>
         /// <exception cref="ArgumentException"></exception>
         public async Task LoginAndThenAsync(Func<Task> onSuccess, UserType userType, string username, string password)
         {

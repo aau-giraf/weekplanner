@@ -45,8 +45,12 @@ namespace WeekPlanner.ViewModels
             {
                 if (_userModeSwitch)
                 {
+                    // TODO this is a bug, use WeekVM.Popped when integrated with other branch //Lau
                     MessagingCenter.Send(this, MessageKeys.LoginSucceeded);
-                    await NavigationService.PopAsync();
+                    
+                    var username = "Graatand";
+                    await _loginService.LoginAndThenAsync(() => NavigationService.PopAsync(),
+                                                          UserType.Department, username, Password.Value);
                 }
                 else
                 {

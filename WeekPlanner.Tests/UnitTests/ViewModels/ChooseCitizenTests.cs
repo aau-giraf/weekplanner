@@ -5,6 +5,7 @@ using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Moq;
+using WeekPlanner.Services;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.Tests.UnitTests.Base;
@@ -80,56 +81,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             
             // Assert
             settingsServiceMock.Verify(s => s.UseTokenFor(UserType.Department));
-        }
-        
-        [Fact]
-        public async void InitializeAsync_ResultIsFalse_SendsMessage()
-        {
-            // Arrange
-            bool messageReceived = false;
-            MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.CitizenListRetrievalFailed, (sender, args) =>
-            {   
-                messageReceived = true;
-            });
-            
-            var response = Fixture.Build<ResponseListUserNameDTO>()
-                .With(r => r.Success, false)
-                .Create();
-            
-            Fixture.Freeze<Mock<IDepartmentApi>>()
-                .Setup(d => d.V1DepartmentByIdCitizensGetAsync(It.IsAny<long?>()))
-                .ThrowsAsync(Fixture.Create<ApiException>());
-            
-            var sut = Fixture.Create<ChooseCitizenViewModel>();
-            
-            // Act
-            await sut.InitializeAsync(null);
-            
-            // Assert
-            Assert.True(messageReceived);
-        }
-        
-        [Fact]
-        public async void InitializeAsync_ApiExceptionThrown_SendsMessage()
-        {
-            // Arrange
-            bool messageReceived = false;
-            MessagingCenter.Subscribe<ChooseCitizenViewModel, string>(this, MessageKeys.CitizenListRetrievalFailed, (sender, args) =>
-            {
-                messageReceived = true;
-            });
-            
-            Fixture.Freeze<Mock<IDepartmentApi>>()
-                .Setup(d => d.V1DepartmentByIdCitizensGetAsync(It.IsAny<long?>()))
-                .ThrowsAsync(Fixture.Create<ApiException>());
-            
-            var sut = Fixture.Create<ChooseCitizenViewModel>();
-            
-            // Act
-            await sut.InitializeAsync(null);
-            
-            // Assert
-            Assert.True(messageReceived);
         }
 
         [Fact]

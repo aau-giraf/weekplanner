@@ -88,6 +88,7 @@ namespace WeekPlanner.ViewModels
                 InsertPicto);
             MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
                 DeleteActivity);
+            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
         }
         
         public override async Task InitializeAsync(object navigationData)
@@ -163,11 +164,9 @@ namespace WeekPlanner.ViewModels
         private async Task SaveNewSchedule()
         {
             await _requestService.SendRequestAndThenAsync(this,
-                async () => await _weekApi.V1WeekPostAsync(WeekDTO),
-                result =>
+                async () => await _weekApi.V1WeekPostAsync(WeekDTO), result => 
                 {
-                    MessagingCenter.Send(this, MessageKeys.RequestSucceeded,
-                        $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
+                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
                 });
         }
 
@@ -182,8 +181,7 @@ namespace WeekPlanner.ViewModels
                 async () => await _weekApi.V1WeekByIdPutAsync((int) WeekDTO.Id, WeekDTO),
                 result =>
                 {
-                    MessagingCenter.Send(this, MessageKeys.RequestSucceeded, 
-                        $"Ugeplanen '{result.Data.Name}' blev gemt.");
+                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
                 });
         }
 
@@ -227,8 +225,6 @@ namespace WeekPlanner.ViewModels
             else
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
-
-                MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
             }
         }
 
