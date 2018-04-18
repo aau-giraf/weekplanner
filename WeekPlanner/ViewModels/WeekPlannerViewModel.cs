@@ -187,8 +187,14 @@ namespace WeekPlanner.ViewModels
         }
 
         public override void Popped(object navigationData) {
+            // Happens after choosing a pictogram in Pictosearch
             if (navigationData is PictogramDTO pictogramDTO) {
                 InsertPicto(pictogramDTO);
+            }
+
+            // Happens after logging in as guardian when switching to guardian mode
+            if (navigationData is bool enterGuardianMode) {
+                SetToGuardianMode();
             }
         }
 
@@ -311,8 +317,6 @@ namespace WeekPlanner.ViewModels
             else
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
-
-                MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
             }
         }
 

@@ -51,13 +51,15 @@ namespace WeekPlanner.ViewModels
             {
                 if (_userModeSwitch)
                 {
-                    MessagingCenter.Send(this, MessageKeys.LoginSucceeded);
-                    await NavigationService.PopAsync();
+                    var username = "Graatand";
+                    bool enableGuardianMode = true;
+                    await _loginService.LoginAndThenAsync(async () => await NavigationService.PopAsync(enableGuardianMode),
+                                                          UserType.Department, username, Password.Value);
                 }
                 else
                 {
                     var username = "Graatand";
-                    await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
+                    await _loginService.LoginAndThenAsync(async () => await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
                                                           UserType.Department, username, Password.Value);
                 }
             }
