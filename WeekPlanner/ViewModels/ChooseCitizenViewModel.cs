@@ -53,7 +53,7 @@ namespace WeekPlanner.ViewModels
 
 		    await _requestService.SendRequestAndThenAsync(this,
 			    requestAsync: async () => await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id),
-			    onSuccess: result => { CitizenNames = new ObservableCollection<UserNameDTO>(result.Data);});
+			    onSuccess: result => CitizenNames = new ObservableCollection<UserNameDTO>(result.Data));
 	    }
 
 	    public override async Task InitializeAsync(object navigationData)
