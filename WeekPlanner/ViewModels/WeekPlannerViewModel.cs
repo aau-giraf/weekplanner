@@ -84,8 +84,6 @@ namespace WeekPlanner.ViewModels
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             
-            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
-                async _ => await SaveSchedule());
             MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
                 DeleteActivity);
             MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
@@ -134,7 +132,6 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => FridayPictos);
             RaisePropertyChanged(() => SaturdayPictos);
             RaisePropertyChanged(() => SundayPictos);
-            RaisePropertyChanged(() => CountOfMaxHeightWeekday);
             RaisePropertyChanged(() => WeekdayPictos);
         }
 
@@ -263,14 +260,8 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => FridayPictos);
                 RaisePropertyChanged(() => SaturdayPictos);
                 RaisePropertyChanged(() => SundayPictos);
-                RaisePropertyChanged(() => CountOfMaxHeightWeekday);
                 RaisePropertyChanged(() => WeekdayPictos);
             }
-        }
-
-        public int CountOfMaxHeightWeekday
-        {
-            get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
         }
 
         public ObservableCollection<string> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
@@ -299,25 +290,6 @@ namespace WeekPlanner.ViewModels
         {
             var friendlyErrorMessage = errorKeyEnum.ToFriendlyString();
             MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
-        }
-
-        private async Task SwitchUserMode()
-        {
-            if (EditModeEnabled)
-            {
-                EditModeEnabled = false;
-                UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-            }
-            else
-            {
-                await NavigationService.NavigateToAsync<LoginViewModel>(this);
-            }
-        }
-
-        private void SetToGuardianMode()
-        {
-            EditModeEnabled = true;
-            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
         }
     }
 }

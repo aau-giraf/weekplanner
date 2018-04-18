@@ -122,49 +122,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public async Task CountOfMaxHeightWeekday_AfterInitAsync_returnsCorrectCount()
-        {
-            //Arrange
-            var mockUsernameDTO = Fixture.Create<UserNameDTO>();
-
-            Func<WeekPlannerViewModel, Func<Task<ResponseWeekDTO>>, Func<ResponseWeekDTO, Task>, Func<Task>, Func<Task>,
-                    string, string, Task>
-                sendRequestAndThenAsyncMock =
-                    async (sender, requestAsync, onSuccessAsync, onExceptionAsync, onRequestFailedAsync,
-                        exceptionMessage, requestFailedMessage) =>
-                    {
-                        var res = await requestAsync.Invoke();
-                        await onSuccessAsync(res);
-                    };
-            var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
-                    r.SendRequestAndThenAsync(It.IsAny<WeekPlannerViewModel>(), It.IsAny<Func<Task<ResponseWeekDTO>>>(),
-                        It.IsAny<Func<ResponseWeekDTO, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
-                        It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(sendRequestAndThenAsyncMock);
-
-            async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
-                await onSuccess.Invoke();
-
-            var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
-                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, mockUsernameDTO.UserName, ""))
-                .Returns((Func<Func<Task>, UserType, string, string, Task>) LoginAndThenMock);
-
-            var weekResponse = Fixture.Build<ResponseWeekDTO>()
-                .With(r => r.Success, true)
-                .With(r => r.ErrorKey, ResponseWeekDTO.ErrorKeyEnum.NoError)
-                .With(r => r.Data, Fixture.Create<WeekDTO>()).Create();
-
-            var mockWeek = Fixture.Freeze<Mock<IWeekApi>>()
-                .Setup(w => w.V1WeekByIdGetAsync(It.IsAny<long?>()))
-                .ReturnsAsync(weekResponse);
-            var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
-            //Act 
-            await sut.InitializeAsync(mockUsernameDTO);
-            //Assert
-            Assert.Equal(weekResponse.Data.Days.Max(d => d.Elements.Count), sut.CountOfMaxHeightWeekday);
-        }
-
-        [Fact]
         public async Task WeekdayPictos_AfterInitAsync_IsNotNullAsync()
         {
             //Arrange
