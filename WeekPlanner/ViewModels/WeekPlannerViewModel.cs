@@ -236,7 +236,7 @@ namespace WeekPlanner.ViewModels
             {
                 var weekday = dayDTO.Day.Value;
                 ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleID in dayDTO.ElementIDs)
+                foreach (var eleID in dayDTO.Elements)
                 {
                     pictos.Add(
                         GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
