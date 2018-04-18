@@ -1,11 +1,5 @@
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-using WeekPlanner.Helpers;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;

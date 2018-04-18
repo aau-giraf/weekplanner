@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Autofac;
-using WeekPlanner.ApplicationObjects;
 using WeekPlanner.Services.Navigation;
 
 namespace WeekPlanner.ViewModels.Base
