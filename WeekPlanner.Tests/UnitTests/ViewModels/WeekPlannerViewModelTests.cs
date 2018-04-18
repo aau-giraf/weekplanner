@@ -5,21 +5,24 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection;
 using Moq;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Login;
+using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels;
-using Xamarin.Forms;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
     public class WeekPlannerViewModelTests : Base.TestsBase
     {
-        [Theory]
+        [Xunit.Theory]
         [InlineData("MondayPictos")]
         [InlineData("TuesdayPictos")]
         [InlineData("WednesdayPictos")]
@@ -47,20 +50,54 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             Assert.True(invoked);
         }
 
-        [Fact]
-        public async Task MondayPictosProperty_AfterInitAsync_ReturnsCorrectPictos()
+        [Xunit.Theory]
+        [InlineData(WeekdayDTO.DayEnum.Monday)]
+        [InlineData(WeekdayDTO.DayEnum.Tuesday)]
+        [InlineData(WeekdayDTO.DayEnum.Wednesday)]
+        [InlineData(WeekdayDTO.DayEnum.Thursday)]
+        [InlineData(WeekdayDTO.DayEnum.Friday)]
+        [InlineData(WeekdayDTO.DayEnum.Saturday)]
+        [InlineData(WeekdayDTO.DayEnum.Sunday)]
+        public async Task DayPictosProperty_AfterInitAsync_ReturnsCorrectPictos(WeekdayDTO.DayEnum day)
         {
             //Arrange
-            var mockUsernameDTO = Fixture.Create<UserNameDTO>();
+            var usernameDTO = Fixture.Create<UserNameDTO>();
             Func<Func<Task>, UserType, string, string, Task> loginAndThenMock =
                 async (onSuccess, userType, username, password) => await onSuccess.Invoke();
 
+            Func<WeekPlannerViewModel, Func<Task<ResponseWeekDTO>>, Func<ResponseWeekDTO, Task>, Func<Task>, Func<Task>,
+                    string, string, Task>
+                sendRequestAndThenAsyncMock =
+                    async (sender, requestAsync, onSuccessAsync, onExceptionAsync, onRequestFailedAsync,
+                        exceptionMessage, requestFailedMessage) =>
+                    {
+                        var res = await requestAsync.Invoke();
+                        await onSuccessAsync(res);
+                    };
+            var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
+                    r.SendRequestAndThenAsync(It.IsAny<WeekPlannerViewModel>(), It.IsAny<Func<Task<ResponseWeekDTO>>>(),
+                        It.IsAny<Func<ResponseWeekDTO, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
+                        It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(sendRequestAndThenAsyncMock);
+
             var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
-                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, mockUsernameDTO.UserName, ""))
+                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, usernameDTO.UserName, ""))
                 .Returns(loginAndThenMock);
 
+            var weekdays = new List<WeekdayDTO>();
+            foreach (WeekdayDTO.DayEnum d in Enum.GetValues(typeof(WeekdayDTO.DayEnum)))
+            {
+                var weekdayDTO = Fixture.Build<WeekdayDTO>()
+                    .With(w => w.Day, d)
+                    .Create();
+                weekdays.Add(weekdayDTO);
+            }
+
+            var weekDTO = Fixture.Build<WeekDTO>()
+                .With(w => w.Days, weekdays).Create();
+
             var response = Fixture.Build<ResponseWeekDTO>()
-                .With(r => r.Data, Fixture.Create<WeekDTO>())
+                .With(r => r.Data, weekDTO)
                 .With(r => r.Success, true)
                 .With(r => r.ErrorKey, ResponseWeekDTO.ErrorKeyEnum.NoError)
                 .Create();
@@ -69,17 +106,20 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .ReturnsAsync(response);
 
             var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
-            //Act
-            await sut.InitializeAsync(mockUsernameDTO);
 
-            var mondayIds =
-                sut.MondayPictos.Select(p =>
-                        Convert.ToInt64(Regex.Match(p.ToString(), "pictogram/(.*)/image").Groups[1].Value))
+            //Act
+            await sut.InitializeAsync(usernameDTO);
+
+            var dayIds = sut.WeekdayPictos[day].Select(p =>
+                    Convert.ToInt64(Regex.Match(p.ToString(), "pictogram/(.*)/image").Groups[1].Value))
+                .ToList();
+
+            var dayIdsFromWeek =
+                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Elements.Select(e => e.Id).Select(i => i.Value)
                     .ToList();
 
-            var mondayIdsFromWeek = response.Data.Days[0].ElementIDs.Select(i => i.Value).ToList();
             //Assert
-            Assert.Equal(mondayIdsFromWeek, mondayIds);
+            Assert.Equal(dayIdsFromWeek, dayIds);
         }
 
         [Fact]
@@ -87,6 +127,21 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         {
             //Arrange
             var mockUsernameDTO = Fixture.Create<UserNameDTO>();
+
+            Func<WeekPlannerViewModel, Func<Task<ResponseWeekDTO>>, Func<ResponseWeekDTO, Task>, Func<Task>, Func<Task>,
+                    string, string, Task>
+                sendRequestAndThenAsyncMock =
+                    async (sender, requestAsync, onSuccessAsync, onExceptionAsync, onRequestFailedAsync,
+                        exceptionMessage, requestFailedMessage) =>
+                    {
+                        var res = await requestAsync.Invoke();
+                        await onSuccessAsync(res);
+                    };
+            var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
+                    r.SendRequestAndThenAsync(It.IsAny<WeekPlannerViewModel>(), It.IsAny<Func<Task<ResponseWeekDTO>>>(),
+                        It.IsAny<Func<ResponseWeekDTO, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
+                        It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(sendRequestAndThenAsyncMock);
 
             async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
                 await onSuccess.Invoke();
@@ -107,7 +162,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             //Act 
             await sut.InitializeAsync(mockUsernameDTO);
             //Assert
-            Assert.Equal(weekResponse.Data.Days.Max(d => d.ElementIDs.Count), sut.CountOfMaxHeightWeekday);
+            Assert.Equal(weekResponse.Data.Days.Max(d => d.Elements.Count), sut.CountOfMaxHeightWeekday);
         }
 
         [Fact]
