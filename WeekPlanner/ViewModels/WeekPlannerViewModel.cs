@@ -183,7 +183,7 @@ namespace WeekPlanner.ViewModels
 
         private void SetWeekdayPictos()
         {
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<String>>();
+            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
             
             foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
@@ -192,9 +192,9 @@ namespace WeekPlanner.ViewModels
             
             foreach (WeekdayDTO dayDTO in WeekDTO.Days)
             {
-                if(dayDTO.Day == null) continue;
+                if (dayDTO.Day == null) continue;
                 var weekday = dayDTO.Day.Value;
-                ObservableCollection<String> pictos = new ObservableCollection<String>();
+                ObservableCollection<string> pictos = new ObservableCollection<string>();
                 foreach (var eleID in dayDTO.Elements.Select(e => e.Id.Value))
                 {
                     pictos.Add(
@@ -225,7 +225,7 @@ namespace WeekPlanner.ViewModels
         {
             EditModeEnabled = true;
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<String>>();
+            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
             
             foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
@@ -235,7 +235,7 @@ namespace WeekPlanner.ViewModels
             foreach (WeekdayDTO dayDTO in WeekDTO.Days)
             {
                 var weekday = dayDTO.Day.Value;
-                ObservableCollection<String> pictos = new ObservableCollection<String>();
+                ObservableCollection<string> pictos = new ObservableCollection<string>();
                 foreach (var eleID in dayDTO.ElementIDs)
                 {
                     pictos.Add(
