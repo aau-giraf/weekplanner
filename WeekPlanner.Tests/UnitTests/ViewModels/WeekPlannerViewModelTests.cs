@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection;
 using Moq;
 using WeekPlanner.Services.Navigation;
-using NUnit.Framework;
 using WeekPlanner.Services.Login;
+using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels;
 using Xunit;
@@ -63,6 +65,21 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             Func<Func<Task>, UserType, string, string, Task> loginAndThenMock =
                 async (onSuccess, userType, username, password) => await onSuccess.Invoke();
 
+            Func<WeekPlannerViewModel, Func<Task<ResponseWeekDTO>>, Func<ResponseWeekDTO, Task>, Func<Task>, Func<Task>,
+                    string, string, Task>
+                sendRequestAndThenAsyncMock =
+                    async (sender, requestAsync, onSuccessAsync, onExceptionAsync, onRequestFailedAsync,
+                        exceptionMessage, requestFailedMessage) =>
+                    {
+                        var res = await requestAsync.Invoke();
+                        await onSuccessAsync(res);
+                    };
+            var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
+                    r.SendRequestAndThenAsync(It.IsAny<WeekPlannerViewModel>(), It.IsAny<Func<Task<ResponseWeekDTO>>>(),
+                        It.IsAny<Func<ResponseWeekDTO, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
+                        It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(sendRequestAndThenAsyncMock);
+
             var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
                     l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, usernameDTO.UserName, ""))
                 .Returns(loginAndThenMock);
@@ -98,10 +115,11 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .ToList();
 
             var dayIdsFromWeek =
-                response.Data.Days.FirstOrDefault(d => d.Day == day)?.ElementIDs.Select(i => i.Value).ToList();
+                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Elements.Select(e => e.Id).Select(i => i.Value)
+                    .ToList();
 
             //Assert
-            CollectionAssert.AreEqual(dayIdsFromWeek, dayIds);
+            Assert.Equal(dayIdsFromWeek, dayIds);
         }
 
         [Fact]
@@ -109,6 +127,21 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         {
             //Arrange
             var mockUsernameDTO = Fixture.Create<UserNameDTO>();
+
+            Func<WeekPlannerViewModel, Func<Task<ResponseWeekDTO>>, Func<ResponseWeekDTO, Task>, Func<Task>, Func<Task>,
+                    string, string, Task>
+                sendRequestAndThenAsyncMock =
+                    async (sender, requestAsync, onSuccessAsync, onExceptionAsync, onRequestFailedAsync,
+                        exceptionMessage, requestFailedMessage) =>
+                    {
+                        var res = await requestAsync.Invoke();
+                        await onSuccessAsync(res);
+                    };
+            var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
+                    r.SendRequestAndThenAsync(It.IsAny<WeekPlannerViewModel>(), It.IsAny<Func<Task<ResponseWeekDTO>>>(),
+                        It.IsAny<Func<ResponseWeekDTO, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
+                        It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(sendRequestAndThenAsyncMock);
 
             async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
                 await onSuccess.Invoke();
@@ -129,7 +162,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             //Act 
             await sut.InitializeAsync(mockUsernameDTO);
             //Assert
-            Assert.Equal(weekResponse.Data.Days.Max(d => d.ElementIDs.Count), sut.CountOfMaxHeightWeekday);
+            Assert.Equal(weekResponse.Data.Days.Max(d => d.Elements.Count), sut.CountOfMaxHeightWeekday);
         }
 
         [Fact]

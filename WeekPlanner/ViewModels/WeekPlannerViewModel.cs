@@ -101,6 +101,22 @@ namespace WeekPlanner.ViewModels
                 throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
             }
         }
+        
+        // TODO: Handle situation where no days exist
+        private async Task GetWeekPlanForCitizenAsync()
+        {
+            // TODO: Make dynamic regarding weekId
+            await _requestService.SendRequestAndThenAsync(this,
+                requestAsync: async () => await _weekApi.V1WeekByIdGetAsync(1),
+                onSuccessAsync: async result =>
+                {
+                    WeekDTO = result.Data;
+                    SetWeekdayPictos();
+                },
+                onExceptionAsync: async () => await NavigationService.PopAsync(),
+                onRequestFailedAsync: async () => await NavigationService.PopAsync()
+            );
+        }
 
         private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
         {
@@ -160,21 +176,6 @@ namespace WeekPlanner.ViewModels
                 });
         }
 
-        // TODO: Handle situation where no days exist
-        private async Task GetWeekPlanForCitizenAsync()
-        {
-            // TODO: Make dynamic regarding weekId
-            await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: async () => await _weekApi.V1WeekByIdGetAsync(1),
-                onSuccessAsync: async result =>
-                {
-                    WeekDTO = result.Data;
-                    SetWeekdayPictos();
-                },
-                onExceptionAsync: async () => await NavigationService.PopAsync(),
-                onRequestFailedAsync: async () => await NavigationService.PopAsync()
-            );
-        }
 
         private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
             // TODO: Remove activityID from List<Resource> 
@@ -194,7 +195,7 @@ namespace WeekPlanner.ViewModels
                 if(dayDTO.Day == null) continue;
                 var weekday = dayDTO.Day.Value;
                 ObservableCollection<String> pictos = new ObservableCollection<String>();
-                foreach (var eleID in dayDTO.Elements.Select(e => e.Id))
+                foreach (var eleID in dayDTO.Elements.Select(e => e.Id.Value))
                 {
                     pictos.Add(
                         GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
