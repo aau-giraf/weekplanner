@@ -8,7 +8,7 @@
              Title="Gem Prompt">
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Prompt me!" Command="{Binding PromptPopupCommand}"/>
+            <Button x:Name="ButtonPrompt" Text="Prompt me!" Command="{Binding PromptPopupCommand}"/>
             
         </StackLayout>
     </ContentPage.Content>

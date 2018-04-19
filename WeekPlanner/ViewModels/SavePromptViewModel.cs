@@ -21,7 +21,7 @@ namespace WeekPlanner.ViewModels
 
         private async Task PromptPopup()
         {
-            MessagingCenter.Send(this, MessageKeys.ScheduleNotSavedPrompt, "Du er ved at forlade en ugeplan med ændringer der ikke er gemt.\nVil du gemme?");
+            MessagingCenter.Send(this, MessageKeys.ScheduleNotSavedPrompt);
         }
     }
 }
