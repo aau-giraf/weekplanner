@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
@@ -16,16 +17,14 @@ namespace WeekPlanner.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-			// Subscription for the sent message regarding orientation setting
-			//MessagingCenter.Subscribe<WeekPlannerPage>(this, "allowPortrait", (sender) =>
-			//{
-			//	RequestedOrientation = ScreenOrientation.Unspecified;
-			//});
-
 			base.OnCreate(bundle);
 
-			Forms.Init(this, bundle);
+            global::Xamarin.Forms.Forms.Init(this, bundle);
+            // Load ffimageloading
             CachedImageRenderer.Init(enableFastRenderer: true);
+            // Load Acr.UserDialogs
+            UserDialogs.Init(this);
+
             LoadApplication(new App());
         }
 
