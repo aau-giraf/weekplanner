@@ -6,6 +6,7 @@ using WeekPlanner.Services.Mocks;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Request;
+using WeekPlanner.Services;
 
 namespace WeekPlanner.ApplicationObjects
 {
@@ -34,6 +35,7 @@ namespace WeekPlanner.ApplicationObjects
             // Services
             cb.RegisterType<NavigationService>().As<INavigationService>();
             cb.RegisterType<SettingsService>().As<ISettingsService>();
+            cb.RegisterType<DialogService>().As<IDialogService>();
             cb.RegisterType<RequestService>().As<IRequestService>();
 
             // *** Conditional Registrations ***

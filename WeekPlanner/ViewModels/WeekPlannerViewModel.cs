@@ -101,6 +101,22 @@ namespace WeekPlanner.ViewModels
                 throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
             }
         }
+        
+        // TODO: Handle situation where no days exist
+        private async Task GetWeekPlanForCitizenAsync()
+        {
+            // TODO: Make dynamic regarding weekId
+            await _requestService.SendRequestAndThenAsync(this,
+                requestAsync: async () => await _weekApi.V1WeekByIdGetAsync(1),
+                onSuccessAsync: async result =>
+                {
+                    WeekDTO = result.Data;
+                    SetWeekdayPictos();
+                },
+                onExceptionAsync: async () => await NavigationService.PopAsync(),
+                onRequestFailedAsync: async () => await NavigationService.PopAsync()
+            );
+        }
 
         private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
         {
@@ -160,21 +176,6 @@ namespace WeekPlanner.ViewModels
                 });
         }
 
-        // TODO: Handle situation where no days exist
-        private async Task GetWeekPlanForCitizenAsync()
-        {
-            // TODO: Make dynamic regarding weekId
-            await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: async () => await _weekApi.V1WeekByIdGetAsync(1),
-                onSuccessAsync: async result =>
-                {
-                    WeekDTO = result.Data;
-                    SetWeekdayPictos();
-                },
-                onExceptionAsync: async () => await NavigationService.PopAsync(),
-                onRequestFailedAsync: async () => await NavigationService.PopAsync()
-            );
-        }
 
         private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
             // TODO: Remove activityID from List<Resource> 
@@ -183,18 +184,23 @@ namespace WeekPlanner.ViewModels
         private void SetWeekdayPictos()
         {
             var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
-            foreach (WeekdayDTO day in WeekDTO.Days)
+            
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
-                if (day.Day == null) continue;
-                var weekday = day.Day.Value;
+                tempDict.Add(day, new ObservableCollection<string>());
+            }
+            
+            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
+            {
+                if (dayDTO.Day == null) continue;
+                var weekday = dayDTO.Day.Value;
                 ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleID in day.ElementIDs)
+                foreach (var eleID in dayDTO.Elements.Select(e => e.Id.Value))
                 {
                     pictos.Add(
                         GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
                 }
-
-                tempDict.Add(weekday, pictos);
+                tempDict[weekday] = pictos;
             }
 
             WeekdayPictos = tempDict;
@@ -219,6 +225,26 @@ namespace WeekPlanner.ViewModels
         {
             EditModeEnabled = true;
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
+            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
+            
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+            {
+                tempDict.Add(day, new ObservableCollection<string>());
+            }
+            
+            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
+            {
+                var weekday = dayDTO.Day.Value;
+                ObservableCollection<string> pictos = new ObservableCollection<string>();
+                foreach (var eleID in dayDTO.Elements)
+                {
+                    pictos.Add(
+                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
+                }
+                tempDict[weekday] = pictos;
+            }
+
+            WeekdayPictos = tempDict;
         }
 
 
