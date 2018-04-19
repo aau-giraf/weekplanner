@@ -84,8 +84,6 @@ namespace WeekPlanner.ViewModels
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             
-            MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
-                DeleteActivity);
             MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
         }
         
@@ -183,7 +181,7 @@ namespace WeekPlanner.ViewModels
         }
 
 
-        private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
+        private void DeleteActivity(int activityID) {
             // TODO: Remove activityID from List<Resource> 
         }
 
@@ -221,6 +219,10 @@ namespace WeekPlanner.ViewModels
             // Happens after logging in as guardian when switching to guardian mode
             if (navigationData is bool enterGuardianMode) {
                 SetToGuardianMode();
+            }
+
+            if (navigationData is int activityID) {
+                DeleteActivity(activityID);
             }
         }
 

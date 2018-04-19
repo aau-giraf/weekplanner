@@ -26,7 +26,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public void Popped_ChangesImageSource()
+        public void Popped_ChangesImageUrl()
         {
             // Arrange
             var sut = Fixture.Build<ActivityViewModel>()

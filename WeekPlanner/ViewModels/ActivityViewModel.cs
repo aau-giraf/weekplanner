@@ -54,8 +54,7 @@ namespace WeekPlanner.ViewModels
         {
             // TODO: send message delete with resource.Id
             int activityID = 42;
-            MessagingCenter.Send(this, MessageKeys.DeleteActivity, activityID);
-            await NavigationService.PopAsync();
+            await NavigationService.PopAsync(activityID);
         });
 
         public ICommand ToggleStateCommand => new Command(() =>
