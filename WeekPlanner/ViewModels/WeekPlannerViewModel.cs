@@ -74,7 +74,7 @@ namespace WeekPlanner.ViewModels
 		{
 			String imgSource =
 				GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl;
-			WeekdayPictos[_weekdayToAddPictogramTo].Add(new PictogramMock(imgSource, PictogramState.Normal));
+			WeekdayPictos[_weekdayToAddPictogramTo].Add(new StatefulPictogram(imgSource, PictogramState.Normal));
 
 			// Add pictogramId to the correct weekday
 			// TODO: Fix
@@ -200,15 +200,15 @@ namespace WeekPlanner.ViewModels
 
 		private void SetWeekdayPictos()
 		{
-			var tempDict = new Dictionary<DayEnum, ObservableCollection<PictogramMock>>();
+			var tempDict = new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
 			foreach (WeekdayDTO day in WeekDTO.Days)
 			{
 				var weekday = day.Day.Value;
-				ObservableCollection<PictogramMock> pictos = new ObservableCollection<PictogramMock>();
+				ObservableCollection<StatefulPictogram> pictos = new ObservableCollection<StatefulPictogram>();
 				foreach (var eleID in day.ElementIDs)
 				{
 					pictos.Add(
-						new PictogramMock(GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw", PictogramState.Normal));
+						new StatefulPictogram(GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw", PictogramState.Normal));
 				}
 
 				tempDict.Add(weekday, pictos);
@@ -217,7 +217,7 @@ namespace WeekPlanner.ViewModels
 			WeekdayPictos = tempDict;
 		}
 
-		public void SetBorderStatusPictograms()
+		public void SetBorderStatusPictograms(DayOfWeek weekday)
 		{
 			// Find the current day in WeekDTO object.
 			DateTimeConverter dateTimeConverter = new DateTimeConverter();
@@ -225,7 +225,7 @@ namespace WeekPlanner.ViewModels
 			// Find the first pictogram, that are: normal state and first.
 			foreach (var weekDayPicto in WeekdayPictos)
 			{
-				if (weekDayPicto.Key == dateTimeConverter.GetWeekDay(DateTime.Today.DayOfWeek))
+				if (weekDayPicto.Key == dateTimeConverter.GetWeekDay(weekday))
 				{
 					weekDayPicto.Value.Where((s) => s.PictogramState == PictogramState.Normal).First().Border = "Black";
 					return;
@@ -235,16 +235,16 @@ namespace WeekPlanner.ViewModels
 
 		#region Boilerplate for each weekday's pictos
 
-		private Dictionary<DayEnum, ObservableCollection<PictogramMock>> _weekdayPictos =
-			new Dictionary<DayEnum, ObservableCollection<PictogramMock>>();
+		private Dictionary<DayEnum, ObservableCollection<StatefulPictogram>> _weekdayPictos =
+			new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
 
-		public Dictionary<DayEnum, ObservableCollection<PictogramMock>> WeekdayPictos
+		public Dictionary<DayEnum, ObservableCollection<StatefulPictogram>> WeekdayPictos
 		{
 			get => _weekdayPictos;
 			set
 			{
 				_weekdayPictos = value;
-				SetBorderStatusPictograms();
+				SetBorderStatusPictograms(DateTime.Today.DayOfWeek);
 				RaisePropertyChanged(() => MondayPictos);
 				RaisePropertyChanged(() => TuesdayPictos);
 				RaisePropertyChanged(() => WednesdayPictos);
@@ -262,28 +262,28 @@ namespace WeekPlanner.ViewModels
 			get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
 		}
 
-		public ObservableCollection<PictogramMock> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
+		public ObservableCollection<StatefulPictogram> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
 
-		public ObservableCollection<PictogramMock> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
+		public ObservableCollection<StatefulPictogram> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
 
-		public ObservableCollection<PictogramMock> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
+		public ObservableCollection<StatefulPictogram> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
 
-		public ObservableCollection<PictogramMock> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
+		public ObservableCollection<StatefulPictogram> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
 
-		public ObservableCollection<PictogramMock> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
+		public ObservableCollection<StatefulPictogram> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
 
-		public ObservableCollection<PictogramMock> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
+		public ObservableCollection<StatefulPictogram> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
 
-		public ObservableCollection<PictogramMock> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
+		public ObservableCollection<StatefulPictogram> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
 
-		private ObservableCollection<PictogramMock> GetPictosOrEmptyList(DayEnum day)
+		private ObservableCollection<StatefulPictogram> GetPictosOrEmptyList(DayEnum day)
 		{
 			if (!WeekdayPictos.TryGetValue(day, out var pictogramMocks))
-				pictogramMocks = new ObservableCollection<PictogramMock>();
+				pictogramMocks = new ObservableCollection<StatefulPictogram>();
 
 
 
-			return new ObservableCollection<PictogramMock>(pictogramMocks);
+			return new ObservableCollection<StatefulPictogram>(pictogramMocks);
 		}
 
 		#endregion
@@ -296,6 +296,8 @@ namespace WeekPlanner.ViewModels
 		}
 	}
 
+
+	// An enum type for determining which state a pictogram is in.
 	public enum PictogramState
 	{
 		Normal = 0,
@@ -303,12 +305,16 @@ namespace WeekPlanner.ViewModels
 		Checked = 2
 	}
 
+	/// <summary>
+	///  Converts a DayOfWeek to a WeekdayDTO 
+	/// </summary>
 	public class DateTimeConverter
 	{
 		public DateTimeConverter()
 		{
 		}
 
+		// Convert a specific day.
 		public WeekdayDTO.DayEnum GetWeekDay(DayOfWeek weekDay)
 		{
 			switch (weekDay)
@@ -333,7 +339,10 @@ namespace WeekPlanner.ViewModels
 		}
 	}
 
-	public class PictogramMock
+	/// <summary>
+	///  A mock class for pictograms, it contains both the URL and State of a pictogram. 
+	/// </summary>
+	public class StatefulPictogram
 	{
 		private string _url;
 		public string URL
@@ -359,7 +368,7 @@ namespace WeekPlanner.ViewModels
 			}
 		}
 
-		public PictogramMock(string url, PictogramState pictogramState)
+		public StatefulPictogram(string url, PictogramState pictogramState)
 		{
 			PictogramState = pictogramState;
 			URL = url;
