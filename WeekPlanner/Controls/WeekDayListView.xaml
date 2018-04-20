@@ -9,6 +9,9 @@
     <!-- TODO: CachingStrategy causes crash, why?  -->
     <!--CachingStrategy="RecycleElement"-->
     <ListView.Behaviors>
+        <behaviors:EventToCommandBehavior EventName="ItemTapped"
+                                                      Command="{Binding PictoClickedCommand}"
+                                                      EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
         <behaviors:ListViewDeselectSelectedItemBehavior />
     </ListView.Behaviors>
     <ListView.ItemTemplate>

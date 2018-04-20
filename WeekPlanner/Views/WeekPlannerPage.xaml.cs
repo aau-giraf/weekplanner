@@ -1,5 +1,4 @@
 using System;
-using IO.Swagger.Model;
 using WeekPlanner.ViewModels;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;

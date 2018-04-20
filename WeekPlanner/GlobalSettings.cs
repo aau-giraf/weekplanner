@@ -4,7 +4,7 @@ namespace WeekPlanner
 {
 	public class GlobalSettings
 	{
-		public const string DefaultEndpoint = "http://localhost:5000";
+		public const string DefaultEndpoint = "http://10.0.2.2:5000";
 
 		private string _baseEndpoint;
 		private static readonly GlobalSettings _instance = new GlobalSettings();
@@ -19,32 +19,21 @@ namespace WeekPlanner
 			get { return _instance; }
 		}
 
-		public string BaseEndpoint
-		{
-			get { return _baseEndpoint; }
-			set
-			{
-				_baseEndpoint = value;
-				UpdateEndpoint(_baseEndpoint);
-			}
-		}
+        public string BaseEndpoint
+        {
+            get { return _baseEndpoint; }
+            set
+            {
+                _baseEndpoint = value;
+            }
+        }
 
 		public bool UseMocks = false;
 
-		public string LoginEndpoint { get; set; }
+        public string DepartmentAuthToken { get; set; }
 
-		public string LogoutEndpoint { get; set; }
+        public string CitizenAuthToken { get; set; }
 
-		public string DepartmentAuthToken { get; set; }
-
-		public string CitizenAuthToken { get; set; }
-
-		public DepartmentNameDTO Department { get; set; } = new DepartmentNameDTO { Name = "Egebakken" };
-
-		private void UpdateEndpoint(string baseEndpoint)
-		{
-			LoginEndpoint = $"{baseEndpoint}/Account/login";
-			LogoutEndpoint = $"{baseEndpoint}/Account/logout";
-		}
-	}
+        public DepartmentNameDTO Department { get; set; } = new DepartmentNameDTO { Name = "Egebakken" };
+    }
 }

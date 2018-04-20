@@ -16,5 +16,6 @@ namespace WeekPlanner.ViewModels.Base
         public const string ScheduleUpdateFailed = "UpdateFailed";
         public const string ScheduleUpdateSucceeded = "UpdateSucceeded";
         public const string PictoSearchChosenItem = "PictoSearchChosenItem";
+        public const string DeleteActivity = "DeleteActivity";
     }
 }

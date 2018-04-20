@@ -22,11 +22,11 @@
                     Text="Vælg skabelon"
                     Command="{Binding NavigateToChooseTemplateCommand}" />
                 <Button
-                    Text="Brugermode skift"
-                    Command="{Binding NavigateToUserModeSwitchCommand}" />
-                <Button
                     Text="Søg efter pictogram"
                     Command="{Binding NavigateToPictogramSearchCommand}" />
+                <Button 
+                    Text="Aktivitet" 
+                    Command="{Binding NavigateToActivityCommand}" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

@@ -1,7 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using Acr.UserDialogs;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
+using WeekPlanner.Services;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
@@ -16,10 +18,12 @@ namespace WeekPlanner.ViewModels
         private readonly IDepartmentApi _departmentApi;
         private readonly ILoginService _loginService;
         private readonly ISettingsService _settingsService;
+        private readonly IDialogService _dialogService;
 
         public TestingViewModel(INavigationService navigationService, IDepartmentApi departmentApi,
-        ILoginService loginService, ISettingsService settingsService) : base(navigationService)
+                                ILoginService loginService, ISettingsService settingsService, IDialogService dialogService) : base(navigationService)
         {
+            _dialogService = dialogService;
             _departmentApi = departmentApi;
             _loginService = loginService;
             _settingsService = settingsService;
@@ -48,12 +52,10 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseTemplateCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
-		public ICommand NavigateToUserModeSwitchCommand =>
-			new Command(async () => await NavigationService.NavigateToAsync<UserModeSwitchViewModel>());
-
         public ICommand NavigateToPictogramSearchCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
-
-
+        
+        public ICommand NavigateToActivityCommand =>
+            new Command(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
 	}
 }

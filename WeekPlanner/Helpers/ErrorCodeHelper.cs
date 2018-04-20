@@ -1,5 +1,3 @@
-using System;
-using System.Runtime.CompilerServices;
 using IO.Swagger.Model;
 using static IO.Swagger.Model.Response;
 

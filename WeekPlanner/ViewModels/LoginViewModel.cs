@@ -1,11 +1,5 @@
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
-using WeekPlanner.Helpers;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
@@ -51,6 +45,7 @@ namespace WeekPlanner.ViewModels
             {
                 if (_userModeSwitch)
                 {
+                    MessagingCenter.Send(this, MessageKeys.LoginSucceeded);
                     await NavigationService.PopAsync();
                 }
                 else
@@ -72,7 +67,7 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is UserModeSwitchViewModel)
+            if (navigationData is WeekPlannerViewModel)
             {
                 _userModeSwitch = true;
             } 
