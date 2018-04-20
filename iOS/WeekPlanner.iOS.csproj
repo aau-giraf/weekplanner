@@ -154,6 +154,17 @@
     <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\default_profile_picture.jpg">
       <Visible>false</Visible>
     </ImageAsset>
+<<<<<<< HEAD
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\icon_default_citizen.png" />
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png" />
+=======
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png" />
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\icon_default_citizen.png" />
+>>>>>>> Fixed icons guardian citizen icons for iOS
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\tab_about.png" />
@@ -167,6 +178,8 @@
     <BundleResource Include="Resources\xamarin_logo%403x.png" />
     <BundleResource Include="Resources\default_profile_picture.jpg" />
     <BundleResource Include="Resources\image_loading.png" />
+    <BundleResource Include="Resources\icon_default_citizen.png" />
+    <BundleResource Include="Resources\icon_default_guardian.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
@@ -189,10 +202,21 @@
   <ItemGroup>
     <Folder Include="Assets.xcassets\default_profile_picture.imageset\" />
     <Folder Include="Assets.xcassets\default_profile_picture.imageset\" />
+<<<<<<< HEAD
+    <Folder Include="Assets.xcassets\icon_default_citizen.imageset\" />
+    <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
+=======
+    <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
+    <Folder Include="Assets.xcassets\icon_default_citizen.imageset\" />
+>>>>>>> Fixed icons guardian citizen icons for iOS
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\image_loading.png" />
 	<Content Include="Resources\BackArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\icon_default_citizen.png" />
+    <AndroidResource Include="Resources\icon_default_guardian.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />

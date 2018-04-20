@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Acr.UserDialogs;
 using IO.Swagger.Api;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using WeekPlanner.Services;
 using WeekPlanner.Services.Login;
@@ -54,10 +55,11 @@ namespace WeekPlanner.ViewModels
             new Command(async () =>
             {
                 _settingsService.Department = new DepartmentNameDTO(1);
-                await _loginService.LoginAndThenAsync(async () =>
-                        await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(
-                            (await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id)).Data),
-                    UserType.Department, "Graatand", "password");
+                    await _loginService.LoginAndThenAsync(async () =>
+                            await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(
+                                (await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id))
+                                .Data),
+                        UserType.Guardian, "Graatand", "password");
             });
 
         public ICommand NavigateToWeekPlannerCommand =>

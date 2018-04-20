@@ -15,12 +15,28 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout
+        <StackLayout VerticalOptions="Center"
             Margin="12">
             <Label
-                Text="{Binding DepartmentName}"
+                Text="Log ind"
                 HorizontalTextAlignment="Center"
                 FontSize="32"/>
+            <!--USERNAME-->
+            <Entry x:Name="UsernameEntry"
+                   Text="{Binding Username.Value}"
+                   Placeholder="Brugernavn"
+                   Completed="Username_Completed">
+                <Entry.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="TextChanged"
+                        Command="{Binding ValidateUsernameCommand}" />
+                </Entry.Behaviors>
+            </Entry>
+            <Label 
+                Text="{Binding UserName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                Style="{StaticResource ValidationErrorLabelStyle}" />
+                   
+            <!-- PASSWORD -->
             <Entry
                 x:Name="PasswordEntry"
                 Text="{Binding Password.Value}"

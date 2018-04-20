@@ -13,18 +13,27 @@ namespace WeekPlanner.ViewModels
     {
         private readonly ILoginService _loginService;
 
+        private ValidatableObject<string> _username;
         private ValidatableObject<string> _password;
 
         private bool _userModeSwitch = false;
-        private ISettingsService _settingsService;
 
-
-        public LoginViewModel(ISettingsService settingsService, INavigationService navigationService,
+        public LoginViewModel(INavigationService navigationService,
             ILoginService loginService) : base(navigationService)
         {
             _loginService = loginService;
-            _password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
-            _settingsService = settingsService;
+            Password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
+            Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
+        }
+        
+        public ValidatableObject<string> Username
+        {
+            get => _username;
+            set
+            {
+                _username = value;
+                RaisePropertyChanged(() => Username);
+            }
         }
 
         public ValidatableObject<string> Password
@@ -37,8 +46,6 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public string DepartmentName => _settingsService.Department.Name;
-
         public ICommand LoginCommand => new Command(async () =>
         {
             if (UserNameAndPasswordIsValid())
@@ -50,23 +57,24 @@ namespace WeekPlanner.ViewModels
                     
                     var username = "Graatand";
                     await _loginService.LoginAndThenAsync(() => NavigationService.PopAsync(),
-                                                          UserType.Department, username, Password.Value);
+                                                          UserType.Guardian, username, Password.Value);
                 }
                 else
                 {
-                    var username = "Graatand";
                     await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
-                                                          UserType.Department, username, Password.Value);
+                                                          UserType.Guardian, Username.Value, Password.Value);
                 }
             }
         });
 
-        public ICommand ValidatePasswordCommand => new Command(() => _password.Validate());
+        public ICommand ValidateUsernameCommand => new Command(() => Username.Validate());
+        public ICommand ValidatePasswordCommand => new Command(() => Password.Validate());
 
         public bool UserNameAndPasswordIsValid()
         {
-            var isValidPassword = _password.Validate();
-            return isValidPassword;
+            var usernameIsValid = Username.Validate();
+            var passwordIsValid = Password.Validate();
+            return usernameIsValid && passwordIsValid;
         }
 
         public override async Task InitializeAsync(object navigationData)

@@ -30,7 +30,7 @@ namespace WeekPlanner.Services.Login
         /// <exception cref="ArgumentException"></exception>
         public async Task LoginAndThenAsync(Func<Task> onSuccess, UserType userType, string username, string password)
         {
-            if (userType == UserType.Department && string.IsNullOrEmpty(password))
+            if (userType == UserType.Guardian && string.IsNullOrEmpty(password))
             {
                 throw new ArgumentException("A password should always be provided for Departments.");
             }
@@ -41,9 +41,9 @@ namespace WeekPlanner.Services.Login
                 {
                     _settingsService.CitizenAuthToken = result.Data;
                 }
-                else // Department
+                else // Guardian
                 {
-                    _settingsService.DepartmentAuthToken = result.Data;
+                    _settingsService.GuardianAuthToken = result.Data;
                 }
 
                 _settingsService.UseTokenFor(userType);
@@ -58,7 +58,7 @@ namespace WeekPlanner.Services.Login
 
         public async Task LoginAsync( UserType userType, string username, string password)
         {
-            if (userType == UserType.Department && string.IsNullOrEmpty(password))
+            if (userType == UserType.Guardian && string.IsNullOrEmpty(password))
             {
                 throw new ArgumentException("A password should always be provided for Departments.");
             }
@@ -69,9 +69,9 @@ namespace WeekPlanner.Services.Login
                 {
                     _settingsService.CitizenAuthToken = result.Data;
                 }
-                else // Department
+                else // Guardian
                 {
-                    _settingsService.DepartmentAuthToken = result.Data;
+                    _settingsService.GuardianAuthToken = result.Data;
                 }
 
                 _settingsService.UseTokenFor(userType);

@@ -61,7 +61,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleEditModeCommand => new Command(() => SwitchUserMode());
+        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
 
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
 
@@ -186,7 +186,7 @@ namespace WeekPlanner.ViewModels
         }
 
 
-        private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
+        private void DeleteActivity(ActivityViewModel activityVm, int activityId) {
             // TODO: Remove activityID from List<Resource> 
         }
 
@@ -204,10 +204,10 @@ namespace WeekPlanner.ViewModels
                 if (dayDTO.Day == null) continue;
                 var weekday = dayDTO.Day.Value;
                 ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleID in dayDTO.Elements.Select(e => e.Id.Value))
+                foreach (var eleId in dayDTO.Elements.Select(e => e.Id.Value))
                 {
                     pictos.Add(
-                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
+                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleId}/image/raw");
                 }
                 tempDict[weekday] = pictos;
             }
@@ -215,7 +215,7 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos = tempDict;
         }
 
-         private async Task SwitchUserMode()
+         private async Task SwitchUserModeAsync()
         {
             if (EditModeEnabled)
             {

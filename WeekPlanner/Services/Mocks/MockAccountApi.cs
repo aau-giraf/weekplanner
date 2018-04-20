@@ -154,7 +154,7 @@ namespace WeekPlanner.Services.Mocks
             // TODO: Handle citizen login
             if (model?.Username == "Graatand" && model.Password == "password")
             {
-                result = new ResponseString("MySecretMockDepartmentAuthToken", true)
+                result = new ResponseString("MySecretMockGuardianAuthToken", true)
                 {
                     ErrorKey = ResponseString.ErrorKeyEnum.NoError
                 };
