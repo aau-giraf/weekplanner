@@ -36,5 +36,24 @@ namespace WeekPlanner.Services.Mocks
 
             await onSuccess.Invoke();
         }
+
+        public async Task LoginAsync(UserType userType, string username, string password)
+        {
+            if (userType == UserType.Department && string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("A password should always be provided for Departments.");
+            }
+            // TODO: Maybe allow for only certain credentials
+            if (userType == UserType.Citizen)
+            {
+                _settingsService.CitizenAuthToken = "MockCitizenAuthToken";
+            }
+            else // Department
+            {
+                _settingsService.DepartmentAuthToken = "MockDepartmentAuthToken";
+            }
+
+            _settingsService.UseTokenFor(userType);
+        }
     }
 }
