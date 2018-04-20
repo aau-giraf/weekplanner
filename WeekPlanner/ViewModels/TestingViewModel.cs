@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Acr.UserDialogs;
 using IO.Swagger.Api;
@@ -29,6 +30,19 @@ namespace WeekPlanner.ViewModels
             _settingsService = settingsService;
         }
 
+        public override async Task InitializeAsync(object navigationData)
+        {
+            if (navigationData is UserNameDTO userNameDTO)
+            {
+                await _loginService.LoginAsync(UserType.Citizen,
+                    userNameDTO.UserName);
+            }
+            else
+            {
+                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
+            }
+        }
+
         public ICommand NavigateToLoginCommand =>
             new Command(async () =>
             {
@@ -57,5 +71,8 @@ namespace WeekPlanner.ViewModels
         
         public ICommand NavigateToActivityCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
+
+        public ICommand NavigateToSettingsCommand =>
+        new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
 	}
 }

@@ -56,5 +56,32 @@ namespace WeekPlanner.Services.Login
                 async () => await _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
                 OnRequestSuccess);
         }
+
+        public async Task LoginAsync( UserType userType, string username, string password)
+        {
+            if (userType == UserType.Department && string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("A password should always be provided for Departments.");
+            }
+
+            Task OnRequestSuccess(ResponseString result)
+            {
+                if (userType == UserType.Citizen)
+                {
+                    _settingsService.CitizenAuthToken = result.Data;
+                }
+                else // Department
+                {
+                    _settingsService.DepartmentAuthToken = result.Data;
+                }
+
+                _settingsService.UseTokenFor(userType);
+                return Task.FromResult(false);
+            }
+
+            await _requestService.SendRequestAndThenAsync(this,
+                async () => await _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
+                OnRequestSuccess);
+        }
     }
 }
