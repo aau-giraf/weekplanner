@@ -57,7 +57,7 @@ namespace WeekPlanner.ViewModels
                     
                     var username = "Graatand";
                     await _loginService.LoginAndThenAsync(() => NavigationService.PopAsync(),
-                                                          UserType.Department, username, Password.Value);
+                                                          UserType.Guardian, username, Password.Value);
                 }
                 else
                 {

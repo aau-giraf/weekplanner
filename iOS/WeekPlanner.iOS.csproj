@@ -154,6 +154,10 @@
     <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\default_profile_picture.jpg">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\icon_default_citizen.png" />
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\tab_about.png" />
@@ -167,6 +171,8 @@
     <BundleResource Include="Resources\xamarin_logo%403x.png" />
     <BundleResource Include="Resources\default_profile_picture.jpg" />
     <BundleResource Include="Resources\image_loading.png" />
+    <BundleResource Include="Resources\icon_default_citizen.png" />
+    <BundleResource Include="Resources\icon_default_guardian.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
@@ -189,6 +195,8 @@
   <ItemGroup>
     <Folder Include="Assets.xcassets\default_profile_picture.imageset\" />
     <Folder Include="Assets.xcassets\default_profile_picture.imageset\" />
+    <Folder Include="Assets.xcassets\icon_default_citizen.imageset\" />
+    <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\image_loading.png" />

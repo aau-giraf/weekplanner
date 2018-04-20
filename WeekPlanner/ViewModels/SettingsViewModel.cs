@@ -30,7 +30,7 @@ namespace WeekPlanner.ViewModels
         {
             if (navigationData is UserNameDTO userNameDTO)
             {
-                if(_settingsService.CitizenAuthToken == null && _settingsService.DepartmentAuthToken == null)
+                if(_settingsService.CitizenAuthToken == null && _settingsService.GuardianAuthToken == null)
                 {
                     await _loginService.LoginAsync(UserType.Citizen,
                     userNameDTO.UserName);

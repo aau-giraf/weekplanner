@@ -15,10 +15,10 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout
+        <StackLayout VerticalOptions="Center"
             Margin="12">
             <Label
-                Text="Log Ind"
+                Text="Log ind"
                 HorizontalTextAlignment="Center"
                 FontSize="32"/>
             <!--USERNAME-->

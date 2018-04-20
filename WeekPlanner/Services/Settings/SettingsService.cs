@@ -36,8 +36,8 @@ namespace WeekPlanner.Services.Settings
 
         public string GuardianAuthToken
         {
-            get => GlobalSettings.Instance.DepartmentAuthToken;
-            set => GlobalSettings.Instance.DepartmentAuthToken = value;
+            get => GlobalSettings.Instance.GuardianAuthToken;
+            set => GlobalSettings.Instance.GuardianAuthToken = value;
         }
 
         public string CitizenAuthToken
