@@ -16,28 +16,7 @@ namespace WeekPlanner.Views
 		public SavePromptPage ()
 		{
 			InitializeComponent ();
-
-            MessagingCenter.Subscribe<SavePromptViewModel>(this, MessageKeys.ScheduleNotSavedPrompt, (sender) => DisplayPrompt());
-        }
-
-        public async void DisplayPrompt()
-        {
-            var result = await DisplayActionSheet("Du har ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
-
-            switch (result)
-            {
-                case "Annuller":
-                    ButtonPrompt.Text = result;
-                    break;
-
-                case "Gem ikke":
-                    ButtonPrompt.Text = result;
-                    break;
-
-                case "Gem ændringer":
-                    ButtonPrompt.Text = result;
-                    break;
-            } 
+            
         }
 	}
 }

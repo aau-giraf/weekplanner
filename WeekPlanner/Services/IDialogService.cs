@@ -7,5 +7,6 @@ namespace WeekPlanner.Services
     {
         Task ShowAlertAsync(string message, string okText = "Ok", string title = null);
         Task<bool> ConfirmAsync(string message, string title = null, string cancelText = "Nej", string okText = "Ja");
+        Task<string> ActionSheetAsync(string title = null, string cancel = "Annuller", string destructive = null, params string[] buttons);
     }
 }

@@ -16,6 +16,7 @@ using System.Windows.Input;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Views;
 using static IO.Swagger.Model.WeekdayDTO;
+using WeekPlanner.Services;
 
 namespace WeekPlanner.ViewModels
 {
@@ -24,6 +25,7 @@ namespace WeekPlanner.ViewModels
         private readonly ILoginService _loginService;
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
+        private readonly IDialogService _dialogService;
 
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
@@ -72,14 +74,15 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
 
         public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
-            IRequestService requestService, IWeekApi weekApi) : base(navigationService)
+            IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
         {
             _loginService = loginService;
-
-            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-
+            _dialogService = dialogService;
             _requestService = requestService;
             _weekApi = weekApi;
+
+
+            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             
             MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
                 async _ => await SaveSchedule());
@@ -206,12 +209,30 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos = tempDict;
         }
 
-         private async Task SwitchUserMode()
+        private async Task SwitchUserMode()
         {
             if (EditModeEnabled)
             {
-                EditModeEnabled = false;
-                UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+
+                switch (result)
+                {
+                    case "Annuller":
+                        break;
+
+                    case "Gem ændringer":
+                        EditModeEnabled = false;
+                        await SaveSchedule();
+                        UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                        break;
+
+                    case "Gem ikke":
+                        EditModeEnabled = false;
+                        SetWeekdayPictos();
+                        UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                        break;
+                }
+                
             }
             else
             {

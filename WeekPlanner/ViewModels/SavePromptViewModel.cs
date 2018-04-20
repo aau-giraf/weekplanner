@@ -6,22 +6,27 @@ using IO.Swagger.Model;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
+using WeekPlanner.Services;
 
 namespace WeekPlanner.ViewModels
 {
     public class SavePromptViewModel : ViewModelBase
     {
+        public readonly IDialogService _dialogService;
+
         public ICommand PromptPopupCommand => new Command(() => PromptPopup());
 
-        public SavePromptViewModel(INavigationService navigationService) : base(navigationService)
+        public SavePromptViewModel(INavigationService navigationService, IDialogService dialogService) : base(navigationService)
         {
-
+            _dialogService = dialogService;
         }
 
 
-        private async Task PromptPopup()
+        private async void PromptPopup()
         {
-            MessagingCenter.Send(this, MessageKeys.ScheduleNotSavedPrompt);
+            var result = await _dialogService.ActionSheetAsync("Title", "Annuller", null, "Hej1", "Hej2", "Hej3");
+
+            
         }
     }
 }
