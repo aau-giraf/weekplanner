@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using WeekPlanner.Services.Login;
@@ -22,6 +24,19 @@ namespace WeekPlanner.ViewModels
             _departmentApi = departmentApi;
             _loginService = loginService;
             _settingsService = settingsService;
+        }
+
+        public override async Task InitializeAsync(object navigationData)
+        {
+            if (navigationData is UserNameDTO userNameDTO)
+            {
+                await _loginService.LoginAsync(UserType.Citizen,
+                    userNameDTO.UserName);
+            }
+            else
+            {
+                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
+            }
         }
 
         public ICommand NavigateToLoginCommand =>
