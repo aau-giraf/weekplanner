@@ -27,8 +27,7 @@ namespace WeekPlanner
 
             AppSetup setup = new AppSetup();
             AppContainer.Container = setup.CreateContainer();
-            MainPage = new MasterPage();
-            //InitNavigation();
+            InitNavigation();
             FlowListView.Init(); 
         }
         
