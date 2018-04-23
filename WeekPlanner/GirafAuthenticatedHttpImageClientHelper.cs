@@ -12,8 +12,7 @@ namespace WeekPlanner
 
         public GirafAuthenticatedHttpImageClientHelper(Func<Task<string>> getToken)
         {
-            if (getToken == null) throw new ArgumentNullException("getToken");
-            _getToken = getToken;
+            _getToken = getToken ?? throw new ArgumentNullException("getToken");
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

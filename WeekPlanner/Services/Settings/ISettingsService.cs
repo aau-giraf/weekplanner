@@ -5,7 +5,7 @@ namespace WeekPlanner.Services.Settings
     public interface ISettingsService
     {
         bool UseMocks { get; set; }
-        string DepartmentAuthToken { get; set; }
+        string GuardianAuthToken { get; set; }
         string CitizenAuthToken { get; set; }
 
         void UseTokenFor(UserType userType);
@@ -16,6 +16,6 @@ namespace WeekPlanner.Services.Settings
     public enum UserType
     {
         Citizen,
-        Department
+        Guardian
     }
 }

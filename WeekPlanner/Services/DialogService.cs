@@ -6,12 +6,12 @@ namespace WeekPlanner.Services
 {
     public class DialogService : IDialogService
     {
-        public Task ShowAlertAsync(string message, string okText = "Ok", string title = null)
+        public Task ShowAlertAsync(string message, string btnText = "OK", string title = null)
         {
             var config = new AlertConfig
             {
                 Title = title,
-                OkText = okText,
+                OkText = btnText,
                 Message = message,
             };
 

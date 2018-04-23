@@ -26,7 +26,6 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
         private readonly IDialogService _dialogService;
-
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
@@ -62,7 +61,9 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleEditModeCommand => new Command(() => SwitchUserMode());
+        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
+
+        public ICommand SaveCommand => new Command(async () => await SaveSchedule());
 
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
@@ -76,6 +77,9 @@ namespace WeekPlanner.ViewModels
         public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
             IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
         {
+            _requestService = requestService;
+            _weekApi = weekApi;
+            _dialogService = dialogService;
             _loginService = loginService;
             _dialogService = dialogService;
             _requestService = requestService;
@@ -84,12 +88,11 @@ namespace WeekPlanner.ViewModels
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             
-            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
-                async _ => await SaveSchedule());
             MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
                 InsertPicto);
             MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
                 DeleteActivity);
+            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
         }
         
         public override async Task InitializeAsync(object navigationData)
@@ -142,6 +145,16 @@ namespace WeekPlanner.ViewModels
 
         private async Task SaveSchedule()
         {
+            bool confirmed = await _dialogService.ConfirmAsync(
+                title: "Gem ugeplan", 
+                message: "Vil du gemme ugeplanen?", 
+                okText: "Gem", 
+                cancelText: "Annuller");
+
+			if(!confirmed){
+                return;   
+            }
+            
             if (WeekDTO.Id is null)
             {
                 await SaveNewSchedule();
@@ -155,11 +168,9 @@ namespace WeekPlanner.ViewModels
         private async Task SaveNewSchedule()
         {
             await _requestService.SendRequestAndThenAsync(this,
-                async () => await _weekApi.V1WeekPostAsync(WeekDTO),
-                result =>
+                async () => await _weekApi.V1WeekPostAsync(WeekDTO), result => 
                 {
-                    MessagingCenter.Send(this, MessageKeys.RequestSucceeded,
-                        $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
+                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
                 });
         }
 
@@ -174,13 +185,12 @@ namespace WeekPlanner.ViewModels
                 async () => await _weekApi.V1WeekByIdPutAsync((int) WeekDTO.Id, WeekDTO),
                 result =>
                 {
-                    MessagingCenter.Send(this, MessageKeys.RequestSucceeded, 
-                        $"Ugeplanen '{result.Data.Name}' blev gemt.");
+                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
                 });
         }
 
 
-        private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
+        private void DeleteActivity(ActivityViewModel activityVm, int activityId) {
             // TODO: Remove activityID from List<Resource> 
         }
 
@@ -198,10 +208,10 @@ namespace WeekPlanner.ViewModels
                 if (dayDTO.Day == null) continue;
                 var weekday = dayDTO.Day.Value;
                 ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleID in dayDTO.Elements.Select(e => e.Id.Value))
+                foreach (var eleId in dayDTO.Elements.Select(e => e.Id.Value))
                 {
                     pictos.Add(
-                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
+                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleId}/image/raw");
                 }
                 tempDict[weekday] = pictos;
             }
@@ -213,14 +223,14 @@ namespace WeekPlanner.ViewModels
         {
             if (EditModeEnabled)
             {
-                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er ï¿½ndringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ï¿½ndringer", "Gem ikke");
 
                 switch (result)
                 {
                     case "Annuller":
                         break;
 
-                    case "Gem ændringer":
+                    case "Gem ï¿½ndringer":
                         EditModeEnabled = false;
                         await SaveSchedule();
                         UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
@@ -237,8 +247,6 @@ namespace WeekPlanner.ViewModels
             else
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
-
-                MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
             }
         }
 

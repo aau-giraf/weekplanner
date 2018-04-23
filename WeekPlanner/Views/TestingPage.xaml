@@ -30,6 +30,9 @@
                 <Button
                     Text="Gem Prompt"
                     Command="{Binding NavigateToSavePromptCommand}" />
+                <Button
+                    Text="Indstillinger"
+                    Command="{Binding NavigateToSettingsCommand}" />
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

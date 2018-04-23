@@ -33,7 +33,7 @@ namespace WeekPlanner
 
         public bool UseMocks = false;
 
-        public string DepartmentAuthToken { get; set; }
+        public string GuardianAuthToken { get; set; }
 
         public string CitizenAuthToken { get; set; }
 
