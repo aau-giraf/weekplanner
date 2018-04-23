@@ -289,5 +289,4 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             Assert.Equal("Black", sut.WeekdayPictos[dateTimeConverter.GetWeekDay(weekday)].First().Border);
         }
     }
->>>>>>> 1fba5a6944580e4ba5e48305c0cc207095ad5fbc
 }
