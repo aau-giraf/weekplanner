@@ -10,12 +10,17 @@
 
 using System;
 using System.Linq;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -37,43 +42,43 @@ namespace IO.Swagger.Model
             /// Enum Monday for value: Monday
             /// </summary>
             [EnumMember(Value = "Monday")]
-            Monday = 0,
+            Monday = 1,
             
             /// <summary>
             /// Enum Tuesday for value: Tuesday
             /// </summary>
             [EnumMember(Value = "Tuesday")]
-            Tuesday = 1,
+            Tuesday = 2,
             
             /// <summary>
             /// Enum Wednesday for value: Wednesday
             /// </summary>
             [EnumMember(Value = "Wednesday")]
-            Wednesday = 2,
+            Wednesday = 3,
             
             /// <summary>
             /// Enum Thursday for value: Thursday
             /// </summary>
             [EnumMember(Value = "Thursday")]
-            Thursday = 3,
+            Thursday = 4,
             
             /// <summary>
             /// Enum Friday for value: Friday
             /// </summary>
             [EnumMember(Value = "Friday")]
-            Friday = 4,
+            Friday = 5,
             
             /// <summary>
             /// Enum Saturday for value: Saturday
             /// </summary>
             [EnumMember(Value = "Saturday")]
-            Saturday = 5,
+            Saturday = 6,
             
             /// <summary>
             /// Enum Sunday for value: Sunday
             /// </summary>
             [EnumMember(Value = "Sunday")]
-            Sunday = 6
+            Sunday = 7
         }
 
         /// <summary>
@@ -85,30 +90,21 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="WeekdayDTO" /> class.
         /// </summary>
-        /// <param name="ElementIDs">A list of all id&#39;s of the resources that make up the weekday..</param>
         /// <param name="Day">An enum defining which day of the week this Weekday represents..</param>
-        /// <param name="Elements">A list of all the elements of the week..</param>
-        public WeekdayDTO(List<long?> ElementIDs = default(List<long?>), DayEnum? Day = default(DayEnum?), List<ResourceDTO> Elements = default(List<ResourceDTO>))
+        /// <param name="Activities">A list of all the activities of the week..</param>
+        public WeekdayDTO(DayEnum? Day = default(DayEnum?), List<ActivityDTO> Activities = default(List<ActivityDTO>))
         {
-            this.ElementIDs = ElementIDs;
             this.Day = Day;
-            this.Elements = Elements;
+            this.Activities = Activities;
         }
         
-        /// <summary>
-        /// A list of all id&#39;s of the resources that make up the weekday.
-        /// </summary>
-        /// <value>A list of all id&#39;s of the resources that make up the weekday.</value>
-        [DataMember(Name="elementIDs", EmitDefaultValue=false)]
-        public List<long?> ElementIDs { get; set; }
-
 
         /// <summary>
-        /// A list of all the elements of the week.
+        /// A list of all the activities of the week.
         /// </summary>
-        /// <value>A list of all the elements of the week.</value>
-        [DataMember(Name="elements", EmitDefaultValue=false)]
-        public List<ResourceDTO> Elements { get; set; }
+        /// <value>A list of all the activities of the week.</value>
+        [DataMember(Name="activities", EmitDefaultValue=false)]
+        public List<ActivityDTO> Activities { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -118,9 +114,8 @@ namespace IO.Swagger.Model
         {
             var sb = new StringBuilder();
             sb.Append("class WeekdayDTO {\n");
-            sb.Append("  ElementIDs: ").Append(ElementIDs).Append("\n");
             sb.Append("  Day: ").Append(Day).Append("\n");
-            sb.Append("  Elements: ").Append(Elements).Append("\n");
+            sb.Append("  Activities: ").Append(Activities).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -156,19 +151,14 @@ namespace IO.Swagger.Model
 
             return 
                 (
-                    this.ElementIDs == input.ElementIDs ||
-                    this.ElementIDs != null &&
-                    this.ElementIDs.SequenceEqual(input.ElementIDs)
-                ) && 
-                (
                     this.Day == input.Day ||
                     (this.Day != null &&
                     this.Day.Equals(input.Day))
                 ) && 
                 (
-                    this.Elements == input.Elements ||
-                    this.Elements != null &&
-                    this.Elements.SequenceEqual(input.Elements)
+                    this.Activities == input.Activities ||
+                    this.Activities != null &&
+                    this.Activities.SequenceEqual(input.Activities)
                 );
         }
 
@@ -181,12 +171,10 @@ namespace IO.Swagger.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.ElementIDs != null)
-                    hashCode = hashCode * 59 + this.ElementIDs.GetHashCode();
                 if (this.Day != null)
                     hashCode = hashCode * 59 + this.Day.GetHashCode();
-                if (this.Elements != null)
-                    hashCode = hashCode * 59 + this.Elements.GetHashCode();
+                if (this.Activities != null)
+                    hashCode = hashCode * 59 + this.Activities.GetHashCode();
                 return hashCode;
             }
         }
