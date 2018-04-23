@@ -91,9 +91,9 @@ namespace WeekPlanner.ViewModels
             MessagingCenter.Send(this, "DeleteWeekAlert");
         }
 
-        private void AddWeekSchedule()
+        private async void AddWeekSchedule()
         {
-            //_weekApi.
+            await NavigationService.NavigateToAsync<WeekPlannerViewModel>();
         }
 
         public override async Task InitializeAsync(object navigationData)

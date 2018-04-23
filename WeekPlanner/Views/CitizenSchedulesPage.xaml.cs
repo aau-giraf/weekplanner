@@ -22,12 +22,12 @@ namespace WeekPlanner.Views
         public CitizenSchedulesPage()
         {
             InitializeComponent();
-            MessagingCenter.Subscribe<ChooseCitizenViewModel>(this, "DeleteWeekAlert", (sender) => AlertUser());
+            MessagingCenter.Subscribe<CitizenSchedulesViewModel>(this, "DeleteWeekAlert", (sender) => AlertUserDeleteWeek());
         }
 
-        private void AlertUser()
+        private void AlertUserDeleteWeek()
         {
-            DisplayAlert("Slet Ugeplan", "Vil du slette denne ugeplan", "Annuller");
+            DisplayAlert("Slet Ugeplan", "Vil du slette denne ugeplan?", "Ok", "Annuller");
         }
     }
 }

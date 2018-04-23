@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+             xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
+             base1:ViewModelLocator.AutoWireViewModel="true"
+             x:Class="WeekPlanner.Views.NewSchedulePage"
+             Title="Tilføj en ny ugeplan">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            Margin="12">
+            <Label
+                Text="UgePlan"
+                HorizontalTextAlignment="Center"
+                FontSize="32"/>
+            <Entry
+                x:Name="NewScheduleNameEntry"
+                Text="{Binding ScheduleName.Value}"
+                Placeholder="Navn på ny ugeplan"/>
+            <Label
+                Text="{Binding ScheduleName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                Style="{StaticResource ValidationErrorLabelStyle}" />
+            <Button
+                x:Name="SaveWeekButton"
+                Command="{Binding SaveWeekScheduleCommand}"
+                Text="Log ind" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
