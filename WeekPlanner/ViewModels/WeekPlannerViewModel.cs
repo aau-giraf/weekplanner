@@ -251,7 +251,6 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos = tempDict;
         }
 
-
         #region Boilerplate for each weekday's pictos
 
         private Dictionary<DayEnum, ObservableCollection<StatefulPictogram>> _weekdayPictos =
@@ -301,17 +300,17 @@ namespace WeekPlanner.ViewModels
                 pictoSources = new ObservableCollection<StatefulPictogram>();
             return new ObservableCollection<StatefulPictogram>(pictoSources);
         }
+        #endregion
+
+        #region Highlighting pictogram
 
         // An enum type for determining which state a pictogram is in.
-
         public enum PictogramState
-
         {
             Normal = 0,
             Cancelled = 1,
             Checked = 2
         }
-
 
         /// <summary>
         ///  Converts a DayOfWeek to a WeekdayDTO
@@ -399,7 +398,7 @@ namespace WeekPlanner.ViewModels
                 Border = "Transparent";
             }
         }
-
         #endregion
+
     }
 }

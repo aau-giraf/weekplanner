@@ -245,5 +245,47 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert
             navServiceMock.Verify(n => n.NavigateToAsync<LoginViewModel>(It.IsAny<WeekPlannerViewModel>()));
         }
+        [Theory]
+        [InlineData(DayOfWeek.Monday)]
+        [InlineData(DayOfWeek.Tuesday)]
+        [InlineData(DayOfWeek.Wednesday)]
+        [InlineData(DayOfWeek.Thursday)]
+        [InlineData(DayOfWeek.Friday)]
+        [InlineData(DayOfWeek.Saturday)]
+        [InlineData(DayOfWeek.Sunday)]
+        public async Task WeekdayPictos_Highligt_FirstNormalPicto_OfCurrentDay(DayOfWeek weekday)
+        {
+            // Arrange
+            var dateTimeConverter = new WeekPlannerViewModel.DateTimeConverter();
+            var mockUsernameDTO = Fixture.Create<UserNameDTO>();
+            async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
+                await onSuccess.Invoke();
+            var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
+                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, mockUsernameDTO.UserName, ""))
+                .Returns((Func<Func<Task>, UserType, string, string, Task>)LoginAndThenMock);
+            var weekResponse = Fixture.Build<ResponseWeekDTO>()
+                .With(r => r.Success, true)
+                .With(r => r.ErrorKey, ResponseWeekDTO.ErrorKeyEnum.NoError)
+                .With(r => r.Data, Fixture.Create<WeekDTO>()).Create();
+            var mockWeek = Fixture.Freeze<Mock<IWeekApi>>()
+                .Setup(w => w.V1WeekByIdGetAsync(It.IsAny<long?>()))
+                .ReturnsAsync(weekResponse);
+            var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
+            // Act
+            await sut.InitializeAsync(mockUsernameDTO);
+            // Find the first pictogram, that are: normal state and first.
+            var borderedPicto = Fixture.Create<StatefulPictogram>();
+            sut.SetBorderStatusPictograms(weekday);
+            foreach (var weekDayPicto in sut.WeekdayPictos)
+            {
+                if (weekDayPicto.Key == dateTimeConverter.GetWeekDay(weekday))
+                {
+                    borderedPicto.Border = weekDayPicto.Value.Where((s) => s.PictogramState == PictogramState.Normal).First().Border;
+                    return;
+                }
+            }
+            //Assert
+            Assert.Equal("Black", borderedPicto.Border);
+        }
     }
 }
