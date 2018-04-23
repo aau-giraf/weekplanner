@@ -19,21 +19,21 @@ namespace WeekPlanner
 			get { return _instance; }
 		}
 
-        public string BaseEndpoint
-        {
-            get { return _baseEndpoint; }
-            set
-            {
-                _baseEndpoint = value;
-            }
-        }
+		public string BaseEndpoint
+		{
+			get { return _baseEndpoint; }
+			set
+			{
+				_baseEndpoint = value;
+			}
+		}
 
 		public bool UseMocks = false;
 
-        public string DepartmentAuthToken { get; set; }
+		public string DepartmentAuthToken { get; set; }
 
-        public string CitizenAuthToken { get; set; }
+		public string CitizenAuthToken { get; set; }
 
-        public DepartmentNameDTO Department { get; set; } = new DepartmentNameDTO { Name = "Egebakken" };
-    }
+		public DepartmentNameDTO Department { get; set; } = new DepartmentNameDTO { Name = "Egebakken" };
+	}
 }

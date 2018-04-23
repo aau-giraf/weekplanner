@@ -23,6 +23,7 @@
 					BackgroundColor="{Binding Border}"
 					Margin="5"
 					VerticalOptions="Center"
+					HasShadow="false"
 					>
                 <ffimageloading:CachedImage
                     VerticalOptions="Center"
