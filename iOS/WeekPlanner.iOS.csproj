@@ -78,6 +78,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Acr.UserDialogs, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Acr.UserDialogs.7.0.1\lib\xamarinios10\Acr.UserDialogs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -135,9 +139,6 @@
     <Reference Include="BTProgressHUD">
       <HintPath>..\packages\BTProgressHUD.1.2.0.6\lib\Xamarin.iOS10\BTProgressHUD.dll</HintPath>
     </Reference>
-    <Reference Include="Acr.UserDialogs">
-      <HintPath>..\packages\Acr.UserDialogs.7.0.1\lib\xamarinios10\Acr.UserDialogs.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK-1.0" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -154,17 +155,10 @@
     <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\default_profile_picture.jpg">
       <Visible>false</Visible>
     </ImageAsset>
-<<<<<<< HEAD
     <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\icon_default_citizen.png" />
     <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png" />
-=======
-    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png" />
-    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\icon_default_citizen.png" />
->>>>>>> Fixed icons guardian citizen icons for iOS
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\tab_about.png" />
@@ -202,17 +196,12 @@
   <ItemGroup>
     <Folder Include="Assets.xcassets\default_profile_picture.imageset\" />
     <Folder Include="Assets.xcassets\default_profile_picture.imageset\" />
-<<<<<<< HEAD
     <Folder Include="Assets.xcassets\icon_default_citizen.imageset\" />
     <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
-=======
-    <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
-    <Folder Include="Assets.xcassets\icon_default_citizen.imageset\" />
->>>>>>> Fixed icons guardian citizen icons for iOS
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\image_loading.png" />
-	<Content Include="Resources\BackArrow.png" />
+    <Content Include="Resources\BackArrow.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\icon_default_citizen.png" />

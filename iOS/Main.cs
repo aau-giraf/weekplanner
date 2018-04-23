@@ -1,5 +1,4 @@
-﻿using Acr.UserDialogs;
-using UIKit;
+﻿using UIKit;
 
 namespace WeekPlanner.iOS
 {
