@@ -1,20 +1,19 @@
 using System;
-using System.IO;
-using IO.Swagger.Model;
-using System.Threading.Tasks;
-using IO.Swagger.Api;
-using WeekPlanner.Helpers;
-using WeekPlanner.Services.Login;
-using WeekPlanner.ViewModels.Base;
-using Xamarin.Forms;
-using WeekPlanner.Services.Navigation;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using WeekPlanner.Services.Settings;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using IO.Swagger.Api;
+using IO.Swagger.Model;
+using WeekPlanner.Services.Login;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
+using WeekPlanner.Services.Settings;
+using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Views;
+using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
 
 namespace WeekPlanner.ViewModels
@@ -220,7 +219,7 @@ namespace WeekPlanner.ViewModels
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
 
                 MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded,
-                    (sender) => SetToGuardianMode());
+                    sender => SetToGuardianMode());
             }
         }
 
@@ -317,31 +316,27 @@ namespace WeekPlanner.ViewModels
         /// </summary>
         public class DateTimeConverter
         {
-            public DateTimeConverter()
-            {
-            }
-
             // Convert a specific day.
-            public WeekdayDTO.DayEnum GetWeekDay(DayOfWeek weekDay)
+            public DayEnum GetWeekDay(DayOfWeek weekDay)
             {
                 switch (weekDay)
                 {
                     case DayOfWeek.Monday:
-                        return WeekdayDTO.DayEnum.Monday;
+                        return DayEnum.Monday;
                     case DayOfWeek.Tuesday:
-                        return WeekdayDTO.DayEnum.Tuesday;
+                        return DayEnum.Tuesday;
                     case DayOfWeek.Wednesday:
-                        return WeekdayDTO.DayEnum.Wednesday;
+                        return DayEnum.Wednesday;
                     case DayOfWeek.Thursday:
-                        return WeekdayDTO.DayEnum.Thursday;
+                        return DayEnum.Thursday;
                     case DayOfWeek.Friday:
-                        return WeekdayDTO.DayEnum.Friday;
+                        return DayEnum.Friday;
                     case DayOfWeek.Saturday:
-                        return WeekdayDTO.DayEnum.Saturday;
+                        return DayEnum.Saturday;
                     case DayOfWeek.Sunday:
-                        return WeekdayDTO.DayEnum.Sunday;
+                        return DayEnum.Sunday;
                     default:
-                        return WeekdayDTO.DayEnum.Monday;
+                        throw new ArgumentException($"{weekDay} is not valid");
                 }
             }
         }
@@ -356,7 +351,7 @@ namespace WeekPlanner.ViewModels
             {
                 if (weekDayPicto.Key == dateTimeConverter.GetWeekDay(weekday))
                 {
-                    weekDayPicto.Value.Where((s) => s.PictogramState == PictogramState.Normal).First().Border = "Black";
+                    weekDayPicto.Value.Where(s => s.PictogramState == PictogramState.Normal).First().Border = "Black";
                     return;
                 }
             }
