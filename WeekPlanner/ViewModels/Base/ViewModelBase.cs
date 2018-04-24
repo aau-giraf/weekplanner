@@ -29,5 +29,7 @@ namespace WeekPlanner.ViewModels.Base
         {
             return Task.FromResult(false);
         }
+
+        public virtual void Popped(object navigationData) { }
     }
 }

@@ -41,8 +41,7 @@ namespace WeekPlanner.ViewModels
         public ICommand ItemTappedCommand => new Command((tappedItem) => ListViewItemTapped((PictogramDTO)tappedItem));
 
         async void ListViewItemTapped(PictogramDTO tappedItem){
-            MessagingCenter.Send(this, MessageKeys.PictoSearchChosenItem, tappedItem);
-            await NavigationService.PopAsync();
+            await NavigationService.PopAsync(tappedItem);
         }
 
         // TODO: Implement message for no results and add a loading icon

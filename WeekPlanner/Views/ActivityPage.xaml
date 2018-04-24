@@ -3,10 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
+             xmlns:converters="using:WeekPlanner.Converters"
              xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
              x:Class="WeekPlanner.Views.ActivityPage"
              base:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Activity.Pictogram.Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StateToBackgroundColorConverter x:Key="StateToBackgroundColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout>
             <Grid VerticalOptions="CenterAndExpand">
@@ -17,19 +23,23 @@
                     <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
                         <Button Grid.Column="0"
                                 Text="Ændre"
-                                Command="{Binding ChangePictoCommand}" />
+                                Command="{Binding ChangePictoCommand}"
+                                IsVisible="{Binding IsGuardianMode}"/>
                         <Button Grid.Column="1"
-                                Text="Aflys" />
+                                Text="{Binding FriendlyStateString}"
+                                Command="{Binding ToggleStateCommand}"
+                                BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/>
                         <Button Grid.Column="2"
                                 Text="Slet"
-                                Command="{Binding DeleteActivityCommand}"/>
+                                Command="{Binding DeleteActivityCommand}"
+                                IsVisible="{Binding IsGuardianMode}"/>
                     </Grid>
                 </StackLayout>
                 <!--Outcommented since this is not a part of the release-->
                 <!--Right Side-->
                 <!--<StackLayout Grid.Column="1"
                              VerticalOptions="CenterAndExpand">
-                    <Image Source="image_loading.png" />
+                    <ffimageloading:CachedImage Source="image_loading.png" />
                     <Grid Padding="30">
                         <Entry Placeholder="Tid"
                                Grid.Column="0" />
@@ -42,13 +52,19 @@
                     </Grid>
                 </StackLayout>-->
             </Grid>
+            <Button Text="Toggle Guardian"
+                        BackgroundColor="Fuchsia"
+                        WidthRequest="300"
+                        Command="{Binding ToggleGuardianMode}"
+                        HorizontalOptions="Center" />
             <StackLayout Orientation="Horizontal"
                          HorizontalOptions="Center"
                          Padding="12"
                          VerticalOptions="End"
                          IsVisible="{Binding IsGuardianMode}">
                 <Button Text="Gem"
-                        WidthRequest="300" />
+                        WidthRequest="300"
+                        Command="{Binding SaveCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

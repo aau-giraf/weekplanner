@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -41,9 +41,10 @@ namespace WeekPlanner.Services.Navigation
         /// Pops the current page unless it is the frontpage of the app
         /// </summary>
         /// <returns></returns>
-        public Task PopAsync()
+        public Task PopAsync(object navigationData = null)
         {
             var navigationPage = Application.Current.MainPage as CustomNavigationPage;
+            PreviousPageViewModel.Popped(navigationData);
             
             // TODO: Update to use correct frontpage
             if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))

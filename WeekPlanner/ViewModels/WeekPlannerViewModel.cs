@@ -83,11 +83,6 @@ namespace WeekPlanner.ViewModels
             _loginService = loginService;
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-
-            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
-                InsertPicto);
-            MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
-                DeleteActivity);
             MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
         }
 
@@ -120,7 +115,7 @@ namespace WeekPlanner.ViewModels
             );
         }
 
-        private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
+        private void InsertPicto(PictogramDTO pictogramDTO)
         {
             string imgSource =
                 GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl;
@@ -134,7 +129,6 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => FridayPictos);
             RaisePropertyChanged(() => SaturdayPictos);
             RaisePropertyChanged(() => SundayPictos);
-            RaisePropertyChanged(() => CountOfMaxHeightWeekday);
             RaisePropertyChanged(() => WeekdayPictos);
         }
 
@@ -186,12 +180,6 @@ namespace WeekPlanner.ViewModels
                 });
         }
 
-
-        private void DeleteActivity(ActivityViewModel activityVm, int activityId)
-        {
-            // TODO: Remove activityID from List<Resource> 
-        }
-
         private void SetWeekdayPictos()
         {
             var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
@@ -217,6 +205,21 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos = tempDict;
         }
 
+        public override void Popped(object navigationData)
+        {
+            // Happens after choosing a pictogram in Pictosearch
+            if (navigationData is PictogramDTO pictogramDTO)
+            {
+                InsertPicto(pictogramDTO);
+            }
+
+            // Happens after logging in as guardian when switching to guardian mode
+            if (navigationData is bool enterGuardianMode)
+            {
+                SetToGuardianMode();
+            }
+        }
+
         private async Task SwitchUserModeAsync()
         {
             if (EditModeEnabled)
@@ -234,26 +237,6 @@ namespace WeekPlanner.ViewModels
         {
             EditModeEnabled = true;
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
-
-            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
-            {
-                tempDict.Add(day, new ObservableCollection<string>());
-            }
-
-            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
-            {
-                var weekday = dayDTO.Day.Value;
-                ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var activity in dayDTO.Activities)
-                {
-                    pictos.Add(
-                        GlobalSettings.DefaultEndpoint + activity.Pictogram.ImageUrl);
-                }
-                tempDict[weekday] = pictos;
-            }
-
-            WeekdayPictos = tempDict;
         }
 
         private Dictionary<DayEnum, ObservableCollection<string>> _weekdayPictos =
@@ -272,14 +255,8 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => FridayPictos);
                 RaisePropertyChanged(() => SaturdayPictos);
                 RaisePropertyChanged(() => SundayPictos);
-                RaisePropertyChanged(() => CountOfMaxHeightWeekday);
                 RaisePropertyChanged(() => WeekdayPictos);
             }
-        }
-
-        public int CountOfMaxHeightWeekday
-        {
-            get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
         }
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
@@ -307,11 +284,21 @@ namespace WeekPlanner.ViewModels
             return day.Activities.ToObservableCollection();
         }
 
+        private void SendRequestFailedMessage(
+            ResponseWeekDTO.ErrorKeyEnum? errorKeyEnum = ResponseWeekDTO.ErrorKeyEnum.Error)
+        {
+            var friendlyErrorMessage = errorKeyEnum.ToFriendlyString();
+            MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
+        }
+
     }
 
-    public static class Extensions {
-        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source) {
+    public static class Extensions
+    {
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
             return new ObservableCollection<T>(source);
+
         }
     }
 }
