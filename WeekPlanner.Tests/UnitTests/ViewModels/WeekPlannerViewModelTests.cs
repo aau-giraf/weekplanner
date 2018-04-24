@@ -104,7 +104,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .ToList();
 
             var dayIdsFromWeek =
-                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Elements.Select(e => e.Id).Select(i => i.Value)
+                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Activities.Select(a => a.Pictogram.Id.Value)
                     .ToList();
 
             //Assert
@@ -138,7 +138,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             //Act 
             await sut.InitializeAsync(mockUsernameDTO);
             //Assert
-            Assert.Equal(weekResponse.Data.Days.Max(d => d.Elements.Count), sut.CountOfMaxHeightWeekday);
+            Assert.Equal(weekResponse.Data.Days.Max(d => d.Activities.Count), sut.CountOfMaxHeightWeekday);
         }
 
         [Fact]
