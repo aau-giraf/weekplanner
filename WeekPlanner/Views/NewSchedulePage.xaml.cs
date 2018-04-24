@@ -16,5 +16,5 @@ namespace WeekPlanner.Views
 		{
 			InitializeComponent ();
 		}
-	}
+    }
 }

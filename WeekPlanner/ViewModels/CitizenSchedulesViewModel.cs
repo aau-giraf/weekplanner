@@ -13,6 +13,7 @@ using WeekPlanner.Services.Request;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Views;
 
 namespace WeekPlanner.ViewModels
 {
@@ -23,7 +24,7 @@ namespace WeekPlanner.ViewModels
         private readonly ILoginService _loginService;
 
         public ICommand WeekTappedCommand => new Command((tappedItem) => ListViewItemTapped((WeekDTO)tappedItem));
-        public ICommand WeekDeletedCommand => new Command(() => WeekDeletedTapped());
+        public ICommand WeekDeletedCommand => new Command((x) => WeekDeletedTapped(x));
         public ICommand AddWeekScheduleCommand => new Command(() => AddWeekSchedule());
 
         public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IWeekApi weekApi, ILoginService loginService) : base(navigationService)
@@ -85,15 +86,24 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private void WeekDeletedTapped()
+        private void WeekDeletedTapped(Object week)
         {
-            Weeks.Add(Weeks.First());
-            MessagingCenter.Send(this, "DeleteWeekAlert");
+            if (week is WeekDTO weekDTO)
+            {
+                MessagingCenter.Send(this, "DeleteWeekAlert");
+
+                //MessagingCenter.Subscribe<CitizenSchedulesPage>(this, "DeleteWeek", (sender) => DeleteWeek(sender, weekDTO));
+            }
+        }
+
+        private void DeleteWeek(CitizenSchedulesPage sender, WeekDTO week)
+        {
+            _weekApi.V1WeekByIdDelete(week.Id);
         }
 
         private async void AddWeekSchedule()
         {
-            await NavigationService.NavigateToAsync<WeekPlannerViewModel>();
+            await NavigationService.NavigateToAsync<NewScheduleViewModel>();
         }
 
         public override async Task InitializeAsync(object navigationData)

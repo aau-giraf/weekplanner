@@ -25,9 +25,14 @@ namespace WeekPlanner.Views
             MessagingCenter.Subscribe<CitizenSchedulesViewModel>(this, "DeleteWeekAlert", (sender) => AlertUserDeleteWeek());
         }
 
-        private void AlertUserDeleteWeek()
+        private async void AlertUserDeleteWeek()
         {
-            DisplayAlert("Slet Ugeplan", "Vil du slette denne ugeplan?", "Ok", "Annuller");
+            bool b = await DisplayAlert("Slet Ugeplan", "Vil du slette denne ugeplan?", "Ok", "Annuller");
+
+            //if (b)
+            //{
+            //    MessagingCenter.Send(this, "DeleteWeek");
+            //}
         }
     }
 }

@@ -8,6 +8,7 @@ using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Validations;
+using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
@@ -16,6 +17,7 @@ namespace WeekPlanner.ViewModels
     {
         private WeekDTO _weekDTO = new WeekDTO();
         private IWeekApi _weekApi;
+        private IPictogramApi _pictogramApi;
         private ValidatableObject<string> _scheduleName;
         public ValidatableObject<string> ScheduleName
         {
@@ -37,12 +39,17 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand AddWeekScheduleCommand => new Command(() => SaveWeekSchedule());
+        public ICommand SaveWeekScheduleCommand => new Command(() => SaveWeekSchedule());
         public ICommand ChangePictogramCommand => new Command(() => ChangePictogram());
 
-        public NewScheduleViewModel(INavigationService navigationService, IWeekApi weekApi) : base(navigationService)
+        public NewScheduleViewModel(INavigationService navigationService, IWeekApi weekApi, IPictogramApi pictogramApi) : base(navigationService)
         {
             _weekApi = weekApi;
+            _pictogramApi = pictogramApi;
+
+            _weekDTO.Thumbnail = _pictogramApi.V1PictogramByIdGet(2).Data;
+            WeekThumbNail = _weekDTO.Thumbnail;
+
             _scheduleName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et navn er påkrævet." });
         }
 
@@ -50,16 +57,34 @@ namespace WeekPlanner.ViewModels
         private void ChangePictogram()
         {
             NavigationService.NavigateToAsync<PictogramSearchViewModel>();
+            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
+                InsertPicto);
+        }
+
+        private void InsertPicto(PictogramSearchViewModel arg1, PictogramDTO arg2)
+        {
+            WeekThumbNail = arg2;
         }
 
         private void SaveWeekSchedule()
         {
-            _weekDTO.Name = ScheduleName.Value;
-            _weekDTO.Thumbnail = WeekThumbNail;
+            if (ValidateWeekScheduleName())
+            {
+                _weekDTO.Name = ScheduleName.Value;
+                _weekDTO.Thumbnail = WeekThumbNail;
 
-            _weekApi.V1WeekPost(_weekDTO);
+                _weekApi.V1WeekPostAsync(_weekDTO);
 
-            NavigationService.PopAsync();
+                NavigationService.PopAsync();
+            }
+        }
+
+        public ICommand ValidateWeekNameCommand => new Command(() => _scheduleName.Validate());
+
+        private bool ValidateWeekScheduleName()
+        {
+            var isWeekNameValid = _scheduleName.Validate();
+            return isWeekNameValid;
         }
     }
 }
