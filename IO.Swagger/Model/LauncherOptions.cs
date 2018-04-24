@@ -10,11 +10,17 @@
 
 using System;
 using System.Linq;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -25,20 +31,197 @@ namespace IO.Swagger.Model
     public partial class LauncherOptions :  IEquatable<LauncherOptions>, IValidatableObject
     {
         /// <summary>
+        /// Preferred orientation of device/screen
+        /// </summary>
+        /// <value>Preferred orientation of device/screen</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum OrientationEnum
+        {
+            
+            /// <summary>
+            /// Enum Portrait for value: portrait
+            /// </summary>
+            [EnumMember(Value = "portrait")]
+            Portrait = 1,
+            
+            /// <summary>
+            /// Enum Landscape for value: landscape
+            /// </summary>
+            [EnumMember(Value = "landscape")]
+            Landscape = 2
+        }
+
+        /// <summary>
+        /// Preferred orientation of device/screen
+        /// </summary>
+        /// <value>Preferred orientation of device/screen</value>
+        [DataMember(Name="orientation", EmitDefaultValue=false)]
+        public OrientationEnum Orientation { get; set; }
+        /// <summary>
+        /// Preferred appearence of checked resources
+        /// </summary>
+        /// <value>Preferred appearence of checked resources</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum CheckResourceAppearenceEnum
+        {
+            
+            /// <summary>
+            /// Enum Normal for value: normal
+            /// </summary>
+            [EnumMember(Value = "normal")]
+            Normal = 1,
+            
+            /// <summary>
+            /// Enum Checkmark for value: checkmark
+            /// </summary>
+            [EnumMember(Value = "checkmark")]
+            Checkmark = 2,
+            
+            /// <summary>
+            /// Enum Removed for value: removed
+            /// </summary>
+            [EnumMember(Value = "removed")]
+            Removed = 3,
+            
+            /// <summary>
+            /// Enum MovedToRight for value: movedToRight
+            /// </summary>
+            [EnumMember(Value = "movedToRight")]
+            MovedToRight = 4,
+            
+            /// <summary>
+            /// Enum GreyedOut for value: greyedOut
+            /// </summary>
+            [EnumMember(Value = "greyedOut")]
+            GreyedOut = 5
+        }
+
+        /// <summary>
+        /// Preferred appearence of checked resources
+        /// </summary>
+        /// <value>Preferred appearence of checked resources</value>
+        [DataMember(Name="checkResourceAppearence", EmitDefaultValue=false)]
+        public CheckResourceAppearenceEnum CheckResourceAppearence { get; set; }
+        /// <summary>
+        /// Preferred appearence of timer
+        /// </summary>
+        /// <value>Preferred appearence of timer</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum DefaultTimerEnum
+        {
+            
+            /// <summary>
+            /// Enum Hourglass for value: hourglass
+            /// </summary>
+            [EnumMember(Value = "hourglass")]
+            Hourglass = 1,
+            
+            /// <summary>
+            /// Enum AnalogClock for value: analogClock
+            /// </summary>
+            [EnumMember(Value = "analogClock")]
+            AnalogClock = 2
+        }
+
+        /// <summary>
+        /// Preferred appearence of timer
+        /// </summary>
+        /// <value>Preferred appearence of timer</value>
+        [DataMember(Name="defaultTimer", EmitDefaultValue=false)]
+        public DefaultTimerEnum DefaultTimer { get; set; }
+        /// <summary>
+        /// The preferred theme
+        /// </summary>
+        /// <value>The preferred theme</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum ThemeEnum
+        {
+            
+            /// <summary>
+            /// Enum GirafYellow for value: girafYellow
+            /// </summary>
+            [EnumMember(Value = "girafYellow")]
+            GirafYellow = 1,
+            
+            /// <summary>
+            /// Enum GirafGreen for value: girafGreen
+            /// </summary>
+            [EnumMember(Value = "girafGreen")]
+            GirafGreen = 2,
+            
+            /// <summary>
+            /// Enum Greyscale for value: greyscale
+            /// </summary>
+            [EnumMember(Value = "greyscale")]
+            Greyscale = 3
+        }
+
+        /// <summary>
+        /// The preferred theme
+        /// </summary>
+        /// <value>The preferred theme</value>
+        [DataMember(Name="theme", EmitDefaultValue=false)]
+        public ThemeEnum Theme { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="LauncherOptions" /> class.
         /// </summary>
-        /// <param name="UseGrayscale">A flag indicating whether to run applications in grayscale or not..</param>
-        /// <param name="DisplayLauncherAnimations">A flag indicating whether to display animations in the launcher or not..</param>
-        /// <param name="AppsUserCanAccess">A collection of all the user&#39;s applications..</param>
+        [JsonConstructorAttribute]
+        protected LauncherOptions() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LauncherOptions" /> class.
+        /// </summary>
+        /// <param name="DisplayLauncherAnimations">A flag indicating whether to run applications in grayscale or not..</param>
         /// <param name="AppGridSizeRows">A field for storing how many rows to display in the GirafLauncher application..</param>
         /// <param name="AppGridSizeColumns">A field for storing how many columns to display in the GirafLauncher application..</param>
-        public LauncherOptions(bool? UseGrayscale = default(bool?), bool? DisplayLauncherAnimations = default(bool?), List<ApplicationOption> AppsUserCanAccess = default(List<ApplicationOption>), int? AppGridSizeRows = default(int?), int? AppGridSizeColumns = default(int?))
+        /// <param name="Orientation">Preferred orientation of device/screen (required).</param>
+        /// <param name="CheckResourceAppearence">Preferred appearence of checked resources (required).</param>
+        /// <param name="DefaultTimer">Preferred appearence of timer (required).</param>
+        /// <param name="TimerSeconds">Number of seconds for timer.</param>
+        /// <param name="ActivitiesCount">Number of activities.</param>
+        /// <param name="Theme">The preferred theme (required).</param>
+        public LauncherOptions(bool? DisplayLauncherAnimations = default(bool?), int? AppGridSizeRows = default(int?), int? AppGridSizeColumns = default(int?), OrientationEnum Orientation = default(OrientationEnum), CheckResourceAppearenceEnum CheckResourceAppearence = default(CheckResourceAppearenceEnum), DefaultTimerEnum DefaultTimer = default(DefaultTimerEnum), int? TimerSeconds = default(int?), int? ActivitiesCount = default(int?), ThemeEnum Theme = default(ThemeEnum))
         {
-            this.UseGrayscale = UseGrayscale;
+            // to ensure "Orientation" is required (not null)
+            if (Orientation == null)
+            {
+                throw new InvalidDataException("Orientation is a required property for LauncherOptions and cannot be null");
+            }
+            else
+            {
+                this.Orientation = Orientation;
+            }
+            // to ensure "CheckResourceAppearence" is required (not null)
+            if (CheckResourceAppearence == null)
+            {
+                throw new InvalidDataException("CheckResourceAppearence is a required property for LauncherOptions and cannot be null");
+            }
+            else
+            {
+                this.CheckResourceAppearence = CheckResourceAppearence;
+            }
+            // to ensure "DefaultTimer" is required (not null)
+            if (DefaultTimer == null)
+            {
+                throw new InvalidDataException("DefaultTimer is a required property for LauncherOptions and cannot be null");
+            }
+            else
+            {
+                this.DefaultTimer = DefaultTimer;
+            }
+            // to ensure "Theme" is required (not null)
+            if (Theme == null)
+            {
+                throw new InvalidDataException("Theme is a required property for LauncherOptions and cannot be null");
+            }
+            else
+            {
+                this.Theme = Theme;
+            }
             this.DisplayLauncherAnimations = DisplayLauncherAnimations;
-            this.AppsUserCanAccess = AppsUserCanAccess;
             this.AppGridSizeRows = AppGridSizeRows;
             this.AppGridSizeColumns = AppGridSizeColumns;
+            this.TimerSeconds = TimerSeconds;
+            this.ActivitiesCount = ActivitiesCount;
         }
         
         /// <summary>
@@ -52,22 +235,8 @@ namespace IO.Swagger.Model
         /// A flag indicating whether to run applications in grayscale or not.
         /// </summary>
         /// <value>A flag indicating whether to run applications in grayscale or not.</value>
-        [DataMember(Name="useGrayscale", EmitDefaultValue=false)]
-        public bool? UseGrayscale { get; set; }
-
-        /// <summary>
-        /// A flag indicating whether to display animations in the launcher or not.
-        /// </summary>
-        /// <value>A flag indicating whether to display animations in the launcher or not.</value>
         [DataMember(Name="displayLauncherAnimations", EmitDefaultValue=false)]
         public bool? DisplayLauncherAnimations { get; set; }
-
-        /// <summary>
-        /// A collection of all the user&#39;s applications.
-        /// </summary>
-        /// <value>A collection of all the user&#39;s applications.</value>
-        [DataMember(Name="appsUserCanAccess", EmitDefaultValue=false)]
-        public List<ApplicationOption> AppsUserCanAccess { get; set; }
 
         /// <summary>
         /// A field for storing how many rows to display in the GirafLauncher application.
@@ -83,6 +252,24 @@ namespace IO.Swagger.Model
         [DataMember(Name="appGridSizeColumns", EmitDefaultValue=false)]
         public int? AppGridSizeColumns { get; set; }
 
+
+
+
+        /// <summary>
+        /// Number of seconds for timer
+        /// </summary>
+        /// <value>Number of seconds for timer</value>
+        [DataMember(Name="timerSeconds", EmitDefaultValue=false)]
+        public int? TimerSeconds { get; set; }
+
+        /// <summary>
+        /// Number of activities
+        /// </summary>
+        /// <value>Number of activities</value>
+        [DataMember(Name="activitiesCount", EmitDefaultValue=false)]
+        public int? ActivitiesCount { get; set; }
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -92,11 +279,15 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class LauncherOptions {\n");
             sb.Append("  Key: ").Append(Key).Append("\n");
-            sb.Append("  UseGrayscale: ").Append(UseGrayscale).Append("\n");
             sb.Append("  DisplayLauncherAnimations: ").Append(DisplayLauncherAnimations).Append("\n");
-            sb.Append("  AppsUserCanAccess: ").Append(AppsUserCanAccess).Append("\n");
             sb.Append("  AppGridSizeRows: ").Append(AppGridSizeRows).Append("\n");
             sb.Append("  AppGridSizeColumns: ").Append(AppGridSizeColumns).Append("\n");
+            sb.Append("  Orientation: ").Append(Orientation).Append("\n");
+            sb.Append("  CheckResourceAppearence: ").Append(CheckResourceAppearence).Append("\n");
+            sb.Append("  DefaultTimer: ").Append(DefaultTimer).Append("\n");
+            sb.Append("  TimerSeconds: ").Append(TimerSeconds).Append("\n");
+            sb.Append("  ActivitiesCount: ").Append(ActivitiesCount).Append("\n");
+            sb.Append("  Theme: ").Append(Theme).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -137,19 +328,9 @@ namespace IO.Swagger.Model
                     this.Key.Equals(input.Key))
                 ) && 
                 (
-                    this.UseGrayscale == input.UseGrayscale ||
-                    (this.UseGrayscale != null &&
-                    this.UseGrayscale.Equals(input.UseGrayscale))
-                ) && 
-                (
                     this.DisplayLauncherAnimations == input.DisplayLauncherAnimations ||
                     (this.DisplayLauncherAnimations != null &&
                     this.DisplayLauncherAnimations.Equals(input.DisplayLauncherAnimations))
-                ) && 
-                (
-                    this.AppsUserCanAccess == input.AppsUserCanAccess ||
-                    this.AppsUserCanAccess != null &&
-                    this.AppsUserCanAccess.SequenceEqual(input.AppsUserCanAccess)
                 ) && 
                 (
                     this.AppGridSizeRows == input.AppGridSizeRows ||
@@ -160,6 +341,36 @@ namespace IO.Swagger.Model
                     this.AppGridSizeColumns == input.AppGridSizeColumns ||
                     (this.AppGridSizeColumns != null &&
                     this.AppGridSizeColumns.Equals(input.AppGridSizeColumns))
+                ) && 
+                (
+                    this.Orientation == input.Orientation ||
+                    (this.Orientation != null &&
+                    this.Orientation.Equals(input.Orientation))
+                ) && 
+                (
+                    this.CheckResourceAppearence == input.CheckResourceAppearence ||
+                    (this.CheckResourceAppearence != null &&
+                    this.CheckResourceAppearence.Equals(input.CheckResourceAppearence))
+                ) && 
+                (
+                    this.DefaultTimer == input.DefaultTimer ||
+                    (this.DefaultTimer != null &&
+                    this.DefaultTimer.Equals(input.DefaultTimer))
+                ) && 
+                (
+                    this.TimerSeconds == input.TimerSeconds ||
+                    (this.TimerSeconds != null &&
+                    this.TimerSeconds.Equals(input.TimerSeconds))
+                ) && 
+                (
+                    this.ActivitiesCount == input.ActivitiesCount ||
+                    (this.ActivitiesCount != null &&
+                    this.ActivitiesCount.Equals(input.ActivitiesCount))
+                ) && 
+                (
+                    this.Theme == input.Theme ||
+                    (this.Theme != null &&
+                    this.Theme.Equals(input.Theme))
                 );
         }
 
@@ -174,16 +385,24 @@ namespace IO.Swagger.Model
                 int hashCode = 41;
                 if (this.Key != null)
                     hashCode = hashCode * 59 + this.Key.GetHashCode();
-                if (this.UseGrayscale != null)
-                    hashCode = hashCode * 59 + this.UseGrayscale.GetHashCode();
                 if (this.DisplayLauncherAnimations != null)
                     hashCode = hashCode * 59 + this.DisplayLauncherAnimations.GetHashCode();
-                if (this.AppsUserCanAccess != null)
-                    hashCode = hashCode * 59 + this.AppsUserCanAccess.GetHashCode();
                 if (this.AppGridSizeRows != null)
                     hashCode = hashCode * 59 + this.AppGridSizeRows.GetHashCode();
                 if (this.AppGridSizeColumns != null)
                     hashCode = hashCode * 59 + this.AppGridSizeColumns.GetHashCode();
+                if (this.Orientation != null)
+                    hashCode = hashCode * 59 + this.Orientation.GetHashCode();
+                if (this.CheckResourceAppearence != null)
+                    hashCode = hashCode * 59 + this.CheckResourceAppearence.GetHashCode();
+                if (this.DefaultTimer != null)
+                    hashCode = hashCode * 59 + this.DefaultTimer.GetHashCode();
+                if (this.TimerSeconds != null)
+                    hashCode = hashCode * 59 + this.TimerSeconds.GetHashCode();
+                if (this.ActivitiesCount != null)
+                    hashCode = hashCode * 59 + this.ActivitiesCount.GetHashCode();
+                if (this.Theme != null)
+                    hashCode = hashCode * 59 + this.Theme.GetHashCode();
                 return hashCode;
             }
         }
