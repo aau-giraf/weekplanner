@@ -25,10 +25,10 @@
                                 Command="{Binding DeleteActivityCommand}"/>
                     </Grid>
                 </StackLayout>
+                <!--Outcommented since this is not a part of the release-->
                 <!--Right Side-->
-                <StackLayout Grid.Column="1"
+                <!--<StackLayout Grid.Column="1"
                              VerticalOptions="CenterAndExpand">
-                    <!--Timer-->
                     <Image Source="image_loading.png" />
                     <Grid Padding="30">
                         <Entry Placeholder="Tid"
@@ -40,7 +40,7 @@
                                 Grid.Column="1"
                                 IsVisible="{Binding IsGuardianMode}"/>
                     </Grid>
-                </StackLayout>
+                </StackLayout>-->
             </Grid>
             <StackLayout Orientation="Horizontal"
                          HorizontalOptions="Center"
