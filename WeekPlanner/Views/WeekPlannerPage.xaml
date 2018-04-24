@@ -78,12 +78,12 @@
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
                     <Grid HeightRequest="1500">
                         <controls:WeekDayListView BackgroundColor="{StaticResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
+                        <!--<controls:WeekDayListView BackgroundColor="{StaticResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
                         <controls:WeekDayListView BackgroundColor="{StaticResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" />
                         <controls:WeekDayListView BackgroundColor="{StaticResource ThursdayColor}" ItemsSource="{Binding ThursdayPictos}" Grid.Column="3" />
                         <controls:WeekDayListView BackgroundColor="{StaticResource FridayColor}" ItemsSource="{Binding FridayPictos}" Grid.Column="4" />
                         <controls:WeekDayListView BackgroundColor="{StaticResource SaturdayColor}" ItemsSource="{Binding SaturdayPictos}" Grid.Column="5" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" />
+                        <controls:WeekDayListView BackgroundColor="{StaticResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" />-->
                     </Grid>
                 </ScrollView>
             </Grid>
