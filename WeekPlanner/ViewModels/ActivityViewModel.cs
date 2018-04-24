@@ -124,10 +124,11 @@ namespace WeekPlanner.ViewModels
             //await _pictogramApi.V1PictogramByIdPutAsync(pictogramDTO.Id, pictogramDTO);
         });
 
-        public override void Popped(object navigationData) {
+        public override async Task PoppedAsync(object navigationData) {
             if (navigationData is PictogramDTO newPicto) {
                 Activity.Pictogram = newPicto;
                 RaisePropertyChanged(() => Activity);
+                await NavigationService.PopAsync(this);
             }
         }
 

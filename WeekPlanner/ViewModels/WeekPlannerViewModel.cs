@@ -72,7 +72,11 @@ namespace WeekPlanner.ViewModels
         });
 
         public ICommand PictoClickedCommand => new Command<ActivityDTO>(async activity =>
-            await NavigationService.NavigateToAsync<ActivityViewModel>(activity));
+        {
+            _selectedActivity = activity;
+            await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
+        });
+                                                                    
 
         public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService,
             IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
@@ -122,14 +126,7 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
             // Add pictogramId to the correct weekday
             // TODO: Fix
-            RaisePropertyChanged(() => MondayPictos);
-            RaisePropertyChanged(() => TuesdayPictos);
-            RaisePropertyChanged(() => WednesdayPictos);
-            RaisePropertyChanged(() => ThursdayPictos);
-            RaisePropertyChanged(() => FridayPictos);
-            RaisePropertyChanged(() => SaturdayPictos);
-            RaisePropertyChanged(() => SundayPictos);
-            RaisePropertyChanged(() => WeekdayPictos);
+            RaisePropertyForDays();
         }
 
 
@@ -205,12 +202,18 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos = tempDict;
         }
 
-        public override void Popped(object navigationData)
+        public override async Task PoppedAsync(object navigationData)
         {
             // Happens after choosing a pictogram in Pictosearch
             if (navigationData is PictogramDTO pictogramDTO)
             {
                 InsertPicto(pictogramDTO);
+            }
+
+            // Happens when popping from ActivityViewModel
+            if(navigationData is ActivityViewModel activityVM) {
+                _selectedActivity = activityVM.Activity;
+                RaisePropertyForDays();
             }
 
             // Happens after logging in as guardian when switching to guardian mode
@@ -241,6 +244,7 @@ namespace WeekPlanner.ViewModels
 
         private Dictionary<DayEnum, ObservableCollection<string>> _weekdayPictos =
             new Dictionary<DayEnum, ObservableCollection<string>>();
+        private ActivityDTO _selectedActivity;
 
         public Dictionary<DayEnum, ObservableCollection<string>> WeekdayPictos
         {
@@ -248,29 +252,16 @@ namespace WeekPlanner.ViewModels
             set
             {
                 _weekdayPictos = value;
-                RaisePropertyChanged(() => MondayPictos);
-                RaisePropertyChanged(() => TuesdayPictos);
-                RaisePropertyChanged(() => WednesdayPictos);
-                RaisePropertyChanged(() => ThursdayPictos);
-                RaisePropertyChanged(() => FridayPictos);
-                RaisePropertyChanged(() => SaturdayPictos);
-                RaisePropertyChanged(() => SundayPictos);
-                RaisePropertyChanged(() => WeekdayPictos);
+                RaisePropertyForDays();
             }
         }
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
-
         public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
-
         public ObservableCollection<ActivityDTO> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
-
         public ObservableCollection<ActivityDTO> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
-
         public ObservableCollection<ActivityDTO> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
-
         public ObservableCollection<ActivityDTO> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
-
         public ObservableCollection<ActivityDTO> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
 
         private ObservableCollection<ActivityDTO> GetPictosOrEmptyList(DayEnum dayEnum)
@@ -289,6 +280,17 @@ namespace WeekPlanner.ViewModels
         {
             var friendlyErrorMessage = errorKeyEnum.ToFriendlyString();
             MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
+        }
+
+        private void RaisePropertyForDays() {
+            RaisePropertyChanged(() => MondayPictos);
+            RaisePropertyChanged(() => TuesdayPictos);
+            RaisePropertyChanged(() => WednesdayPictos);
+            RaisePropertyChanged(() => ThursdayPictos);
+            RaisePropertyChanged(() => FridayPictos);
+            RaisePropertyChanged(() => SaturdayPictos);
+            RaisePropertyChanged(() => SundayPictos);
+            RaisePropertyChanged(() => WeekdayPictos);
         }
 
     }

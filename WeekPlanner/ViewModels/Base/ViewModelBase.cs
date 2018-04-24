@@ -30,6 +30,8 @@ namespace WeekPlanner.ViewModels.Base
             return Task.FromResult(false);
         }
 
-        public virtual void Popped(object navigationData) { }
+        public virtual Task PoppedAsync(object navigationData) {
+            return Task.FromResult(false);
+         }
     }
 }

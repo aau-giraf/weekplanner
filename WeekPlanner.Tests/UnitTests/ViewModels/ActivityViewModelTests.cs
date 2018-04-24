@@ -26,7 +26,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public void Popped_ChangesImageUrl()
+        public async Task Popped_ChangesImageUrl()
         {
             // Arrange
             var sut = Fixture.Build<ActivityViewModel>()
@@ -39,7 +39,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             bool propertyOnChangedIsInvoked = false;
 
             // Act
-            sut.Popped(picto);
+            await sut.PoppedAsync(picto);
             sut.PropertyChanged += (sender, e) => {
                 if (e.PropertyName == nameof(sut.ImageUrl))
                     propertyOnChangedIsInvoked = true;
