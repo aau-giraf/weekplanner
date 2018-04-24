@@ -26,6 +26,8 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
         private readonly IDialogService _dialogService;
+        private readonly ISettingsService _settingsService;
+        
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
@@ -71,16 +73,24 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand PictoClickedCommand => new Command<string>(async imageSource => 
-            await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
+        public ICommand PictoClickedCommand => new Command<string>(async imageSource =>
+        {
+            if (_editModeEnabled)
+            {
+                await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource);
+            }
+        });
+            
 
         public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
-            IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
+            IRequestService requestService, IWeekApi weekApi, IDialogService dialogService, ISettingsService settingsService) 
+            : base(navigationService)
         {
             _requestService = requestService;
             _weekApi = weekApi;
             _dialogService = dialogService;
             _loginService = loginService;
+            _settingsService = settingsService;
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             
@@ -125,7 +135,14 @@ namespace WeekPlanner.ViewModels
             string imgSource = 
                 GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl;
             WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
-            // Add pictogramId to the correct weekday
+
+            var dayToAddTo = WeekDTO.Days.FirstOrDefault(d => d.Day == _weekdayToAddPictogramTo);
+            if (dayToAddTo != null)
+            {
+                // Insert pictogram in the very bottom of the day
+                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
+                dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom));
+            }
             // TODO: Fix
             RaisePropertyChanged(() => MondayPictos);
             RaisePropertyChanged(() => TuesdayPictos);
@@ -150,6 +167,8 @@ namespace WeekPlanner.ViewModels
 			if(!confirmed){
                 return;   
             }
+            
+            _settingsService.UseTokenFor(UserType.Citizen);
             
             if (WeekDTO.Id is null)
             {
@@ -204,10 +223,10 @@ namespace WeekPlanner.ViewModels
                 if (dayDTO.Day == null) continue;
                 var weekday = dayDTO.Day.Value;
                 ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleId in dayDTO.Activities.Select(e => e.Pictogram.Id.Value))
+                foreach (var activity in dayDTO.Activities.OrderBy(d => d.Order))
                 {
                     pictos.Add(
-                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleId}/image/raw");
+                        GlobalSettings.DefaultEndpoint + activity.Pictogram.ImageUrl);
                 }
                 tempDict[weekday] = pictos;
             }
@@ -232,26 +251,9 @@ namespace WeekPlanner.ViewModels
         {
             EditModeEnabled = true;
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
             
-            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
-            {
-                tempDict.Add(day, new ObservableCollection<string>());
-            }
-            
-            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
-            {
-                var weekday = dayDTO.Day.Value;
-                ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var activity in dayDTO.Activities)
-                {
-                    pictos.Add(
-                        GlobalSettings.DefaultEndpoint + activity.Pictogram.ImageUrl);
-                }
-                tempDict[weekday] = pictos;
-            }
-
-            WeekdayPictos = tempDict;
+            // Needs to set pictos again due to? Perhaps garbage collection??
+            SetWeekdayPictos();
         }
 
 
