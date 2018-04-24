@@ -15,80 +15,197 @@ using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Views;
 using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
+using WeekPlanner.Services;
 
 namespace WeekPlanner.ViewModels
 {
-	public class WeekPlannerViewModel : ViewModelBase
-	{
-		private readonly ILoginService _loginService;
-		private readonly IRequestService _requestService;
-		private readonly IWeekApi _weekApi;
+    public class WeekPlannerViewModel : ViewModelBase
+    {
+        private readonly ILoginService _loginService;
+        private readonly IRequestService _requestService;
+        private readonly IWeekApi _weekApi;
+        private readonly IDialogService _dialogService;
+        private bool _editModeEnabled;
+        private WeekDTO _weekDto;
+        private DayEnum _weekdayToAddPictogramTo;
+        private ImageSource _userModeImage;
+        
+        public bool EditModeEnabled
+        {
+            get => _editModeEnabled;
+            set
+            {
+                _editModeEnabled = value;
+                RaisePropertyChanged(() => EditModeEnabled);
+            }
+        }
 
-		private bool _editModeEnabled;
-		private WeekDTO _weekDto;
-		private DayEnum _weekdayToAddPictogramTo;
-		private ImageSource _userModeImage;
+        public WeekDTO WeekDTO
+        {
+            get => _weekDto;
+            set
+            {
+                _weekDto = value;
+                RaisePropertyChanged(() => WeekDTO);
+            }
+        }
 
+        public ImageSource UserModeImage
+        {
+            get => _userModeImage;
+            set
+            {
+                _userModeImage = value;
+                RaisePropertyChanged(() => UserModeImage);
+            }
+        }
+	    
+        public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
+            IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
+        {
+            _requestService = requestService;
+            _weekApi = weekApi;
+            _dialogService = dialogService;
+            _loginService = loginService;
 
+            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+            
+            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
+                InsertPicto);
+            MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
+                DeleteActivity);
+            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
+        }
 
-		public bool EditModeEnabled
+	    #region Message Callbacks (Insert, delete and SetToGuardianMode)
+		private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
 		{
-			get => _editModeEnabled;
-			set
+			StatefulPictogram statefulPictogram = new StatefulPictogram(GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl,
+				PictogramState.Normal);
+			WeekdayPictos[_weekdayToAddPictogramTo].Add(statefulPictogram);
+			// Add pictogramId to the correct weekday
+			// TODO: Fix
+			RaisePropertyChanged(() => MondayPictos);
+			RaisePropertyChanged(() => TuesdayPictos);
+			RaisePropertyChanged(() => WednesdayPictos);
+			RaisePropertyChanged(() => ThursdayPictos);
+			RaisePropertyChanged(() => FridayPictos);
+			RaisePropertyChanged(() => SaturdayPictos);
+			RaisePropertyChanged(() => SundayPictos);
+			RaisePropertyChanged(() => CountOfMaxHeightWeekday);
+			RaisePropertyChanged(() => WeekdayPictos);
+		}
+	    
+		private void DeleteActivity(ActivityViewModel activityVM, int activityID)
+		{
+			// TODO: Remove activityID from List<Resource> 
+		}
+	    
+		private void SetToGuardianMode()
+		{
+			EditModeEnabled = true;
+			UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
+			var tempDict = new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
+
+			foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
 			{
-				_editModeEnabled = value;
-				RaisePropertyChanged(() => EditModeEnabled);
+				tempDict.Add(day, new ObservableCollection<StatefulPictogram>());
 			}
-		}
 
-		public WeekDTO WeekDTO
-		{
-			get => _weekDto;
-			set
+			foreach (WeekdayDTO dayDTO in WeekDTO.Days)
 			{
-				_weekDto = value;
-				RaisePropertyChanged(() => WeekDTO);
+				var weekday = dayDTO.Day.Value;
+				ObservableCollection<StatefulPictogram> pictos = new ObservableCollection<StatefulPictogram>();
+				foreach (var eleID in dayDTO.Elements)
+				{
+					pictos.Add(new StatefulPictogram(
+						GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw", PictogramState.Normal));
+				}
+
+				tempDict[weekday] = pictos;
 			}
+
+			WeekdayPictos = tempDict;
 		}
+	    #endregion
+	    
+	    #region Command: ToggleEditMode
+        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
+	    private async Task SwitchUserModeAsync()
+	    {
+		    if (EditModeEnabled)
+		    {
+			    EditModeEnabled = false;
+			    UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+		    }
+		    else
+		    {
+			    await NavigationService.NavigateToAsync<LoginViewModel>(this);
+		    }
+	    }
+	    #endregion
 
-		public ImageSource UserModeImage
-		{
-			get => _userModeImage;
-			set
-			{
-				_userModeImage = value;
-				RaisePropertyChanged(() => UserModeImage);
-			}
-		}
+	    #region Command: SavePicto
+        public ICommand SaveCommand => new Command(async () => await SaveSchedule());
+	    private async Task SaveSchedule()
+	    {
+		    bool confirmed = await _dialogService.ConfirmAsync(
+			    title: "Gem ugeplan", 
+			    message: "Vil du gemme ugeplanen?", 
+			    okText: "Gem", 
+			    cancelText: "Annuller");
 
-		public ICommand ToggleEditModeCommand => new Command(() => SwitchUserMode());
+		    if(!confirmed){
+			    return;   
+		    }
+            
+		    if (WeekDTO.Id is null)
+		    {
+			    await SaveNewSchedule();
+		    }
+		    else
+		    {
+			    await UpdateExistingSchedule();
+		    }
+	    }
+	    
+	    private async Task SaveNewSchedule()
+	    {
+		    await _requestService.SendRequestAndThenAsync(this,
+			    async () => await _weekApi.V1WeekPostAsync(WeekDTO), result => 
+			    {
+				    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
+			    });
+	    }
+	    
+	    private async Task UpdateExistingSchedule()
+	    {
+		    if (WeekDTO.Id == null)
+		    {
+			    throw new InvalidDataException("WeekDTO should always have an Id when updating.");
+		    }
+            
+		    await _requestService.SendRequestAndThenAsync(this,
+			    async () => await _weekApi.V1WeekByIdPutAsync((int) WeekDTO.Id, WeekDTO),
+			    result =>
+			    {
+				    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
+			    });
+	    }
+	    
+	    #endregion
 
-		public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
-		{
-			_weekdayToAddPictogramTo = weekday;
-			await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
-		});
+        public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
+        {
+            _weekdayToAddPictogramTo = weekday;
+            await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
+        });
 
-		public ICommand PictoClickedCommand => new Command<StatefulPictogram>(async imageSource =>
-			await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
+        public ICommand PictoClickedCommand => new Command<string>(async imageSource => 
+            await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
 
-		public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService,
-			IRequestService requestService, IWeekApi weekApi) : base(navigationService)
-		{
-			_loginService = loginService;
 
-			UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-
-			_requestService = requestService;
-			_weekApi = weekApi;
-
-			MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
-				async _ => await SaveSchedule());
-			MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
-				InsertPicto);
-			MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
-				DeleteActivity);
-		}
+	    #region InitAsync: Show weekplan
 
 		public override async Task InitializeAsync(object navigationData)
 		{
@@ -119,70 +236,6 @@ namespace WeekPlanner.ViewModels
 			);
 		}
 
-		private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
-		{
-			StatefulPictogram statefulPictogram = new StatefulPictogram(GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl,
-				PictogramState.Normal);
-			WeekdayPictos[_weekdayToAddPictogramTo].Add(statefulPictogram);
-			// Add pictogramId to the correct weekday
-			// TODO: Fix
-			RaisePropertyChanged(() => MondayPictos);
-			RaisePropertyChanged(() => TuesdayPictos);
-			RaisePropertyChanged(() => WednesdayPictos);
-			RaisePropertyChanged(() => ThursdayPictos);
-			RaisePropertyChanged(() => FridayPictos);
-			RaisePropertyChanged(() => SaturdayPictos);
-			RaisePropertyChanged(() => SundayPictos);
-			RaisePropertyChanged(() => CountOfMaxHeightWeekday);
-			RaisePropertyChanged(() => WeekdayPictos);
-		}
-
-
-		private async Task SaveSchedule()
-		{
-			if (WeekDTO.Id is null)
-			{
-				await SaveNewSchedule();
-			}
-			else
-			{
-				await UpdateExistingSchedule();
-			}
-		}
-
-		private async Task SaveNewSchedule()
-		{
-			await _requestService.SendRequestAndThenAsync(this,
-				async () => await _weekApi.V1WeekPostAsync(WeekDTO),
-				result =>
-				{
-					MessagingCenter.Send(this, MessageKeys.RequestSucceeded,
-						$"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
-				});
-		}
-
-		private async Task UpdateExistingSchedule()
-		{
-			if (WeekDTO.Id == null)
-			{
-				throw new InvalidDataException("WeekDTO should always have an Id when updating.");
-			}
-
-			await _requestService.SendRequestAndThenAsync(this,
-				async () => await _weekApi.V1WeekByIdPutAsync((int)WeekDTO.Id, WeekDTO),
-				result =>
-				{
-					MessagingCenter.Send(this, MessageKeys.RequestSucceeded,
-						$"Ugeplanen '{result.Data.Name}' blev gemt.");
-				});
-		}
-
-
-		private void DeleteActivity(ActivityViewModel activityVM, int activityID)
-		{
-			// TODO: Remove activityID from List<Resource> 
-		}
-
 		private void SetWeekdayPictos()
 		{
 			var tempDict = new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
@@ -208,49 +261,8 @@ namespace WeekPlanner.ViewModels
 
 			WeekdayPictos = tempDict;
 		}
+	    #endregion
 
-		private async Task SwitchUserMode()
-		{
-			if (EditModeEnabled)
-			{
-				EditModeEnabled = false;
-				UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-			}
-			else
-			{
-				await NavigationService.NavigateToAsync<LoginViewModel>(this);
-
-				MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded,
-					sender => SetToGuardianMode());
-			}
-		}
-
-		private void SetToGuardianMode()
-		{
-			EditModeEnabled = true;
-			UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
-			var tempDict = new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
-
-			foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
-			{
-				tempDict.Add(day, new ObservableCollection<StatefulPictogram>());
-			}
-
-			foreach (WeekdayDTO dayDTO in WeekDTO.Days)
-			{
-				var weekday = dayDTO.Day.Value;
-				ObservableCollection<StatefulPictogram> pictos = new ObservableCollection<StatefulPictogram>();
-				foreach (var eleID in dayDTO.Elements)
-				{
-					pictos.Add(new StatefulPictogram(
-						GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw", PictogramState.Normal));
-				}
-
-				tempDict[weekday] = pictos;
-			}
-
-			WeekdayPictos = tempDict;
-		}
 
 		#region Boilerplate for each weekday's pictos
 
@@ -396,6 +408,5 @@ namespace WeekPlanner.ViewModels
 			}
 		}
 		#endregion
-
 	}
 }

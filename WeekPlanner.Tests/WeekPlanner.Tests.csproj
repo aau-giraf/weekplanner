@@ -25,6 +25,7 @@
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="IntegrationTests\LoginTests.cs" />
     <Folder Include="UnitTests\" />
     <Folder Include="IntegrationTests\" />
     <Folder Include="IntegrationTests\Swagger.IO\" />

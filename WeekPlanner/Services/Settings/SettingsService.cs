@@ -34,10 +34,10 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.Department = value;
         }
 
-        public string DepartmentAuthToken
+        public string GuardianAuthToken
         {
-            get => GlobalSettings.Instance.DepartmentAuthToken;
-            set => GlobalSettings.Instance.DepartmentAuthToken = value;
+            get => GlobalSettings.Instance.GuardianAuthToken;
+            set => GlobalSettings.Instance.GuardianAuthToken = value;
         }
 
         public string CitizenAuthToken
@@ -60,9 +60,9 @@ namespace WeekPlanner.Services.Settings
                     SetAuthTokenInAccountApi(CitizenAuthToken);
                     Token = CitizenAuthToken;
                     break;
-                case UserType.Department:
-                    SetAuthTokenInAccountApi(DepartmentAuthToken);
-                    Token = DepartmentAuthToken;
+                case UserType.Guardian:
+                    SetAuthTokenInAccountApi(GuardianAuthToken);
+                    Token = GuardianAuthToken;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(userType), userType, null);
