@@ -7,6 +7,7 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using WeekPlanner.Services;
+using WeekPlanner.Views;
 
 namespace WeekPlanner.ViewModels
 {
@@ -19,14 +20,33 @@ namespace WeekPlanner.ViewModels
         public SavePromptViewModel(INavigationService navigationService, IDialogService dialogService) : base(navigationService)
         {
             _dialogService = dialogService;
+
+            MessagingCenter.Subscribe<SavePromptPage>(this, MessageKeys.BackButtonPressed, (sender) => BackButtonPressed());
         }
 
 
         private async void PromptPopup()
         {
             var result = await _dialogService.ActionSheetAsync("Title", "Annuller", null, "Hej1", "Hej2", "Hej3");
+        }
 
-            
+        private async Task BackButtonPressed()
+        {
+            var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+
+            switch (result)
+            {
+                case "Annuller":
+                    break;
+
+                case "Gem ændringer":
+                    await NavigationService.PopAsync();
+                    break;
+
+                case "Gem ikke":
+                    await NavigationService.PopAsync();
+                    break;
+            }
         }
     }
 }

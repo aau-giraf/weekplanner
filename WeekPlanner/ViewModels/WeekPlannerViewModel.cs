@@ -93,6 +93,7 @@ namespace WeekPlanner.ViewModels
             MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
                 DeleteActivity);
             MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
+            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.BackButtonPressed, (sender) => BackButtonPressed());
         }
         
         public override async Task InitializeAsync(object navigationData)
@@ -219,18 +220,18 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos = tempDict;
         }
 
-        private async Task SwitchUserMode()
+        private async Task SwitchUserModeAsync()
         {
             if (EditModeEnabled)
             {
-                var result = await _dialogService.ActionSheetAsync("Der er �ndringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem �ndringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem �ndringer", "Gem ikke");
 
                 switch (result)
                 {
                     case "Annuller":
                         break;
 
-                    case "Gem �ndringer":
+                    case "Gem ændringer":
                         EditModeEnabled = false;
                         await SaveSchedule();
                         UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
@@ -274,6 +275,26 @@ namespace WeekPlanner.ViewModels
             }
 
             WeekdayPictos = tempDict;
+        }
+
+        private async Task BackButtonPressed()
+        {
+            var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+
+            switch (result)
+            {
+                case "Annuller":
+                    break;
+
+                case "Gem ændringer":
+                    await SaveSchedule();
+                    await NavigationService.PopAsync();
+                    break;
+
+                case "Gem ikke":
+                    await NavigationService.PopAsync();
+                    break;
+            }
         }
 
 
