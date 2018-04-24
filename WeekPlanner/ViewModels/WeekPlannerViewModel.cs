@@ -256,9 +256,6 @@ namespace WeekPlanner.ViewModels
             WeekdayPictos = tempDict;
         }
 
-
-        #region Boilerplate for each weekday's pictos
-
         private Dictionary<DayEnum, ObservableCollection<string>> _weekdayPictos =
             new Dictionary<DayEnum, ObservableCollection<string>>();
 
@@ -285,40 +282,31 @@ namespace WeekPlanner.ViewModels
             get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
         }
 
-        public ObservableCollection<ActivityDTO> MondayPictos
+        public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
+
+        public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
+
+        public ObservableCollection<ActivityDTO> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
+
+        public ObservableCollection<ActivityDTO> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
+
+        public ObservableCollection<ActivityDTO> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
+
+        public ObservableCollection<ActivityDTO> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
+
+        public ObservableCollection<ActivityDTO> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
+
+        private ObservableCollection<ActivityDTO> GetPictosOrEmptyList(DayEnum dayEnum)
         {
-            get
+            var day = WeekDTO?.Days.FirstOrDefault(x => x.Day == dayEnum);
+            if (day == null)
             {
-                var day = WeekDTO?.Days.FirstOrDefault(x => x.Day == DayEnum.Monday);
-                if (day == null) {
-                    return new ObservableCollection<ActivityDTO>();
-                }
-
-                return day.Activities.ToObservableCollection();
+                return new ObservableCollection<ActivityDTO>();
             }
+
+            return day.Activities.ToObservableCollection();
         }
 
-        public ObservableCollection<string> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
-
-        public ObservableCollection<string> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
-
-        public ObservableCollection<string> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
-
-        public ObservableCollection<string> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
-
-        public ObservableCollection<string> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
-
-        public ObservableCollection<string> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
-
-        private ObservableCollection<string> GetPictosOrEmptyList(DayEnum day)
-        {
-            if (!WeekdayPictos.TryGetValue(day, out var pictoSources))
-                pictoSources = new ObservableCollection<string>();
-            return new ObservableCollection<string>(pictoSources);
-        }
-
-        #endregion
-       
     }
 
     public static class Extensions {
