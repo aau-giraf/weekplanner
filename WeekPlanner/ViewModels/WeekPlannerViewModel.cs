@@ -232,7 +232,21 @@ namespace WeekPlanner.ViewModels
 
             // Happens when popping from ActivityViewModel
             if(navigationData is ActivityViewModel activityVM) {
-                _selectedActivity = activityVM.Activity;
+                
+                if(activityVM.Activity == null) {
+                    // TODO this is dumb and it may remove duplicate elements since all elements are not unique
+                    // we can refactor when ActivityDTO gets a unique ID
+                    RemoveItemFromDay(DayEnum.Monday);
+                    RemoveItemFromDay(DayEnum.Tuesday);
+                    RemoveItemFromDay(DayEnum.Wednesday);
+                    RemoveItemFromDay(DayEnum.Thursday);
+                    RemoveItemFromDay(DayEnum.Friday);
+                    RemoveItemFromDay(DayEnum.Saturday);
+                    RemoveItemFromDay(DayEnum.Sunday);
+                } else {
+                    _selectedActivity = activityVM.Activity;
+                }
+
                 RaisePropertyForDays();
             }
 
@@ -241,6 +255,14 @@ namespace WeekPlanner.ViewModels
             {
                 SetToGuardianMode();
             }
+        }
+
+        private bool RemoveItemFromDay(DayEnum day) {
+            var a = WeekDTO.Days.First(x => x.Day == day).Activities;
+            if (a.Count == 0) {
+                return false;
+            }
+            return a.Remove(_selectedActivity);
         }
 
         private async Task SwitchUserModeAsync()

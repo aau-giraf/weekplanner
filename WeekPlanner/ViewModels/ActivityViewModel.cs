@@ -52,9 +52,8 @@ namespace WeekPlanner.ViewModels
 
         public ICommand DeleteActivityCommand => new Command(async () =>
         {
-            // TODO: send message delete with resource.Id
-            int activityID = 42;
-            await NavigationService.PopAsync(activityID);
+            Activity = null;
+            await NavigationService.PopAsync(this);
         });
 
         public ICommand ToggleStateCommand => new Command(() =>
