@@ -117,19 +117,17 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        // TODO: Replace with real model when backend is updated
-        private PictogramDTO pictogramDTO;
-
         public ICommand ToggleGuardianMode => new Command(() => IsGuardianMode = !IsGuardianMode);
         public ICommand SaveCommand => new Command(async () =>
         {
             // TODO: error handling - use RequestService
-            await _pictogramApi.V1PictogramByIdPutAsync(pictogramDTO.Id, pictogramDTO);
+            //await _pictogramApi.V1PictogramByIdPutAsync(pictogramDTO.Id, pictogramDTO);
         });
 
         public override void Popped(object navigationData) {
             if (navigationData is PictogramDTO newPicto) {
                 Activity.Pictogram = newPicto;
+                RaisePropertyChanged(() => Activity);
             }
         }
 
