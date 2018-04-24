@@ -15,18 +15,6 @@ namespace WeekPlanner.Views
 			InitializeComponent();
 		}
 
-        override protected void OnAppearing()
-        {
-            base.OnAppearing();
-            MessagingCenter.Send(this, "allowPortrait");
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            MessagingCenter.Send(this, "forceLandscape");
-        }
-
     }
 
 }

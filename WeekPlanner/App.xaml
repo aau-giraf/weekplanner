@@ -17,6 +17,7 @@
             <Color x:Key="ErrorColor">#ff5252</Color>
             <Color x:Key="SuccessColor">#77AA44</Color>
             <Color x:Key="CancelColor">#CC6655</Color>
+            <Color x:Key="WhiteColor">#ffffff</Color>
 
             <!--Layouts-->
 
