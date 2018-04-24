@@ -71,8 +71,8 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand PictoClickedCommand => new Command<string>(async imageSource =>
-            await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
+        public ICommand PictoClickedCommand => new Command<ActivityDTO>(async activity =>
+            await NavigationService.NavigateToAsync<ActivityViewModel>(activity));
 
         public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService,
             IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
