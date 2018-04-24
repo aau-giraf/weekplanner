@@ -6,14 +6,14 @@
              xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
              x:Class="WeekPlanner.Views.ActivityPage"
              base:ViewModelLocator.AutoWireViewModel="true"
-             Title="Aktivitet">
+             Title="{Binding Activity.Pictogram.Title}">
     <ContentPage.Content>
         <StackLayout>
             <Grid VerticalOptions="CenterAndExpand">
                 <!--Left Side-->
                 <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
-                    <Image Source="{Binding ImageSource}" />
+                    <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.ImageUrl, Converter={StaticResource RelativeUrlConverter}}" />
                     <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
                         <Button Grid.Column="0"
                                 Text="Ændre"

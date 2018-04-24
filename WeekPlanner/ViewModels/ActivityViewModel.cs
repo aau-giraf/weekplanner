@@ -10,30 +10,30 @@ namespace WeekPlanner.ViewModels
 {
     public class ActivityViewModel : ViewModelBase
     {
-        private ImageSource _imageSource;
+        private ActivityDTO _activity;
         private bool _isGuardianMode = true;
 
         public ActivityViewModel(INavigationService navigationService) : base(navigationService)
         {
-            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
-                ChangePicto);
+            //MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
+                //ChangePicto);
         }
 
         override public async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is ImageSource imgSource)
+            if (navigationData is ActivityDTO activity)
             {
-                ImageSource = imgSource;
+                Activity = activity;
             }
         }
 
-        public ImageSource ImageSource
+        public ActivityDTO Activity
         {
-            get => _imageSource;
+            get => _activity;
             set
             {
-                _imageSource = value;
-                RaisePropertyChanged(() => ImageSource);
+                _activity = value;
+                RaisePropertyChanged(() => Activity);
             }
         }
 
@@ -50,9 +50,9 @@ namespace WeekPlanner.ViewModels
             await NavigationService.PopAsync();
         });
 
-        private void ChangePicto(PictogramSearchViewModel pictoVM, PictogramDTO pictogramDTO)
+        private void ChangePicto(PictogramDTO pictogramDTO)
         {
-            ImageSource = pictogramDTO.ImageUrl;
+            Activity.Pictogram = pictogramDTO;
         }
 
         public bool IsGuardianMode { 
