@@ -78,14 +78,24 @@ namespace WeekPlanner.ViewModels
             if (ValidateWeekScheduleName())
             {
                 _weekDTO.Name = ScheduleName.Value;
+                WeekThumbNail.AccessLevel = PictogramDTO.AccessLevelEnum.PROTECTED;
                 _weekDTO.Thumbnail = WeekThumbNail;
-
+                _weekDTO.Id = default(int);
+                var list = new List<WeekdayDTO>();
+                for (int i = 0; i < 7; i++)
+                {
+                    WeekdayDTO weekdayDTO = new WeekdayDTO();
+                    weekdayDTO.Day = (WeekdayDTO.DayEnum)i;
+                    weekdayDTO.Activities = new List<ActivityDTO>();
+                    list.Add(weekdayDTO);
+                }
+                _weekDTO.Days = list;
 
                 await _requestService.SendRequestAndThenAsync(this,
                 requestAsync: async () => await _weekApi.V1WeekPostAsync(_weekDTO),
                 onSuccess: async (R) => await _dialogService.ShowAlertAsync("Succes", "Ok", "Succes"));
 
-                //await NavigationService.PopAsync();
+                await NavigationService.PopAsync();
             }
         }
 

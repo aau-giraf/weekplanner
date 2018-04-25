@@ -88,15 +88,16 @@ namespace WeekPlanner.ViewModels
         {
             if (week is WeekDTO weekDTO)
             {
-                MessagingCenter.Send(this, "DeleteWeekAlert");
 
-                //MessagingCenter.Subscribe<CitizenSchedulesPage>(this, "DeleteWeek", (sender) => DeleteWeek(sender, weekDTO));
+                DeleteWeek(weekDTO);
             }
         }
 
-        private void DeleteWeek(CitizenSchedulesPage sender, WeekDTO week)
+        private void DeleteWeek(WeekDTO w)
         {
-            _weekApi.V1WeekByIdDelete(week.Id);
+
+            _requestService.SendRequestAndThenAsync<CitizenSchedulesViewModel, ResponseWeekDTO>(this, async () => { await _weekApi.V1WeekByIdDeleteAsync(w.Id); return null; }, onSuccess: result => { });
+
         }
 
         private async void AddWeekSchedule()
