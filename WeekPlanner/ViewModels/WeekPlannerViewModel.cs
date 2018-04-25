@@ -26,9 +26,12 @@ namespace WeekPlanner.ViewModels
         private readonly IWeekApi _weekApi;
 
         private bool _editModeEnabled;
+        private bool _selectModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _userModeImage;
+
+        private List<ResourceDTO> _selectedActivities;
         
         public bool EditModeEnabled
         {
@@ -37,6 +40,16 @@ namespace WeekPlanner.ViewModels
             {
                 _editModeEnabled = value;
                 RaisePropertyChanged(() => EditModeEnabled);
+            }
+        }
+
+        public bool SelectModeEnabled
+        {
+            get => _selectModeEnabled;
+            set
+            {
+                _selectModeEnabled = value;
+                RaisePropertyChanged(() => SelectModeEnabled);
             }
         }
 
@@ -61,6 +74,7 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand ToggleEditModeCommand => new Command(() => SwitchUserMode());
+        public ICommand ToggleSelectModeCommand  => new Command(() =>  ToggleSelectMode());
 
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
@@ -68,8 +82,21 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand PictoClickedCommand => new Command<string>(async imageSource => 
-            await NavigationService.NavigateToAsync<ActivityViewModel>(imageSource));
+        public ICommand PictoClickedCommand =>  new Command<ResourceDTO>(async activity =>
+        {
+            // mark activities start
+            if (SelectModeEnabled)
+            {
+                if(_selectedActivities.Contains(activity)){
+                    await DeSelectActivity(activity);
+                }
+                else
+                {
+                    await SelectActivity(activity);
+                }
+            }
+            // mark activities end 
+        });
 
         public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
             IRequestService requestService, IWeekApi weekApi) : base(navigationService)
@@ -298,6 +325,25 @@ namespace WeekPlanner.ViewModels
         }
 
         #endregion
-       
+
+        private async Task SelectActivity(ResourceDTO activity){
+            _selectedActivities.Add(activity);
+            // TODO: Change Border color
+        }
+
+        private async Task DeSelectActivity(ResourceDTO activity)
+        {
+            _selectedActivities.Remove(activity);
+            // TODO: Change Border color
+        }
+
+        private async Task ToggleSelectMode()
+        {
+            if (SelectModeEnabled)
+            {
+                _selectedActivities.Clear();
+            }
+            SelectModeEnabled = !SelectModeEnabled;
+        }
     }
 }

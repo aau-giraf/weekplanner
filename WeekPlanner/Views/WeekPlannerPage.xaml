@@ -38,6 +38,7 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Column="0">
                     <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Clicked="Save_OnClicked" />
+                    <Button BackgroundColor="{StaticResource SuccessColor}" Text="Marker piktogramer" Command="{Binding ToggleSelectModeCommand}"/>
                     </Grid>
                 <Grid Grid.Column="1">
                     <Entry HorizontalTextAlignment="Center" Text="{Binding WeekDTO.Name}" Placeholder="Unavngivet skema" TextColor="{StaticResource WhiteColor}">
