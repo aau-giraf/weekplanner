@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using WeekPlanner.Services;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
@@ -16,8 +17,12 @@ namespace WeekPlanner.ViewModels
     public class NewScheduleViewModel : Base.ViewModelBase
     {
         private WeekDTO _weekDTO = new WeekDTO();
-        private IWeekApi _weekApi;
-        private IPictogramApi _pictogramApi;
+
+        private readonly IWeekApi _weekApi;
+        private readonly IPictogramApi _pictogramApi;
+        private readonly IDialogService _dialogService;
+        private readonly IRequestService _requestService;
+
         private ValidatableObject<string> _scheduleName;
         public ValidatableObject<string> ScheduleName
         {
@@ -42,10 +47,12 @@ namespace WeekPlanner.ViewModels
         public ICommand SaveWeekScheduleCommand => new Command(() => SaveWeekSchedule());
         public ICommand ChangePictogramCommand => new Command(() => ChangePictogram());
 
-        public NewScheduleViewModel(INavigationService navigationService, IWeekApi weekApi, IPictogramApi pictogramApi) : base(navigationService)
+        public NewScheduleViewModel(INavigationService navigationService, IWeekApi weekApi, IPictogramApi pictogramApi, IRequestService  requestService, IDialogService dialogService) : base(navigationService)
         {
             _weekApi = weekApi;
             _pictogramApi = pictogramApi;
+            _requestService = requestService;
+            _dialogService = dialogService;
 
             _weekDTO.Thumbnail = _pictogramApi.V1PictogramByIdGet(2).Data;
             WeekThumbNail = _weekDTO.Thumbnail;
@@ -66,16 +73,19 @@ namespace WeekPlanner.ViewModels
             WeekThumbNail = arg2;
         }
 
-        private void SaveWeekSchedule()
+        private async void SaveWeekSchedule()
         {
             if (ValidateWeekScheduleName())
             {
                 _weekDTO.Name = ScheduleName.Value;
                 _weekDTO.Thumbnail = WeekThumbNail;
 
-                _weekApi.V1WeekPostAsync(_weekDTO);
 
-                NavigationService.PopAsync();
+                await _requestService.SendRequestAndThenAsync(this,
+                requestAsync: async () => await _weekApi.V1WeekPostAsync(_weekDTO),
+                onSuccess: async (R) => await _dialogService.ShowAlertAsync("Succes", "Ok", "Succes"));
+
+                //await NavigationService.PopAsync();
             }
         }
 

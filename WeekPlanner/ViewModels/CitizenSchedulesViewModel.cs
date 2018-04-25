@@ -22,19 +22,21 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
         private readonly ILoginService _loginService;
+        private readonly ISettingsService _settingsService;
 
         public ICommand WeekTappedCommand => new Command((tappedItem) => ListViewItemTapped((WeekDTO)tappedItem));
         public ICommand WeekDeletedCommand => new Command((x) => WeekDeletedTapped(x));
         public ICommand AddWeekScheduleCommand => new Command(() => AddWeekSchedule());
 
-        public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IWeekApi weekApi, ILoginService loginService) : base(navigationService)
+        public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IWeekApi weekApi, ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {
             _requestService = requestService;
             _weekApi = weekApi;
             _loginService = loginService;
+            _settingsService = settingsService;
         }
 
-        private ObservableCollection<WeekNameDTO> _namesAndID;
+        private ObservableCollection<WeekNameDTO> _namesAndID = new ObservableCollection<WeekNameDTO>();
         public ObservableCollection<WeekNameDTO> NamesAndID
         {
             get => _namesAndID;
@@ -66,7 +68,6 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => WeekImage);
             }
         }
-
         private async void ListViewItemTapped(WeekDTO tappedItem)
         {
             await NavigationService.NavigateToAsync<WeekPlannerViewModel>(tappedItem);
@@ -76,16 +77,13 @@ namespace WeekPlanner.ViewModels
         {
             await _requestService.SendRequestAndThenAsync(this,
                 requestAsync: async () => await _weekApi.V1WeekGetAsync(),
-                onSuccess: result => { NamesAndID = new ObservableCollection<WeekNameDTO>(result.Data); },
-                onExceptionAsync: async () => await NavigationService.PopAsync(),
-                onRequestFailedAsync: async () => await NavigationService.PopAsync());
+                onSuccess: result => { NamesAndID = new ObservableCollection<WeekNameDTO>(result.Data); });
 
             foreach (var item in NamesAndID)
             {
                 Weeks.Add(_weekApi.V1WeekByIdGet(item.Id).Data);
             }
         }
-
         private void WeekDeletedTapped(Object week)
         {
             if (week is WeekDTO weekDTO)
@@ -105,7 +103,6 @@ namespace WeekPlanner.ViewModels
         {
             await NavigationService.NavigateToAsync<NewScheduleViewModel>();
         }
-
         public override async Task InitializeAsync(object navigationData)
         {
             if (navigationData is UserNameDTO userNameDTO)
