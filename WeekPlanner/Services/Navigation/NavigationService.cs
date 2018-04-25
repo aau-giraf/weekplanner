@@ -91,15 +91,10 @@ namespace WeekPlanner.Services.Navigation
             }
             else
             {
-                if (Application.Current.MainPage is CustomNavigationPage navigationPage)
-                {
-                    await navigationPage.PushAsync(page);
-                }
-                else
-                {
-                    Application.Current.MainPage = new CustomNavigationPage(page);
-                }
-            }
+                var master = (MasterPage)Application.Current.MainPage;
+                var detail = (CustomNavigationPage)master.Detail;
+                await detail.PushAsync(page);                
+             }
 
             if (page.BindingContext is ViewModelBase vmBase)
             {
