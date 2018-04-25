@@ -63,6 +63,8 @@ namespace WeekPlanner.ViewModels
 
         public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
 
+        public ICommand OnBackButtonPressedCommand => new Command(async () => await BackButtonPressed());
+
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
 
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
@@ -93,7 +95,6 @@ namespace WeekPlanner.ViewModels
             MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
                 DeleteActivity);
             MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
-            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.BackButtonPressed, (sender) => BackButtonPressed());
         }
         
         public override async Task InitializeAsync(object navigationData)
@@ -296,6 +297,9 @@ namespace WeekPlanner.ViewModels
                     break;
             }
         }
+
+        // TODO: Override the navigation bar backbutton when this is available.
+        // Will most likely only be available if/when the custom navigation bar gets implemented.
 
 
         #region Boilerplate for each weekday's pictos

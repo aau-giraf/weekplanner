@@ -17,7 +17,9 @@ namespace WeekPlanner.Views
 
         protected override bool OnBackButtonPressed()
         {
-            MessagingCenter.Send(this, MessageKeys.BackButtonPressed);
+            var vm = BindingContext as WeekPlannerViewModel;
+
+            vm.OnBackButtonPressedCommand.Execute(null);
 
             return true;
         }

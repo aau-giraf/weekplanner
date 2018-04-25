@@ -16,12 +16,12 @@ namespace WeekPlanner.ViewModels
         public readonly IDialogService _dialogService;
 
         public ICommand PromptPopupCommand => new Command(() => PromptPopup());
+        public ICommand OnBackButtonPressedCommand => new Command(async () => await BackButtonPressed());
 
         public SavePromptViewModel(INavigationService navigationService, IDialogService dialogService) : base(navigationService)
         {
             _dialogService = dialogService;
 
-            MessagingCenter.Subscribe<SavePromptPage>(this, MessageKeys.BackButtonPressed, (sender) => BackButtonPressed());
         }
 
 
