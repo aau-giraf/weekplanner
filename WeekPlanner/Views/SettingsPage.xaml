@@ -16,9 +16,8 @@
                 <!--Different completion mark-->
 
                 <!--Orientation lock-->
-                <TableSection Title="Orienterings lås" x:Name="SettingOrientation">
-                    <SwitchCell Text="Landskab" On="True"/>
-                    <SwitchCell Text="Portrat" On="False"/>
+                <TableSection Title="Orienterings lås">
+                    <SwitchCell x:Name="SettingOrientation" Text="{Binding OrientationSetting}" On="{Binding OrientationSwitch}" />
                 </TableSection>
             </TableRoot>
         </TableView>

@@ -56,7 +56,8 @@ namespace WeekPlanner.ApplicationObjects
                 cb.RegisterType<PictogramApi>().As<IPictogramApi>();
                 cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
                 cb.RegisterType<PictogramApi>().As<IPictogramApi>();
-            }
+				cb.RegisterType<UserApi>().As<IUserApi>();
+			}
         }
     }
 }

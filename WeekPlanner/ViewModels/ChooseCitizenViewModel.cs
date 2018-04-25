@@ -42,7 +42,7 @@ namespace WeekPlanner.ViewModels
 	    private async Task UseDepartmentTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
 	    {
 		    _settingsService.UseTokenFor(UserType.Guardian);
-		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(usernameDTO);
+		    await NavigationService.NavigateToAsync<SettingsViewModel>(usernameDTO);
 	    }
 
 	    private async Task GetAndSetCitizenNamesAsync()
