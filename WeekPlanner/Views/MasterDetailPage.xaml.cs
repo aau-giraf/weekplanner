@@ -15,6 +15,7 @@ namespace WeekPlanner.Views
 		public MasterPage ()
 		{
 			InitializeComponent ();
+            Detail = new TestingPage();
 		}
 	}
 }
