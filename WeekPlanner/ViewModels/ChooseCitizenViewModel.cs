@@ -51,8 +51,12 @@ namespace WeekPlanner.ViewModels
 		    // It might have been changed to using the citizenToken
             _settingsService.UseTokenFor(UserType.Guardian);
 
-		    await _requestService.SendRequestAndThenAsync(this,
-			    requestAsync: async () => await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id),
+            //TODO Legacy from we had ChooseDepartment
+            // We need to refactor so we don't need the ID
+            var departmentId = 1;
+
+		    await _requestService.SendRequestAndThenAsync(
+                requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(departmentId),
 			    onSuccess: result => CitizenNames = new ObservableCollection<UserNameDTO>(result.Data));
 	    }
 

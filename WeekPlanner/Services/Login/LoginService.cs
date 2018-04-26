@@ -51,8 +51,8 @@ namespace WeekPlanner.Services.Login
                 await onSuccess.Invoke();
             }
 
-            await _requestService.SendRequestAndThenAsync(this,
-                async () => await _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
+            await _requestService.SendRequestAndThenAsync(
+                () => _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
                 OnRequestSuccess);
         }
 
@@ -78,8 +78,8 @@ namespace WeekPlanner.Services.Login
                 return Task.FromResult(false);
             }
 
-            await _requestService.SendRequestAndThenAsync(this,
-                async () => await _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
+            await _requestService.SendRequestAndThenAsync(
+                () => _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
                 OnRequestSuccess);
         }
     }

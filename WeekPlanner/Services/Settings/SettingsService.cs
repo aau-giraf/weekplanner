@@ -28,12 +28,6 @@ namespace WeekPlanner.Services.Settings
             set => GlobalSettings.Instance.UseMocks = value;
         }
 
-        public DepartmentNameDTO Department
-        {
-            get => GlobalSettings.Instance.Department;
-            set => GlobalSettings.Instance.Department = value;
-        }
-
         public string GuardianAuthToken
         {
             get => GlobalSettings.Instance.GuardianAuthToken;

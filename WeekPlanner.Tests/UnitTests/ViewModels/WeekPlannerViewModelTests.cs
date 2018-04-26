@@ -74,7 +74,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                         await onSuccessAsync(res);
                     };
             var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
-                    r.SendRequestAndThenAsync(It.IsAny<WeekPlannerViewModel>(), It.IsAny<Func<Task<ResponseWeekDTO>>>(),
+                    r.SendRequestAndThenAsync(It.IsAny<Func<Task<ResponseWeekDTO>>>(),
                         It.IsAny<Func<ResponseWeekDTO, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
                         It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(sendRequestAndThenAsyncMock);

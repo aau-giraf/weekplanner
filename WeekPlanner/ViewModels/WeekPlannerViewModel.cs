@@ -118,7 +118,7 @@ namespace WeekPlanner.ViewModels
         private async Task GetWeekPlanForCitizenAsync()
         {
             // TODO: Make dynamic regarding weekId
-            await _requestService.SendRequestAndThenAsync(this,
+            await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _weekApi.V1WeekByIdGetAsync(1),
                 onSuccessAsync: async result =>
                 {
@@ -175,8 +175,8 @@ namespace WeekPlanner.ViewModels
 
         private async Task SaveNewSchedule()
         {
-            await _requestService.SendRequestAndThenAsync(this,
-                async () => await _weekApi.V1WeekPostAsync(WeekDTO), result =>
+            await _requestService.SendRequestAndThenAsync(
+                () => _weekApi.V1WeekPostAsync(WeekDTO), result =>
                 {
                     _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
                     EditModeEnabled = false;
@@ -190,8 +190,8 @@ namespace WeekPlanner.ViewModels
                 throw new InvalidDataException("WeekDTO should always have an Id when updating.");
             }
 
-            await _requestService.SendRequestAndThenAsync(this,
-                async () => await _weekApi.V1WeekByIdPutAsync((int)WeekDTO.Id, WeekDTO),
+            await _requestService.SendRequestAndThenAsync(
+                () => _weekApi.V1WeekByIdPutAsync(WeekDTO.Id, WeekDTO),
                 result =>
                 {
                     _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");

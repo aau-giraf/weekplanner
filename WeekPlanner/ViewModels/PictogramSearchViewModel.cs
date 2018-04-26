@@ -48,8 +48,8 @@ namespace WeekPlanner.ViewModels
         // TODO: Implement message for no results and add a loading icon
         public Task OnSearchGetPictograms(String searchTerm)
         {
-            return _requestService.SendRequestAndThenAsync(this,
-                requestAsync: async () => await _pictogramApi.V1PictogramGetAsync(1, 10, searchTerm),
+            return _requestService.SendRequestAndThenAsync(
+                requestAsync: () => _pictogramApi.V1PictogramGetAsync(1, 10, searchTerm),
                 onSuccess: result => { ImageSources = new ObservableCollection<PictogramDTO>(result.Data); });
         }
     } 
