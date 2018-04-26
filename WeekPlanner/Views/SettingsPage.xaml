@@ -17,7 +17,7 @@
 
                 <!--Orientation lock-->
                 <TableSection Title="Orienterings lås">
-                    <SwitchCell x:Name="SettingOrientation" Text="{Binding OrientationSetting}" On="{Binding OrientationSwitch}" />
+                    <SwitchCell x:Name="SettingOrientation" Text="{Binding OrientationSetting}" On="{Binding OrientationSwitch}" OnChanged="{Binding HandleSwitchChangedCommand}"/>
                 </TableSection>
             </TableRoot>
         </TableView>

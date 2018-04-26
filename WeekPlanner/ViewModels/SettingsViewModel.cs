@@ -63,7 +63,7 @@ namespace WeekPlanner.ViewModels
 			}
 		}
 
-		public ICommand HandleSwitchChangedCommand => new Command(async () =>
+		public ICommand HandleSwitchChangedCommand => new Command(() =>
 		{
 			if (OrientationSetting == LauncherOptionsDTO.OrientationEnum.Portrait)
 			{
