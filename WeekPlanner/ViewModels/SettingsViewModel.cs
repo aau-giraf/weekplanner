@@ -38,17 +38,7 @@ namespace WeekPlanner.ViewModels
 		private bool _orientationSlider;
 		public bool OrientationSwitch
 		{
-			get
-			{
-				if (OrientationSetting == LauncherOptionsDTO.OrientationEnum.Portrait)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			} 
+			get	=> _orientationSlider; 
 			set
 			{
 				if (OrientationSetting == LauncherOptionsDTO.OrientationEnum.Portrait)

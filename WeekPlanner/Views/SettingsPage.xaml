@@ -17,7 +17,20 @@
 
                 <!--Orientation lock-->
                 <TableSection Title="Orienterings lås">
-                    <SwitchCell x:Name="SettingOrientation" Text="{Binding OrientationSetting}" On="{Binding OrientationSwitch}" OnChanged="{Binding HandleSwitchChangedCommand}"/>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <StackLayout Orientation="Horizontal" Padding="15, 0">
+                                <Label Text="Ugeplans orientering" VerticalOptions="Center"></Label>
+                                <Picker HorizontalOptions="EndAndExpand" SelectedIndexChanged="Picker_SelectedIndexChanged">
+                                    <Picker.Items>
+                                        <x:String>A</x:String>
+                                        <x:String>B</x:String>
+                                        <x:String>C</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
                 </TableSection>
             </TableRoot>
         </TableView>
