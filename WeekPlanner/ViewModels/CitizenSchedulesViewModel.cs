@@ -81,7 +81,7 @@ namespace WeekPlanner.ViewModels
 
             foreach (var item in NamesAndID)
             {
-                Weeks.Add(_weekApi.V1WeekByIdGet(item.Id).Data);
+                await _requestService.SendRequestAndThenAsync(this, async () => await _weekApi.V1WeekByIdGetAsync(item.Id), (res) => Weeks.Add(res.Data));
             }
         }
         private void WeekDeletedTapped(Object week)

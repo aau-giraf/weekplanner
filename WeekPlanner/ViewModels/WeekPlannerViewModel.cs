@@ -259,10 +259,12 @@ namespace WeekPlanner.ViewModels
                 if (dayDTO.Day == null) continue;
                 var weekday = dayDTO.Day.Value;
                 ObservableCollection<StatefulPictogram> pictos = new ObservableCollection<StatefulPictogram>();
-                foreach (var eleID in dayDTO.Activities.Select(a => a.Pictogram.Id))
-                {
-                    pictos.Add(new StatefulPictogram(
-                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw", PictogramState.Normal));
+                if(dayDTO.Activities.Capacity > 0) { 
+                    foreach (var eleID in dayDTO.Activities.Select(a => a.Pictogram.Id))
+                    {
+                        pictos.Add(new StatefulPictogram(
+                            GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw", PictogramState.Normal));
+                    }
                 }
 
                 tempDict[weekday] = pictos;

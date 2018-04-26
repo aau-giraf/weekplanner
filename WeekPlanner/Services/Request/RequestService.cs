@@ -51,8 +51,7 @@ namespace WeekPlanner.Services.Request
                 {
                     await onRequestFailedAsync.Invoke();
                 } else {
-                    //var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKey);
-                    await _dialogService.ShowAlertAsync(title: "Fejl", message: "Fede nar");
+                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKey);
                 }
             }
         }

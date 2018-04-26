@@ -78,7 +78,7 @@ namespace WeekPlanner.ViewModels
             if (ValidateWeekScheduleName())
             {
                 _weekDTO.Name = ScheduleName.Value;
-                WeekThumbNail.AccessLevel = PictogramDTO.AccessLevelEnum.PROTECTED;
+                WeekThumbNail.AccessLevel = PictogramDTO.AccessLevelEnum.PUBLIC;
                 _weekDTO.Thumbnail = WeekThumbNail;
                 _weekDTO.Id = default(int);
                 var list = new List<WeekdayDTO>();
