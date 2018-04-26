@@ -95,6 +95,7 @@ namespace WeekPlanner.ViewModels
                 requestAsync: async () => await _weekApi.V1WeekPostAsync(_weekDTO),
                 onSuccess: async (R) => await _dialogService.ShowAlertAsync("Succes", "Ok", "Succes"));
 
+                MessagingCenter.Send(this, "UpdateView");
                 await NavigationService.PopAsync();
             }
         }
