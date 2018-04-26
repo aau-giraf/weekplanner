@@ -122,7 +122,6 @@ namespace WeekPlanner.ViewModels
                 onSuccessAsync: async result =>
                 {
                     WeekDTO = result.Data;
-                    SetWeekdayPictos();
                 },
                 onExceptionAsync: async () => await NavigationService.PopAsync(),
                 onRequestFailedAsync: async () => await NavigationService.PopAsync()
@@ -131,10 +130,6 @@ namespace WeekPlanner.ViewModels
 
         private void InsertPicto(PictogramDTO pictogramDTO)
         {
-            string imgSource =
-                GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl;
-            WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
-
             var dayToAddTo = WeekDTO.Days.FirstOrDefault(d => d.Day == _weekdayToAddPictogramTo);
             if (dayToAddTo != null)
             {
@@ -198,31 +193,6 @@ namespace WeekPlanner.ViewModels
                 });
         }
 
-        private void SetWeekdayPictos()
-        {
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
-
-            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
-            {
-                tempDict.Add(day, new ObservableCollection<string>());
-            }
-
-            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
-            {
-                if (dayDTO.Day == null) continue;
-                var weekday = dayDTO.Day.Value;
-                ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var activity in dayDTO.Activities.OrderBy(d => d.Order))
-                {
-                    pictos.Add(
-                        GlobalSettings.DefaultEndpoint + activity.Pictogram.ImageUrl);
-                }
-                tempDict[weekday] = pictos;
-            }
-
-            WeekdayPictos = tempDict;
-        }
-
         public override async Task PoppedAsync(object navigationData)
         {
             // Happens after choosing a pictogram in Pictosearch
@@ -283,24 +253,9 @@ namespace WeekPlanner.ViewModels
         {
             EditModeEnabled = true;
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
-            
-            // Needs to set pictos again due to? Perhaps garbage collection??
-            SetWeekdayPictos();
         }
 
-        private Dictionary<DayEnum, ObservableCollection<string>> _weekdayPictos =
-            new Dictionary<DayEnum, ObservableCollection<string>>();
         private ActivityDTO _selectedActivity;
-
-        public Dictionary<DayEnum, ObservableCollection<string>> WeekdayPictos
-        {
-            get => _weekdayPictos;
-            set
-            {
-                _weekdayPictos = value;
-                RaisePropertyForDays();
-            }
-        }
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
         public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
@@ -318,7 +273,7 @@ namespace WeekPlanner.ViewModels
                 return new ObservableCollection<ActivityDTO>();
             }
 
-            return day.Activities.ToObservableCollection();
+            return new ObservableCollection<ActivityDTO>(day.Activities);
         }
 
 
@@ -330,17 +285,7 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => FridayPictos);
             RaisePropertyChanged(() => SaturdayPictos);
             RaisePropertyChanged(() => SundayPictos);
-            RaisePropertyChanged(() => WeekdayPictos);
         }
 
-    }
-
-    public static class Extensions
-    {
-        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
-        {
-            return new ObservableCollection<T>(source);
-
-        }
     }
 }
