@@ -37,6 +37,7 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _loginService = loginService;
             _settingsService = settingsService;
+            AddIcon = (FileImageSource)ImageSource.FromFile("icon_add.png");
         }
 
         private ObservableCollection<WeekNameDTO> _namesAndID = new ObservableCollection<WeekNameDTO>();
@@ -71,6 +72,18 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => WeekImage);
             }
         }
+
+        private ImageSource _addIcon;
+        public ImageSource AddIcon
+        {
+            get => _addIcon;
+            set
+            {
+                _addIcon = value;
+                RaisePropertyChanged(() => AddIcon);
+            }
+        }
+
         private async void ListViewItemTapped(WeekDTO tappedItem)
         {
             await NavigationService.NavigateToAsync<WeekPlannerViewModel>(tappedItem.Id);
@@ -106,7 +119,7 @@ namespace WeekPlanner.ViewModels
                 requestAsync: () => _weekApi.V1WeekByIdDeleteAsync(week.Id), onSuccess: (r) => Weeks.Remove(week));
         }
 
-        private async void AddWeekSchedule()
+        private async Task AddWeekSchedule()
         {
             await NavigationService.NavigateToAsync<NewScheduleViewModel>();
         }

@@ -1,44 +1,42 @@
 using System;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
+using SimpleJson;
 
 namespace WeekPlanner.Services.Settings
 {
     public class SettingsService : ISettingsService
     {
         private readonly IAccountApi  _accountApi;
+        private readonly JsonObject _appSettings;
 
-        private static string Token;
+        private static string _token;
         public static Task<string> GetToken()
         {
-            return Task.FromResult(Token);
+            return Task.FromResult(_token);
         }
 
-
-        public SettingsService(IAccountApi accountApi)
+        public SettingsService(IAccountApi accountApi, JsonObject appSettings)
         {
             _accountApi = accountApi;
+            _appSettings = appSettings;
         }
+
+        public string BaseEndpoint
+        {
+            get { return _appSettings["BaseEndpoint"].ToString(); }
+            set { }
+        }
+
+        public bool UseMocks { get; set; }
+
+        public DepartmentNameDTO Department { get; set; }
+
+        public string GuardianAuthToken { get; set; }
+
+        public string CitizenAuthToken { get; set; }
         
-        public bool UseMocks
-        {
-            get => GlobalSettings.Instance.UseMocks;
-            set => GlobalSettings.Instance.UseMocks = value;
-        }
-
-        public string GuardianAuthToken
-        {
-            get => GlobalSettings.Instance.GuardianAuthToken;
-            set => GlobalSettings.Instance.GuardianAuthToken = value;
-        }
-
-        public string CitizenAuthToken
-        {
-            get => GlobalSettings.Instance.CitizenAuthToken;
-            set => GlobalSettings.Instance.CitizenAuthToken = value;
-        }
 
         /// <summary>
         /// Sets the API up to using the specified type of authentication token.
@@ -52,11 +50,11 @@ namespace WeekPlanner.Services.Settings
             {
                 case UserType.Citizen:
                     SetAuthTokenInAccountApi(CitizenAuthToken);
-                    Token = CitizenAuthToken;
+                    _token = CitizenAuthToken;
                     break;
                 case UserType.Guardian:
                     SetAuthTokenInAccountApi(GuardianAuthToken);
-                    Token = GuardianAuthToken;
+                    _token = GuardianAuthToken;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(userType), userType, null);
