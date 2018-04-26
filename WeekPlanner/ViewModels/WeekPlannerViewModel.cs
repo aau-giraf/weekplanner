@@ -321,12 +321,6 @@ namespace WeekPlanner.ViewModels
             return day.Activities.ToObservableCollection();
         }
 
-        private void SendRequestFailedMessage(
-            ResponseWeekDTO.ErrorKeyEnum? errorKeyEnum = ResponseWeekDTO.ErrorKeyEnum.Error)
-        {
-            var friendlyErrorMessage = errorKeyEnum.ToFriendlyString();
-            MessagingCenter.Send(this, MessageKeys.RequestFailed, friendlyErrorMessage);
-        }
 
         private void RaisePropertyForDays() {
             RaisePropertyChanged(() => MondayPictos);
