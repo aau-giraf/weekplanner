@@ -32,6 +32,7 @@ namespace WeekPlanner.Helpers
         }
         
         // We do this to avoid having to change and combine the enums from the generated Swagger code manually.
+        // An issue on the Swagger codegen repo about the duplicate enums has been created
         
         public static string ToFriendlyString(this ResponseGirafUserDTO.ErrorKeyEnum? errorKey) => 
         ToFriendlyString(errorKey.ToString());
@@ -64,6 +65,9 @@ namespace WeekPlanner.Helpers
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponseIEnumerableWeekDTO.ErrorKeyEnum? errorKey) =>
+            ToFriendlyString(errorKey.ToString());
+
+        public static string ToFriendlyString(this ResponseIEnumerableWeekNameDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponseListPictogramDTO.ErrorKeyEnum? errorKey) =>

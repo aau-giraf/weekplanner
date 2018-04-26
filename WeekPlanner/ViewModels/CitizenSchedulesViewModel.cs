@@ -20,6 +20,11 @@ namespace WeekPlanner.ViewModels
 {
     public class CitizenSchedulesViewModel : ViewModelBase
     {
+        void HandleFunc()
+        {
+        }
+
+
         private readonly IRequestService _requestService;
         private readonly IDialogService _dialogService;
         private readonly IWeekApi _weekApi;
@@ -93,7 +98,9 @@ namespace WeekPlanner.ViewModels
         {
             await _requestService.SendRequestAndThenAsync(this,
                 requestAsync: async () => await _weekApi.V1WeekGetAsync(),
-                onSuccess: result => { NamesAndID = new ObservableCollection<WeekNameDTO>(result.Data); });
+                onSuccess: result => { NamesAndID = new ObservableCollection<WeekNameDTO>(result.Data); },
+                onRequestFailedAsync: () => Task.FromResult("'No week schedules found is not an error'-fix."));
+                
 
             foreach (var item in NamesAndID)
             {

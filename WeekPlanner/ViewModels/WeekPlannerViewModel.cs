@@ -106,7 +106,7 @@ namespace WeekPlanner.ViewModels
         {
             if (navigationData is long weekId)
             {
-                GetWeekPlanForCitizenAsync(weekId);
+                await GetWeekPlanForCitizenAsync(weekId);
             }
             else
             {
@@ -117,10 +117,9 @@ namespace WeekPlanner.ViewModels
         // TODO: Handle situation where no days exist
         private async Task GetWeekPlanForCitizenAsync(long weekId)
         {
-            // TODO: Make dynamic regarding weekId
             await _requestService.SendRequestAndThenAsync(this,
                 requestAsync: () => _weekApi.V1WeekByIdGetAsync(weekId),
-                onSuccessAsync: async result =>
+                onSuccess: result =>
                 {
                     WeekDTO = result.Data;
                 },
