@@ -106,7 +106,7 @@ namespace WeekPlanner.ViewModels
         {
             if (navigationData is long weekId)
             {
-                GetWeekPlanForCitizenAsync(weekId);
+                await GetWeekPlanForCitizenAsync(weekId);
             }
             else
             {
@@ -123,9 +123,7 @@ namespace WeekPlanner.ViewModels
                 onSuccessAsync: async result =>
                 {
                     WeekDTO = result.Data;
-                },
-                onExceptionAsync: async () => await NavigationService.PopAsync(),
-                onRequestFailedAsync: async () => await NavigationService.PopAsync()
+                }
             );
         }
 

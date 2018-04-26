@@ -78,14 +78,14 @@ namespace WeekPlanner.ViewModels
 
         public async Task InitializeWeekSchedules()
         {
-            await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: async () => await _weekApi.V1WeekGetAsync(),
+            await _requestService.SendRequestAndThenAsync(
+                requestAsync: () => _weekApi.V1WeekGetAsync(),
                 onSuccess: result => { NamesAndID = new ObservableCollection<WeekNameDTO>(result.Data); });
 
             foreach (var item in NamesAndID)
             {
-                await _requestService.SendRequestAndThenAsync(this,
-                    async () => await _weekApi.V1WeekByIdGetAsync(item.Id), (res) => Weeks.Add(res.Data));
+                await _requestService.SendRequestAndThenAsync(
+                    () => _weekApi.V1WeekByIdGetAsync(item.Id), (res) => Weeks.Add(res.Data));
             }
         }
         private async Task WeekDeletedTapped(Object week)
@@ -102,7 +102,7 @@ namespace WeekPlanner.ViewModels
             if (!confirmed) {
                 return;
             }
-            await _requestService.SendRequestAndThenAsync(this,
+            await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _weekApi.V1WeekByIdDeleteAsync(week.Id), onSuccess: (r) => Weeks.Remove(week));
         }
 

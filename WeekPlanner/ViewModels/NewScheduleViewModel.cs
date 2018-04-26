@@ -99,8 +99,8 @@ namespace WeekPlanner.ViewModels
                 }
                 _weekDTO.Days = list;
 
-                await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: async () => await _weekApi.V1WeekPostAsync(_weekDTO),
+                await _requestService.SendRequestAndThenAsync(
+                requestAsync: () => _weekApi.V1WeekPostAsync(_weekDTO),
                 onSuccess: async result => { 
                     await _dialogService.ShowAlertAsync("Succes", "Ok", "Succes"); 
                     await NavigationService.PopAsync();
