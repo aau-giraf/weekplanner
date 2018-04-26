@@ -65,7 +65,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             Func<Func<Task>, UserType, string, string, Task> loginAndThenMock =
                 async (onSuccess, userType, username, password) => await onSuccess.Invoke();
 
-
             FreezeMockOfIRequestService<WeekPlannerViewModel, ResponseWeekDTO>();
             
             var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>

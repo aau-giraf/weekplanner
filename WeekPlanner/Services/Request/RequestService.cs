@@ -17,11 +17,11 @@ namespace WeekPlanner.Services.Request
 			_dialogService = dialogService;
 		}
 
-        public async Task SendRequestAndThenAsync<TS, TR>(TS sender, Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
+        public async Task SendRequestAndThenAsync<TR>(Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
             Func<Task> onExceptionAsync = null,
             Func<Task> onRequestFailedAsync = null,
             string exceptionErrorMessageKey = MessageKeys.RequestFailed,
-            string requestFailedMessageKey = MessageKeys.RequestFailed) where TS : class
+            string requestFailedMessageKey = MessageKeys.RequestFailed)
         {
             // TODO: Check for internet connection first.
             dynamic result;
@@ -57,21 +57,20 @@ namespace WeekPlanner.Services.Request
 				}
 			}
 		}
-
-		public async Task SendRequestAndThenAsync<TS, TR>(TS sender, Func<Task<TR>> requestAsync,
-			Action<TR> onSuccess,
-			Func<Task> onExceptionAsync = null,
-			Func<Task> onRequestFailedAsync = null,
-			string exceptionErrorMessageKey = MessageKeys.RequestFailed,
-			string requestFailedMessageKey = MessageKeys.RequestFailed) where TS : class
-		{
-			async Task OnSuccessAsync(TR result)
-			{
-				onSuccess.Invoke(result);
-			}
-
-			await SendRequestAndThenAsync(sender, requestAsync, OnSuccessAsync,
-				onExceptionAsync, onRequestFailedAsync, exceptionErrorMessageKey, requestFailedMessageKey);
-		}
-	}
+        public async Task SendRequestAndThenAsync<TR>(Func<Task<TR>> requestAsync,
+            Action<TR> onSuccess,
+            Func<Task> onExceptionAsync = null,
+            Func<Task> onRequestFailedAsync = null,
+            string exceptionErrorMessageKey = MessageKeys.RequestFailed,
+            string requestFailedMessageKey = MessageKeys.RequestFailed)
+        {
+            async Task OnSuccessAsync(TR result)
+            {
+                onSuccess.Invoke(result);
+            }
+               
+            await SendRequestAndThenAsync(requestAsync, OnSuccessAsync,
+                onExceptionAsync, onRequestFailedAsync, exceptionErrorMessageKey, requestFailedMessageKey);
+        }
+    }
 }

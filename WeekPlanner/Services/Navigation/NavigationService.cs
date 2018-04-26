@@ -34,17 +34,7 @@ namespace WeekPlanner.Services.Navigation
 
         public Task InitializeAsync()
         {
-            return NavigateToAsync<TestingViewModel>();
-            
-            // TODO: Remember chosen department and maybe authtoken
-            /*if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
-            {
-                return NavigateToAsync<TestingViewModel>();
-            }
-            else
-            {
-                return NavigateToAsync<ChooseCitizenViewModel>();
-            }*/
+            return NavigateToAsync<LoginViewModel>();
         }
         
         /// <summary>
@@ -55,11 +45,7 @@ namespace WeekPlanner.Services.Navigation
         {
             var navigationPage = Application.Current.MainPage as CustomNavigationPage;
 
-            // TODO: Update to use correct frontpage
-            if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))
-            {
-                await navigationPage?.PopAsync();
-            }
+            await navigationPage?.PopAsync();
             await CurrentPageViewModel.PoppedAsync(navigationData);
 
         }

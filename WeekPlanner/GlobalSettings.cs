@@ -29,7 +29,6 @@ namespace WeekPlanner
         public bool UseMocks = false;
         public string GuardianAuthToken { get; set; }
         public string CitizenAuthToken { get; set; }
-        public DepartmentNameDTO Department { get; set; } = new DepartmentNameDTO { Name = "Egebakken" };
     }
 }
 
