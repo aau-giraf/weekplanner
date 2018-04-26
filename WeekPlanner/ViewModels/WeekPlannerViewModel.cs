@@ -16,6 +16,7 @@ using WeekPlanner.Views;
 using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
 using WeekPlanner.Services;
+using WeekPlanner.Helpers;
 
 namespace WeekPlanner.ViewModels
 {
@@ -102,10 +103,9 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is UserNameDTO userNameDTO)
+            if (navigationData is long weekId)
             {
-                await _loginService.LoginAndThenAsync(GetWeekPlanForCitizenAsync, UserType.Citizen,
-                    userNameDTO.UserName);
+                GetWeekPlanForCitizenAsync(weekId);
             }
             else
             {
@@ -114,11 +114,11 @@ namespace WeekPlanner.ViewModels
         }
 
         // TODO: Handle situation where no days exist
-        private async Task GetWeekPlanForCitizenAsync()
+        private async Task GetWeekPlanForCitizenAsync(long weekId)
         {
             // TODO: Make dynamic regarding weekId
             await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: () => _weekApi.V1WeekByIdGetAsync(1),
+                requestAsync: () => _weekApi.V1WeekByIdGetAsync(weekId),
                 onSuccessAsync: async result =>
                 {
                     WeekDTO = result.Data;
@@ -349,5 +349,4 @@ namespace WeekPlanner.ViewModels
 
         }
     }
->>>>>>> release-2018S3R1
 }

@@ -75,7 +75,7 @@ namespace WeekPlanner.ViewModels
         }
         private async void ListViewItemTapped(WeekDTO tappedItem)
         {
-            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(tappedItem);
+            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(tappedItem.Id);
         }
 
         public async Task InitializeWeekSchedules()
@@ -100,12 +100,12 @@ namespace WeekPlanner.ViewModels
 
         private async Task DeleteWeek(WeekDTO w)
         {
-            var answer = await _dialogService.ConfirmAsync($"Vil du slette {w.Name}?", "Slet Ugeplan");
-            if (answer)
-            {
-                await _requestService.SendRequestAndThenAsync(this,
-                    requestAsync: () => _weekApi.V1WeekByIdDeleteAsync(w.Id), onSuccess: (r) => Weeks.Remove(w));
+            var confirmed = await _dialogService.ConfirmAsync($"Vil du slette {w.Name}?", "Slet Ugeplan");
+            if (!confirmed) {
+                return;
             }
+            await _requestService.SendRequestAndThenAsync(this,
+                requestAsync: () => _weekApi.V1WeekByIdDeleteAsync(w.Id), onSuccess: (r) => Weeks.Remove(w));
         }
 
         private async void AddWeekSchedule()
