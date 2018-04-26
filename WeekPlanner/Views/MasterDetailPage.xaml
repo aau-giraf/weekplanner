@@ -4,6 +4,7 @@
                   xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                   xmlns:views="clr-namespace:WeekPlanner.Views"
+                  base1:ViewModelLocator.AutoWireViewModel="true"
                   x:Class="WeekPlanner.Views.MasterPage"
                   x:Name="Mdp">
 
@@ -11,7 +12,7 @@
         <ContentPage Padding="10" BackgroundColor="Lime" Title="Master">
             <ContentPage.Content>
                 <StackLayout Margin="5,30,5,5">
-                    <Button Text="Settings" Command="" />
+                    <Button Text="Indstillinger" Command="{Binding NavigateToSettingsCommand}" />
                 </StackLayout>
             </ContentPage.Content>
         </ContentPage>
