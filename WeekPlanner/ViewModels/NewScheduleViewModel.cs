@@ -102,7 +102,7 @@ namespace WeekPlanner.ViewModels
                 await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _weekApi.V1WeekPostAsync(_weekDTO),
                 onSuccess: async result => { 
-                    await _dialogService.ShowAlertAsync("Succes", "Ok", "Succes"); 
+                    await _dialogService.ShowAlertAsync($"Ugeplanen '{result.Data.Name}' blev oprettet og gemt."); 
                     await NavigationService.PopAsync();
                 });
 
