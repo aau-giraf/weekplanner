@@ -27,11 +27,10 @@ namespace WeekPlanner.Services.Login
         /// <param name="userType"></param>
         /// <param name="username"></param>
         /// <param name="password">Provide for Departments, but not Citizens</param>
-        /// <returns>Sends a LoginFailed or LoginSucceed message through MessagingCenter</returns>
         /// <exception cref="ArgumentException"></exception>
         public async Task LoginAndThenAsync(Func<Task> onSuccess, UserType userType, string username, string password)
         {
-            if (userType == UserType.Department && string.IsNullOrEmpty(password))
+            if (userType == UserType.Guardian && string.IsNullOrEmpty(password))
             {
                 throw new ArgumentException("A password should always be provided for Departments.");
             }
@@ -42,14 +41,41 @@ namespace WeekPlanner.Services.Login
                 {
                     _settingsService.CitizenAuthToken = result.Data;
                 }
-                else // Department
+                else // Guardian
                 {
-                    _settingsService.DepartmentAuthToken = result.Data;
+                    _settingsService.GuardianAuthToken = result.Data;
                 }
 
                 _settingsService.UseTokenFor(userType);
 
                 await onSuccess.Invoke();
+            }
+
+            await _requestService.SendRequestAndThenAsync(this,
+                async () => await _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
+                OnRequestSuccess);
+        }
+
+        public async Task LoginAsync( UserType userType, string username, string password)
+        {
+            if (userType == UserType.Guardian && string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("A password should always be provided for Departments.");
+            }
+
+            Task OnRequestSuccess(ResponseString result)
+            {
+                if (userType == UserType.Citizen)
+                {
+                    _settingsService.CitizenAuthToken = result.Data;
+                }
+                else // Guardian
+                {
+                    _settingsService.GuardianAuthToken = result.Data;
+                }
+
+                _settingsService.UseTokenFor(userType);
+                return Task.FromResult(false);
             }
 
             await _requestService.SendRequestAndThenAsync(this,

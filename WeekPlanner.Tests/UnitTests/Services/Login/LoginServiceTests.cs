@@ -8,6 +8,7 @@ using IO.Swagger.Model;
 using Moq;
 using WeekPlanner.Tests.UnitTests.Base;
 using WeekPlanner.Services.Login;
+using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -20,11 +21,11 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public async void LoginAndThenAsync_UserTypeDepartmentAndemptyOrNullPassword_ThrowsArgumentException(string password)
+        public async void LoginAndThenAsync_UserTypeDepartmentAndEmptyOrNullPassword_ThrowsArgumentException(string password)
         {
             // Arrange
             var sut = Fixture.Create<LoginService>();
-            var userType = UserType.Department;
+            var userType = UserType.Guardian;
             var username = "NotEmpty";
             var onSuccess = Fixture.Create<Func<Task>>();
             
@@ -33,12 +34,26 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
         }
 
         [Theory]
-        [InlineData(UserType.Department, "NotEmpty", "NotEmpty")]
+        [InlineData(UserType.Guardian, "NotEmpty", "NotEmpty")]
         [InlineData(UserType.Citizen, "NotEmpty", "")]
         public async void LoginAndThenAsync_ValidInput_InvokesV1AccountLoginPostAsync(UserType userType, string username,
             string password)
         {
             // Arrange
+            async Task SendRequestAndThenAsyncMock<TS, TR>(TS sender, Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
+                Func<Task> onExceptionAsync = null,
+                Func<Task> onRequestFailedAsync = null,
+                string exceptionErrorMessageKey = MessageKeys.RequestFailed,
+                string requestFailedMessageKey = MessageKeys.RequestFailed) where TS : class
+            {
+                await requestAsync.Invoke();
+            }
+
+            /*Fixture.Freeze<Mock<IRequestService>>()
+                .Setup(r => r.SendRequestAndThenAsync(It.IsAny<object>(), It.IsAny<Func<Task<ResponseString>>>(),
+                    It.IsAny<Func<ResponseString, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
+                    It.IsAny<string>(), It.IsAny<string>())).Returns(SendRequestAndThenAsyncMock);*/
+            
             var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>();
             accountApiMock.Setup(a => a.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()))
                 .ReturnsUsingFixture(Fixture);
@@ -53,7 +68,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
         }
 
         [Fact]
-        public async void LoginAndThenAsync_AccountApiThrowsError_SendsLoginFailedMessage()
+        public async void LoginAndThenAsync_AccountApiThrowsError_SendsRequestFailedMessage()
         {
             // Arrange
             var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>();
@@ -62,39 +77,39 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var sut = Fixture.Create<LoginService>();
 
             var messageReceived = false;
-            MessagingCenter.Subscribe<LoginService,string>(this, MessageKeys.LoginFailed,
+            MessagingCenter.Subscribe<LoginService,string>(this, MessageKeys.RequestFailed,
                 (sender, args) => { messageReceived = true;});
 
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Department, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
             
             // Assert
             Assert.True(messageReceived);
         }
 
         [Fact]
-        public async void LoginAndThenAsync_UserTypeDepartmentAndSuccessResponse_SetsDepartmentAuthToken()
+        public async void LoginAndThenAsync_UserTypeDepartmentAndSuccessResponse_SetsGuardianAuthToken()
         {
             // Arrange
             var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
             
-            var token = "DepartmentAuthToken";
+            var token = "GuardianAuthToken";
             var response = Fixture.Build<ResponseString>()
                 .With(r => r.Success, true)
                 .With(r => r.Data, token)
                 .With(r => r.ErrorKey, ResponseString.ErrorKeyEnum.NoError)
                 .Create();
-            var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>()
+            Fixture.Freeze<Mock<IAccountApi>>()
                 .Setup(a => a.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()))
                 .ReturnsAsync(response);
 
             var sut = Fixture.Create<LoginService>();
             
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Department, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
             
             // Assert
-            settingsServiceMock.VerifySet(s => s.DepartmentAuthToken = token);
+            settingsServiceMock.VerifySet(s => s.GuardianAuthToken = token);
         }
         
         [Fact]
@@ -109,7 +124,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 .With(r => r.Data, token)
                 .With(r => r.ErrorKey, ResponseString.ErrorKeyEnum.NoError)
                 .Create();
-            var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>()
+            Fixture.Freeze<Mock<IAccountApi>>()
                 .Setup(a => a.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()))
                 .ReturnsAsync(response);
 
@@ -134,7 +149,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 .With(r => r.ErrorKey, ResponseString.ErrorKeyEnum.NoError)
                 .Create();
             
-            var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>()
+            Fixture.Freeze<Mock<IAccountApi>>()
                 .Setup(a => a.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()))
                 .ReturnsAsync(response);
 
@@ -159,7 +174,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var onSuccessInvoked = false;
             Func<Task> onSuccess = async () => { onSuccessInvoked = true; };
             
-            var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>()
+            Fixture.Freeze<Mock<IAccountApi>>()
                 .Setup(a => a.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()))
                 .ReturnsAsync(response);
 
@@ -190,7 +205,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 (sender, args) => { messageReceived = true;});
 
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Department, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
             
             // Assert
             Assert.True(messageReceived);

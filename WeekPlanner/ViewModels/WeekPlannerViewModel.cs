@@ -1,21 +1,21 @@
 using System;
-using System.IO;
-using IO.Swagger.Model;
-using System.Threading.Tasks;
-using IO.Swagger.Api;
-using WeekPlanner.Helpers;
-using WeekPlanner.Services.Login;
-using WeekPlanner.ViewModels.Base;
-using Xamarin.Forms;
-using WeekPlanner.Services.Navigation;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using WeekPlanner.Services.Settings;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using IO.Swagger.Api;
+using IO.Swagger.Model;
+using WeekPlanner.Services.Login;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
+using WeekPlanner.Services.Settings;
+using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Views;
+using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
+using WeekPlanner.Services;
 
 namespace WeekPlanner.ViewModels
 {
@@ -24,14 +24,14 @@ namespace WeekPlanner.ViewModels
         private readonly ILoginService _loginService;
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
-
+        private readonly IDialogService _dialogService;
         private bool _editModeEnabled;
         private bool _selectModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _userModeImage;
 
-        private List<ResourceDTO> _selectedActivities;
+        private List<StatefulPictogram> _selectedActivities;
         
         public bool EditModeEnabled
         {
@@ -72,9 +72,142 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => UserModeImage);
             }
         }
+	    
+        public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
+            IRequestService requestService, IWeekApi weekApi, IDialogService dialogService) : base(navigationService)
+        {
+            _requestService = requestService;
+            _weekApi = weekApi;
+            _dialogService = dialogService;
+            _loginService = loginService;
 
-        public ICommand ToggleEditModeCommand => new Command(() => SwitchUserMode());
+            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+            
+            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
+                InsertPicto);
+            MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
+                DeleteActivity);
+            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
+        }
         public ICommand ToggleSelectModeCommand  => new Command(() =>  ToggleSelectMode());
+
+	    #region Message Callbacks (Insert, delete and SetToGuardianMode)
+		private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
+		{
+			StatefulPictogram statefulPictogram = new StatefulPictogram(GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl,
+				PictogramState.Normal);
+			WeekdayPictos[_weekdayToAddPictogramTo].Add(statefulPictogram);
+			// Add pictogramId to the correct weekday
+			// TODO: Fix
+			RaisePropertyChanged(() => MondayPictos);
+			RaisePropertyChanged(() => TuesdayPictos);
+			RaisePropertyChanged(() => WednesdayPictos);
+			RaisePropertyChanged(() => ThursdayPictos);
+			RaisePropertyChanged(() => FridayPictos);
+			RaisePropertyChanged(() => SaturdayPictos);
+			RaisePropertyChanged(() => SundayPictos);
+			RaisePropertyChanged(() => CountOfMaxHeightWeekday);
+			RaisePropertyChanged(() => WeekdayPictos);
+		}
+	    
+		private void DeleteActivity(ActivityViewModel activityVM, int activityID)
+		{
+			// TODO: Remove activityID from List<Resource> 
+		}
+	    
+		private void SetToGuardianMode()
+		{
+			EditModeEnabled = true;
+			UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
+			var tempDict = new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
+
+			foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+			{
+				tempDict.Add(day, new ObservableCollection<StatefulPictogram>());
+			}
+
+			foreach (WeekdayDTO dayDTO in WeekDTO.Days)
+			{
+				var weekday = dayDTO.Day.Value;
+				ObservableCollection<StatefulPictogram> pictos = new ObservableCollection<StatefulPictogram>();
+				foreach (var a in dayDTO.Activities)
+				{
+					pictos.Add(new StatefulPictogram(
+						GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{a.Pictogram.Id}/image/raw", PictogramState.Normal));
+				}
+
+				tempDict[weekday] = pictos;
+			}
+
+			WeekdayPictos = tempDict;
+		}
+	    #endregion
+	    
+	    #region Command: ToggleEditMode
+        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
+	    private async Task SwitchUserModeAsync()
+	    {
+		    if (EditModeEnabled)
+		    {
+			    EditModeEnabled = false;
+			    UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+		    }
+		    else
+		    {
+			    await NavigationService.NavigateToAsync<LoginViewModel>(this);
+		    }
+	    }
+	    #endregion
+
+	    #region Command: SavePicto
+        public ICommand SaveCommand => new Command(async () => await SaveSchedule());
+	    private async Task SaveSchedule()
+	    {
+		    bool confirmed = await _dialogService.ConfirmAsync(
+			    title: "Gem ugeplan", 
+			    message: "Vil du gemme ugeplanen?", 
+			    okText: "Gem", 
+			    cancelText: "Annuller");
+
+		    if(!confirmed){
+			    return;   
+		    }
+            
+		    if (WeekDTO.Id is null)
+		    {
+			    await SaveNewSchedule();
+		    }
+		    else
+		    {
+			    await UpdateExistingSchedule();
+		    }
+	    }
+	    
+	    private async Task SaveNewSchedule()
+	    {
+		    await _requestService.SendRequestAndThenAsync(this,
+			    async () => await _weekApi.V1WeekPostAsync(WeekDTO), result => 
+			    {
+				    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
+			    });
+	    }
+	    
+	    private async Task UpdateExistingSchedule()
+	    {
+		    if (WeekDTO.Id == null)
+		    {
+			    throw new InvalidDataException("WeekDTO should always have an Id when updating.");
+		    }
+            
+		    await _requestService.SendRequestAndThenAsync(this,
+			    async () => await _weekApi.V1WeekByIdPutAsync((int) WeekDTO.Id, WeekDTO),
+			    result =>
+			    {
+				    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
+			    });
+	    }
+	    
+	    #endregion
 
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
@@ -82,7 +215,7 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand PictoClickedCommand =>  new Command<ResourceDTO>(async activity =>
+        public ICommand PictoClickedCommand =>  new Command<StatefulPictogram>(async activity =>
         {
             // mark activities start
             if (SelectModeEnabled)
@@ -98,243 +231,220 @@ namespace WeekPlanner.ViewModels
             // mark activities end 
         });
 
-        public WeekPlannerViewModel(INavigationService navigationService, ILoginService loginService, 
-            IRequestService requestService, IWeekApi weekApi) : base(navigationService)
-        {
-            _loginService = loginService;
 
-            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+	    #region InitAsync: Show weekplan
 
-            _requestService = requestService;
-            _weekApi = weekApi;
-            
-            MessagingCenter.Subscribe<WeekPlannerPage>(this, MessageKeys.ScheduleSaveRequest,
-                async _ => await SaveSchedule());
-            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
-                InsertPicto);
-            MessagingCenter.Subscribe<ActivityViewModel, int>(this, MessageKeys.DeleteActivity,
-                DeleteActivity);
-        }
-        
-        public override async Task InitializeAsync(object navigationData)
-        {
-            if (navigationData is UserNameDTO userNameDTO)
-            {
-                await _loginService.LoginAndThenAsync(GetWeekPlanForCitizenAsync, UserType.Citizen,
-                    userNameDTO.UserName);
-            }
-            else
-            {
-                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
-            }
-        }
-        
-        // TODO: Handle situation where no days exist
-        private async Task GetWeekPlanForCitizenAsync()
-        {
-            // TODO: Make dynamic regarding weekId
-            await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: async () => await _weekApi.V1WeekByIdGetAsync(1),
-                onSuccessAsync: async result =>
-                {
-                    WeekDTO = result.Data;
-                    SetWeekdayPictos();
-                },
-                onExceptionAsync: async () => await NavigationService.PopAsync(),
-                onRequestFailedAsync: async () => await NavigationService.PopAsync()
-            );
-        }
+		public override async Task InitializeAsync(object navigationData)
+		{
+			if (navigationData is UserNameDTO userNameDTO)
+			{
+				await _loginService.LoginAndThenAsync(GetWeekPlanForCitizenAsync, UserType.Citizen,
+					userNameDTO.UserName);
+			}
+			else
+			{
+				throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
+			}
+		}
 
-        private void InsertPicto(PictogramSearchViewModel sender, PictogramDTO pictogramDTO)
-        {
-            string imgSource = 
-                GlobalSettings.DefaultEndpoint + pictogramDTO.ImageUrl;
-            WeekdayPictos[_weekdayToAddPictogramTo].Add(imgSource);
-            // Add pictogramId to the correct weekday
-            // TODO: Fix
-            RaisePropertyChanged(() => MondayPictos);
-            RaisePropertyChanged(() => TuesdayPictos);
-            RaisePropertyChanged(() => WednesdayPictos);
-            RaisePropertyChanged(() => ThursdayPictos);
-            RaisePropertyChanged(() => FridayPictos);
-            RaisePropertyChanged(() => SaturdayPictos);
-            RaisePropertyChanged(() => SundayPictos);
-            RaisePropertyChanged(() => CountOfMaxHeightWeekday);
-            RaisePropertyChanged(() => WeekdayPictos);
-        }
+		// TODO: Handle situation where no days exist
+		private async Task GetWeekPlanForCitizenAsync()
+		{
+			// TODO: Make dynamic regarding weekId
+			await _requestService.SendRequestAndThenAsync(this,
+				requestAsync: async () => await _weekApi.V1WeekByIdGetAsync(1),
+				onSuccessAsync: async result =>
+				{
+					WeekDTO = result.Data;
+					SetWeekdayPictos();
+				},
+				onExceptionAsync: async () => await NavigationService.PopAsync(),
+				onRequestFailedAsync: async () => await NavigationService.PopAsync()
+			);
+		}
+
+		private void SetWeekdayPictos()
+		{
+			var tempDict = new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
+
+			foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+			{
+				tempDict.Add(day, new ObservableCollection<StatefulPictogram>());
+			}
+
+			foreach (WeekdayDTO dayDTO in WeekDTO.Days)
+			{
+				if (dayDTO.Day == null) continue;
+				var weekday = dayDTO.Day.Value;
+				ObservableCollection<StatefulPictogram> pictos = new ObservableCollection<StatefulPictogram>();
+				foreach (var eleID in dayDTO.Activities.Select(a => a.Pictogram.Id))
+				{
+					pictos.Add(new StatefulPictogram(
+						GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw", PictogramState.Normal));
+				}
+
+				tempDict[weekday] = pictos;
+			}
+
+			WeekdayPictos = tempDict;
+		}
+	    #endregion
 
 
-        private async Task SaveSchedule()
-        {
-            if (WeekDTO.Id is null)
-            {
-                await SaveNewSchedule();
-            }
-            else
-            {
-                await UpdateExistingSchedule();
-            }
-        }
+		#region Boilerplate for each weekday's pictos
 
-        private async Task SaveNewSchedule()
-        {
-            await _requestService.SendRequestAndThenAsync(this,
-                async () => await _weekApi.V1WeekPostAsync(WeekDTO),
-                result =>
-                {
-                    MessagingCenter.Send(this, MessageKeys.RequestSucceeded,
-                        $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
-                });
-        }
+		private Dictionary<DayEnum, ObservableCollection<StatefulPictogram>> _weekdayPictos =
+			new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
 
-        private async Task UpdateExistingSchedule()
-        {
-            if (WeekDTO.Id == null)
-            {
-                throw new InvalidDataException("WeekDTO should always have an Id when updating.");
-            }
-            
-            await _requestService.SendRequestAndThenAsync(this,
-                async () => await _weekApi.V1WeekByIdPutAsync((int) WeekDTO.Id, WeekDTO),
-                result =>
-                {
-                    MessagingCenter.Send(this, MessageKeys.RequestSucceeded, 
-                        $"Ugeplanen '{result.Data.Name}' blev gemt.");
-                });
-        }
+		public Dictionary<DayEnum, ObservableCollection<StatefulPictogram>> WeekdayPictos
+		{
+			get => _weekdayPictos;
+			set
+			{
+				_weekdayPictos = value;
+				SetBorderStatusPictograms(DateTime.Today.DayOfWeek);
+				RaisePropertyChanged(() => MondayPictos);
+				RaisePropertyChanged(() => TuesdayPictos);
+				RaisePropertyChanged(() => WednesdayPictos);
+				RaisePropertyChanged(() => ThursdayPictos);
+				RaisePropertyChanged(() => FridayPictos);
+				RaisePropertyChanged(() => SaturdayPictos);
+				RaisePropertyChanged(() => SundayPictos);
+				RaisePropertyChanged(() => CountOfMaxHeightWeekday);
+				RaisePropertyChanged(() => WeekdayPictos);
+			}
+		}
 
+		public int CountOfMaxHeightWeekday
+		{
+			get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
+		}
 
-        private void DeleteActivity(ActivityViewModel activityVM, int activityID) {
-            // TODO: Remove activityID from List<Resource> 
-        }
+		public ObservableCollection<StatefulPictogram> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
 
-        private void SetWeekdayPictos()
-        {
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
-            
-            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
-            {
-                tempDict.Add(day, new ObservableCollection<string>());
-            }
-            
-            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
-            {
-                if (dayDTO.Day == null) continue;
-                var weekday = dayDTO.Day.Value;
-                ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleID in dayDTO.Elements.Select(e => e.Id.Value))
-                {
-                    pictos.Add(
-                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
-                }
-                tempDict[weekday] = pictos;
-            }
+		public ObservableCollection<StatefulPictogram> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
 
-            WeekdayPictos = tempDict;
-        }
+		public ObservableCollection<StatefulPictogram> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
 
-         private async Task SwitchUserMode()
-        {
-            if (EditModeEnabled)
-            {
-                EditModeEnabled = false;
-                UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-            }
-            else
-            {
-                await NavigationService.NavigateToAsync<LoginViewModel>(this);
+		public ObservableCollection<StatefulPictogram> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
 
-                MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
-            }
-        }
+		public ObservableCollection<StatefulPictogram> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
 
-        private void SetToGuardianMode()
-        {
-            EditModeEnabled = true;
-            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
-            var tempDict = new Dictionary<DayEnum, ObservableCollection<string>>();
-            
-            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
-            {
-                tempDict.Add(day, new ObservableCollection<string>());
-            }
-            
-            foreach (WeekdayDTO dayDTO in WeekDTO.Days)
-            {
-                var weekday = dayDTO.Day.Value;
-                ObservableCollection<string> pictos = new ObservableCollection<string>();
-                foreach (var eleID in dayDTO.Elements)
-                {
-                    pictos.Add(
-                        GlobalSettings.DefaultEndpoint + $"/v1/pictogram/{eleID}/image/raw");
-                }
-                tempDict[weekday] = pictos;
-            }
+		public ObservableCollection<StatefulPictogram> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
 
-            WeekdayPictos = tempDict;
-        }
+		public ObservableCollection<StatefulPictogram> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
 
+		private ObservableCollection<StatefulPictogram> GetPictosOrEmptyList(DayEnum day)
+		{
+			if (!WeekdayPictos.TryGetValue(day, out var pictoSources))
+				pictoSources = new ObservableCollection<StatefulPictogram>();
+			return new ObservableCollection<StatefulPictogram>(pictoSources);
+		}
+		#endregion
 
-        #region Boilerplate for each weekday's pictos
+		#region Highlighting pictogram
 
-        private Dictionary<DayEnum, ObservableCollection<string>> _weekdayPictos =
-            new Dictionary<DayEnum, ObservableCollection<string>>();
+		// An enum type for determining which state a pictogram is in.
+		public enum PictogramState
+		{
+			Normal = 0,
+			Cancelled = 1,
+			Checked = 2
+		}
 
-        public Dictionary<DayEnum, ObservableCollection<string>> WeekdayPictos
-        {
-            get => _weekdayPictos;
-            set
-            {
-                _weekdayPictos = value;
-                RaisePropertyChanged(() => MondayPictos);
-                RaisePropertyChanged(() => TuesdayPictos);
-                RaisePropertyChanged(() => WednesdayPictos);
-                RaisePropertyChanged(() => ThursdayPictos);
-                RaisePropertyChanged(() => FridayPictos);
-                RaisePropertyChanged(() => SaturdayPictos);
-                RaisePropertyChanged(() => SundayPictos);
-                RaisePropertyChanged(() => CountOfMaxHeightWeekday);
-                RaisePropertyChanged(() => WeekdayPictos);
-            }
-        }
+		/// <summary>
+		///  Converts a DayOfWeek to a WeekdayDTO
+		/// </summary>
+		public class DateTimeConverter
+		{
+			// Convert a specific day.
+			public DayEnum GetWeekDay(DayOfWeek weekDay)
+			{
+				switch (weekDay)
+				{
+					case DayOfWeek.Monday:
+						return DayEnum.Monday;
+					case DayOfWeek.Tuesday:
+						return DayEnum.Tuesday;
+					case DayOfWeek.Wednesday:
+						return DayEnum.Wednesday;
+					case DayOfWeek.Thursday:
+						return DayEnum.Thursday;
+					case DayOfWeek.Friday:
+						return DayEnum.Friday;
+					case DayOfWeek.Saturday:
+						return DayEnum.Saturday;
+					case DayOfWeek.Sunday:
+						return DayEnum.Sunday;
+					default:
+						throw new ArgumentException($"{weekDay} is not valid");
+				}
+			}
+		}
 
-        public int CountOfMaxHeightWeekday
-        {
-            get { return _weekdayPictos.Any() ? _weekdayPictos.Max(w => GetPictosOrEmptyList(w.Key).Count) : 0; }
-        }
+		public void SetBorderStatusPictograms(DayOfWeek weekday)
+		{
+			// Find the current day in WeekDTO object.
+			DateTimeConverter dateTimeConverter = new DateTimeConverter();
 
-        public ObservableCollection<string> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
+			// Find the first pictogram, that are: normal state and first.
+			foreach (var weekDayPicto in WeekdayPictos)
+			{
+				if (weekDayPicto.Key == dateTimeConverter.GetWeekDay(weekday))
+				{
+					weekDayPicto.Value.Where(s => s.PictogramState == PictogramState.Normal).First().Border = "Black";
+					return;
+				}
+			}
+		}
 
-        public ObservableCollection<string> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
+		/// <summary>
+		///  A mock class for pictograms, it contains both the URL and State of a pictogram. 
+		/// </summary>
+		public class StatefulPictogram
+		{
+			private string _url;
 
-        public ObservableCollection<string> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
+			public string URL
+			{
+				get { return _url; }
+				set { _url = value; }
+			}
 
-        public ObservableCollection<string> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
+			private PictogramState _pictogramState;
 
-        public ObservableCollection<string> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
+			public PictogramState PictogramState
+			{
+				get { return _pictogramState; }
+				set { _pictogramState = value; }
+			}
 
-        public ObservableCollection<string> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
+			private string _border;
 
-        public ObservableCollection<string> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
+			public string Border
+			{
+				get { return _border; }
+				set { _border = value; }
+			}
 
-        private ObservableCollection<string> GetPictosOrEmptyList(DayEnum day)
-        {
-            if (!WeekdayPictos.TryGetValue(day, out var pictoSources))
-                pictoSources = new ObservableCollection<string>();
-            return new ObservableCollection<string>(pictoSources);
-        }
+			public StatefulPictogram(string url, PictogramState pictogramState)
+			{
+				PictogramState = pictogramState;
+				URL = url;
+				Border = "Transparent";
+			}
+		}
+		#endregion
 
-        #endregion
-
-        private async Task SelectActivity(ResourceDTO activity){
+        private async Task SelectActivity(StatefulPictogram activity){
             _selectedActivities.Add(activity);
-            // TODO: Change Border color
+            activity.Border = "Lime";
         }
 
-        private async Task DeSelectActivity(ResourceDTO activity)
+        private async Task DeSelectActivity(StatefulPictogram activity)
         {
             _selectedActivities.Remove(activity);
-            // TODO: Change Border color
+            activity.Border = "Transparent";
         }
 
         private async Task ToggleSelectMode()

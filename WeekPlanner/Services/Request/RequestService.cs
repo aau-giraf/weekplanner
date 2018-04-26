@@ -10,6 +10,13 @@ namespace WeekPlanner.Services.Request
 {
     public class RequestService : IRequestService
     {
+        private readonly IDialogService _dialogService;
+
+        public RequestService(IDialogService dialogService)
+        {
+            _dialogService = dialogService;
+        }
+
         public async Task SendRequestAndThenAsync<TS, TR>(TS sender, Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
             Func<Task> onExceptionAsync = null,
             Func<Task> onRequestFailedAsync = null,
@@ -24,12 +31,12 @@ namespace WeekPlanner.Services.Request
             }
             catch (ApiException)
             {
-                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
-                MessagingCenter.Send(sender, exceptionErrorMessageKey, friendlyErrorMessage);
-
                 if (onExceptionAsync != null)
                 {
                     await onExceptionAsync.Invoke();
+                } else {
+                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
+                    await _dialogService.ShowAlertAsync(message: friendlyErrorMessage, title: "Fejl");
                 }
                 return;
             }
@@ -40,12 +47,12 @@ namespace WeekPlanner.Services.Request
             }
             else
             {
-                var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
-                MessagingCenter.Send(sender, requestFailedMessageKey, friendlyErrorMessage);
-
                 if (onRequestFailedAsync != null)
                 {
                     await onRequestFailedAsync.Invoke();
+                } else {
+                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKey);
+                    _dialogService.ShowAlertAsync(title: "Fejl", message: friendlyErrorMessage);
                 }
             }
         }
