@@ -29,7 +29,7 @@ namespace WeekPlanner.Services.Request
             {
                 result = await requestAsync.Invoke();
             }
-            catch (ApiException)
+            catch (ApiException e)
             {
                 if (onExceptionAsync != null)
                 {

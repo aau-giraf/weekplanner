@@ -37,9 +37,9 @@ namespace WeekPlanner.ViewModels
         }
 
 	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
-		    await UseDepartmentTokenAndNavigateToWeekPlan(usernameDTO));
+		    await UseGuardianTokenAndNavigateToWeekPlan(usernameDTO));
 
-	    private async Task UseDepartmentTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
+	    private async Task UseGuardianTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
 	    {
 		    _settingsService.UseTokenFor(UserType.Guardian);
 		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(usernameDTO);

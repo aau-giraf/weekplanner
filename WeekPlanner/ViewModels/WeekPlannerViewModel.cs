@@ -119,7 +119,7 @@ namespace WeekPlanner.ViewModels
         {
             // TODO: Make dynamic regarding weekId
             await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: async () => await _weekApi.V1WeekByIdGetAsync(1),
+                requestAsync: () => _weekApi.V1WeekByIdGetAsync(1),
                 onSuccessAsync: async result =>
                 {
                     WeekDTO = result.Data;
