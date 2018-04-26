@@ -1,20 +1,19 @@
 using System;
-using System.IO;
-using IO.Swagger.Model;
-using System.Threading.Tasks;
-using IO.Swagger.Api;
-using WeekPlanner.Helpers;
-using WeekPlanner.Services.Login;
-using WeekPlanner.ViewModels.Base;
-using Xamarin.Forms;
-using WeekPlanner.Services.Navigation;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using WeekPlanner.Services.Settings;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using IO.Swagger.Api;
+using IO.Swagger.Model;
+using WeekPlanner.Services.Login;
+using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
+using WeekPlanner.Services.Settings;
+using WeekPlanner.ViewModels.Base;
 using WeekPlanner.Views;
+using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
 using WeekPlanner.Services;
 
@@ -350,4 +349,5 @@ namespace WeekPlanner.ViewModels
 
         }
     }
+>>>>>>> release-2018S3R1
 }

@@ -64,7 +64,7 @@
     <DefineConstants>DEBUG;ENABLE_TEST_CLOUD;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer: kasper-db@hotmail.com (SV55ZQWU39)</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
@@ -155,10 +155,18 @@
     <ImageAsset Include="Assets.xcassets\default_profile_picture.imageset\default_profile_picture.jpg">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\icon_default_citizen.png" />
-    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png" />
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_default_citizen.imageset\icon_default_citizen.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\tab_about.png" />

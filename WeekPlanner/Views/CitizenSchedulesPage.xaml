@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+             base1:ViewModelLocator.AutoWireViewModel="true"
+             x:Class="WeekPlanner.Views.CitizenSchedulesPage"
+             Title="Ugeplaner Frontpage"
+             x:Name="root">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="icon_add.png" Command="{Binding AddWeekScheduleCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            
+            <flv:FlowListView
+                    SeparatorVisibility="None"
+                    HasUnevenRows="true"
+                    FlowItemTappedCommand="{Binding WeekTappedCommand}"
+                    FlowLastTappedItem="{Binding LastTappedItem}"
+                    FlowColumnMinWidth="210"
+                    FlowItemsSource="{Binding Weeks}"
+                    x:Name="Level">
+                <flv:FlowListView.FlowColumnTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition
+                                        Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ffimageloading:CachedImage
+                                    HeightRequest="200"
+                                    Aspect="AspectFit"
+                                    LoadingPlaceholder="image_loading.png"
+                                    ErrorPlaceholder="weekschedule.png"
+                                    Source="{Binding Thumbnail.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                                    BackgroundColor="White"/>
+                            <Label TextColor="Black" FontSize="18" Margin="0" Text="{Binding Name}" 
+                                   VerticalTextAlignment="End" HorizontalTextAlignment="Center" BackgroundColor="White" VerticalOptions="EndAndExpand"/>
+                            <Button Command="{Binding Source={x:Reference root}, Path=BindingContext.WeekDeletedCommand}" CommandParameter="{Binding .}" 
+                                    Image="icon_delete.png" VerticalOptions="Start" HorizontalOptions="End" 
+                                    WidthRequest="30" HeightRequest="30" Margin="0"/>
+                        </Grid>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowColumnTemplate>
+                </flv:FlowListView>
+            </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
