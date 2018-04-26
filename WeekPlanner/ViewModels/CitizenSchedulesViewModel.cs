@@ -34,6 +34,8 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _loginService = loginService;
             _settingsService = settingsService;
+
+            MessagingCenter.Subscribe<NewScheduleViewModel>(this, "UpdateView", (sender) => UpdateWeekViewAsync());
         }
 
         private ObservableCollection<WeekNameDTO> _namesAndID = new ObservableCollection<WeekNameDTO>();
@@ -87,22 +89,26 @@ namespace WeekPlanner.ViewModels
         private void WeekDeletedTapped(Object week)
         {
             if (week is WeekDTO weekDTO)
-            {
-
+            { 
                 DeleteWeek(weekDTO);
             }
         }
 
         private void DeleteWeek(WeekDTO w)
         {
-
             _requestService.SendRequestAndThenAsync<CitizenSchedulesViewModel, ResponseWeekDTO>(this, async () => { await _weekApi.V1WeekByIdDeleteAsync(w.Id); return null; }, onSuccess: result => { });
-
+            Weeks.Remove(w);
         }
 
         private async void AddWeekSchedule()
         {
             await NavigationService.NavigateToAsync<NewScheduleViewModel>();
+        }
+
+        private async void UpdateWeekViewAsync()
+        {
+            Weeks.Clear();
+            await InitializeWeekSchedules();
         }
         public override async Task InitializeAsync(object navigationData)
         {
