@@ -14,12 +14,14 @@ using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.Views;
+using WeekPlanner.Services;
 
 namespace WeekPlanner.ViewModels
 {
     public class CitizenSchedulesViewModel : ViewModelBase
     {
         private readonly IRequestService _requestService;
+        private readonly IDialogService _dialogService;
         private readonly IWeekApi _weekApi;
         private readonly ILoginService _loginService;
         private readonly ISettingsService _settingsService;
@@ -28,9 +30,10 @@ namespace WeekPlanner.ViewModels
         public ICommand WeekDeletedCommand => new Command((x) => WeekDeletedTapped(x));
         public ICommand AddWeekScheduleCommand => new Command(() => AddWeekSchedule());
 
-        public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IWeekApi weekApi, ILoginService loginService, ISettingsService settingsService) : base(navigationService)
+        public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IDialogService dialogService, IWeekApi weekApi, ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {
             _requestService = requestService;
+            _dialogService = dialogService;
             _weekApi = weekApi;
             _loginService = loginService;
             _settingsService = settingsService;
@@ -83,21 +86,26 @@ namespace WeekPlanner.ViewModels
 
             foreach (var item in NamesAndID)
             {
-                await _requestService.SendRequestAndThenAsync(this, async () => await _weekApi.V1WeekByIdGetAsync(item.Id), (res) => Weeks.Add(res.Data));
+                await _requestService.SendRequestAndThenAsync(this,
+                    async () => await _weekApi.V1WeekByIdGetAsync(item.Id), (res) => Weeks.Add(res.Data));
             }
         }
-        private void WeekDeletedTapped(Object week)
+        private async Task WeekDeletedTapped(Object week)
         {
             if (week is WeekDTO weekDTO)
             { 
-                DeleteWeek(weekDTO);
+                await DeleteWeek(weekDTO);
             }
         }
 
-        private void DeleteWeek(WeekDTO w)
+        private async Task DeleteWeek(WeekDTO w)
         {
-            _requestService.SendRequestAndThenAsync<CitizenSchedulesViewModel, ResponseWeekDTO>(this, async () => { await _weekApi.V1WeekByIdDeleteAsync(w.Id); return null; }, onSuccess: result => { });
-            Weeks.Remove(w);
+            var answer = await _dialogService.ConfirmAsync($"Vil du slette {w.Name}?", "Slet Ugeplan");
+            if (answer)
+            {
+                await _requestService.SendRequestAndThenAsync(this,
+                    requestAsync: () => _weekApi.V1WeekByIdDeleteAsync(w.Id), onSuccess: (r) => Weeks.Remove(w));
+            }
         }
 
         private async void AddWeekSchedule()
