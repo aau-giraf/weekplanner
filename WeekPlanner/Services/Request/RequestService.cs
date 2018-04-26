@@ -55,7 +55,7 @@ namespace WeekPlanner.Services.Request
 				}
 				else
 				{
-					var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString();
+					var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKeyEnum);
 				}
 			}
 		}
