@@ -32,20 +32,25 @@ namespace WeekPlanner.ViewModels
 
         private async Task BackButtonPressed()
         {
-            var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+            bool test = true;
 
-            switch (result)
+            if (test)
             {
-                case "Annuller":
-                    break;
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
 
-                case "Gem ændringer":
-                    await NavigationService.PopAsync();
-                    break;
+                switch (result)
+                {
+                    case "Annuller":
+                        break;
 
-                case "Gem ikke":
-                    await NavigationService.PopAsync();
-                    break;
+                    case "Gem ændringer":
+                        await NavigationService.PopAsync();
+                        break;
+
+                    case "Gem ikke":
+                        await NavigationService.PopAsync();
+                        break;
+                }
             }
         }
     }
