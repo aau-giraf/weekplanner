@@ -43,7 +43,7 @@ Assuming the backend is running on http://localhost:5000
 1. Install Swagger CLI (https://swagger.io/docs/swagger-tools/#installation-11) 
 2. Generate new client
     - cd to repository root
-    - Either `source update_swagger.sh` 
+    - Either `source swagger_update.sh` 
     - OR run `swagger-codegen generate -i http://localhost:5000/swagger/v1/swagger.json -l csharp -o GeneratedClient`
 
 OR with https://editor.swagger.io/
@@ -53,7 +53,7 @@ OR with https://editor.swagger.io/
 
 ### 2. Fix the generated client
 
-1. If you didn't use `update_swagger.sh` then copy and paste (overwrite) the IO.Swagger folder from inside GeneratedClient/src/ to the root of weekplanner and delete the GeneratedClient/ directory
+1. If you didn't use `swagger_update.sh` then copy and paste (overwrite) the IO.Swagger folder from inside GeneratedClient/src/ to the root of weekplanner and delete the GeneratedClient/ directory
 2. Swagger has a problem generating enums, which is problem in the generated WeekDayDTO. The following hack solves it:
 Start the enum from 0 instead of 1 to reflect the actual backend
 3. Fix compile error:

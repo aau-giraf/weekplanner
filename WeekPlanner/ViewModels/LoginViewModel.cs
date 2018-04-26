@@ -52,17 +52,16 @@ namespace WeekPlanner.ViewModels
             {
                 if (_userModeSwitch)
                 {
-                    // TODO this is a bug, use WeekVM.Popped when integrated with other branch //Lau
-                    MessagingCenter.Send(this, MessageKeys.LoginSucceeded);
-                    
                     var username = "Graatand";
-                    await _loginService.LoginAndThenAsync(() => NavigationService.PopAsync(),
+                    bool enableGuardianMode = true;
+                    await _loginService.LoginAndThenAsync(async () => await NavigationService.PopAsync(enableGuardianMode),
                                                           UserType.Guardian, username, Password.Value);
                 }
                 else
                 {
-                    await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
-                                                          UserType.Guardian, Username.Value, Password.Value);
+                    var username = "Graatand";
+                    await _loginService.LoginAndThenAsync(async () => await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
+                                                          UserType.Guardian, username, Password.Value);
                 }
             }
         });

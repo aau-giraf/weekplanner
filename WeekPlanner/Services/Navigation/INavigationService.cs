@@ -9,7 +9,7 @@ namespace WeekPlanner.Services.Navigation
 
         Task InitializeAsync();
 
-        Task PopAsync();
+        Task PopAsync(object navidationData = null);
 
         Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase;
 

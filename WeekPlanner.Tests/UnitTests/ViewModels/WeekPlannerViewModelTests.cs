@@ -31,7 +31,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         [InlineData("FridayPictos")]
         [InlineData("SaturdayPictos")]
         [InlineData("SundayPictos")]
-        [InlineData("SundayPictos")]
         [InlineData("CountOfMaxHeightWeekday")]
         public void WeekdayPictos_OnSet_RaisesPropertiesChanged(string property)
         {
@@ -104,45 +103,15 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
                 .ToList();
 
             var dayIdsFromWeek =
-                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Activities.Select(a => a.Pictogram.Id.Value)
+
+                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Activities.Select(e => e.Pictogram.Id).Select(i => i.Value)
                     .ToList();
 
             //Assert
             Assert.Equal(dayIdsFromWeek, dayIds);
         }
 
-        [Fact]
-        public async void CountOfMaxHeightWeekday_AfterInitAsync_returnsCorrectCount()
-        {
-            //Arrange
-            var mockUsernameDTO = Fixture.Create<UserNameDTO>();
-
-            FreezeMockOfIRequestService<WeekPlannerViewModel, ResponseWeekDTO>();
-
-            async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
-                await onSuccess.Invoke();
-
-            var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
-                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, mockUsernameDTO.UserName, ""))
-                .Returns((Func<Func<Task>, UserType, string, string, Task>) LoginAndThenMock);
-
-            var weekResponse = Fixture.Build<ResponseWeekDTO>()
-                .With(r => r.Success, true)
-                .With(r => r.ErrorKey, ResponseWeekDTO.ErrorKeyEnum.NoError)
-                .With(r => r.Data, Fixture.Create<WeekDTO>()).Create();
-
-            var mockWeek = Fixture.Freeze<Mock<IWeekApi>>()
-                .Setup(w => w.V1WeekByIdGetAsync(It.IsAny<long?>()))
-                .ReturnsAsync(weekResponse);
-            var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
-            //Act 
-            await sut.InitializeAsync(mockUsernameDTO);
-            //Assert
-            Assert.Equal(weekResponse.Data.Days.Max(d => d.Activities.Count), sut.CountOfMaxHeightWeekday);
-        }
-
-        [Fact]
-        public void WeekdayPictos_AfterInitAsync_IsNotNull()
+        public async Task WeekdayPictos_AfterInitAsync_IsNotNullAsync()
         {
             //Arrange
             var weekResponse = Fixture.Build<ResponseWeekDTO>()
@@ -162,7 +131,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
             var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
             //Act
-            sut.InitializeAsync(null);
+            await sut.InitializeAsync(null);
             //Assert
             Assert.NotNull(sut.WeekdayPictos);
         }

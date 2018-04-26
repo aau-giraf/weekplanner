@@ -9,6 +9,7 @@ using System.Windows.Input;
 using IO.Swagger.Client;
 using WeekPlanner.Helpers;
 using WeekPlanner.Services.Request;
+using System.Threading.Tasks;
 
 namespace WeekPlanner.ViewModels
 {
@@ -37,18 +38,17 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand SearchCommand => new Command((searchTerm) => OnSearchGetPictograms((String)searchTerm));
+        public ICommand SearchCommand => new Command<string>(async searchTerm => await OnSearchGetPictograms(searchTerm));
         public ICommand ItemTappedCommand => new Command((tappedItem) => ListViewItemTapped((PictogramDTO)tappedItem));
 
         async void ListViewItemTapped(PictogramDTO tappedItem){
-            MessagingCenter.Send(this, MessageKeys.PictoSearchChosenItem, tappedItem);
-            await NavigationService.PopAsync();
+            await NavigationService.PopAsync(tappedItem);
         }
 
         // TODO: Implement message for no results and add a loading icon
-        public async void OnSearchGetPictograms(String searchTerm)
+        public Task OnSearchGetPictograms(String searchTerm)
         {
-            await _requestService.SendRequestAndThenAsync(this,
+            return _requestService.SendRequestAndThenAsync(this,
                 requestAsync: async () => await _pictogramApi.V1PictogramGetAsync(1, 10, searchTerm),
                 onSuccess: result => { ImageSources = new ObservableCollection<PictogramDTO>(result.Data); });
         }

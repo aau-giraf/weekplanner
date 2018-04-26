@@ -17,31 +17,29 @@ namespace WeekPlanner.Services.Request
 			_dialogService = dialogService;
 		}
 
-		public async Task SendRequestAndThenAsync<TS, TR>(TS sender, Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
-			Func<Task> onExceptionAsync = null,
-			Func<Task> onRequestFailedAsync = null,
-			string exceptionErrorMessageKey = MessageKeys.RequestFailed,
-			string requestFailedMessageKey = MessageKeys.RequestFailed) where TS : class
-		{
-			// TODO: Check for internet connection first.
-			dynamic result;
-			try
-			{
-				result = await requestAsync.Invoke();
-			}
-			catch (ApiException)
-			{
-				if (onExceptionAsync != null)
-				{
-					await onExceptionAsync.Invoke();
-				}
-				else
-				{
-					var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
-					await _dialogService.ShowAlertAsync(message: friendlyErrorMessage, title: "Fejl");
-				}
-				return;
-			}
+        public async Task SendRequestAndThenAsync<TS, TR>(TS sender, Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
+            Func<Task> onExceptionAsync = null,
+            Func<Task> onRequestFailedAsync = null,
+            string exceptionErrorMessageKey = MessageKeys.RequestFailed,
+            string requestFailedMessageKey = MessageKeys.RequestFailed) where TS : class
+        {
+            // TODO: Check for internet connection first.
+            dynamic result;
+            try
+            {
+                result = await requestAsync.Invoke();
+            }
+            catch (ApiException e)
+            {
+                if (onExceptionAsync != null)
+                {
+                    await onExceptionAsync.Invoke();
+                } else {
+                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseString.ErrorKeyEnum.Error);
+                    await _dialogService.ShowAlertAsync(message: friendlyErrorMessage, title: "Fejl");
+                }
+                return;
+            }
 
 			if (result.Success == true)
 			{
