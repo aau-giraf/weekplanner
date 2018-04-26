@@ -37,8 +37,6 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _loginService = loginService;
             _settingsService = settingsService;
-
-            MessagingCenter.Subscribe<NewScheduleViewModel>(this, "UpdateView", (sender) => UpdateWeekViewAsync());
         }
 
         private ObservableCollection<WeekNameDTO> _namesAndID = new ObservableCollection<WeekNameDTO>();
@@ -98,14 +96,14 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private async Task DeleteWeek(WeekDTO w)
+        private async Task DeleteWeek(WeekDTO week)
         {
-            var confirmed = await _dialogService.ConfirmAsync($"Vil du slette {w.Name}?", "Slet Ugeplan");
+            var confirmed = await _dialogService.ConfirmAsync($"Vil du slette {week.Name}?", "Slet Ugeplan");
             if (!confirmed) {
                 return;
             }
             await _requestService.SendRequestAndThenAsync(this,
-                requestAsync: () => _weekApi.V1WeekByIdDeleteAsync(w.Id), onSuccess: (r) => Weeks.Remove(w));
+                requestAsync: () => _weekApi.V1WeekByIdDeleteAsync(week.Id), onSuccess: (r) => Weeks.Remove(week));
         }
 
         private async void AddWeekSchedule()
@@ -113,11 +111,11 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<NewScheduleViewModel>();
         }
 
-        private async void UpdateWeekViewAsync()
-        {
+        public override async Task PoppedAsync(object navigationData) {
             Weeks.Clear();
             await InitializeWeekSchedules();
         }
+
         public override async Task InitializeAsync(object navigationData)
         {
             if (navigationData is UserNameDTO userNameDTO)

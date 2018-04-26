@@ -3,6 +3,7 @@ using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using WeekPlanner.Services;
 using WeekPlanner.Services.Login;
@@ -47,7 +48,12 @@ namespace WeekPlanner.ViewModels
         public ICommand SaveWeekScheduleCommand => new Command(() => SaveWeekSchedule());
         public ICommand ChangePictogramCommand => new Command(() => ChangePictogram());
 
-        public NewScheduleViewModel(INavigationService navigationService, IWeekApi weekApi, IPictogramApi pictogramApi, IRequestService  requestService, IDialogService dialogService) : base(navigationService)
+        public NewScheduleViewModel(
+            INavigationService navigationService, 
+            IWeekApi weekApi, 
+            IPictogramApi pictogramApi, 
+            IRequestService  requestService, 
+            IDialogService dialogService) : base(navigationService)
         {
             _weekApi = weekApi;
             _pictogramApi = pictogramApi;
@@ -60,17 +66,19 @@ namespace WeekPlanner.ViewModels
             _scheduleName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et navn er påkrævet." });
         }
 
+		public override Task PoppedAsync(object navigationData)
+		{
+            // Happens when selecting a picto in PictoSearch
+            if (navigationData is PictogramDTO pictoDTO){
+                WeekThumbNail = pictoDTO;
+            }
+            return Task.FromResult(false);
+		}
 
-        private void ChangePictogram()
+
+		private void ChangePictogram()
         {
             NavigationService.NavigateToAsync<PictogramSearchViewModel>();
-            MessagingCenter.Subscribe<PictogramSearchViewModel, PictogramDTO>(this, MessageKeys.PictoSearchChosenItem,
-                InsertPicto);
-        }
-
-        private void InsertPicto(PictogramSearchViewModel arg1, PictogramDTO arg2)
-        {
-            WeekThumbNail = arg2;
         }
 
         private async void SaveWeekSchedule()
@@ -93,10 +101,11 @@ namespace WeekPlanner.ViewModels
 
                 await _requestService.SendRequestAndThenAsync(this,
                 requestAsync: async () => await _weekApi.V1WeekPostAsync(_weekDTO),
-                onSuccess: async (R) => await _dialogService.ShowAlertAsync("Succes", "Ok", "Succes"));
+                onSuccess: async result => { 
+                    await _dialogService.ShowAlertAsync("Succes", "Ok", "Succes"); 
+                    await NavigationService.PopAsync();
+                });
 
-                MessagingCenter.Send(this, "UpdateView");
-                await NavigationService.PopAsync();
             }
         }
 
