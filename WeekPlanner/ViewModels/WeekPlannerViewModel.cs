@@ -50,6 +50,7 @@ namespace WeekPlanner.ViewModels
             {
                 _weekDto = value;
                 RaisePropertyChanged(() => WeekDTO);
+                RaisePropertyForDays();
             }
         }
 
