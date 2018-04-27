@@ -12,6 +12,7 @@ This repository contains the rewritten Weekplanner built with Xamarin.
     - Open a terminal-emulator and navigate to {project-root}/WeekPlanner
     - Run `cp appsettings.template.json appsettings.Development.json`
     - Open appsettings.Development.json for editing and alter the fields for your setup
+    - Set the build action for appsettings.Development.json to Embedded Resource (right-click on file in IDE)
 
 ## Contributing
 
@@ -72,6 +73,11 @@ foreach(var param in fileParams)
 ```
 ApiClient.cs line 135
 Simply remove/comment those lines. No need to fix it since we don't work with files.
+
+## Testing with an iPhone / iPad
+Follow [this guide](https://docs.microsoft.com/en-us/xamarin/ios/get-started/installation/device-provisioning/free-provisioning) in order to test on your iPhone. Necessary until we get a developer license for App Store.
+
+
 
 ## API Reference
 

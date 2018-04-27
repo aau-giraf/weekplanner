@@ -171,21 +171,38 @@
     <ImageAsset Include="Assets.xcassets\icon_add.imageset\icon_add.png" />
     <ImageAsset Include="Assets.xcassets\icon_delete.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\icon_delete.imageset\icon_delete.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-40.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-58.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-87.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-80.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-120.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-180.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-20.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-29.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-76.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-152.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-167.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-1024.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\tab_about.png" />
-    <BundleResource Include="Resources\tab_about%402x.png" />
-    <BundleResource Include="Resources\tab_about%403x.png" />
-    <BundleResource Include="Resources\tab_feed.png" />
-    <BundleResource Include="Resources\tab_feed%402x.png" />
-    <BundleResource Include="Resources\tab_feed%403x.png" />
-    <BundleResource Include="Resources\xamarin_logo.png" />
-    <BundleResource Include="Resources\xamarin_logo%402x.png" />
-    <BundleResource Include="Resources\xamarin_logo%403x.png" />
     <BundleResource Include="Resources\default_profile_picture.jpg" />
     <BundleResource Include="Resources\image_loading.png" />
     <BundleResource Include="Resources\icon_default_citizen.png" />
     <BundleResource Include="Resources\icon_default_guardian.png" />
+    <BundleResource Include="Resources\icon\Icon-1024.png" />
+    <BundleResource Include="Resources\icon\Icon-120.png" />
+    <BundleResource Include="Resources\icon\Icon-152.png" />
+    <BundleResource Include="Resources\icon\Icon-167.png" />
+    <BundleResource Include="Resources\icon\Icon-180.png" />
+    <BundleResource Include="Resources\icon\Icon-20.png" />
+    <BundleResource Include="Resources\icon\Icon-29.png" />
+    <BundleResource Include="Resources\icon\Icon-40.png" />
+    <BundleResource Include="Resources\icon\Icon-58.png" />
+    <BundleResource Include="Resources\icon\Icon-60.png" />
+    <BundleResource Include="Resources\icon\Icon-76.png" />
+    <BundleResource Include="Resources\icon\Icon-80.png" />
+    <BundleResource Include="Resources\icon\Icon-87.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />

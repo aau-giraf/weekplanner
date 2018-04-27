@@ -10,7 +10,7 @@
              Title="Ugeplaner Frontpage"
              x:Name="root">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="add_icon.png" Command="{Binding AddWeekScheduleCommand}"></ToolbarItem>
+        <ToolbarItem Icon="icon_add.png" Command="{Binding AddWeekScheduleCommand}"></ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
