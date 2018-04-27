@@ -48,7 +48,12 @@ namespace WeekPlanner
             // Get current assembly. Needed because this is a shared project
             var assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
 
-            Stream stream = assembly.GetManifestResourceStream("WeekPlanner.appsettings.json");
+            Stream stream = assembly.GetManifestResourceStream("WeekPlanner.appsettings.Development.json");
+
+            if(stream == null)
+            {
+                throw new FileLoadException("The file appsettings.Development.json could not be found. Read README.md for instructions.");
+            }
 
             using (var reader = new StreamReader(stream))
             {

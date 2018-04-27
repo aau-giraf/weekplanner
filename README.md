@@ -3,8 +3,15 @@
 This repository contains the rewritten Weekplanner built with Xamarin.
 
 ## Prerequisites
-- .NET Core 2.0 or newer
-- Xamarin SDK
+
+0. Download and install
+	- .NET Core 2.0 or newer
+	- Xamarin SDK
+
+1. Create local appsettings file
+    - Open a terminal-emulator and navigate to {project-root}/WeekPlanner
+    - Run `cp appsettings.template.json appsettings.Development.json`
+    - Open appsettings.Development.json for editing and alter the fields for your setup
 
 ## Contributing
 

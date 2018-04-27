@@ -27,10 +27,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Views\MyPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="appsettings.json" />
+    <EmbeddedResource Include="appsettings.Development.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Views\CitizenSchedulesPage.xaml">
@@ -41,6 +38,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="appsettings.json" />
+    <None Remove="appsettings.Development.json" />
   </ItemGroup>
 </Project>

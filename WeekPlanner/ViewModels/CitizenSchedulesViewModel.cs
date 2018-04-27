@@ -96,7 +96,7 @@ namespace WeekPlanner.ViewModels
 
         public async Task InitializeWeekSchedules()
         {
-            await _requestService.SendRequestAndThenAsync(this,
+            await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _weekApi.V1WeekGetAsync(),
                 onSuccess: result => { NamesAndID = new ObservableCollection<WeekNameDTO>(result.Data); },
                 onRequestFailedAsync: () => Task.FromResult("'No week schedules found is not an error'-fix."));
