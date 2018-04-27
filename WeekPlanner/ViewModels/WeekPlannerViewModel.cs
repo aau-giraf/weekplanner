@@ -117,7 +117,9 @@ namespace WeekPlanner.ViewModels
         // TODO: Handle situation where no days exist
         private async Task GetWeekPlanForCitizenAsync(long weekId)
         {
-            // TODO: Make dynamic regarding weekId
+
+            _settingsService.UseTokenFor(UserType.Citizen);
+
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _weekApi.V1WeekByIdGetAsync(weekId),
                 onSuccess: result =>
