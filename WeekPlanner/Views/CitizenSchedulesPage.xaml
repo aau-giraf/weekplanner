@@ -10,7 +10,7 @@
              Title="Ugeplaner Frontpage"
              x:Name="root">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="{Binding AddIcon}" Command="{Binding AddWeekScheduleCommand}"></ToolbarItem>
+        <ToolbarItem Icon="add_icon.png" Command="{Binding AddWeekScheduleCommand}"></ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
@@ -44,8 +44,8 @@
                             <Label TextColor="Black" FontSize="18" Margin="0" Text="{Binding Name}" 
                                    VerticalTextAlignment="End" HorizontalTextAlignment="Center" BackgroundColor="White" VerticalOptions="EndAndExpand"/>
                             <Button Command="{Binding Source={x:Reference root}, Path=BindingContext.WeekDeletedCommand}" CommandParameter="{Binding .}" 
-                                    Image="icon_delete.png" VerticalOptions="Start" HorizontalOptions="End" 
-                                    WidthRequest="30" HeightRequest="30" Margin="0"/>
+                                    Image="icon_delete.png" VerticalOptions="Start" HorizontalOptions="End"
+                                    WidthRequest="30" HeightRequest="30" Margin="0" BackgroundColor="Transparent"/>
                         </Grid>
                         </DataTemplate>
                     </flv:FlowListView.FlowColumnTemplate>

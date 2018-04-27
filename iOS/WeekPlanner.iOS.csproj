@@ -169,6 +169,8 @@
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\icon_add.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\icon_add.imageset\icon_add.png" />
+    <ImageAsset Include="Assets.xcassets\icon_delete.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon_delete.imageset\icon_delete.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\tab_about.png" />
@@ -209,6 +211,7 @@
     <Folder Include="Assets.xcassets\icon_default_citizen.imageset\" />
     <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
     <Folder Include="Assets.xcassets\icon_add.imageset\" />
+    <Folder Include="Assets.xcassets\icon_delete.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\image_loading.png" />
@@ -218,6 +221,9 @@
     <AndroidResource Include="Resources\icon_default_citizen.png" />
     <AndroidResource Include="Resources\icon_default_guardian.png" />
     <AndroidResource Include="Resources\icon_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\icon_delete.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />

@@ -32,8 +32,8 @@ namespace WeekPlanner.ViewModels
         private readonly ISettingsService _settingsService;
 
         public ICommand WeekTappedCommand => new Command((tappedItem) => ListViewItemTapped((WeekDTO)tappedItem));
-        public ICommand WeekDeletedCommand => new Command((x) => WeekDeletedTapped(x));
-        public ICommand AddWeekScheduleCommand => new Command(() => AddWeekSchedule());
+        public ICommand WeekDeletedCommand => new Command(async (x) => await WeekDeletedTapped(x));
+        public ICommand AddWeekScheduleCommand => new Command(async () => await AddWeekSchedule());
 
         public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IDialogService dialogService, IWeekApi weekApi, ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {
@@ -42,7 +42,6 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _loginService = loginService;
             _settingsService = settingsService;
-            AddIcon = (FileImageSource)ImageSource.FromFile("icon_add.png");
         }
 
         private ObservableCollection<WeekNameDTO> _namesAndID = new ObservableCollection<WeekNameDTO>();
@@ -75,17 +74,6 @@ namespace WeekPlanner.ViewModels
             {
                 _weekImage = value;
                 RaisePropertyChanged(() => WeekImage);
-            }
-        }
-
-        private ImageSource _addIcon;
-        public ImageSource AddIcon
-        {
-            get => _addIcon;
-            set
-            {
-                _addIcon = value;
-                RaisePropertyChanged(() => AddIcon);
             }
         }
 

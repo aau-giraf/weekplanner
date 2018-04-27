@@ -55,7 +55,8 @@
             <Button
                 x:Name="LoginButton"
                 Command="{Binding LoginCommand}"
-                Text="Log ind" />
+                Text="Log ind" 
+                BackgroundColor="{StaticResource SuccessColor}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
