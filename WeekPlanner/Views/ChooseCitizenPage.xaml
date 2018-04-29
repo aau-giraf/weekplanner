@@ -9,7 +9,10 @@
              Title="Vælg Borger">
     <ContentPage.Content>
        <StackLayout>
-            <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
+
+            <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
+            <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50"/>
+            
             <ListView 
                 x:Name="CitizensListView" 
                 ItemsSource="{Binding CitizenNames}" 
