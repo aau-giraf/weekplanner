@@ -75,6 +75,6 @@ namespace WeekPlanner.ViewModels
             new Command(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
 
         public ICommand NavigateToSettingsCommand =>
-        new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
+        new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>(new UserNameDTO("Kurt", "KurtId")));
 	}
 }

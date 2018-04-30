@@ -13,7 +13,8 @@
         <ContentPage Padding="10" BackgroundColor="Lime" Title="Master">
             <ContentPage.Content>
                 <StackLayout Margin="5,30,5,5">
-                    <Button Text="Indstillinger" Command="{Binding NavigateToSettingsCommand}" />
+                    <Button Text="Indstillinger"  />
+                    <!--Command="{Binding NavigateToSettingsCommand}"-->
                 </StackLayout>
             </ContentPage.Content>
         </ContentPage>

@@ -1,53 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             x:Class="WeekPlanner.Views.SettingsPage">
-     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="{Binding UserModeImage}" Command="{Binding ToggleEditModeCommand}"></ToolbarItem>
-    </ContentPage.ToolbarItems>
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
+             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
+             x:Class="WeekPlanner.Views.SettingsPage"
+             base:ViewModelLocator.AutoWireViewModel="True">
     <ContentPage.Content>
-        <StackLayout>
-            <Grid ColumnSpacing="5"> <!-- Defines the white space between columns -->
-                <Grid.ColumnDefinitions>
-                    <!-- There needs to be a column definition for each column in the view -->
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <!-- Should assign all available space for the height of the columns -->
-                    <RowDefinition Height="AUTO"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <!-- SETTINGS TITLEBAR -->
-                <Label Text="Tema" Grid.Column="0" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Dage Farver" Grid.Column="1" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Uge Dage" Grid.Column="2" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Orientering" Grid.Column="3" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Viste Aktiviteter" Grid.Column="4" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Udført Tegn" Grid.Column="5" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <ScrollView Grid.Row="1" Grid.ColumnSpan="6">
-                    <!-- HACK: The HeightRequest is set to make the Grid's height larger
-                    than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                    <Grid HeightRequest="1500" ColumnSpacing="5">
-                        <StackLayout BackgroundColor="#000" Grid.Column="0"> <!-- Tema -->
-                        </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="1"> <!-- Dage farver -->
-                        </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="2"> <!-- Uge Dage -->
-                        </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="3"> <!-- Orientering -->
-                        </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="4"> <!-- Viste Aktiviteter -->
-                        </StackLayout>
-                        <StackLayout BackgroundColor="#000" Grid.Column="5"> <!-- Udført Tegn -->
-                        </StackLayout>
-                    </Grid>
-                </ScrollView>
-             </Grid>
-        </StackLayout>
+        <TableView Intent="Settings">
+            <TableRoot>
+                <!--Number of activity-->
+                
+                <!--Number of days shown-->
+                
+                <!--Different completion mark-->
+
+                <!--Orientation lock-->
+                <TableSection Title="Orienterings lås">
+                    <ViewCell>
+                        <ViewCell.View>
+                            <StackLayout Orientation="Horizontal" Padding="15, 0">
+                                <Label Text="Ugeplans orientering" VerticalOptions="Center"></Label>
+                                <Picker HorizontalOptions="EndAndExpand" SelectedIndexChanged="Picker_SelectedIndexChanged">
+                                    <Picker.Items>
+                                        <x:String>A</x:String>
+                                        <x:String>B</x:String>
+                                        <x:String>C</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
     </ContentPage.Content>
 </ContentPage>
