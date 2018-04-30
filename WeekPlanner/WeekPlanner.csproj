@@ -38,4 +38,9 @@
     <Compile Remove="Views\MyPage.xaml.cs" />
     <Compile Remove="Views\MyPage.xaml.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\MasterDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

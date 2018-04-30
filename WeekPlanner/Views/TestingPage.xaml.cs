@@ -9,6 +9,7 @@ namespace WeekPlanner.Views
         public TestingPage ()
         {
             InitializeComponent ();
+            
 		}
     }
 }

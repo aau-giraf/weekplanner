@@ -11,7 +11,7 @@
             <StackLayout VerticalOptions="Center">
                 <Button
                     Text="Log ind"
-                    Command="{Binding NavigateToLoginCommand}" />
+                    Command="{Binding NavigateToLoginCommand}"  />
                 <Button
                     Text="Vælg borger"
                     Command="{Binding NavigateToChooseCitizenCommand}" />
