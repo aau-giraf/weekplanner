@@ -40,4 +40,9 @@
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\SavePromptPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

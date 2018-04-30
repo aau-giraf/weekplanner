@@ -30,5 +30,10 @@ namespace WeekPlanner.Services
 
             return UserDialogs.Instance.ConfirmAsync(config);
         }
+
+        public Task<string> ActionSheetAsync(string title, string cancel = "Annuller", string destructive = null, params string[] buttons)
+        {
+            return UserDialogs.Instance.ActionSheetAsync(title, cancel, destructive, null, buttons);
+        }
     }
 }

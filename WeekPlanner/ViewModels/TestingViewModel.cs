@@ -74,5 +74,8 @@ namespace WeekPlanner.ViewModels
 
         public ICommand NavigateToSettingsCommand =>
         new MutexCommand(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
-	}
+
+        public ICommand NavigateToSavePromptCommand =>
+            new MutexCommand(async () => await NavigationService.NavigateToAsync<SavePromptViewModel>());
+    }
 }

@@ -15,9 +15,13 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Services;
 using WeekPlanner.ViewModels;
 using Xunit;
 using Assert = Xunit.Assert;
+using Xamarin.Forms;
+using WeekPlanner.Views;
+using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
@@ -190,5 +194,45 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             navServiceMock.Verify(n => n.NavigateToAsync<LoginViewModel>(It.IsAny<WeekPlannerViewModel>()));
         }
 
+        [Xunit.Theory]
+        [InlineData("Gem ændringer")]
+        [InlineData("Gem ikke")]
+        public void OnBackButtonPressedCommand_Executed_InvokesNavigationPopOnCorrectResult(string result)
+        {
+            // Arrange
+            var dialogServiceMock = Fixture.Freeze<Mock<IDialogService>>()
+                .Setup(d => d.ActionSheetAsync(PopupMessages.SavePromptTitle,
+                    PopupMessages.Cancel, null, PopupMessages.SaveAndQuit, PopupMessages.QuitWithoutSave))
+                .ReturnsAsync(result);
+            var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
+            var sut = Fixture.Create<WeekPlannerViewModel>();
+            
+            // Act
+            sut.OnBackButtonPressedCommand.Execute(true);
+
+            // Assert
+            navServiceMock.Verify(n => n.PopAsync());
+        }
+
+        [Xunit.Theory]
+        [InlineData(PopupMessages.Cancel)]
+        [InlineData("Wrong string")]
+        [InlineData("Gem ændringer_Partially correct")]
+        public void OnBackButtonPressedCommand_Executed_CancelsOnIncorrectResult(string result)
+        {
+            // Arrange
+            var dialogServiceMock = Fixture.Freeze<Mock<IDialogService>>()
+                .Setup(d => d.ActionSheetAsync(PopupMessages.SavePromptTitle,
+                    PopupMessages.Cancel, null, PopupMessages.SaveAndQuit, PopupMessages.QuitWithoutSave))
+                .ReturnsAsync(result);
+            var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
+            var sut = Fixture.Create<WeekPlannerViewModel>();
+
+            // Act
+            sut.OnBackButtonPressedCommand.Execute(true);
+
+            // Assert
+            navServiceMock.Verify(n => n.PopAsync(), Times.Never);
+        }
     }
 }
