@@ -15,6 +15,7 @@ using Xamarin.Forms;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.Views;
 using WeekPlanner.Services;
+using WeekPlanner.Helpers;
 
 namespace WeekPlanner.ViewModels
 {
@@ -31,9 +32,9 @@ namespace WeekPlanner.ViewModels
         private readonly ILoginService _loginService;
         private readonly ISettingsService _settingsService;
 
-        public ICommand WeekTappedCommand => new Command((tappedItem) => ListViewItemTapped((WeekDTO)tappedItem));
-        public ICommand WeekDeletedCommand => new Command(async (x) => await WeekDeletedTapped(x));
-        public ICommand AddWeekScheduleCommand => new Command(async () => await AddWeekSchedule());
+        public ICommand WeekTappedCommand => new MutexCommand<WeekDTO>((tappedItem) => ListViewItemTapped((WeekDTO)tappedItem));
+        public ICommand WeekDeletedCommand => new MutexCommand<Object>(async (x) => await WeekDeletedTapped(x));
+        public ICommand AddWeekScheduleCommand => new MutexCommand(async () => await AddWeekSchedule());
 
         public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IDialogService dialogService, IWeekApi weekApi, ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {

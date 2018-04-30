@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using WeekPlanner.Helpers;
 using WeekPlanner.Services;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
@@ -45,8 +46,8 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand SaveWeekScheduleCommand => new Command(() => SaveWeekSchedule());
-        public ICommand ChangePictogramCommand => new Command(() => ChangePictogram());
+        public ICommand SaveWeekScheduleCommand => new MutexCommand(SaveWeekSchedule);
+        public ICommand ChangePictogramCommand => new MutexCommand(ChangePictogram);
 
         public NewScheduleViewModel(
             INavigationService navigationService, 

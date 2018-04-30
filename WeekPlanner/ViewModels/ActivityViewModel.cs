@@ -6,6 +6,7 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using IO.Swagger.Api;
+using WeekPlanner.Helpers;
 
 namespace WeekPlanner.ViewModels
 {
@@ -45,18 +46,18 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ChangePictoCommand => new Command(async () =>
+        public ICommand ChangePictoCommand => new MutexCommand(async () =>
         {
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand DeleteActivityCommand => new Command(async () =>
+        public ICommand DeleteActivityCommand => new MutexCommand(async () =>
         {
             Activity = null;
             await NavigationService.PopAsync(this);
         });
 
-        public ICommand ToggleStateCommand => new Command(() =>
+        public ICommand ToggleStateCommand => new MutexCommand(() =>
         {
             switch (State)
             {

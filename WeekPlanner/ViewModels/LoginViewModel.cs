@@ -1,5 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using WeekPlanner.Helpers;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Settings;
@@ -46,7 +48,9 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand LoginCommand => new Command(async () =>
+        public ICommand LoginCommand => new MutexCommand(async () => await LoginIfUsernameAndPasswordAreValid());
+
+        private async Task LoginIfUsernameAndPasswordAreValid()
         {
             if (!UserNameAndPasswordIsValid())
             {
@@ -71,7 +75,7 @@ namespace WeekPlanner.ViewModels
                     Password.Value
                 );
             }
-        });
+        }
 
         public ICommand ValidateUsernameCommand => new Command(() => Username.Validate());
         public ICommand ValidatePasswordCommand => new Command(() => Password.Validate());
