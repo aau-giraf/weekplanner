@@ -127,6 +127,11 @@ namespace WeekPlanner.ViewModels
                     WeekDTO = result.Data;
                 }
             );
+
+            foreach (var days in WeekDTO.Days)
+            {
+                days.Activities = days.Activities.OrderBy(x => x.Order).ToList();
+            }
         }
 
         private void InsertPicto(PictogramDTO pictogramDTO)
