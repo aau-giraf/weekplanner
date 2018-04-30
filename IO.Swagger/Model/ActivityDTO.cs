@@ -25,35 +25,33 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// WeekNameDTO
+    /// ActivityDTO
     /// </summary>
     [DataContract]
-    public partial class WeekNameDTO :  IEquatable<WeekNameDTO>, IValidatableObject
+    public partial class ActivityDTO :  IEquatable<ActivityDTO>, IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeekNameDTO" /> class.
+        /// Initializes a new instance of the <see cref="ActivityDTO" /> class.
         /// </summary>
-        /// <param name="Name">A Name describing the week..</param>
-        /// <param name="Id">The id of the week..</param>
-        public WeekNameDTO(string Name = default(string), long? Id = default(long?))
+        /// <param name="Pictogram">Pictogram.</param>
+        /// <param name="Order">Order.</param>
+        public ActivityDTO(PictogramDTO Pictogram = default(PictogramDTO), int? Order = default(int?))
         {
-            this.Name = Name;
-            this.Id = Id;
+            this.Pictogram = Pictogram;
+            this.Order = Order;
         }
         
         /// <summary>
-        /// A Name describing the week.
+        /// Gets or Sets Pictogram
         /// </summary>
-        /// <value>A Name describing the week.</value>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
+        [DataMember(Name="pictogram", EmitDefaultValue=false)]
+        public PictogramDTO Pictogram { get; set; }
 
         /// <summary>
-        /// The id of the week.
+        /// Gets or Sets Order
         /// </summary>
-        /// <value>The id of the week.</value>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public long? Id { get; set; }
+        [DataMember(Name="order", EmitDefaultValue=false)]
+        public int? Order { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -62,9 +60,9 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class WeekNameDTO {\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("class ActivityDTO {\n");
+            sb.Append("  Pictogram: ").Append(Pictogram).Append("\n");
+            sb.Append("  Order: ").Append(Order).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -85,29 +83,29 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as WeekNameDTO);
+            return this.Equals(input as ActivityDTO);
         }
 
         /// <summary>
-        /// Returns true if WeekNameDTO instances are equal
+        /// Returns true if ActivityDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of WeekNameDTO to be compared</param>
+        /// <param name="input">Instance of ActivityDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(WeekNameDTO input)
+        public bool Equals(ActivityDTO input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
+                    this.Pictogram == input.Pictogram ||
+                    (this.Pictogram != null &&
+                    this.Pictogram.Equals(input.Pictogram))
                 ) && 
                 (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
+                    this.Order == input.Order ||
+                    (this.Order != null &&
+                    this.Order.Equals(input.Order))
                 );
         }
 
@@ -120,10 +118,10 @@ namespace IO.Swagger.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Pictogram != null)
+                    hashCode = hashCode * 59 + this.Pictogram.GetHashCode();
+                if (this.Order != null)
+                    hashCode = hashCode * 59 + this.Order.GetHashCode();
                 return hashCode;
             }
         }
