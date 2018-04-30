@@ -28,6 +28,7 @@ namespace WeekPlanner.ViewModels
         private readonly IDialogService _dialogService;
         private readonly ISettingsService _settingsService;
         
+        private ActivityDTO _selectedActivity;
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
@@ -66,6 +67,8 @@ namespace WeekPlanner.ViewModels
 
         public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
 
+        public ICommand OnBackButtonPressedCommand => new Command(async () => await BackButtonPressed());
+
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
 
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
@@ -96,6 +99,7 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _dialogService = dialogService;
             _loginService = loginService;
+            _requestService = requestService;
             _settingsService = settingsService;
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
@@ -246,8 +250,26 @@ namespace WeekPlanner.ViewModels
         {
             if (EditModeEnabled)
             {
-                EditModeEnabled = false;
-                UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem �ndringer", "Gem ikke");
+
+                switch (result)
+                {
+                    case "Annuller":
+                        break;
+
+                    case "Gem ændringer":
+                        EditModeEnabled = false;
+                        await SaveSchedule();
+                        UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                        break;
+
+                    case "Gem ikke":
+                        EditModeEnabled = false;
+                        UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                        await GetWeekPlanForCitizenAsync((long)WeekDTO.Id);
+                        break;
+                }
+                
             }
             else
             {
@@ -261,7 +283,32 @@ namespace WeekPlanner.ViewModels
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
         }
 
-        private ActivityDTO _selectedActivity;
+        private async Task BackButtonPressed()
+        {
+            if (EditModeEnabled)
+            {
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+
+                switch (result)
+                {
+                    case "Annuller":
+                        break;
+
+                    case "Gem ændringer":
+                        await SaveSchedule();
+                        await NavigationService.PopAsync();
+                        break;
+
+                    case "Gem ikke":
+                        await NavigationService.PopAsync();
+                        break;
+                }
+            }
+        }
+
+        // TODO: Override the navigation bar backbutton when this is available.
+        // Will most likely only be available if/when the custom navigation bar gets implemented.
+        
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
         public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);

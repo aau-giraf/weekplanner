@@ -73,5 +73,8 @@ namespace WeekPlanner.ViewModels
 
         public ICommand NavigateToSettingsCommand =>
         new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
-	}
+
+        public ICommand NavigateToSavePromptCommand =>
+            new Command(async () => await NavigationService.NavigateToAsync<SavePromptViewModel>());
+    }
 }
