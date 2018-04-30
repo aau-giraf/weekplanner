@@ -3,6 +3,11 @@
   <Import Project="..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.2.5.0.121934\build\netstandard1.0\Xamarin.Forms.props')" />
   <Import Project="..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.props" Condition="Exists('..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.props')" />
+  <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
+    <MonoAndroidBinDirectory>/usr/lib/mono/xamarin-android/bin</MonoAndroidBinDirectory>
+    <AndroidSdkDirectory>$(ANDROID_SDK_PATH)</AndroidSdkDirectory>
+    <TargetFrameworkRootPath>/usr/lib/mono/xbuild-frameworks/</TargetFrameworkRootPath>
+  </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>

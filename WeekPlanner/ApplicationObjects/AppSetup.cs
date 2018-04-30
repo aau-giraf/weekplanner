@@ -31,6 +31,8 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<PictogramSearchViewModel>();
             cb.RegisterType<ActivityViewModel>();
 			cb.RegisterType<SettingsViewModel>();
+            cb.RegisterType<MasterViewModel>();
+
 
 			// Services
 			cb.RegisterType<NavigationService>().As<INavigationService>();

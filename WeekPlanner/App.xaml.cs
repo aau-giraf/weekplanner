@@ -7,6 +7,7 @@ using WeekPlanner.Services.Navigation;
 using DLToolkit.Forms.Controls;
 using FFImageLoading.Config;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Views;
 
 namespace WeekPlanner
 {
@@ -26,11 +27,12 @@ namespace WeekPlanner
 
             AppSetup setup = new AppSetup();
             AppContainer.Container = setup.CreateContainer();
-            
-            InitNavigation();
-            FlowListView.Init(); 
+            //InitNavigation();
+            FlowListView.Init();
+            MainPage = new MasterPage();
+
         }
-        
+
         private Task InitNavigation()
         {
             using (var scope = AppContainer.Container.BeginLifetimeScope())
