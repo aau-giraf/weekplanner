@@ -6,7 +6,8 @@
                   xmlns:views="clr-namespace:WeekPlanner.Views"
                   base1:ViewModelLocator.AutoWireViewModel="true"
                   x:Class="WeekPlanner.Views.MasterPage"
-                  x:Name="Mdp">
+                  x:Name="Mdp"
+                  MasterBehavior="Popover">
 
     <MasterDetailPage.Master>
         <ContentPage Padding="10" BackgroundColor="Lime" Title="Master">
