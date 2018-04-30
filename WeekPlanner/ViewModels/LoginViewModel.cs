@@ -25,7 +25,7 @@ namespace WeekPlanner.ViewModels
             Password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
             Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
         }
-        
+
         public ValidatableObject<string> Username
         {
             get => _username;
@@ -48,22 +48,28 @@ namespace WeekPlanner.ViewModels
 
         public ICommand LoginCommand => new Command(async () =>
         {
-            if (UserNameAndPasswordIsValid())
+            if (!UserNameAndPasswordIsValid())
             {
-                if (_userModeSwitch)
-                {
-                    // TODO this is a bug, use WeekVM.Popped when integrated with other branch //Lau
-                    MessagingCenter.Send(this, MessageKeys.LoginSucceeded);
-                    
-                    var username = "Graatand";
-                    await _loginService.LoginAndThenAsync(() => NavigationService.PopAsync(),
-                                                          UserType.Guardian, username, Password.Value);
-                }
-                else
-                {
-                    await _loginService.LoginAndThenAsync(() => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
-                                                          UserType.Guardian, Username.Value, Password.Value);
-                }
+                return;
+            }
+            if (_userModeSwitch)
+            {
+                bool enableGuardianMode = true;
+                await _loginService.LoginAndThenAsync(
+                    () => NavigationService.PopAsync(enableGuardianMode),
+                    UserType.Guardian, 
+                    Username.Value, 
+                    Password.Value
+                );
+            }
+            else
+            {
+                await _loginService.LoginAndThenAsync(
+                    () => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
+                    UserType.Guardian, 
+                    Username.Value, 
+                    Password.Value
+                );
             }
         });
 
@@ -77,12 +83,13 @@ namespace WeekPlanner.ViewModels
             return usernameIsValid && passwordIsValid;
         }
 
-        public override async Task InitializeAsync(object navigationData)
+        public override Task InitializeAsync(object navigationData)
         {
             if (navigationData is WeekPlannerViewModel)
             {
                 _userModeSwitch = true;
-            } 
+            }
+            return Task.FromResult(false);
         }
     }
 }

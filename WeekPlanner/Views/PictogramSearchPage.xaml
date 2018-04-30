@@ -10,11 +10,14 @@
     Title="Søg efter pictogrammer">
     <ContentPage.Content>
         <StackLayout>
+
+            <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
             <SearchBar
                 x:Name="searchField"
                 Placeholder="Søg"
                 SearchCommand="{Binding SearchCommand}"
-                SearchCommandParameter="{Binding Text, Source={x:Reference searchField}}" />
+                SearchCommandParameter="{Binding Text, Source={x:Reference searchField}}" 
+                HeightRequest="50"/>
             
             <StackLayout>
                 <flv:FlowListView

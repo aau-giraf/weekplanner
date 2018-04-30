@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -22,35 +22,32 @@ namespace WeekPlanner.Services.Navigation
             }
         }
 
+        public ViewModelBase CurrentPageViewModel
+        {
+            get
+            {
+                var mainPage = Application.Current.MainPage as CustomNavigationPage;
+                var viewModel = mainPage.Navigation.NavigationStack.Last().BindingContext;
+                return viewModel as ViewModelBase;
+            }
+        }
+
         public Task InitializeAsync()
         {
-            return NavigateToAsync<TestingViewModel>();
-            
-            // TODO: Remember chosen department and maybe authtoken
-            /*if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
-            {
-                return NavigateToAsync<TestingViewModel>();
-            }
-            else
-            {
-                return NavigateToAsync<ChooseCitizenViewModel>();
-            }*/
+            return NavigateToAsync<LoginViewModel>();
         }
         
         /// <summary>
         /// Pops the current page unless it is the frontpage of the app
         /// </summary>
         /// <returns></returns>
-        public Task PopAsync()
+        public async Task PopAsync(object navigationData = null)
         {
             var navigationPage = Application.Current.MainPage as CustomNavigationPage;
-            
-            // TODO: Update to use correct frontpage
-            if (!(navigationPage?.Navigation.NavigationStack.Last() is TestingPage))
-            {
-                return navigationPage?.PopAsync();
-            }
-            return Task.FromResult(false);
+
+            await navigationPage?.PopAsync();
+            await CurrentPageViewModel.PoppedAsync(navigationData);
+
         }
 
         public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase

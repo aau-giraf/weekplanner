@@ -10,12 +10,17 @@
 
 using System;
 using System.Linq;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 
 namespace IO.Swagger.Model
 {
@@ -348,7 +353,19 @@ namespace IO.Swagger.Model
             /// Enum NoWeekTemplateFound for value: NoWeekTemplateFound
             /// </summary>
             [EnumMember(Value = "NoWeekTemplateFound")]
-            NoWeekTemplateFound = 53
+            NoWeekTemplateFound = 53,
+            
+            /// <summary>
+            /// Enum UserAlreadyHasDepartment for value: UserAlreadyHasDepartment
+            /// </summary>
+            [EnumMember(Value = "UserAlreadyHasDepartment")]
+            UserAlreadyHasDepartment = 54,
+            
+            /// <summary>
+            /// Enum MissingSettings for value: MissingSettings
+            /// </summary>
+            [EnumMember(Value = "MissingSettings")]
+            MissingSettings = 55
         }
 
         /// <summary>
