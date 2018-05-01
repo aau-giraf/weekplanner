@@ -9,7 +9,6 @@
     <ContentPage.Content>
         <StackLayout>
             <Button x:Name="ButtonPrompt" Text="Prompt me!" Command="{Binding PromptPopupCommand}"/>
-            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

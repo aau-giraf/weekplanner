@@ -38,11 +38,15 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand SearchCommand => new SingleExecuteCommand<string>(async searchTerm => await OnSearchGetPictograms(searchTerm));
-        public ICommand ItemTappedCommand => new SingleExecuteCommand<PictogramDTO>((tappedItem) => ListViewItemTapped((PictogramDTO)tappedItem));
+        public ICommand SearchCommand => new Command<string>(async searchTerm => await OnSearchGetPictograms(searchTerm));
+        public ICommand ItemTappedCommand => new Command<PictogramDTO>(tappedItem => ListViewItemTapped(tappedItem));
 
-        async void ListViewItemTapped(PictogramDTO tappedItem){
+        async void ListViewItemTapped(PictogramDTO tappedItem)
+        {
+            if (IsBusy) return;
+            IsBusy = true;
             await NavigationService.PopAsync(tappedItem);
+            IsBusy = false;
         }
 
         // TODO: Implement message for no results and add a loading icon

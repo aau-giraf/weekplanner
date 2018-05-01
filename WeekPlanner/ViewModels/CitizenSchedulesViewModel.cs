@@ -16,25 +16,20 @@ using WeekPlanner.Services.Settings;
 using WeekPlanner.Views;
 using WeekPlanner.Services;
 using WeekPlanner.Helpers;
+using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
 {
     public class CitizenSchedulesViewModel : ViewModelBase
     {
-        void HandleFunc()
-        {
-        }
-
-
         private readonly IRequestService _requestService;
         private readonly IDialogService _dialogService;
         private readonly IWeekApi _weekApi;
         private readonly ILoginService _loginService;
-        private readonly ISettingsService _settingsService;
 
-        public ICommand WeekTappedCommand => new SingleExecuteCommand<WeekDTO>((tappedItem) => ListViewItemTapped((WeekDTO)tappedItem));
-        public ICommand WeekDeletedCommand => new SingleExecuteCommand<Object>(async (x) => await WeekDeletedTapped(x));
-        public ICommand AddWeekScheduleCommand => new SingleExecuteCommand(async () => await AddWeekSchedule());
+        public ICommand WeekTappedCommand => new Command<WeekDTO>(ListViewItemTapped);
+        public ICommand WeekDeletedCommand => new Command<WeekDTO>(async week => await WeekDeletedTapped(week));
+        public ICommand AddWeekScheduleCommand => new Command(async () => await AddWeekSchedule());
 
         public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService, IDialogService dialogService, IWeekApi weekApi, ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {
@@ -42,7 +37,6 @@ namespace WeekPlanner.ViewModels
             _dialogService = dialogService;
             _weekApi = weekApi;
             _loginService = loginService;
-            _settingsService = settingsService;
         }
 
         private ObservableCollection<WeekNameDTO> _namesAndID = new ObservableCollection<WeekNameDTO>();
@@ -80,7 +74,11 @@ namespace WeekPlanner.ViewModels
 
         private async void ListViewItemTapped(WeekDTO tappedItem)
         {
+            if(IsBusy) return;
+
+            IsBusy = true;
             await NavigationService.NavigateToAsync<WeekPlannerViewModel>(tappedItem.Id);
+            IsBusy = false;
         }
 
         public async Task InitializeWeekSchedules()
@@ -96,12 +94,17 @@ namespace WeekPlanner.ViewModels
                     () => _weekApi.V1WeekByIdGetAsync(item.Id), (res) => Weeks.Add(res.Data));
             }
         }
-        private async Task WeekDeletedTapped(Object week)
+        private async Task WeekDeletedTapped(WeekDTO week)
         {
+            if (IsBusy) return;
+            IsBusy = true;
+            
             if (week is WeekDTO weekDTO)
-            { 
-                await DeleteWeek(weekDTO);
+            {
+               await DeleteWeek(weekDTO);
             }
+            
+            IsBusy = false;
         }
 
         private async Task DeleteWeek(WeekDTO week)
@@ -116,7 +119,11 @@ namespace WeekPlanner.ViewModels
 
         private async Task AddWeekSchedule()
         {
+            if (IsBusy) return;
+            
+            IsBusy = true;
             await NavigationService.NavigateToAsync<NewScheduleViewModel>();
+            IsBusy = false;
         }
 
         public override async Task PoppedAsync(object navigationData) {

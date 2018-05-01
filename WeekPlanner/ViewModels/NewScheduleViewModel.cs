@@ -46,8 +46,8 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand SaveWeekScheduleCommand => new SingleExecuteCommand(SaveWeekSchedule);
-        public ICommand ChangePictogramCommand => new SingleExecuteCommand(ChangePictogram);
+        public ICommand SaveWeekScheduleCommand => new Command(SaveWeekSchedule);
+        public ICommand ChangePictogramCommand => new Command(ChangePictogram);
 
         public NewScheduleViewModel(
             INavigationService navigationService, 
@@ -78,12 +78,18 @@ namespace WeekPlanner.ViewModels
 
 
 		private void ChangePictogram()
-        {
+		{
+		    if (IsBusy) return;
+		    IsBusy = true;
             NavigationService.NavigateToAsync<PictogramSearchViewModel>();
-        }
+		    IsBusy = false;
+		}
 
         private async void SaveWeekSchedule()
         {
+            if (IsBusy) return;
+            IsBusy = true;
+            
             if (ValidateWeekScheduleName())
             {
                 _weekDTO.Name = ScheduleName.Value;
@@ -106,8 +112,8 @@ namespace WeekPlanner.ViewModels
                     await _dialogService.ShowAlertAsync($"Ugeplanen '{result.Data.Name}' blev oprettet og gemt."); 
                     await NavigationService.PopAsync();
                 });
-
             }
+            IsBusy = false;
         }
 
         public ICommand ValidateWeekNameCommand => new Command(() => _scheduleName.Validate());

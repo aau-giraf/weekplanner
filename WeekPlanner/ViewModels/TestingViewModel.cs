@@ -46,13 +46,13 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand NavigateToLoginCommand =>
-            new SingleExecuteCommand(async () =>
+            new Command(async () =>
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>();
             });
 
         public ICommand NavigateToChooseCitizenCommand =>
-            new SingleExecuteCommand(() =>
+            new Command(() =>
             {
                 _loginService.LoginAndThenAsync(
                     () => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
@@ -61,21 +61,21 @@ namespace WeekPlanner.ViewModels
             });
 
         public ICommand NavigateToWeekPlannerCommand =>
-            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<WeekPlannerViewModel>(new UserNameDTO("Kurt", "KurtId")));
+            new Command(async () => await NavigationService.NavigateToAsync<WeekPlannerViewModel>(new UserNameDTO("Kurt", "KurtId")));
 
         public ICommand NavigateToChooseTemplateCommand =>
-            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
+            new Command(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
         public ICommand NavigateToPictogramSearchCommand =>
-            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
+            new Command(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
         
         public ICommand NavigateToActivityCommand =>
-            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
+            new Command(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
 
         public ICommand NavigateToSettingsCommand =>
-        new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
+        new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
 
         public ICommand NavigateToSavePromptCommand =>
-            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<SavePromptViewModel>());
+            new Command(async () => await NavigationService.NavigateToAsync<SavePromptViewModel>());
     }
 }

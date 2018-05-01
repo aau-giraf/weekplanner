@@ -36,13 +36,16 @@ namespace WeekPlanner.ViewModels
 	        _settingsService = settingsService;
         }
 
-	    public ICommand ChooseCitizenCommand => new SingleExecuteCommand<UserNameDTO>(async usernameDTO =>
+	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
 		    await UseGuardianTokenAndNavigateToWeekPlan(usernameDTO));
 
 	    private async Task UseGuardianTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
 	    {
+		    if (IsBusy) return;
+		    IsBusy = true;
 		    _settingsService.UseTokenFor(UserType.Guardian);
 		    await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>(usernameDTO);
+		    IsBusy = false;
 	    }
 
 	    private async Task GetAndSetCitizenNamesAsync()

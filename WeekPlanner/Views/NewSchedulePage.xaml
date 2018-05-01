@@ -56,12 +56,14 @@
                     VerticalOptions="Center"
                     HeightRequest="50"
                     x:Name="ChangePictogramButton"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                     Command="{Binding ChangePictogramCommand}"
                     Text="Ændre Pictogram for ugen"></Button>
             </Grid>
             
             <Button
                 x:Name="SaveWeekButton"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                 Command="{Binding SaveWeekScheduleCommand}"
                 Text="Gem Ny Uge" />
         </StackLayout>

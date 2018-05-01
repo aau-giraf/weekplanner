@@ -65,24 +65,31 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleEditModeCommand => new SingleExecuteCommand(async () => await SwitchUserModeAsync());
+        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
 
-        public ICommand SaveCommand => new SingleExecuteCommand(async () => await SaveSchedule());
-        public ICommand OnBackButtonPressedCommand => new SingleExecuteCommand(async () => await BackButtonPressed());
+        public ICommand SaveCommand => new Command(async () => await SaveSchedule());
+        public ICommand OnBackButtonPressedCommand => new Command(async () => await BackButtonPressed());
 
-        public ICommand NavigateToPictoSearchCommand => new SingleExecuteCommand<DayEnum>(async weekday =>
+        public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
+            if (IsBusy) return;
+            IsBusy = true;
             _weekdayToAddPictogramTo = weekday;
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
+            IsBusy = false;
         });
 
-        public ICommand PictoClickedCommand => new SingleExecuteCommand<ActivityDTO>(async activity =>
+        public ICommand PictoClickedCommand => new Command<ActivityDTO>(async activity =>
         {
+            if (IsBusy) return;
+            IsBusy = true;
             if (_editModeEnabled)
             {
                 _selectedActivity = activity;
                 await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
             }
+
+            IsBusy = false;
         });
                                                                     
         public WeekPlannerViewModel(
@@ -153,6 +160,9 @@ namespace WeekPlanner.ViewModels
 
         private async Task SaveSchedule()
         {
+            if (IsBusy) return;
+
+            IsBusy = true;
             bool confirmed = await _dialogService.ConfirmAsync(
                 title: "Gem ugeplan",
                 message: "Vil du gemme ugeplanen?",
@@ -174,6 +184,8 @@ namespace WeekPlanner.ViewModels
             {
                 await UpdateExistingSchedule();
             }
+
+            IsBusy = false;
         }
 
         private async Task SaveNewSchedule()
@@ -247,25 +259,31 @@ namespace WeekPlanner.ViewModels
 
         private async Task SwitchUserModeAsync()
         {
+            if (IsBusy) return;
+
+            IsBusy = true;
             if (EditModeEnabled)
             {
-                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem �ndringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
 
                 switch (result)
                 {
                     case "Annuller":
+                        IsBusy = false;
                         break;
 
                     case "Gem ændringer":
                         EditModeEnabled = false;
                         await SaveSchedule();
                         UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                        IsBusy = false;
                         break;
 
                     case "Gem ikke":
                         EditModeEnabled = false;
                         UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-                        await GetWeekPlanForCitizenAsync((long)WeekDTO.Id);
+                        if (WeekDTO.Id != null) await GetWeekPlanForCitizenAsync((long) WeekDTO.Id);
+                        IsBusy = false;
                         break;
                 }
                 
@@ -274,6 +292,7 @@ namespace WeekPlanner.ViewModels
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
+            IsBusy = false;
         }
 
         private void SetToGuardianMode()
@@ -284,6 +303,9 @@ namespace WeekPlanner.ViewModels
 
         private async Task BackButtonPressed()
         {
+            if (IsBusy) return;
+
+            IsBusy = true;
             if (EditModeEnabled)
             {
                 var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
@@ -291,15 +313,18 @@ namespace WeekPlanner.ViewModels
                 switch (result)
                 {
                     case "Annuller":
+                        IsBusy = false;
                         break;
 
                     case "Gem ændringer":
                         await SaveSchedule();
                         await NavigationService.PopAsync();
+                        IsBusy = false;
                         break;
 
                     case "Gem ikke":
                         await NavigationService.PopAsync();
+                        IsBusy = false;
                         break;
                 }
             }

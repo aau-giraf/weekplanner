@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WeekPlanner.Helpers;
@@ -48,11 +47,11 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand LoginCommand => new SingleExecuteCommand(async () => await LoginIfUsernameAndPasswordAreValid());
+        public ICommand LoginCommand => new Command(async () => await LoginIfUsernameAndPasswordAreValid());
 
         private async Task LoginIfUsernameAndPasswordAreValid()
         {
-            if (!UserNameAndPasswordIsValid())
+            if (IsBusy || !UserNameAndPasswordIsValid())
             {
                 return;
             }
@@ -60,6 +59,7 @@ namespace WeekPlanner.ViewModels
 
             if (_userModeSwitch)
             {
+                IsBusy = true;
                 bool enableGuardianMode = true;
                 await _loginService.LoginAndThenAsync(
                     () => NavigationService.PopAsync(enableGuardianMode),
@@ -67,15 +67,18 @@ namespace WeekPlanner.ViewModels
                     Username.Value, 
                     Password.Value
                 );
+                IsBusy = false;
             }
             else
             {
+                IsBusy = true;
                 await _loginService.LoginAndThenAsync(
                     () => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
                     UserType.Guardian, 
                     Username.Value, 
                     Password.Value
                 );
+                IsBusy = false;
             }
         }
 

@@ -7,10 +7,13 @@
              xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
              base1:ViewModelLocator.AutoWireViewModel="true"
              x:Class="WeekPlanner.Views.CitizenSchedulesPage"
+             IsBusy="{Binding IsBusy}"
              Title="Ugeplaner Frontpage"
              x:Name="root">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="icon_add.png" Command="{Binding AddWeekScheduleCommand}"></ToolbarItem>
+        <ToolbarItem Icon="icon_add.png" 
+                     Command="{Binding AddWeekScheduleCommand}" 
+                     IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"></ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
@@ -19,8 +22,8 @@
                     SeparatorVisibility="None"
                     HasUnevenRows="true"
                     FlowItemTappedCommand="{Binding WeekTappedCommand}"
-                    FlowLastTappedItem="{Binding LastTappedItem}"
                     FlowColumnMinWidth="210"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                     FlowItemsSource="{Binding Weeks}"
                     x:Name="Level">
                 <flv:FlowListView.FlowColumnTemplate>
