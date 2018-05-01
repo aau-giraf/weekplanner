@@ -36,7 +36,7 @@ namespace WeekPlanner.ViewModels
 	        _settingsService = settingsService;
         }
 
-	    public ICommand ChooseCitizenCommand => new MutexCommand<UserNameDTO>(async usernameDTO =>
+	    public ICommand ChooseCitizenCommand => new SingleExecuteCommand<UserNameDTO>(async usernameDTO =>
 		    await UseGuardianTokenAndNavigateToWeekPlan(usernameDTO));
 
 	    private async Task UseGuardianTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)

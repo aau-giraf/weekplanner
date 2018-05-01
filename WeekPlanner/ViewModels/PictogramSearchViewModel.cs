@@ -38,8 +38,8 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand SearchCommand => new MutexCommand<string>(async searchTerm => await OnSearchGetPictograms(searchTerm));
-        public ICommand ItemTappedCommand => new MutexCommand<PictogramDTO>((tappedItem) => ListViewItemTapped((PictogramDTO)tappedItem));
+        public ICommand SearchCommand => new SingleExecuteCommand<string>(async searchTerm => await OnSearchGetPictograms(searchTerm));
+        public ICommand ItemTappedCommand => new SingleExecuteCommand<PictogramDTO>((tappedItem) => ListViewItemTapped((PictogramDTO)tappedItem));
 
         async void ListViewItemTapped(PictogramDTO tappedItem){
             await NavigationService.PopAsync(tappedItem);

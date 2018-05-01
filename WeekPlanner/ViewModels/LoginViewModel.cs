@@ -48,7 +48,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand LoginCommand => new MutexCommand(async () => await LoginIfUsernameAndPasswordAreValid());
+        public ICommand LoginCommand => new SingleExecuteCommand(async () => await LoginIfUsernameAndPasswordAreValid());
 
         private async Task LoginIfUsernameAndPasswordAreValid()
         {
@@ -56,6 +56,8 @@ namespace WeekPlanner.ViewModels
             {
                 return;
             }
+
+
             if (_userModeSwitch)
             {
                 bool enableGuardianMode = true;
@@ -79,6 +81,12 @@ namespace WeekPlanner.ViewModels
 
         public ICommand ValidateUsernameCommand => new Command(() => Username.Validate());
         public ICommand ValidatePasswordCommand => new Command(() => Password.Validate());
+
+        private void ClearUsernameAndPasswordFields()
+        {
+            Username.Value = "";
+            Password.Value = "";
+        }
 
         public bool UserNameAndPasswordIsValid()
         {

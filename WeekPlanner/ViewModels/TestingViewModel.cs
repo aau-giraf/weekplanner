@@ -46,13 +46,13 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand NavigateToLoginCommand =>
-            new MutexCommand(async () =>
+            new SingleExecuteCommand(async () =>
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>();
             });
 
         public ICommand NavigateToChooseCitizenCommand =>
-            new MutexCommand(() =>
+            new SingleExecuteCommand(() =>
             {
                 _loginService.LoginAndThenAsync(
                     () => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
@@ -61,21 +61,21 @@ namespace WeekPlanner.ViewModels
             });
 
         public ICommand NavigateToWeekPlannerCommand =>
-            new MutexCommand(async () => await NavigationService.NavigateToAsync<WeekPlannerViewModel>(new UserNameDTO("Kurt", "KurtId")));
+            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<WeekPlannerViewModel>(new UserNameDTO("Kurt", "KurtId")));
 
         public ICommand NavigateToChooseTemplateCommand =>
-            new MutexCommand(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
+            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<ChooseTemplateViewModel>());
 
         public ICommand NavigateToPictogramSearchCommand =>
-            new MutexCommand(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
+            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
         
         public ICommand NavigateToActivityCommand =>
-            new MutexCommand(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
+            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
 
         public ICommand NavigateToSettingsCommand =>
-        new MutexCommand(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
+        new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<SettingsViewModel>());
 
         public ICommand NavigateToSavePromptCommand =>
-            new MutexCommand(async () => await NavigationService.NavigateToAsync<SavePromptViewModel>());
+            new SingleExecuteCommand(async () => await NavigationService.NavigateToAsync<SavePromptViewModel>());
     }
 }

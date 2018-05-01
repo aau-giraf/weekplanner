@@ -46,8 +46,8 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand SaveWeekScheduleCommand => new MutexCommand(SaveWeekSchedule);
-        public ICommand ChangePictogramCommand => new MutexCommand(ChangePictogram);
+        public ICommand SaveWeekScheduleCommand => new SingleExecuteCommand(SaveWeekSchedule);
+        public ICommand ChangePictogramCommand => new SingleExecuteCommand(ChangePictogram);
 
         public NewScheduleViewModel(
             INavigationService navigationService, 

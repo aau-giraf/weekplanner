@@ -46,18 +46,18 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ChangePictoCommand => new MutexCommand(async () =>
+        public ICommand ChangePictoCommand => new SingleExecuteCommand(async () =>
         {
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand DeleteActivityCommand => new MutexCommand(async () =>
+        public ICommand DeleteActivityCommand => new SingleExecuteCommand(async () =>
         {
             Activity = null;
             await NavigationService.PopAsync(this);
         });
 
-        public ICommand ToggleStateCommand => new MutexCommand(() =>
+        public ICommand ToggleStateCommand => new SingleExecuteCommand(() =>
         {
             switch (State)
             {

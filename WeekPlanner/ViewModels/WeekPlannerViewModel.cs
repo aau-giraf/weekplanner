@@ -65,18 +65,18 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleEditModeCommand => new MutexCommand(async () => await SwitchUserModeAsync());
+        public ICommand ToggleEditModeCommand => new SingleExecuteCommand(async () => await SwitchUserModeAsync());
 
-        public ICommand SaveCommand => new MutexCommand(async () => await SaveSchedule());
-        public ICommand OnBackButtonPressedCommand => new MutexCommand(async () => await BackButtonPressed());
+        public ICommand SaveCommand => new SingleExecuteCommand(async () => await SaveSchedule());
+        public ICommand OnBackButtonPressedCommand => new SingleExecuteCommand(async () => await BackButtonPressed());
 
-        public ICommand NavigateToPictoSearchCommand => new MutexCommand<DayEnum>(async weekday =>
+        public ICommand NavigateToPictoSearchCommand => new SingleExecuteCommand<DayEnum>(async weekday =>
         {
             _weekdayToAddPictogramTo = weekday;
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
-        public ICommand PictoClickedCommand => new MutexCommand<ActivityDTO>(async activity =>
+        public ICommand PictoClickedCommand => new SingleExecuteCommand<ActivityDTO>(async activity =>
         {
             if (_editModeEnabled)
             {
