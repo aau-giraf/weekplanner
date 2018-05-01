@@ -276,6 +276,23 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        public int Height
+        {
+            get 
+            {
+                int minimumHeight = 1500;
+                int elementHeight = 250;
+
+                if(WeekDTO == null){
+                    return minimumHeight;
+                }
+
+                int dynamicHeight = WeekDTO.Days.Max(d => d.Activities.Count) * elementHeight;
+
+                return dynamicHeight > minimumHeight ? dynamicHeight : minimumHeight; 
+            }
+        }
+
         private void SetToGuardianMode()
         {
             EditModeEnabled = true;
@@ -337,6 +354,7 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => FridayPictos);
             RaisePropertyChanged(() => SaturdayPictos);
             RaisePropertyChanged(() => SundayPictos);
+            RaisePropertyChanged(() => Height);
         }
 
     }
