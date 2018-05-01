@@ -194,7 +194,6 @@ namespace WeekPlanner.ViewModels
                 () => _weekApi.V1WeekPostAsync(WeekDTO), result =>
                 {
                     _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
-                    EditModeEnabled = false;
                 });
         }
 
@@ -210,7 +209,6 @@ namespace WeekPlanner.ViewModels
                 result =>
                 {
                     _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
-                    EditModeEnabled = false;
                 });
         }
 

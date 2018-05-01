@@ -62,9 +62,9 @@ namespace WeekPlanner.ViewModels
                 IsBusy = true;
                 bool enableGuardianMode = true;
                 await _loginService.LoginAndThenAsync(
-                    () => {
+                    async () => {
+                        await NavigationService.PopAsync(enableGuardianMode);
                         ClearUsernameAndPasswordFields();
-                        return NavigationService.PopAsync(enableGuardianMode);
                     },
                     UserType.Guardian, 
                     Username.Value, 
@@ -76,9 +76,9 @@ namespace WeekPlanner.ViewModels
             {
                 IsBusy = true;
                 await _loginService.LoginAndThenAsync(
-                    () => {
+                    async () => {
+                        await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
                         ClearUsernameAndPasswordFields();
-                        return NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
                     },
                     UserType.Guardian, 
                     Username.Value, 
