@@ -1,11 +1,9 @@
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
 using WeekPlanner.Helpers;
+using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Settings;
 using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
@@ -14,26 +12,28 @@ namespace WeekPlanner.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        private readonly IAccountApi _accountApi;
-        private bool _isValid;
-        private ValidatableObject<string> _password;
-        private ValidatableObject<string> _userName;
+        private readonly ILoginService _loginService;
 
-        public LoginViewModel(IAccountApi accountApi, INavigationService navigationService) : base(navigationService)
+        private ValidatableObject<string> _username;
+        private ValidatableObject<string> _password;
+
+        private bool _userModeSwitch = false;
+
+        public LoginViewModel(INavigationService navigationService,
+            ILoginService loginService) : base(navigationService)
         {
-            _accountApi = accountApi;
-            _userName = new ValidatableObject<string>();
-            _password = new ValidatableObject<string>();
-            AddValidations();
+            _loginService = loginService;
+            Password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
+            Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
         }
 
-        public ValidatableObject<string> UserName
+        public ValidatableObject<string> Username
         {
-            get => _userName;
+            get => _username;
             set
             {
-                _userName = value;
-                RaisePropertyChanged(() => UserName);
+                _username = value;
+                RaisePropertyChanged(() => Username);
             }
         }
 
@@ -47,80 +47,70 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public bool IsValid
+        public ICommand LoginCommand => new Command(async () => await LoginIfUsernameAndPasswordAreValid());
+
+        private async Task LoginIfUsernameAndPasswordAreValid()
         {
-            get => _isValid;
-            set
+            if (IsBusy || !UserNameAndPasswordIsValid())
             {
-                _isValid = value;
-                RaisePropertyChanged(() => IsValid);
-            }
-        }
-
-        public ICommand LoginCommand => new Command(async () => await SendLoginRequest());
-
-        public ICommand ValidateUserNameCommand => new Command(() => ValidateUserName());
-
-        public ICommand ValidatePasswordCommand => new Command(() => ValidatePassword());
-
-        private async Task SendLoginRequest()
-        {
-            ResponseGirafUserDTO result;
-            try
-            {
-                var loginDTO = new LoginDTO(UserName.Value, Password.Value);
-                result = await _accountApi.V1AccountLoginPostAsync(loginDTO);
-            }
-            catch (ApiException)
-            {
-                // TODO make a "ServerDownError"
-                var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(ResponseGirafUserDTO.ErrorKeyEnum.Error);
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
                 return;
             }
 
-            if (result.Success == true)
+
+            if (_userModeSwitch)
             {
-                MessagingCenter.Send(this, MessageKeys.LoginSucceeded, result.Data);
-                result.Data.GuardianOf.OrderBy(x => x.Username);
-                var dto = result.Data.GuardianOf;
-
-                // Switch this to an actual token once implemented in backend
-                //GlobalSettings.Instance.AuthToken = result.Data.Id;
-
-                await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(dto);
+                IsBusy = true;
+                bool enableGuardianMode = true;
+                await _loginService.LoginAndThenAsync(
+                    async () => {
+                        await NavigationService.PopAsync(enableGuardianMode);
+                        ClearUsernameAndPasswordFields();
+                    },
+                    UserType.Guardian, 
+                    Username.Value, 
+                    Password.Value
+                );
+                IsBusy = false;
             }
             else
             {
-                var friendlyErrorMessage = result.ErrorKey.ToFriendlyString();
-                MessagingCenter.Send(this, MessageKeys.LoginFailed, friendlyErrorMessage);
+                IsBusy = true;
+                await _loginService.LoginAndThenAsync(
+                    async () => {
+                        await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
+                        ClearUsernameAndPasswordFields();
+                    },
+                    UserType.Guardian, 
+                    Username.Value, 
+                    Password.Value
+                );
+                IsBusy = false;
             }
         }
 
-        private bool Validate()
-        {
-            var isValidUser = ValidateUserName();
-            var isValidPassword = ValidatePassword();
+        public ICommand ValidateUsernameCommand => new Command(() => Username.Validate());
+        public ICommand ValidatePasswordCommand => new Command(() => Password.Validate());
 
-            return isValidUser && isValidPassword;
+        private void ClearUsernameAndPasswordFields()
+        {
+            Username.Value = "";
+            Password.Value = "";
         }
 
-        private bool ValidateUserName()
+        public bool UserNameAndPasswordIsValid()
         {
-            return _userName.Validate();
+            var usernameIsValid = Username.Validate();
+            var passwordIsValid = Password.Validate();
+            return usernameIsValid && passwordIsValid;
         }
 
-        private bool ValidatePassword()
+        public override Task InitializeAsync(object navigationData)
         {
-            return _password.Validate();
-        }
-
-        private void AddValidations()
-        {
-            _userName.Validations.Add(
-                new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et brugernavn er påkrævet."});
-            _password.Validations.Add(
-                new IsNotNullOrEmptyRule<string> {ValidationMessage = "En adgangskode er påkrævet."});
+            if (navigationData is WeekPlannerViewModel)
+            {
+                _userModeSwitch = true;
+            }
+            return Task.FromResult(false);
         }
     }
 }

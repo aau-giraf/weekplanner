@@ -1,16 +1,39 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-             base1:ViewModelLocator.AutoWireViewModel="true"
-             x:Class="WeekPlanner.Views.TestingPage"
-             Title="Navigering">
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+    base1:ViewModelLocator.AutoWireViewModel="true"
+    x:Class="WeekPlanner.Views.TestingPage"
+    Title="Navigering">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="Center" Padding="40">
-            <Button Text="Log ind" Command="{Binding NavigateToLoginCommand}" />
-            <Button Text="Vælg borger" Command="{Binding NavigateToChooseCitizenCommand}" />
-            <Button Text="Ugeplan" Command="{Binding NavigateToWeekPlannerCommand}" />
-            <Button Text="Vælg skabelon" Command="{Binding NavigateToChooseTemplateCommand}" />
-        </StackLayout>
+        <ScrollView>
+            <StackLayout VerticalOptions="Center">
+                <Button
+                    Text="Log ind"
+                    Command="{Binding NavigateToLoginCommand}" />
+                <Button
+                    Text="Vælg borger"
+                    Command="{Binding NavigateToChooseCitizenCommand}" />
+                <Button
+                    Text="Ugeplan"
+                    Command="{Binding NavigateToWeekPlannerCommand}" />
+                <Button
+                    Text="Vælg skabelon"
+                    Command="{Binding NavigateToChooseTemplateCommand}" />
+                <Button
+                    Text="Søg efter pictogram"
+                    Command="{Binding NavigateToPictogramSearchCommand}" />
+                <Button 
+                    Text="Aktivitet" 
+                    Command="{Binding NavigateToActivityCommand}" />
+                <Button
+                    Text="Gem Prompt"
+                    Command="{Binding NavigateToSavePromptCommand}" />
+                <Button
+                    Text="Indstillinger"
+                    Command="{Binding NavigateToSettingsCommand}" />
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

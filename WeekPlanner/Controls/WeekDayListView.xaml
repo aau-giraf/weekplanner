@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+    x:Class="WeekPlanner.Controls.WeekDayListView"
+    HasUnevenRows="True" SeparatorVisibility="None">
+    <!-- TODO: CachingStrategy causes crash, why?  -->
+    <!--CachingStrategy="RecycleElement"-->
+    <ListView.Behaviors>
+        <behaviors:EventToCommandBehavior EventName="ItemTapped"
+                                                      Command="{Binding PictoClickedCommand}"
+                                                      EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
+        <behaviors:ListViewDeselectSelectedItemBehavior />
+    </ListView.Behaviors>
+    <ListView.ItemTemplate>
+        <DataTemplate>
+            <ViewCell>
+                <!--DownsampleToViewSize="true"-->
+                <ffimageloading:CachedImage
+                    VerticalOptions="Center"
+                    LoadingPlaceholder="image_loading.png"
+                    Source="{Binding Pictogram.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                    ErrorPlaceholder="image_loading.png"
+                    Margin="5" />
+            </ViewCell>
+        </DataTemplate>
+    </ListView.ItemTemplate>
+</ListView>

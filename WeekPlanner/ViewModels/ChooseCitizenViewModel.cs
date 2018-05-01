@@ -1,11 +1,12 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using IO.Swagger.Api;
 using IO.Swagger.Model;
-using WeekPlanner.ApplicationObjects;
-using WeekPlanner.Services.Mocks;
+using WeekPlanner.Helpers;
 using WeekPlanner.Services.Navigation;
+using WeekPlanner.Services.Request;
+using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
@@ -13,33 +14,59 @@ namespace WeekPlanner.ViewModels
 {
     public class ChooseCitizenViewModel : ViewModelBase
     {
-        private ObservableCollection<GirafUserDTO> _citizens;
+        private ObservableCollection<UserNameDTO> _citizenNames;
+        private readonly IDepartmentApi _departmentApi;
+	    private readonly IRequestService _requestService;
+	    private readonly ISettingsService _settingsService;
+	    
+	    
+	    public ObservableCollection<UserNameDTO> CitizenNames {
+		    get => _citizenNames;
+		    set {
+			    _citizenNames = value;
+			    RaisePropertyChanged(() => CitizenNames);
+		    }
+	    }
 
-        public ChooseCitizenViewModel(INavigationService navigationService) : base(navigationService)
+        public ChooseCitizenViewModel(INavigationService navigationService, IDepartmentApi departmentApi, 
+	        IRequestService requestService, ISettingsService settingsService) : base(navigationService)
         {
+	        _departmentApi = departmentApi;
+	        _requestService = requestService;
+	        _settingsService = settingsService;
         }
 
-        public ObservableCollection<GirafUserDTO> Citizens {
-            get => _citizens;
-            set {
-                _citizens = value;
-                RaisePropertyChanged(() => Citizens);
-            }
-        }
+	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
+		    await UseGuardianTokenAndNavigateToWeekPlan(usernameDTO));
 
-	    public ICommand ChooseCitizenCommand => new Command<GirafUserDTO>(async citizen =>
-		    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(citizen));
+	    private async Task UseGuardianTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
+	    {
+		    if (IsBusy) return;
+		    IsBusy = true;
+		    _settingsService.UseTokenFor(UserType.Guardian);
+		    await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>(usernameDTO);
+		    IsBusy = false;
+	    }
 
-		public override async Task InitializeAsync(object navigationData)
-		{
-			if (navigationData is IEnumerable<GirafUserDTO> dtos)
-			{
-				Citizens = new ObservableCollection<GirafUserDTO>(dtos);
-			} else if (GlobalSettings.Instance.UseMocks) {
-                var service = new AccountMockService();
-                var result = await service.V1AccountLoginPostAsync(new LoginDTO("Graatand", "password"));
-			    Citizens = new ObservableCollection<GirafUserDTO>(result.Data.GuardianOf);
-			}
-		}
-	}
+	    private async Task GetAndSetCitizenNamesAsync()
+	    {
+		    // Always use the departmentToken when coming to this view.
+		    // It might have been changed to using the citizenToken
+            _settingsService.UseTokenFor(UserType.Guardian);
+
+            //TODO Legacy from we had ChooseDepartment
+            // We need to refactor so we don't need the ID
+            var departmentId = 1;
+
+		    await _requestService.SendRequestAndThenAsync(
+                requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(departmentId),
+			    onSuccess: result => CitizenNames = new ObservableCollection<UserNameDTO>(result.Data));
+	    }
+
+	    public override async Task InitializeAsync(object navigationData)
+	    {
+		    await GetAndSetCitizenNamesAsync();
+	    }
+    }
+
 }

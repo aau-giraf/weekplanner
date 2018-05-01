@@ -1,11 +1,13 @@
 using System;
+using WeekPlanner.ViewModels;
+using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace WeekPlanner.Views
 {
 
-    [XamlCompilation(XamlCompilationOptions.Compile)]
+	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WeekPlannerPage : ContentPage
 	{
 		public WeekPlannerPage()
@@ -13,17 +15,13 @@ namespace WeekPlanner.Views
 			InitializeComponent();
 		}
 
-        private void Settings_OnClicked(object sender, EventArgs e)
+        protected override bool OnBackButtonPressed()
         {
-            DisplayAlert("Indstillinger", "Du trykkede på indstillinger!", "Luk");
-        }
+            var vm = BindingContext as WeekPlannerViewModel;
 
-        private void Edit_OnClicked(object sender, EventArgs e)
-        {
-        }
+            vm.OnBackButtonPressedCommand.Execute(null);
 
-        private void ChangeCitizen_OnClicked(object sender, EventArgs e)
-        {
+            return true;
         }
-	}
+    }
 }

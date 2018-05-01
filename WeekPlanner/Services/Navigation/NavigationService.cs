@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using WeekPlanner.ViewModels;
@@ -21,25 +22,35 @@ namespace WeekPlanner.Services.Navigation
             }
         }
 
+        public ViewModelBase CurrentPageViewModel
+        {
+            get
+            {
+                var mainPage = Application.Current.MainPage as CustomNavigationPage;
+                var viewModel = mainPage.Navigation.NavigationStack.Last().BindingContext;
+                return viewModel as ViewModelBase;
+            }
+        }
+
         public Task InitializeAsync()
         {
-
-            if (string.IsNullOrEmpty(GlobalSettings.Instance.AuthToken))
-            {
-                return NavigateToAsync<TestingViewModel>();
-            }
-            else
-            {
-                return NavigateToAsync<ChooseCitizenViewModel>();
-            }
+            return NavigateToAsync<LoginViewModel>();
         }
-
-        public Task NavigateToAsync<TViewModel>() where TViewModel : ViewModelBase
+        
+        /// <summary>
+        /// Pops the current page unless it is the frontpage of the app
+        /// </summary>
+        /// <returns></returns>
+        public async Task PopAsync(object navigationData = null)
         {
-            return InternalNavigateToAsync(typeof(TViewModel), null);
+            var navigationPage = Application.Current.MainPage as CustomNavigationPage;
+
+            await navigationPage?.PopAsync();
+            await CurrentPageViewModel.PoppedAsync(navigationData);
+
         }
 
-        public Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : ViewModelBase
+        public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
         {
             return InternalNavigateToAsync(typeof(TViewModel), parameter);
         }
@@ -119,5 +130,7 @@ namespace WeekPlanner.Services.Navigation
             Page page = Activator.CreateInstance(pageType) as Page;
             return page;
         }
+
+
     }
 }

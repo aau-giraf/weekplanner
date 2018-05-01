@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Autofac;
-using WeekPlanner.ApplicationObjects;
 using WeekPlanner.Services.Navigation;
 
 namespace WeekPlanner.ViewModels.Base
@@ -31,5 +29,9 @@ namespace WeekPlanner.ViewModels.Base
         {
             return Task.FromResult(false);
         }
+
+        public virtual Task PoppedAsync(object navigationData) {
+            return Task.FromResult(false);
+         }
     }
 }

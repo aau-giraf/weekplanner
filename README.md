@@ -3,12 +3,20 @@
 This repository contains the rewritten Weekplanner built with Xamarin.
 
 ## Prerequisites
-- .NET Core 2.0 or newer
-- Xamarin SDK
+
+0. Download and install
+	- .NET Core 2.0 or newer
+	- Xamarin SDK
+
+1. Create local appsettings file
+    - Open a terminal-emulator and navigate to {project-root}/WeekPlanner
+    - Run `cp appsettings.template.json appsettings.Development.json`
+    - Open appsettings.Development.json for editing and alter the fields for your setup
+    - Set the build action for appsettings.Development.json to Embedded Resource (right-click on file in IDE)
 
 ## Contributing
 
-We are using the Gitflow brancing pattern so all development must be done in either a feature branch or the `develop` branch.
+We are using the GitFlow brancing pattern so all development must be done in either a feature branch or the `develop` branch.
 
 1. Clone the project
 2. `git checkout develop`
@@ -31,18 +39,56 @@ We are using the Gitflow brancing pattern so all development must be done in eit
 - [AutoFixture Documentation](https://github.com/AutoFixture/AutoFixture/wiki/Cheat-Sheet)
 - Good sample application: [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers/)
 
+## Pull Requests
+
+Pull Requests are used for code review. Before submitting a Pull Request make sure to merge `develop` into your branch, so your Pull Request can be performed automatically.
+
+## Updating Swagger Client
+
+### 1. Generate Swagger Client with swagger-codegen
+Assuming the backend is running on http://localhost:5000
+
+1. Install Swagger CLI (https://swagger.io/docs/swagger-tools/#installation-11) 
+2. Generate new client
+    - cd to repository root
+    - Either `source swagger_update.sh` 
+    - OR run `swagger-codegen generate -i http://localhost:5000/swagger/v1/swagger.json -l csharp -o GeneratedClient`
+
+OR with https://editor.swagger.io/
+
+1. Go to File > Import URL > http://localhost:5000/swagger/v1/swagger.json
+3. Generate Client > csharp
+
+### 2. Fix the generated client
+
+1. If you didn't use `swagger_update.sh` then copy and paste (overwrite) the IO.Swagger folder from inside GeneratedClient/src/ to the root of weekplanner and delete the GeneratedClient/ directory
+2. Swagger has a problem generating enums, which is problem in the generated WeekDayDTO. The following hack solves it:
+Start the enum from 0 instead of 1 to reflect the actual backend
+3. Fix compile error:
+```
+foreach(var param in fileParams)
+{
+    request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
+}
+```
+ApiClient.cs line 135
+Simply remove/comment those lines. No need to fix it since we don't work with files.
+
+## Testing with an iPhone / iPad
+Follow [this guide](https://docs.microsoft.com/en-us/xamarin/ios/get-started/installation/device-provisioning/free-provisioning) in order to test on your iPhone. Necessary until we get a developer license for App Store.
+
+
+
+## API Reference
+
+For API reference start the API and navigate to http://localhost:5000/swagger
+
+## Contributors
+
+- SW608F18
+- SW609F18
+- SW610F18 
+
 ## License
 
 Copyright [2018] [Aalborg University]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
