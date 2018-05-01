@@ -25,6 +25,8 @@ namespace WeekPlanner.Helpers
                     return "Ikke fundet";
                 case nameof(ErrorKeyEnum.TwoDaysCannotHaveSameDayProperty):
                     return "Der skete en fejl i forhold til gemning.";
+                case nameof(ErrorKeyEnum.DuplicateWeekScheduleName):
+                    return "Dette ugenavn er allerede i brug. Prøv et andet.";
                 default:
                     return "Der skete en ukendt fejl";
                     //throw new ArgumentOutOfRangeException(nameof(errorCode), errorCode, null);
