@@ -328,21 +328,19 @@ namespace WeekPlanner.ViewModels
                 switch (result)
                 {
                     case "Annuller":
-                        IsBusy = false;
                         break;
 
                     case "Gem ændringer":
                         await SaveSchedule();
                         await NavigationService.PopAsync();
-                        IsBusy = false;
                         break;
 
                     case "Gem ikke":
                         await NavigationService.PopAsync();
-                        IsBusy = false;
                         break;
                 }
             }
+            IsBusy = false;
         }
 
         // TODO: Override the navigation bar backbutton when this is available.
