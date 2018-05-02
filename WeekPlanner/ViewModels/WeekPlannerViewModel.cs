@@ -27,7 +27,7 @@ namespace WeekPlanner.ViewModels
         private readonly IWeekApi _weekApi;
         private readonly IDialogService _dialogService;
         private readonly ISettingsService _settingsService;
-        
+
         private ActivityDTO _selectedActivity;
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
@@ -91,14 +91,14 @@ namespace WeekPlanner.ViewModels
 
             IsBusy = false;
         });
-                                                                    
+
         public WeekPlannerViewModel(
-            INavigationService navigationService, 
-            ILoginService loginService, 
-            IRequestService requestService, 
-            IWeekApi weekApi, 
-            IDialogService dialogService, 
-            ISettingsService settingsService) 
+            INavigationService navigationService,
+            ILoginService loginService,
+            IRequestService requestService,
+            IWeekApi weekApi,
+            IDialogService dialogService,
+            ISettingsService settingsService)
             : base(navigationService)
         {
             _requestService = requestService;
@@ -108,15 +108,16 @@ namespace WeekPlanner.ViewModels
             _requestService = requestService;
             _settingsService = settingsService;
 
-            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
+            UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_citizen.png");
+            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded,
+                (sender) => SetToGuardianMode());
         }
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is long weekId)
+            if (navigationData is Tuple<int?, int?> weekYearAndNumber)
             {
-                await GetWeekPlanForCitizenAsync(weekId);
+                await GetWeekPlanForCitizenAsync(weekYearAndNumber);
             }
             else
             {
@@ -125,26 +126,23 @@ namespace WeekPlanner.ViewModels
         }
 
         // TODO: Handle situation where no days exist
-        private async Task GetWeekPlanForCitizenAsync(long weekId)
+        private async Task GetWeekPlanForCitizenAsync(Tuple<int?, int?> weekYearAndNumber)
         {
-
             _settingsService.UseTokenFor(UserType.Citizen);
 
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _weekApi.V1WeekByIdGetAsync(weekId),
-                onSuccess: result =>
-                {
-                    WeekDTO = result.Data;
-                }
+                requestAsync: () =>
+                    _weekApi.V1WeekByWeekYearByWeekNumberGetAsync(weekYearAndNumber.Item1, weekYearAndNumber.Item2),
+                onSuccess: result => { WeekDTO = result.Data; }
             );
 
             foreach (var days in WeekDTO.Days)
             {
-                days.Activities = days.Activities.OrderBy(x => x.Order).ToList();
+                days.Activities = days.Activities.OrderBy(a => a.Order).ToList();
             }
         }
 
-        private void InsertPicto(PictogramDTO pictogramDTO)
+        private void InsertPicto(WeekPictogramDTO pictogramDTO)
         {
             var dayToAddTo = WeekDTO.Days.FirstOrDefault(d => d.Day == _weekdayToAddPictogramTo);
             if (dayToAddTo != null)
@@ -153,6 +151,7 @@ namespace WeekPlanner.ViewModels
                 var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
                 dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom));
             }
+
             // TODO: Fix
             RaisePropertyForDays();
         }
@@ -173,10 +172,10 @@ namespace WeekPlanner.ViewModels
             {
                 return;
             }
-            
+
             _settingsService.UseTokenFor(UserType.Citizen);
-            
-            if (WeekDTO.Id is null)
+
+            if (WeekDTO.WeekNumber is null)
             {
                 await SaveNewSchedule();
             }
@@ -191,7 +190,9 @@ namespace WeekPlanner.ViewModels
         private async Task SaveNewSchedule()
         {
             await _requestService.SendRequestAndThenAsync(
-                () => _weekApi.V1WeekPostAsync(WeekDTO), result =>
+                () => _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(weekYear: WeekDTO.WeekYear,
+                    weekNumber: WeekDTO.WeekNumber, newWeek: WeekDTO),
+                result =>
                 {
                     _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
                 });
@@ -199,31 +200,29 @@ namespace WeekPlanner.ViewModels
 
         private async Task UpdateExistingSchedule()
         {
-            if (WeekDTO.Id == null)
+            if (WeekDTO.WeekNumber == null)
             {
                 throw new InvalidDataException("WeekDTO should always have an Id when updating.");
             }
 
             await _requestService.SendRequestAndThenAsync(
-                () => _weekApi.V1WeekByIdPutAsync(WeekDTO.Id, WeekDTO),
-                result =>
-                {
-                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
-                });
+                () => _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(WeekDTO.WeekYear, WeekDTO.WeekNumber, WeekDTO),
+                result => { _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt."); });
         }
 
         public override async Task PoppedAsync(object navigationData)
         {
             // Happens after choosing a pictogram in Pictosearch
-            if (navigationData is PictogramDTO pictogramDTO)
+            if (navigationData is WeekPictogramDTO pictogramDTO)
             {
                 InsertPicto(pictogramDTO);
             }
 
             // Happens when popping from ActivityViewModel
-            if(navigationData is ActivityViewModel activityVM) {
-                
-                if(activityVM.Activity == null) {
+            if (navigationData is ActivityViewModel activityVM)
+            {
+                if (activityVM.Activity == null)
+                {
                     // TODO this is dumb and it may remove duplicate elements since all elements are not unique
                     // we can refactor when ActivityDTO gets a unique ID
                     RemoveItemFromDay(DayEnum.Monday);
@@ -233,7 +232,9 @@ namespace WeekPlanner.ViewModels
                     RemoveItemFromDay(DayEnum.Friday);
                     RemoveItemFromDay(DayEnum.Saturday);
                     RemoveItemFromDay(DayEnum.Sunday);
-                } else {
+                }
+                else
+                {
                     _selectedActivity = activityVM.Activity;
                 }
 
@@ -247,11 +248,14 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private bool RemoveItemFromDay(DayEnum day) {
+        private bool RemoveItemFromDay(DayEnum day)
+        {
             var a = WeekDTO.Days.First(x => x.Day == day).Activities;
-            if (a.Count == 0) {
+            if (a.Count == 0)
+            {
                 return false;
             }
+
             return a.Remove(_selectedActivity);
         }
 
@@ -262,7 +266,8 @@ namespace WeekPlanner.ViewModels
             IsBusy = true;
             if (EditModeEnabled)
             {
-                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
+                    "Annuller", null, "Gem ændringer", "Gem ikke");
 
                 switch (result)
                 {
@@ -273,47 +278,49 @@ namespace WeekPlanner.ViewModels
                     case "Gem ændringer":
                         EditModeEnabled = false;
                         await SaveSchedule();
-                        UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                        UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_citizen.png");
                         IsBusy = false;
                         break;
 
                     case "Gem ikke":
                         EditModeEnabled = false;
-                        UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-                        if (WeekDTO.Id != null) await GetWeekPlanForCitizenAsync((long) WeekDTO.Id);
+                        UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_citizen.png");
+                        if (WeekDTO.WeekNumber != null)
+                            await GetWeekPlanForCitizenAsync(new Tuple<int?, int?>(WeekDTO.WeekYear, WeekDTO.WeekNumber));
                         IsBusy = false;
                         break;
                 }
-                
             }
             else
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
+
             IsBusy = false;
         }
 
         public int Height
         {
-            get 
+            get
             {
                 int minimumHeight = 1500;
                 int elementHeight = 250;
 
-                if(WeekDTO == null){
+                if (WeekDTO == null)
+                {
                     return minimumHeight;
                 }
 
                 int dynamicHeight = WeekDTO.Days.Max(d => d.Activities.Count) * elementHeight;
 
-                return dynamicHeight > minimumHeight ? dynamicHeight : minimumHeight; 
+                return dynamicHeight > minimumHeight ? dynamicHeight : minimumHeight;
             }
         }
 
         private void SetToGuardianMode()
         {
             EditModeEnabled = true;
-            UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
+            UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_guardian.png");
         }
 
         private async Task BackButtonPressed()
@@ -323,7 +330,8 @@ namespace WeekPlanner.ViewModels
             IsBusy = true;
             if (EditModeEnabled)
             {
-                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?", "Annuller", null, "Gem ændringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
+                    "Annuller", null, "Gem ændringer", "Gem ikke");
 
                 switch (result)
                 {
@@ -347,7 +355,7 @@ namespace WeekPlanner.ViewModels
 
         // TODO: Override the navigation bar backbutton when this is available.
         // Will most likely only be available if/when the custom navigation bar gets implemented.
-        
+
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
         public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
@@ -369,7 +377,8 @@ namespace WeekPlanner.ViewModels
         }
 
 
-        private void RaisePropertyForDays() {
+        private void RaisePropertyForDays()
+        {
             RaisePropertyChanged(() => MondayPictos);
             RaisePropertyChanged(() => TuesdayPictos);
             RaisePropertyChanged(() => WednesdayPictos);
@@ -379,6 +388,5 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => SundayPictos);
             RaisePropertyChanged(() => Height);
         }
-
     }
 }

@@ -69,9 +69,6 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToPictogramSearchCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
         
-        public ICommand NavigateToActivityCommand =>
-            new Command(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
-
         public ICommand NavigateToSettingsCommand =>
             new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>(new UserNameDTO("Kurt", "KurtId")));
 
