@@ -5,6 +5,7 @@ using Acr.UserDialogs;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
+using WeekPlanner.Helpers;
 using WeekPlanner.Services;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
@@ -47,19 +48,16 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToLoginCommand =>
             new Command(async () =>
             {
-                _settingsService.Department = new DepartmentNameDTO { Name = "Birken", Id = 1 };
                 await NavigationService.NavigateToAsync<LoginViewModel>();
             });
 
         public ICommand NavigateToChooseCitizenCommand =>
-            new Command(async () =>
+            new Command(() =>
             {
-                _settingsService.Department = new DepartmentNameDTO(1);
-                    await _loginService.LoginAndThenAsync(async () =>
-                            await NavigationService.NavigateToAsync<ChooseCitizenViewModel>(
-                                (await _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.Department.Id))
-                                .Data),
-                        UserType.Guardian, "Graatand", "password");
+                _loginService.LoginAndThenAsync(
+                    () => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
+                    UserType.Guardian, "Graatand", "password"
+                );
             });
 
         public ICommand NavigateToWeekPlannerCommand =>
@@ -75,6 +73,9 @@ namespace WeekPlanner.ViewModels
             new Command(async () => await NavigationService.NavigateToAsync<ActivityViewModel>());
 
         public ICommand NavigateToSettingsCommand =>
-        new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>(new UserNameDTO("Kurt", "KurtId")));
-	}
+            new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>(new UserNameDTO("Kurt", "KurtId")));
+
+        public ICommand NavigateToSavePromptCommand =>
+            new Command(async () => await NavigationService.NavigateToAsync<SavePromptViewModel>());
+    }
 }

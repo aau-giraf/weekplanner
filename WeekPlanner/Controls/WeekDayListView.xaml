@@ -18,21 +18,12 @@
         <DataTemplate>
             <ViewCell>
                 <!--DownsampleToViewSize="true"-->
-					<Frame 
-						OutlineColor="{Binding Border}"
-						BackgroundColor="{Binding Border}"
-						VerticalOptions="Center"
-						HasShadow="false"
-						Padding="0"
-					>
-	                <ffimageloading:CachedImage
-	                    VerticalOptions="Center"
-	                    LoadingPlaceholder="image_loading.png"
-	                    ErrorPlaceholder="image_loading.png"
-	                    Source="{Binding URL}"
-	                    Scale=".8"
-					/>
-					</Frame>
+                <ffimageloading:CachedImage
+                    VerticalOptions="Center"
+                    LoadingPlaceholder="image_loading.png"
+                    Source="{Binding Pictogram.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                    ErrorPlaceholder="image_loading.png"
+                    Margin="5" />
             </ViewCell>
         </DataTemplate>
     </ListView.ItemTemplate>

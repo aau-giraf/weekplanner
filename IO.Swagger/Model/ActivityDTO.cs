@@ -35,10 +35,12 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <param name="Pictogram">Pictogram.</param>
         /// <param name="Order">Order.</param>
-        public ActivityDTO(PictogramDTO Pictogram = default(PictogramDTO), int? Order = default(int?))
+        /// <param name="Id">Id.</param>
+        public ActivityDTO(PictogramDTO Pictogram = default(PictogramDTO), int? Order = default(int?), long? Id = default(long?))
         {
             this.Pictogram = Pictogram;
             this.Order = Order;
+            this.Id = Id;
         }
         
         /// <summary>
@@ -54,6 +56,12 @@ namespace IO.Swagger.Model
         public int? Order { get; set; }
 
         /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public long? Id { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -63,6 +71,7 @@ namespace IO.Swagger.Model
             sb.Append("class ActivityDTO {\n");
             sb.Append("  Pictogram: ").Append(Pictogram).Append("\n");
             sb.Append("  Order: ").Append(Order).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -106,6 +115,11 @@ namespace IO.Swagger.Model
                     this.Order == input.Order ||
                     (this.Order != null &&
                     this.Order.Equals(input.Order))
+                ) && 
+                (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
                 );
         }
 
@@ -122,6 +136,8 @@ namespace IO.Swagger.Model
                     hashCode = hashCode * 59 + this.Pictogram.GetHashCode();
                 if (this.Order != null)
                     hashCode = hashCode * 59 + this.Order.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 return hashCode;
             }
         }

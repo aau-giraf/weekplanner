@@ -7,6 +7,7 @@
     xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
     x:Class="WeekPlanner.Views.LoginPage"
     base1:ViewModelLocator.AutoWireViewModel="true"
+    IsBusy="{Binding IsBusy}"
     Title="Log ind">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -55,7 +56,9 @@
             <Button
                 x:Name="LoginButton"
                 Command="{Binding LoginCommand}"
-                Text="Log ind" />
+                Text="Log ind" 
+                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                BackgroundColor="{StaticResource SuccessColor}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

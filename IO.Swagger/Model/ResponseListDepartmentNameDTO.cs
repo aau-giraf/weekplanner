@@ -365,7 +365,13 @@ namespace IO.Swagger.Model
             /// Enum MissingSettings for value: MissingSettings
             /// </summary>
             [EnumMember(Value = "MissingSettings")]
-            MissingSettings = 55
+            MissingSettings = 55,
+            
+            /// <summary>
+            /// Enum DuplicateWeekScheduleName for value: DuplicateWeekScheduleName
+            /// </summary>
+            [EnumMember(Value = "DuplicateWeekScheduleName")]
+            DuplicateWeekScheduleName = 56
         }
 
         /// <summary>

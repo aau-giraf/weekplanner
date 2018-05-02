@@ -37,7 +37,7 @@
                     <RowDefinition Height="AUTO"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Column="0">
-                    <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Command="{Binding SaveCommand}" />
+                    <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
                     </Grid>
                 <Grid Grid.Column="1">
                     <Entry HorizontalTextAlignment="Center" Text="{Binding WeekDTO.Name}" Placeholder="Unavngivet skema" TextColor="{StaticResource WhiteColor}">
@@ -47,7 +47,7 @@
                         </Entry>
                     </Grid>
                 <Grid Grid.Column="2">
-                    <Button Text="Annuller" BackgroundColor="{StaticResource CancelColor}" Command="{Binding ToggleEditModeCommand}" />
+                    <Button Text="Annuller" BackgroundColor="{StaticResource CancelColor}" Command="{Binding ToggleEditModeCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
                     </Grid>
                 </Grid>
             <Grid>
@@ -76,7 +76,7 @@
                 <ScrollView Grid.Row="1" Grid.ColumnSpan="7">
                     <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                    <Grid HeightRequest="1500">
+                    <Grid HeightRequest="{Binding Height}">
                         <controls:WeekDayListView BackgroundColor="{StaticResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" />
                         <controls:WeekDayListView BackgroundColor="{StaticResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
                         <controls:WeekDayListView BackgroundColor="{StaticResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" />
@@ -100,13 +100,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="AUTO" />
                 </Grid.RowDefinitions>
-                <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Monday}"/>
-                <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Tuesday}"/>
-                <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Wednesday}"/>
-                <Button Grid.Column="3" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Thursday}"/>
-                <Button Grid.Column="4" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Friday}"/>
-                <Button Grid.Column="5" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Saturday}"/>
-                <Button Grid.Column="6" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Sunday}"/>
+                <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Monday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Tuesday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Wednesday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                <Button Grid.Column="3" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Thursday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                <Button Grid.Column="4" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Friday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                <Button Grid.Column="5" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Saturday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                <Button Grid.Column="6" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Sunday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
             </Grid>
         </StackLayout>
     </ContentPage.Content>

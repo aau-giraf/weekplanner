@@ -167,21 +167,76 @@
     <ImageAsset Include="Assets.xcassets\icon_default_guardian.imageset\icon_default_guardian.png">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_add.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_add.imageset\icon_add.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_delete.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_delete.imageset\icon_delete.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-40.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-58.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-87.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-80.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-120.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-180.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-20.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-29.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-76.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-152.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-167.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-1024.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\tab_about.png" />
-    <BundleResource Include="Resources\tab_about%402x.png" />
-    <BundleResource Include="Resources\tab_about%403x.png" />
-    <BundleResource Include="Resources\tab_feed.png" />
-    <BundleResource Include="Resources\tab_feed%402x.png" />
-    <BundleResource Include="Resources\tab_feed%403x.png" />
-    <BundleResource Include="Resources\xamarin_logo.png" />
-    <BundleResource Include="Resources\xamarin_logo%402x.png" />
-    <BundleResource Include="Resources\xamarin_logo%403x.png" />
     <BundleResource Include="Resources\default_profile_picture.jpg" />
     <BundleResource Include="Resources\image_loading.png" />
     <BundleResource Include="Resources\icon_default_citizen.png" />
     <BundleResource Include="Resources\icon_default_guardian.png" />
+    <BundleResource Include="Resources\icon\Icon-1024.png" />
+    <BundleResource Include="Resources\icon\Icon-120.png" />
+    <BundleResource Include="Resources\icon\Icon-152.png" />
+    <BundleResource Include="Resources\icon\Icon-167.png" />
+    <BundleResource Include="Resources\icon\Icon-180.png" />
+    <BundleResource Include="Resources\icon\Icon-20.png" />
+    <BundleResource Include="Resources\icon\Icon-29.png" />
+    <BundleResource Include="Resources\icon\Icon-40.png" />
+    <BundleResource Include="Resources\icon\Icon-58.png" />
+    <BundleResource Include="Resources\icon\Icon-60.png" />
+    <BundleResource Include="Resources\icon\Icon-76.png" />
+    <BundleResource Include="Resources\icon\Icon-80.png" />
+    <BundleResource Include="Resources\icon\Icon-87.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
@@ -206,6 +261,8 @@
     <Folder Include="Assets.xcassets\default_profile_picture.imageset\" />
     <Folder Include="Assets.xcassets\icon_default_citizen.imageset\" />
     <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
+    <Folder Include="Assets.xcassets\icon_add.imageset\" />
+    <Folder Include="Assets.xcassets\icon_delete.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\image_loading.png" />
@@ -214,6 +271,10 @@
   <ItemGroup>
     <AndroidResource Include="Resources\icon_default_citizen.png" />
     <AndroidResource Include="Resources\icon_default_guardian.png" />
+    <AndroidResource Include="Resources\icon_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\icon_delete.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />

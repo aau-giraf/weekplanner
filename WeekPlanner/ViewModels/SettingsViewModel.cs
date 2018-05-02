@@ -103,7 +103,7 @@ namespace WeekPlanner.ViewModels
 
 		private async Task InitializeCitizen()
 		{
-			await _requestService.SendRequestAndThenAsync(this,
+			await _requestService.SendRequestAndThenAsync(
 				requestAsync: async () => await _userApi.V1UserGetAsync(),
 				onSuccess: result => 
 				{
@@ -116,7 +116,7 @@ namespace WeekPlanner.ViewModels
 
 		private async Task InitalizeSettings()
 		{
-			await _requestService.SendRequestAndThenAsync(this,
+			await _requestService.SendRequestAndThenAsync(
 				requestAsync: async () => await _userApi.V1UserSettingsGetAsync(),
 				onSuccess: result =>
 				{

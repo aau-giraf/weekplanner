@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Globalization;
+using Autofac;
+using WeekPlanner.ApplicationObjects;
+using WeekPlanner.Services.Settings;
 using Xamarin.Forms;
 
 namespace WeekPlanner.Converters
 {
     public class RelativeUrlConverter : IValueConverter
     {
-        public RelativeUrlConverter()
-        {
-        }
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var url = (String)value;
-            return GlobalSettings.DefaultEndpoint + url;
-
+            var url = (string)value;
+            
+            using(var scope = AppContainer.Container.BeginLifetimeScope())
+            {
+                var settingsService = scope.Resolve<ISettingsService>();
+                return settingsService.BaseEndpoint + url;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -15,9 +15,13 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Services;
 using WeekPlanner.ViewModels;
 using Xunit;
 using Assert = Xunit.Assert;
+using Xamarin.Forms;
+using WeekPlanner.Views;
+using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
@@ -30,7 +34,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         [InlineData("ThursdayPictos")]
         [InlineData("FridayPictos")]
         [InlineData("SaturdayPictos")]
-        [InlineData("SundayPictos")]
         [InlineData("SundayPictos")]
         [InlineData("CountOfMaxHeightWeekday")]
         public void WeekdayPictos_OnSet_RaisesPropertiesChanged(string property)
@@ -45,7 +48,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             };
 
             //Act
-            sut.WeekdayPictos = new Dictionary<WeekdayDTO.DayEnum, ObservableCollection<WeekPlannerViewModel.StatefulPictogram>>();
+            sut.WeekdayPictos = new Dictionary<WeekdayDTO.DayEnum, ObservableCollection<string>>();
 
             //Assert
             Assert.True(invoked);
@@ -65,7 +68,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var usernameDTO = Fixture.Create<UserNameDTO>();
             Func<Func<Task>, UserType, string, string, Task> loginAndThenMock =
                 async (onSuccess, userType, username, password) => await onSuccess.Invoke();
-
 
             FreezeMockOfIRequestService<WeekPlannerViewModel, ResponseWeekDTO>();
             
@@ -99,50 +101,20 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             //Act
             await sut.InitializeAsync(usernameDTO);
 
-            var dayIds = sut.WeekdayPictos[day].Select(p => p.URL).Select(p => 
+            var dayIds = sut.WeekdayPictos[day].Select(p => p).Select(p => 
                     Convert.ToInt64(Regex.Match(p.ToString(), "pictogram/(.*)/image").Groups[1].Value))
                 .ToList();
 
             var dayIdsFromWeek =
-                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Activities.Select(a => a.Pictogram.Id.Value)
+
+                response.Data.Days.FirstOrDefault(d => d.Day == day)?.Activities.Select(e => e.Pictogram.Id).Select(i => i.Value)
                     .ToList();
 
             //Assert
             Assert.Equal(dayIdsFromWeek, dayIds);
         }
 
-        [Fact]
-        public async void CountOfMaxHeightWeekday_AfterInitAsync_returnsCorrectCount()
-        {
-            //Arrange
-            var mockUsernameDTO = Fixture.Create<UserNameDTO>();
-
-            FreezeMockOfIRequestService<WeekPlannerViewModel, ResponseWeekDTO>();
-
-            async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
-                await onSuccess.Invoke();
-
-            var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
-                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, mockUsernameDTO.UserName, ""))
-                .Returns((Func<Func<Task>, UserType, string, string, Task>) LoginAndThenMock);
-
-            var weekResponse = Fixture.Build<ResponseWeekDTO>()
-                .With(r => r.Success, true)
-                .With(r => r.ErrorKey, ResponseWeekDTO.ErrorKeyEnum.NoError)
-                .With(r => r.Data, Fixture.Create<WeekDTO>()).Create();
-
-            var mockWeek = Fixture.Freeze<Mock<IWeekApi>>()
-                .Setup(w => w.V1WeekByIdGetAsync(It.IsAny<long?>()))
-                .ReturnsAsync(weekResponse);
-            var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
-            //Act 
-            await sut.InitializeAsync(mockUsernameDTO);
-            //Assert
-            Assert.Equal(weekResponse.Data.Days.Max(d => d.Activities.Count), sut.CountOfMaxHeightWeekday);
-        }
-
-        [Fact]
-        public void WeekdayPictos_AfterInitAsync_IsNotNull()
+        public async Task WeekdayPictos_AfterInitAsync_IsNotNullAsync()
         {
             //Arrange
             var weekResponse = Fixture.Build<ResponseWeekDTO>()
@@ -162,7 +134,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
 
             var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
             //Act
-            sut.InitializeAsync(null);
+            await sut.InitializeAsync(null);
             //Assert
             Assert.NotNull(sut.WeekdayPictos);
         }
@@ -222,71 +194,45 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             navServiceMock.Verify(n => n.NavigateToAsync<LoginViewModel>(It.IsAny<WeekPlannerViewModel>()));
         }
 
-        [Theory]
-        [InlineData(DayOfWeek.Monday, WeekdayDTO.DayEnum.Monday)]
-        [InlineData(DayOfWeek.Tuesday, WeekdayDTO.DayEnum.Tuesday)]
-        [InlineData(DayOfWeek.Wednesday, WeekdayDTO.DayEnum.Wednesday)]
-        [InlineData(DayOfWeek.Thursday, WeekdayDTO.DayEnum.Thursday)]
-        [InlineData(DayOfWeek.Friday, WeekdayDTO.DayEnum.Friday)]
-        [InlineData(DayOfWeek.Saturday, WeekdayDTO.DayEnum.Saturday)]
-        [InlineData(DayOfWeek.Sunday, WeekdayDTO.DayEnum.Sunday)]
-        public void DatetimeConverter_GetWeekday_ReturnsCorrectGirafDay(DayOfWeek weekday, WeekdayDTO.DayEnum girafDay)
-        {
-            //Arrange
-            WeekPlannerViewModel.DateTimeConverter dc = new WeekPlannerViewModel.DateTimeConverter();
-            //Act
-            var res = dc.GetWeekDay(weekday);
-            //Assert
-            Assert.Equal(res, girafDay);
-        }
-        [Theory]
-        [InlineData(DayOfWeek.Monday)]
-        [InlineData(DayOfWeek.Tuesday)]
-        [InlineData(DayOfWeek.Wednesday)]
-        [InlineData(DayOfWeek.Thursday)]
-        [InlineData(DayOfWeek.Friday)]
-        [InlineData(DayOfWeek.Saturday)]
-        [InlineData(DayOfWeek.Sunday)]
-        public async Task WeekdayPictos_Highligt_FirstNormalPicto_OfCurrentDay(DayOfWeek weekday)
+        [Xunit.Theory]
+        [InlineData("Gem ændringer")]
+        [InlineData("Gem ikke")]
+        public void OnBackButtonPressedCommand_Executed_InvokesNavigationPopOnCorrectResult(string result)
         {
             // Arrange
-            FreezeMockOfIRequestService<WeekPlannerViewModel, ResponseWeekDTO>();
+            var dialogServiceMock = Fixture.Freeze<Mock<IDialogService>>()
+                .Setup(d => d.ActionSheetAsync(PopupMessages.SavePromptTitle,
+                    PopupMessages.Cancel, null, PopupMessages.SaveAndQuit, PopupMessages.QuitWithoutSave))
+                .ReturnsAsync(result);
+            var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
+            var sut = Fixture.Create<WeekPlannerViewModel>();
             
-            var mockUsernameDTO = Fixture.Create<UserNameDTO>();
-            async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string username, string password) =>
-                await onSuccess.Invoke();
-            var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
-                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, mockUsernameDTO.UserName, ""))
-                .Returns((Func<Func<Task>, UserType, string, string, Task>)LoginAndThenMock);
-            var weekdays = new List<WeekdayDTO>();
-            foreach (WeekdayDTO.DayEnum d in Enum.GetValues(typeof(WeekdayDTO.DayEnum)))
-            {
-                var weekdayDTO = Fixture.Build<WeekdayDTO>()
-                    .With(w => w.Day, d)
-                    .Create();
-                weekdays.Add(weekdayDTO);
-            }
-
-            var weekDTO = Fixture.Build<WeekDTO>()
-                .With(w => w.Days, weekdays).Create();
-
-            var response = Fixture.Build<ResponseWeekDTO>()
-                .With(r => r.Data, weekDTO)
-                .With(r => r.Success, true)
-                .With(r => r.ErrorKey, ResponseWeekDTO.ErrorKeyEnum.NoError)
-                .Create();
-            var mockWeek = Fixture.Freeze<Mock<IWeekApi>>()
-                .Setup(w => w.V1WeekByIdGetAsync(It.IsAny<long?>()))
-                .ReturnsAsync(response);
-            
-            var sut = Fixture.Build<WeekPlannerViewModel>().OmitAutoProperties().Create();
             // Act
-            await sut.InitializeAsync(mockUsernameDTO);
-            sut.SetBorderStatusPictograms(weekday);
-            WeekPlannerViewModel.DateTimeConverter dateTimeConverter = new WeekPlannerViewModel.DateTimeConverter();
-            
-            //Assert
-            Assert.Equal("Black", sut.WeekdayPictos[dateTimeConverter.GetWeekDay(weekday)].First().Border);
+            sut.OnBackButtonPressedCommand.Execute(true);
+
+            // Assert
+            navServiceMock.Verify(n => n.PopAsync());
+        }
+
+        [Xunit.Theory]
+        [InlineData(PopupMessages.Cancel)]
+        [InlineData("Wrong string")]
+        [InlineData("Gem ændringer_Partially correct")]
+        public void OnBackButtonPressedCommand_Executed_CancelsOnIncorrectResult(string result)
+        {
+            // Arrange
+            var dialogServiceMock = Fixture.Freeze<Mock<IDialogService>>()
+                .Setup(d => d.ActionSheetAsync(PopupMessages.SavePromptTitle,
+                    PopupMessages.Cancel, null, PopupMessages.SaveAndQuit, PopupMessages.QuitWithoutSave))
+                .ReturnsAsync(result);
+            var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
+            var sut = Fixture.Create<WeekPlannerViewModel>();
+
+            // Act
+            sut.OnBackButtonPressedCommand.Execute(true);
+
+            // Assert
+            navServiceMock.Verify(n => n.PopAsync(), Times.Never);
         }
     }
 }

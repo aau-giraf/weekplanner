@@ -17,6 +17,13 @@ namespace WeekPlanner.Views
 
 		}
 
-    }
+        protected override bool OnBackButtonPressed()
+        {
+            var vm = BindingContext as WeekPlannerViewModel;
 
+            vm.OnBackButtonPressedCommand.Execute(null);
+
+            return true;
+        }
+    }
 }

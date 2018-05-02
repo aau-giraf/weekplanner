@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors1="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             base1:ViewModelLocator.AutoWireViewModel="true"
+             x:Class="WeekPlanner.Views.SavePromptPage"
+             Title="Gem Prompt">
+    <ContentPage.Content>
+        <StackLayout>
+            <Button x:Name="ButtonPrompt" Text="Prompt me!" Command="{Binding PromptPopupCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

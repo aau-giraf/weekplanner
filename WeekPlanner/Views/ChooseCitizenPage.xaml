@@ -9,7 +9,10 @@
              Title="Vælg Borger">
     <ContentPage.Content>
        <StackLayout>
-            <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" />
+
+            <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
+            <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50"/>
+            
             <ListView 
                 x:Name="CitizensListView" 
                 ItemsSource="{Binding CitizenNames}" 
@@ -33,6 +36,7 @@
                                                             DownsampleToViewSize="true"
                                                             LoadingPlaceholder="default_profile_picture.jpg"
                                                             ErrorPlaceholder="default_profile_picture.jpg"
+                                                            IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                                                             Source = "https://us.123rf.com/450wm/silviemiskova/silviemiskova1604/silviemiskova160400029/55722613-stock-vector-giraffe-colorful-low-poly-design-on-blue-background-with-dark-brown-outline-animal-card-design-backg.jpg?ver=6">
                                     <!-- Source will change to UserIcon when backend has switched to using images -->
                                 </ffimageloading:CachedImage>

@@ -28,6 +28,9 @@
                     Text="Aktivitet" 
                     Command="{Binding NavigateToActivityCommand}" />
                 <Button
+                    Text="Gem Prompt"
+                    Command="{Binding NavigateToSavePromptCommand}" />
+                <Button
                     Text="Indstillinger"
                     Command="{Binding NavigateToSettingsCommand}" />
             </StackLayout>
