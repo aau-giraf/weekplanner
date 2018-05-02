@@ -9,8 +9,10 @@ namespace WeekPlanner.Services.Settings
         string GuardianAuthToken { get; set; }
         string CitizenAuthToken { get; set; }
         void UseTokenFor(UserType userType);
+        Task UpdateSettings(SettingDTO settings);
 
     }
+
 
     public enum UserType
     {
