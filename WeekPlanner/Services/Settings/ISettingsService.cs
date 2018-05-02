@@ -1,4 +1,6 @@
-﻿using IO.Swagger.Model;
+﻿using System.Threading.Tasks;
+using IO.Swagger.Model;
+
 
 namespace WeekPlanner.Services.Settings
 {
@@ -13,6 +15,7 @@ namespace WeekPlanner.Services.Settings
         
         void UseTokenFor(UserType userType);
     }
+
 
     public enum UserType
     {

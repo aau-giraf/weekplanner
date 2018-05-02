@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using SimpleJson;
+using WeekPlanner.Services.Request;
 
 namespace WeekPlanner.Services.Settings
 {
@@ -11,17 +12,20 @@ namespace WeekPlanner.Services.Settings
         private readonly IAccountApi  _accountApi;
         private readonly JsonObject _appSettings;
         private readonly IUserApi _userApi;
+        private readonly IRequestService _requestService;
+        
         private static string _token;
         public static Task<string> GetToken()
         {
             return Task.FromResult(_token);
         }
 
-        public SettingsService(IAccountApi accountApi, JsonObject appSettings, IUserApi userApi)
+        public SettingsService(IAccountApi accountApi, JsonObject appSettings, IUserApi userApi, IRequestService requestService)
         {
             _accountApi = accountApi;
             _appSettings = appSettings;
             _userApi = userApi;
+            _requestService = requestService;
         }
 
         public string BaseEndpoint
@@ -38,13 +42,7 @@ namespace WeekPlanner.Services.Settings
 
         public string CitizenAuthToken { get; set; }
         
-        public string CurrentCitizenId { get; set; }
-
-        public Task UpdateSettings(SettingDTO settingDTO)
-        {
-            throw new NotImplementedException();
-        }
-        
+        public string CurrentCitizenId { get; set; }       
 
         /// <summary>
         /// Sets the API up to using the specified type of authentication token.
