@@ -42,7 +42,7 @@
                                     Aspect="AspectFit"
                                     LoadingPlaceholder="image_loading.png"
                                     ErrorPlaceholder="weekschedule.png"
-                                    Source="{Binding Thumbnail.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                                    Source="{Binding Thumbnail.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White"/>
                             <Label TextColor="Black" FontSize="18" Margin="0" Text="{Binding Name}" 
                                    VerticalTextAlignment="End" HorizontalTextAlignment="Center" BackgroundColor="White" VerticalOptions="EndAndExpand"/>
