@@ -63,13 +63,8 @@ namespace WeekPlanner.ViewModels
             _pictogramApi = pictogramApi;
             _requestService = requestService;
             _dialogService = dialogService;
-
-            var defaultPicto = _pictogramApi.V1PictogramByIdGet(2).Data;
-            WeekPictogramDTO weekPictogramDto = new WeekPictogramDTO()
-            {
-                Id = defaultPicto.Id,
-            };
-
+            PictogramDTO defaultPicto = _pictogramApi.V1PictogramByIdGet(2).Data;
+            WeekPictogramDTO weekPictogramDto = new WeekPictogramDTO(defaultPicto.Id);
             WeekThumbNail = weekPictogramDto;
 
             _scheduleName =
@@ -82,7 +77,7 @@ namespace WeekPlanner.ViewModels
             // Happens when selecting a picto in PictoSearch
             if (navigationData is PictogramDTO pictoDTO)
             {
-                WeekThumbNail.Id = pictoDTO.Id;
+                WeekThumbNail = new WeekPictogramDTO(pictoDTO.Id);
             }
 
             return Task.FromResult(false);
