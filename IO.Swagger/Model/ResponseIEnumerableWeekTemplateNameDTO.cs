@@ -25,10 +25,10 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// ResponseListDepartmentNameDTO
+    /// ResponseIEnumerableWeekTemplateNameDTO
     /// </summary>
     [DataContract]
-    public partial class ResponseListDepartmentNameDTO :  IEquatable<ResponseListDepartmentNameDTO>, IValidatableObject
+    public partial class ResponseIEnumerableWeekTemplateNameDTO :  IEquatable<ResponseIEnumerableWeekTemplateNameDTO>, IValidatableObject
     {
         /// <summary>
         /// Defines ErrorKey
@@ -398,12 +398,12 @@ namespace IO.Swagger.Model
         [DataMember(Name="errorKey", EmitDefaultValue=false)]
         public ErrorKeyEnum? ErrorKey { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResponseListDepartmentNameDTO" /> class.
+        /// Initializes a new instance of the <see cref="ResponseIEnumerableWeekTemplateNameDTO" /> class.
         /// </summary>
         /// <param name="Data">Data.</param>
         /// <param name="Success">Success.</param>
         /// <param name="ErrorProperties">ErrorProperties.</param>
-        public ResponseListDepartmentNameDTO(List<DepartmentNameDTO> Data = default(List<DepartmentNameDTO>), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
+        public ResponseIEnumerableWeekTemplateNameDTO(List<WeekTemplateNameDTO> Data = default(List<WeekTemplateNameDTO>), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
         {
             this.Data = Data;
             this.Success = Success;
@@ -414,7 +414,7 @@ namespace IO.Swagger.Model
         /// Gets or Sets Data
         /// </summary>
         [DataMember(Name="data", EmitDefaultValue=false)]
-        public List<DepartmentNameDTO> Data { get; set; }
+        public List<WeekTemplateNameDTO> Data { get; set; }
 
         /// <summary>
         /// Gets or Sets Success
@@ -436,7 +436,7 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class ResponseListDepartmentNameDTO {\n");
+            sb.Append("class ResponseIEnumerableWeekTemplateNameDTO {\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Success: ").Append(Success).Append("\n");
             sb.Append("  ErrorProperties: ").Append(ErrorProperties).Append("\n");
@@ -461,15 +461,15 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as ResponseListDepartmentNameDTO);
+            return this.Equals(input as ResponseIEnumerableWeekTemplateNameDTO);
         }
 
         /// <summary>
-        /// Returns true if ResponseListDepartmentNameDTO instances are equal
+        /// Returns true if ResponseIEnumerableWeekTemplateNameDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of ResponseListDepartmentNameDTO to be compared</param>
+        /// <param name="input">Instance of ResponseIEnumerableWeekTemplateNameDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ResponseListDepartmentNameDTO input)
+        public bool Equals(ResponseIEnumerableWeekTemplateNameDTO input)
         {
             if (input == null)
                 return false;

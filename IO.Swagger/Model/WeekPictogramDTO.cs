@@ -25,10 +25,10 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// Defines the structure of Pictogram when serializing and deserializing data. Data transfer objects (DTOs)   were introduced in the project due to problems with circular references in the model classes.
+    /// WeekPictogramDTO
     /// </summary>
     [DataContract]
-    public partial class PictogramDTO :  IEquatable<PictogramDTO>, IValidatableObject
+    public partial class WeekPictogramDTO :  IEquatable<WeekPictogramDTO>, IValidatableObject
     {
         /// <summary>
         /// The accesslevel of the pictogram.
@@ -64,21 +64,19 @@ namespace IO.Swagger.Model
         [DataMember(Name="accessLevel", EmitDefaultValue=false)]
         public AccessLevelEnum? AccessLevel { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="PictogramDTO" /> class.
+        /// Initializes a new instance of the <see cref="WeekPictogramDTO" /> class.
         /// </summary>
-        /// <param name="Title">The title of the pictogram..</param>
-        /// <param name="AccessLevel">The accesslevel of the pictogram..</param>
-        public PictogramDTO(string Title = default(string), AccessLevelEnum? AccessLevel = default(AccessLevelEnum?))
+        /// <param name="Id">Id.</param>
+        public WeekPictogramDTO(long? Id = default(long?))
         {
-            this.Title = Title;
-            this.AccessLevel = AccessLevel;
+            this.Id = Id;
         }
         
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
-        public long? Id { get; private set; }
+        public long? Id { get; set; }
 
         /// <summary>
         /// The last time the pictogram was edited.
@@ -92,7 +90,7 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <value>The title of the pictogram.</value>
         [DataMember(Name="title", EmitDefaultValue=false)]
-        public string Title { get; set; }
+        public string Title { get; private set; }
 
 
         /// <summary>
@@ -114,7 +112,7 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class PictogramDTO {\n");
+            sb.Append("class WeekPictogramDTO {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  LastEdit: ").Append(LastEdit).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
@@ -141,15 +139,15 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as PictogramDTO);
+            return this.Equals(input as WeekPictogramDTO);
         }
 
         /// <summary>
-        /// Returns true if PictogramDTO instances are equal
+        /// Returns true if WeekPictogramDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of PictogramDTO to be compared</param>
+        /// <param name="input">Instance of WeekPictogramDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(PictogramDTO input)
+        public bool Equals(WeekPictogramDTO input)
         {
             if (input == null)
                 return false;

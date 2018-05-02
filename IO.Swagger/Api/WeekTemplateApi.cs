@@ -32,8 +32,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>ResponseWeekDTO</returns>
-        ResponseWeekDTO V1WeekTemplateByIdGet (long? id);
+        /// <returns>ResponseWeekTemplateDTO</returns>
+        ResponseWeekTemplateDTO V1WeekTemplateByIdGet (long? id);
 
         /// <summary>
         /// Gets the week template with the specified id.
@@ -43,8 +43,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        ApiResponse<ResponseWeekDTO> V1WeekTemplateByIdGetWithHttpInfo (long? id);
+        /// <returns>ApiResponse of ResponseWeekTemplateDTO</returns>
+        ApiResponse<ResponseWeekTemplateDTO> V1WeekTemplateByIdGetWithHttpInfo (long? id);
         /// <summary>
         /// Gets all week schedule for the currently authenticated user.
         /// </summary>
@@ -52,8 +52,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseIEnumerableWeekNameDTO</returns>
-        ResponseIEnumerableWeekNameDTO V1WeekTemplateGet ();
+        /// <returns>ResponseIEnumerableWeekTemplateNameDTO</returns>
+        ResponseIEnumerableWeekTemplateNameDTO V1WeekTemplateGet ();
 
         /// <summary>
         /// Gets all week schedule for the currently authenticated user.
@@ -62,8 +62,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseIEnumerableWeekNameDTO</returns>
-        ApiResponse<ResponseIEnumerableWeekNameDTO> V1WeekTemplateGetWithHttpInfo ();
+        /// <returns>ApiResponse of ResponseIEnumerableWeekTemplateNameDTO</returns>
+        ApiResponse<ResponseIEnumerableWeekTemplateNameDTO> V1WeekTemplateGetWithHttpInfo ();
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -74,8 +74,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>Task of ResponseWeekDTO</returns>
-        System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekTemplateByIdGetAsync (long? id);
+        /// <returns>Task of ResponseWeekTemplateDTO</returns>
+        System.Threading.Tasks.Task<ResponseWeekTemplateDTO> V1WeekTemplateByIdGetAsync (long? id);
 
         /// <summary>
         /// Gets the week template with the specified id.
@@ -85,8 +85,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekTemplateByIdGetAsyncWithHttpInfo (long? id);
+        /// <returns>Task of ApiResponse (ResponseWeekTemplateDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekTemplateDTO>> V1WeekTemplateByIdGetAsyncWithHttpInfo (long? id);
         /// <summary>
         /// Gets all week schedule for the currently authenticated user.
         /// </summary>
@@ -94,8 +94,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseIEnumerableWeekNameDTO</returns>
-        System.Threading.Tasks.Task<ResponseIEnumerableWeekNameDTO> V1WeekTemplateGetAsync ();
+        /// <returns>Task of ResponseIEnumerableWeekTemplateNameDTO</returns>
+        System.Threading.Tasks.Task<ResponseIEnumerableWeekTemplateNameDTO> V1WeekTemplateGetAsync ();
 
         /// <summary>
         /// Gets all week schedule for the currently authenticated user.
@@ -104,8 +104,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseIEnumerableWeekNameDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekNameDTO>> V1WeekTemplateGetAsyncWithHttpInfo ();
+        /// <returns>Task of ApiResponse (ResponseIEnumerableWeekTemplateNameDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekTemplateNameDTO>> V1WeekTemplateGetAsyncWithHttpInfo ();
         #endregion Asynchronous Operations
     }
 
@@ -211,10 +211,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>ResponseWeekDTO</returns>
-        public ResponseWeekDTO V1WeekTemplateByIdGet (long? id)
+        /// <returns>ResponseWeekTemplateDTO</returns>
+        public ResponseWeekTemplateDTO V1WeekTemplateByIdGet (long? id)
         {
-             ApiResponse<ResponseWeekDTO> localVarResponse = V1WeekTemplateByIdGetWithHttpInfo(id);
+             ApiResponse<ResponseWeekTemplateDTO> localVarResponse = V1WeekTemplateByIdGetWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -223,8 +223,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        public ApiResponse< ResponseWeekDTO > V1WeekTemplateByIdGetWithHttpInfo (long? id)
+        /// <returns>ApiResponse of ResponseWeekTemplateDTO</returns>
+        public ApiResponse< ResponseWeekTemplateDTO > V1WeekTemplateByIdGetWithHttpInfo (long? id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -274,9 +274,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseWeekDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekTemplateDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseWeekDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekDTO)));
+                (ResponseWeekTemplateDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekTemplateDTO)));
         }
 
         /// <summary>
@@ -284,10 +284,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>Task of ResponseWeekDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekTemplateByIdGetAsync (long? id)
+        /// <returns>Task of ResponseWeekTemplateDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseWeekTemplateDTO> V1WeekTemplateByIdGetAsync (long? id)
         {
-             ApiResponse<ResponseWeekDTO> localVarResponse = await V1WeekTemplateByIdGetAsyncWithHttpInfo(id);
+             ApiResponse<ResponseWeekTemplateDTO> localVarResponse = await V1WeekTemplateByIdGetAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -297,8 +297,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
-        /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekTemplateByIdGetAsyncWithHttpInfo (long? id)
+        /// <returns>Task of ApiResponse (ResponseWeekTemplateDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekTemplateDTO>> V1WeekTemplateByIdGetAsyncWithHttpInfo (long? id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -348,19 +348,19 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseWeekDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekTemplateDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseWeekDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekDTO)));
+                (ResponseWeekTemplateDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekTemplateDTO)));
         }
 
         /// <summary>
         /// Gets all week schedule for the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseIEnumerableWeekNameDTO</returns>
-        public ResponseIEnumerableWeekNameDTO V1WeekTemplateGet ()
+        /// <returns>ResponseIEnumerableWeekTemplateNameDTO</returns>
+        public ResponseIEnumerableWeekTemplateNameDTO V1WeekTemplateGet ()
         {
-             ApiResponse<ResponseIEnumerableWeekNameDTO> localVarResponse = V1WeekTemplateGetWithHttpInfo();
+             ApiResponse<ResponseIEnumerableWeekTemplateNameDTO> localVarResponse = V1WeekTemplateGetWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -368,8 +368,8 @@ namespace IO.Swagger.Api
         /// Gets all week schedule for the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseIEnumerableWeekNameDTO</returns>
-        public ApiResponse< ResponseIEnumerableWeekNameDTO > V1WeekTemplateGetWithHttpInfo ()
+        /// <returns>ApiResponse of ResponseIEnumerableWeekTemplateNameDTO</returns>
+        public ApiResponse< ResponseIEnumerableWeekTemplateNameDTO > V1WeekTemplateGetWithHttpInfo ()
         {
 
             var localVarPath = "/v1/WeekTemplate";
@@ -415,19 +415,19 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseIEnumerableWeekNameDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseIEnumerableWeekTemplateNameDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseIEnumerableWeekNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseIEnumerableWeekNameDTO)));
+                (ResponseIEnumerableWeekTemplateNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseIEnumerableWeekTemplateNameDTO)));
         }
 
         /// <summary>
         /// Gets all week schedule for the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseIEnumerableWeekNameDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseIEnumerableWeekNameDTO> V1WeekTemplateGetAsync ()
+        /// <returns>Task of ResponseIEnumerableWeekTemplateNameDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseIEnumerableWeekTemplateNameDTO> V1WeekTemplateGetAsync ()
         {
-             ApiResponse<ResponseIEnumerableWeekNameDTO> localVarResponse = await V1WeekTemplateGetAsyncWithHttpInfo();
+             ApiResponse<ResponseIEnumerableWeekTemplateNameDTO> localVarResponse = await V1WeekTemplateGetAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -436,8 +436,8 @@ namespace IO.Swagger.Api
         /// Gets all week schedule for the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseIEnumerableWeekNameDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekNameDTO>> V1WeekTemplateGetAsyncWithHttpInfo ()
+        /// <returns>Task of ApiResponse (ResponseIEnumerableWeekTemplateNameDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekTemplateNameDTO>> V1WeekTemplateGetAsyncWithHttpInfo ()
         {
 
             var localVarPath = "/v1/WeekTemplate";
@@ -483,9 +483,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseIEnumerableWeekNameDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseIEnumerableWeekTemplateNameDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseIEnumerableWeekNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseIEnumerableWeekNameDTO)));
+                (ResponseIEnumerableWeekTemplateNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseIEnumerableWeekTemplateNameDTO)));
         }
 
     }

@@ -25,10 +25,10 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// The LauncherOptions, which is the various settings the users can add to customize the Launcher App.
+    /// A Data Transfer Object for the user settings used by the launcher
     /// </summary>
     [DataContract]
-    public partial class LauncherOptions :  IEquatable<LauncherOptions>, IValidatableObject
+    public partial class SettingDTO :  IEquatable<SettingDTO>, IValidatableObject
     {
         /// <summary>
         /// Preferred orientation of device/screen
@@ -62,46 +62,61 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <value>Preferred appearence of checked resources</value>
         [JsonConverter(typeof(StringEnumConverter))]
-        public enum CheckResourceAppearenceEnum
+        public enum CompleteMarkEnum
         {
             
             /// <summary>
-            /// Enum Normal for value: normal
+            /// Enum Removed for value: Removed
             /// </summary>
-            [EnumMember(Value = "normal")]
-            Normal = 1,
+            [EnumMember(Value = "Removed")]
+            Removed = 1,
             
             /// <summary>
-            /// Enum Checkmark for value: checkmark
+            /// Enum Checkmark for value: Checkmark
             /// </summary>
-            [EnumMember(Value = "checkmark")]
+            [EnumMember(Value = "Checkmark")]
             Checkmark = 2,
             
             /// <summary>
-            /// Enum Removed for value: removed
+            /// Enum MovedRight for value: MovedRight
             /// </summary>
-            [EnumMember(Value = "removed")]
-            Removed = 3,
-            
-            /// <summary>
-            /// Enum MovedToRight for value: movedToRight
-            /// </summary>
-            [EnumMember(Value = "movedToRight")]
-            MovedToRight = 4,
-            
-            /// <summary>
-            /// Enum GreyedOut for value: greyedOut
-            /// </summary>
-            [EnumMember(Value = "greyedOut")]
-            GreyedOut = 5
+            [EnumMember(Value = "MovedRight")]
+            MovedRight = 3
         }
 
         /// <summary>
         /// Preferred appearence of checked resources
         /// </summary>
         /// <value>Preferred appearence of checked resources</value>
-        [DataMember(Name="checkResourceAppearence", EmitDefaultValue=false)]
-        public CheckResourceAppearenceEnum CheckResourceAppearence { get; set; }
+        [DataMember(Name="completeMark", EmitDefaultValue=false)]
+        public CompleteMarkEnum CompleteMark { get; set; }
+        /// <summary>
+        /// Preferred appearence of cancelled resources
+        /// </summary>
+        /// <value>Preferred appearence of cancelled resources</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum CancelMarkEnum
+        {
+            
+            /// <summary>
+            /// Enum Removed for value: Removed
+            /// </summary>
+            [EnumMember(Value = "Removed")]
+            Removed = 1,
+            
+            /// <summary>
+            /// Enum Cross for value: Cross
+            /// </summary>
+            [EnumMember(Value = "Cross")]
+            Cross = 2
+        }
+
+        /// <summary>
+        /// Preferred appearence of cancelled resources
+        /// </summary>
+        /// <value>Preferred appearence of cancelled resources</value>
+        [DataMember(Name="cancelMark", EmitDefaultValue=false)]
+        public CancelMarkEnum CancelMark { get; set; }
         /// <summary>
         /// Preferred appearence of timer
         /// </summary>
@@ -150,10 +165,16 @@ namespace IO.Swagger.Model
             GirafGreen = 2,
             
             /// <summary>
-            /// Enum Greyscale for value: greyscale
+            /// Enum GirafRed for value: girafRed
             /// </summary>
-            [EnumMember(Value = "greyscale")]
-            Greyscale = 3
+            [EnumMember(Value = "girafRed")]
+            GirafRed = 3,
+            
+            /// <summary>
+            /// Enum AndroidBlue for value: androidBlue
+            /// </summary>
+            [EnumMember(Value = "androidBlue")]
+            AndroidBlue = 4
         }
 
         /// <summary>
@@ -163,46 +184,83 @@ namespace IO.Swagger.Model
         [DataMember(Name="theme", EmitDefaultValue=false)]
         public ThemeEnum Theme { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="LauncherOptions" /> class.
+        /// Property for setting the color theme of weekschedules
+        /// </summary>
+        /// <value>Property for setting the color theme of weekschedules</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum ColorThemeWeekSchedulesEnum
+        {
+            
+            /// <summary>
+            /// Enum Standard for value: standard
+            /// </summary>
+            [EnumMember(Value = "standard")]
+            Standard = 1,
+            
+            /// <summary>
+            /// Enum YellowAndWhite for value: yellowAndWhite
+            /// </summary>
+            [EnumMember(Value = "yellowAndWhite")]
+            YellowAndWhite = 2
+        }
+
+        /// <summary>
+        /// Property for setting the color theme of weekschedules
+        /// </summary>
+        /// <value>Property for setting the color theme of weekschedules</value>
+        [DataMember(Name="colorThemeWeekSchedules", EmitDefaultValue=false)]
+        public ColorThemeWeekSchedulesEnum ColorThemeWeekSchedules { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingDTO" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected LauncherOptions() { }
+        protected SettingDTO() { }
         /// <summary>
-        /// Initializes a new instance of the <see cref="LauncherOptions" /> class.
+        /// Initializes a new instance of the <see cref="SettingDTO" /> class.
         /// </summary>
-        /// <param name="DisplayLauncherAnimations">A flag indicating whether to run applications in grayscale or not..</param>
-        /// <param name="AppGridSizeRows">A field for storing how many rows to display in the GirafLauncher application..</param>
-        /// <param name="AppGridSizeColumns">A field for storing how many columns to display in the GirafLauncher application..</param>
         /// <param name="Orientation">Preferred orientation of device/screen (required).</param>
-        /// <param name="CheckResourceAppearence">Preferred appearence of checked resources (required).</param>
+        /// <param name="CompleteMark">Preferred appearence of checked resources (required).</param>
+        /// <param name="CancelMark">Preferred appearence of cancelled resources (required).</param>
         /// <param name="DefaultTimer">Preferred appearence of timer (required).</param>
         /// <param name="TimerSeconds">Number of seconds for timer.</param>
         /// <param name="ActivitiesCount">Number of activities.</param>
         /// <param name="Theme">The preferred theme (required).</param>
-        public LauncherOptions(bool? DisplayLauncherAnimations = default(bool?), int? AppGridSizeRows = default(int?), int? AppGridSizeColumns = default(int?), OrientationEnum Orientation = default(OrientationEnum), CheckResourceAppearenceEnum CheckResourceAppearence = default(CheckResourceAppearenceEnum), DefaultTimerEnum DefaultTimer = default(DefaultTimerEnum), int? TimerSeconds = default(int?), int? ActivitiesCount = default(int?), ThemeEnum Theme = default(ThemeEnum))
+        /// <param name="ColorThemeWeekSchedules">Property for setting the color theme of weekschedules (required).</param>
+        /// <param name="NrOfDaysToDisplay">defines the number of days to display for a user in a weekschedule.</param>
+        /// <param name="GreyScale">Flag for indicating whether or not greyscale is enabled.</param>
+        public SettingDTO(OrientationEnum Orientation = default(OrientationEnum), CompleteMarkEnum CompleteMark = default(CompleteMarkEnum), CancelMarkEnum CancelMark = default(CancelMarkEnum), DefaultTimerEnum DefaultTimer = default(DefaultTimerEnum), int? TimerSeconds = default(int?), int? ActivitiesCount = default(int?), ThemeEnum Theme = default(ThemeEnum), ColorThemeWeekSchedulesEnum ColorThemeWeekSchedules = default(ColorThemeWeekSchedulesEnum), int? NrOfDaysToDisplay = default(int?), bool? GreyScale = default(bool?))
         {
             // to ensure "Orientation" is required (not null)
             if (Orientation == null)
             {
-                throw new InvalidDataException("Orientation is a required property for LauncherOptions and cannot be null");
+                throw new InvalidDataException("Orientation is a required property for SettingDTO and cannot be null");
             }
             else
             {
                 this.Orientation = Orientation;
             }
-            // to ensure "CheckResourceAppearence" is required (not null)
-            if (CheckResourceAppearence == null)
+            // to ensure "CompleteMark" is required (not null)
+            if (CompleteMark == null)
             {
-                throw new InvalidDataException("CheckResourceAppearence is a required property for LauncherOptions and cannot be null");
+                throw new InvalidDataException("CompleteMark is a required property for SettingDTO and cannot be null");
             }
             else
             {
-                this.CheckResourceAppearence = CheckResourceAppearence;
+                this.CompleteMark = CompleteMark;
+            }
+            // to ensure "CancelMark" is required (not null)
+            if (CancelMark == null)
+            {
+                throw new InvalidDataException("CancelMark is a required property for SettingDTO and cannot be null");
+            }
+            else
+            {
+                this.CancelMark = CancelMark;
             }
             // to ensure "DefaultTimer" is required (not null)
             if (DefaultTimer == null)
             {
-                throw new InvalidDataException("DefaultTimer is a required property for LauncherOptions and cannot be null");
+                throw new InvalidDataException("DefaultTimer is a required property for SettingDTO and cannot be null");
             }
             else
             {
@@ -211,46 +269,27 @@ namespace IO.Swagger.Model
             // to ensure "Theme" is required (not null)
             if (Theme == null)
             {
-                throw new InvalidDataException("Theme is a required property for LauncherOptions and cannot be null");
+                throw new InvalidDataException("Theme is a required property for SettingDTO and cannot be null");
             }
             else
             {
                 this.Theme = Theme;
             }
-            this.DisplayLauncherAnimations = DisplayLauncherAnimations;
-            this.AppGridSizeRows = AppGridSizeRows;
-            this.AppGridSizeColumns = AppGridSizeColumns;
+            // to ensure "ColorThemeWeekSchedules" is required (not null)
+            if (ColorThemeWeekSchedules == null)
+            {
+                throw new InvalidDataException("ColorThemeWeekSchedules is a required property for SettingDTO and cannot be null");
+            }
+            else
+            {
+                this.ColorThemeWeekSchedules = ColorThemeWeekSchedules;
+            }
             this.TimerSeconds = TimerSeconds;
             this.ActivitiesCount = ActivitiesCount;
+            this.NrOfDaysToDisplay = NrOfDaysToDisplay;
+            this.GreyScale = GreyScale;
         }
         
-        /// <summary>
-        /// Key for LauncherOptions
-        /// </summary>
-        /// <value>Key for LauncherOptions</value>
-        [DataMember(Name="key", EmitDefaultValue=false)]
-        public long? Key { get; private set; }
-
-        /// <summary>
-        /// A flag indicating whether to run applications in grayscale or not.
-        /// </summary>
-        /// <value>A flag indicating whether to run applications in grayscale or not.</value>
-        [DataMember(Name="displayLauncherAnimations", EmitDefaultValue=false)]
-        public bool? DisplayLauncherAnimations { get; set; }
-
-        /// <summary>
-        /// A field for storing how many rows to display in the GirafLauncher application.
-        /// </summary>
-        /// <value>A field for storing how many rows to display in the GirafLauncher application.</value>
-        [DataMember(Name="appGridSizeRows", EmitDefaultValue=false)]
-        public int? AppGridSizeRows { get; set; }
-
-        /// <summary>
-        /// A field for storing how many columns to display in the GirafLauncher application.
-        /// </summary>
-        /// <value>A field for storing how many columns to display in the GirafLauncher application.</value>
-        [DataMember(Name="appGridSizeColumns", EmitDefaultValue=false)]
-        public int? AppGridSizeColumns { get; set; }
 
 
 
@@ -270,6 +309,21 @@ namespace IO.Swagger.Model
         public int? ActivitiesCount { get; set; }
 
 
+
+        /// <summary>
+        /// defines the number of days to display for a user in a weekschedule
+        /// </summary>
+        /// <value>defines the number of days to display for a user in a weekschedule</value>
+        [DataMember(Name="nrOfDaysToDisplay", EmitDefaultValue=false)]
+        public int? NrOfDaysToDisplay { get; set; }
+
+        /// <summary>
+        /// Flag for indicating whether or not greyscale is enabled
+        /// </summary>
+        /// <value>Flag for indicating whether or not greyscale is enabled</value>
+        [DataMember(Name="greyScale", EmitDefaultValue=false)]
+        public bool? GreyScale { get; set; }
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -277,17 +331,17 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class LauncherOptions {\n");
-            sb.Append("  Key: ").Append(Key).Append("\n");
-            sb.Append("  DisplayLauncherAnimations: ").Append(DisplayLauncherAnimations).Append("\n");
-            sb.Append("  AppGridSizeRows: ").Append(AppGridSizeRows).Append("\n");
-            sb.Append("  AppGridSizeColumns: ").Append(AppGridSizeColumns).Append("\n");
+            sb.Append("class SettingDTO {\n");
             sb.Append("  Orientation: ").Append(Orientation).Append("\n");
-            sb.Append("  CheckResourceAppearence: ").Append(CheckResourceAppearence).Append("\n");
+            sb.Append("  CompleteMark: ").Append(CompleteMark).Append("\n");
+            sb.Append("  CancelMark: ").Append(CancelMark).Append("\n");
             sb.Append("  DefaultTimer: ").Append(DefaultTimer).Append("\n");
             sb.Append("  TimerSeconds: ").Append(TimerSeconds).Append("\n");
             sb.Append("  ActivitiesCount: ").Append(ActivitiesCount).Append("\n");
             sb.Append("  Theme: ").Append(Theme).Append("\n");
+            sb.Append("  ColorThemeWeekSchedules: ").Append(ColorThemeWeekSchedules).Append("\n");
+            sb.Append("  NrOfDaysToDisplay: ").Append(NrOfDaysToDisplay).Append("\n");
+            sb.Append("  GreyScale: ").Append(GreyScale).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -308,49 +362,34 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as LauncherOptions);
+            return this.Equals(input as SettingDTO);
         }
 
         /// <summary>
-        /// Returns true if LauncherOptions instances are equal
+        /// Returns true if SettingDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of LauncherOptions to be compared</param>
+        /// <param name="input">Instance of SettingDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(LauncherOptions input)
+        public bool Equals(SettingDTO input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Key == input.Key ||
-                    (this.Key != null &&
-                    this.Key.Equals(input.Key))
-                ) && 
-                (
-                    this.DisplayLauncherAnimations == input.DisplayLauncherAnimations ||
-                    (this.DisplayLauncherAnimations != null &&
-                    this.DisplayLauncherAnimations.Equals(input.DisplayLauncherAnimations))
-                ) && 
-                (
-                    this.AppGridSizeRows == input.AppGridSizeRows ||
-                    (this.AppGridSizeRows != null &&
-                    this.AppGridSizeRows.Equals(input.AppGridSizeRows))
-                ) && 
-                (
-                    this.AppGridSizeColumns == input.AppGridSizeColumns ||
-                    (this.AppGridSizeColumns != null &&
-                    this.AppGridSizeColumns.Equals(input.AppGridSizeColumns))
-                ) && 
-                (
                     this.Orientation == input.Orientation ||
                     (this.Orientation != null &&
                     this.Orientation.Equals(input.Orientation))
                 ) && 
                 (
-                    this.CheckResourceAppearence == input.CheckResourceAppearence ||
-                    (this.CheckResourceAppearence != null &&
-                    this.CheckResourceAppearence.Equals(input.CheckResourceAppearence))
+                    this.CompleteMark == input.CompleteMark ||
+                    (this.CompleteMark != null &&
+                    this.CompleteMark.Equals(input.CompleteMark))
+                ) && 
+                (
+                    this.CancelMark == input.CancelMark ||
+                    (this.CancelMark != null &&
+                    this.CancelMark.Equals(input.CancelMark))
                 ) && 
                 (
                     this.DefaultTimer == input.DefaultTimer ||
@@ -371,6 +410,21 @@ namespace IO.Swagger.Model
                     this.Theme == input.Theme ||
                     (this.Theme != null &&
                     this.Theme.Equals(input.Theme))
+                ) && 
+                (
+                    this.ColorThemeWeekSchedules == input.ColorThemeWeekSchedules ||
+                    (this.ColorThemeWeekSchedules != null &&
+                    this.ColorThemeWeekSchedules.Equals(input.ColorThemeWeekSchedules))
+                ) && 
+                (
+                    this.NrOfDaysToDisplay == input.NrOfDaysToDisplay ||
+                    (this.NrOfDaysToDisplay != null &&
+                    this.NrOfDaysToDisplay.Equals(input.NrOfDaysToDisplay))
+                ) && 
+                (
+                    this.GreyScale == input.GreyScale ||
+                    (this.GreyScale != null &&
+                    this.GreyScale.Equals(input.GreyScale))
                 );
         }
 
@@ -383,18 +437,12 @@ namespace IO.Swagger.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.Key != null)
-                    hashCode = hashCode * 59 + this.Key.GetHashCode();
-                if (this.DisplayLauncherAnimations != null)
-                    hashCode = hashCode * 59 + this.DisplayLauncherAnimations.GetHashCode();
-                if (this.AppGridSizeRows != null)
-                    hashCode = hashCode * 59 + this.AppGridSizeRows.GetHashCode();
-                if (this.AppGridSizeColumns != null)
-                    hashCode = hashCode * 59 + this.AppGridSizeColumns.GetHashCode();
                 if (this.Orientation != null)
                     hashCode = hashCode * 59 + this.Orientation.GetHashCode();
-                if (this.CheckResourceAppearence != null)
-                    hashCode = hashCode * 59 + this.CheckResourceAppearence.GetHashCode();
+                if (this.CompleteMark != null)
+                    hashCode = hashCode * 59 + this.CompleteMark.GetHashCode();
+                if (this.CancelMark != null)
+                    hashCode = hashCode * 59 + this.CancelMark.GetHashCode();
                 if (this.DefaultTimer != null)
                     hashCode = hashCode * 59 + this.DefaultTimer.GetHashCode();
                 if (this.TimerSeconds != null)
@@ -403,6 +451,12 @@ namespace IO.Swagger.Model
                     hashCode = hashCode * 59 + this.ActivitiesCount.GetHashCode();
                 if (this.Theme != null)
                     hashCode = hashCode * 59 + this.Theme.GetHashCode();
+                if (this.ColorThemeWeekSchedules != null)
+                    hashCode = hashCode * 59 + this.ColorThemeWeekSchedules.GetHashCode();
+                if (this.NrOfDaysToDisplay != null)
+                    hashCode = hashCode * 59 + this.NrOfDaysToDisplay.GetHashCode();
+                if (this.GreyScale != null)
+                    hashCode = hashCode * 59 + this.GreyScale.GetHashCode();
                 return hashCode;
             }
         }

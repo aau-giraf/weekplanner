@@ -25,37 +25,31 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// Defines the structure of Week when serializing and deserializing data. Data transfer objects (DTOs)   were introduced in the project due to problems with circular references in the model classes.
+    /// WeekTemplateDTO
     /// </summary>
     [DataContract]
-    public partial class WeekDTO :  IEquatable<WeekDTO>, IValidatableObject
+    public partial class WeekTemplateDTO :  IEquatable<WeekTemplateDTO>, IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeekDTO" /> class.
+        /// Initializes a new instance of the <see cref="WeekTemplateDTO" /> class.
         /// </summary>
+        /// <param name="DepartmentKey">DepartmentKey.</param>
         /// <param name="Thumbnail">The weeks thumbnail..</param>
         /// <param name="Name">A Name describing the week..</param>
         /// <param name="Days">A list of the days in the week schedule..</param>
-        public WeekDTO(WeekPictogramDTO Thumbnail = default(WeekPictogramDTO), string Name = default(string), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
+        public WeekTemplateDTO(long? DepartmentKey = default(long?), WeekPictogramDTO Thumbnail = default(WeekPictogramDTO), string Name = default(string), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
         {
+            this.DepartmentKey = DepartmentKey;
             this.Thumbnail = Thumbnail;
             this.Name = Name;
             this.Days = Days;
         }
         
         /// <summary>
-        /// The year of the week.
+        /// Gets or Sets DepartmentKey
         /// </summary>
-        /// <value>The year of the week.</value>
-        [DataMember(Name="weekYear", EmitDefaultValue=false)]
-        public int? WeekYear { get; private set; }
-
-        /// <summary>
-        /// The number of the week, 0 - 52 (53).
-        /// </summary>
-        /// <value>The number of the week, 0 - 52 (53).</value>
-        [DataMember(Name="weekNumber", EmitDefaultValue=false)]
-        public int? WeekNumber { get; private set; }
+        [DataMember(Name="departmentKey", EmitDefaultValue=false)]
+        public long? DepartmentKey { get; set; }
 
         /// <summary>
         /// The weeks thumbnail.
@@ -85,9 +79,8 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class WeekDTO {\n");
-            sb.Append("  WeekYear: ").Append(WeekYear).Append("\n");
-            sb.Append("  WeekNumber: ").Append(WeekNumber).Append("\n");
+            sb.Append("class WeekTemplateDTO {\n");
+            sb.Append("  DepartmentKey: ").Append(DepartmentKey).Append("\n");
             sb.Append("  Thumbnail: ").Append(Thumbnail).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Days: ").Append(Days).Append("\n");
@@ -111,29 +104,24 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as WeekDTO);
+            return this.Equals(input as WeekTemplateDTO);
         }
 
         /// <summary>
-        /// Returns true if WeekDTO instances are equal
+        /// Returns true if WeekTemplateDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of WeekDTO to be compared</param>
+        /// <param name="input">Instance of WeekTemplateDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(WeekDTO input)
+        public bool Equals(WeekTemplateDTO input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.WeekYear == input.WeekYear ||
-                    (this.WeekYear != null &&
-                    this.WeekYear.Equals(input.WeekYear))
-                ) && 
-                (
-                    this.WeekNumber == input.WeekNumber ||
-                    (this.WeekNumber != null &&
-                    this.WeekNumber.Equals(input.WeekNumber))
+                    this.DepartmentKey == input.DepartmentKey ||
+                    (this.DepartmentKey != null &&
+                    this.DepartmentKey.Equals(input.DepartmentKey))
                 ) && 
                 (
                     this.Thumbnail == input.Thumbnail ||
@@ -161,10 +149,8 @@ namespace IO.Swagger.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.WeekYear != null)
-                    hashCode = hashCode * 59 + this.WeekYear.GetHashCode();
-                if (this.WeekNumber != null)
-                    hashCode = hashCode * 59 + this.WeekNumber.GetHashCode();
+                if (this.DepartmentKey != null)
+                    hashCode = hashCode * 59 + this.DepartmentKey.GetHashCode();
                 if (this.Thumbnail != null)
                     hashCode = hashCode * 59 + this.Thumbnail.GetHashCode();
                 if (this.Name != null)

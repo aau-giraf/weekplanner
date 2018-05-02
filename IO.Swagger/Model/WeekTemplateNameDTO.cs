@@ -25,39 +25,25 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// WeekNameDTO
+    /// WeekTemplateNameDTO
     /// </summary>
     [DataContract]
-    public partial class WeekNameDTO :  IEquatable<WeekNameDTO>, IValidatableObject
+    public partial class WeekTemplateNameDTO :  IEquatable<WeekTemplateNameDTO>, IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WeekNameDTO" /> class.
+        /// Initializes a new instance of the <see cref="WeekTemplateNameDTO" /> class.
         /// </summary>
-        [JsonConstructorAttribute]
-        public WeekNameDTO()
+        /// <param name="Name">Name.</param>
+        public WeekTemplateNameDTO(string Name = default(string))
         {
+            this.Name = Name;
         }
         
         /// <summary>
-        /// A Name describing the week.
+        /// Gets or Sets Name
         /// </summary>
-        /// <value>A Name describing the week.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; private set; }
-
-        /// <summary>
-        /// The year of the week.
-        /// </summary>
-        /// <value>The year of the week.</value>
-        [DataMember(Name="weekYear", EmitDefaultValue=false)]
-        public int? WeekYear { get; private set; }
-
-        /// <summary>
-        /// The number of the week, 0 - 52 (53).
-        /// </summary>
-        /// <value>The number of the week, 0 - 52 (53).</value>
-        [DataMember(Name="weekNumber", EmitDefaultValue=false)]
-        public int? WeekNumber { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -66,10 +52,8 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class WeekNameDTO {\n");
+            sb.Append("class WeekTemplateNameDTO {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  WeekYear: ").Append(WeekYear).Append("\n");
-            sb.Append("  WeekNumber: ").Append(WeekNumber).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -90,15 +74,15 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as WeekNameDTO);
+            return this.Equals(input as WeekTemplateNameDTO);
         }
 
         /// <summary>
-        /// Returns true if WeekNameDTO instances are equal
+        /// Returns true if WeekTemplateNameDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of WeekNameDTO to be compared</param>
+        /// <param name="input">Instance of WeekTemplateNameDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(WeekNameDTO input)
+        public bool Equals(WeekTemplateNameDTO input)
         {
             if (input == null)
                 return false;
@@ -108,16 +92,6 @@ namespace IO.Swagger.Model
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && 
-                (
-                    this.WeekYear == input.WeekYear ||
-                    (this.WeekYear != null &&
-                    this.WeekYear.Equals(input.WeekYear))
-                ) && 
-                (
-                    this.WeekNumber == input.WeekNumber ||
-                    (this.WeekNumber != null &&
-                    this.WeekNumber.Equals(input.WeekNumber))
                 );
         }
 
@@ -132,10 +106,6 @@ namespace IO.Swagger.Model
                 int hashCode = 41;
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.WeekYear != null)
-                    hashCode = hashCode * 59 + this.WeekYear.GetHashCode();
-                if (this.WeekNumber != null)
-                    hashCode = hashCode * 59 + this.WeekNumber.GetHashCode();
                 return hashCode;
             }
         }

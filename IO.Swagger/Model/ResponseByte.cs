@@ -368,10 +368,28 @@ namespace IO.Swagger.Model
             MissingSettings = 55,
             
             /// <summary>
+            /// Enum InvalidAmountOfWeekdays for value: InvalidAmountOfWeekdays
+            /// </summary>
+            [EnumMember(Value = "InvalidAmountOfWeekdays")]
+            InvalidAmountOfWeekdays = 56,
+            
+            /// <summary>
+            /// Enum WeekAlreadyExists for value: WeekAlreadyExists
+            /// </summary>
+            [EnumMember(Value = "WeekAlreadyExists")]
+            WeekAlreadyExists = 57,
+            
+            /// <summary>
+            /// Enum InvalidDay for value: InvalidDay
+            /// </summary>
+            [EnumMember(Value = "InvalidDay")]
+            InvalidDay = 58,
+            
+            /// <summary>
             /// Enum DuplicateWeekScheduleName for value: DuplicateWeekScheduleName
             /// </summary>
             [EnumMember(Value = "DuplicateWeekScheduleName")]
-            DuplicateWeekScheduleName = 56
+            DuplicateWeekScheduleName = 59
         }
 
         /// <summary>
