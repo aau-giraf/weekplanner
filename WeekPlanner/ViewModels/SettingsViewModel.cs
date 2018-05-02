@@ -90,25 +90,18 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-			if (navigationData is UserNameDTO userNameDTO)
-			{
-				await _loginService.LoginAndThenAsync(InitializeCitizen, UserType.Citizen,
-					userNameDTO.UserName);
-			}
-			else
-			{
-				throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
-			}
+            _settingsService.UseTokenFor(UserType.Citizen);
+            await InitializeCitizen();
 		}
 
 		private async Task InitializeCitizen()
 		{
 			await _requestService.SendRequestAndThenAsync(
 				requestAsync: async () => await _userApi.V1UserGetAsync(),
-				onSuccess: result => 
+				onSuccessAsync: async result => 
 				{
 					GirafCitizen = result.Data;
-					InitalizeSettings();
+					await InitalizeSettings();
 				},
 				onExceptionAsync: async () => await NavigationService.PopAsync(),
 				onRequestFailedAsync: async () => await NavigationService.PopAsync());
@@ -125,12 +118,10 @@ namespace WeekPlanner.ViewModels
 				onExceptionAsync: async () => await NavigationService.PopAsync(),
 				onRequestFailedAsync: async () => await NavigationService.PopAsync());
 		}
-
-		private void SetSettings(ResponseSettingDTO result)
+        public SettingDTO Settings { get; set; }
+        private void SetSettings(ResponseSettingDTO result)
 		{
-			OrientationSetting = result.Data.Orientation;
-
-			// Set all the other settings here.
+            Settings = result.Data;
 		}
 	}
 }

@@ -10,17 +10,18 @@ namespace WeekPlanner.Services.Settings
     {
         private readonly IAccountApi  _accountApi;
         private readonly JsonObject _appSettings;
-
+        private readonly IUserApi _userApi;
         private static string _token;
         public static Task<string> GetToken()
         {
             return Task.FromResult(_token);
         }
 
-        public SettingsService(IAccountApi accountApi, JsonObject appSettings)
+        public SettingsService(IAccountApi accountApi, JsonObject appSettings, IUserApi userApi)
         {
             _accountApi = accountApi;
             _appSettings = appSettings;
+            _userApi = userApi;
         }
 
         public string BaseEndpoint
@@ -36,6 +37,11 @@ namespace WeekPlanner.Services.Settings
         public string GuardianAuthToken { get; set; }
 
         public string CitizenAuthToken { get; set; }
+
+        public Task UpdateSettings(SettingDTO settingDTO)
+        {
+            throw new NotImplementedException();
+        }
         
 
         /// <summary>
