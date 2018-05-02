@@ -41,7 +41,7 @@ namespace WeekPlanner.ViewModels
 			get	=> _orientationSlider; 
 			set
 			{
-				if (OrientationSetting == LauncherOptionsDTO.OrientationEnum.Portrait)
+				if (OrientationSetting == SettingDTO.OrientationEnum.Portrait)
 				{
 					_orientationSlider = true;
 				}
@@ -55,19 +55,19 @@ namespace WeekPlanner.ViewModels
 
 		public ICommand HandleSwitchChangedCommand => new Command(() =>
 		{
-			if (OrientationSetting == LauncherOptionsDTO.OrientationEnum.Portrait)
+			if (OrientationSetting == SettingDTO.OrientationEnum.Portrait)
 			{
-				OrientationSetting = LauncherOptionsDTO.OrientationEnum.Landscape;
+				OrientationSetting = SettingDTO.OrientationEnum.Landscape;
 			}
 			else
 			{
-				OrientationSetting = LauncherOptionsDTO.OrientationEnum.Portrait;
+				OrientationSetting = SettingDTO.OrientationEnum.Portrait;
 			}
 		});
 
 
-		private LauncherOptionsDTO.OrientationEnum _orientationSetting;
-		public LauncherOptionsDTO.OrientationEnum OrientationSetting
+		private SettingDTO.OrientationEnum _orientationSetting;
+		public SettingDTO.OrientationEnum OrientationSetting
 		{
 			get => _orientationSetting;
 			set
@@ -126,7 +126,7 @@ namespace WeekPlanner.ViewModels
 				onRequestFailedAsync: async () => await NavigationService.PopAsync());
 		}
 
-		private void SetSettings(ResponseLauncherOptionsDTO result)
+		private void SetSettings(ResponseSettingDTO result)
 		{
 			OrientationSetting = result.Data.Orientation;
 
