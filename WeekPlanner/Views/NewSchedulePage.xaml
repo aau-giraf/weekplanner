@@ -15,36 +15,82 @@
                 x:Key="FirstValidationErrorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    
+
     <ContentPage.Content>
         <StackLayout
             Margin="12">
             <Label
-                Text="Ugeplan"
+                Text="Ny ugeplan"
                 HorizontalTextAlignment="Center"
-                FontSize="32"/>
-            <Entry
+                FontSize="Large"/>
+            <!-- NAME OF SCHEDULE START -->
+            <StackLayout>
+                <Label Text="Navngiv din nye ugeplan" FontSize="Medium"/>
+                <Entry
                 x:Name="NewScheduleNameEntry"
                 Text="{Binding ScheduleName.Value}"
-                Placeholder="Navn på ny ugeplan">
-                <Entry.Behaviors>
-                    <behaviors:EventToCommandBehavior
+                Placeholder="Eksempel: Min nye ugeplan">
+                    <Entry.Behaviors>
+                        <behaviors:EventToCommandBehavior
                         EventName="TextChanged"
                         Command="{Binding ValidateWeekNameCommand}" />
-                </Entry.Behaviors>
-            </Entry>
-            <Label
+                    </Entry.Behaviors>
+                </Entry>
+                <Label
                 Text="{Binding ScheduleName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                 Style="{StaticResource ValidationErrorLabelStyle}" />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="AUTO"/>
-                </Grid.RowDefinitions>
-                <ffimageloading:CachedImage
+            </StackLayout>
+            <!-- NAME OF SCHEDULE END -->
+
+            <!-- CHOOSE DAYS START -->
+            <StackLayout>
+                <Label Text="Hvilke dage skal indgå i ugeplanen?" FontSize="Medium"/>
+                <Grid ColumnSpacing="7" HorizontalOptions="FillAndExpand" x:Name="ToggleGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Text="Mandag" Grid.Column="0" HorizontalTextAlignment="Start"/>
+                    <Label Text="Tirsdag" Grid.Column="1" HorizontalTextAlignment="Start"/>
+                    <Label Text="Onsdag" Grid.Column="2" HorizontalTextAlignment="Start"/>
+                    <Label Text="Torsdag" Grid.Column="3" HorizontalTextAlignment="Start"/>
+                    <Label Text="Fredag" Grid.Column="4" HorizontalTextAlignment="Start"/>
+                    <Label Text="Lørdag" Grid.Column="5" HorizontalTextAlignment="Start"/>
+                    <Label Text="Søndag" Grid.Column="6" HorizontalTextAlignment="Start"/>
+
+                    <Switch Grid.Row="1" Grid.Column="0" x:Name="Monday" IsToggled="{Binding ToggledDays[0].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="1" x:Name="Tuesday" IsToggled="{Binding ToggledDays[1].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="2" x:Name="Wednesday" IsToggled="{Binding ToggledDays[2].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="3" x:Name="Thursday" IsToggled="{Binding ToggledDays[3].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="4" x:Name="Friday" IsToggled="{Binding ToggledDays[4].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="5" x:Name="Saturday" IsToggled="{Binding ToggledDays[5].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="6" x:Name="Sunday" IsToggled="{Binding ToggledDays[6].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                </Grid>
+            </StackLayout>
+            <!-- CHOOSE DAYS END -->
+
+            <!-- SET THUMBNAIL START -->
+            <StackLayout>
+                <Label Text="Vælg et passende piktogram til din nye ugeplan" FontSize="Medium"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                    </Grid.RowDefinitions>
+                    <ffimageloading:CachedImage
                                     Grid.Column="0"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
@@ -52,14 +98,16 @@
                                     ErrorPlaceholder="weekschedule.png"
                                     Source="{Binding WeekThumbNail.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
                                     BackgroundColor="White"/>
-                <Button Grid.Column="1"
+                    <Button Grid.Column="1"
                     VerticalOptions="Center"
                     HeightRequest="50"
                     x:Name="ChangePictogramButton"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                     Command="{Binding ChangePictogramCommand}"
                     Text="Ændre Pictogram for ugen"></Button>
-            </Grid>
+                </Grid>
+            </StackLayout>
+            <!-- SET THUMBNAIL END -->
             
             <Button
                 x:Name="SaveWeekButton"

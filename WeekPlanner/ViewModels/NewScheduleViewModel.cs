@@ -2,6 +2,7 @@
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -16,8 +17,25 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
 {
-    public class NewScheduleViewModel : Base.ViewModelBase
+    public class NewScheduleViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Small wrapper for handling which days have been toggled.
+        /// Inheritance from Switch means we don't have to manually handle PropertyChanged etc.
+        /// </summary>
+        public class DayToggledWrapper : Switch
+        {
+            public readonly WeekdayDTO.DayEnum Day;
+            public DayToggledWrapper(WeekdayDTO.DayEnum day)
+            {
+                IsToggled = true;
+                Day = day;
+            }
+        }
+
+        private ObservableCollection<DayToggledWrapper> _toggledDays;
+        public ObservableCollection<DayToggledWrapper> ToggledDays => _toggledDays;
+
         private WeekDTO _weekDTO = new WeekDTO();
 
         private readonly IWeekApi _weekApi;
@@ -65,6 +83,20 @@ namespace WeekPlanner.ViewModels
             WeekThumbNail = _weekDTO.Thumbnail;
 
             _scheduleName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et navn er påkrævet." });
+
+            _toggledDays = PopulateToggableDaysList();
+        }
+
+        private ObservableCollection<DayToggledWrapper> PopulateToggableDaysList()
+        {
+            var result = new ObservableCollection<DayToggledWrapper>();
+
+            foreach (WeekdayDTO.DayEnum day in Enum.GetValues(typeof(WeekdayDTO.DayEnum)))
+            {
+                result.Add(new DayToggledWrapper(day));
+            }
+
+            return result;
         }
 
 		public override Task PoppedAsync(object navigationData)
@@ -97,13 +129,16 @@ namespace WeekPlanner.ViewModels
                 _weekDTO.Thumbnail = WeekThumbNail;
                 _weekDTO.Id = default(int);
                 var list = new List<WeekdayDTO>();
-                for (int i = 0; i < 7; i++)
+                foreach(DayToggledWrapper day in ToggledDays)
                 {
+                    if (!day.IsToggled) continue;
+
                     WeekdayDTO weekdayDTO = new WeekdayDTO();
-                    weekdayDTO.Day = (WeekdayDTO.DayEnum)i;
+                    weekdayDTO.Day = day.Day;
                     weekdayDTO.Activities = new List<ActivityDTO>();
                     list.Add(weekdayDTO);
                 }
+
                 _weekDTO.Days = list;
 
                 await _requestService.SendRequestAndThenAsync(
