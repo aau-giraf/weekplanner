@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
-             xmlns:converters="using:WeekPlanner.Converters"
-             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
+    xmlns:converters="using:WeekPlanner.Converters"
+    xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
+    xmlns:converters1="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.ActivityPage"
              base:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Activity.Pictogram.Title}">
@@ -14,6 +16,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
         <StackLayout>
             <Grid VerticalOptions="CenterAndExpand">
                 <!--Left Side-->
@@ -31,19 +34,14 @@
                         <Button Grid.Column="2"
                                 Text="Slet"
                                 Command="{Binding DeleteActivityCommand}"/>
-                    </Grid>
-                </StackLayout>
-                <!--Right Side-->
-                <!--<StackLayout Grid.Column="1"
-                             VerticalOptions="CenterAndExpand">
-                    <Image Source="image_loading.png" />
-                    <Grid Padding="30">
-                        <Entry Placeholder="Tid"
-                               Grid.Column="0" />
-                        <Button Text="Start"
+                        </Grid>
+                    </StackLayout>
+                    <!--Right Side-->
+                    <!--<StackLayout Grid.Column="1"
+                             VerticalOptions="CenterAndExpand"><Image Source="image_loading.png" /><Grid Padding="30"><Entry Placeholder="Tid"
+                               Grid.Column="0" /><Button Text="Start"
                                 Grid.Column="1"
-                                IsVisible="{Binding IsGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/>
-                        <Button Text="Slet"
+                                IsVisible="{Binding IsGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/><Button Text="Slet"
                                 Grid.Column="1"
                                 IsVisible="{Binding IsGuardianMode}"/>
                     </Grid>
@@ -59,8 +57,7 @@
                          HorizontalOptions="Center"
                          Padding="12"
                          VerticalOptions="End"
-                         IsVisible="{Binding IsGuardianMode}">
-                <Button Text="Gem"
+                         IsVisible="{Binding IsGuardianMode}"><Button Text="Gem"
                         WidthRequest="300"
                         Command="{Binding SaveCommand}" />
             </StackLayout>

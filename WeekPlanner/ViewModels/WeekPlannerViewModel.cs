@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
-using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
@@ -23,7 +22,6 @@ namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
-        private readonly ILoginService _loginService;
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
         private readonly IDialogService _dialogService;
@@ -33,7 +31,7 @@ namespace WeekPlanner.ViewModels
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
-        private ImageSource _userModeImage;
+        private ImageSource _toolbarButtonIcon;
 
         public bool EditModeEnabled
         {
@@ -56,21 +54,21 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ImageSource UserModeImage
+        public ImageSource ToolbarButtonIcon
         {
-            get => _userModeImage;
+            get => _toolbarButtonIcon;
             set
             {
-                _userModeImage = value;
-                RaisePropertyChanged(() => UserModeImage);
+                _toolbarButtonIcon = value;
+                RaisePropertyChanged(() => ToolbarButtonIcon);
             }
         }
-
-        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
-
+        
+        public bool ShowToolbarButton { get; set; }
+        
+        public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
+        
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
-        public ICommand OnBackButtonPressedCommand => new Command(async () => await BackButtonPressed());
-
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
             if (IsBusy) return;
@@ -94,24 +92,23 @@ namespace WeekPlanner.ViewModels
         });
 
         public WeekPlannerViewModel(
-            INavigationService navigationService,
-            ILoginService loginService,
-            IRequestService requestService,
-            IWeekApi weekApi,
-            IDialogService dialogService,
-            ISettingsService settingsService)
+            INavigationService navigationService, 
+            IRequestService requestService, 
+            IWeekApi weekApi, 
+            IDialogService dialogService, 
+            ISettingsService settingsService) 
             : base(navigationService)
         {
             _requestService = requestService;
             _weekApi = weekApi;
             _dialogService = dialogService;
-            _loginService = loginService;
             _requestService = requestService;
             _settingsService = settingsService;
 
-            UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_citizen.png");
-            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded,
-                (sender) => SetToGuardianMode());
+            OnBackButtonPressedCommand = new Command(async () => await BackButtonPressed());
+            ShowToolbarButton = true;
+            ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, sender => SetToGuardianMode());
         }
 
         public override async Task InitializeAsync(object navigationData)
@@ -171,6 +168,7 @@ namespace WeekPlanner.ViewModels
 
             if (!confirmed)
             {
+                IsBusy = false;
                 return;
             }
 
@@ -273,22 +271,17 @@ namespace WeekPlanner.ViewModels
                 switch (result)
                 {
                     case "Annuller":
-                        IsBusy = false;
                         break;
 
                     case "Gem ændringer":
-                        EditModeEnabled = false;
                         await SaveSchedule();
-                        UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_citizen.png");
-                        IsBusy = false;
+                        ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
                         break;
 
                     case "Gem ikke":
-                        EditModeEnabled = false;
-                        UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_citizen.png");
+                        ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
                         if (WeekDTO.WeekNumber != null)
                             await GetWeekPlanForCitizenAsync(new Tuple<int?, int?>(WeekDTO.WeekYear, WeekDTO.WeekNumber));
-                        IsBusy = false;
                         break;
                 }
             }
@@ -321,7 +314,7 @@ namespace WeekPlanner.ViewModels
         private void SetToGuardianMode()
         {
             EditModeEnabled = true;
-            UserModeImage = (FileImageSource) ImageSource.FromFile("icon_default_guardian.png");
+            ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
         }
 
         private async Task BackButtonPressed()
@@ -349,6 +342,7 @@ namespace WeekPlanner.ViewModels
                         break;
                 }
             }
+
             IsBusy = false;
         }
 

@@ -9,7 +9,8 @@ namespace WeekPlanner.Views
         public TestingPage ()
         {
             InitializeComponent ();
-            
+			
+	        NavigationPage.SetHasNavigationBar(this, false);
 		}
     }
 }

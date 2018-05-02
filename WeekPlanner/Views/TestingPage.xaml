@@ -7,7 +7,7 @@
     x:Class="WeekPlanner.Views.TestingPage"
     Title="Navigering">
     <ContentPage.Content>
-        <ScrollView>
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
             <StackLayout VerticalOptions="Center">
                 <Button
                     Text="Log ind"
@@ -34,6 +34,6 @@
                     Text="Indstillinger"
                     Command="{Binding NavigateToSettingsCommand}" />
             </StackLayout>
-        </ScrollView>
+        </ContentView>
     </ContentPage.Content>
 </ContentPage>

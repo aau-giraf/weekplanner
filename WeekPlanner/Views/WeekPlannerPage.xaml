@@ -22,92 +22,91 @@
             <Color x:Key="WhiteColor">#000</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="{Binding UserModeImage}" Command="{Binding ToggleEditModeCommand}"></ToolbarItem>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Grid IsVisible="{Binding EditModeEnabled}">
+        <ContentView ControlTemplate="{StaticResource NavBarWithToolbarTemplate}">
+            <StackLayout>
+                <Grid IsVisible="{Binding EditModeEnabled}">
                     <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="AUTO"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Column="0">
-                    <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="0">
+                        <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
                     </Grid>
-                <Grid Grid.Column="1">
-                    <Entry HorizontalTextAlignment="Center" Text="{Binding WeekDTO.Name}" Placeholder="Unavngivet skema" TextColor="{StaticResource WhiteColor}">
+                    <Grid Grid.Column="1">
+                        <Entry HorizontalTextAlignment="Center" Text="{Binding WeekDTO.Name}" Placeholder="Unavngivet skema" TextColor="{StaticResource WhiteColor}">
                             <Entry.Behaviors>
-                            <behaviors:EventToCommandBehavior EventName="TextChanged" Command="{Binding SaveScheduleName}" />
+                                <behaviors:EventToCommandBehavior EventName="TextChanged" Command="{Binding SaveScheduleName}" />
                             </Entry.Behaviors>
                         </Entry>
                     </Grid>
-                <Grid Grid.Column="2">
-                    <Button Text="Annuller" BackgroundColor="{StaticResource CancelColor}" Command="{Binding ToggleEditModeCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                    <Grid Grid.Column="2">
+                        <Button Text="Annuller" BackgroundColor="{StaticResource CancelColor}" Command="{Binding ToolbarButtonCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
                     </Grid>
                 </Grid>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="AUTO" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <!-- DAYS TITLEBAR -->
-                <Label Text="Mandag" Grid.Column="0" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Tirsdag" Grid.Column="1" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Onsdag" Grid.Column="2" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Torsdag" Grid.Column="3" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Fredag" Grid.Column="4" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Lørdag" Grid.Column="5" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <Label Text="Søndag" Grid.Column="6" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
-                <!-- WEEKDAY LISTS -->
-                <ScrollView Grid.Row="1" Grid.ColumnSpan="7">
-                    <!-- HACK: The HeightRequest is set to make the Grid's height larger
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <!-- DAYS TITLEBAR -->
+                    <Label Text="Mandag" Grid.Column="0" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                    <Label Text="Tirsdag" Grid.Column="1" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                    <Label Text="Onsdag" Grid.Column="2" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                    <Label Text="Torsdag" Grid.Column="3" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                    <Label Text="Fredag" Grid.Column="4" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                    <Label Text="Lørdag" Grid.Column="5" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                    <Label Text="Søndag" Grid.Column="6" TextColor="{StaticResource WhiteColor}" HorizontalTextAlignment="Center" />
+                    <!-- WEEKDAY LISTS -->
+                    <ScrollView Grid.Row="1" Grid.ColumnSpan="7">
+                        <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
-                    <Grid HeightRequest="{Binding Height}">
-                        <controls:WeekDayListView BackgroundColor="{StaticResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource ThursdayColor}" ItemsSource="{Binding ThursdayPictos}" Grid.Column="3" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource FridayColor}" ItemsSource="{Binding FridayPictos}" Grid.Column="4" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource SaturdayColor}" ItemsSource="{Binding SaturdayPictos}" Grid.Column="5" />
-                        <controls:WeekDayListView BackgroundColor="{StaticResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" />
-                    </Grid>
-                </ScrollView>
-            </Grid>
-            <Grid IsVisible="{Binding EditModeEnabled}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="AUTO" />
-                </Grid.RowDefinitions>
-                <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Monday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
-                <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Tuesday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
-                <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Wednesday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
-                <Button Grid.Column="3" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Thursday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
-                <Button Grid.Column="4" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Friday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
-                <Button Grid.Column="5" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Saturday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
-                <Button Grid.Column="6" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Sunday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
-            </Grid>
-        </StackLayout>
+                        <Grid HeightRequest="{Binding Height}">
+                            <controls:WeekDayListView BackgroundColor="{StaticResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" />
+                            <controls:WeekDayListView BackgroundColor="{StaticResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
+                            <controls:WeekDayListView BackgroundColor="{StaticResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" />
+                            <controls:WeekDayListView BackgroundColor="{StaticResource ThursdayColor}" ItemsSource="{Binding ThursdayPictos}" Grid.Column="3" />
+                            <controls:WeekDayListView BackgroundColor="{StaticResource FridayColor}" ItemsSource="{Binding FridayPictos}" Grid.Column="4" />
+                            <controls:WeekDayListView BackgroundColor="{StaticResource SaturdayColor}" ItemsSource="{Binding SaturdayPictos}" Grid.Column="5" />
+                            <controls:WeekDayListView BackgroundColor="{StaticResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" />
+                        </Grid>
+                    </ScrollView>
+                </Grid>
+                <Grid IsVisible="{Binding EditModeEnabled}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO" />
+                    </Grid.RowDefinitions>
+                    <Button Grid.Column="0" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Monday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                    <Button Grid.Column="1" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Tuesday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                    <Button Grid.Column="2" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Wednesday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                    <Button Grid.Column="3" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Thursday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                    <Button Grid.Column="4" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Friday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                    <Button Grid.Column="5" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Saturday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                    <Button Grid.Column="6" Text="Tilføj" Command="{Binding NavigateToPictoSearchCommand}" CommandParameter="{x:Static local:WeekdayDTO+DayEnum.Sunday}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                </Grid>
+            </StackLayout>
+        </ContentView>
     </ContentPage.Content>
 </ContentPage>

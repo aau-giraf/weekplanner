@@ -13,7 +13,7 @@ namespace WeekPlanner.Views
 		public WeekPlannerPage()
 		{
 			InitializeComponent();
-
+			NavigationPage.SetHasNavigationBar(this, false);
 
 		}
 

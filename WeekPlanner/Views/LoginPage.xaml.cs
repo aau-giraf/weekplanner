@@ -6,10 +6,11 @@ using Xamarin.Forms;
 namespace WeekPlanner.Views
 {
     public partial class LoginPage : ContentPage
-    {
+    {       
         public LoginPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         void Username_Completed(object sender, System.EventArgs e)
