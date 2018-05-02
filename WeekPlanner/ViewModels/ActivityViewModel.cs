@@ -73,9 +73,9 @@ namespace WeekPlanner.ViewModels
             }
         });
 
-        private void ChangePicto(PictogramDTO pictogramDTO)
+        private void ChangePicto(WeekPictogramDTO weekPictogram)
         {
-            Activity.Pictogram = pictogramDTO;
+            Activity.Pictogram = weekPictogram;
         }
 
         public bool IsGuardianMode
@@ -125,7 +125,7 @@ namespace WeekPlanner.ViewModels
         });
 
         public override async Task PoppedAsync(object navigationData) {
-            if (navigationData is PictogramDTO newPicto) {
+            if (navigationData is WeekPictogramDTO newPicto) {
                 Activity.Pictogram = newPicto;
                 RaisePropertyChanged(() => Activity);
                 await NavigationService.PopAsync(this);
