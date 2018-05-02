@@ -37,6 +37,8 @@ namespace WeekPlanner.Services.Settings
         public string GuardianAuthToken { get; set; }
 
         public string CitizenAuthToken { get; set; }
+        
+        public string CurrentCitizenId { get; set; }
 
         public Task UpdateSettings(SettingDTO settingDTO)
         {

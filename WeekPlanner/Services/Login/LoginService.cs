@@ -12,12 +12,15 @@ namespace WeekPlanner.Services.Login
         private readonly IAccountApi _accountApi;
         private readonly IRequestService _requestService;
         private readonly ISettingsService _settingsService;
+        private readonly IUserApi _userApi;
         
-        public LoginService(IAccountApi accountApi, IRequestService requestService, ISettingsService settingsService)
+        public LoginService(IAccountApi accountApi, IRequestService requestService, ISettingsService settingsService,
+            IUserApi userApi)
         {
             _accountApi = accountApi;
             _requestService = requestService;
             _settingsService = settingsService;
+            _userApi = userApi;
         }
 
         /// <summary>
@@ -40,12 +43,13 @@ namespace WeekPlanner.Services.Login
                 if (userType == UserType.Citizen)
                 {
                     _settingsService.CitizenAuthToken = result.Data;
+                    await GetCitizenIdAndSetInSettings();
                 }
                 else // Guardian
                 {
                     _settingsService.GuardianAuthToken = result.Data;
                 }
-
+                
                 _settingsService.UseTokenFor(userType);
 
                 await onSuccess.Invoke();
@@ -54,6 +58,7 @@ namespace WeekPlanner.Services.Login
             await _requestService.SendRequestAndThenAsync(
                 () => _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
                 OnRequestSuccess);
+            
         }
 
         public async Task LoginAsync( UserType userType, string username, string password)
@@ -63,11 +68,12 @@ namespace WeekPlanner.Services.Login
                 throw new ArgumentException("A password should always be provided for Departments.");
             }
 
-            Task OnRequestSuccess(ResponseString result)
+            async Task OnRequestSuccess(ResponseString result)
             {
                 if (userType == UserType.Citizen)
                 {
                     _settingsService.CitizenAuthToken = result.Data;
+                    await GetCitizenIdAndSetInSettings();
                 }
                 else // Guardian
                 {
@@ -75,12 +81,17 @@ namespace WeekPlanner.Services.Login
                 }
 
                 _settingsService.UseTokenFor(userType);
-                return Task.FromResult(false);
             }
 
             await _requestService.SendRequestAndThenAsync(
                 () => _accountApi.V1AccountLoginPostAsync(new LoginDTO(username, password)),
                 OnRequestSuccess);
+        }
+
+        private Task GetCitizenIdAndSetInSettings()
+        {
+            return _requestService.SendRequestAndThenAsync(() => _userApi.V1UserGetAsync(),
+                dto => { _settingsService.CurrentCitizenId = dto.Data.Id; });
         }
     }
 }

@@ -55,6 +55,7 @@ namespace WeekPlanner.ApplicationObjects
                 cb.RegisterType<MockWeekApi>().As<IWeekApi>();
                 cb.RegisterType<MockPictogramApi>().As<IPictogramApi>();
                 cb.RegisterType<MockLoginService>().As<ILoginService>();
+                cb.RegisterType<MockUserApi>().As<IUserApi>();
             }
             else
             {

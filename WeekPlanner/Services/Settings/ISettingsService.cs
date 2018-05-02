@@ -8,8 +8,10 @@ namespace WeekPlanner.Services.Settings
         bool UseMocks { get; set; }
         string GuardianAuthToken { get; set; }
         string CitizenAuthToken { get; set; }
+        
+        string CurrentCitizenId { get; set; }
+        
         void UseTokenFor(UserType userType);
-
     }
 
     public enum UserType
