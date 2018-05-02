@@ -21,70 +21,72 @@ namespace WeekPlanner.ViewModels
     {
         private readonly ISettingsService _settingsService;
         private readonly ILoginService _loginService;
-		private readonly IRequestService _requestService;
-		private readonly IUserApi _userApi;
+        private readonly IRequestService _requestService;
+        private readonly IUserApi _userApi;
 
-		private GirafUserDTO _girafCitizen;
-		public GirafUserDTO GirafCitizen
-		{
-			get => _girafCitizen;
-			set
-			{
-				_girafCitizen = value;
-				RaisePropertyChanged(() => GirafCitizen);
-			}
-		}
+        private GirafUserDTO _girafCitizen;
+        public GirafUserDTO GirafCitizen
+        {
+            get => _girafCitizen;
+            set
+            {
+                _girafCitizen = value;
+                RaisePropertyChanged(() => GirafCitizen);
+            }
+        }
 
-		private bool _orientationSlider;
-		public bool OrientationSwitch
-		{
-			get	=> _orientationSlider; 
-			set
-			{
-				if (OrientationSetting == SettingDTO.OrientationEnum.Portrait)
-				{
-					_orientationSlider = true;
-				}
-				else
-				{
-					_orientationSlider = false;
-				}
-				RaisePropertyChanged(() => OrientationSwitch);
-			}
-		}
+        private bool _orientationSlider;
+        public bool OrientationSwitch
+        {
+            get => _orientationSlider;
+            set
+            {
+                if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
+                {
+                    _orientationSlider = true;
+                }
+                else
+                {
+                    _orientationSlider = false;
+                }
+                RaisePropertyChanged(() => OrientationSwitch);
+            }
+        }
 
-		public ICommand HandleSwitchChangedCommand => new Command(() =>
-		{
-			if (OrientationSetting == SettingDTO.OrientationEnum.Portrait)
-			{
-				OrientationSetting = SettingDTO.OrientationEnum.Landscape;
-			}
-			else
-			{
-				OrientationSetting = SettingDTO.OrientationEnum.Portrait;
-			}
-		});
-
-
-		private SettingDTO.OrientationEnum _orientationSetting;
-		public SettingDTO.OrientationEnum OrientationSetting
-		{
-			get => _orientationSetting;
-			set
-			{
-				_orientationSetting = value;
-				RaisePropertyChanged(() => OrientationSetting);
-			}
-		}
+        public ICommand HandleSwitchChangedCommand => new Command(() =>
+        {
+            if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
+            {
+                Settings.Orientation = SettingDTO.OrientationEnum.Landscape;
+            }
+            else
+            {
+                Settings.Orientation = SettingDTO.OrientationEnum.Portrait;
+            }
+        });
 
 
+        private SettingDTO.OrientationEnum _orientationSetting;
+        private SettingDTO _settings;
 
-		public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService, ILoginService loginService, IRequestService requestService, IUserApi userApi) : base(navigationService)
+        public SettingDTO Settings
+        {
+            get => _settings;
+            set
+            {
+                _settings = value;
+                RaisePropertyChanged(() => Settings);
+            }
+        }
+
+
+
+        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService, ILoginService loginService, IRequestService requestService, IUserApi userApi) : base(navigationService)
         {
             _settingsService = settingsService;
             _loginService = loginService;
-			_requestService = requestService;
-			_userApi = userApi;
+            _requestService = requestService;
+            _userApi = userApi;
 
         }
 
@@ -92,36 +94,31 @@ namespace WeekPlanner.ViewModels
         {
             _settingsService.UseTokenFor(UserType.Citizen);
             await InitializeCitizen();
-		}
+        }
 
-		private async Task InitializeCitizen()
-		{
-			await _requestService.SendRequestAndThenAsync(
-				requestAsync: async () => await _userApi.V1UserGetAsync(),
-				onSuccessAsync: async result => 
-				{
-					GirafCitizen = result.Data;
-					await InitalizeSettings();
-				},
-				onExceptionAsync: async () => await NavigationService.PopAsync(),
-				onRequestFailedAsync: async () => await NavigationService.PopAsync());
-		}
+        private async Task InitializeCitizen()
+        {
+            await _requestService.SendRequestAndThenAsync(
+                requestAsync: async () => await _userApi.V1UserGetAsync(),
+                onSuccessAsync: async result =>
+                {
+                    GirafCitizen = result.Data;
+                    await InitalizeSettings();
+                },
+                onExceptionAsync: async () => await NavigationService.PopAsync(),
+                onRequestFailedAsync: async () => await NavigationService.PopAsync());
+        }
 
-		private async Task InitalizeSettings()
-		{
-			await _requestService.SendRequestAndThenAsync(
-				requestAsync: async () => await _userApi.V1UserSettingsGetAsync(),
-				onSuccess: result =>
-				{
-					SetSettings(result);
-				},
-				onExceptionAsync: async () => await NavigationService.PopAsync(),
-				onRequestFailedAsync: async () => await NavigationService.PopAsync());
-		}
-        public SettingDTO Settings { get; set; }
-        private void SetSettings(ResponseSettingDTO result)
-		{
-            Settings = result.Data;
-		}
-	}
+        private async Task InitalizeSettings()
+        {
+            await _requestService.SendRequestAndThenAsync(
+                requestAsync: async () => await _userApi.V1UserSettingsGetAsync(),
+                onSuccess: result =>
+                {
+                    Settings = result.Data;
+                },
+                onExceptionAsync: async () => await NavigationService.PopAsync(),
+                onRequestFailedAsync: async () => await NavigationService.PopAsync());
+        }
+    }
 }
