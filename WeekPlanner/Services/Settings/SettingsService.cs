@@ -42,7 +42,10 @@ namespace WeekPlanner.Services.Settings
 
         public string CitizenAuthToken { get; set; }
         
-        public string CurrentCitizenId { get; set; }       
+        public string CurrentCitizenId { get; set; }    
+
+        public SettingDTO CurrentCitizenSettingDTO { get; set; }
+
 
         /// <summary>
         /// Sets the API up to using the specified type of authentication token.
@@ -77,6 +80,27 @@ namespace WeekPlanner.Services.Settings
             
             // The 'bearer' part is necessary, because it uses the Bearer Authentication
             _accountApi.Configuration.AddApiKey("Authorization", $"bearer {authToken}");
+        }
+
+        public void SetThemeOnLogin(){
+            var resources = App.Current.Resources;
+            switch (CurrentCitizenSettingDTO.Theme)
+            {
+                case SettingDTO.ThemeEnum.GirafRed:
+                    resources.MergedWith = typeof(Themes.RedTheme);
+                    break;
+                case SettingDTO.ThemeEnum.GirafYellow:
+                    resources.MergedWith = typeof(Themes.OrangeTheme);
+                    break;
+                case SettingDTO.ThemeEnum.AndroidBlue:
+                    resources.MergedWith = typeof(Themes.BlueTheme);
+                    break;
+                case SettingDTO.ThemeEnum.GirafGreen:
+                    resources.MergedWith = typeof(Themes.GreenTheme);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

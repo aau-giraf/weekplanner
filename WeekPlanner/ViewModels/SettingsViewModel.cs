@@ -32,13 +32,13 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private IEnumerable<SettingDTO.ThemeEnum> _themes { get; set; } = new List<SettingDTO.ThemeEnum>(){
+        private IEnumerable<SettingDTO.ThemeEnum> _themes = new List<SettingDTO.ThemeEnum>(){
             SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
         };
         public IEnumerable<SettingDTO.ThemeEnum> Themes => _themes;
 
 
-        private SettingDTO.ThemeEnum _themeSelected { get; set; }
+        private SettingDTO.ThemeEnum _themeSelected;
         public SettingDTO.ThemeEnum ThemeSelected
         {
             get { return _themeSelected; }
@@ -66,16 +66,14 @@ namespace WeekPlanner.ViewModels
                         break;
                     default:
                         break;
-
                 }
                 RaisePropertyChanged(() => ThemeSelected);
             }
         }
 
         private void SetThemeInSettingDTOAntUpdate(SettingDTO.ThemeEnum pickedTheme){
-            _settings.Theme = pickedTheme;
+            Settings.Theme = pickedTheme;
             UpdateSettingsAsync();
-            Console.WriteLine("**********************FUCK************************");
         }
 
         private bool _orientationSlider;
@@ -113,20 +111,19 @@ namespace WeekPlanner.ViewModels
         private async void UpdateSettingsAsync()
         {
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _userApi.V1UserSettingsPatchAsync(_settings),
+                requestAsync: () => _userApi.V1UserSettingsPatchAsync(Settings),
                 onSuccess: dto => { });
         }
 
 
         private SettingDTO.OrientationEnum _orientationSetting;
-        private SettingDTO _settings;
 
         public SettingDTO Settings
         {
-            get => _settings;
+            get => _settingsService.CurrentCitizenSettingDTO;
             set
             {
-                _settings = value;
+                _settingsService.CurrentCitizenSettingDTO = value;
                 RaisePropertyChanged(() => Settings);
             }
         }
@@ -153,30 +150,13 @@ namespace WeekPlanner.ViewModels
         {
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: async () => await _userApi.V1UserGetAsync(),
-                onSuccessAsync: async result =>
-                {
-                    GirafCitizen = result.Data;
-                    await InitalizeSettings();
-                },
-                onExceptionAsync: async () => await NavigationService.PopAsync(),
-                onRequestFailedAsync: async () => await NavigationService.PopAsync());
-        }
-
-        private async Task InitalizeSettings()
-        {
-            await _requestService.SendRequestAndThenAsync(
-                requestAsync: async () => await _userApi.V1UserSettingsGetAsync(),
                 onSuccess: result =>
                 {
-                    Settings = result.Data;
-
-
+                    GirafCitizen = result.Data;
                 },
                 onExceptionAsync: async () => await NavigationService.PopAsync(),
                 onRequestFailedAsync: async () => await NavigationService.PopAsync());
-
         }
-
 
     }
 }

@@ -53,10 +53,6 @@
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
 
-            <Style TargetType="views:SettingsPage.StackLayout">
-                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-            </Style>
-            
             <Style x:Key="ValidationErrorLabelStyle"
                    TargetType="{x:Type Label}">
                 <Setter Property="TextColor"
