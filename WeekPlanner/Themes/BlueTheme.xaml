@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="WeekPlanner.Themes.BlueTheme"
+    xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
+    xmlns:views="clr-namespace:WeekPlanner.Views;assembly=WeekPlanner">
+    <Style
+        TargetType="Button">
+        <Setter
+            Property="BackgroundColor"
+            Value="{StaticResource Primary}" />
+        <Setter
+            Property="TextColor"
+            Value="White" />
+    </Style>
+    <Style
+        TargetType="views:CustomNavigationPage">
+        <Setter
+            Property="BarBackgroundColor"
+            Value="{StaticResource Primary}" />
+        <Setter
+            Property="BarTextColor"
+            Value="White" />
+    </Style>
+</ResourceDictionary>

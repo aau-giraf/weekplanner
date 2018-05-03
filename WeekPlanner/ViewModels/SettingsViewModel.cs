@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Api;
@@ -29,6 +30,52 @@ namespace WeekPlanner.ViewModels
                 _girafCitizen = value;
                 RaisePropertyChanged(() => GirafCitizen);
             }
+        }
+
+        private IEnumerable<SettingDTO.ThemeEnum> _themes { get; set; } = new List<SettingDTO.ThemeEnum>(){
+            SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
+        };
+        public IEnumerable<SettingDTO.ThemeEnum> Themes => _themes;
+
+
+        private SettingDTO.ThemeEnum _themeSelected { get; set; }
+        public SettingDTO.ThemeEnum ThemeSelected
+        {
+            get { return _themeSelected; }
+            set
+            {
+                var currentTheme = App.Current.Resources;
+                _themeSelected = value;
+                switch (value)
+                {
+                    case SettingDTO.ThemeEnum.GirafRed:
+                        currentTheme.MergedWith = typeof(Themes.RedTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.GirafYellow:
+                        currentTheme.MergedWith = typeof(Themes.OrangeTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.AndroidBlue:
+                        currentTheme.MergedWith = typeof(Themes.BlueTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.GirafGreen:
+                        currentTheme.MergedWith = typeof(Themes.GreenTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    default:
+                        break;
+
+                }
+                RaisePropertyChanged(() => ThemeSelected);
+            }
+        }
+
+        private void SetThemeInSettingDTOAntUpdate(SettingDTO.ThemeEnum pickedTheme){
+            _settings.Theme = pickedTheme;
+            UpdateSettingsAsync();
+            Console.WriteLine("**********************FUCK************************");
         }
 
         private bool _orientationSlider;
@@ -66,14 +113,14 @@ namespace WeekPlanner.ViewModels
         private async void UpdateSettingsAsync()
         {
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _userApi.V1UserByIdSettingsPatchAsync(_settingsService.CurrentCitizenId, _settings),
+                requestAsync: () => _userApi.V1UserSettingsPatchAsync(_settings),
                 onSuccess: dto => { });
         }
-        
-        
+
+
         private SettingDTO.OrientationEnum _orientationSetting;
         private SettingDTO _settings;
-        
+
         public SettingDTO Settings
         {
             get => _settings;
@@ -86,7 +133,7 @@ namespace WeekPlanner.ViewModels
 
 
 
-        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService, 
+        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService,
             IDialogService dialogService, IRequestService requestService, IUserApi userApi) : base(navigationService)
         {
             _settingsService = settingsService;
@@ -122,9 +169,14 @@ namespace WeekPlanner.ViewModels
                 onSuccess: result =>
                 {
                     Settings = result.Data;
+
+
                 },
                 onExceptionAsync: async () => await NavigationService.PopAsync(),
                 onRequestFailedAsync: async () => await NavigationService.PopAsync());
+
         }
+
+
     }
 }
