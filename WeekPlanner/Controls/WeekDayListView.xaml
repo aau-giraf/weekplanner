@@ -4,26 +4,36 @@
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+    xmlns:converters="clr-namespace:WeekPlanner.Converters"
     x:Class="WeekPlanner.Controls.WeekDayListView"
     HasUnevenRows="True" SeparatorVisibility="None">
-    <!-- TODO: CachingStrategy causes crash, why?  -->
-    <!--CachingStrategy="RecycleElement"-->
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StateToOutlineConverter x:Key="StateToOutlineConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ListView.Behaviors>
         <behaviors:EventToCommandBehavior EventName="ItemTapped"
-                                                      Command="{Binding PictoClickedCommand}"
-                                                      EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
+                                          Command="{Binding PictoClickedCommand}"
+                                          EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
         <behaviors:ListViewDeselectSelectedItemBehavior />
     </ListView.Behaviors>
     <ListView.ItemTemplate>
         <DataTemplate>
             <ViewCell>
-                <!--DownsampleToViewSize="true"-->
-                <ffimageloading:CachedImage
+                <Frame 
+                    OutlineColor="{Binding State, Converter={StaticResource StateToOutlineConverter}}"
+                    BackgroundColor="{Binding State, Converter={StaticResource StateToOutlineConverter}}"
                     VerticalOptions="Center"
-                    LoadingPlaceholder="image_loading.png"
-                    Source="{Binding Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
-                    ErrorPlaceholder="image_loading.png"
-                    Margin="5" />
+                    HasShadow="false">
+                    <ffimageloading:CachedImage
+                        VerticalOptions="Center"
+                        LoadingPlaceholder="image_loading.png"
+                        Source="{Binding Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
+                        ErrorPlaceholder="image_loading.png"
+                        Scale="0.85" />
+                </Frame>
             </ViewCell>
         </DataTemplate>
     </ListView.ItemTemplate>

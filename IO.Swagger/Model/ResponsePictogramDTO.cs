@@ -389,7 +389,19 @@ namespace IO.Swagger.Model
             /// Enum DuplicateWeekScheduleName for value: DuplicateWeekScheduleName
             /// </summary>
             [EnumMember(Value = "DuplicateWeekScheduleName")]
-            DuplicateWeekScheduleName = 59
+            DuplicateWeekScheduleName = 59,
+            
+            /// <summary>
+            /// Enum ColorMustHaveUniqueDay for value: ColorMustHaveUniqueDay
+            /// </summary>
+            [EnumMember(Value = "ColorMustHaveUniqueDay")]
+            ColorMustHaveUniqueDay = 60,
+            
+            /// <summary>
+            /// Enum InvalidHexValues for value: InvalidHexValues
+            /// </summary>
+            [EnumMember(Value = "InvalidHexValues")]
+            InvalidHexValues = 61
         }
 
         /// <summary>

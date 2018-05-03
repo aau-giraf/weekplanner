@@ -7,20 +7,14 @@ using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using IO.Swagger.Api;
 using WeekPlanner.Helpers;
+using static IO.Swagger.Model.ActivityDTO;
 
 namespace WeekPlanner.ViewModels
 {
-    public enum State
-    {
-        Normal, Checked, Cancelled
-    }
-
-
     public class ActivityViewModel : ViewModelBase
     {
         private ActivityDTO _activity;
         private bool _isGuardianMode = true;
-        private State _state = State.Checked;
         readonly IPictogramApi _pictogramApi;
 
         public ActivityViewModel(INavigationService navigationService, IPictogramApi pictogramApi) : base(navigationService)
@@ -43,6 +37,8 @@ namespace WeekPlanner.ViewModels
             {
                 _activity = value;
                 RaisePropertyChanged(() => Activity);
+                RaisePropertyChanged(() => State);
+                RaisePropertyChanged(() => FriendlyStateString);
             }
         }
 
@@ -61,15 +57,20 @@ namespace WeekPlanner.ViewModels
         {
             switch (State)
             {
-                case State.Normal:
-                    State = State.Checked;
+                case StateEnum.Normal:
+                    State = StateEnum.Completed;
                     break;
-                case State.Checked:
-                    State = State.Cancelled;
+                case StateEnum.Completed:
+                    State = StateEnum.Canceled;
                     break;
-                case State.Cancelled:
-                    State = State.Normal;
+                case StateEnum.Canceled:
+                    State = StateEnum.Active;
                     break;
+                case StateEnum.Active:
+                    State = StateEnum.Normal;
+                    break;
+                
+                
             }
         });
 
@@ -88,12 +89,18 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public State State
+        public StateEnum State
         {
-            get => _state;
+            get 
+            {
+                if(Activity == null) {
+                    return StateEnum.Active;
+                }
+                return (StateEnum)Activity.State;
+            }
             set
             {
-                _state = value;
+                Activity.State = value;
                 RaisePropertyChanged(() => State);
                 RaisePropertyChanged(() => FriendlyStateString);
             }
@@ -105,11 +112,13 @@ namespace WeekPlanner.ViewModels
             {
                 switch (State)
                 {
-                    case State.Normal:
+                    case StateEnum.Normal:
                         return "Normal";
-                    case State.Checked:
+                    case StateEnum.Active:
+                        return "Aktiv";
+                    case StateEnum.Completed:
                         return "Udført";
-                    case State.Cancelled:
+                    case StateEnum.Canceled:
                         return "Aflyst";
                     default:
                         return State.ToString();
@@ -120,16 +129,27 @@ namespace WeekPlanner.ViewModels
         public ICommand ToggleGuardianMode => new Command(() => IsGuardianMode = !IsGuardianMode);
         public ICommand SaveCommand => new Command(async () =>
         {
-            // TODO: error handling - use RequestService
-            //await _pictogramApi.V1PictogramByIdPutAsync(pictogramDTO.Id, pictogramDTO);
+            await NavigationService.PopAsync(this);
         });
 
         public override async Task PoppedAsync(object navigationData) {
-            if (navigationData is WeekPictogramDTO newPicto) {
-                Activity.Pictogram = newPicto;
+            if (navigationData is PictogramDTO newPicto) {
+                WeekPictogramDTO newWeekPicto = Convert(newPicto);
+                Activity.Pictogram = newWeekPicto;
                 RaisePropertyChanged(() => Activity);
-                await NavigationService.PopAsync(this);
             }
+        }
+
+        WeekPictogramDTO Convert(PictogramDTO picto) {
+            return new WeekPictogramDTO
+            {
+                Id = picto.Id,
+                AccessLevel = (WeekPictogramDTO.AccessLevelEnum)picto.AccessLevel,
+                ImageHash = picto.ImageHash,
+                ImageUrl = picto.ImageUrl,
+                LastEdit = picto.LastEdit,
+                Title = picto.Title,
+            };
         }
 
     }

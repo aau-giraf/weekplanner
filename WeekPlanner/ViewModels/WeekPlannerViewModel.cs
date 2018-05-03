@@ -17,6 +17,7 @@ using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
 using WeekPlanner.Services;
 using WeekPlanner.Helpers;
+using static IO.Swagger.Model.ActivityDTO;
 
 namespace WeekPlanner.ViewModels
 {
@@ -351,9 +352,28 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        // TODO: Override the navigation bar backbutton when this is available.
-        // Will most likely only be available if/when the custom navigation bar gets implemented.
-
+        private DayEnum GetCurrentDay() {
+            var today = DateTime.Today.DayOfWeek;
+            switch(today) {
+                case DayOfWeek.Monday:
+                    return DayEnum.Monday;
+                case DayOfWeek.Tuesday:
+                    return DayEnum.Tuesday;
+                case DayOfWeek.Wednesday:
+                    return DayEnum.Wednesday;
+                case DayOfWeek.Thursday:
+                    return DayEnum.Thursday;
+                case DayOfWeek.Friday:
+                    return DayEnum.Friday;
+                case DayOfWeek.Saturday:
+                    return DayEnum.Saturday;
+                case DayOfWeek.Sunday:
+                    return DayEnum.Sunday;
+                default:
+                    throw new NotSupportedException("DayEnum out of bounds");
+            }
+                                
+        }
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
         public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
@@ -377,6 +397,7 @@ namespace WeekPlanner.ViewModels
 
         private void RaisePropertyForDays()
         {
+            SetActiveActivity();
             RaisePropertyChanged(() => MondayPictos);
             RaisePropertyChanged(() => TuesdayPictos);
             RaisePropertyChanged(() => WednesdayPictos);
@@ -385,6 +406,21 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => SaturdayPictos);
             RaisePropertyChanged(() => SundayPictos);
             RaisePropertyChanged(() => Height);
+        }
+
+        private void SetActiveActivity()
+        {
+            var today = GetCurrentDay();
+            var todaysActivities = WeekDTO.Days.First(d => d.Day == today).Activities;
+
+            foreach (var activity in todaysActivities)
+            {
+                if(activity.State != StateEnum.Canceled 
+                || activity.State != StateEnum.Completed) {
+                    activity.State = StateEnum.Active;
+                    return;
+                }
+            }
         }
     }
 }
