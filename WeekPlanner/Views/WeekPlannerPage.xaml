@@ -10,18 +10,6 @@
     x:Class="WeekPlanner.Views.WeekPlannerPage"
     base1:ViewModelLocator.AutoWireViewModel="true"
     Title="{Binding WeekDTO.Name}">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Color x:Key="MondayColor">#067700</Color>
-            <Color x:Key="TuesdayColor">#8c1086</Color>
-            <Color x:Key="WednesdayColor">#ff7f00</Color>
-            <Color x:Key="ThursdayColor">#0017ff</Color>
-            <Color x:Key="FridayColor">#ffdd00</Color>
-            <Color x:Key="SaturdayColor">#ff0102</Color>
-            <Color x:Key="SundayColor">#ffffff</Color>
-            <Color x:Key="WhiteColor">#000</Color>
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Icon="{Binding UserModeImage}" Command="{Binding ToggleEditModeCommand}"></ToolbarItem>
     </ContentPage.ToolbarItems>
