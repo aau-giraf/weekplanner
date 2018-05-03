@@ -50,7 +50,7 @@
                                     Aspect="AspectFit"
                                     LoadingPlaceholder="image_loading.png"
                                     ErrorPlaceholder="weekschedule.png"
-                                    Source="{Binding WeekThumbNail.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                                    Source="{Binding WeekThumbNail.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White"/>
                 <Button Grid.Column="1"
                     VerticalOptions="Center"
