@@ -83,7 +83,7 @@ namespace WeekPlanner.Services.Settings
         }
 
         public void SetThemeOnLogin(){
-            var resources = App.Current.Resources;
+            var resources = Xamarin.Forms.Application.Current.Resources;
             switch (CurrentCitizenSettingDTO.Theme)
             {
                 case SettingDTO.ThemeEnum.GirafRed:

@@ -110,6 +110,7 @@ namespace WeekPlanner.ViewModels
 
         private async void UpdateSettingsAsync()
         {
+            _settingsService.UseTokenFor(UserType.Citizen);
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _userApi.V1UserSettingsPatchAsync(Settings),
                 onSuccess: dto => { });
@@ -148,11 +149,12 @@ namespace WeekPlanner.ViewModels
 
         private async Task InitializeCitizen()
         {
+            _settingsService.UseTokenFor(UserType.Citizen);
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: async () => await _userApi.V1UserGetAsync(),
                 onSuccess: result =>
                 {
-                    GirafCitizen = result.Data;
+                       GirafCitizen = result.Data;
                 },
                 onExceptionAsync: async () => await NavigationService.PopAsync(),
                 onRequestFailedAsync: async () => await NavigationService.PopAsync());
