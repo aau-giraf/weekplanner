@@ -12,13 +12,15 @@ namespace WeekPlanner.Converters
             StateEnum? state = (StateEnum?)value;
 
             switch(state) {
-                case StateEnum.Active:
+                case StateEnum.Normal:
                 case null:
                     return Color.Transparent;
+                case StateEnum.Active:
+                    return Color.SeaGreen;
                 case StateEnum.Canceled:
                     return Color.Tomato;
                 case StateEnum.Completed:
-                    return Color.Green;
+                    return Color.DarkGreen;
                 default:
                     throw new NotSupportedException("StateToOutlineColor doesn't support this state");
             }

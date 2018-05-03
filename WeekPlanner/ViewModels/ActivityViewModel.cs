@@ -57,7 +57,7 @@ namespace WeekPlanner.ViewModels
         {
             switch (State)
             {
-                case StateEnum.Active:
+                case StateEnum.Normal:
                     State = StateEnum.Completed;
                     break;
                 case StateEnum.Completed:
@@ -66,6 +66,11 @@ namespace WeekPlanner.ViewModels
                 case StateEnum.Canceled:
                     State = StateEnum.Active;
                     break;
+                case StateEnum.Active:
+                    State = StateEnum.Normal;
+                    break;
+                
+                
             }
         });
 
@@ -107,8 +112,10 @@ namespace WeekPlanner.ViewModels
             {
                 switch (State)
                 {
-                    case StateEnum.Active:
+                    case StateEnum.Normal:
                         return "Normal";
+                    case StateEnum.Active:
+                        return "Aktiv";
                     case StateEnum.Completed:
                         return "Udført";
                     case StateEnum.Canceled:

@@ -228,7 +228,8 @@ namespace IO.Swagger.Model
         /// <param name="ColorThemeWeekSchedules">Property for setting the color theme of weekschedules (required).</param>
         /// <param name="NrOfDaysToDisplay">defines the number of days to display for a user in a weekschedule.</param>
         /// <param name="GreyScale">Flag for indicating whether or not greyscale is enabled.</param>
-        public SettingDTO(OrientationEnum Orientation = default(OrientationEnum), CompleteMarkEnum CompleteMark = default(CompleteMarkEnum), CancelMarkEnum CancelMark = default(CancelMarkEnum), DefaultTimerEnum DefaultTimer = default(DefaultTimerEnum), int? TimerSeconds = default(int?), int? ActivitiesCount = default(int?), ThemeEnum Theme = default(ThemeEnum), ColorThemeWeekSchedulesEnum ColorThemeWeekSchedules = default(ColorThemeWeekSchedulesEnum), int? NrOfDaysToDisplay = default(int?), bool? GreyScale = default(bool?))
+        /// <param name="WeekDayColors">WeekDayColors.</param>
+        public SettingDTO(OrientationEnum Orientation = default(OrientationEnum), CompleteMarkEnum CompleteMark = default(CompleteMarkEnum), CancelMarkEnum CancelMark = default(CancelMarkEnum), DefaultTimerEnum DefaultTimer = default(DefaultTimerEnum), int? TimerSeconds = default(int?), int? ActivitiesCount = default(int?), ThemeEnum Theme = default(ThemeEnum), ColorThemeWeekSchedulesEnum ColorThemeWeekSchedules = default(ColorThemeWeekSchedulesEnum), int? NrOfDaysToDisplay = default(int?), bool? GreyScale = default(bool?), List<WeekDayColorDTO> WeekDayColors = default(List<WeekDayColorDTO>))
         {
             // to ensure "Orientation" is required (not null)
             if (Orientation == null)
@@ -288,6 +289,7 @@ namespace IO.Swagger.Model
             this.ActivitiesCount = ActivitiesCount;
             this.NrOfDaysToDisplay = NrOfDaysToDisplay;
             this.GreyScale = GreyScale;
+            this.WeekDayColors = WeekDayColors;
         }
         
 
@@ -325,6 +327,12 @@ namespace IO.Swagger.Model
         public bool? GreyScale { get; set; }
 
         /// <summary>
+        /// Gets or Sets WeekDayColors
+        /// </summary>
+        [DataMember(Name="weekDayColors", EmitDefaultValue=false)]
+        public List<WeekDayColorDTO> WeekDayColors { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -342,6 +350,7 @@ namespace IO.Swagger.Model
             sb.Append("  ColorThemeWeekSchedules: ").Append(ColorThemeWeekSchedules).Append("\n");
             sb.Append("  NrOfDaysToDisplay: ").Append(NrOfDaysToDisplay).Append("\n");
             sb.Append("  GreyScale: ").Append(GreyScale).Append("\n");
+            sb.Append("  WeekDayColors: ").Append(WeekDayColors).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -425,6 +434,11 @@ namespace IO.Swagger.Model
                     this.GreyScale == input.GreyScale ||
                     (this.GreyScale != null &&
                     this.GreyScale.Equals(input.GreyScale))
+                ) && 
+                (
+                    this.WeekDayColors == input.WeekDayColors ||
+                    this.WeekDayColors != null &&
+                    this.WeekDayColors.SequenceEqual(input.WeekDayColors)
                 );
         }
 
@@ -457,6 +471,8 @@ namespace IO.Swagger.Model
                     hashCode = hashCode * 59 + this.NrOfDaysToDisplay.GetHashCode();
                 if (this.GreyScale != null)
                     hashCode = hashCode * 59 + this.GreyScale.GetHashCode();
+                if (this.WeekDayColors != null)
+                    hashCode = hashCode * 59 + this.WeekDayColors.GetHashCode();
                 return hashCode;
             }
         }

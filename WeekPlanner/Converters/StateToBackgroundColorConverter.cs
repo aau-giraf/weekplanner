@@ -11,13 +11,15 @@ namespace WeekPlanner.Converters
         {
             StateEnum? state = (StateEnum?)value;
             switch(state) {
-                case StateEnum.Active:
                 case null:
+                case StateEnum.Normal:
                     return Color.Blue;
+                case StateEnum.Active:
+                    return Color.SeaGreen;
                 case StateEnum.Canceled:
                     return Color.Red;
                 case StateEnum.Completed:
-                    return Color.Green;
+                    return Color.DarkGreen;
                 default:
                     throw new NotSupportedException("StateToBackgroundConverter");
             }
