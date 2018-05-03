@@ -105,11 +105,6 @@ namespace WeekPlanner.ViewModels
 		public string SundaySelectedColor { get { return _sundaySelectedColor; } set { RaisePropertyChanged(() => SundayColorSelected); _sundaySelectedColor = value; } }
 		public Color SundayColorSelected { get { return _weekdayColorsDict[_sundaySelectedColor]; } }
 
-		public string HexTestString
-		{
-			get { return ColorToHexConverter(_weekdayColorsDict[_mondaySelectedColor]); }
-		}
-
 		public string[] WeekdayHexColors
 		{
 			get
