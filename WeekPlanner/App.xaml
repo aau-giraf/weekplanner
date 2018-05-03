@@ -78,8 +78,8 @@
             <!-- CONVERTERS -->
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
             <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
-            <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />            
-            <converters:RelativeUrlConverter x:Key="RelativeUrlConverter" />
+            <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
+            <converters:IdToRawPictoUrlConverter x:Key="IdToRawPictoUrlConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

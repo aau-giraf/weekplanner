@@ -45,7 +45,7 @@
                                     Aspect="AspectFit"
                                     LoadingPlaceholder="image_loading.png"
                                     ErrorPlaceholder="default_profile_picture.jpg"
-                                    Source="{Binding ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                                    Source="{Binding Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White" 
                                     />
                             </Grid>

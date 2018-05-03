@@ -63,10 +63,10 @@ namespace WeekPlanner.ViewModels
             _pictogramApi = pictogramApi;
             _requestService = requestService;
             _dialogService = dialogService;
+
             PictogramDTO defaultPicto = _pictogramApi.V1PictogramByIdGet(2).Data;
             WeekPictogramDTO weekPictogramDto = new WeekPictogramDTO(defaultPicto.Id);
             WeekThumbNail = weekPictogramDto;
-
             _scheduleName =
                 new ValidatableObject<string>(
                     new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et navn er påkrævet."});

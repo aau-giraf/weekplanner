@@ -21,7 +21,7 @@
                 <ffimageloading:CachedImage
                     VerticalOptions="Center"
                     LoadingPlaceholder="image_loading.png"
-                    Source="{Binding Pictogram.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                    Source="{Binding Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                     ErrorPlaceholder="image_loading.png"
                     Margin="5" />
             </ViewCell>
