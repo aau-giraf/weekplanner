@@ -56,9 +56,9 @@
 					<ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding WednessdayColorSelected}"/>
+								<Frame WidthRequest="100" BackgroundColor="{Binding WednesdayColorSelected}"/>
                                 <Label Text="Onsdag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding WednessdaySelectedColor}"/>
+                                <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding WednesdaySelectedColor}"/>
                             </StackLayout>
 						</ViewCell.View>
 					</ViewCell>

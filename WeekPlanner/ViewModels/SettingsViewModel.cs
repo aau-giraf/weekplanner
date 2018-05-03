@@ -53,7 +53,7 @@ namespace WeekPlanner.ViewModels
                 UpdateSettingsAsync();
             }
         }
-
+        #region Weekplan Colours
         Dictionary<string, Color> _weekdayColorsDict = new Dictionary<string, Color>
         {
             {"Aqua", Color.Aqua},
@@ -89,6 +89,13 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        private void UpdateSettings(string key, Color value)
+        {
+
+           var a =  value.ToString();
+            App.Current.Resources[key] = value;
+        }
+
         string _mondaySelectedColor = "Grøn";
 
         public string MondaySelectedColor
@@ -98,6 +105,7 @@ namespace WeekPlanner.ViewModels
             {
                 RaisePropertyChanged(() => MondayColorSelected);
                 _mondaySelectedColor = value;
+                UpdateSettings("MondayColor", MondayColorSelected);
             }
         }
 
@@ -115,6 +123,7 @@ namespace WeekPlanner.ViewModels
             {
                 RaisePropertyChanged(() => TuesdayColorSelected);
                 _tuesdaySelectedColor = value;
+                UpdateSettings("TuesdayColor", TuesdayColorSelected);
             }
         }
 
@@ -123,21 +132,22 @@ namespace WeekPlanner.ViewModels
             get { return _weekdayColorsDict[_tuesdaySelectedColor]; }
         }
 
-        string _wednessdaySelectedColor = "Orange";
+        string _wednesdaySelectedColor = "Orange";
 
-        public string WednessdaySelectedColor
+        public string WednesdaySelectedColor
         {
-            get { return _wednessdaySelectedColor; }
+            get { return _wednesdaySelectedColor; }
             set
             {
-                RaisePropertyChanged(() => WednessdayColorSelected);
-                _wednessdaySelectedColor = value;
+                RaisePropertyChanged(() => WednesdayColorSelected);
+                _wednesdaySelectedColor = value;
+                UpdateSettings("WednesdayColor", WednesdayColorSelected);
             }
         }
 
-        public Color WednessdayColorSelected
+        public Color WednesdayColorSelected
         {
-            get { return _weekdayColorsDict[_wednessdaySelectedColor]; }
+            get { return _weekdayColorsDict[_wednesdaySelectedColor]; }
         }
 
         string _thursdaySelectedColor = "Blå";
@@ -149,6 +159,7 @@ namespace WeekPlanner.ViewModels
             {
                 RaisePropertyChanged(() => ThursdayColorSelected);
                 _thursdaySelectedColor = value;
+                UpdateSettings("ThursdayColor", ThursdayColorSelected);
             }
         }
 
@@ -166,6 +177,7 @@ namespace WeekPlanner.ViewModels
             {
                 RaisePropertyChanged(() => FridayColorSelected);
                 _fridaySelectedColor = value;
+                UpdateSettings("FridayColor", FridayColorSelected);
             }
         }
 
@@ -183,6 +195,7 @@ namespace WeekPlanner.ViewModels
             {
                 RaisePropertyChanged(() => SaturdayColorSelected);
                 _saturdaySelectedColor = value;
+                UpdateSettings("SaturdayColor", SaturdayColorSelected);
             }
         }
 
@@ -200,6 +213,7 @@ namespace WeekPlanner.ViewModels
             {
                 RaisePropertyChanged(() => SundayColorSelected);
                 _sundaySelectedColor = value;
+                UpdateSettings("SundayColor", SundayColorSelected);
             }
         }
 
@@ -216,7 +230,7 @@ namespace WeekPlanner.ViewModels
                 {
                     ColorToHexConverter(_weekdayColorsDict[_mondaySelectedColor]),
                     ColorToHexConverter(_weekdayColorsDict[_tuesdaySelectedColor]),
-                    ColorToHexConverter(_weekdayColorsDict[_wednessdaySelectedColor]),
+                    ColorToHexConverter(_weekdayColorsDict[_wednesdaySelectedColor]),
                     ColorToHexConverter(_weekdayColorsDict[_thursdaySelectedColor]),
                     ColorToHexConverter(_weekdayColorsDict[_fridaySelectedColor]),
                     ColorToHexConverter(_weekdayColorsDict[_saturdaySelectedColor]),
@@ -235,6 +249,7 @@ namespace WeekPlanner.ViewModels
 
             return hex;
         }
+        #endregion
 
         public ICommand HandleSwitchChangedCommand => new Command(() =>
         {
