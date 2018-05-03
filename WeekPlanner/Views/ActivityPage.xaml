@@ -17,21 +17,21 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarTheme}">
-        <StackLayout>
-            <Grid VerticalOptions="CenterAndExpand">
-                <!--Left Side-->
-                <StackLayout Grid.Column="0"
+            <StackLayout>
+                <Grid VerticalOptions="CenterAndExpand">
+                    <!--Left Side-->
+                    <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
-                    <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}" />
-                    <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
-                        <Button Grid.Column="0"
+                        <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}" />
+                        <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
+                            <Button Grid.Column="0"
                                 Text="Ændre"
                                 Command="{Binding ChangePictoCommand}" />
-                         <Button Grid.Column="1"
+                            <Button Grid.Column="1"
                                 Text="{Binding FriendlyStateString}"
                                 Command="{Binding ToggleStateCommand}"
-                                BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/> 
-                        <Button Grid.Column="2"
+                                BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/>
+                            <Button Grid.Column="2"
                                 Text="Slet"
                                 Command="{Binding DeleteActivityCommand}"/>
                         </Grid>
@@ -43,24 +43,24 @@
                                 Grid.Column="1"
                                 IsVisible="{Binding IsGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/><Button Text="Slet"
                                 Grid.Column="1"
-                                IsVisible="{Binding IsGuardianMode}"/>
-                    </Grid>
-                </StackLayout>-->
-            </Grid>
-           <!--The button below is used for debugging purposes-->
-           <!--  <Button Text="Toggle Guardian"
+                                IsVisible="{Binding IsGuardianMode}"/></Grid></StackLayout>-->
+                </Grid>
+                <!--The button below is used for debugging purposes-->
+                <!--  <Button Text="Toggle Guardian"
                         BackgroundColor="Fuchsia"
                         WidthRequest="300"
                         Command="{Binding ToggleGuardianMode}"
                         HorizontalOptions="Center" /> -->
-            <StackLayout Orientation="Horizontal"
+                <StackLayout Orientation="Horizontal"
                          HorizontalOptions="Center"
                          Padding="12"
                          VerticalOptions="End"
-                         IsVisible="{Binding IsGuardianMode}"><Button Text="Gem"
+                         IsVisible="{Binding IsGuardianMode}">
+                    <Button Text="Gem"
                         WidthRequest="300"
                         Command="{Binding SaveCommand}" />
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
+        </ContentView>
     </ContentPage.Content>
 </ContentPage>

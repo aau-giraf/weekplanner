@@ -9,11 +9,6 @@
              x:Class="WeekPlanner.Views.CitizenSchedulesPage"
              Title="Ugeplaner Frontpage"
              x:Name="root">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="icon_add.png" 
-                     Command="{Binding AddWeekScheduleCommand}" 
-                     IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"></ToolbarItem>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarTemplate}">
             <StackLayout>

@@ -23,7 +23,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <ContentView ControlTemplate="{StaticResource NavBarWithToolbarTemplate}">
+        <ContentView ControlTemplate="{StaticResource NavBarWithToolbarAndStackTemplate}">
             <StackLayout>
                 <Grid IsVisible="{Binding EditModeEnabled}">
                     <Grid.ColumnDefinitions>
