@@ -33,8 +33,16 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private ObservableCollection<DayToggledWrapper> _toggledDays;
-        public ObservableCollection<DayToggledWrapper> ToggledDays => _toggledDays;
+        private ValidatableObject<ObservableCollection<DayToggledWrapper>> _toggledDaysValidatable;
+        public ValidatableObject<ObservableCollection<DayToggledWrapper>> ToggledDaysValidatable
+        {
+            get => _toggledDaysValidatable;
+            set
+            {
+                _toggledDaysValidatable = value;
+                RaisePropertyChanged(() => ToggledDaysValidatable);
+            }
+        }
 
         private WeekDTO _weekDTO = new WeekDTO();
 
@@ -84,17 +92,25 @@ namespace WeekPlanner.ViewModels
 
             _scheduleName = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et navn er påkrævet." });
 
-            _toggledDays = PopulateToggableDaysList();
+            ToggledDaysValidatable = PopulateToggableDaysList();
         }
 
-        private ObservableCollection<DayToggledWrapper> PopulateToggableDaysList()
+        private ValidatableObject<ObservableCollection<DayToggledWrapper>> PopulateToggableDaysList()
         {
-            var result = new ObservableCollection<DayToggledWrapper>();
+            var result = new ValidatableObject<ObservableCollection<DayToggledWrapper>>(
+                new MinimumOneDayToggledRule<ObservableCollection<DayToggledWrapper>> {
+                    ValidationMessage = "Et ugeskema skal bestå af minimum en dag."
+                });
+
+
+            ObservableCollection<DayToggledWrapper> value = new ObservableCollection<DayToggledWrapper>();
 
             foreach (WeekdayDTO.DayEnum day in Enum.GetValues(typeof(WeekdayDTO.DayEnum)))
             {
-                result.Add(new DayToggledWrapper(day));
+                value.Add(new DayToggledWrapper(day));
             }
+
+            result.Value = value;
 
             return result;
         }
@@ -122,14 +138,14 @@ namespace WeekPlanner.ViewModels
             if (IsBusy) return;
             IsBusy = true;
             
-            if (ValidateWeekScheduleName())
+            if (ValidateWeekScheduleName() && ValidateWeekDays())
             {
                 _weekDTO.Name = ScheduleName.Value;
                 WeekThumbNail.AccessLevel = PictogramDTO.AccessLevelEnum.PUBLIC;
                 _weekDTO.Thumbnail = WeekThumbNail;
                 _weekDTO.Id = default(int);
                 var list = new List<WeekdayDTO>();
-                foreach(DayToggledWrapper day in ToggledDays)
+                foreach(DayToggledWrapper day in ToggledDaysValidatable.Value)
                 {
                     if (!day.IsToggled) continue;
 
@@ -157,6 +173,11 @@ namespace WeekPlanner.ViewModels
         {
             var isWeekNameValid = _scheduleName.Validate();
             return isWeekNameValid;
+        }
+
+        private bool ValidateWeekDays()
+        {
+            return _toggledDaysValidatable.Validate();
         }
     }
 }

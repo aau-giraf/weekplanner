@@ -18,7 +18,8 @@
 
     <ContentPage.Content>
         <StackLayout
-            Margin="12">
+            Margin="12"
+            Spacing="20">
             <Label
                 Text="Ny ugeplan"
                 HorizontalTextAlignment="Center"
@@ -68,14 +69,17 @@
                     <Label Text="Lørdag" Grid.Column="5" HorizontalTextAlignment="Start"/>
                     <Label Text="Søndag" Grid.Column="6" HorizontalTextAlignment="Start"/>
 
-                    <Switch Grid.Row="1" Grid.Column="0" x:Name="Monday" IsToggled="{Binding ToggledDays[0].IsToggled}" HorizontalOptions="StartAndExpand"/>
-                    <Switch Grid.Row="1" Grid.Column="1" x:Name="Tuesday" IsToggled="{Binding ToggledDays[1].IsToggled}" HorizontalOptions="StartAndExpand"/>
-                    <Switch Grid.Row="1" Grid.Column="2" x:Name="Wednesday" IsToggled="{Binding ToggledDays[2].IsToggled}" HorizontalOptions="StartAndExpand"/>
-                    <Switch Grid.Row="1" Grid.Column="3" x:Name="Thursday" IsToggled="{Binding ToggledDays[3].IsToggled}" HorizontalOptions="StartAndExpand"/>
-                    <Switch Grid.Row="1" Grid.Column="4" x:Name="Friday" IsToggled="{Binding ToggledDays[4].IsToggled}" HorizontalOptions="StartAndExpand"/>
-                    <Switch Grid.Row="1" Grid.Column="5" x:Name="Saturday" IsToggled="{Binding ToggledDays[5].IsToggled}" HorizontalOptions="StartAndExpand"/>
-                    <Switch Grid.Row="1" Grid.Column="6" x:Name="Sunday" IsToggled="{Binding ToggledDays[6].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="0" x:Name="Monday" IsToggled="{Binding ToggledDaysValidatable.Value[0].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="1" x:Name="Tuesday" IsToggled="{Binding ToggledDaysValidatable.Value[1].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="2" x:Name="Wednesday" IsToggled="{Binding ToggledDaysValidatable.Value[2].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="3" x:Name="Thursday" IsToggled="{Binding ToggledDaysValidatable.Value[3].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="4" x:Name="Friday" IsToggled="{Binding ToggledDaysValidatable.Value[4].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="5" x:Name="Saturday" IsToggled="{Binding ToggledDaysValidatable.Value[5].IsToggled}" HorizontalOptions="StartAndExpand"/>
+                    <Switch Grid.Row="1" Grid.Column="6" x:Name="Sunday" IsToggled="{Binding ToggledDaysValidatable.Value[6].IsToggled}" HorizontalOptions="StartAndExpand"/>
                 </Grid>
+                <Label
+                Text="{Binding ToggledDaysValidatable.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                Style="{StaticResource ValidationErrorLabelStyle}" />
             </StackLayout>
             <!-- CHOOSE DAYS END -->
 
