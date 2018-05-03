@@ -80,6 +80,7 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _dialogService = dialogService;
             _loginService = loginService;
+            _selectedActivities = new List<StatefulPictogram>();
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             
@@ -118,6 +119,8 @@ namespace WeekPlanner.ViewModels
 		private void SetToGuardianMode()
 		{
 			EditModeEnabled = true;
+            SelectModeEnabled = false;
+            _selectedActivities.Clear();
 			UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
 			var tempDict = new Dictionary<DayEnum, ObservableCollection<StatefulPictogram>>();
 
@@ -149,6 +152,16 @@ namespace WeekPlanner.ViewModels
 	    {
 		    if (EditModeEnabled)
 		    {
+                if (SelectModeEnabled)
+                {
+                    foreach (StatefulPictogram activity in _selectedActivities)
+                    {
+                        activity.Border = "Transparent";
+                    }
+                    _selectedActivities.Clear();
+                    SelectModeEnabled = false;
+                }
+                //SetBorderStatusPictograms(DateTime.Today.DayOfWeek);
 			    EditModeEnabled = false;
 			    UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
 		    }
@@ -302,7 +315,6 @@ namespace WeekPlanner.ViewModels
 			set
 			{
 				_weekdayPictos = value;
-				SetBorderStatusPictograms(DateTime.Today.DayOfWeek);
 				RaisePropertyChanged(() => MondayPictos);
 				RaisePropertyChanged(() => TuesdayPictos);
 				RaisePropertyChanged(() => WednesdayPictos);
@@ -401,7 +413,7 @@ namespace WeekPlanner.ViewModels
 		/// <summary>
 		///  A mock class for pictograms, it contains both the URL and State of a pictogram. 
 		/// </summary>
-		public class StatefulPictogram
+        public class StatefulPictogram : ExtendedBindableObject
 		{
 			private string _url;
 
@@ -424,21 +436,25 @@ namespace WeekPlanner.ViewModels
 			public string Border
 			{
 				get { return _border; }
-				set { _border = value; }
+				set 
+                { 
+                    _border = value;
+                    RaisePropertyChanged(() => Border);
+                }
 			}
 
 			public StatefulPictogram(string url, PictogramState pictogramState)
 			{
 				PictogramState = pictogramState;
 				URL = url;
-				Border = "Transparent";
+				Border = "Lime";
 			}
 		}
 		#endregion
 
         private async Task SelectActivity(StatefulPictogram activity){
             _selectedActivities.Add(activity);
-            activity.Border = "Lime";
+            activity.Border = "Blue";
         }
 
         private async Task DeSelectActivity(StatefulPictogram activity)
@@ -451,9 +467,16 @@ namespace WeekPlanner.ViewModels
         {
             if (SelectModeEnabled)
             {
+                foreach(StatefulPictogram activity in _selectedActivities){
+                    activity.Border = "Transparent";
+                }
                 _selectedActivities.Clear();
+                SelectModeEnabled = false;
             }
-            SelectModeEnabled = !SelectModeEnabled;
+            else
+            {
+                SelectModeEnabled = true;
+            }
         }
     }
 }
