@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Api;
-using IO.Swagger.Client;
 using IO.Swagger.Model;
-using WeekPlanner.Helpers;
+using WeekPlanner.Services;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
-using WeekPlanner.Validations;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
@@ -20,117 +17,148 @@ namespace WeekPlanner.ViewModels
     public class SettingsViewModel : ViewModelBase
     {
         private readonly ISettingsService _settingsService;
-        private readonly ILoginService _loginService;
-		private readonly IRequestService _requestService;
-		private readonly IUserApi _userApi;
+        private readonly IRequestService _requestService;
+        private readonly IDialogService _dialogService;
+        private readonly IUserApi _userApi;
 
-		private GirafUserDTO _girafCitizen;
-		public GirafUserDTO GirafCitizen
-		{
-			get => _girafCitizen;
-			set
-			{
-				_girafCitizen = value;
-				RaisePropertyChanged(() => GirafCitizen);
-			}
-		}
+        private GirafUserDTO _girafCitizen;
+        public GirafUserDTO GirafCitizen
+        {
+            get => _girafCitizen;
+            set
+            {
+                _girafCitizen = value;
+                RaisePropertyChanged(() => GirafCitizen);
+            }
+        }
 
-		private bool _orientationSlider;
-		public bool OrientationSwitch
-		{
-			get	=> _orientationSlider; 
-			set
-			{
-				if (OrientationSetting == SettingDTO.OrientationEnum.Portrait)
-				{
-					_orientationSlider = true;
-				}
-				else
-				{
-					_orientationSlider = false;
-				}
-				RaisePropertyChanged(() => OrientationSwitch);
-			}
-		}
-
-		public ICommand HandleSwitchChangedCommand => new Command(() =>
-		{
-			if (OrientationSetting == SettingDTO.OrientationEnum.Portrait)
-			{
-				OrientationSetting = SettingDTO.OrientationEnum.Landscape;
-			}
-			else
-			{
-				OrientationSetting = SettingDTO.OrientationEnum.Portrait;
-			}
-		});
+        private IEnumerable<SettingDTO.ThemeEnum> _themes = new List<SettingDTO.ThemeEnum>(){
+            SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
+        };
+        public IEnumerable<SettingDTO.ThemeEnum> Themes => _themes;
 
 
-		private SettingDTO.OrientationEnum _orientationSetting;
-		public SettingDTO.OrientationEnum OrientationSetting
-		{
-			get => _orientationSetting;
-			set
-			{
-				_orientationSetting = value;
-				RaisePropertyChanged(() => OrientationSetting);
-			}
-		}
+        private SettingDTO.ThemeEnum _themeSelected;
+        public SettingDTO.ThemeEnum ThemeSelected
+        {
+            get { return _themeSelected; }
+            set
+            {
+                var currentTheme = App.Current.Resources;
+                _themeSelected = value;
+                switch (value)
+                {
+                    case SettingDTO.ThemeEnum.GirafRed:
+                        currentTheme.MergedWith = typeof(Themes.RedTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.GirafYellow:
+                        currentTheme.MergedWith = typeof(Themes.OrangeTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.AndroidBlue:
+                        currentTheme.MergedWith = typeof(Themes.BlueTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.GirafGreen:
+                        currentTheme.MergedWith = typeof(Themes.GreenTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    default:
+                        break;
+                }
+                RaisePropertyChanged(() => ThemeSelected);
+            }
+        }
+
+        private void SetThemeInSettingDTOAntUpdate(SettingDTO.ThemeEnum pickedTheme){
+            Settings.Theme = pickedTheme;
+            UpdateSettingsAsync();
+        }
+
+        private bool _orientationSlider;
+        public bool OrientationSwitch
+        {
+            get => _orientationSlider;
+            set
+            {
+                if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
+                {
+                    _orientationSlider = true;
+                }
+                else
+                {
+                    _orientationSlider = false;
+                }
+                RaisePropertyChanged(() => OrientationSwitch);
+                UpdateSettingsAsync();
+            }
+        }
+
+        public ICommand HandleSwitchChangedCommand => new Command(() =>
+        {
+            if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
+            {
+                Settings.Orientation = SettingDTO.OrientationEnum.Landscape;
+            }
+            else
+            {
+                Settings.Orientation = SettingDTO.OrientationEnum.Portrait;
+            }
+        });
+
+
+        private async void UpdateSettingsAsync()
+        {
+            _settingsService.UseTokenFor(UserType.Citizen);
+            await _requestService.SendRequestAndThenAsync(
+                requestAsync: () => _userApi.V1UserSettingsPatchAsync(Settings),
+                onSuccess: dto => { });
+        }
+
+
+        private SettingDTO.OrientationEnum _orientationSetting;
+
+        public SettingDTO Settings
+        {
+            get => _settingsService.CurrentCitizenSettingDTO;
+            set
+            {
+                _settingsService.CurrentCitizenSettingDTO = value;
+                RaisePropertyChanged(() => Settings);
+            }
+        }
 
 
 
-		public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService, ILoginService loginService, IRequestService requestService, IUserApi userApi) : base(navigationService)
+        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService,
+            IDialogService dialogService, IRequestService requestService, IUserApi userApi) : base(navigationService)
         {
             _settingsService = settingsService;
-            _loginService = loginService;
-			_requestService = requestService;
-			_userApi = userApi;
+            _requestService = requestService;
+            _userApi = userApi;
+            _dialogService = dialogService;
 
         }
 
         public override async Task InitializeAsync(object navigationData)
         {
-			if (navigationData is UserNameDTO userNameDTO)
-			{
-				await _loginService.LoginAndThenAsync(InitializeCitizen, UserType.Citizen,
-					userNameDTO.UserName);
-			}
-			else
-			{
-				throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
-			}
-		}
+            _settingsService.UseTokenFor(UserType.Citizen);
+            await InitializeCitizen();
+        }
 
-		private async Task InitializeCitizen()
-		{
-			await _requestService.SendRequestAndThenAsync(
-				requestAsync: async () => await _userApi.V1UserGetAsync(),
-				onSuccess: result => 
-				{
-					GirafCitizen = result.Data;
-					InitalizeSettings();
-				},
-				onExceptionAsync: async () => await NavigationService.PopAsync(),
-				onRequestFailedAsync: async () => await NavigationService.PopAsync());
-		}
+        private async Task InitializeCitizen()
+        {
+            _settingsService.UseTokenFor(UserType.Citizen);
+            await _requestService.SendRequestAndThenAsync(
+                requestAsync: async () => await _userApi.V1UserGetAsync(),
+                onSuccess: result =>
+                {
+                       GirafCitizen = result.Data;
+                },
+                onExceptionAsync: async () => await NavigationService.PopAsync(),
+                onRequestFailedAsync: async () => await NavigationService.PopAsync());
+        }
 
-		private async Task InitalizeSettings()
-		{
-			await _requestService.SendRequestAndThenAsync(
-				requestAsync: async () => await _userApi.V1UserSettingsGetAsync(),
-				onSuccess: result =>
-				{
-					SetSettings(result);
-				},
-				onExceptionAsync: async () => await NavigationService.PopAsync(),
-				onRequestFailedAsync: async () => await NavigationService.PopAsync());
-		}
-
-		private void SetSettings(ResponseSettingDTO result)
-		{
-			OrientationSetting = result.Data.Orientation;
-
-			// Set all the other settings here.
-		}
-	}
+    }
 }

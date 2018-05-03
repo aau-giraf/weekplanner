@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using IO.Swagger.Api;
 using IO.Swagger.Model;
 using SimpleJson;
+using WeekPlanner.Services.Request;
 
 namespace WeekPlanner.Services.Settings
 {
@@ -10,17 +11,21 @@ namespace WeekPlanner.Services.Settings
     {
         private readonly IAccountApi  _accountApi;
         private readonly JsonObject _appSettings;
-
+        private readonly IUserApi _userApi;
+        private readonly IRequestService _requestService;
+        
         private static string _token;
         public static Task<string> GetToken()
         {
             return Task.FromResult(_token);
         }
 
-        public SettingsService(IAccountApi accountApi, JsonObject appSettings)
+        public SettingsService(IAccountApi accountApi, JsonObject appSettings, IUserApi userApi, IRequestService requestService)
         {
             _accountApi = accountApi;
             _appSettings = appSettings;
+            _userApi = userApi;
+            _requestService = requestService;
         }
 
         public string BaseEndpoint
@@ -37,6 +42,10 @@ namespace WeekPlanner.Services.Settings
 
         public string CitizenAuthToken { get; set; }
         
+        public string CurrentCitizenId { get; set; }    
+
+        public SettingDTO CurrentCitizenSettingDTO { get; set; }
+
 
         /// <summary>
         /// Sets the API up to using the specified type of authentication token.
@@ -71,6 +80,27 @@ namespace WeekPlanner.Services.Settings
             
             // The 'bearer' part is necessary, because it uses the Bearer Authentication
             _accountApi.Configuration.AddApiKey("Authorization", $"bearer {authToken}");
+        }
+
+        public void SetThemeOnLogin(){
+            var resources = Xamarin.Forms.Application.Current.Resources;
+            switch (CurrentCitizenSettingDTO.Theme)
+            {
+                case SettingDTO.ThemeEnum.GirafRed:
+                    resources.MergedWith = typeof(Themes.RedTheme);
+                    break;
+                case SettingDTO.ThemeEnum.GirafYellow:
+                    resources.MergedWith = typeof(Themes.OrangeTheme);
+                    break;
+                case SettingDTO.ThemeEnum.AndroidBlue:
+                    resources.MergedWith = typeof(Themes.BlueTheme);
+                    break;
+                case SettingDTO.ThemeEnum.GirafGreen:
+                    resources.MergedWith = typeof(Themes.GreenTheme);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
