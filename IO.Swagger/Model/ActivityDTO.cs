@@ -41,19 +41,19 @@ namespace IO.Swagger.Model
             /// Enum Active for value: Active
             /// </summary>
             [EnumMember(Value = "Active")]
-            Active = 1,
+            Active = 0,
             
             /// <summary>
             /// Enum Canceled for value: Canceled
             /// </summary>
             [EnumMember(Value = "Canceled")]
-            Canceled = 2,
+            Canceled = 1,
             
             /// <summary>
             /// Enum Completed for value: Completed
             /// </summary>
             [EnumMember(Value = "Completed")]
-            Completed = 3
+            Completed = 2
         }
 
         /// <summary>
