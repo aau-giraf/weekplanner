@@ -6,7 +6,15 @@
     <Application.Resources>
         <ResourceDictionary>
             <!--COLORS-->
-            
+
+            <Color x:Key="MondayColor">#067700</Color>
+            <Color x:Key="TuesdayColor">#8c1086</Color>
+            <Color x:Key="WednesdayColor">#ff7f00</Color>
+            <Color x:Key="ThursdayColor">#0017ff</Color>
+            <Color x:Key="FridayColor">#ffdd00</Color>
+            <Color x:Key="SaturdayColor">#ff0102</Color>
+            <Color x:Key="SundayColor">#ffffff</Color>
+
             <Color
                 x:Key="Primary">#33b5e5</Color>
             <Color

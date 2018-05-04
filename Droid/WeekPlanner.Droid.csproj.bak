@@ -196,6 +196,9 @@
     <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable\icon_left_arrow.png" />
+    <AndroidResource Include="Resources\drawable\icon_checkmark.png" />
+    <AndroidResource Include="Resources\drawable\icon_cross.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WeekPlanner\WeekPlanner.csproj">

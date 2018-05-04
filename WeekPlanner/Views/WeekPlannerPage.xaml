@@ -10,17 +10,9 @@
     x:Class="WeekPlanner.Views.WeekPlannerPage"
     base1:ViewModelLocator.AutoWireViewModel="true"
     Title="{Binding WeekDTO.Name}">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Color x:Key="MondayColor">#067700</Color>
-            <Color x:Key="TuesdayColor">#8c1086</Color>
-            <Color x:Key="WednesdayColor">#ff7f00</Color>
-            <Color x:Key="ThursdayColor">#0017ff</Color>
-            <Color x:Key="FridayColor">#ffdd00</Color>
-            <Color x:Key="SaturdayColor">#ff0102</Color>
-            <Color x:Key="SundayColor">#ffffff</Color>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="{Binding UserModeImage}" Command="{Binding ToggleEditModeCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarAndStackTemplate}">
             <StackLayout>
@@ -73,18 +65,19 @@
                     <ScrollView Grid.Row="1" Grid.ColumnSpan="7">
                         <!-- HACK: The HeightRequest is set to make the Grid's height larger
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
+
                         <Grid HeightRequest="{Binding Height}">
-                            <controls:WeekDayListView BackgroundColor="{StaticResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" />
-                            <controls:WeekDayListView BackgroundColor="{StaticResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
-                            <controls:WeekDayListView BackgroundColor="{StaticResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" />
-                            <controls:WeekDayListView BackgroundColor="{StaticResource ThursdayColor}" ItemsSource="{Binding ThursdayPictos}" Grid.Column="3" />
-                            <controls:WeekDayListView BackgroundColor="{StaticResource FridayColor}" ItemsSource="{Binding FridayPictos}" Grid.Column="4" />
-                            <controls:WeekDayListView BackgroundColor="{StaticResource SaturdayColor}" ItemsSource="{Binding SaturdayPictos}" Grid.Column="5" />
-                            <controls:WeekDayListView BackgroundColor="{StaticResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" />
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" />
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" />
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource ThursdayColor}" ItemsSource="{Binding ThursdayPictos}" Grid.Column="3" />
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource FridayColor}" ItemsSource="{Binding FridayPictos}" Grid.Column="4" />
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource SaturdayColor}" ItemsSource="{Binding SaturdayPictos}" Grid.Column="5" />
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" />
                         </Grid>
                     </ScrollView>
                 </Grid>
-                <Grid IsVisible="{Binding SettingsService.IsInGuardianMode}">
+                <Grid IsVisible="{Binding EditModeEnabled}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
