@@ -224,6 +224,8 @@
     <ImageAsset Include="Assets.xcassets\icon_check_mark.imageset\icon_check_mark.png" />
     <ImageAsset Include="Assets.xcassets\icon_cross.imageset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\icon_cross.imageset\icon_cross.png" />
+    <ImageAsset Include="Assets.xcassets\icon.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\icon.imageset\Icon-120.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\default_profile_picture.jpg" />
@@ -272,6 +274,7 @@
     <Folder Include="Assets.xcassets\icon_left_arrow.imageset\" />
     <Folder Include="Assets.xcassets\icon_check_mark.imageset\" />
     <Folder Include="Assets.xcassets\icon_cross.imageset\" />
+    <Folder Include="Assets.xcassets\icon.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\image_loading.png" />
