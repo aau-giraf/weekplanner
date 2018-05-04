@@ -19,9 +19,10 @@ namespace WeekPlanner
         {
             InitializeComponent();
 
-            //InitNavigation();
+
             FlowListView.Init();
             InitApplication();
+            //InitNavigation();
             MainPage = new MasterPage();
         }
 
