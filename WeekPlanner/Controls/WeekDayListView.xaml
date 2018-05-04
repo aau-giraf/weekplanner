@@ -25,7 +25,7 @@
                 <Grid Margin="4">
                     <ffimageloading:CachedImage
                         HorizontalOptions="CenterAndExpand"
-                        DownsampleToViewSize="true"
+                        VerticalOptions="CenterAndExpand"
                         LoadingPlaceholder="image_loading.png"
                         Source="{Binding Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                         ErrorPlaceholder="image_loading.png" />

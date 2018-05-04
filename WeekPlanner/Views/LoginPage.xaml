@@ -17,6 +17,7 @@
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarTheme}">
             <StackLayout VerticalOptions="Center"
+                     Padding="400, 0"
                      Margin="12">
                 <Label
                 Text="Log ind"
@@ -53,6 +54,7 @@
                 Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                 Style="{StaticResource ValidationErrorLabelStyle}" />
                 <Button
+                Margin="80, 0"
                 x:Name="LoginButton"
                 Command="{Binding LoginCommand}"
                 Text="Log ind"
