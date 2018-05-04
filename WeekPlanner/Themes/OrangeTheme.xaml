@@ -3,13 +3,14 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="WeekPlanner.Themes.OrangeTheme"
-    xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
     xmlns:views="clr-namespace:WeekPlanner.Views;assembly=WeekPlanner">
+    
+    <Color x:Key="NavBarColor">#ffbb33</Color>
     <Style
         TargetType="Button">
         <Setter
             Property="BackgroundColor"
-            Value="{StaticResource GirafColor}" />
+            Value="{StaticResource OrangeThemeColor}" />
         <Setter
             Property="TextColor"
             Value="White" />
@@ -18,7 +19,7 @@
         TargetType="views:CustomNavigationPage">
         <Setter
             Property="BarBackgroundColor"
-            Value="{StaticResource GirafColor}" />
+            Value="{StaticResource OrangeThemeColor}" />
         <Setter
             Property="BarTextColor"
             Value="White" />

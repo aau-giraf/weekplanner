@@ -40,13 +40,15 @@
             <Color
                 x:Key="CancelColor">#CC0000</Color>
             <Color
-                x:Key="GirafColor">#ffbb33</Color>
+                x:Key="OrangeThemeColor">#ffbb33</Color>
             <Color
                 x:Key="WhiteColor">#FFFFFF</Color>
             <Color
                 x:Key="RedThemeColor">#ff4444</Color>
             <Color
                 x:Key="GreenThemeColor">#007E33</Color>
+            <Color
+                x:Key="NavBarColor">#33b5e5</Color>
             
             <!--Layouts-->
 
@@ -105,7 +107,7 @@
                         Orientation="Horizontal"
                         HeightRequest="50"
                         IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
-                        BackgroundColor="{StaticResource Primary}"
+                        BackgroundColor="{DynamicResource NavBarColor}"
                         Spacing="0"
                         Padding="7, 0, 10, 0"
                         Grid.Column="0" Grid.Row="0">
@@ -146,7 +148,7 @@
                         Orientation="Horizontal"
                         HeightRequest="50"
                         IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
-                        BackgroundColor="{StaticResource Primary}"
+                        BackgroundColor="{DynamicResource NavBarColor}"
                         Spacing="0"
                         Padding="7, 0, 10, 0"
                         Grid.Column="0" Grid.Row="0">
@@ -197,7 +199,7 @@
                         Orientation="Horizontal"
                         HeightRequest="50"
                         IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
-                        BackgroundColor="{StaticResource Primary}"
+                        BackgroundColor="{DynamicResource NavBarColor}"
                         Spacing="0"
                         Padding="7, 0, 10, 0"
                         Grid.Column="0" Grid.Row="0">

@@ -3,8 +3,9 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="WeekPlanner.Themes.RedTheme"
-    xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
     xmlns:views="clr-namespace:WeekPlanner.Views;assembly=WeekPlanner">
+    
+    <Color x:Key="NavBarColor">#ff4444</Color>
     <Style
         TargetType="Button">
         <Setter
