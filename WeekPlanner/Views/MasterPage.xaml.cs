@@ -18,5 +18,5 @@ namespace WeekPlanner.Views
             Detail = new CustomNavigationPage(new LoginPage());
            // IsPresented = false;
         }
-    }
+	}
 }

@@ -14,7 +14,8 @@ namespace WeekPlanner.Services.Mocks
             _settingsService = settingsService;
         }
         
-        public async Task LoginAndThenAsync(Func<Task> onSuccess, UserType userType, string username, string password = "")
+        public async Task LoginAndThenAsync(UserType userType, string username, string password = "",
+            Func<Task> onSuccess = null)
         {
             if (userType == UserType.Guardian && string.IsNullOrEmpty(password))
             {

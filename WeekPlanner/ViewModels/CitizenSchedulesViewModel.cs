@@ -152,7 +152,7 @@ namespace WeekPlanner.ViewModels
         {
             if (navigationData is UserNameDTO userNameDTO)
             {
-                await _loginService.LoginAndThenAsync(InitializeWeekSchedules, UserType.Citizen, userNameDTO.UserName);
+                await _loginService.LoginAndThenAsync(UserType.Citizen, userNameDTO.UserName, "", InitializeWeekSchedules);
             }
             else
             {

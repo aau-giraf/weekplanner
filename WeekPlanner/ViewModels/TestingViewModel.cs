@@ -54,10 +54,7 @@ namespace WeekPlanner.ViewModels
         public ICommand NavigateToChooseCitizenCommand =>
             new Command(() =>
             {
-                _loginService.LoginAndThenAsync(
-                    () => NavigationService.NavigateToAsync<ChooseCitizenViewModel>(),
-                    UserType.Guardian, "Graatand", "password"
-                );
+                _loginService.LoginAndThenAsync(UserType.Guardian, "Graatand", "password", () => NavigationService.NavigateToAsync<ChooseCitizenViewModel>());
             });
 
         public ICommand NavigateToWeekPlannerCommand =>

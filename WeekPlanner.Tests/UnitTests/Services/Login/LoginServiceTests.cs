@@ -30,7 +30,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var onSuccess = Fixture.Create<Func<Task>>();
             
             // Assert       Act
-            await Assert.ThrowsAsync<ArgumentException>(async () => await sut.LoginAndThenAsync(onSuccess, userType, username, password));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await sut.LoginAndThenAsync(userType, username, password, onSuccess));
         }
 
         [Theory]
@@ -61,7 +61,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var onSuccess = Fixture.Create<Func<Task>>();
             
             // Act
-            await sut.LoginAndThenAsync(onSuccess, userType, username, password);
+            await sut.LoginAndThenAsync(userType, username, password, onSuccess);
 
             // Assert
             accountApiMock.Verify(a => a.V1AccountLoginPostAsync(It.IsAny<LoginDTO>()));
@@ -81,7 +81,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 (sender, args) => { messageReceived = true;});
 
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync("NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>(), UserType.Guardian);
             
             // Assert
             Assert.True(messageReceived);
@@ -106,7 +106,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var sut = Fixture.Create<LoginService>();
             
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(UserType.Guardian, "NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>());
             
             // Assert
             settingsServiceMock.VerifySet(s => s.GuardianAuthToken = token);
@@ -131,7 +131,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var sut = Fixture.Create<LoginService>();
             
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Citizen, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(UserType.Citizen, "NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>());
             
             // Assert
             settingsServiceMock.VerifySet(s => s.CitizenAuthToken = token);
@@ -156,7 +156,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var sut = Fixture.Create<LoginService>();
             
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), userType, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync("NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>(), userType);
             
             // Assert
             settingsServiceMock.Verify(s => s.UseTokenFor(userType));
@@ -181,7 +181,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var sut = Fixture.Create<LoginService>();
             
             // Act
-            await sut.LoginAndThenAsync(onSuccess, UserType.Citizen, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(UserType.Citizen, "NotEmpty", "NotEmpty", onSuccess);
             
             // Assert
             Assert.True(onSuccessInvoked);
@@ -205,7 +205,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 (sender, args) => { messageReceived = true;});
 
             // Act
-            await sut.LoginAndThenAsync(Fixture.Create<Func<Task>>(), UserType.Guardian, "NotEmpty", "NotEmpty");
+            await sut.LoginAndThenAsync(UserType.Guardian, "NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>());
             
             // Assert
             Assert.True(messageReceived);

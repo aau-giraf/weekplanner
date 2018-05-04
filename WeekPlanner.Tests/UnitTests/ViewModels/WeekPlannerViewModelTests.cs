@@ -72,7 +72,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             FreezeMockOfIRequestService<WeekPlannerViewModel, ResponseWeekDTO>();
             
             var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
-                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, usernameDTO.UserName, ""))
+                    l.LoginAndThenAsync(UserType.Citizen, usernameDTO.UserName, "", It.IsAny<Func<Task>>()))
                 .Returns(loginAndThenMock);
 
             var weekdays = new List<WeekdayDTO>();

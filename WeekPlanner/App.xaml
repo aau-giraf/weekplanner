@@ -16,6 +16,8 @@
             <Color
                 x:Key="LightBackgroundColor">#FAFAFA</Color>
             <Color
+                x:Key="BlackColor">#000</Color>
+            <Color
                 x:Key="DarkBackgroundColor">#C0C0C0</Color>
             <Color
                 x:Key="MediumGrayTextColor">#4d4d4d</Color>
@@ -154,7 +156,7 @@
                         
                         <!-- Toolbar Button -->
                         <Image 
-                            HorizontalOptions="End" 
+                            HorizontalOptions="EndAndExpand" 
                             VerticalOptions="Center"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
                             HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
@@ -205,7 +207,7 @@
                         
                         <!-- Toolbar Button -->
                         <Image 
-                            HorizontalOptions="End" 
+                            HorizontalOptions="EndAndExpand" 
                             VerticalOptions="Center"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
                             HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">

@@ -25,23 +25,13 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
         private readonly IDialogService _dialogService;
-        private readonly ISettingsService _settingsService;
+        public ISettingsService SettingsService { get; }
 
         private ActivityDTO _selectedActivity;
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _toolbarButtonIcon;
-
-        public bool EditModeEnabled
-        {
-            get => _editModeEnabled;
-            set
-            {
-                _editModeEnabled = value;
-                RaisePropertyChanged(() => EditModeEnabled);
-            }
-        }
 
         public WeekDTO WeekDTO
         {
@@ -103,11 +93,11 @@ namespace WeekPlanner.ViewModels
             _weekApi = weekApi;
             _dialogService = dialogService;
             _requestService = requestService;
-            _settingsService = settingsService;
+            SettingsService = settingsService;
 
             OnBackButtonPressedCommand = new Command(async () => await BackButtonPressed());
             ShowToolbarButton = true;
-            ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+            ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
             MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, sender => SetToGuardianMode());
         }
 
@@ -126,7 +116,7 @@ namespace WeekPlanner.ViewModels
         // TODO: Handle situation where no days exist
         private async Task GetWeekPlanForCitizenAsync(Tuple<int?, int?> weekYearAndNumber)
         {
-            _settingsService.UseTokenFor(UserType.Citizen);
+            SettingsService.UseTokenFor(UserType.Citizen);
 
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: () =>
@@ -172,7 +162,7 @@ namespace WeekPlanner.ViewModels
                 return;
             }
 
-            _settingsService.UseTokenFor(UserType.Citizen);
+            SettingsService.UseTokenFor(UserType.Citizen);
 
             if (WeekDTO.WeekNumber is null)
             {
@@ -263,7 +253,7 @@ namespace WeekPlanner.ViewModels
             if (IsBusy) return;
 
             IsBusy = true;
-            if (EditModeEnabled)
+            if (SettingsService.IsInGuardianMode)
             {
                 var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
                     "Annuller", null, "Gem ændringer", "Gem ikke");
@@ -275,13 +265,13 @@ namespace WeekPlanner.ViewModels
 
                     case "Gem ændringer":
                         await SaveSchedule();
-                        ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+                        SetToCitizenMode();
                         break;
 
                     case "Gem ikke":
-                        ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
                         if (WeekDTO.WeekNumber != null)
                             await GetWeekPlanForCitizenAsync(new Tuple<int?, int?>(WeekDTO.WeekYear, WeekDTO.WeekNumber));
+                        SetToCitizenMode();
                         break;
                 }
             }
@@ -311,9 +301,17 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        private void SetToCitizenMode()
+        {
+            ShowBackButton = false;
+            SettingsService.IsInGuardianMode = false;
+            ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
+        }
+        
         private void SetToGuardianMode()
         {
-            EditModeEnabled = true;
+            ShowBackButton = true;
+            SettingsService.IsInGuardianMode = true;
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
         }
 
@@ -322,7 +320,7 @@ namespace WeekPlanner.ViewModels
             if (IsBusy) return;
 
             IsBusy = true;
-            if (EditModeEnabled)
+            if (SettingsService.IsInGuardianMode)
             {
                 var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
                     "Annuller", null, "Gem ændringer", "Gem ikke");

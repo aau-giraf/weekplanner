@@ -6,7 +6,8 @@
                   base1:ViewModelLocator.AutoWireViewModel="true"
                   x:Class="WeekPlanner.Views.MasterPage"
                   x:Name="Mdp"
-                  MasterBehavior="Popover">
+                  MasterBehavior="Popover"
+                  IsGestureEnabled="{Binding SettingsService.IsInGuardianMode}">
 
     <MasterDetailPage.Master>
         <ContentPage Padding="10" Title="Master">
