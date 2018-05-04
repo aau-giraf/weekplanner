@@ -8,17 +8,23 @@ using Xamarin.Forms;
 using IO.Swagger.Api;
 using WeekPlanner.Helpers;
 using static IO.Swagger.Model.ActivityDTO;
+using WeekPlanner.Services.Settings;
 
 namespace WeekPlanner.ViewModels
 {
     public class ActivityViewModel : ViewModelBase
     {
         private ActivityDTO _activity;
-        private bool _isGuardianMode = true;
+
+        public ISettingsService SettingsService { get; private set; }
+
         readonly IPictogramApi _pictogramApi;
 
-        public ActivityViewModel(INavigationService navigationService, IPictogramApi pictogramApi) : base(navigationService)
+        public ActivityViewModel(INavigationService navigationService, 
+                                 IPictogramApi pictogramApi,
+                                 ISettingsService settingsService) : base(navigationService)
         {
+            SettingsService = settingsService;
             _pictogramApi = pictogramApi;
         }
 
@@ -69,24 +75,12 @@ namespace WeekPlanner.ViewModels
                 case StateEnum.Active:
                     State = StateEnum.Normal;
                     break;
-                
-                
             }
         });
 
         private void ChangePicto(WeekPictogramDTO weekPictogram)
         {
             Activity.Pictogram = weekPictogram;
-        }
-
-        public bool IsGuardianMode
-        {
-            get => _isGuardianMode;
-            set
-            {
-                _isGuardianMode = value;
-                RaisePropertyChanged(() => IsGuardianMode);
-            }
         }
 
         public StateEnum State
@@ -126,7 +120,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleGuardianMode => new Command(() => IsGuardianMode = !IsGuardianMode);
+        public ICommand ToggleGuardianMode => new Command(() => SettingsService.IsInGuardianMode = !SettingsService.IsInGuardianMode);
         public ICommand SaveCommand => new Command(async () =>
         {
             await NavigationService.PopAsync(this);

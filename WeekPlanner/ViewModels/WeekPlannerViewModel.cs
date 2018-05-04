@@ -72,12 +72,8 @@ namespace WeekPlanner.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            if (_editModeEnabled)
-            {
-                _selectedActivity = activity;
-                await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
-            }
-
+            _selectedActivity = activity;
+            await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
             IsBusy = false;
         });
 
@@ -407,8 +403,8 @@ namespace WeekPlanner.ViewModels
 
             foreach (var activity in todaysActivities)
             {
-                if(activity.State != StateEnum.Canceled 
-                || activity.State != StateEnum.Completed) {
+                if(activity.State == StateEnum.Normal) 
+                {
                     activity.State = StateEnum.Active;
                     return;
                 }

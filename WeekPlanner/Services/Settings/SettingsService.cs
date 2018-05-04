@@ -56,7 +56,16 @@ namespace WeekPlanner.Services.Settings
             }
         }
 
-        public string CurrentCitizenId { get; set; }    
+        private string _currentCitizenId;
+        public string CurrentCitizenId
+        {
+            get => _currentCitizenId;
+            set
+            {
+                _currentCitizenId = value;
+                RaisePropertyChanged(() => CurrentCitizenId);
+            } 
+        }    
 
         public SettingDTO CurrentCitizenSettingDTO { get; set; }
 
@@ -96,8 +105,7 @@ namespace WeekPlanner.Services.Settings
             _accountApi.Configuration.AddApiKey("Authorization", $"bearer {authToken}");
         }
 
-        public void SetThemeOnLogin(){
-            var resources = Xamarin.Forms.Application.Current.Resources;
+        public void SetTheme(){
             App.Current.Resources["MondayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[0].HexColor);
             App.Current.Resources["TuesdayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[1].HexColor);
             App.Current.Resources["WednesdayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[2].HexColor);
@@ -105,6 +113,7 @@ namespace WeekPlanner.Services.Settings
             App.Current.Resources["FridayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[4].HexColor);
             App.Current.Resources["SaturdayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[5].HexColor);
             App.Current.Resources["SundayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[6].HexColor);
+            var resources = Application.Current.Resources;
             switch (CurrentCitizenSettingDTO.Theme)
             {
                 case SettingDTO.ThemeEnum.GirafRed:
