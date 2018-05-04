@@ -19,13 +19,14 @@ namespace WeekPlanner
         {
             InitializeComponent();
 
-            //InitNavigation();
+
             FlowListView.Init();
             InitApplication();
+            //InitNavigation();
             MainPage = new MasterPage();
         }
 
-        private void InitApplication()
+        private static void InitApplication()
         {
             var appSettings = GetApplicationSettings();
             
@@ -36,7 +37,7 @@ namespace WeekPlanner
             InitFFImage();
         }
 
-        private void InitFFImage()
+        private static void InitFFImage()
         {
             FFImageLoading.ImageService.Instance.Initialize(new Configuration
             {

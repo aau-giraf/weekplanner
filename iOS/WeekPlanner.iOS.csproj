@@ -218,6 +218,12 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-1024.png">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_left_arrow.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\icon_left_arrow.imageset\icon_left_arrow.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\default_profile_picture.jpg" />
@@ -263,6 +269,7 @@
     <Folder Include="Assets.xcassets\icon_default_guardian.imageset\" />
     <Folder Include="Assets.xcassets\icon_add.imageset\" />
     <Folder Include="Assets.xcassets\icon_delete.imageset\" />
+    <Folder Include="Assets.xcassets\icon_left_arrow.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\image_loading.png" />
@@ -272,6 +279,7 @@
     <AndroidResource Include="Resources\icon_default_citizen.png" />
     <AndroidResource Include="Resources\icon_default_guardian.png" />
     <AndroidResource Include="Resources\icon_add.png" />
+    <AndroidResource Include="Resources\icon_left_arrow.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\icon_delete.png" />

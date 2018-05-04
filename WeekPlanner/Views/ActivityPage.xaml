@@ -1,64 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
-             xmlns:converters="using:WeekPlanner.Converters"
-             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
+    xmlns:converters="using:WeekPlanner.Converters"
+    xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
+    xmlns:converters1="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.ActivityPage"
              base:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Activity.Pictogram.Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StateToBackgroundColorConverter x:Key="StateToBackgroundColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
-            <Grid VerticalOptions="CenterAndExpand">
-                <!--Left Side-->
-                <StackLayout Grid.Column="0"
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
+            <StackLayout>
+                <Grid VerticalOptions="CenterAndExpand">
+                    <!--Left Side-->
+                    <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
-                    <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}" />
-                    <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
-                        <Button Grid.Column="0"
+                        <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}" />
+                        <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
+                            <Button Grid.Column="0"
                                 Text="Ændre"
                                 Command="{Binding ChangePictoCommand}" />
-                         <Button Grid.Column="1"
+                            <Button Grid.Column="1"
                                 Text="{Binding FriendlyStateString}"
                                 Command="{Binding ToggleStateCommand}"
-                                BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/> 
-                        <Button Grid.Column="2"
+                                BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/>
+                            <Button Grid.Column="2"
                                 Text="Slet"
                                 Command="{Binding DeleteActivityCommand}"/>
-                    </Grid>
-                </StackLayout>
-                <!--Right Side-->
-                <!--<StackLayout Grid.Column="1"
-                             VerticalOptions="CenterAndExpand">
-                    <Image Source="image_loading.png" />
-                    <Grid Padding="30">
-                        <Entry Placeholder="Tid"
-                               Grid.Column="0" />
-                        <Button Text="Start"
+                        </Grid>
+                    </StackLayout>
+                    <!--Right Side-->
+                    <!--<StackLayout Grid.Column="1"
+                             VerticalOptions="CenterAndExpand"><Image Source="image_loading.png" /><Grid Padding="30"><Entry Placeholder="Tid"
+                               Grid.Column="0" /><Button Text="Start"
                                 Grid.Column="1"
-                                IsVisible="{Binding IsGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/>
-                        <Button Text="Slet"
+                                IsVisible="{Binding IsGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/><Button Text="Slet"
                                 Grid.Column="1"
-                                IsVisible="{Binding IsGuardianMode}"/>
-                    </Grid>
-                </StackLayout>-->
-            </Grid>
-           <!--The button below is used for debugging purposes-->
-           <!--  <Button Text="Toggle Guardian"
+                                IsVisible="{Binding IsGuardianMode}"/></Grid></StackLayout>-->
+                </Grid>
+                <!--The button below is used for debugging purposes-->
+                <!--  <Button Text="Toggle Guardian"
                         BackgroundColor="Fuchsia"
                         WidthRequest="300"
                         Command="{Binding ToggleGuardianMode}"
                         HorizontalOptions="Center" /> -->
-            <StackLayout Orientation="Horizontal"
+                <StackLayout Orientation="Horizontal"
                          HorizontalOptions="Center"
                          Padding="12"
                          VerticalOptions="End"
                          IsVisible="{Binding IsGuardianMode}">
-                <Button Text="Gem"
+                    <Button Text="Gem"
                         WidthRequest="300"
                         Command="{Binding SaveCommand}" />
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
+        </ContentView>
     </ContentPage.Content>
 </ContentPage>

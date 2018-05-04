@@ -15,6 +15,7 @@ namespace WeekPlanner.Views
 		public NewSchedulePage ()
 		{
 			InitializeComponent ();
+			NavigationPage.SetHasNavigationBar(this, false);
 		}
     }
 }

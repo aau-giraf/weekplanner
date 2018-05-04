@@ -10,6 +10,7 @@ namespace WeekPlanner.Views
         public SettingsPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
 		public void Picker_SelectedIndexChanged(object sender, EventArgs e)

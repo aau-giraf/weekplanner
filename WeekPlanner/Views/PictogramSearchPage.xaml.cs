@@ -10,6 +10,7 @@ namespace WeekPlanner.Views
         public PictogramSearchPage()
         {
             InitializeComponent(); 
+            NavigationPage.SetHasNavigationBar(this, false);
             searchField.Focus();
         }
     }

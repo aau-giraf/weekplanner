@@ -18,6 +18,8 @@ namespace WeekPlanner.Services.Navigation
             {
                 CustomNavigationPage navigationPage = GetNavigationPage();
                 var navigationStack = navigationPage.Navigation.NavigationStack;
+
+                // TODO: Check if previous page exists before using index, and return something meaningful if not
                 var viewModel = navigationStack[navigationStack.Count - 2].BindingContext;
                 return viewModel as ViewModelBase;
             }
@@ -43,7 +45,6 @@ namespace WeekPlanner.Services.Navigation
             CustomNavigationPage navigationPage = GetNavigationPage();
             await navigationPage?.PopAsync();
             await CurrentPageViewModel.PoppedAsync(navigationData);
-
         }
 
         private CustomNavigationPage GetNavigationPage()

@@ -72,7 +72,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             FreezeMockOfIRequestService<WeekPlannerViewModel, ResponseWeekDTO>();
             
             var mockLogin = Fixture.Freeze<Mock<ILoginService>>().Setup(l =>
-                    l.LoginAndThenAsync(It.IsAny<Func<Task>>(), UserType.Citizen, usernameDTO.UserName, ""))
+                    l.LoginAndThenAsync(UserType.Citizen, usernameDTO.UserName, "", It.IsAny<Func<Task>>()))
                 .Returns(loginAndThenMock);
 
             var weekdays = new List<WeekdayDTO>();
@@ -153,7 +153,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             };
 
             //Act
-            sut.ToggleEditModeCommand.Execute(true);
+            sut.ToolbarButtonCommand.Execute(true);
 
             //Assert
             Assert.True(invoked);
@@ -168,12 +168,12 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             bool invoked = false;
             sut.PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName.Equals(nameof(sut.UserModeImage)))
+                if (e.PropertyName.Equals(nameof(sut.ToolbarButtonIcon)))
                     invoked = true;
             };
 
             //Act
-            sut.ToggleEditModeCommand.Execute(true);
+            sut.ToolbarButtonCommand.Execute(true);
 
             //Assert
             Assert.True(invoked);
@@ -187,8 +187,8 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var sut = Fixture.Create<WeekPlannerViewModel>();
 
             // Act
-            sut.ToggleEditModeCommand.Execute(true);
-            sut.ToggleEditModeCommand.Execute(true);
+            sut.ToolbarButtonCommand.Execute(true);
+            sut.ToolbarButtonCommand.Execute(true);
 
             // Assert
             navServiceMock.Verify(n => n.NavigateToAsync<LoginViewModel>(It.IsAny<WeekPlannerViewModel>()));

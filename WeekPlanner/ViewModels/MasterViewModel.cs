@@ -7,17 +7,15 @@ using IO.Swagger.Model;
 using System.Threading.Tasks;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.Services.Login;
-using WeekPlanner.Services.Request;
 
 namespace WeekPlanner.ViewModels
 {
     class MasterViewModel : ViewModelBase
     {
-		private readonly ISettingsService _settingsService;
+		public ISettingsService SettingsService { get; }
 		private readonly ILoginService _loginService;
-		private readonly IRequestService _requestService;
 
-		private UserNameDTO _girafCitizen;
+	    private UserNameDTO _girafCitizen;
 		public UserNameDTO GirafCitizen
 		{
 			get => _girafCitizen;
@@ -28,20 +26,18 @@ namespace WeekPlanner.ViewModels
 			}
 		}
 
-		public MasterViewModel(ISettingsService settingsService, INavigationService navigationService, ILoginService loginService, IRequestService requestService) : base(navigationService)
+		public MasterViewModel(ISettingsService settingsService, INavigationService navigationService, ILoginService loginService) : base(navigationService)
 		{
-			_settingsService = settingsService;
+			SettingsService = settingsService;
 			_loginService = loginService;
-			_requestService = requestService;
-
 		}
 
 		public override async Task InitializeAsync(object navigationData)
 		{
 			if (navigationData is UserNameDTO userNameDTO)
 			{
-				await _loginService.LoginAndThenAsync(() => InitializeCitizen(userNameDTO), UserType.Citizen,
-					userNameDTO.UserName);
+				await _loginService.LoginAndThenAsync(UserType.Citizen,
+					userNameDTO.UserName, "", () => InitializeCitizen(userNameDTO));
 			}
 			else
 			{

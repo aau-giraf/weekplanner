@@ -4,11 +4,12 @@ using IO.Swagger.Api;
 using IO.Swagger.Model;
 using SimpleJson;
 using WeekPlanner.Services.Request;
+using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.Services.Settings
 {
-    public class SettingsService : ISettingsService
+    public class SettingsService : ExtendedBindableObject, ISettingsService
     {
         private readonly IAccountApi  _accountApi;
         private readonly JsonObject _appSettings;
@@ -42,7 +43,19 @@ namespace WeekPlanner.Services.Settings
         public string GuardianAuthToken { get; set; }
 
         public string CitizenAuthToken { get; set; }
-        
+
+        private bool _isInGuardianMode;
+
+        public bool IsInGuardianMode
+        {
+            get => _isInGuardianMode;
+            set
+            {
+                _isInGuardianMode = value;
+                RaisePropertyChanged(() => IsInGuardianMode);
+            }
+        }
+
         public string CurrentCitizenId { get; set; }    
 
         public SettingDTO CurrentCitizenSettingDTO { get; set; }

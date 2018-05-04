@@ -1,51 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behaviors1="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors1="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              base1:ViewModelLocator.AutoWireViewModel="true"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="WeekPlanner.Views.ChooseCitizenPage"
              Title="Vælg Borger">
     <ContentPage.Content>
-       <StackLayout>
-
-            <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
-            <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50"/>
-            
-            <ListView 
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
+            <StackLayout>
+                <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
+                <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50"/>
+                <ListView 
                 x:Name="CitizensListView" 
                 ItemsSource="{Binding CitizenNames}" 
                 VerticalOptions="FillAndExpand" 
                 HasUnevenRows="true"
                 RowHeight="100">
-                <ListView.Behaviors>
-                    <behaviors1:EventToCommandBehavior           
+                    <ListView.Behaviors>
+                        <behaviors1:EventToCommandBehavior           
                         EventName="ItemTapped"
                         Command="{Binding ChooseCitizenCommand}"
                         EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
-                    <behaviors1:ListViewDeselectSelectedItemBehavior />
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <!-- https://github.com/luberda-molinet/FFImageLoading/wiki/Xamarin.Forms-API -->
-                                <ffimageloading:CachedImage VerticalOptions="Center"
+                        <behaviors1:ListViewDeselectSelectedItemBehavior />
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <!-- https://github.com/luberda-molinet/FFImageLoading/wiki/Xamarin.Forms-API -->
+                                    <ffimageloading:CachedImage VerticalOptions="Center"
                                                             HeightRequest="95"
                                                             DownsampleToViewSize="true"
                                                             LoadingPlaceholder="default_profile_picture.jpg"
                                                             ErrorPlaceholder="default_profile_picture.jpg"
                                                             IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                                                             Source = "https://us.123rf.com/450wm/silviemiskova/silviemiskova1604/silviemiskova160400029/55722613-stock-vector-giraffe-colorful-low-poly-design-on-blue-background-with-dark-brown-outline-animal-card-design-backg.jpg?ver=6">
-                                    <!-- Source will change to UserIcon when backend has switched to using images -->
-                                </ffimageloading:CachedImage>
-                                <Label FontSize="18" Margin="5, 0, 0, 0" Text="{Binding UserName}" VerticalTextAlignment="Center"/>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
+                                        <!-- Source will change to UserIcon when backend has switched to using images -->
+                                    </ffimageloading:CachedImage>
+                                    <Label FontSize="18" Margin="5, 0, 0, 0" Text="{Binding UserName}" VerticalTextAlignment="Center"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+        </ContentView>
     </ContentPage.Content>
 </ContentPage>

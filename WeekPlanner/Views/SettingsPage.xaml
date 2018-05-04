@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
-             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:base="clr-namespace:WeekPlanner.ViewModels.Base"
+    xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors"
              x:Class="WeekPlanner.Views.SettingsPage"
              base:ViewModelLocator.AutoWireViewModel="True">
     <ContentPage.Content>
-        <TableView Intent="Settings">
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
+            <StackLayout>
+        <TableView Intent="Settings" >
             <TableRoot>
                 <!--Number of activity-->
-                
+
                 <!--Number of days shown-->
-                
+
                 <!--Different completion mark-->
 
                 <!--Orientation lock-->
@@ -28,81 +31,83 @@
                     </ViewCell>
                 </TableSection>
 
-				<!-- Weekschedule Color Seettings -->
-				<TableSection Title="Ugeplan">
+                <!-- Weekschedule Color Seettings -->
+                <TableSection Title="Ugeplan">
                     <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding MondayColorSelected}"/>
+                                <Frame WidthRequest="100" BackgroundColor="{Binding MondayColorSelected}"/>
                                 <Label Text="Mandag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
                                 <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding MondaySelectedColor}"/>
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
-					<ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding TuesdayColorSelected}"/>
+                                <Frame WidthRequest="100" BackgroundColor="{Binding TuesdayColorSelected}"/>
                                 <Label Text="Tirsdag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
                                 <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding TuesdaySelectedColor}"/>
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
-					<ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding WednesdayColorSelected}"/>
+                                <Frame WidthRequest="100" BackgroundColor="{Binding WednesdayColorSelected}"/>
                                 <Label Text="Onsdag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
                                 <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding WednesdaySelectedColor}"/>
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
-					<ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding ThursdayColorSelected}"/>
+                                <Frame WidthRequest="100" BackgroundColor="{Binding ThursdayColorSelected}"/>
                                 <Label Text="Torsdag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
                                 <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding ThursdaySelectedColor}"/>
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
-					<ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding FridayColorSelected}"/>
+                                <Frame WidthRequest="100" BackgroundColor="{Binding FridayColorSelected}"/>
                                 <Label Text="Fredag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
                                 <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding FridaySelectedColor}"/>
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
-					<ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding SaturdayColorSelected}"/>
+                                <Frame WidthRequest="100" BackgroundColor="{Binding SaturdayColorSelected}"/>
                                 <Label Text="Lørdag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
                                 <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding SaturdaySelectedColor}"/>
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
-					<ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-								<Frame WidthRequest="100" BackgroundColor="{Binding SundayColorSelected}"/>
+                                <Frame WidthRequest="100" BackgroundColor="{Binding SundayColorSelected}"/>
                                 <Label Text="Søndag Farve" VerticalOptions="Center" HorizontalOptions="Center" />
                                 <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding SundaySelectedColor}"/>
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
-					<ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
                                 <Label Text="{Binding HexTestString}" VerticalOptions="Center" HorizontalOptions="Center" />
                             </StackLayout>
-						</ViewCell.View>
-					</ViewCell>
+                        </ViewCell.View>
+                    </ViewCell>
                 </TableSection>
-				<!-- WEEKPLANNER COLOR CHANGE END HERE! -->
+                <!-- WEEKPLANNER COLOR CHANGE END HERE! -->
             </TableRoot>
         </TableView>
+            </StackLayout>
+        </ContentView>
     </ContentPage.Content>
 </ContentPage>
