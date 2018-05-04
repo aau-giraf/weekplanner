@@ -16,7 +16,7 @@ namespace WeekPlanner.Services.Settings
         SettingDTO CurrentCitizenSettingDTO { get; set; }
         
         void UseTokenFor(UserType userType);
-        void SetThemeOnLogin();
+        void SetTheme();
     }
 
 

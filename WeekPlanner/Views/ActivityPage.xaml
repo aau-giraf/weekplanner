@@ -12,7 +12,7 @@
              Title="{Binding Activity.Pictogram.Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:StateToBackgroundColorConverter x:Key="StateToBackgroundColorConverter" />
+            <converters1:StateToBackgroundColorConverter x:Key="StateToBackgroundColorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -23,7 +23,12 @@
                     <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
                         <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}" />
-                        <Grid Padding="30">
+                        <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
                                 Text="Ændre"
                                 Command="{Binding ChangePictoCommand}"

@@ -56,7 +56,16 @@ namespace WeekPlanner.Services.Settings
             }
         }
 
-        public string CurrentCitizenId { get; set; }    
+        private string _currentCitizenId;
+        public string CurrentCitizenId
+        {
+            get => _currentCitizenId;
+            set
+            {
+                _currentCitizenId = value;
+                RaisePropertyChanged(() => CurrentCitizenId);
+            } 
+        }    
 
         public SettingDTO CurrentCitizenSettingDTO { get; set; }
 
@@ -96,8 +105,8 @@ namespace WeekPlanner.Services.Settings
             _accountApi.Configuration.AddApiKey("Authorization", $"bearer {authToken}");
         }
 
-        public void SetThemeOnLogin(){
-            var resources = Xamarin.Forms.Application.Current.Resources;
+        public void SetTheme(){
+            var resources = Application.Current.Resources;
             switch (CurrentCitizenSettingDTO.Theme)
             {
                 case SettingDTO.ThemeEnum.GirafRed:

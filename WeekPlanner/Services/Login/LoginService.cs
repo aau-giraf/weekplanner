@@ -45,7 +45,7 @@ namespace WeekPlanner.Services.Login
                     _settingsService.CitizenAuthToken = result.Data;
                     await GetCitizenIdAndSetInSettings();
                     await GetCitizenSettingsAndSetInSettings();
-                    _settingsService.SetThemeOnLogin();
+                    _settingsService.SetTheme();
 
                 }
                 else // Guardian

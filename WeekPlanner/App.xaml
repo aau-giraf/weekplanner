@@ -82,6 +82,7 @@
             <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
             <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
             <converters:IdToRawPictoUrlConverter x:Key="IdToRawPictoUrlConverter" />
+            <converters:CitizenIdIsSetConverter x:Key="CitizenIdIsSetConverter" />
 
             <!-- CUSTOM NAVIGATION BAR - without toolbar button -->
             <ControlTemplate x:Key="NavBarTheme">

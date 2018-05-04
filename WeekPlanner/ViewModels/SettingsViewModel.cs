@@ -41,10 +41,10 @@ namespace WeekPlanner.ViewModels
         private SettingDTO.ThemeEnum _themeSelected;
         public SettingDTO.ThemeEnum ThemeSelected
         {
-            get { return _themeSelected; }
+            get => _themeSelected;
             set
             {
-                var currentTheme = App.Current.Resources;
+                var currentTheme = Application.Current.Resources;
                 _themeSelected = value;
                 switch (value)
                 {

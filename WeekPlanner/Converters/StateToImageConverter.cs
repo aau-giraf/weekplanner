@@ -15,7 +15,7 @@ namespace WeekPlanner.Converters
                 case StateEnum.Canceled:
                     return ImageSource.FromFile("icon_cross.png");
                 case StateEnum.Completed:
-                    return ImageSource.FromFile("icon_checkmark.png");
+                    return ImageSource.FromFile("icon_check_mark.png");
                 default:
                     return null;
             }
