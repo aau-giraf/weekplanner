@@ -33,6 +33,51 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        private IEnumerable<SettingDTO.ThemeEnum> _themes = new List<SettingDTO.ThemeEnum>(){
+            SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
+        };
+        public IEnumerable<SettingDTO.ThemeEnum> Themes => _themes;
+
+
+        private SettingDTO.ThemeEnum _themeSelected;
+        public SettingDTO.ThemeEnum ThemeSelected
+        {
+            get { return _themeSelected; }
+            set
+            {
+                var currentTheme = App.Current.Resources;
+                _themeSelected = value;
+                switch (value)
+                {
+                    case SettingDTO.ThemeEnum.GirafRed:
+                        currentTheme.MergedWith = typeof(Themes.RedTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.GirafYellow:
+                        currentTheme.MergedWith = typeof(Themes.OrangeTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.AndroidBlue:
+                        currentTheme.MergedWith = typeof(Themes.BlueTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    case SettingDTO.ThemeEnum.GirafGreen:
+                        currentTheme.MergedWith = typeof(Themes.GreenTheme);
+                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        break;
+                    default:
+                        break;
+                }
+                RaisePropertyChanged(() => ThemeSelected);
+            }
+        }
+
+        private void SetThemeInSettingDTOAntUpdate(SettingDTO.ThemeEnum pickedTheme)
+        {
+            Settings.Theme = pickedTheme;
+            UpdateSettingsAsync();
+        }
+
         private bool _orientationSlider;
 
         public bool OrientationSwitch
@@ -58,21 +103,21 @@ namespace WeekPlanner.ViewModels
         {
             {"Aqua", Color.Aqua},
             {"Sort", Color.Black},
-            {"Blå", Color.Blue},
+            {"Blå", Color.FromHex("#0017ff")},
             {"Fucshia", Color.Fuchsia},
             {"Grå", Color.Gray},
-            {"Grøn", Color.Green},
+            {"Grøn", Color.FromHex("#067700")},
             {"Lime", Color.Lime},
             {"Maroon", Color.Maroon},
             {"Navy", Color.Navy},
             {"Oliven", Color.Olive},
-            {"Lilla", Color.Purple},
-            {"Rød", Color.Red},
+            {"Lilla", Color.FromHex("#8c1086")},
+            {"Rød", Color.FromHex("#ff0102")},
             {"Sølv", Color.Silver},
             {"Teal", Color.Teal},
-            {"Hvid", Color.White},
-            {"Gul", Color.Yellow},
-            {"Orange", Color.Orange}
+            {"Hvid", Color.FromHex("#ffffff")},
+            {"Gul", Color.FromHex("#ffdd00")},
+            {"Orange", Color.FromHex("#ff7f00")}
         };
 
         public List<string> WeekdayColors
@@ -91,9 +136,50 @@ namespace WeekPlanner.ViewModels
 
         private void UpdateSettings(string key, Color value)
         {
-
-           var a =  value.ToString();
             App.Current.Resources[key] = value;
+        }
+
+        public static string ColorToHex(Color color)
+        {
+            return RGBToHexadecimal(color.R, color.G, color.B);
+        }
+        public static string RGBToHexadecimal(double r, double g, double b)
+        {
+            string rs = DecimalToHexadecimal((int)(r * 255));
+            string gs = DecimalToHexadecimal((int)(g * 255));
+            string bs = DecimalToHexadecimal((int)(b * 255));
+
+            return '#' + rs + gs + bs;
+        }
+
+        private static string DecimalToHexadecimal(int dec)
+        {
+            if (dec <= 0)
+                return "00";
+
+            int hex = dec;
+            string hexStr = string.Empty;
+
+            hex = dec % 16;
+
+            if (hex < 10)
+                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 48).ToString());
+            else
+                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 55).ToString());
+
+            dec /= 16;
+
+
+            hex = dec % 16;
+
+            if (hex < 10)
+                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 48).ToString());
+            else
+                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 55).ToString());
+
+            dec /= 16;
+
+            return hexStr;
         }
 
         string _mondaySelectedColor = "Grøn";
@@ -228,27 +314,20 @@ namespace WeekPlanner.ViewModels
             {
                 return new string[7]
                 {
-                    ColorToHexConverter(_weekdayColorsDict[_mondaySelectedColor]),
-                    ColorToHexConverter(_weekdayColorsDict[_tuesdaySelectedColor]),
-                    ColorToHexConverter(_weekdayColorsDict[_wednesdaySelectedColor]),
-                    ColorToHexConverter(_weekdayColorsDict[_thursdaySelectedColor]),
-                    ColorToHexConverter(_weekdayColorsDict[_fridaySelectedColor]),
-                    ColorToHexConverter(_weekdayColorsDict[_saturdaySelectedColor]),
-                    ColorToHexConverter(_weekdayColorsDict[_sundaySelectedColor])
+                    ColorToHex(_weekdayColorsDict[_mondaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_tuesdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_wednesdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_thursdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_fridaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_saturdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_sundaySelectedColor])
                 };
             }
         }
 
-        public string ColorToHexConverter(Color color)
-        {
-            var red = (int) (color.R * 255);
-            var green = (int) (color.G * 255);
-            var blue = (int) (color.B * 255);
-            var alpha = (int) (color.A * 255);
-            var hex = $"#{alpha:X2}{red:X2}{green:X2}{blue:X2}";
 
-            return hex;
-        }
+
+
         #endregion
 
         public ICommand HandleSwitchChangedCommand => new Command(() =>
@@ -266,21 +345,21 @@ namespace WeekPlanner.ViewModels
 
         private async void UpdateSettingsAsync()
         {
+            _settingsService.UseTokenFor(UserType.Citizen);
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _userApi.V1UserByIdSettingsPatchAsync(_settingsService.CurrentCitizenId, _settings),
+                requestAsync: () => _userApi.V1UserSettingsPatchAsync(Settings),
                 onSuccess: dto => { });
         }
 
 
         private SettingDTO.OrientationEnum _orientationSetting;
-        private SettingDTO _settings;
 
         public SettingDTO Settings
         {
-            get => _settings;
+            get => _settingsService.CurrentCitizenSettingDTO;
             set
             {
-                _settings = value;
+                _settingsService.CurrentCitizenSettingDTO = value;
                 RaisePropertyChanged(() => Settings);
             }
         }
@@ -303,24 +382,16 @@ namespace WeekPlanner.ViewModels
 
         private async Task InitializeCitizen()
         {
+            _settingsService.UseTokenFor(UserType.Citizen);
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: async () => await _userApi.V1UserGetAsync(),
-                onSuccessAsync: async result =>
+                onSuccess: result =>
                 {
                     GirafCitizen = result.Data;
-                    await InitalizeSettings();
                 },
                 onExceptionAsync: async () => await NavigationService.PopAsync(),
                 onRequestFailedAsync: async () => await NavigationService.PopAsync());
         }
 
-        private async Task InitalizeSettings()
-        {
-            await _requestService.SendRequestAndThenAsync(
-                requestAsync: async () => await _userApi.V1UserSettingsGetAsync(),
-                onSuccess: result => { Settings = result.Data; },
-                onExceptionAsync: async () => await NavigationService.PopAsync(),
-                onRequestFailedAsync: async () => await NavigationService.PopAsync());
-        }
     }
 }

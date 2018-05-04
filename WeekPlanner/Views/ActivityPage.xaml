@@ -8,28 +8,22 @@
              x:Class="WeekPlanner.Views.ActivityPage"
              base:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Activity.Pictogram.Title}">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <converters:StateToBackgroundColorConverter x:Key="StateToBackgroundColorConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
     <ContentPage.Content>
-        <!--Outcommented parts are not a part of this release-->
         <StackLayout>
             <Grid VerticalOptions="CenterAndExpand">
                 <!--Left Side-->
                 <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
-                    <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.ImageUrl, Converter={StaticResource RelativeUrlConverter}}" />
+                    <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}" />
                     <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
                         <Button Grid.Column="0"
                                 Text="Ændre"
                                 Command="{Binding ChangePictoCommand}" />
-                        <!-- <Button Grid.Column="1"
+                         <Button Grid.Column="1"
                                 Text="{Binding FriendlyStateString}"
                                 Command="{Binding ToggleStateCommand}"
-                                BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/> -->
-                        <Button Grid.Column="1"
+                                BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/> 
+                        <Button Grid.Column="2"
                                 Text="Slet"
                                 Command="{Binding DeleteActivityCommand}"/>
                     </Grid>
@@ -50,12 +44,13 @@
                     </Grid>
                 </StackLayout>-->
             </Grid>
-            <!-- <Button Text="Toggle Guardian"
+           <!--The button below is used for debugging purposes-->
+           <!--  <Button Text="Toggle Guardian"
                         BackgroundColor="Fuchsia"
                         WidthRequest="300"
                         Command="{Binding ToggleGuardianMode}"
                         HorizontalOptions="Center" /> -->
-            <!--<StackLayout Orientation="Horizontal"
+            <StackLayout Orientation="Horizontal"
                          HorizontalOptions="Center"
                          Padding="12"
                          VerticalOptions="End"
@@ -63,7 +58,7 @@
                 <Button Text="Gem"
                         WidthRequest="300"
                         Command="{Binding SaveCommand}" />
-            </StackLayout>-->
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

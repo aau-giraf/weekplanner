@@ -38,22 +38,28 @@ namespace IO.Swagger.Model
         {
             
             /// <summary>
+            /// Enum Normal for value: Normal
+            /// </summary>
+            [EnumMember(Value = "Normal")]
+            Normal = 1,
+            
+            /// <summary>
             /// Enum Active for value: Active
             /// </summary>
             [EnumMember(Value = "Active")]
-            Active = 1,
+            Active = 2,
             
             /// <summary>
             /// Enum Canceled for value: Canceled
             /// </summary>
             [EnumMember(Value = "Canceled")]
-            Canceled = 2,
+            Canceled = 3,
             
             /// <summary>
             /// Enum Completed for value: Completed
             /// </summary>
             [EnumMember(Value = "Completed")]
-            Completed = 3
+            Completed = 4
         }
 
         /// <summary>

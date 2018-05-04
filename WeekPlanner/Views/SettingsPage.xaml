@@ -16,18 +16,13 @@
                 <!--Different completion mark-->
 
                 <!--Orientation lock-->
-                <TableSection Title="Orienterings lås">
+
+                <TableSection Title="Vælg farvetema">
                     <ViewCell>
                         <ViewCell.View>
                             <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                <Label Text="Ugeplans orientering" VerticalOptions="Center"></Label>
-                                <Picker HorizontalOptions="EndAndExpand" SelectedIndexChanged="Picker_SelectedIndexChanged">
-                                    <Picker.Items>
-                                        <x:String>A</x:String>
-                                        <x:String>B</x:String>
-                                        <x:String>C</x:String>
-                                    </Picker.Items>
-                                </Picker>
+                                <Label Text="Farvetemaer" VerticalOptions="Center"></Label>
+                                <Picker Title="Vælg et farvetema" ItemsSource="{Binding Themes}" SelectedItem="{Binding ThemeSelected}"/>
                             </StackLayout>
                         </ViewCell.View>
                     </ViewCell>

@@ -12,8 +12,10 @@ namespace WeekPlanner.Services.Settings
         string CitizenAuthToken { get; set; }
         
         string CurrentCitizenId { get; set; }
+        SettingDTO CurrentCitizenSettingDTO { get; set; }
         
         void UseTokenFor(UserType userType);
+        void SetThemeOnLogin();
     }
 
 
