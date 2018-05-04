@@ -134,15 +134,13 @@ namespace WeekPlanner.ViewModels
 
         public static string ColorToHex(Color color)
         {
-            return RGBToHexadecimal(color.R, color.G, color.B);
-        }
-        public static string RGBToHexadecimal(double r, double g, double b)
-        {
-            string rs = DecimalToHexadecimal((int)(r * 255));
-            string gs = DecimalToHexadecimal((int)(g * 255));
-            string bs = DecimalToHexadecimal((int)(b * 255));
+            var red = (int)(color.R * 255);
+            var green = (int)(color.G * 255);
+            var blue = (int)(color.B * 255);
+            var alpha = (int)(color.A * 255);
+            var hex = $"#{alpha:X2}{red:X2}{green:X2}{blue:X2}";
 
-            return '#' + rs + gs + bs;
+            return hex;
         }
 
         public string[] WeekdayHexColors
@@ -160,36 +158,6 @@ namespace WeekPlanner.ViewModels
                     ColorToHex(_weekdayColorsDict[SundaySelectedColor])
                 };
             }
-        }
-
-        private static string DecimalToHexadecimal(int dec)
-        {
-            if (dec <= 0)
-                return "00";
-
-            int hex = dec;
-            string hexStr = string.Empty;
-
-            hex = dec % 16;
-
-            if (hex < 10)
-                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 48).ToString());
-            else
-                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 55).ToString());
-
-            dec /= 16;
-
-
-            hex = dec % 16;
-
-            if (hex < 10)
-                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 48).ToString());
-            else
-                hexStr = hexStr.Insert(0, Convert.ToChar(hex + 55).ToString());
-
-            dec /= 16;
-
-            return hexStr;
         }
 
         string _mondaySelectedColor = "Grøn";
