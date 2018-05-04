@@ -72,12 +72,8 @@ namespace WeekPlanner.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            if (_editModeEnabled)
-            {
-                _selectedActivity = activity;
-                await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
-            }
-
+            _selectedActivity = activity;
+            await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
             IsBusy = false;
         });
 

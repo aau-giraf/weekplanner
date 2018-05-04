@@ -23,17 +23,19 @@
                     <StackLayout Grid.Column="0"
                              VerticalOptions="Center">
                         <ffimageloading:CachedImage Source="{Binding Activity.Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}" />
-                        <Grid Padding="30" IsVisible="{Binding IsGuardianMode}">
+                        <Grid Padding="30">
                             <Button Grid.Column="0"
                                 Text="Ændre"
-                                Command="{Binding ChangePictoCommand}" />
+                                Command="{Binding ChangePictoCommand}"
+                                IsVisible="{Binding SettingsService.IsInGuardianMode}" />
                             <Button Grid.Column="1"
                                 Text="{Binding FriendlyStateString}"
                                 Command="{Binding ToggleStateCommand}"
                                 BackgroundColor="{Binding State, Converter={StaticResource StateToBackgroundColorConverter}}"/>
                             <Button Grid.Column="2"
                                 Text="Slet"
-                                Command="{Binding DeleteActivityCommand}"/>
+                                Command="{Binding DeleteActivityCommand}"
+                                IsVisible="{Binding SettingsService.IsInGuardianMode}" />
                         </Grid>
                     </StackLayout>
                     <!--Right Side-->
@@ -41,21 +43,20 @@
                              VerticalOptions="CenterAndExpand"><Image Source="image_loading.png" /><Grid Padding="30"><Entry Placeholder="Tid"
                                Grid.Column="0" /><Button Text="Start"
                                 Grid.Column="1"
-                                IsVisible="{Binding IsGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/><Button Text="Slet"
+                                IsVisible="{Binding SettingsService.IsInGuardianMode, Converter={StaticResource NegateBooleanConverter}}"/><Button Text="Slet"
                                 Grid.Column="1"
-                                IsVisible="{Binding IsGuardianMode}"/></Grid></StackLayout>-->
+                                IsVisible="{Binding SettingsService.IsInGuardianMode}"/></Grid></StackLayout>-->
                 </Grid>
                 <!--The button below is used for debugging purposes-->
-                <!--  <Button Text="Toggle Guardian"
+                  <Button Text="Toggle Guardian"
                         BackgroundColor="Fuchsia"
                         WidthRequest="300"
                         Command="{Binding ToggleGuardianMode}"
-                        HorizontalOptions="Center" /> -->
+                        HorizontalOptions="Center" /> 
                 <StackLayout Orientation="Horizontal"
                          HorizontalOptions="Center"
                          Padding="12"
-                         VerticalOptions="End"
-                         IsVisible="{Binding IsGuardianMode}">
+                         VerticalOptions="End">
                     <Button Text="Gem"
                         WidthRequest="300"
                         Command="{Binding SaveCommand}" />
