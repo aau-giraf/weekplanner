@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Api;
@@ -129,14 +130,20 @@ namespace WeekPlanner.ViewModels
                 {
                     returnList.Add(elem);
                 }
-
                 return returnList;
             }
         }
 
         private void UpdateSettings(string key, Color value)
         {
+            var weekPlanTheme = WeekdayHexColors;
+            _settingsService.CurrentCitizenSettingDTO.WeekDayColors = _settingsService.CurrentCitizenSettingDTO.WeekDayColors.OrderBy(wd => wd.Day).ToList();
+            for (int i = 0; i < 7; i++)
+            {
+                _settingsService.CurrentCitizenSettingDTO.WeekDayColors[i].HexColor = weekPlanTheme[i];
+            }
             App.Current.Resources[key] = value;
+            UpdateSettingsAsync();
         }
 
         public static string ColorToHex(Color color)
@@ -150,6 +157,23 @@ namespace WeekPlanner.ViewModels
             string bs = DecimalToHexadecimal((int)(b * 255));
 
             return '#' + rs + gs + bs;
+        }
+
+        public string[] WeekdayHexColors
+        {
+            get
+            {
+                return new string[7]
+                {
+                    ColorToHex(_weekdayColorsDict[_mondaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_tuesdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_wednesdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_thursdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_fridaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_saturdaySelectedColor]),
+                    ColorToHex(_weekdayColorsDict[_sundaySelectedColor])
+                };
+            }
         }
 
         private static string DecimalToHexadecimal(int dec)
@@ -186,7 +210,7 @@ namespace WeekPlanner.ViewModels
 
         public string MondaySelectedColor
         {
-            get { return _mondaySelectedColor; }
+            get { return _weekdayColorsDict.First(color => color.Value == Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[0].HexColor)).Key; }
             set
             {
                 RaisePropertyChanged(() => MondayColorSelected);
@@ -197,50 +221,49 @@ namespace WeekPlanner.ViewModels
 
         public Color MondayColorSelected
         {
-            get { return _weekdayColorsDict[_mondaySelectedColor]; }
+            get { return Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[0].HexColor); }
         }
 
         string _tuesdaySelectedColor = "Lilla";
-
         public string TuesdaySelectedColor
         {
-            get { return _tuesdaySelectedColor; }
+            get { return _weekdayColorsDict.First(color => color.Value == Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[1].HexColor)).Key; }
             set
             {
-                RaisePropertyChanged(() => TuesdayColorSelected);
                 _tuesdaySelectedColor = value;
                 UpdateSettings("TuesdayColor", TuesdayColorSelected);
+                RaisePropertyChanged(() => TuesdayColorSelected);
             }
         }
 
         public Color TuesdayColorSelected
         {
-            get { return _weekdayColorsDict[_tuesdaySelectedColor]; }
+            get { return Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[1].HexColor); }
         }
 
         string _wednesdaySelectedColor = "Orange";
 
         public string WednesdaySelectedColor
         {
-            get { return _wednesdaySelectedColor; }
+            get { return _weekdayColorsDict.First(color => color.Value == Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[2].HexColor)).Key; }
             set
             {
+                UpdateSettings("WednesdayColor", WednesdayColorSelected);
                 RaisePropertyChanged(() => WednesdayColorSelected);
                 _wednesdaySelectedColor = value;
-                UpdateSettings("WednesdayColor", WednesdayColorSelected);
             }
         }
 
         public Color WednesdayColorSelected
         {
-            get { return _weekdayColorsDict[_wednesdaySelectedColor]; }
+            get { return Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[2].HexColor); }
         }
 
         string _thursdaySelectedColor = "Blå";
 
         public string ThursdaySelectedColor
         {
-            get { return _thursdaySelectedColor; }
+            get { return _weekdayColorsDict.First(color => color.Value == Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[3].HexColor)).Key; }
             set
             {
                 RaisePropertyChanged(() => ThursdayColorSelected);
@@ -251,14 +274,14 @@ namespace WeekPlanner.ViewModels
 
         public Color ThursdayColorSelected
         {
-            get { return _weekdayColorsDict[_thursdaySelectedColor]; }
+            get { return Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[3].HexColor); }
         }
 
         string _fridaySelectedColor = "Gul";
 
         public string FridaySelectedColor
         {
-            get { return _fridaySelectedColor; }
+            get { return _weekdayColorsDict.First(color => color.Value == Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[4].HexColor)).Key; }
             set
             {
                 RaisePropertyChanged(() => FridayColorSelected);
@@ -269,14 +292,14 @@ namespace WeekPlanner.ViewModels
 
         public Color FridayColorSelected
         {
-            get { return _weekdayColorsDict[_fridaySelectedColor]; }
+            get { return Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[4].HexColor); }
         }
 
         string _saturdaySelectedColor = "Rød";
 
         public string SaturdaySelectedColor
         {
-            get { return _saturdaySelectedColor; }
+            get { return _weekdayColorsDict.First(color => color.Value == Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[5].HexColor)).Key; }
             set
             {
                 RaisePropertyChanged(() => SaturdayColorSelected);
@@ -287,14 +310,14 @@ namespace WeekPlanner.ViewModels
 
         public Color SaturdayColorSelected
         {
-            get { return _weekdayColorsDict[_saturdaySelectedColor]; }
+            get { return Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[5].HexColor); }
         }
 
         string _sundaySelectedColor = "Hvid";
 
         public string SundaySelectedColor
         {
-            get { return _sundaySelectedColor; }
+            get { return _weekdayColorsDict.First(color => color.Value == Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[6].HexColor)).Key; }
             set
             {
                 RaisePropertyChanged(() => SundayColorSelected);
@@ -305,28 +328,8 @@ namespace WeekPlanner.ViewModels
 
         public Color SundayColorSelected
         {
-            get { return _weekdayColorsDict[_sundaySelectedColor]; }
+            get { return Color.FromHex(_settingsService.CurrentCitizenSettingDTO.WeekDayColors[6].HexColor); }
         }
-
-        public string[] WeekdayHexColors
-        {
-            get
-            {
-                return new string[7]
-                {
-                    ColorToHex(_weekdayColorsDict[_mondaySelectedColor]),
-                    ColorToHex(_weekdayColorsDict[_tuesdaySelectedColor]),
-                    ColorToHex(_weekdayColorsDict[_wednesdaySelectedColor]),
-                    ColorToHex(_weekdayColorsDict[_thursdaySelectedColor]),
-                    ColorToHex(_weekdayColorsDict[_fridaySelectedColor]),
-                    ColorToHex(_weekdayColorsDict[_saturdaySelectedColor]),
-                    ColorToHex(_weekdayColorsDict[_sundaySelectedColor])
-                };
-            }
-        }
-
-
-
 
         #endregion
 
