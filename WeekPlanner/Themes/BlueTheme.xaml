@@ -23,4 +23,5 @@
             Property="BarTextColor"
             Value="White" />
     </Style>
+    
 </ResourceDictionary>

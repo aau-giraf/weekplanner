@@ -8,17 +8,17 @@
                   x:Name="Mdp"
                   MasterBehavior="Popover"
                   IsGestureEnabled="{Binding SettingsService.IsInGuardianMode}">
-
     <MasterDetailPage.Master>
         <ContentPage Padding="10" Title="Master">
             <ContentPage.Content>
                 <StackLayout Margin="5,30,5,5">
                     <Button Text="Indstillinger"
-                    IsEnabled="false"
-                    Command="{Binding NavigateToSettingsCommand}"></Button>
+                    Command="{Binding NavigateToSettingsCommand}"
+                    IsVisible="{Binding SettingsService.CurrentCitizenId, Converter={StaticResource CitizenIdIsSetConverter}}">
+                    </Button>
+                   
                 </StackLayout>
             </ContentPage.Content>
         </ContentPage>
     </MasterDetailPage.Master>
-
 </MasterDetailPage>
