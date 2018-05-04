@@ -9,18 +9,17 @@
     x:Class="WeekPlanner.Views.PictogramSearchPage"
     Title="Søg efter pictogrammer">
     <ContentPage.Content>
-        <StackLayout>
-
-            <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
-            <SearchBar
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
+            <StackLayout>
+                <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
+                <SearchBar
                 x:Name="searchField"
                 Placeholder="Søg"
                 SearchCommand="{Binding SearchCommand}"
                 SearchCommandParameter="{Binding Text, Source={x:Reference searchField}}" 
                 HeightRequest="50"/>
-            
-            <StackLayout>
-                <flv:FlowListView
+                <StackLayout>
+                    <flv:FlowListView
                     SeparatorVisibility="None"
                     HasUnevenRows="true"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
@@ -28,31 +27,32 @@
                     FlowLastTappedItem="{Binding LastTappedItem}"
                     FlowColumnMinWidth="210"
                     FlowItemsSource="{Binding ImageSources}">
-                    <flv:FlowListView.FlowColumnTemplate>
-                        <DataTemplate>
-                            <Grid
+                        <flv:FlowListView.FlowColumnTemplate>
+                            <DataTemplate>
+                                <Grid
                                 Padding="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition
                                         Height="*" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition
                                         Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <ffimageloading:CachedImage
+                                    </Grid.ColumnDefinitions>
+                                    <ffimageloading:CachedImage
                                     HeightRequest="200"
                                     Aspect="AspectFit"
                                     LoadingPlaceholder="image_loading.png"
-                                    ErrorPlaceholder="default_profile_picture.jpg"
-                                    Source="{Binding Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
+                                    ErrorPlaceholder="image_loading.png"
+                                    Source="{Binding ImageUrl, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White" 
                                     />
-                            </Grid>
-                        </DataTemplate>
-                    </flv:FlowListView.FlowColumnTemplate>
-                </flv:FlowListView>
+                                </Grid>
+                            </DataTemplate>
+                        </flv:FlowListView.FlowColumnTemplate>
+                    </flv:FlowListView>
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
+        </ContentView>
     </ContentPage.Content>
 </ContentPage>

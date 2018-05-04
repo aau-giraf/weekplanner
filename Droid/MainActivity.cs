@@ -1,8 +1,8 @@
 ﻿using Acr.UserDialogs;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Views;
 using FFImageLoading.Forms.Droid;
 using Xamarin.Forms;
 using WeekPlanner.Views;
@@ -18,19 +18,21 @@ namespace WeekPlanner.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
 			base.OnCreate(bundle);
-
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+            
+            Forms.Init(this, bundle);
+            
             // Load ffimageloading
             CachedImageRenderer.Init(enableFastRenderer: true);
             // Load Acr.UserDialogs
             UserDialogs.Init(this);
-
+            
             LoadApplication(new App());
-        }
-
-        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-        {
-            base.OnActivityResult(requestCode, resultCode, data);
+            
+            // Does so the on-screen keyboard does not hide custom navigation bar
+            Window.SetSoftInputMode(SoftInput.AdjustResize);
+            
+            Window.AddFlags(WindowManagerFlags.Fullscreen);
+            
         }
     }
 }

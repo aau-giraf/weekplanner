@@ -16,7 +16,7 @@ namespace WeekPlanner.ViewModels
 
         private ValidatableObject<string> _username;
         private ValidatableObject<string> _password;
-
+        
         private bool _userModeSwitch = false;
 
         public LoginViewModel(INavigationService navigationService,
@@ -25,6 +25,8 @@ namespace WeekPlanner.ViewModels
             _loginService = loginService;
             Password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
             Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
+
+            ShowNavigationBar = false;
         }
 
         public ValidatableObject<string> Username

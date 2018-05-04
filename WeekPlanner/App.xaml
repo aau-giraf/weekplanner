@@ -81,6 +81,148 @@
             <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
             <converters:IdToRawPictoUrlConverter x:Key="IdToRawPictoUrlConverter" />
 
+            <!-- CUSTOM NAVIGATION BAR - without toolbar button -->
+            <ControlTemplate x:Key="NavBarTheme">
+                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+ 
+                    <!-- Begin Header -->
+                    <StackLayout
+                        Orientation="Horizontal"
+                        HeightRequest="50"
+                        IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
+                        BackgroundColor="{StaticResource Primary}"
+                        Spacing="0"
+                        Padding="7, 0, 10, 0"
+                        Grid.Column="0" Grid.Row="0">
+                        <!-- Header Content -->
+                        
+                        <!-- Back Button -->
+                        <Image 
+                            HorizontalOptions="StartAndExpand" 
+                            VerticalOptions="Center"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                            HeightRequest="30" Source="icon_left_arrow.png">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </StackLayout>
+                    <!-- End Header -->
+                     
+                    <!-- Begin Content -->
+                    <ScrollView Grid.Column="0" Grid.Row="1">
+                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+                    </ScrollView>
+                    <!-- End Content -->
+                </Grid>
+            </ControlTemplate>
+            
+            
+            <!-- CUSTOM NAVIGATION BAR - with toolbar button -->
+            <ControlTemplate x:Key="NavBarWithToolbarTemplate">
+                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+ 
+                    <!-- Begin Header -->
+                    <StackLayout
+                        Orientation="Horizontal"
+                        HeightRequest="50"
+                        IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
+                        BackgroundColor="{StaticResource Primary}"
+                        Spacing="0"
+                        Padding="7, 0, 10, 0"
+                        Grid.Column="0" Grid.Row="0">
+                        <!-- Header Content -->
+                        
+                        <!-- Back Button -->
+                        <Image 
+                                HorizontalOptions="StartAndExpand" 
+                                VerticalOptions="Center"
+                                IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                                HeightRequest="30" Source="icon_left_arrow.png">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        
+                        <!-- Toolbar Button -->
+                        <Image 
+                            HorizontalOptions="End" 
+                            VerticalOptions="Center"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
+                            HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer  Command="{TemplateBinding Parent.BindingContext.ToolbarButtonCommand}"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </StackLayout>
+                    <!-- End Header -->
+                     
+                    <!-- Begin Content -->
+                    <ScrollView Grid.Column="0" Grid.Row="1">
+                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+                    </ScrollView>
+                    <!-- End Content -->
+                </Grid>
+            </ControlTemplate>
+            
+            <!-- CUSTOM NAVIGATION BAR - with toolbar button and stacklayout-->
+            <ControlTemplate x:Key="NavBarWithToolbarAndStackTemplate">
+                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+ 
+                    <!-- Begin Header -->
+                    <StackLayout
+                        Orientation="Horizontal"
+                        HeightRequest="50"
+                        IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
+                        BackgroundColor="{StaticResource Primary}"
+                        Spacing="0"
+                        Padding="7, 0, 10, 0"
+                        Grid.Column="0" Grid.Row="0">
+                        <!-- Header Content -->
+                        
+                        <!-- Back Button -->
+                        <Image 
+                                HorizontalOptions="StartAndExpand" 
+                                VerticalOptions="Center"
+                                IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                                HeightRequest="30" Source="icon_left_arrow.png">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        
+                        <!-- Toolbar Button -->
+                        <Image 
+                            HorizontalOptions="End" 
+                            VerticalOptions="Center"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
+                            HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer  Command="{TemplateBinding Parent.BindingContext.ToolbarButtonCommand}"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </StackLayout>
+                    <!-- End Header -->
+                     
+                    <!-- Begin Content -->
+                    <StackLayout Grid.Column="0" Grid.Row="1">
+                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+                    <!-- End Content -->
+                </Grid>
+            </ControlTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

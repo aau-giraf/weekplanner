@@ -22,6 +22,7 @@ namespace WeekPlanner.Views
         public CitizenSchedulesPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace WeekPlanner.Views
         public ChooseCitizenPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
