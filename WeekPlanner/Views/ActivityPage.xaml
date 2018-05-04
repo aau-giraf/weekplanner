@@ -8,6 +8,11 @@
              x:Class="WeekPlanner.Views.ActivityPage"
              base:ViewModelLocator.AutoWireViewModel="true"
              Title="{Binding Activity.Pictogram.Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StateToBackgroundColorConverter x:Key="StateToBackgroundColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout>
             <Grid VerticalOptions="CenterAndExpand">
