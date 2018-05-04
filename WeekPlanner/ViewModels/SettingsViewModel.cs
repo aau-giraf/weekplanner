@@ -121,18 +121,7 @@ namespace WeekPlanner.ViewModels
             {"Orange", Color.FromHex("#ff7f00")}
         };
 
-        public List<string> WeekdayColors
-        {
-            get
-            {
-                var returnList = new List<string>();
-                foreach (var elem in _weekdayColorsDict.Keys)
-                {
-                    returnList.Add(elem);
-                }
-                return returnList;
-            }
-        }
+        public List<string> WeekdayColors => _weekdayColorsDict.Keys.ToList();
 
         private void UpdateSettings(string key, Color value, int day)
         {
