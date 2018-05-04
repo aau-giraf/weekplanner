@@ -52,12 +52,6 @@
                                 Grid.Column="1"
                                 IsVisible="{Binding SettingsService.IsInGuardianMode}"/></Grid></StackLayout>-->
                 </Grid>
-                <!--The button below is used for debugging purposes-->
-                  <Button Text="Toggle Guardian"
-                        BackgroundColor="Fuchsia"
-                        WidthRequest="300"
-                        Command="{Binding ToggleGuardianMode}"
-                        HorizontalOptions="Center" /> 
                 <StackLayout Orientation="Horizontal"
                          HorizontalOptions="Center"
                          Padding="12"

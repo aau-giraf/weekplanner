@@ -10,9 +10,6 @@
     x:Class="WeekPlanner.Views.WeekPlannerPage"
     base1:ViewModelLocator.AutoWireViewModel="true"
     Title="{Binding WeekDTO.Name}">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="{Binding UserModeImage}" Command="{Binding ToggleEditModeCommand}"></ToolbarItem>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarAndStackTemplate}">
             <StackLayout>
@@ -77,7 +74,7 @@
                         </Grid>
                     </ScrollView>
                 </Grid>
-                <Grid IsVisible="{Binding EditModeEnabled}">
+                <Grid IsVisible="{Binding SettingsService.IsInGuardianMode}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />

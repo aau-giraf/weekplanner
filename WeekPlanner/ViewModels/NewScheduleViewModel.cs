@@ -77,7 +77,7 @@ namespace WeekPlanner.ViewModels
             // Happens when selecting a picto in PictoSearch
             if (navigationData is PictogramDTO pictoDTO)
             {
-                WeekThumbNail = new WeekPictogramDTO(pictoDTO.Id);
+                WeekThumbNail = PictoToWeekPictoDtoHelper.Convert(pictoDTO);
             }
 
             return Task.FromResult(false);
@@ -102,12 +102,21 @@ namespace WeekPlanner.ViewModels
             {
                 _weekDTO.Name = ScheduleName.Value;
                 _weekDTO.Thumbnail = WeekThumbNail;
-
+                _weekDTO.Days = new List<WeekdayDTO>
+                {
+                    new WeekdayDTO(WeekdayDTO.DayEnum.Monday),
+                    new WeekdayDTO(WeekdayDTO.DayEnum.Tuesday),
+                    new WeekdayDTO(WeekdayDTO.DayEnum.Wednesday),
+                    new WeekdayDTO(WeekdayDTO.DayEnum.Thursday),
+                    new WeekdayDTO(WeekdayDTO.DayEnum.Friday),
+                    new WeekdayDTO(WeekdayDTO.DayEnum.Saturday),
+                    new WeekdayDTO(WeekdayDTO.DayEnum.Sunday)
+                };
 
                 await _requestService.SendRequestAndThenAsync(
                     requestAsync: () =>
                         _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(
-                            weekNumber: Helpers.DateTimeHelper.GetIso8601WeekOfYear(DateTime.Now),
+                            weekNumber: DateTimeHelper.GetIso8601WeekOfYear(DateTime.Now),
                             weekYear: DateTime.Now.Year, newWeek: _weekDTO),
                     onSuccess:
                     async result =>

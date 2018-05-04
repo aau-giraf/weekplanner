@@ -27,6 +27,8 @@ namespace WeekPlanner.Helpers
                     return "Der skete en fejl i forhold til gemning.";
                 case nameof(ErrorKeyEnum.DuplicateWeekScheduleName):
                     return "Dette ugenavn er allerede i brug. Prøv et andet.";
+                case nameof(ErrorKeyEnum.InvalidAmountOfWeekdays):
+                    return "Der er ikke den rigtige mængde ugedage i denne uge.";
                 default:
                     return "Der skete en ukendt fejl";
                     //throw new ArgumentOutOfRangeException(nameof(errorCode), errorCode, null);

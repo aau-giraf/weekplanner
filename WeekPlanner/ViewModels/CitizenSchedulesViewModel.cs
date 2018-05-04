@@ -69,18 +69,6 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private ObservableCollection<PictogramDTO> _weekImage;
-
-        public ObservableCollection<PictogramDTO> WeekImage
-        {
-            get => _weekImage;
-            set
-            {
-                _weekImage = value;
-                RaisePropertyChanged(() => WeekImage);
-            }
-        }
-
         private async void ListViewItemTapped(WeekDTO tappedItem)
         {
             if (IsBusy) return;
@@ -145,6 +133,7 @@ namespace WeekPlanner.ViewModels
         public override async Task PoppedAsync(object navigationData)
         {
             Weeks.Clear();
+            WeekNameDTOS.Clear();
             await InitializeWeekSchedules();
         }
 

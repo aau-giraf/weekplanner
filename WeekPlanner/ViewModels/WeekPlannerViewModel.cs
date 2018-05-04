@@ -133,7 +133,7 @@ namespace WeekPlanner.ViewModels
             {
                 // Insert pictogram in the very bottom of the day
                 var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
-                dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom));
+                dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal));
             }
 
             // TODO: Fix
@@ -198,9 +198,10 @@ namespace WeekPlanner.ViewModels
         public override async Task PoppedAsync(object navigationData)
         {
             // Happens after choosing a pictogram in Pictosearch
-            if (navigationData is WeekPictogramDTO pictogramDTO)
+            if (navigationData is PictogramDTO pictogramDTO)
             {
-                InsertPicto(pictogramDTO);
+                WeekPictogramDTO weekPictogramDTO = PictoToWeekPictoDtoHelper.Convert(pictogramDTO);
+                InsertPicto(weekPictogramDTO);
             }
 
             // Happens when popping from ActivityViewModel

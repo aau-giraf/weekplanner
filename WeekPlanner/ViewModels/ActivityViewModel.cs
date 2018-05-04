@@ -120,7 +120,6 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleGuardianMode => new Command(() => SettingsService.IsInGuardianMode = !SettingsService.IsInGuardianMode);
         public ICommand SaveCommand => new Command(async () =>
         {
             await NavigationService.PopAsync(this);
@@ -128,23 +127,10 @@ namespace WeekPlanner.ViewModels
 
         public override async Task PoppedAsync(object navigationData) {
             if (navigationData is PictogramDTO newPicto) {
-                WeekPictogramDTO newWeekPicto = Convert(newPicto);
+                WeekPictogramDTO newWeekPicto = PictoToWeekPictoDtoHelper.Convert(newPicto);
                 Activity.Pictogram = newWeekPicto;
                 RaisePropertyChanged(() => Activity);
             }
         }
-
-        WeekPictogramDTO Convert(PictogramDTO picto) {
-            return new WeekPictogramDTO
-            {
-                Id = picto.Id,
-                AccessLevel = (WeekPictogramDTO.AccessLevelEnum)picto.AccessLevel,
-                ImageHash = picto.ImageHash,
-                ImageUrl = picto.ImageUrl,
-                LastEdit = picto.LastEdit,
-                Title = picto.Title,
-            };
-        }
-
     }
 }

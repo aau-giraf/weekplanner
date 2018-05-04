@@ -53,7 +53,7 @@ namespace WeekPlanner.Services.Request
 				}
 				else
 				{
-					var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKey);
+                    var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKey);
                     await _dialogService.ShowAlertAsync(message: friendlyErrorMessage, title: "Fejl");
 				}
 			}
