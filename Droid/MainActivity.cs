@@ -9,20 +9,27 @@ using WeekPlanner.Views;
 
 namespace WeekPlanner.Droid
 {
-    [Activity(Label = "Giraf Ugeplan", Icon = "@drawable/icon", Theme = "@style/MyTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Landscape)]
+    [Activity(Label = "Giraf Ugeplan"
+              , Icon = "@drawable/icon"
+              , Theme = "@style/MyTheme"
+              , MainLauncher = true
+              , ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation
+              , ScreenOrientation = ScreenOrientation.Landscape
+              , LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-			base.OnCreate(bundle);
+			base.OnCreate(savedInstanceState);
             
-            Forms.Init(this, bundle);
+            Forms.Init(this, savedInstanceState);
             
             // Load ffimageloading
             CachedImageRenderer.Init(enableFastRenderer: true);
+
             // Load Acr.UserDialogs
             UserDialogs.Init(this);
             
