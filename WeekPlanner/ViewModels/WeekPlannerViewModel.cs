@@ -42,7 +42,6 @@ namespace WeekPlanner.ViewModels
                 _weekDto = value;
                 RaisePropertyChanged(() => WeekDTO);
                 RaisePropertyForDays();
-                RaisePropertyChanged(() => WeekName);
             }
         }
 
@@ -57,18 +56,6 @@ namespace WeekPlanner.ViewModels
         }
         
         public bool ShowToolbarButton { get; set; }
-
-        public string WeekName
-        {
-            get => WeekDTO?.Name;
-
-            set
-            {
-                WeekDTO.Name = value;
-                RaisePropertyChanged(() => WeekName);
-                _isDirty = true;
-            }
-        }
 
         public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
         
@@ -133,7 +120,6 @@ namespace WeekPlanner.ViewModels
                     _weekApi.V1WeekByWeekYearByWeekNumberGetAsync(weekYearAndNumber.Item1, weekYearAndNumber.Item2),
                 onSuccess: result => { 
                     WeekDTO = result.Data;
-                    _isDirty = false;
                 }
             );
 
