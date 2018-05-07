@@ -26,6 +26,7 @@ namespace WeekPlanner.ViewModels
         private readonly IWeekApi _weekApi;
         private readonly IDialogService _dialogService;
         public ISettingsService SettingsService { get; }
+        private bool _isDirty = false;
 
         private ActivityDTO _selectedActivity;
         private bool _editModeEnabled;
@@ -55,7 +56,7 @@ namespace WeekPlanner.ViewModels
         }
         
         public bool ShowToolbarButton { get; set; }
-        
+
         public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
         
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
@@ -117,7 +118,9 @@ namespace WeekPlanner.ViewModels
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: () =>
                     _weekApi.V1WeekByWeekYearByWeekNumberGetAsync(weekYearAndNumber.Item1, weekYearAndNumber.Item2),
-                onSuccess: result => { WeekDTO = result.Data; }
+                onSuccess: result => { 
+                    WeekDTO = result.Data;
+                }
             );
 
             foreach (var days in WeekDTO.Days)
@@ -134,16 +137,16 @@ namespace WeekPlanner.ViewModels
                 // Insert pictogram in the very bottom of the day
                 var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
                 dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal));
+                _isDirty = true;
+                RaisePropertyForDays();
             }
-
-            // TODO: Fix
-            RaisePropertyForDays();
         }
 
 
         private async Task SaveSchedule()
         {
             if (IsBusy) return;
+            if(!_isDirty) return;
 
             IsBusy = true;
             bool confirmed = await _dialogService.ConfirmAsync(
@@ -180,6 +183,7 @@ namespace WeekPlanner.ViewModels
                 result =>
                 {
                     _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
+                    _isDirty = false;
                 });
         }
 
@@ -192,7 +196,10 @@ namespace WeekPlanner.ViewModels
 
             await _requestService.SendRequestAndThenAsync(
                 () => _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(WeekDTO.WeekYear, WeekDTO.WeekNumber, WeekDTO),
-                result => { _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt."); });
+                result => { 
+                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
+                    _isDirty = false;
+                 });
         }
 
         public override async Task PoppedAsync(object navigationData)
@@ -209,19 +216,18 @@ namespace WeekPlanner.ViewModels
             {
                 if (activityVM.Activity == null)
                 {
-                    // TODO this is dumb and it may remove duplicate elements since all elements are not unique
-                    // we can refactor when ActivityDTO gets a unique ID
-                    RemoveItemFromDay(DayEnum.Monday);
-                    RemoveItemFromDay(DayEnum.Tuesday);
-                    RemoveItemFromDay(DayEnum.Wednesday);
-                    RemoveItemFromDay(DayEnum.Thursday);
-                    RemoveItemFromDay(DayEnum.Friday);
-                    RemoveItemFromDay(DayEnum.Saturday);
-                    RemoveItemFromDay(DayEnum.Sunday);
+                    foreach (var day in WeekDTO.Days)
+                    {
+                        bool removed = day.Activities.Remove(activityVM.Activity);
+                        if(removed) {
+                            _isDirty = true;
+                        }
+                    }
                 }
                 else
                 {
                     _selectedActivity = activityVM.Activity;
+                    _isDirty = true;
                 }
 
                 RaisePropertyForDays();
@@ -234,24 +240,17 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private bool RemoveItemFromDay(DayEnum day)
-        {
-            var a = WeekDTO.Days.First(x => x.Day == day).Activities;
-            if (a.Count == 0)
-            {
-                return false;
-            }
-
-            return a.Remove(_selectedActivity);
-        }
-
         private async Task SwitchUserModeAsync()
         {
             if (IsBusy) return;
-
             IsBusy = true;
             if (SettingsService.IsInGuardianMode)
             {
+                if(!_isDirty) {
+                    SetToCitizenMode();
+                    IsBusy = false;
+                    return;
+                }
                 var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
                     "Annuller", null, "Gem ændringer", "Gem ikke");
 
@@ -315,27 +314,30 @@ namespace WeekPlanner.ViewModels
         private async Task BackButtonPressed()
         {
             if (IsBusy) return;
-
+            if(!_isDirty) {
+                await NavigationService.PopAsync();
+                return;
+            }
+            if (!SettingsService.IsInGuardianMode){
+                return;
+            }
             IsBusy = true;
-            if (SettingsService.IsInGuardianMode)
+            var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
+                "Annuller", null, "Gem ændringer", "Gem ikke");
+
+            switch (result)
             {
-                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
-                    "Annuller", null, "Gem ændringer", "Gem ikke");
+                case "Annuller":
+                    break;
 
-                switch (result)
-                {
-                    case "Annuller":
-                        break;
+                case "Gem ændringer":
+                    await SaveSchedule();
+                    await NavigationService.PopAsync();
+                    break;
 
-                    case "Gem ændringer":
-                        await SaveSchedule();
-                        await NavigationService.PopAsync();
-                        break;
-
-                    case "Gem ikke":
-                        await NavigationService.PopAsync();
-                        break;
-                }
+                case "Gem ikke":
+                    await NavigationService.PopAsync();
+                    break;
             }
 
             IsBusy = false;
