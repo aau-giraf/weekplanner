@@ -19,10 +19,14 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IPictogramApi _pictogramApi;
 
+        public ISettingsService SettingsService { get; }
+
         public ActivityViewModel(INavigationService navigationService, 
                                  IPictogramApi pictogramApi,
-                                 IRequestService requestService) : base(navigationService)
+                                 IRequestService requestService,
+                                 ISettingsService settingsService) : base(navigationService)
         {
+            SettingsService = settingsService;
             _requestService = requestService;
             _pictogramApi = pictogramApi;
         }
