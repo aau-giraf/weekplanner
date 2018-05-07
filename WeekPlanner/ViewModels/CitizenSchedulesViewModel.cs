@@ -26,6 +26,7 @@ namespace WeekPlanner.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IWeekApi _weekApi;
         private readonly ILoginService _loginService;
+        private readonly ISettingsService _settingsService;
 
         public ICommand WeekTappedCommand => new Command<WeekDTO>(ListViewItemTapped);
         public ICommand WeekDeletedCommand => new Command<WeekDTO>(async week => await WeekDeletedTapped(week));
@@ -43,6 +44,7 @@ namespace WeekPlanner.ViewModels
             _dialogService = dialogService;
             _weekApi = weekApi;
             _loginService = loginService;
+            _settingsService = settingsService;
         }
 
         private ObservableCollection<WeekNameDTO> _weekNameDtos = new ObservableCollection<WeekNameDTO>();
@@ -134,6 +136,7 @@ namespace WeekPlanner.ViewModels
         {
             Weeks.Clear();
             WeekNameDTOS.Clear();
+            _settingsService.UseTokenFor(UserType.Citizen);
             await InitializeWeekSchedules();
         }
 
