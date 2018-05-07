@@ -26,66 +26,66 @@
                         </TableSection>
                         <!-- Weekschedule Color Seettings -->
                         <TableSection Title="Vælg Dagenes Farver">
-                            <ViewCell>
+<                            <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                        <Frame WidthRequest="100" BackgroundColor="{Binding MondayColorSelected}"/>
+                                        <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.MondayHexColor}"/>
                                         <Label Text="Mandags Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding MondaySelectedColor}"/>
+                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors.ColorNames}" SelectedItem="{Binding WeekdayColors.MondaySelectedColor}"/>
                                     </StackLayout>
                                 </ViewCell.View>
                             </ViewCell>
                             <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                        <Frame WidthRequest="100" BackgroundColor="{Binding TuesdayColorSelected}"/>
+                                        <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.TuesdayHexColor}"/>
                                         <Label Text="Tirsdags Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding TuesdaySelectedColor}"/>
+                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors.ColorNames}" SelectedItem="{Binding WeekdayColors.TuesdaySelectedColor}"/>
                                     </StackLayout>
                                 </ViewCell.View>
                             </ViewCell>
                             <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                        <Frame WidthRequest="100" BackgroundColor="{Binding WednesdayColorSelected}"/>
+                                        <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.WednesdayHexColor}"/>
                                         <Label Text="Onsdags Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding WednesdaySelectedColor}"/>
+                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors.ColorNames}" SelectedItem="{Binding WeekdayColors.WednesdaySelectedColor}"/>
                                     </StackLayout>
                                 </ViewCell.View>
                             </ViewCell>
                             <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                        <Frame WidthRequest="100" BackgroundColor="{Binding ThursdayColorSelected}"/>
+                                        <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.ThursdayHexColor}"/>
                                         <Label Text="Torsdags Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding ThursdaySelectedColor}"/>
+                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors.ColorNames}" SelectedItem="{Binding WeekdayColors.ThursdaySelectedColor}"/>
                                     </StackLayout>
                                 </ViewCell.View>
                             </ViewCell>
                             <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                        <Frame WidthRequest="100" BackgroundColor="{Binding FridayColorSelected}"/>
+                                        <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.FridayHexColor}"/>
                                         <Label Text="Fredags Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding FridaySelectedColor}"/>
+                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors.ColorNames}" SelectedItem="{Binding WeekdayColors.FridaySelectedColor}"/>
                                     </StackLayout>
                                 </ViewCell.View>
                             </ViewCell>
                             <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                        <Frame WidthRequest="100" BackgroundColor="{Binding SaturdayColorSelected}"/>
+                                        <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.SaturdayHexColor}"/>
                                         <Label Text="Lørdags Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding SaturdaySelectedColor}"/>
+                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors.ColorNames}" SelectedItem="{Binding WeekdayColors.SaturdaySelectedColor}"/>
                                     </StackLayout>
                                 </ViewCell.View>
                             </ViewCell>
                             <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
-                                        <Frame WidthRequest="100" BackgroundColor="{Binding SundayColorSelected}"/>
+                                        <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.SundayHexColor}"/>
                                         <Label Text="Søndags Farve" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors}" SelectedItem="{Binding SundaySelectedColor}"/>
+                                        <Picker Title="Vælg en farve" HorizontalOptions="EndAndExpand" WidthRequest="200" ItemsSource="{Binding WeekdayColors.ColorNames}" SelectedItem="{Binding WeekdayColors.SundaySelectedColor}"/>
                                     </StackLayout>
                                 </ViewCell.View>
                             </ViewCell>

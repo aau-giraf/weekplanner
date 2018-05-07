@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="Services\Mocks\" />
     <Folder Include="Controls\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
@@ -42,11 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Views\SavePromptPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Views\MasterDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
