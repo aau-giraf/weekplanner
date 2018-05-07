@@ -24,6 +24,7 @@
             <ViewCell>
                 <Grid Margin="4">
                     <ffimageloading:CachedImage
+                        DownsampleToViewSize="True"
                         HorizontalOptions="CenterAndExpand"
                         VerticalOptions="CenterAndExpand"
                         LoadingPlaceholder="image_loading.png"
