@@ -16,17 +16,22 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarTheme}">
-            <StackLayout VerticalOptions="Center"
-                     Padding="400, 0"
+            <StackLayout>
+            <StackLayout VerticalOptions="CenterAndExpand"
+                         HorizontalOptions="Center"
                      Margin="12">
-                <Label
-                Text="Log ind"
-                HorizontalTextAlignment="Center"
-                FontSize="32" />
+                <StackLayout Orientation="Horizontal" 
+                             VerticalOptions="Start" 
+                             HorizontalOptions="Center" 
+                             Margin="0,30,0,65">
+                    <Image Source="icon.png" VerticalOptions="Center"></Image>
+                    <Label Text="Ugeplan" Margin="5,0,0,0" FontSize="40" VerticalOptions="Center" FontAttributes="Bold"></Label>
+                </StackLayout>
                 <!--USERNAME-->
                 <Entry x:Name="UsernameEntry"
                    Text="{Binding Username.Value}"
                    Placeholder="Brugernavn"
+                   WidthRequest="250"
                    Completed="Username_Completed">
                     <Entry.Behaviors>
                         <behaviors:EventToCommandBehavior
@@ -42,6 +47,7 @@
                 x:Name="PasswordEntry"
                 Text="{Binding Password.Value}"
                 Placeholder="Adgangskode"
+                WidthRequest="250"
                 IsPassword="True"
                 Completed="Password_Completed">
                     <Entry.Behaviors>
@@ -54,12 +60,21 @@
                 Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                 Style="{StaticResource ValidationErrorLabelStyle}" />
                 <Button
-                Margin="80, 0"
+                Margin="80, 20, 80, 0"
+                WidthRequest="200"
                 x:Name="LoginButton"
                 Command="{Binding LoginCommand}"
                 Text="Log ind"
+                FontAttributes="Bold"
                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                 BackgroundColor="{StaticResource SuccessColor}" />
+            </StackLayout>
+                <StackLayout VerticalOptions="End" HorizontalOptions="Center">
+                    <Label
+                        Margin="0, 0, 0, 20"
+                        HorizontalOptions="Center"
+                        Text="By Software årgang 2015 @ Aalborg University"></Label>
+                </StackLayout>
             </StackLayout>
         </ContentView>
     </ContentPage.Content>

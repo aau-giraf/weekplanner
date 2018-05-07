@@ -20,7 +20,6 @@ namespace WeekPlanner.ViewModels
     {
         private readonly ISettingsService _settingsService;
         private readonly IRequestService _requestService;
-        private readonly IDialogService _dialogService;
         private readonly IUserApi _userApi;
 
         public WeekdayColors WeekdayColors { get; set; }
@@ -40,34 +39,30 @@ namespace WeekPlanner.ViewModels
         private IEnumerable<SettingDTO.ThemeEnum> _themes = new List<SettingDTO.ThemeEnum>(){
             SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
         };
-        public IEnumerable<SettingDTO.ThemeEnum> Themes => _themes;
 
-
-        private SettingDTO.ThemeEnum _themeSelected;
         public SettingDTO.ThemeEnum ThemeSelected
         {
-            get => _themeSelected;
+            get => _settingsService.CurrentCitizenSettingDTO.Theme;
             set
             {
                 var currentTheme = Application.Current.Resources;
-                _themeSelected = value;
                 switch (value)
                 {
                     case SettingDTO.ThemeEnum.GirafRed:
                         currentTheme.MergedWith = typeof(Themes.RedTheme);
-                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        SetThemeInSettingDTOAndUpdate(value);
                         break;
                     case SettingDTO.ThemeEnum.GirafYellow:
                         currentTheme.MergedWith = typeof(Themes.OrangeTheme);
-                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        SetThemeInSettingDTOAndUpdate(value);
                         break;
                     case SettingDTO.ThemeEnum.AndroidBlue:
                         currentTheme.MergedWith = typeof(Themes.BlueTheme);
-                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        SetThemeInSettingDTOAndUpdate(value);
                         break;
                     case SettingDTO.ThemeEnum.GirafGreen:
                         currentTheme.MergedWith = typeof(Themes.GreenTheme);
-                        SetThemeInSettingDTOAntUpdate(_themeSelected);
+                        SetThemeInSettingDTOAndUpdate(value);
                         break;
                     default:
                         break;
@@ -76,7 +71,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private void SetThemeInSettingDTOAntUpdate(SettingDTO.ThemeEnum pickedTheme)
+        private void SetThemeInSettingDTOAndUpdate(SettingDTO.ThemeEnum pickedTheme)
         {
             Settings.Theme = pickedTheme;
             UpdateSettingsAsync();
@@ -125,24 +120,14 @@ namespace WeekPlanner.ViewModels
 
         private SettingDTO.OrientationEnum _orientationSetting;
 
-        public SettingDTO Settings
-        {
-            get => _settingsService.CurrentCitizenSettingDTO;
-            set
-            {
-                _settingsService.CurrentCitizenSettingDTO = value;
-                RaisePropertyChanged(() => Settings);
-            }
-        }
+        public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
 
-
-        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService,
-            IDialogService dialogService, IRequestService requestService, IUserApi userApi) : base(navigationService)
+        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService, 
+            IRequestService requestService, IUserApi userApi) : base(navigationService)
         {
             _settingsService = settingsService;
             _requestService = requestService;
             _userApi = userApi;
-            _dialogService = dialogService;
 
             WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
             // Update settings regardless of which property calls 'RaisePropertyChanged'
@@ -165,6 +150,5 @@ namespace WeekPlanner.ViewModels
                     GirafCitizen = result.Data;
                 });
         }
-
     }
 }

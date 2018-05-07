@@ -51,6 +51,9 @@ namespace WeekPlanner.ViewModels
 		}
 
 		public ICommand NavigateToSettingsCommand =>
-        new Command(async () => await NavigationService.NavigateToAsync<SettingsViewModel>(GirafCitizen));
+        new Command(async () => {
+            MessagingCenter.Send(this, MessageKeys.HideMasterPage);
+            await NavigationService.NavigateToAsync<SettingsViewModel>(GirafCitizen);
+        });
     }
 }

@@ -12,11 +12,5 @@ namespace WeekPlanner.Views
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
         }
-
-		public void Picker_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			DisplayAlert("Hey", "Med", "Dig");
-		}
-
 	}
 }
