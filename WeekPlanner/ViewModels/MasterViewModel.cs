@@ -15,17 +15,26 @@ namespace WeekPlanner.ViewModels
 		{
 			SettingsService = settingsService;
 		}
+        bool _isPresented;
 
-		public ICommand NavigateToSettingsCommand => new Command(NavigateToSettingsAndHideMaster);
+        public bool IsPresented
+        {
+            get => _isPresented;
+            set
+            {
+                _isPresented = value;
+                RaisePropertyChanged(() => IsPresented);
+            }
+        }
+
+        public ICommand NavigateToSettingsCommand => new Command(NavigateToSettingsAndHideMaster);
 
 	    private async void NavigateToSettingsAndHideMaster()
 	    {
 		    if (IsBusy) return;
 
 		    IsBusy = true;
-		    
-		    MessagingCenter.Send(this, MessageKeys.HideMasterPage);
-		    
+            IsPresented = false;		    
 		    if (NavigationService.CurrentPageViewModel is SettingsViewModel)
 		    {
 			    IsBusy = false;
