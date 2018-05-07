@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:IO.Swagger.Model;assembly=IO.Swagger"
     x:Class="WeekPlanner.Views.WeekPlannerPage"
     base1:ViewModelLocator.AutoWireViewModel="true"
-    Title="{Binding WeekDTO.Name}">
+    Title="{Binding WeekName}">
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarAndStackTemplate}">
             <StackLayout>
@@ -26,7 +26,7 @@
                         <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
                     </Grid>
                     <Grid Grid.Column="1">
-                        <Entry HorizontalTextAlignment="Center" Text="{Binding WeekDTO.Name}" Placeholder="Unavngivet skema" TextColor="{StaticResource BlackColor}">
+                        <Entry HorizontalTextAlignment="Center" Text="{Binding WeekName}" Placeholder="Unavngivet skema" TextColor="{StaticResource BlackColor}">
                             <Entry.Behaviors>
                                 <behaviors:EventToCommandBehavior EventName="TextChanged" Command="{Binding SaveScheduleName}" />
                             </Entry.Behaviors>
