@@ -26,7 +26,7 @@
                         </TableSection>
                         <!-- Weekschedule Color Seettings -->
                         <TableSection Title="Vælg Dagenes Farver">
-<                            <ViewCell>
+                            <ViewCell>
                                 <ViewCell.View>
                                     <StackLayout Orientation="Horizontal" Padding="15, 0">
                                         <Frame WidthRequest="100" BackgroundColor="{Binding WeekdayColors.MondayHexColor}"/>
