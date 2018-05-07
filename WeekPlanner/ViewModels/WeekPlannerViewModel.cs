@@ -53,11 +53,11 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ToolbarButtonIcon);
             }
         }
-        
+
         public bool ShowToolbarButton { get; set; }
-        
+
         public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
-        
+
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
@@ -78,11 +78,11 @@ namespace WeekPlanner.ViewModels
         });
 
         public WeekPlannerViewModel(
-            INavigationService navigationService, 
-            IRequestService requestService, 
-            IWeekApi weekApi, 
-            IDialogService dialogService, 
-            ISettingsService settingsService) 
+            INavigationService navigationService,
+            IRequestService requestService,
+            IWeekApi weekApi,
+            IDialogService dialogService,
+            ISettingsService settingsService)
             : base(navigationService)
         {
             _requestService = requestService;
@@ -205,44 +205,20 @@ namespace WeekPlanner.ViewModels
             }
 
             // Happens when popping from ActivityViewModel
-            if (navigationData is ActivityViewModel activityVM)
+            if (navigationData == null)
             {
-                if (activityVM.Activity == null)
-                {
-                    // TODO this is dumb and it may remove duplicate elements since all elements are not unique
-                    // we can refactor when ActivityDTO gets a unique ID
-                    RemoveItemFromDay(DayEnum.Monday);
-                    RemoveItemFromDay(DayEnum.Tuesday);
-                    RemoveItemFromDay(DayEnum.Wednesday);
-                    RemoveItemFromDay(DayEnum.Thursday);
-                    RemoveItemFromDay(DayEnum.Friday);
-                    RemoveItemFromDay(DayEnum.Saturday);
-                    RemoveItemFromDay(DayEnum.Sunday);
-                }
-                else
-                {
-                    _selectedActivity = activityVM.Activity;
-                }
-
-                RaisePropertyForDays();
+                WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Remove(_selectedActivity);
             }
-
+            else if (navigationData is ActivityDTO activity)
+            {
+                _selectedActivity = activity;
+            }
             // Happens after logging in as guardian when switching to guardian mode
             if (navigationData is bool enterGuardianMode)
             {
                 SetToGuardianMode();
             }
-        }
-
-        private bool RemoveItemFromDay(DayEnum day)
-        {
-            var a = WeekDTO.Days.First(x => x.Day == day).Activities;
-            if (a.Count == 0)
-            {
-                return false;
-            }
-
-            return a.Remove(_selectedActivity);
+            RaisePropertyForDays();
         }
 
         private async Task SwitchUserModeAsync()
@@ -304,7 +280,7 @@ namespace WeekPlanner.ViewModels
             SettingsService.IsInGuardianMode = false;
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
         }
-        
+
         private void SetToGuardianMode()
         {
             ShowBackButton = true;
@@ -341,9 +317,11 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        private DayEnum GetCurrentDay() {
+        private DayEnum GetCurrentDay()
+        {
             var today = DateTime.Today.DayOfWeek;
-            switch(today) {
+            switch (today)
+            {
                 case DayOfWeek.Monday:
                     return DayEnum.Monday;
                 case DayOfWeek.Tuesday:
@@ -361,7 +339,7 @@ namespace WeekPlanner.ViewModels
                 default:
                     throw new NotSupportedException("DayEnum out of bounds");
             }
-                                
+
         }
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
@@ -404,7 +382,7 @@ namespace WeekPlanner.ViewModels
 
             foreach (var activity in todaysActivities)
             {
-                if(activity.State == StateEnum.Normal) 
+                if (activity.State == StateEnum.Normal)
                 {
                     activity.State = StateEnum.Active;
                     return;
