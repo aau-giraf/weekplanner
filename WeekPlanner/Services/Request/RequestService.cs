@@ -17,7 +17,9 @@ namespace WeekPlanner.Services.Request
 			_dialogService = dialogService;
 		}
 
-        public async Task SendRequestAndThenAsync<TR>(Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
+        public async Task SendRequestAndThenAsync<TR>(
+            Func<Task<TR>> requestAsync, 
+            Func<TR, Task> onSuccessAsync = null,
             Func<Task> onExceptionAsync = null,
             Func<Task> onRequestFailedAsync = null,
             string exceptionErrorMessageKey = MessageKeys.RequestFailed,
@@ -43,7 +45,7 @@ namespace WeekPlanner.Services.Request
 
 			if (result.Success == true)
 			{
-				await onSuccessAsync.Invoke(result);
+				await onSuccessAsync?.Invoke(result);
 			}
 			else
 			{
@@ -58,6 +60,11 @@ namespace WeekPlanner.Services.Request
 				}
 			}
 		}
+
+        public async Task SendRequest<TR>(Task<TR> requestAsync) {
+            await SendRequestAndThenAsync(() => requestAsync);
+        }
+
         public async Task SendRequestAndThenAsync<TR>(Func<Task<TR>> requestAsync,
             Action<TR> onSuccess,
             Func<Task> onExceptionAsync = null,

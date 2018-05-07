@@ -17,11 +17,15 @@ namespace WeekPlanner.Services.Request
         /// <param name="requestFailedMessageKey">The messagekey used on requestfailed, default is RequestFailed</param>
         /// <typeparam name="TR">The inner result type of the requestAsync</typeparam>
         /// <returns></returns>
-        Task SendRequestAndThenAsync<TR>(Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
+        Task SendRequestAndThenAsync<TR>(
+            Func<Task<TR>> requestAsync, 
+            Func<TR, Task> onSuccessAsync = null,
             Func<Task> onExceptionAsync = null,
             Func<Task> onRequestFailedAsync = null,
             string exceptionErrorMessageKey = MessageKeys.RequestFailed,
             string requestFailedMessageKey = MessageKeys.RequestFailed);
+
+        Task SendRequest<TR>(Task<TR> requestAsync); 
         
         /// <summary>
         /// Sends a request, then sends and invokes the correct messages and functions based on the result.
