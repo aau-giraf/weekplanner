@@ -163,14 +163,7 @@ namespace WeekPlanner.ViewModels
 
             SettingsService.UseTokenFor(UserType.Citizen);
 
-            if (WeekDTO.WeekNumber is null)
-            {
-                await SaveNewSchedule();
-            }
-            else
-            {
-                await UpdateExistingSchedule();
-            }
+            await SaveOrUpdateSchedule();
 
             IsBusy = false;
         }
@@ -260,7 +253,7 @@ namespace WeekPlanner.ViewModels
                         break;
 
                     case "Gem ændringer":
-                        await SaveSchedule();
+                        await SaveOrUpdateSchedule();
                         SetToCitizenMode();
                         break;
 
@@ -329,12 +322,10 @@ namespace WeekPlanner.ViewModels
             {
                 case "Annuller":
                     break;
-
                 case "Gem ændringer":
-                    await SaveSchedule();
+                    await SaveOrUpdateSchedule();
                     await NavigationService.PopAsync();
                     break;
-
                 case "Gem ikke":
                     await NavigationService.PopAsync();
                     break;
@@ -411,6 +402,18 @@ namespace WeekPlanner.ViewModels
                     activity.State = StateEnum.Active;
                     return;
                 }
+            }
+        }
+
+        private async Task SaveOrUpdateSchedule()
+        {
+            if (WeekDTO.WeekNumber is null)
+            {
+                await SaveNewSchedule();
+            }
+            else
+            {
+                await UpdateExistingSchedule();
             }
         }
     }
