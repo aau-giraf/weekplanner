@@ -24,18 +24,6 @@ namespace WeekPlanner.ViewModels
 
         public WeekdayColors WeekdayColors { get; set; }
 
-        private GirafUserDTO _girafCitizen;
-
-        public GirafUserDTO GirafCitizen
-        {
-            get => _girafCitizen;
-            set
-            {
-                _girafCitizen = value;
-                RaisePropertyChanged(() => GirafCitizen);
-            }
-        }
-
         private IEnumerable<SettingDTO.ThemeEnum> _themes = new List<SettingDTO.ThemeEnum>(){
             SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
         };
@@ -117,9 +105,6 @@ namespace WeekPlanner.ViewModels
             await _requestService.SendRequest(_userApi.V1UserSettingsPatchAsync(Settings));
         }
 
-
-        private SettingDTO.OrientationEnum _orientationSetting;
-
         public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
 
         public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService, 
@@ -132,23 +117,6 @@ namespace WeekPlanner.ViewModels
             WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
             // Update settings regardless of which property calls 'RaisePropertyChanged'
             WeekdayColors.PropertyChanged += (sender, e) => UpdateSettingsAsync();
-        }
-
-        public override async Task InitializeAsync(object navigationData)
-        {
-            _settingsService.UseTokenFor(UserType.Citizen);
-            await InitializeCitizen();
-        }
-
-        private async Task InitializeCitizen()
-        {
-            _settingsService.UseTokenFor(UserType.Citizen);
-            await _requestService.SendRequestAndThenAsync(
-                requestAsync: async () => await _userApi.V1UserGetAsync(),
-                onSuccess: result =>
-                {
-                    GirafCitizen = result.Data;
-                });
         }
     }
 }

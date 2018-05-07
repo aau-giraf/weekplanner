@@ -66,7 +66,7 @@ namespace WeekPlanner.ViewModels
                     State = StateEnum.Completed;
                     break;
                 case StateEnum.Completed:
-                    State = StateEnum.Canceled;
+                    State = (SettingsService.IsInGuardianMode) ? StateEnum.Canceled : StateEnum.Active;
                     break;
                 case StateEnum.Canceled:
                     State = StateEnum.Active;
