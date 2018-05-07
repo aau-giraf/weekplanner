@@ -12,7 +12,6 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
             Detail = new CustomNavigationPage(new LoginPage());
-            MessagingCenter.Subscribe<MasterViewModel>(this, MessageKeys.HideMasterPage, sender => { IsPresented = false; });
         }
 
 
