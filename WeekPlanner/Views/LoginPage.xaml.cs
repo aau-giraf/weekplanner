@@ -1,16 +1,13 @@
-using WeekPlanner.Services.Login;
-using WeekPlanner.ViewModels;
-using WeekPlanner.ViewModels.Base;
+using WeekPlanner.Views.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class LoginPage : ContentPage
+    public partial class LoginPage : PageBase
     {       
         public LoginPage()
         {
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);
             if (Device.Idiom == TargetIdiom.Phone)
             {
                 StackTitle.Margin = new Thickness(0, 20, 0, 30);
@@ -18,12 +15,12 @@ namespace WeekPlanner.Views
             }
         }
 
-        void Username_Completed(object sender, System.EventArgs e)
+        private void Username_Completed(object sender, System.EventArgs e)
         {
             PasswordEntry.Focus();
         }
 
-        void Password_Completed(object sender, System.EventArgs e)
+        private void Password_Completed(object sender, System.EventArgs e)
         {
             LoginButton.Command.Execute(null);
         }

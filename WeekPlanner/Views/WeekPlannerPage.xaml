@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage
+<base:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
     xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
     xmlns:controls="clr-namespace:WeekPlanner.Controls"
     xmlns:local="clr-namespace:IO.Swagger.Model;assembly=IO.Swagger"
+    xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
     x:Class="WeekPlanner.Views.WeekPlannerPage"
     x:Name="page"
-    base1:ViewModelLocator.AutoWireViewModel="true"
     Title="{Binding WeekDTO.Name}">
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarAndStackTemplate}">
@@ -65,6 +63,15 @@
                 than the ListViews height in effect disabling their scrolling, so all days scroll together -->
 
                         <Grid HeightRequest="{Binding Height}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
                             <controls:WeekDayListView BackgroundColor="{DynamicResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" />
                             <controls:WeekDayListView BackgroundColor="{DynamicResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" />
                             <controls:WeekDayListView BackgroundColor="{DynamicResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" />
@@ -99,4 +106,4 @@
             </StackLayout>
         </ContentView>
     </ContentPage.Content>
-</ContentPage>
+</base:PageBase>

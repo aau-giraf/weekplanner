@@ -1,16 +1,14 @@
-using Xamarin.Forms;
+using WeekPlanner.Views.Base;
 using Xamarin.Forms.Xaml;
 
 namespace WeekPlanner.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class TestingPage : ContentPage
+	public partial class TestingPage : PageBase
 	{
         public TestingPage ()
         {
-            InitializeComponent ();
-			
-	        NavigationPage.SetHasNavigationBar(this, false);
+            InitializeComponent();
 		}
     }
 }
