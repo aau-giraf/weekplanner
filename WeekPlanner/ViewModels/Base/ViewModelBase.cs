@@ -61,7 +61,13 @@ namespace WeekPlanner.ViewModels.Base
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
-            OnBackButtonPressedCommand = new Command(async () => await NavigationService.PopAsync());
+            OnBackButtonPressedCommand = new Command(async () =>
+            {
+                if (IsBusy) return;
+                IsBusy = true;
+                await NavigationService.PopAsync();
+                IsBusy = false;
+            });
         }
 
         public virtual Task InitializeAsync(object navigationData)

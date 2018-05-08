@@ -5,8 +5,8 @@
              x:Class="WeekPlanner.App">
     <Application.Resources>
         <ResourceDictionary>
+            
             <!--COLORS-->
-
             <Color x:Key="MondayColor">#067700</Color>
             <Color x:Key="TuesdayColor">#8c1086</Color>
             <Color x:Key="WednesdayColor">#ff7f00</Color>
@@ -49,16 +49,6 @@
                 x:Key="GreenThemeColor">#007E33</Color>
             <Color
                 x:Key="NavBarColor">#33b5e5</Color>
-            
-            <!--Layouts-->
-
-            <!--<Style TargetType="ContentPage">
-                <Setter Property="BackgroundColor" Value="{StaticResource White}" />
-            </Style>-->
-
-            <!--<Style TargetType="ContentPage.ToolbarItems">
-                <Setter Property="BackgroundColor" Value="{staticResource White}" />
-            </Style>-->
 
             <Style TargetType="views:CustomNavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
@@ -70,21 +60,10 @@
                 <Setter Property="TextColor"
                         Value="{StaticResource ErrorColor}" />
             </Style>
-
-            <!--<Style TargetType="Label">
-                
-            </Style>
-
-            <Style TargetType="SearchBar">
-
-            </Style>
--->
+            
             <Style TargetType="Button">
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                <!--<Setter Property="Margin" Value="20" />
-                <Setter Property="VerticalOptions" Value="CenterAndExpand" />-->
-                <Setter Property="TextColor" Value="White" />
-
+                <Setter Property="TextColor" Value="{StaticResource WhiteColor}" />
             </Style>
 
             <!-- CONVERTERS -->
@@ -120,7 +99,7 @@
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
                             HeightRequest="30" Source="icon_left_arrow.png">
                             <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
+                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}"  />
                             </Image.GestureRecognizers>
                         </Image>
                     </StackLayout>
