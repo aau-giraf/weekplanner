@@ -8,6 +8,7 @@
     xmlns:controls="clr-namespace:WeekPlanner.Controls"
     xmlns:local="clr-namespace:IO.Swagger.Model;assembly=IO.Swagger"
     x:Class="WeekPlanner.Views.WeekPlannerPage"
+    x:Name="page"
     base1:ViewModelLocator.AutoWireViewModel="true"
     Title="{Binding WeekDTO.Name}">
     <ContentPage.Content>
