@@ -210,15 +210,21 @@ namespace WeekPlanner.ViewModels
                     .Activities
                     .Remove(_selectedActivity);
                 _isDirty = true;
-                await UpdateExistingSchedule();
                 RaisePropertyForDays();
+                if (!SettingsService.IsInGuardianMode)
+                {
+                    await UpdateExistingSchedule();
+                }
             }
             else if (navigationData is ActivityDTO activity)
             {
                 _selectedActivity = activity;
                 _isDirty = true;
-                await UpdateExistingSchedule();
                 RaisePropertyForDays();
+                if (!SettingsService.IsInGuardianMode)
+                {
+                    await UpdateExistingSchedule();
+                }
             }
             // Happens after logging in as guardian when switching to guardian mode
             if (navigationData is bool enterGuardianMode)
