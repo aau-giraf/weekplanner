@@ -20,9 +20,15 @@
     <Folder Include="Services\Mocks\" />
     <Folder Include="Controls\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Base" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
+    <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj">
+      <Project>{4AC971BD-FD70-4BCC-82A1-32F8CFB029FF}</Project>
+      <Name>IO.Swagger</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />

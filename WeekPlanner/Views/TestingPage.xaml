@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage
+<base:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-    base1:ViewModelLocator.AutoWireViewModel="true"
+    xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
     x:Class="WeekPlanner.Views.TestingPage"
     Title="Navigering">
     <ContentPage.Content>
@@ -36,4 +35,4 @@
             </StackLayout>
         </ContentView>
     </ContentPage.Content>
-</ContentPage>
+</base:PageBase>

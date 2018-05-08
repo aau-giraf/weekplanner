@@ -1,7 +1,5 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using WeekPlanner.ViewModels;
-using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.Views
 {

@@ -1,31 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeekPlanner.ViewModels;
-using WeekPlanner.ViewModels.Base;
-using Xamarin.Forms;
+﻿using WeekPlanner.Views.Base;
 using Xamarin.Forms.Xaml;
 
 namespace WeekPlanner.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SavePromptPage : ContentPage
+	public partial class SavePromptPage : PageBase
 	{
 		public SavePromptPage ()
 		{
 			InitializeComponent ();
-            
-        }
-
-        protected override bool OnBackButtonPressed()
-        {
-            var vm = BindingContext as SavePromptViewModel;
-
-            vm.OnBackButtonPressedCommand.Execute(null);
-
-            return true;
         }
     }
 }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<base:PageBase xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
              xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
              xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
+             xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.LoginPage"
-             base1:ViewModelLocator.AutoWireViewModel="true"
              Title="Log ind">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -80,4 +79,4 @@
             </StackLayout>
         </ContentView>
     </ContentPage.Content>
-</ContentPage>
+</base:PageBase>

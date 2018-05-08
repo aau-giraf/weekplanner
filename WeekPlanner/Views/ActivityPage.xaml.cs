@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Xamarin.Forms;
+﻿using WeekPlanner.Views.Base;
 
 namespace WeekPlanner.Views
 {
-    public partial class ActivityPage : ContentPage
+    public partial class ActivityPage : PageBase
     {
         public ActivityPage()
         {
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);
         }
     }
 }

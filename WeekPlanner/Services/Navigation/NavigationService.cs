@@ -50,8 +50,8 @@ namespace WeekPlanner.Services.Navigation
                 if (PreviousPageViewModel is null || PreviousPageViewModel is LoginViewModel)
                 {
                     // If you pop to login or beyond, simply clear stack and go to loginpage
-                    await RemoveBackStackAsync();
                     await NavigateToAsync<LoginViewModel>();
+                    await RemoveBackStackAsync();
                     return;
                 }
 

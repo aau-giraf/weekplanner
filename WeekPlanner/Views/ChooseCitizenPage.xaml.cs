@@ -1,16 +1,15 @@
 using System.Linq;
 using WeekPlanner.ViewModels;
-using WeekPlanner.ViewModels.Base;
+using WeekPlanner.Views.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class ChooseCitizenPage : ContentPage
+    public partial class ChooseCitizenPage : PageBase
     {
         public ChooseCitizenPage()
         {
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
