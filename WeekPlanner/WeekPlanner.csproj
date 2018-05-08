@@ -21,7 +21,6 @@
     <Folder Include="Controls\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Base" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
