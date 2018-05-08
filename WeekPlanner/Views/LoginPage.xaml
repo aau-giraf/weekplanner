@@ -1,80 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-    xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
-    xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
-    x:Class="WeekPlanner.Views.LoginPage"
-    base1:ViewModelLocator.AutoWireViewModel="true"
-    Title="Log ind">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+             xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
+             xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
+             x:Class="WeekPlanner.Views.LoginPage"
+             base1:ViewModelLocator.AutoWireViewModel="true"
+             Title="Log ind">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:FirstValidationErrorConverter
-                x:Key="FirstValidationErrorConverter" />
+            <converters:FirstValidationErrorConverter x:Key="FirstValidationErrorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarTheme}">
             <StackLayout>
-            <StackLayout VerticalOptions="CenterAndExpand"
-                         HorizontalOptions="Center"
-                     Margin="12">
-                <StackLayout Orientation="Horizontal" 
-                             VerticalOptions="Start" 
-                             HorizontalOptions="Center" 
-                             Margin="0,30,0,65"
-                             x:Name="StackTitle">
-                    <Image Source="icon.png" VerticalOptions="Center"></Image>
-                    <Label Text="Ugeplan" Margin="5,0,0,0" FontSize="40" VerticalOptions="Center" FontAttributes="Bold"></Label>
+                <StackLayout VerticalOptions="CenterAndExpand"
+                             HorizontalOptions="Center"
+                             Margin="12">
+                    <StackLayout Orientation="Horizontal"
+                                 VerticalOptions="Start"
+                                 HorizontalOptions="Center"
+                                 Margin="0,30,0,65"
+                                 x:Name="StackTitle">
+                        <Image Source="icon.png"
+                               VerticalOptions="Center"
+                               HeightRequest="40">
+                        </Image>
+                        <Label Text="Ugeplan"
+                               Margin="5,0,0,0"
+                               FontSize="40"
+                               VerticalOptions="Center"
+                               FontAttributes="Bold">
+                        </Label>
+                    </StackLayout>
+                    <!--USERNAME-->
+                    <Entry x:Name="UsernameEntry"
+                           Text="{Binding Username.Value}"
+                           Placeholder="Brugernavn"
+                           WidthRequest="250"
+                           Completed="Username_Completed">
+                        <Entry.Behaviors>
+                            <behaviors:EventToCommandBehavior EventName="TextChanged"
+                                                              Command="{Binding ValidateUsernameCommand}" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label Text="{Binding Username.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                           Style="{StaticResource ValidationErrorLabelStyle}" />
+                    <!-- PASSWORD -->
+                    <Entry x:Name="PasswordEntry"
+                           Text="{Binding Password.Value}"
+                           Placeholder="Adgangskode"
+                           WidthRequest="250"
+                           IsPassword="True"
+                           Completed="Password_Completed">
+                        <Entry.Behaviors>
+                            <behaviors:EventToCommandBehavior EventName="TextChanged"
+                                                              Command="{Binding ValidatePasswordCommand}" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                           Style="{StaticResource ValidationErrorLabelStyle}" />
+                    <Button Margin="80, 20, 80, 0"
+                            WidthRequest="200"
+                            x:Name="LoginButton"
+                            Command="{Binding LoginCommand}"
+                            Text="Log ind"
+                            FontAttributes="Bold"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                            BackgroundColor="{StaticResource SuccessColor}" />
                 </StackLayout>
-                <!--USERNAME-->
-                <Entry x:Name="UsernameEntry"
-                   Text="{Binding Username.Value}"
-                   Placeholder="Brugernavn"
-                   WidthRequest="250"
-                   Completed="Username_Completed">
-                    <Entry.Behaviors>
-                        <behaviors:EventToCommandBehavior
-                        EventName="TextChanged"
-                        Command="{Binding ValidateUsernameCommand}" />
-                    </Entry.Behaviors>
-                </Entry>
-                <Label
-                Text="{Binding Username.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                Style="{StaticResource ValidationErrorLabelStyle}" />
-                <!-- PASSWORD -->
-                <Entry
-                x:Name="PasswordEntry"
-                Text="{Binding Password.Value}"
-                Placeholder="Adgangskode"
-                WidthRequest="250"
-                IsPassword="True"
-                Completed="Password_Completed">
-                    <Entry.Behaviors>
-                        <behaviors:EventToCommandBehavior
-                        EventName="TextChanged"
-                        Command="{Binding ValidatePasswordCommand}" />
-                    </Entry.Behaviors>
-                </Entry>
-                <Label
-                Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                Style="{StaticResource ValidationErrorLabelStyle}" />
-                <Button
-                Margin="80, 20, 80, 0"
-                WidthRequest="200"
-                x:Name="LoginButton"
-                Command="{Binding LoginCommand}"
-                Text="Log ind"
-                FontAttributes="Bold"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
-                BackgroundColor="{StaticResource SuccessColor}" />
-            </StackLayout>
-                <StackLayout VerticalOptions="End" HorizontalOptions="Center">
-                    <Label
-                        Margin="0, 0, 0, 20"
-                        HorizontalOptions="Center"
-                        Text="By Software årgang 2015 @ Aalborg University"></Label>
+                <StackLayout VerticalOptions="End"
+                             HorizontalOptions="Center">
+                    <Label Margin="0, 0, 0, 20"
+                           HorizontalOptions="Center"
+                           Text="By Software årgang 2015 @ Aalborg University">
+                    </Label>
                 </StackLayout>
             </StackLayout>
         </ContentView>
