@@ -150,6 +150,14 @@ namespace WeekPlanner.ViewModels
             if(!_isDirty) return;
 
             IsBusy = true;
+
+            if (WeekDTO.Name == null || WeekDTO.Name == "")
+            {
+                await _dialogService.ShowAlertAsync("Ugeplanen skal have et navn.");
+                IsBusy = false;
+                return;
+            }
+
             bool confirmed = await _dialogService.ConfirmAsync(
                 title: "Gem ugeplan",
                 message: "Vil du gemme ugeplanen?",
