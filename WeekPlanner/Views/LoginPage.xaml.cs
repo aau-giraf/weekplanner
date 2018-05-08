@@ -11,6 +11,11 @@ namespace WeekPlanner.Views
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
+            if (Device.Idiom == TargetIdiom.Phone)
+            {
+                StackTitle.Margin = new Thickness(0, 20, 0, 30);
+                LoginButton.Margin = new Thickness(80, 5, 80, 0);
+            }
         }
 
         void Username_Completed(object sender, System.EventArgs e)
