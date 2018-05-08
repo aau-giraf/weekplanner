@@ -54,6 +54,8 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ToolbarButtonIcon);
             }
         }
+        
+        public double PictoSize { get; } = Device.Idiom == TargetIdiom.Phone ? 100 : 150;
 
         public bool ShowToolbarButton { get; set; }
 
