@@ -107,6 +107,17 @@
     <None Include="WeekPlanner.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="image_loading.png" />
+    <Content Include="icon_left_arrow.png" />
+    <Content Include="icon_delete.png" />
+    <Content Include="icon_default_guardian.png" />
+    <Content Include="icon_default_citizen.png" />
+    <Content Include="icon_cross.png" />
+    <Content Include="icon_checkmark.png" />
+    <Content Include="icon_check_mark.png" />
+    <Content Include="icon_add.png" />
+    <Content Include="icon.png" />
+    <Content Include="default_profile_picture.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -115,6 +126,7 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="weekschedule.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
