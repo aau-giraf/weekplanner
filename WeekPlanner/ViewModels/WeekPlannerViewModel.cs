@@ -95,7 +95,6 @@ namespace WeekPlanner.ViewModels
             OnBackButtonPressedCommand = new Command(async () => await BackButtonPressed());
             ShowToolbarButton = true;
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
-            MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, sender => SetToGuardianMode());
         }
 
         public override async Task InitializeAsync(object navigationData)
