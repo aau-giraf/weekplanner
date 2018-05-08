@@ -9,22 +9,25 @@ using IO.Swagger.Api;
 using WeekPlanner.Helpers;
 using static IO.Swagger.Model.ActivityDTO;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Services.Request;
 
 namespace WeekPlanner.ViewModels
 {
     public class ActivityViewModel : ViewModelBase
     {
         private ActivityDTO _activity;
+        private readonly IRequestService _requestService;
+        private readonly IPictogramApi _pictogramApi;
 
-        public ISettingsService SettingsService { get; private set; }
-
-        readonly IPictogramApi _pictogramApi;
+        public ISettingsService SettingsService { get; }
 
         public ActivityViewModel(INavigationService navigationService, 
                                  IPictogramApi pictogramApi,
+                                 IRequestService requestService,
                                  ISettingsService settingsService) : base(navigationService)
         {
             SettingsService = settingsService;
+            _requestService = requestService;
             _pictogramApi = pictogramApi;
         }
 
@@ -56,7 +59,7 @@ namespace WeekPlanner.ViewModels
         public ICommand DeleteActivityCommand => new Command(async () =>
         {
             Activity = null;
-            await NavigationService.PopAsync(this);
+            await NavigationService.PopAsync(Activity);
         });
 
         public ICommand ToggleStateCommand => new Command(() =>
@@ -122,7 +125,7 @@ namespace WeekPlanner.ViewModels
 
         public ICommand SaveCommand => new Command(async () =>
         {
-            await NavigationService.PopAsync(this);
+            await NavigationService.PopAsync(Activity);
         });
 
         public override async Task PoppedAsync(object navigationData) {
