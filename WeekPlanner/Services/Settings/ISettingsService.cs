@@ -13,6 +13,7 @@ namespace WeekPlanner.Services.Settings
         bool IsInGuardianMode { get; set; }
         
         string CurrentCitizenId { get; set; }
+        string CurrentCitizenName { get; set; }
         SettingDTO CurrentCitizenSettingDTO { get; set; }
         
         void UseTokenFor(UserType userType);

@@ -59,6 +59,11 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ThemeSelected);
             }
         }
+        public string CitizenName
+        {
+            get { return _settingsService.CurrentCitizenName; }
+        }
+
 
         private void SetThemeInSettingDTOAndUpdate(SettingDTO.ThemeEnum pickedTheme)
         {

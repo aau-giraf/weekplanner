@@ -75,7 +75,10 @@ namespace WeekPlanner.Services.Login
         {
             _settingsService.UseTokenFor(UserType.Citizen);
             return _requestService.SendRequestAndThenAsync(() => _userApi.V1UserGetAsync(),
-                dto => { _settingsService.CurrentCitizenId = dto.Data.Id; });
+                dto => {
+                    _settingsService.CurrentCitizenId = dto.Data.Id;
+                    _settingsService.CurrentCitizenName = dto.Data.Username;
+                    });
         }
 
         private Task GetCitizenSettingsAndSetInSettings()
@@ -85,6 +88,7 @@ namespace WeekPlanner.Services.Login
                 onSuccess: result =>
                 {
                     _settingsService.CurrentCitizenSettingDTO = result.Data;
+
                 });
         }
     }

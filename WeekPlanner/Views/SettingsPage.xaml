@@ -3,7 +3,8 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
-    x:Class="WeekPlanner.Views.SettingsPage">
+    x:Class="WeekPlanner.Views.SettingsPage"
+    Title="{Binding CitizenName, Converter={StaticResource CitizenToSettingsTitle}">
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarTheme}">
             <StackLayout>

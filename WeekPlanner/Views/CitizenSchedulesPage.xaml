@@ -6,7 +6,7 @@
     xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
     xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
     x:Class="WeekPlanner.Views.CitizenSchedulesPage"
-             Title="Ugeplaner Frontpage"
+             Title="Vælg Skema"
              x:Name="root">
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarTemplate}">

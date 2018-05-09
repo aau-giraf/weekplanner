@@ -66,7 +66,17 @@ namespace WeekPlanner.Services.Settings
                 _currentCitizenId = value;
                 RaisePropertyChanged(() => CurrentCitizenId);
             } 
-        }    
+        }
+        private string _currentCitizenName;
+        public string CurrentCitizenName
+        {
+            get => _currentCitizenName;
+            set
+            {
+                _currentCitizenName = value;
+                RaisePropertyChanged(() => CurrentCitizenName);
+            }
+        }
 
         public SettingDTO CurrentCitizenSettingDTO { get; set; }
 

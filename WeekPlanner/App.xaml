@@ -60,7 +60,18 @@
                 <Setter Property="TextColor"
                         Value="{StaticResource ErrorColor}" />
             </Style>
-            
+            <Style x:Key="NavBarLabelStyle"
+                   TargetType="{x:Type Label}">
+                <Setter Property="TextColor"
+                        Value="{StaticResource WhiteColor}" />
+                <Setter Property="HorizontalOptions"
+                        Value="CenterAndExpand" />
+                <Setter Property="VerticalOptions"
+                        Value="Center" />
+                <Setter Property="FontSize"
+                        Value="20" />
+            </Style>
+
             <Style TargetType="Button">
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="TextColor" Value="{StaticResource WhiteColor}" />
@@ -68,6 +79,7 @@
 
             <!-- CONVERTERS -->
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
+            <converters:CitizenToSettingsTitle x:Key="CitizenToSettingsTitle" />
             <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
             <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
             <converters:IdToRawPictoUrlConverter x:Key="IdToRawPictoUrlConverter" />
@@ -94,7 +106,7 @@
                         
                         <!-- Back Button -->
                         <Image 
-                            HorizontalOptions="StartAndExpand" 
+                            HorizontalOptions="Start" 
                             VerticalOptions="Center"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
                             HeightRequest="30" Source="icon_left_arrow.png">
@@ -102,6 +114,7 @@
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}"  />
                             </Image.GestureRecognizers>
                         </Image>
+                        <Label Style="{StaticResource NavBarLabelStyle}" Text="{TemplateBinding Parent.Title}"></Label>
                     </StackLayout>
                     <!-- End Header -->
                      
@@ -135,7 +148,7 @@
                         
                         <!-- Back Button -->
                         <Image 
-                                HorizontalOptions="StartAndExpand" 
+                                HorizontalOptions="Start" 
                                 VerticalOptions="Center"
                                 IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
                                 HeightRequest="30" Source="icon_left_arrow.png">
@@ -143,10 +156,11 @@
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
+                        <Label Style="{StaticResource NavBarLabelStyle}" Text="{TemplateBinding Parent.Title}"></Label>
                         
                         <!-- Toolbar Button -->
                         <Image 
-                            HorizontalOptions="EndAndExpand" 
+                            HorizontalOptions="End" 
                             VerticalOptions="Center"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
                             HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
@@ -186,7 +200,7 @@
                         
                         <!-- Back Button -->
                         <Image 
-                                HorizontalOptions="StartAndExpand" 
+                                HorizontalOptions="Start" 
                                 VerticalOptions="Center"
                                 IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
                                 HeightRequest="30" Source="icon_left_arrow.png">
@@ -194,10 +208,11 @@
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
+                        <Label Style="{StaticResource NavBarLabelStyle}" Text="{TemplateBinding Parent.Title}"></Label>
                         
                         <!-- Toolbar Button -->
                         <Image 
-                            HorizontalOptions="EndAndExpand" 
+                            HorizontalOptions="End" 
                             VerticalOptions="Center"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
                             HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
