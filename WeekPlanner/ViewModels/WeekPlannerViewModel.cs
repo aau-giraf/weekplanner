@@ -442,6 +442,8 @@ namespace WeekPlanner.ViewModels
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
 
+            RaisePropertyChangedForDayLabels();
+
             IsBusy = false;
         }
 
@@ -472,9 +474,9 @@ namespace WeekPlanner.ViewModels
         public bool ShowSaturdayLabel => ShowDayLabel(DayEnum.Sunday);
         private bool ShowDayLabel(DayEnum day)
         {
-            return EditModeEnabled ||
-                (WeekDTO == null && ToggledDaysWrapper.First(dayObj => dayObj.Day == day).SwitchToggled) ||
-                (WeekDTO != null && WeekDTO.Days.Any(dayObj => dayObj.Day == day));
+            return EditModeEnabled ||   //When EditModeEnabled we want to see the day labels
+                (WeekDTO == null && ToggledDaysWrapper.First(dayObj => dayObj.Day == day).SwitchToggled) || //Happens upon initialization of the view. WeekDTO is still null at this point, so we rely on SwitchToggled for the day
+                (WeekDTO != null && WeekDTO.Days.Any(dayObj => dayObj.Day == day)); //Happens when refreshing the view
         }
 
         private void SetToGuardianMode()
