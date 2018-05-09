@@ -64,12 +64,23 @@ namespace WeekPlanner.ViewModels
             _requestService = requestService;
             _dialogService = dialogService;
 
-            PictogramDTO defaultPicto = _pictogramApi.V1PictogramByIdGet(2).Data;
-            WeekPictogramDTO weekPictogramDto = new WeekPictogramDTO(defaultPicto.Id);
-            WeekThumbNail = weekPictogramDto;
             _scheduleName =
                 new ValidatableObject<string>(
                     new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et navn er påkrævet."});
+        }
+
+        public async override Task InitializeAsync(object navigationData)
+        {
+            await _requestService.SendRequestAndThenAsync(
+                requestAsync: async () => await _pictogramApi.V1PictogramByIdGetAsync(2),
+                onSuccess: result =>
+                {
+                    PictogramDTO defaultPicto = result.Data;
+                    WeekPictogramDTO weekPictogramDto = new WeekPictogramDTO(defaultPicto.Id);
+                    WeekThumbNail = weekPictogramDto;
+                },
+                onExceptionAsync: () => NavigationService.PopAsync(),
+                onRequestFailedAsync: () => NavigationService.PopAsync());
         }
 
         public override Task PoppedAsync(object navigationData)
