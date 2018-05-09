@@ -46,7 +46,7 @@ namespace WeekPlanner.Services.Mocks
             return Task.FromResult(new ResponsePictogramDTO
             {
                 Success = true,
-                Data = new PictogramDTO(Title:id.ToString()){Id = id},
+                Data = new PictogramDTO(Title:id.ToString()){/*Id = id*/},
                 ErrorKey = ResponsePictogramDTO.ErrorKeyEnum.NoError
             });
         }
@@ -177,6 +177,106 @@ namespace WeekPlanner.Services.Mocks
         }
 
         public ApiResponse<ResponsePictogramDTO> V1PictogramPostWithHttpInfo(PictogramDTO pictogram = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        ResponseWeekPictogramDTO IPictogramApi.V1PictogramByIdGet(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramByIdGetAsync(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ApiResponse<ResponseWeekPictogramDTO>> IPictogramApi.V1PictogramByIdGetAsyncWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        ApiResponse<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramByIdGetWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        ResponseWeekPictogramDTO IPictogramApi.V1PictogramByIdImagePut(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramByIdImagePutAsync(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ApiResponse<ResponseWeekPictogramDTO>> IPictogramApi.V1PictogramByIdImagePutAsyncWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        ApiResponse<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramByIdImagePutWithHttpInfo(long? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        ResponseWeekPictogramDTO IPictogramApi.V1PictogramByIdPut(long? id, PictogramDTO pictogram)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramByIdPutAsync(long? id, PictogramDTO pictogram)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ApiResponse<ResponseWeekPictogramDTO>> IPictogramApi.V1PictogramByIdPutAsyncWithHttpInfo(long? id, PictogramDTO pictogram)
+        {
+            throw new NotImplementedException();
+        }
+
+        ApiResponse<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramByIdPutWithHttpInfo(long? id, PictogramDTO pictogram)
+        {
+            throw new NotImplementedException();
+        }
+
+        ResponseListWeekPictogramDTO IPictogramApi.V1PictogramGet(int? page, int? pageSize, string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ResponseListWeekPictogramDTO> IPictogramApi.V1PictogramGetAsync(int? page, int? pageSize, string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ApiResponse<ResponseListWeekPictogramDTO>> IPictogramApi.V1PictogramGetAsyncWithHttpInfo(int? page, int? pageSize, string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        ApiResponse<ResponseListWeekPictogramDTO> IPictogramApi.V1PictogramGetWithHttpInfo(int? page, int? pageSize, string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        ResponseWeekPictogramDTO IPictogramApi.V1PictogramPost(PictogramDTO pictogram)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramPostAsync(PictogramDTO pictogram)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ApiResponse<ResponseWeekPictogramDTO>> IPictogramApi.V1PictogramPostAsyncWithHttpInfo(PictogramDTO pictogram)
+        {
+            throw new NotImplementedException();
+        }
+
+        ApiResponse<ResponseWeekPictogramDTO> IPictogramApi.V1PictogramPostWithHttpInfo(PictogramDTO pictogram)
         {
             throw new NotImplementedException();
         }

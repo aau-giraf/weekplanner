@@ -33,12 +33,9 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="WeekNameDTO" /> class.
         /// </summary>
-        /// <param name="Name">A Name describing the week..</param>
-        /// <param name="Id">The id of the week..</param>
-        public WeekNameDTO(string Name = default(string), long? Id = default(long?))
+        [JsonConstructorAttribute]
+        public WeekNameDTO()
         {
-            this.Name = Name;
-            this.Id = Id;
         }
         
         /// <summary>
@@ -46,14 +43,21 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <value>A Name describing the week.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
-        /// The id of the week.
+        /// The year of the week.
         /// </summary>
-        /// <value>The id of the week.</value>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public long? Id { get; set; }
+        /// <value>The year of the week.</value>
+        [DataMember(Name="weekYear", EmitDefaultValue=false)]
+        public int? WeekYear { get; private set; }
+
+        /// <summary>
+        /// The number of the week, 0 - 52 (53).
+        /// </summary>
+        /// <value>The number of the week, 0 - 52 (53).</value>
+        [DataMember(Name="weekNumber", EmitDefaultValue=false)]
+        public int? WeekNumber { get; private set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -64,7 +68,8 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class WeekNameDTO {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  WeekYear: ").Append(WeekYear).Append("\n");
+            sb.Append("  WeekNumber: ").Append(WeekNumber).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -105,9 +110,14 @@ namespace IO.Swagger.Model
                     this.Name.Equals(input.Name))
                 ) && 
                 (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
+                    this.WeekYear == input.WeekYear ||
+                    (this.WeekYear != null &&
+                    this.WeekYear.Equals(input.WeekYear))
+                ) && 
+                (
+                    this.WeekNumber == input.WeekNumber ||
+                    (this.WeekNumber != null &&
+                    this.WeekNumber.Equals(input.WeekNumber))
                 );
         }
 
@@ -122,8 +132,10 @@ namespace IO.Swagger.Model
                 int hashCode = 41;
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.WeekYear != null)
+                    hashCode = hashCode * 59 + this.WeekYear.GetHashCode();
+                if (this.WeekNumber != null)
+                    hashCode = hashCode * 59 + this.WeekNumber.GetHashCode();
                 return hashCode;
             }
         }

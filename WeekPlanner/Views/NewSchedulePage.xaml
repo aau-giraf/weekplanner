@@ -6,6 +6,7 @@
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
     xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib" 
     x:Class="WeekPlanner.Views.NewSchedulePage"
     base1:ViewModelLocator.AutoWireViewModel="true"
     Title="Tilføj en ny ugeplan">
@@ -26,7 +27,7 @@
                 FontSize="Large"/>
             <!-- NAME OF SCHEDULE START -->
             <StackLayout>
-                <Label Text="Navngiv din nye ugeplan" FontSize="Medium"/>
+                <Label Text="Navngiv din nye ugeplan" FontSize="Medium" Style="TitleStyle"/>
                 <Entry
                 x:Name="NewScheduleNameEntry"
                 Text="{Binding ScheduleName.Value}"
@@ -43,8 +44,45 @@
             </StackLayout>
             <!-- NAME OF SCHEDULE END -->
 
-            <!-- CHOOSE DAYS START -->
+            <!-- CHOOSE WEEK AND YEAR START -->
             <StackLayout>
+                <Label Text="Angiv hvilket år og hvilken uge, dit nye skema skal gælde for" FontSize="Medium" Style="TitleStyle"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Text="Årstal" FontSize="Medium" Grid.Row="0" Grid.Column="0"/>
+                    <Entry Keyboard="Numeric" x:Name="NewScheduleYearEntry" Text="{Binding ScheduleYear}" Grid.Row="1" Grid.Column="0">
+                        <Entry.Behaviors>
+                            <behaviors:EventToCommandBehavior
+                                EventName="Completed"
+                                Command="{Binding GetScheduleDatesCommand}"/>
+                        </Entry.Behaviors>
+                    </Entry>
+
+                    <Label Text="Ugenummer" FontSize="Medium" Grid.Row="0" Grid.Column="1"/>
+                    <Entry Keyboard="Numeric" x:Name="NewScheduleWeekEntry" Text="{Binding ScheduleWeek}" Grid.Row="1" Grid.Column="1">
+                        <Entry.Behaviors>
+                            <behaviors:EventToCommandBehavior
+                                EventName="Completed"
+                                Command="{Binding GetScheduleDatesCommand}"/>
+                        </Entry.Behaviors>
+                    </Entry>
+
+                </Grid>
+                <Label Text="{Binding ScheduleValidateYearAndWeek}" Style="{StaticResource ValidationErrorLabelStyle}"/>
+                <Label Text="{Binding ScheduleFromAndToDates}" FontSize="Medium" TextColor="Green"/>
+            </StackLayout>
+            <!-- CHOOSE WEEK AND YEAR END -->
+
+            <!-- CHOOSE DAYS START -->
+            <!--<StackLayout>
                 <Label Text="Hvilke dage skal indgå i ugeplanen?" FontSize="Medium"/>
                 <Grid ColumnSpacing="7" HorizontalOptions="FillAndExpand" x:Name="ToggleGrid">
                     <Grid.ColumnDefinitions>
@@ -80,12 +118,12 @@
                 <Label
                 Text="{Binding ToggledDaysValidatable.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                 Style="{StaticResource ValidationErrorLabelStyle}" />
-            </StackLayout>
+            </StackLayout>-->
             <!-- CHOOSE DAYS END -->
 
             <!-- SET THUMBNAIL START -->
             <StackLayout>
-                <Label Text="Vælg et passende piktogram til din nye ugeplan" FontSize="Medium"/>
+                <Label Text="Vælg et passende piktogram til din nye ugeplan" FontSize="Medium" Style="TitleStyle"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -112,12 +150,31 @@
                 </Grid>
             </StackLayout>
             <!-- SET THUMBNAIL END -->
-            
-            <Button
-                x:Name="SaveWeekButton"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
-                Command="{Binding SaveWeekScheduleCommand}"
-                Text="Gem Ny Uge" />
+
+            <StackLayout>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                <Button
+                    x:Name="CreateBlankWeekButton"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                    Command="{Binding CreateWeekScheduleCommand}"
+                    CommandParameter="Blank"
+                    Text="Lav blankt ugeskema" 
+                    Grid.Column="0"/>
+                <Button
+                    x:Name="CreateTemplateWeekButton"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                    Command="{Binding CreateWeekScheduleCommand}"
+                    CommandParameter="Template"
+                    Text="Lav ugeskema fra skabelon" 
+                    Grid.Column="1"/>
+                </Grid>
+            </StackLayout>
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

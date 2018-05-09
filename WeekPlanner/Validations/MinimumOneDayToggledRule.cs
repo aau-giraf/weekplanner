@@ -12,19 +12,20 @@ namespace WeekPlanner.Validations
 
         public bool Check(T value)
         {
-            if(!(value is ICollection<NewScheduleViewModel.DayToggledWrapper> toggledDays))
-            {
-                return false;
-            }
+            return false;
+            //if(!(value is ICollection<NewScheduleViewModel.DayToggledWrapper> toggledDays))
+            //{
+            //    return false;
+            //}
 
-            bool result = false;
-            foreach(NewScheduleViewModel.DayToggledWrapper day in toggledDays)
-            {
-                result |= day.IsToggled;
-                if (result) break;
-            }
+            //bool result = false;
+            //foreach(NewScheduleViewModel.DayToggledWrapper day in toggledDays)
+            //{
+            //    result |= day.IsToggled;
+            //    if (result) break;
+            //}
 
-            return result;
+            //return result;
         }
     }
 }

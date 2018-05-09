@@ -22,17 +22,58 @@ namespace WeekPlanner.ViewModels
 {
     public class WeekPlannerViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Small wrapper for handling which days have been toggled.
+        /// Inheritance from Switch means we don't have to manually handle PropertyChanged etc.
+        /// </summary>
+        public class DayToggledWrapper : Switch
+        {
+            public readonly DayEnum Day;
+
+            //SwitchToggled is used for visual purposes (see binding of schedule days in .XAML)
+            private bool _switchToggled;
+            public bool SwitchToggled
+            {
+                get => _switchToggled;
+                set
+                {
+                    _switchToggled = value;
+                    OnPropertyChanged(nameof(SwitchToggled));
+                }
+            }
+
+            public DayToggledWrapper(DayEnum day, EventHandler<ToggledEventArgs> toggledEventCallback)
+            {
+                IsToggled = SwitchToggled = true;
+                Day = day;
+                Toggled += toggledEventCallback;
+            }
+        }
+
         private readonly ILoginService _loginService;
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
         private readonly IDialogService _dialogService;
         private readonly ISettingsService _settingsService;
-        
+        private readonly List<WeekdayDTO> _removedWeekdayDTOs;
         private ActivityDTO _selectedActivity;
         private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _userModeImage;
+        private int _scheduleYear;
+        private int _scheduleWeek;
+        private ObservableCollection<DayToggledWrapper> _toggledDaysWrapper;
+
+        public ObservableCollection<DayToggledWrapper> ToggledDaysWrapper
+        {
+            get => _toggledDaysWrapper;
+            set
+            {
+                _toggledDaysWrapper = value;
+                RaisePropertyChanged(() => ToggledDaysWrapper);
+            }
+        }
 
         public bool EditModeEnabled
         {
@@ -65,11 +106,29 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
+        public int ScheduleYear
+        {
+            get => _scheduleYear;
+            set
+            {
+                _scheduleYear = value;
+                RaisePropertyChanged(() => ScheduleYear);
+            }
+        }
 
+        public int ScheduleWeek
+        {
+            get => _scheduleWeek;
+            set
+            {
+                _scheduleWeek = value;
+                RaisePropertyChanged(() => ScheduleWeek);
+            }
+        }
+
+        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
         public ICommand OnBackButtonPressedCommand => new Command(async () => await BackButtonPressed());
-
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
             if (IsBusy) return;
@@ -78,7 +137,6 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
             IsBusy = false;
         });
-
         public ICommand PictoClickedCommand => new Command<ActivityDTO>(async activity =>
         {
             if (IsBusy) return;
@@ -91,14 +149,14 @@ namespace WeekPlanner.ViewModels
 
             IsBusy = false;
         });
-                                                                    
+
         public WeekPlannerViewModel(
-            INavigationService navigationService, 
-            ILoginService loginService, 
-            IRequestService requestService, 
-            IWeekApi weekApi, 
-            IDialogService dialogService, 
-            ISettingsService settingsService) 
+            INavigationService navigationService,
+            ILoginService loginService,
+            IRequestService requestService,
+            IWeekApi weekApi,
+            IDialogService dialogService,
+            ISettingsService settingsService)
             : base(navigationService)
         {
             _requestService = requestService;
@@ -107,6 +165,13 @@ namespace WeekPlanner.ViewModels
             _loginService = loginService;
             _requestService = requestService;
             _settingsService = settingsService;
+            _removedWeekdayDTOs = new List<WeekdayDTO>();
+
+            ToggledDaysWrapper = new ObservableCollection<DayToggledWrapper>();
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+            {
+                ToggledDaysWrapper.Add(new DayToggledWrapper(day, OnToggledDayEventHandler));
+            }
 
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
             MessagingCenter.Subscribe<LoginViewModel>(this, MessageKeys.LoginSucceeded, (sender) => SetToGuardianMode());
@@ -114,37 +179,175 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is long weekId)
+            if (navigationData is Tuple<int, int> weekDetails)
             {
-                await GetWeekPlanForCitizenAsync(weekId);
+                ScheduleYear = weekDetails.Item1;
+                ScheduleWeek = weekDetails.Item2;
+                await GetWeekPlanForCitizenAsync(ScheduleYear, ScheduleWeek);
+            }
+            else if (navigationData is Tuple<int, int, WeekDTO> weekDetailsWithDTO) //When initialized from NewScheduleViewModel
+            {
+                ScheduleYear = weekDetailsWithDTO.Item1;
+                ScheduleWeek = weekDetailsWithDTO.Item2;
+                WeekDTO = weekDetailsWithDTO.Item3;
+
+                SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
             }
             else
             {
-                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
+                throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
+            }
+
+            FlipToggledDays();
+
+            OrderActivities();
+        }
+
+        public override async Task PoppedAsync(object navigationData)
+        {
+            // Happens after choosing a pictogram in Pictosearch
+            if (navigationData is WeekPictogramDTO pictogramDTO)
+            {
+                InsertPicto(pictogramDTO);
+            }
+
+            // Happens when popping from ActivityViewModel
+            if (navigationData is ActivityViewModel activityVM)
+            {
+
+                if (activityVM.Activity == null)
+                {
+                    // TODO this is dumb and it may remove duplicate elements since all elements are not unique
+                    // we can refactor when ActivityDTO gets a unique ID
+                    RemoveItemFromDay(DayEnum.Monday);
+                    RemoveItemFromDay(DayEnum.Tuesday);
+                    RemoveItemFromDay(DayEnum.Wednesday);
+                    RemoveItemFromDay(DayEnum.Thursday);
+                    RemoveItemFromDay(DayEnum.Friday);
+                    RemoveItemFromDay(DayEnum.Saturday);
+                    RemoveItemFromDay(DayEnum.Sunday);
+                }
+                else
+                {
+                    _selectedActivity = activityVM.Activity;
+                }
+
+                RaisePropertyForDays();
+            }
+
+            // Happens after logging in as guardian when switching to guardian mode
+            if (navigationData is bool enterGuardianMode)
+            {
+                SetToGuardianMode();
             }
         }
 
         // TODO: Handle situation where no days exist
-        private async Task GetWeekPlanForCitizenAsync(long weekId)
+        private async Task GetWeekPlanForCitizenAsync(int weekYear, int weekNumber)
         {
 
             _settingsService.UseTokenFor(UserType.Citizen);
 
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _weekApi.V1WeekByIdGetAsync(weekId),
+                requestAsync: () => _weekApi.V1WeekByWeekYearByWeekNumberGetAsync(weekYear, weekNumber),
                 onSuccess: result =>
                 {
                     WeekDTO = result.Data;
                 }
             );
+        }
 
+        private void OrderActivities()
+        {
             foreach (var days in WeekDTO.Days)
             {
                 days.Activities = days.Activities.OrderBy(x => x.Order).ToList();
             }
         }
 
-        private void InsertPicto(PictogramDTO pictogramDTO)
+        private async void OnToggledDayEventHandler<ToggledEventArgs>(object sender, ToggledEventArgs e)
+        {
+            if (!(sender is DayToggledWrapper dayToggleWrapper)) return;
+
+            //Alright, here's the scenarios and quick truth table:
+            //There are 2 scenarios here; either IsToggled went from T => F or F => T (obviously)
+            //In either case, the property SwitchToggled has the value of IsToggled BEFORE it got toggled.
+            //For scenario 1 (IsToggled F => T), our action also depends on the 'confirmed' bool
+            //Here's the truth table from the scenarios:
+            // Scenario      IsToggled          SwitchToggled        confirmed   =>     IsToggled   SwitchToggled
+            // 1             T => F             T                    T           =>     F           F
+            // 1             T => F             T                    F           =>     T           T
+            // 2             F => T             F                    N/A         =>     T           T          
+
+            //Scenario 1
+            if (!dayToggleWrapper.IsToggled) //Check if we should remove the day from the schedule
+            {
+                var dayFromWeekDTO = WeekDTO.Days.FirstOrDefault(dayObj => dayObj.Day == dayToggleWrapper.Day);
+
+                if (dayFromWeekDTO == null) return;
+
+                bool confirmed = dayFromWeekDTO.Activities.Count > 0 ?
+                    await _dialogService.ConfirmAsync(
+                        title: "Bekræft sletning af ugedag",
+                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker på, at du vil fortsætte?",
+                        okText: "Slet ugedag",
+                        cancelText: "Annuller") :
+                    true;
+
+                if (confirmed)
+                {
+                    var removedDay = WeekDTO.Days.FirstOrDefault(dayObj => dayObj.Day == dayToggleWrapper.Day);
+                    if (removedDay == null) return;
+                    _removedWeekdayDTOs.Add(removedDay);
+                    WeekDTO.Days.Remove(removedDay);
+                }
+
+
+                dayToggleWrapper.IsToggled = dayToggleWrapper.SwitchToggled = !confirmed;
+
+            }
+            //Scenario 2
+            else //Re-add the day to the schedule
+            {
+                var removedDay = _removedWeekdayDTOs.FirstOrDefault(dayObj => dayObj.Day == dayToggleWrapper.Day);
+                if (removedDay == null)
+                {
+                    removedDay = new WeekdayDTO(Day: dayToggleWrapper.Day, Activities: new List<ActivityDTO>());
+                }
+                else
+                {
+                    _removedWeekdayDTOs.Remove(removedDay);
+                }
+
+                WeekDTO.Days.Add(removedDay);
+                WeekDTO.Days.OrderBy(dayObj => (int)dayObj.Day);
+
+                dayToggleWrapper.IsToggled = dayToggleWrapper.SwitchToggled = true;
+            }
+
+            RaisePropertyForDays(); //Not sure if this is nedded; but we may remove very large schedules, which may motivate an adjustment in Height etc.
+        }
+
+        private void FlipToggledDays()
+        {
+            if (ToggledDaysWrapper.Count == 0 || WeekDTO == null) return;
+
+            bool isNewSchedule = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ? true : false;
+
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+            {
+                var toggleDayWrapper = ToggledDaysWrapper.FirstOrDefault(toggledDay => toggledDay.Day == day);
+
+                if (toggleDayWrapper == null)
+                    continue;
+
+                toggleDayWrapper.IsToggled = toggleDayWrapper.SwitchToggled = WeekDTO.Days.Any(dayObj => dayObj.Day == day);
+            }
+
+            RaisePropertyChangedForDayLabels();
+        }
+
+        private void InsertPicto(WeekPictogramDTO pictogramDTO)
         {
             var dayToAddTo = WeekDTO.Days.FirstOrDefault(d => d.Day == _weekdayToAddPictogramTo);
             if (dayToAddTo != null)
@@ -156,7 +359,6 @@ namespace WeekPlanner.ViewModels
             // TODO: Fix
             RaisePropertyForDays();
         }
-
 
         private async Task SaveSchedule()
         {
@@ -171,85 +373,37 @@ namespace WeekPlanner.ViewModels
 
             if (!confirmed)
             {
+                IsBusy = false;
                 return;
             }
-            
+
             _settingsService.UseTokenFor(UserType.Citizen);
-            
-            if (WeekDTO.Id is null)
-            {
-                await SaveNewSchedule();
-            }
-            else
-            {
-                await UpdateExistingSchedule();
-            }
+
+            await SaveOrUpdateSchedule();
 
             IsBusy = false;
         }
 
-        private async Task SaveNewSchedule()
+        private async Task SaveOrUpdateSchedule()
         {
-            await _requestService.SendRequestAndThenAsync(
-                () => _weekApi.V1WeekPostAsync(WeekDTO), result =>
-                {
-                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
-                });
-        }
-
-        private async Task UpdateExistingSchedule()
-        {
-            if (WeekDTO.Id == null)
-            {
-                throw new InvalidDataException("WeekDTO should always have an Id when updating.");
-            }
+            string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
+                "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
+                "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
             await _requestService.SendRequestAndThenAsync(
-                () => _weekApi.V1WeekByIdPutAsync(WeekDTO.Id, WeekDTO),
+                () => _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
                 result =>
                 {
-                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
+                    _dialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
+                    WeekDTO = result.Data;
                 });
         }
 
-        public override async Task PoppedAsync(object navigationData)
+        private bool RemoveItemFromDay(DayEnum day)
         {
-            // Happens after choosing a pictogram in Pictosearch
-            if (navigationData is PictogramDTO pictogramDTO)
+            var a = WeekDTO.Days.FirstOrDefault(x => x.Day == day).Activities;
+            if (a == null || a == default(List<ActivityDTO>) || a.Count == 0)
             {
-                InsertPicto(pictogramDTO);
-            }
-
-            // Happens when popping from ActivityViewModel
-            if(navigationData is ActivityViewModel activityVM) {
-                
-                if(activityVM.Activity == null) {
-                    // TODO this is dumb and it may remove duplicate elements since all elements are not unique
-                    // we can refactor when ActivityDTO gets a unique ID
-                    RemoveItemFromDay(DayEnum.Monday);
-                    RemoveItemFromDay(DayEnum.Tuesday);
-                    RemoveItemFromDay(DayEnum.Wednesday);
-                    RemoveItemFromDay(DayEnum.Thursday);
-                    RemoveItemFromDay(DayEnum.Friday);
-                    RemoveItemFromDay(DayEnum.Saturday);
-                    RemoveItemFromDay(DayEnum.Sunday);
-                } else {
-                    _selectedActivity = activityVM.Activity;
-                }
-
-                RaisePropertyForDays();
-            }
-
-            // Happens after logging in as guardian when switching to guardian mode
-            if (navigationData is bool enterGuardianMode)
-            {
-                SetToGuardianMode();
-            }
-        }
-
-        private bool RemoveItemFromDay(DayEnum day) {
-            var a = WeekDTO.Days.First(x => x.Day == day).Activities;
-            if (a.Count == 0) {
                 return false;
             }
             return a.Remove(_selectedActivity);
@@ -267,53 +421,78 @@ namespace WeekPlanner.ViewModels
                 switch (result)
                 {
                     case "Annuller":
-                        IsBusy = false;
                         break;
 
                     case "Gem ændringer":
                         EditModeEnabled = false;
                         await SaveSchedule();
                         UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-                        IsBusy = false;
                         break;
 
                     case "Gem ikke":
                         EditModeEnabled = false;
                         UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
-                        if (WeekDTO.Id != null) await GetWeekPlanForCitizenAsync((long) WeekDTO.Id);
-                        IsBusy = false;
+                        if (WeekDTO.WeekYear != null && WeekDTO.WeekNumber != null) await GetWeekPlanForCitizenAsync((int)WeekDTO.WeekYear, (int)WeekDTO.WeekNumber);
                         break;
                 }
-                
+
             }
             else
             {
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
+
             IsBusy = false;
         }
 
         public int Height
         {
-            get 
+            get
             {
                 int minimumHeight = 1500;
                 int elementHeight = 250;
 
-                if(WeekDTO == null){
+                if (WeekDTO == null || WeekDTO.Days.Count == 0)
+                {
                     return minimumHeight;
                 }
 
                 int dynamicHeight = WeekDTO.Days.Max(d => d.Activities.Count) * elementHeight;
 
-                return dynamicHeight > minimumHeight ? dynamicHeight : minimumHeight; 
+                return dynamicHeight > minimumHeight ? dynamicHeight : minimumHeight;
             }
+        }
+
+        public bool ShowMondayLabel => ShowDayLabel(DayEnum.Monday);
+        public bool ShowTuesdayLabel => ShowDayLabel(DayEnum.Tuesday);
+        public bool ShowWednesdayLabel => ShowDayLabel(DayEnum.Wednesday);
+        public bool ShowThursdayLabel => ShowDayLabel(DayEnum.Thursday);
+        public bool ShowFridayLabel => ShowDayLabel(DayEnum.Friday);
+        public bool ShowSundayLabel => ShowDayLabel(DayEnum.Saturday);
+        public bool ShowSaturdayLabel => ShowDayLabel(DayEnum.Sunday);
+        private bool ShowDayLabel(DayEnum day)
+        {
+            return EditModeEnabled ||
+                (WeekDTO == null && ToggledDaysWrapper.First(dayObj => dayObj.Day == day).SwitchToggled) ||
+                (WeekDTO != null && WeekDTO.Days.Any(dayObj => dayObj.Day == day));
         }
 
         private void SetToGuardianMode()
         {
             EditModeEnabled = true;
             UserModeImage = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
+            RaisePropertyChangedForDayLabels();
+        }
+
+        private void RaisePropertyChangedForDayLabels()
+        {
+            RaisePropertyChanged(() => ShowMondayLabel);
+            RaisePropertyChanged(() => ShowTuesdayLabel);
+            RaisePropertyChanged(() => ShowWednesdayLabel);
+            RaisePropertyChanged(() => ShowThursdayLabel);
+            RaisePropertyChanged(() => ShowFridayLabel);
+            RaisePropertyChanged(() => ShowSaturdayLabel);
+            RaisePropertyChanged(() => ShowSundayLabel);
         }
 
         private async Task BackButtonPressed()
@@ -345,7 +524,7 @@ namespace WeekPlanner.ViewModels
 
         // TODO: Override the navigation bar backbutton when this is available.
         // Will most likely only be available if/when the custom navigation bar gets implemented.
-        
+
 
         public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
         public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
@@ -367,7 +546,8 @@ namespace WeekPlanner.ViewModels
         }
 
 
-        private void RaisePropertyForDays() {
+        private void RaisePropertyForDays()
+        {
             RaisePropertyChanged(() => MondayPictos);
             RaisePropertyChanged(() => TuesdayPictos);
             RaisePropertyChanged(() => WednesdayPictos);

@@ -35,22 +35,34 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <param name="Thumbnail">The weeks thumbnail..</param>
         /// <param name="Name">A Name describing the week..</param>
-        /// <param name="Id">The id of the week..</param>
         /// <param name="Days">A list of the days in the week schedule..</param>
-        public WeekDTO(PictogramDTO Thumbnail = default(PictogramDTO), string Name = default(string), long? Id = default(long?), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
+        public WeekDTO(WeekPictogramDTO Thumbnail = default(WeekPictogramDTO), string Name = default(string), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
         {
             this.Thumbnail = Thumbnail;
             this.Name = Name;
-            this.Id = Id;
             this.Days = Days;
         }
         
+        /// <summary>
+        /// The year of the week.
+        /// </summary>
+        /// <value>The year of the week.</value>
+        [DataMember(Name="weekYear", EmitDefaultValue=false)]
+        public int? WeekYear { get; private set; }
+
+        /// <summary>
+        /// The number of the week, 0 - 52 (53).
+        /// </summary>
+        /// <value>The number of the week, 0 - 52 (53).</value>
+        [DataMember(Name="weekNumber", EmitDefaultValue=false)]
+        public int? WeekNumber { get; private set; }
+
         /// <summary>
         /// The weeks thumbnail.
         /// </summary>
         /// <value>The weeks thumbnail.</value>
         [DataMember(Name="thumbnail", EmitDefaultValue=false)]
-        public PictogramDTO Thumbnail { get; set; }
+        public WeekPictogramDTO Thumbnail { get; set; }
 
         /// <summary>
         /// A Name describing the week.
@@ -58,13 +70,6 @@ namespace IO.Swagger.Model
         /// <value>A Name describing the week.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-
-        /// <summary>
-        /// The id of the week.
-        /// </summary>
-        /// <value>The id of the week.</value>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public long? Id { get; set; }
 
         /// <summary>
         /// A list of the days in the week schedule.
@@ -81,9 +86,10 @@ namespace IO.Swagger.Model
         {
             var sb = new StringBuilder();
             sb.Append("class WeekDTO {\n");
+            sb.Append("  WeekYear: ").Append(WeekYear).Append("\n");
+            sb.Append("  WeekNumber: ").Append(WeekNumber).Append("\n");
             sb.Append("  Thumbnail: ").Append(Thumbnail).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Days: ").Append(Days).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -120,6 +126,16 @@ namespace IO.Swagger.Model
 
             return 
                 (
+                    this.WeekYear == input.WeekYear ||
+                    (this.WeekYear != null &&
+                    this.WeekYear.Equals(input.WeekYear))
+                ) && 
+                (
+                    this.WeekNumber == input.WeekNumber ||
+                    (this.WeekNumber != null &&
+                    this.WeekNumber.Equals(input.WeekNumber))
+                ) && 
+                (
                     this.Thumbnail == input.Thumbnail ||
                     (this.Thumbnail != null &&
                     this.Thumbnail.Equals(input.Thumbnail))
@@ -128,11 +144,6 @@ namespace IO.Swagger.Model
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
                 ) && 
                 (
                     this.Days == input.Days ||
@@ -150,12 +161,14 @@ namespace IO.Swagger.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
+                if (this.WeekYear != null)
+                    hashCode = hashCode * 59 + this.WeekYear.GetHashCode();
+                if (this.WeekNumber != null)
+                    hashCode = hashCode * 59 + this.WeekNumber.GetHashCode();
                 if (this.Thumbnail != null)
                     hashCode = hashCode * 59 + this.Thumbnail.GetHashCode();
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.Days != null)
                     hashCode = hashCode * 59 + this.Days.GetHashCode();
                 return hashCode;

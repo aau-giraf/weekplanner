@@ -25,72 +25,78 @@ namespace IO.Swagger.Api
     {
         #region Synchronous Operations
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>ResponseIEnumerableWeekDTO</returns>
-        ResponseIEnumerableWeekDTO V1WeekByIdDelete (long? id);
+        ResponseIEnumerableWeekDTO V1WeekByWeekYearByWeekNumberDelete (int? weekYear, int? weekNumber);
 
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>ApiResponse of ResponseIEnumerableWeekDTO</returns>
-        ApiResponse<ResponseIEnumerableWeekDTO> V1WeekByIdDeleteWithHttpInfo (long? id);
+        ApiResponse<ResponseIEnumerableWeekDTO> V1WeekByWeekYearByWeekNumberDeleteWithHttpInfo (int? weekYear, int? weekNumber);
         /// <summary>
-        /// Gets the schedule with the specified id.
+        /// Gets the schedule with the specified week number and year.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>ResponseWeekDTO</returns>
-        ResponseWeekDTO V1WeekByIdGet (long? id);
+        ResponseWeekDTO V1WeekByWeekYearByWeekNumberGet (int? weekYear, int? weekNumber);
 
         /// <summary>
-        /// Gets the schedule with the specified id.
+        /// Gets the schedule with the specified week number and year.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        ApiResponse<ResponseWeekDTO> V1WeekByIdGetWithHttpInfo (long? id);
+        ApiResponse<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberGetWithHttpInfo (int? weekYear, int? weekNumber);
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>ResponseWeekDTO</returns>
-        ResponseWeekDTO V1WeekByIdPut (long? id, WeekDTO newWeek = null);
+        ResponseWeekDTO V1WeekByWeekYearByWeekNumberPut (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
 
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        ApiResponse<ResponseWeekDTO> V1WeekByIdPutWithHttpInfo (long? id, WeekDTO newWeek = null);
+        ApiResponse<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberPutWithHttpInfo (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -100,7 +106,7 @@ namespace IO.Swagger.Api
         ResponseIEnumerableWeekNameDTO V1WeekGet ();
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -108,96 +114,81 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseIEnumerableWeekNameDTO</returns>
         ApiResponse<ResponseIEnumerableWeekNameDTO> V1WeekGetWithHttpInfo ();
-        /// <summary>
-        /// Creates the week.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>ResponseWeekDTO</returns>
-        ResponseWeekDTO V1WeekPost (WeekDTO newWeek = null);
-
-        /// <summary>
-        /// Creates the week.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        ApiResponse<ResponseWeekDTO> V1WeekPostWithHttpInfo (WeekDTO newWeek = null);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>Task of ResponseIEnumerableWeekDTO</returns>
-        System.Threading.Tasks.Task<ResponseIEnumerableWeekDTO> V1WeekByIdDeleteAsync (long? id);
+        System.Threading.Tasks.Task<ResponseIEnumerableWeekDTO> V1WeekByWeekYearByWeekNumberDeleteAsync (int? weekYear, int? weekNumber);
 
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekByIdDeleteAsyncWithHttpInfo (long? id);
+        System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekByWeekYearByWeekNumberDeleteAsyncWithHttpInfo (int? weekYear, int? weekNumber);
         /// <summary>
-        /// Gets the schedule with the specified id.
+        /// Gets the schedule with the specified week number and year.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>Task of ResponseWeekDTO</returns>
-        System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByIdGetAsync (long? id);
+        System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberGetAsync (int? weekYear, int? weekNumber);
 
         /// <summary>
-        /// Gets the schedule with the specified id.
+        /// Gets the schedule with the specified week number and year.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByIdGetAsyncWithHttpInfo (long? id);
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberGetAsyncWithHttpInfo (int? weekYear, int? weekNumber);
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>Task of ResponseWeekDTO</returns>
-        System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByIdPutAsync (long? id, WeekDTO newWeek = null);
+        System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberPutAsync (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
 
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByIdPutAsyncWithHttpInfo (long? id, WeekDTO newWeek = null);
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberPutAsyncWithHttpInfo (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -207,7 +198,7 @@ namespace IO.Swagger.Api
         System.Threading.Tasks.Task<ResponseIEnumerableWeekNameDTO> V1WeekGetAsync ();
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -215,27 +206,6 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekNameDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekNameDTO>> V1WeekGetAsyncWithHttpInfo ();
-        /// <summary>
-        /// Creates the week.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>Task of ResponseWeekDTO</returns>
-        System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekPostAsync (WeekDTO newWeek = null);
-
-        /// <summary>
-        /// Creates the week.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekPostAsyncWithHttpInfo (WeekDTO newWeek = null);
         #endregion Asynchronous Operations
     }
 
@@ -337,30 +307,35 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>ResponseIEnumerableWeekDTO</returns>
-        public ResponseIEnumerableWeekDTO V1WeekByIdDelete (long? id)
+        public ResponseIEnumerableWeekDTO V1WeekByWeekYearByWeekNumberDelete (int? weekYear, int? weekNumber)
         {
-             ApiResponse<ResponseIEnumerableWeekDTO> localVarResponse = V1WeekByIdDeleteWithHttpInfo(id);
+             ApiResponse<ResponseIEnumerableWeekDTO> localVarResponse = V1WeekByWeekYearByWeekNumberDeleteWithHttpInfo(weekYear, weekNumber);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>ApiResponse of ResponseIEnumerableWeekDTO</returns>
-        public ApiResponse< ResponseIEnumerableWeekDTO > V1WeekByIdDeleteWithHttpInfo (long? id)
+        public ApiResponse< ResponseIEnumerableWeekDTO > V1WeekByWeekYearByWeekNumberDeleteWithHttpInfo (int? weekYear, int? weekNumber)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling WeekApi->V1WeekByIdDelete");
+            // verify the required parameter 'weekYear' is set
+            if (weekYear == null)
+                throw new ApiException(400, "Missing required parameter 'weekYear' when calling WeekApi->V1WeekByWeekYearByWeekNumberDelete");
+            // verify the required parameter 'weekNumber' is set
+            if (weekNumber == null)
+                throw new ApiException(400, "Missing required parameter 'weekNumber' when calling WeekApi->V1WeekByWeekYearByWeekNumberDelete");
 
-            var localVarPath = "/v1/Week/{id}";
+            var localVarPath = "/v1/Week/{weekYear}/{weekNumber}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -383,7 +358,8 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (weekYear != null) localVarPathParams.Add("weekYear", Configuration.ApiClient.ParameterToString(weekYear)); // path parameter
+            if (weekNumber != null) localVarPathParams.Add("weekNumber", Configuration.ApiClient.ParameterToString(weekNumber)); // path parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -400,7 +376,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1WeekByIdDelete", localVarResponse);
+                Exception exception = ExceptionFactory("V1WeekByWeekYearByWeekNumberDelete", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -410,31 +386,36 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>Task of ResponseIEnumerableWeekDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseIEnumerableWeekDTO> V1WeekByIdDeleteAsync (long? id)
+        public async System.Threading.Tasks.Task<ResponseIEnumerableWeekDTO> V1WeekByWeekYearByWeekNumberDeleteAsync (int? weekYear, int? weekNumber)
         {
-             ApiResponse<ResponseIEnumerableWeekDTO> localVarResponse = await V1WeekByIdDeleteAsyncWithHttpInfo(id);
+             ApiResponse<ResponseIEnumerableWeekDTO> localVarResponse = await V1WeekByWeekYearByWeekNumberDeleteAsyncWithHttpInfo(weekYear, weekNumber);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Id of the week to delete.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekByIdDeleteAsyncWithHttpInfo (long? id)
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekByWeekYearByWeekNumberDeleteAsyncWithHttpInfo (int? weekYear, int? weekNumber)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling WeekApi->V1WeekByIdDelete");
+            // verify the required parameter 'weekYear' is set
+            if (weekYear == null)
+                throw new ApiException(400, "Missing required parameter 'weekYear' when calling WeekApi->V1WeekByWeekYearByWeekNumberDelete");
+            // verify the required parameter 'weekNumber' is set
+            if (weekNumber == null)
+                throw new ApiException(400, "Missing required parameter 'weekNumber' when calling WeekApi->V1WeekByWeekYearByWeekNumberDelete");
 
-            var localVarPath = "/v1/Week/{id}";
+            var localVarPath = "/v1/Week/{weekYear}/{weekNumber}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -457,7 +438,8 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (weekYear != null) localVarPathParams.Add("weekYear", Configuration.ApiClient.ParameterToString(weekYear)); // path parameter
+            if (weekNumber != null) localVarPathParams.Add("weekNumber", Configuration.ApiClient.ParameterToString(weekNumber)); // path parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -474,7 +456,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1WeekByIdDelete", localVarResponse);
+                Exception exception = ExceptionFactory("V1WeekByWeekYearByWeekNumberDelete", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -484,30 +466,35 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets the schedule with the specified id. 
+        /// Gets the schedule with the specified week number and year. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>ResponseWeekDTO</returns>
-        public ResponseWeekDTO V1WeekByIdGet (long? id)
+        public ResponseWeekDTO V1WeekByWeekYearByWeekNumberGet (int? weekYear, int? weekNumber)
         {
-             ApiResponse<ResponseWeekDTO> localVarResponse = V1WeekByIdGetWithHttpInfo(id);
+             ApiResponse<ResponseWeekDTO> localVarResponse = V1WeekByWeekYearByWeekNumberGetWithHttpInfo(weekYear, weekNumber);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Gets the schedule with the specified id. 
+        /// Gets the schedule with the specified week number and year. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        public ApiResponse< ResponseWeekDTO > V1WeekByIdGetWithHttpInfo (long? id)
+        public ApiResponse< ResponseWeekDTO > V1WeekByWeekYearByWeekNumberGetWithHttpInfo (int? weekYear, int? weekNumber)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling WeekApi->V1WeekByIdGet");
+            // verify the required parameter 'weekYear' is set
+            if (weekYear == null)
+                throw new ApiException(400, "Missing required parameter 'weekYear' when calling WeekApi->V1WeekByWeekYearByWeekNumberGet");
+            // verify the required parameter 'weekNumber' is set
+            if (weekNumber == null)
+                throw new ApiException(400, "Missing required parameter 'weekNumber' when calling WeekApi->V1WeekByWeekYearByWeekNumberGet");
 
-            var localVarPath = "/v1/Week/{id}";
+            var localVarPath = "/v1/Week/{weekYear}/{weekNumber}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -530,7 +517,8 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (weekYear != null) localVarPathParams.Add("weekYear", Configuration.ApiClient.ParameterToString(weekYear)); // path parameter
+            if (weekNumber != null) localVarPathParams.Add("weekNumber", Configuration.ApiClient.ParameterToString(weekNumber)); // path parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -547,7 +535,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1WeekByIdGet", localVarResponse);
+                Exception exception = ExceptionFactory("V1WeekByWeekYearByWeekNumberGet", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -557,31 +545,36 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets the schedule with the specified id. 
+        /// Gets the schedule with the specified week number and year. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>Task of ResponseWeekDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByIdGetAsync (long? id)
+        public async System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberGetAsync (int? weekYear, int? weekNumber)
         {
-             ApiResponse<ResponseWeekDTO> localVarResponse = await V1WeekByIdGetAsyncWithHttpInfo(id);
+             ApiResponse<ResponseWeekDTO> localVarResponse = await V1WeekByWeekYearByWeekNumberGetAsyncWithHttpInfo(weekYear, weekNumber);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Gets the schedule with the specified id. 
+        /// Gets the schedule with the specified week number and year. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">The id of the week schedule to fetch.</param>
+        /// <param name="weekYear">The year of the week schedule to fetch.</param>
+        /// <param name="weekNumber">The week number of the week schedule to fetch.</param>
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByIdGetAsyncWithHttpInfo (long? id)
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberGetAsyncWithHttpInfo (int? weekYear, int? weekNumber)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling WeekApi->V1WeekByIdGet");
+            // verify the required parameter 'weekYear' is set
+            if (weekYear == null)
+                throw new ApiException(400, "Missing required parameter 'weekYear' when calling WeekApi->V1WeekByWeekYearByWeekNumberGet");
+            // verify the required parameter 'weekNumber' is set
+            if (weekNumber == null)
+                throw new ApiException(400, "Missing required parameter 'weekNumber' when calling WeekApi->V1WeekByWeekYearByWeekNumberGet");
 
-            var localVarPath = "/v1/Week/{id}";
+            var localVarPath = "/v1/Week/{weekYear}/{weekNumber}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -604,7 +597,8 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (weekYear != null) localVarPathParams.Add("weekYear", Configuration.ApiClient.ParameterToString(weekYear)); // path parameter
+            if (weekNumber != null) localVarPathParams.Add("weekNumber", Configuration.ApiClient.ParameterToString(weekNumber)); // path parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -621,7 +615,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1WeekByIdGet", localVarResponse);
+                Exception exception = ExceptionFactory("V1WeekByWeekYearByWeekNumberGet", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -631,32 +625,37 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>ResponseWeekDTO</returns>
-        public ResponseWeekDTO V1WeekByIdPut (long? id, WeekDTO newWeek = null)
+        public ResponseWeekDTO V1WeekByWeekYearByWeekNumberPut (int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
-             ApiResponse<ResponseWeekDTO> localVarResponse = V1WeekByIdPutWithHttpInfo(id, newWeek);
+             ApiResponse<ResponseWeekDTO> localVarResponse = V1WeekByWeekYearByWeekNumberPutWithHttpInfo(weekYear, weekNumber, newWeek);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        public ApiResponse< ResponseWeekDTO > V1WeekByIdPutWithHttpInfo (long? id, WeekDTO newWeek = null)
+        public ApiResponse< ResponseWeekDTO > V1WeekByWeekYearByWeekNumberPutWithHttpInfo (int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling WeekApi->V1WeekByIdPut");
+            // verify the required parameter 'weekYear' is set
+            if (weekYear == null)
+                throw new ApiException(400, "Missing required parameter 'weekYear' when calling WeekApi->V1WeekByWeekYearByWeekNumberPut");
+            // verify the required parameter 'weekNumber' is set
+            if (weekNumber == null)
+                throw new ApiException(400, "Missing required parameter 'weekNumber' when calling WeekApi->V1WeekByWeekYearByWeekNumberPut");
 
-            var localVarPath = "/v1/Week/{id}";
+            var localVarPath = "/v1/Week/{weekYear}/{weekNumber}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -683,7 +682,8 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (weekYear != null) localVarPathParams.Add("weekYear", Configuration.ApiClient.ParameterToString(weekYear)); // path parameter
+            if (weekNumber != null) localVarPathParams.Add("weekNumber", Configuration.ApiClient.ParameterToString(weekNumber)); // path parameter
             if (newWeek != null && newWeek.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(newWeek); // http body (model) parameter
@@ -708,7 +708,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1WeekByIdPut", localVarResponse);
+                Exception exception = ExceptionFactory("V1WeekByWeekYearByWeekNumberPut", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -718,33 +718,38 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>Task of ResponseWeekDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByIdPutAsync (long? id, WeekDTO newWeek = null)
+        public async System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberPutAsync (int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
-             ApiResponse<ResponseWeekDTO> localVarResponse = await V1WeekByIdPutAsyncWithHttpInfo(id, newWeek);
+             ApiResponse<ResponseWeekDTO> localVarResponse = await V1WeekByWeekYearByWeekNumberPutAsyncWithHttpInfo(weekYear, weekNumber, newWeek);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">If of the week to update information for.</param>
+        /// <param name="weekYear"></param>
+        /// <param name="weekNumber"></param>
         /// <param name="newWeek">A serialized Week with new information. (optional)</param>
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByIdPutAsyncWithHttpInfo (long? id, WeekDTO newWeek = null)
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberPutAsyncWithHttpInfo (int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling WeekApi->V1WeekByIdPut");
+            // verify the required parameter 'weekYear' is set
+            if (weekYear == null)
+                throw new ApiException(400, "Missing required parameter 'weekYear' when calling WeekApi->V1WeekByWeekYearByWeekNumberPut");
+            // verify the required parameter 'weekNumber' is set
+            if (weekNumber == null)
+                throw new ApiException(400, "Missing required parameter 'weekNumber' when calling WeekApi->V1WeekByWeekYearByWeekNumberPut");
 
-            var localVarPath = "/v1/Week/{id}";
+            var localVarPath = "/v1/Week/{weekYear}/{weekNumber}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -771,7 +776,8 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (weekYear != null) localVarPathParams.Add("weekYear", Configuration.ApiClient.ParameterToString(weekYear)); // path parameter
+            if (weekNumber != null) localVarPathParams.Add("weekNumber", Configuration.ApiClient.ParameterToString(weekNumber)); // path parameter
             if (newWeek != null && newWeek.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(newWeek); // http body (model) parameter
@@ -796,7 +802,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1WeekByIdPut", localVarResponse);
+                Exception exception = ExceptionFactory("V1WeekByWeekYearByWeekNumberPut", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -806,7 +812,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ResponseIEnumerableWeekNameDTO</returns>
@@ -817,7 +823,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseIEnumerableWeekNameDTO</returns>
@@ -873,7 +879,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ResponseIEnumerableWeekNameDTO</returns>
@@ -885,7 +891,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekNameDTO)</returns>
@@ -938,169 +944,6 @@ namespace IO.Swagger.Api
             return new ApiResponse<ResponseIEnumerableWeekNameDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (ResponseIEnumerableWeekNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseIEnumerableWeekNameDTO)));
-        }
-
-        /// <summary>
-        /// Creates the week. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>ResponseWeekDTO</returns>
-        public ResponseWeekDTO V1WeekPost (WeekDTO newWeek = null)
-        {
-             ApiResponse<ResponseWeekDTO> localVarResponse = V1WeekPostWithHttpInfo(newWeek);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Creates the week. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>ApiResponse of ResponseWeekDTO</returns>
-        public ApiResponse< ResponseWeekDTO > V1WeekPostWithHttpInfo (WeekDTO newWeek = null)
-        {
-
-            var localVarPath = "/v1/Week";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (newWeek != null && newWeek.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(newWeek); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = newWeek; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1WeekPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseWeekDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseWeekDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekDTO)));
-        }
-
-        /// <summary>
-        /// Creates the week. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>Task of ResponseWeekDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekPostAsync (WeekDTO newWeek = null)
-        {
-             ApiResponse<ResponseWeekDTO> localVarResponse = await V1WeekPostAsyncWithHttpInfo(newWeek);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Creates the week. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newWeek">New week. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekPostAsyncWithHttpInfo (WeekDTO newWeek = null)
-        {
-
-            var localVarPath = "/v1/Week";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (newWeek != null && newWeek.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(newWeek); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = newWeek; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1WeekPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseWeekDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseWeekDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekDTO)));
         }
 
     }
