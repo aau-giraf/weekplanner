@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -11,7 +10,6 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
-using WeekPlanner.Views;
 using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
 using WeekPlanner.Services;
@@ -20,7 +18,7 @@ using static IO.Swagger.Model.ActivityDTO;
 
 namespace WeekPlanner.ViewModels
 {
-    public class WeekPlannerViewModel : ViewModelBase
+	public class WeekPlannerViewModel : ViewModelBase
     {
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
@@ -29,7 +27,6 @@ namespace WeekPlanner.ViewModels
         private bool _isDirty = false;
 
         private ActivityDTO _selectedActivity;
-        private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _toolbarButtonIcon;
@@ -42,6 +39,25 @@ namespace WeekPlanner.ViewModels
                 _weekDto = value;
                 RaisePropertyChanged(() => WeekDTO);
                 RaisePropertyForDays();
+            }
+        }
+
+		private int _weekNameSetterCount = 0;
+        private string _weekName;
+        public string WeekName
+        {
+            get => _weekName;
+            set
+            {
+                _weekName = WeekDTO.Name = value;
+                RaisePropertyChanged(() => WeekName);
+                            
+                // Hack needed, because initializeAsync and TwoWay-binding sets it
+				if (_weekNameSetterCount >= 2)
+                {
+                    _isDirty = true;
+                }
+				_weekNameSetterCount++;
             }
         }
 
@@ -121,6 +137,7 @@ namespace WeekPlanner.ViewModels
                     _weekApi.V1WeekByWeekYearByWeekNumberGetAsync(weekYearAndNumber.Item1, weekYearAndNumber.Item2),
                 onSuccess: result => { 
                     WeekDTO = result.Data;
+                    WeekName = WeekDTO.Name;
                 }
             );
 
@@ -151,7 +168,7 @@ namespace WeekPlanner.ViewModels
 
             IsBusy = true;
 
-            if (WeekDTO.Name == null || WeekDTO.Name == "")
+            if (string.IsNullOrEmpty(WeekDTO.Name))
             {
                 await _dialogService.ShowAlertAsync("Ugeplanen skal have et navn.");
                 IsBusy = false;
