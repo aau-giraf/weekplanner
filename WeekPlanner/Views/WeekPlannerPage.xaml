@@ -8,7 +8,7 @@
     xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
     x:Class="WeekPlanner.Views.WeekPlannerPage"
     x:Name="page"
-    Title="{Binding WeekDTO.Name}">
+    Title="{Binding WeekName}">
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarAndStackTemplate}">
             <StackLayout>
@@ -25,7 +25,7 @@
                         <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
                     </Grid>
                     <Grid Grid.Column="1">
-                        <Entry HorizontalTextAlignment="Center" Text="{Binding WeekDTO.Name}" Placeholder="Unavngivet skema" TextColor="{StaticResource BlackColor}">
+                        <Entry HorizontalTextAlignment="Center" Text="{Binding WeekName}" Placeholder="Unavngivet skema" TextColor="{StaticResource BlackColor}">
                             <Entry.Behaviors>
                                 <behaviors:EventToCommandBehavior EventName="TextChanged" Command="{Binding SaveScheduleName}" />
                             </Entry.Behaviors>

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -11,7 +10,6 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
-using WeekPlanner.Views;
 using Xamarin.Forms;
 using static IO.Swagger.Model.WeekdayDTO;
 using WeekPlanner.Services;
@@ -20,7 +18,7 @@ using static IO.Swagger.Model.ActivityDTO;
 
 namespace WeekPlanner.ViewModels
 {
-    public class WeekPlannerViewModel : ViewModelBase
+	public class WeekPlannerViewModel : ViewModelBase
     {
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
@@ -29,7 +27,6 @@ namespace WeekPlanner.ViewModels
         private bool _isDirty = false;
 
         private ActivityDTO _selectedActivity;
-        private bool _editModeEnabled;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _toolbarButtonIcon;
@@ -42,6 +39,25 @@ namespace WeekPlanner.ViewModels
                 _weekDto = value;
                 RaisePropertyChanged(() => WeekDTO);
                 RaisePropertyForDays();
+            }
+        }
+
+		private int _weekNameSetterCount = 0;
+        private string _weekName;
+        public string WeekName
+        {
+            get => _weekName;
+            set
+            {
+                _weekName = WeekDTO.Name = value;
+                RaisePropertyChanged(() => WeekName);
+                            
+                // Hack needed because initializeAsync and TwoWay-binding sets it
+				if (_weekNameSetterCount >= 2)
+                {
+                    _isDirty = true;
+                }
+				_weekNameSetterCount++;
             }
         }
 
@@ -121,6 +137,7 @@ namespace WeekPlanner.ViewModels
                     _weekApi.V1WeekByWeekYearByWeekNumberGetAsync(weekYearAndNumber.Item1, weekYearAndNumber.Item2),
                 onSuccess: result => { 
                     WeekDTO = result.Data;
+                    WeekName = WeekDTO.Name;
                 }
             );
 
@@ -147,9 +164,16 @@ namespace WeekPlanner.ViewModels
         private async Task SaveSchedule()
         {
             if (IsBusy) return;
-            if(!_isDirty) return;
-
+            
             IsBusy = true;
+            
+            if (WeekNameIsEmpty)
+            {
+                await ShowWeekNameEmptyPrompt();
+                IsBusy = false;
+                return;
+            }
+
             bool confirmed = await _dialogService.ConfirmAsync(
                 title: "Gem ugeplan",
                 message: "Vil du gemme ugeplanen?",
@@ -161,7 +185,7 @@ namespace WeekPlanner.ViewModels
                 IsBusy = false;
                 return;
             }
-
+            
             SettingsService.UseTokenFor(UserType.Citizen);
 
             await SaveOrUpdateSchedule();
@@ -170,7 +194,7 @@ namespace WeekPlanner.ViewModels
         }
 
         private async Task SaveNewSchedule()
-        {
+        {            
             await _requestService.SendRequestAndThenAsync(
                 () => _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(weekYear: WeekDTO.WeekYear,
                     weekNumber: WeekDTO.WeekNumber, newWeek: WeekDTO),
@@ -258,6 +282,11 @@ namespace WeekPlanner.ViewModels
                         break;
 
                     case "Gem ændringer":
+                        if (WeekNameIsEmpty)
+                        {
+                            await ShowWeekNameEmptyPrompt();
+                            break;
+                        }
                         await SaveOrUpdateSchedule();
                         SetToCitizenMode();
                         break;
@@ -277,6 +306,12 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
+        private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
+
+        private Task ShowWeekNameEmptyPrompt() =>
+            _dialogService.ShowAlertAsync("Giv venligst ugeplanen et navn, og gem igen.", "Ok",
+                "Ugeplanen blev ikke gemt");
+            
         public int Height
         {
             get
@@ -328,6 +363,11 @@ namespace WeekPlanner.ViewModels
                 case "Annuller":
                     break;
                 case "Gem ændringer":
+                    if (WeekNameIsEmpty)
+                    {
+                        await ShowWeekNameEmptyPrompt();
+                        break;
+                    }
                     await SaveOrUpdateSchedule();
                     await NavigationService.PopAsync();
                     break;
