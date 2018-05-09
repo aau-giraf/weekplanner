@@ -181,7 +181,7 @@ namespace WeekPlanner.ViewModels
                 });
         }
 
-        private async Task UpdateExistingSchedule()
+        private async Task UpdateExistingSchedule(bool showDialog = true)
         {
             if (WeekDTO.WeekNumber == null)
             {
@@ -190,8 +190,11 @@ namespace WeekPlanner.ViewModels
 
             await _requestService.SendRequestAndThenAsync(
                 () => _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(WeekDTO.WeekYear, WeekDTO.WeekNumber, WeekDTO),
-                result => { 
-                    _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
+                result => {
+                    if (showDialog)
+                    {
+                        _dialogService.ShowAlertAsync(message: $"Ugeplanen '{result.Data.Name}' blev gemt.");
+                    }
                     _isDirty = false;
                  });
         }
@@ -225,7 +228,7 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyForDays();
                 if (!SettingsService.IsInGuardianMode)
                 {
-                    await UpdateExistingSchedule();
+                    await UpdateExistingSchedule(showDialog:false);
                 }
             }
             // Happens after logging in as guardian when switching to guardian mode
