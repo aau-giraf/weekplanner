@@ -6,6 +6,7 @@
     xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
     xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
     xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
     x:Class="WeekPlanner.Views.NewSchedulePage"
     Title="Tilføj en ny ugeplan">
     <ContentPage.Resources>
@@ -51,13 +52,17 @@
                                     ErrorPlaceholder="weekschedule.png"
                                     Source="{Binding WeekThumbNail.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White"/>
-                    <Button Grid.Column="1"
-                    VerticalOptions="Center"
-                    HeightRequest="50"
-                    x:Name="ChangePictogramButton"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
-                    Command="{Binding ChangePictogramCommand}"
-                    Text="Ændre Pictogram for ugen"></Button>
+                    <StackLayout Grid.Column="1">
+                        <Button
+                                VerticalOptions="Center"
+                                HeightRequest="50"
+                                x:Name="ChangePictogramButton"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                                Command="{Binding ChangePictogramCommand}"
+                                Text="Ændre Pictogram for ugen"></Button>
+                        <Picker ItemsSource="{Binding YearsAndWeeksStrings}" SelectedIndex="{Binding SelectedYearWeekIndex}"></Picker>
+                    </StackLayout>
+                    
                 </Grid>
                 <Button
                 x:Name="SaveWeekButton"

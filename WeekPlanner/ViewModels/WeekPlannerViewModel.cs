@@ -42,22 +42,21 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-		private int _weekNameSetterCount = 0;
-        private string _weekName;
         public string WeekName
         {
-            get => _weekName;
+            get => WeekDTO?.Name;
             set
             {
-                _weekName = WeekDTO.Name = value;
-                RaisePropertyChanged(() => WeekName);
-                            
                 // Hack needed because initializeAsync and TwoWay-binding sets it
-				if (_weekNameSetterCount >= 2)
+                if (value != WeekDTO?.Name)
                 {
                     _isDirty = true;
                 }
-				_weekNameSetterCount++;
+
+                if (WeekDTO == null) return;
+                
+                WeekDTO.Name = value;
+                RaisePropertyChanged(() => WeekName);
             }
         }
 

@@ -2,16 +2,14 @@
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WeekPlanner.Helpers;
 using WeekPlanner.Services;
-using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Validations;
-using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
@@ -48,6 +46,26 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => WeekThumbNail);
             }
         }
+
+        private const int NumberOfWeeksToChooseFrom = 5;
+        
+        private List<(int,int)> _yearsAndWeeks = Enumerable.Range(
+            DateTimeHelper.GetIso8601WeekOfYear(DateTime.Now),
+            NumberOfWeeksToChooseFrom).Select(WeekToYearsAndWeeks).ToList();
+
+        private static (int,int) WeekToYearsAndWeeks(int week)
+        {
+            var year = DateTime.Now.Year;
+            return week > 52 
+                ? (year + 1, week + 1 % 53) 
+                : (year, week);
+        }
+        public List<string> YearsAndWeeksStrings
+        {
+            get => _yearsAndWeeks.Select(yw => $"Uge {yw.Item2} - {yw.Item1}").ToList();
+        }
+        
+        public int SelectedYearWeekIndex { get; set; }
 
         public ICommand SaveWeekScheduleCommand => new Command(SaveWeekSchedule);
         public ICommand ChangePictogramCommand => new Command(ChangePictogram);
@@ -127,8 +145,9 @@ namespace WeekPlanner.ViewModels
                 await _requestService.SendRequestAndThenAsync(
                     requestAsync: () =>
                         _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(
-                            weekNumber: DateTimeHelper.GetIso8601WeekOfYear(DateTime.Now),
-                            weekYear: DateTime.Now.Year, newWeek: _weekDTO),
+                            weekNumber: _yearsAndWeeks[SelectedYearWeekIndex].Item2,
+                            weekYear: _yearsAndWeeks[SelectedYearWeekIndex].Item1, 
+                            newWeek: _weekDTO),
                     onSuccess:
                     async result =>
                     {
