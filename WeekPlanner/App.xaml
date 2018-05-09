@@ -114,7 +114,13 @@
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}"  />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Label Style="{StaticResource NavBarLabelStyle}" Text="{TemplateBinding Parent.Title}"></Label>
+                        <Label 
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="22"
+                               TextColor="White"
+                               Text="{TemplateBinding Parent.Title}"></Label>
                     </StackLayout>
                     <!-- End Header -->
                      
@@ -156,7 +162,13 @@
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Label Style="{StaticResource NavBarLabelStyle}" Text="{TemplateBinding Parent.Title}"></Label>
+                        <Label 
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="22"
+                               TextColor="White"
+                               Text="{TemplateBinding Parent.Title}"></Label>
                         
                         <!-- Toolbar Button -->
                         <Image 
@@ -208,7 +220,13 @@
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Label Style="{StaticResource NavBarLabelStyle}" Text="{TemplateBinding Parent.Title}"></Label>
+                        <Label 
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="22"
+                               TextColor="White"
+                               Text="{TemplateBinding Parent.Title}"></Label>
                         
                         <!-- Toolbar Button -->
                         <Image 
