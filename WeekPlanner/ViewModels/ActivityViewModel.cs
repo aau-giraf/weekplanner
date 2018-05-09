@@ -125,7 +125,7 @@ namespace WeekPlanner.ViewModels
 
         public ICommand SaveCommand => new Command(async () =>
         {
-            await NavigationService.PopAsync(Activity);
+            await NavigationService.PopAsync(this);
         });
 
         public override async Task PoppedAsync(object navigationData) {

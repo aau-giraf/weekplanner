@@ -233,7 +233,7 @@ namespace WeekPlanner.ViewModels
             }
 
             // Happens when popping from ActivityViewModel
-            if (navigationData == null)
+            if (navigationData is ActivityViewModel activityViewModel && activityViewModel.Activity == null)
             {
                 WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
                     .Activities
@@ -245,9 +245,9 @@ namespace WeekPlanner.ViewModels
                     await UpdateExistingSchedule();
                 }
             }
-            else if (navigationData is ActivityDTO activity)
+            else if (navigationData is ActivityViewModel activityVM)
             {
-                _selectedActivity = activity;
+                _selectedActivity = activityVM.Activity;
                 _isDirty = true;
                 RaisePropertyForDays();
                 if (!SettingsService.IsInGuardianMode)
