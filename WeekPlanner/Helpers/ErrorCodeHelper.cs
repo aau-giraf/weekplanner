@@ -10,7 +10,7 @@ namespace WeekPlanner.Helpers
             switch (errorCode)
             {
                 case nameof(ErrorKeyEnum.InvalidCredentials):
-                    return "Forkert login.";
+                    return "Indtastede brugernavn eller kodeord var forkert.";
                 case nameof(ErrorKeyEnum.MissingProperties):
                     return "Du mangler at udfylde nogle felter.";
                 case nameof(ErrorKeyEnum.UserMustBeGuardian):
