@@ -119,10 +119,13 @@ namespace WeekPlanner.ViewModels
             _settingsService = settingsService;
             _requestService = requestService;
             _userApi = userApi;
+        }
 
+        public async override Task InitializeAsync(object navigationData)
+        {
             WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
             // Update settings regardless of which property calls 'RaisePropertyChanged'
-            WeekdayColors.PropertyChanged += (sender, e) => UpdateSettingsAsync();
+            WeekdayColors.PropertyChanged += async (sender, e) => await UpdateSettingsAsync();
         }
     }
 }
