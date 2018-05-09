@@ -8,6 +8,7 @@ using FFImageLoading.Config;
 using Newtonsoft.Json;
 using SimpleJson;
 using WeekPlanner.Services.Settings;
+using WeekPlanner.Views;
 using System.Reflection;
 
 namespace WeekPlanner
@@ -17,21 +18,26 @@ namespace WeekPlanner
         public App()
         {
             InitializeComponent();
+
+
+            FlowListView.Init();
             InitApplication();
+            //InitNavigation();
+            MainPage = new MasterPage();
         }
 
-        private void InitApplication()
+        private static void InitApplication()
         {
             var appSettings = GetApplicationSettings();
             
             AppSetup setup = new AppSetup();
             AppContainer.Container = setup.CreateContainer(appSettings);
             
-            InitNavigation();
+            //InitNavigation();
             InitFFImage();
         }
 
-        private void InitFFImage()
+        private static void InitFFImage()
         {
             FFImageLoading.ImageService.Instance.Initialize(new Configuration
             {
@@ -39,8 +45,6 @@ namespace WeekPlanner
                     new HttpClient(
                         new GirafAuthenticatedHttpImageClientHelper(SettingsService.GetToken))
             });
-            
-            FlowListView.Init(); 
         }
 
         private static JsonObject GetApplicationSettings()

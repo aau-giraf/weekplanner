@@ -16,8 +16,13 @@ namespace WeekPlanner.Services.Navigation
         {
             get
             {
-                var mainPage = Application.Current.MainPage as CustomNavigationPage;
-                var viewModel = mainPage.Navigation.NavigationStack[mainPage.Navigation.NavigationStack.Count - 2].BindingContext;
+                CustomNavigationPage navigationPage = GetNavigationPage();
+                var navigationStack = navigationPage.Navigation.NavigationStack;
+
+                // If we do not have a previous page, return null
+                if (navigationStack.Count < 2) return null;
+                
+                var viewModel = navigationStack[navigationStack.Count - 2].BindingContext;
                 return viewModel as ViewModelBase;
             }
         }
@@ -26,8 +31,8 @@ namespace WeekPlanner.Services.Navigation
         {
             get
             {
-                var mainPage = Application.Current.MainPage as CustomNavigationPage;
-                var viewModel = mainPage.Navigation.NavigationStack.Last().BindingContext;
+                CustomNavigationPage navigationPage = GetNavigationPage();
+                var viewModel = navigationPage.Navigation.NavigationStack.Last().BindingContext;
                 return viewModel as ViewModelBase;
             }
         }
@@ -36,18 +41,41 @@ namespace WeekPlanner.Services.Navigation
         {
             return NavigateToAsync<LoginViewModel>();
         }
-        
-        /// <summary>
-        /// Pops the current page unless it is the frontpage of the app
-        /// </summary>
-        /// <returns></returns>
+
         public async Task PopAsync(object navigationData = null)
         {
-            var navigationPage = Application.Current.MainPage as CustomNavigationPage;
+            CustomNavigationPage navigationPage = GetNavigationPage();
+            if (navigationPage != null)
+            {
+                if (PreviousPageViewModel is null || PreviousPageViewModel is LoginViewModel)
+                {
+                    // If you pop to login or beyond, simply clear stack and go to loginpage
+                    await NavigateToAsync<LoginViewModel>();
+                    await RemoveBackStackAsync();
+                    return;
+                }
 
-            await navigationPage?.PopAsync();
-            await CurrentPageViewModel.PoppedAsync(navigationData);
+                await navigationPage.PopAsync();
+                await CurrentPageViewModel.PoppedAsync(navigationData);
+            }
+        }
 
+        private static CustomNavigationPage GetNavigationPage()
+        {
+            var mainPage = Application.Current.MainPage;
+            CustomNavigationPage navigationPage = null;
+
+            switch (mainPage)
+            {
+                case MasterPage masterPage:
+                    navigationPage = masterPage.Detail as CustomNavigationPage;
+                    break;
+                case CustomNavigationPage customNavigationPage:
+                    navigationPage = customNavigationPage;
+                    break;
+            }
+
+            return navigationPage;
         }
 
         public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
@@ -57,29 +85,26 @@ namespace WeekPlanner.Services.Navigation
 
         public Task RemoveLastFromBackStackAsync()
         {
-            var mainPage = Application.Current.MainPage as CustomNavigationPage;
-
-            mainPage?.Navigation.RemovePage(
-                mainPage.Navigation.NavigationStack[mainPage.Navigation.NavigationStack.Count - 2]);
+            CustomNavigationPage navigationPage = GetNavigationPage();
+            var navigationStack = navigationPage.Navigation.NavigationStack;
+            navigationPage.Navigation.RemovePage(navigationStack[navigationStack.Count - 2]);
 
             return Task.FromResult(true);
         }
 
         public Task RemoveBackStackAsync()
         {
-            if (Application.Current.MainPage is CustomNavigationPage mainPage)
+            CustomNavigationPage navigationPage = GetNavigationPage();
+            for (int i = 0; i < navigationPage.Navigation.NavigationStack.Count - 1; i++)
             {
-                for (int i = 0; i < mainPage.Navigation.NavigationStack.Count - 1; i++)
-                {
-                    var page = mainPage.Navigation.NavigationStack[i];
-                    mainPage.Navigation.RemovePage(page);
-                }
+                var page = navigationPage.Navigation.NavigationStack[i];
+                navigationPage.Navigation.RemovePage(page);
             }
 
             return Task.FromResult(true);
         }
 
-        private async Task InternalNavigateToAsync(Type viewModelType, object parameter)
+        private static async Task InternalNavigateToAsync(Type viewModelType, object parameter)
         {
             Page page = CreatePage(viewModelType, parameter);
 
@@ -89,15 +114,10 @@ namespace WeekPlanner.Services.Navigation
             }
             else
             {
-                if (Application.Current.MainPage is CustomNavigationPage navigationPage)
-                {
-                    await navigationPage.PushAsync(page);
-                }
-                else
-                {
-                    Application.Current.MainPage = new CustomNavigationPage(page);
-                }
-            }
+                var master = (MasterPage)Application.Current.MainPage;
+                var detail = (CustomNavigationPage)master.Detail;
+                await detail.PushAsync(page);
+             }
 
             if (page.BindingContext is ViewModelBase vmBase)
             {
@@ -107,10 +127,10 @@ namespace WeekPlanner.Services.Navigation
             {
                 throw new Exception($"{page.BindingContext} does not inherit ViewModelBase");
             }
-            
+
         }
 
-        private Type GetPageTypeForViewModel(Type viewModelType)
+        private static Type GetPageTypeForViewModel(Type viewModelType)
         {
             var viewName = viewModelType.FullName.Replace("ViewModels", "Views").Replace("ViewModel", "Page");
             var viewModelAssemblyName = viewModelType.GetTypeInfo().Assembly.FullName;
@@ -119,7 +139,7 @@ namespace WeekPlanner.Services.Navigation
             return viewType;
         }
 
-        private Page CreatePage(Type viewModelType, object parameter)
+        private static Page CreatePage(Type viewModelType, object parameter)
         {
             Type pageType = GetPageTypeForViewModel(viewModelType);
             if (pageType == null)

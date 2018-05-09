@@ -10,7 +10,7 @@ namespace WeekPlanner.Helpers
             switch (errorCode)
             {
                 case nameof(ErrorKeyEnum.InvalidCredentials):
-                    return "Forkert login.";
+                    return "Indtastede brugernavn eller kodeord var forkert.";
                 case nameof(ErrorKeyEnum.MissingProperties):
                     return "Du mangler at udfylde nogle felter.";
                 case nameof(ErrorKeyEnum.UserMustBeGuardian):
@@ -27,6 +27,8 @@ namespace WeekPlanner.Helpers
                     return "Der skete en fejl i forhold til gemning.";
                 case nameof(ErrorKeyEnum.DuplicateWeekScheduleName):
                     return "Dette ugenavn er allerede i brug. Prøv et andet.";
+                case nameof(ErrorKeyEnum.InvalidAmountOfWeekdays):
+                    return "Der er ikke den rigtige mængde ugedage i denne uge.";
                 default:
                     return "Der skete en ukendt fejl";
                     //throw new ArgumentOutOfRangeException(nameof(errorCode), errorCode, null);
@@ -55,12 +57,6 @@ namespace WeekPlanner.Helpers
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponseDepartmentDTO.ErrorKeyEnum? errorKey) =>
-            ToFriendlyString(errorKey.ToString());
-        
-        public static string ToFriendlyString(this ResponseLauncherOptions.ErrorKeyEnum? errorKey) =>
-            ToFriendlyString(errorKey.ToString());
-        
-        public static string ToFriendlyString(this ResponseLauncherOptionsDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponsePictogramDTO.ErrorKeyEnum? errorKey) =>

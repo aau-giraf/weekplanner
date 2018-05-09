@@ -1,8 +1,8 @@
-﻿using Xamarin.Forms;
+﻿using WeekPlanner.Views.Base;
 
 namespace WeekPlanner.Views
 {
-    public partial class ChooseTemplatePage : ContentPage
+    public partial class ChooseTemplatePage : PageBase
     {
         public ChooseTemplatePage()
         {

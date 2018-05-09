@@ -33,13 +33,15 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<WeekPlannerViewModel>();
             cb.RegisterType<ChooseTemplateViewModel>();
             cb.RegisterType<PictogramSearchViewModel>();
-            cb.RegisterType<ActivityViewModel>();
+			cb.RegisterType<SettingsViewModel>();
+            cb.RegisterType<MasterViewModel>();
             cb.RegisterType<SavePromptViewModel>();
             cb.RegisterType<CitizenSchedulesViewModel>();
             cb.RegisterType<NewScheduleViewModel>();
+            cb.RegisterType<ActivityViewModel>();
 
             // Services
-            cb.RegisterType<NavigationService>().As<INavigationService>();
+			cb.RegisterType<NavigationService>().As<INavigationService>();
             cb.RegisterType<DialogService>().As<IDialogService>();
             cb.RegisterType<RequestService>().As<IRequestService>();
             cb.RegisterType<SettingsService>().As<ISettingsService>()
@@ -54,6 +56,7 @@ namespace WeekPlanner.ApplicationObjects
                 cb.RegisterType<MockWeekApi>().As<IWeekApi>();
                 cb.RegisterType<MockPictogramApi>().As<IPictogramApi>();
                 cb.RegisterType<MockLoginService>().As<ILoginService>();
+                cb.RegisterType<MockUserApi>().As<IUserApi>();
             }
             else
             {
@@ -64,7 +67,8 @@ namespace WeekPlanner.ApplicationObjects
                 cb.RegisterType<PictogramApi>().As<IPictogramApi>();
                 cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
                 cb.RegisterType<PictogramApi>().As<IPictogramApi>();
-            }
+				cb.RegisterType<UserApi>().As<IUserApi>();
+			}
         }
     }
 }
