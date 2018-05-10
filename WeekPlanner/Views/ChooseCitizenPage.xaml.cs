@@ -1,11 +1,11 @@
 using System.Linq;
 using WeekPlanner.ViewModels;
-using WeekPlanner.ViewModels.Base;
+using WeekPlanner.Views.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class ChooseCitizenPage : ContentPage
+    public partial class ChooseCitizenPage : PageBase
     {
         public ChooseCitizenPage()
         {

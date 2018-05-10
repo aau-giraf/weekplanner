@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using WeekPlanner.ViewModels;
 using Xamarin.Forms;
+using static IO.Swagger.Model.ActivityDTO;
 
 namespace WeekPlanner.Converters
 {
@@ -9,17 +9,20 @@ namespace WeekPlanner.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch ((State)value)
-            {
-                case State.Normal:
+            StateEnum? state = (StateEnum?)value;
+            switch(state) {
+                case null:
+                case StateEnum.Normal:
                     return Color.Blue;
-                case State.Checked:
-                    return Color.Green;
-                case State.Cancelled:
+                case StateEnum.Active:
+                    return Color.SeaGreen;
+                case StateEnum.Canceled:
                     return Color.Red;
-
+                case StateEnum.Completed:
+                    return Color.DarkGreen;
+                default:
+                    throw new NotSupportedException("StateToBackgroundConverter");
             }
-            throw new NotImplementedException();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

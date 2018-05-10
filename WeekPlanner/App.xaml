@@ -5,28 +5,50 @@
              x:Class="WeekPlanner.App">
     <Application.Resources>
         <ResourceDictionary>
+            
             <!--COLORS-->
-            <Color x:Key="Primary">#2196F3</Color>
-            <Color x:Key="PrimaryDark">#1976D2</Color>
-            <Color x:Key="Accent">#96d1ff</Color>
-            <Color x:Key="LightBackgroundColor">#FAFAFA</Color>
-            <Color x:Key="DarkBackgroundColor">#C0C0C0</Color>
-            <Color x:Key="MediumGrayTextColor">#4d4d4d</Color>
-            <Color x:Key="LightTextColor">#999999</Color>
-            <Color x:Key="RegularButton">#FFCD59</Color>
-            <Color x:Key="ErrorColor">#ff5252</Color>
-            <Color x:Key="SuccessColor">#77AA44</Color>
-            <Color x:Key="CancelColor">#CC6655</Color>
+            <Color x:Key="MondayColor">#067700</Color>
+            <Color x:Key="TuesdayColor">#8c1086</Color>
+            <Color x:Key="WednesdayColor">#ff7f00</Color>
+            <Color x:Key="ThursdayColor">#0017ff</Color>
+            <Color x:Key="FridayColor">#ffdd00</Color>
+            <Color x:Key="SaturdayColor">#ff0102</Color>
+            <Color x:Key="SundayColor">#ffffff</Color>
 
-            <!--Layouts-->
-
-            <!--<Style TargetType="ContentPage">
-                <Setter Property="BackgroundColor" Value="{StaticResource White}" />
-            </Style>-->
-
-            <!--<Style TargetType="ContentPage.ToolbarItems">
-                <Setter Property="BackgroundColor" Value="{staticResource White}" />
-            </Style>-->
+            <Color
+                x:Key="Primary">#33b5e5</Color>
+            <Color
+                x:Key="PrimaryDark">#0099CC</Color>
+            <Color
+                x:Key="Accent">#96d1ff</Color>
+            <Color
+                x:Key="LightBackgroundColor">#FAFAFA</Color>
+            <Color
+                x:Key="BlackColor">#000</Color>
+            <Color
+                x:Key="DarkBackgroundColor">#C0C0C0</Color>
+            <Color
+                x:Key="MediumGrayTextColor">#4d4d4d</Color>
+            <Color
+                x:Key="LightTextColor">#999999</Color>
+            <Color
+                x:Key="RegularButton">#FFCD59</Color>
+            <Color
+                x:Key="ErrorColor">#CC0000</Color>
+            <Color
+                x:Key="SuccessColor">#00C851</Color>
+            <Color
+                x:Key="CancelColor">#CC0000</Color>
+            <Color
+                x:Key="OrangeThemeColor">#ffbb33</Color>
+            <Color
+                x:Key="WhiteColor">#FFFFFF</Color>
+            <Color
+                x:Key="RedThemeColor">#ff4444</Color>
+            <Color
+                x:Key="GreenThemeColor">#007E33</Color>
+            <Color
+                x:Key="NavBarColor">#33b5e5</Color>
 
             <Style TargetType="views:CustomNavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
@@ -38,29 +60,194 @@
                 <Setter Property="TextColor"
                         Value="{StaticResource ErrorColor}" />
             </Style>
-
-            <!--<Style TargetType="Label">
-                
+            <Style x:Key="NavBarLabelStyle"
+                   TargetType="{x:Type Label}">
+                <Setter Property="TextColor"
+                        Value="{StaticResource WhiteColor}" />
+                <Setter Property="HorizontalOptions"
+                        Value="CenterAndExpand" />
+                <Setter Property="VerticalOptions"
+                        Value="Center" />
+                <Setter Property="FontSize"
+                        Value="20" />
             </Style>
 
-            <Style TargetType="SearchBar">
-
-            </Style>
--->
             <Style TargetType="Button">
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                <!--<Setter Property="Margin" Value="20" />
-                <Setter Property="VerticalOptions" Value="CenterAndExpand" />-->
-                <Setter Property="TextColor" Value="White" />
-
+                <Setter Property="TextColor" Value="{StaticResource WhiteColor}" />
             </Style>
 
             <!-- CONVERTERS -->
             <converters:ItemTappedEventArgsConverter x:Key="ItemTappedEventArgsConverter" />
+            <converters:CitizenToSettingsTitle x:Key="CitizenToSettingsTitle" />
             <converters:ItemsToHeightConverter x:Key="ItemsToHeightConverter" />
-            <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />            
-            <converters:RelativeUrlConverter x:Key="RelativeUrlConverter" />
+            <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
+            <converters:IdToRawPictoUrlConverter x:Key="IdToRawPictoUrlConverter" />
+            <converters:CitizenIdIsSetConverter x:Key="CitizenIdIsSetConverter" />
 
+            <!-- CUSTOM NAVIGATION BAR - without toolbar button -->
+            <ControlTemplate x:Key="NavBarTheme">
+                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+ 
+                    <!-- Begin Header -->
+                    <StackLayout
+                        Orientation="Horizontal"
+                        HeightRequest="50"
+                        IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
+                        BackgroundColor="{DynamicResource NavBarColor}"
+                        Spacing="0"
+                        Padding="7, 0, 10, 0"
+                        Grid.Column="0" Grid.Row="0">
+                        <!-- Header Content -->
+                        
+                        <!-- Back Button -->
+                        <Image 
+                            HorizontalOptions="Start" 
+                            VerticalOptions="Center"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                            HeightRequest="30" Source="icon_left_arrow.png">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}"  />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Label 
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="22"
+                               TextColor="White"
+                               Text="{TemplateBinding Parent.Title}"></Label>
+                    </StackLayout>
+                    <!-- End Header -->
+                     
+                    <!-- Begin Content -->
+                    <ScrollView Grid.Column="0" Grid.Row="1">
+                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+                    </ScrollView>
+                    <!-- End Content -->
+                </Grid>
+            </ControlTemplate>
+            
+            
+            <!-- CUSTOM NAVIGATION BAR - with toolbar button -->
+            <ControlTemplate x:Key="NavBarWithToolbarTemplate">
+                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+ 
+                    <!-- Begin Header -->
+                    <StackLayout
+                        Orientation="Horizontal"
+                        HeightRequest="50"
+                        IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
+                        BackgroundColor="{DynamicResource NavBarColor}"
+                        Spacing="0"
+                        Padding="7, 0, 10, 0"
+                        Grid.Column="0" Grid.Row="0">
+                        <!-- Header Content -->
+                        
+                        <!-- Back Button -->
+                        <Image 
+                                HorizontalOptions="Start" 
+                                VerticalOptions="Center"
+                                IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                                HeightRequest="30" Source="icon_left_arrow.png">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Label 
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="22"
+                               TextColor="White"
+                               Text="{TemplateBinding Parent.Title}"></Label>
+                        
+                        <!-- Toolbar Button -->
+                        <Image 
+                            HorizontalOptions="End" 
+                            VerticalOptions="Center"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
+                            HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer  Command="{TemplateBinding Parent.BindingContext.ToolbarButtonCommand}"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </StackLayout>
+                    <!-- End Header -->
+                     
+                    <!-- Begin Content -->
+                    <ScrollView Grid.Column="0" Grid.Row="1">
+                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+                    </ScrollView>
+                    <!-- End Content -->
+                </Grid>
+            </ControlTemplate>
+            
+            <!-- CUSTOM NAVIGATION BAR - with toolbar button and stacklayout-->
+            <ControlTemplate x:Key="NavBarWithToolbarAndStackTemplate">
+                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+ 
+                    <!-- Begin Header -->
+                    <StackLayout
+                        Orientation="Horizontal"
+                        HeightRequest="50"
+                        IsVisible="{TemplateBinding Parent.BindingContext.ShowNavigationBar}"
+                        BackgroundColor="{DynamicResource NavBarColor}"
+                        Spacing="0"
+                        Padding="7, 0, 10, 0"
+                        Grid.Column="0" Grid.Row="0">
+                        <!-- Header Content -->
+                        
+                        <!-- Back Button -->
+                        <Image 
+                                HorizontalOptions="Start" 
+                                VerticalOptions="Center"
+                                IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                                HeightRequest="30" Source="icon_left_arrow.png">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Label 
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="22"
+                               TextColor="White"
+                               Text="{TemplateBinding Parent.Title}"></Label>
+                        
+                        <!-- Toolbar Button -->
+                        <Image 
+                            HorizontalOptions="End" 
+                            VerticalOptions="Center"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
+                            HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer  Command="{TemplateBinding Parent.BindingContext.ToolbarButtonCommand}"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </StackLayout>
+                    <!-- End Header -->
+                     
+                    <!-- Begin Content -->
+                    <StackLayout Grid.Column="0" Grid.Row="1">
+                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+                    <!-- End Content -->
+                </Grid>
+            </ControlTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -16,7 +16,7 @@ namespace WeekPlanner.ViewModels
 
         private ValidatableObject<string> _username;
         private ValidatableObject<string> _password;
-
+        
         private bool _userModeSwitch = false;
 
         public LoginViewModel(INavigationService navigationService,
@@ -25,6 +25,8 @@ namespace WeekPlanner.ViewModels
             _loginService = loginService;
             Password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
             Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
+
+            ShowNavigationBar = false;
         }
 
         public ValidatableObject<string> Username
@@ -60,29 +62,23 @@ namespace WeekPlanner.ViewModels
             {
                 IsBusy = true;
                 bool enableGuardianMode = true;
-                await _loginService.LoginAndThenAsync(
-                    async () => {
+                await _loginService.LoginAndThenAsync(UserType.Guardian, 
+                    Username.Value, 
+                    Password.Value, async () => {
                         await NavigationService.PopAsync(enableGuardianMode);
                         ClearUsernameAndPasswordFields();
-                    },
-                    UserType.Guardian, 
-                    Username.Value, 
-                    Password.Value
-                );
+                    });
                 IsBusy = false;
             }
             else
             {
                 IsBusy = true;
-                await _loginService.LoginAndThenAsync(
-                    async () => {
+                await _loginService.LoginAndThenAsync(UserType.Guardian, 
+                    Username.Value, 
+                    Password.Value, async () => {
                         await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
                         ClearUsernameAndPasswordFields();
-                    },
-                    UserType.Guardian, 
-                    Username.Value, 
-                    Password.Value
-                );
+                    });
                 IsBusy = false;
             }
         }

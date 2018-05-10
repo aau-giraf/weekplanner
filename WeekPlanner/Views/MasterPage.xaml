@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  base1:ViewModelLocator.AutoWireViewModel="true"
+                  x:Class="WeekPlanner.Views.MasterPage"
+                  x:Name="Mdp"
+                  MasterBehavior="Popover"
+                  IsPresented="{Binding IsPresented}"
+                  IsGestureEnabled="{Binding SettingsService.IsInGuardianMode}">
+    <MasterDetailPage.Master>
+        <ContentPage Padding="10" Title="Master">
+            <ContentPage.Content>
+                <ContentView>
+                    <StackLayout Margin="5,30,5,5">
+                        <Button Text="Indstillinger"
+                        Command="{Binding NavigateToSettingsCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                        IsVisible="{Binding SettingsService.CurrentCitizenId, Converter={StaticResource CitizenIdIsSetConverter}}">
+                        </Button>
+                    </StackLayout>
+                </ContentView>
+            </ContentPage.Content>
+        </ContentPage>
+    </MasterDetailPage.Master>
+</MasterDetailPage>

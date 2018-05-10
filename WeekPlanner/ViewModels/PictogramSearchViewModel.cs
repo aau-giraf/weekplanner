@@ -39,7 +39,7 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand SearchCommand => new Command<string>(async searchTerm => await OnSearchGetPictograms(searchTerm));
-        public ICommand ItemTappedCommand => new Command<PictogramDTO>(tappedItem => ListViewItemTapped(tappedItem));
+        public ICommand ItemTappedCommand => new Command<PictogramDTO>(ListViewItemTapped);
 
         async void ListViewItemTapped(PictogramDTO tappedItem)
         {

@@ -1,4 +1,6 @@
-﻿using IO.Swagger.Model;
+﻿using System.Threading.Tasks;
+using IO.Swagger.Model;
+
 
 namespace WeekPlanner.Services.Settings
 {
@@ -8,9 +10,16 @@ namespace WeekPlanner.Services.Settings
         bool UseMocks { get; set; }
         string GuardianAuthToken { get; set; }
         string CitizenAuthToken { get; set; }
+        bool IsInGuardianMode { get; set; }
+        
+        string CurrentCitizenId { get; set; }
+        string CurrentCitizenName { get; set; }
+        SettingDTO CurrentCitizenSettingDTO { get; set; }
+        
         void UseTokenFor(UserType userType);
-
+        void SetTheme();
     }
+
 
     public enum UserType
     {

@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿using WeekPlanner.Views.Base;
 using Xamarin.Forms;
 
 namespace WeekPlanner.Views
 {
-    public partial class SettingsPage : ContentPage
+    public partial class SettingsPage : PageBase
     {
         public SettingsPage()
         {
             InitializeComponent();
         }
-
-		public void Picker_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			DisplayAlert("Hey", "Med", "Dig");
-		}
-
 	}
 }

@@ -6,7 +6,7 @@ namespace WeekPlanner.Services.Login
 {
     public interface ILoginService
     {
-        Task LoginAndThenAsync(Func<Task> onSuccess, UserType userType, string username, string password = "");
+        Task LoginAndThenAsync(UserType userType, string username, string password = "", Func<Task> onSuccess = null);
         Task LoginAsync(UserType userType, string username, string password = "");
     }
 }

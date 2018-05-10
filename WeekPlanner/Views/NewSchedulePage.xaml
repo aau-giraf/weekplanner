@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage 
+<base:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
     xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
+    xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
     x:Class="WeekPlanner.Views.NewSchedulePage"
-    base1:ViewModelLocator.AutoWireViewModel="true"
     Title="Tilføj en ny ugeplan">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,57 +15,61 @@
                 x:Key="FirstValidationErrorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    
     <ContentPage.Content>
-        <StackLayout
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
+            <StackLayout
             Margin="12">
-            <Label
+                <Label
                 Text="Ugeplan"
                 HorizontalTextAlignment="Center"
                 FontSize="32"/>
-            <Entry
+                <Entry
                 x:Name="NewScheduleNameEntry"
                 Text="{Binding ScheduleName.Value}"
                 Placeholder="Navn på ny ugeplan">
-                <Entry.Behaviors>
-                    <behaviors:EventToCommandBehavior
+                    <Entry.Behaviors>
+                        <behaviors:EventToCommandBehavior
                         EventName="TextChanged"
                         Command="{Binding ValidateWeekNameCommand}" />
-                </Entry.Behaviors>
-            </Entry>
-            <Label
+                    </Entry.Behaviors>
+                </Entry>
+                <Label
                 Text="{Binding ScheduleName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                 Style="{StaticResource ValidationErrorLabelStyle}" />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="AUTO"/>
-                </Grid.RowDefinitions>
-                <ffimageloading:CachedImage
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                    </Grid.RowDefinitions>
+                    <ffimageloading:CachedImage
                                     Grid.Column="0"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
                                     LoadingPlaceholder="image_loading.png"
                                     ErrorPlaceholder="weekschedule.png"
-                                    Source="{Binding WeekThumbNail.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                                    Source="{Binding WeekThumbNail.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White"/>
-                <Button Grid.Column="1"
-                    VerticalOptions="Center"
-                    HeightRequest="50"
-                    x:Name="ChangePictogramButton"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
-                    Command="{Binding ChangePictogramCommand}"
-                    Text="Ændre Pictogram for ugen"></Button>
-            </Grid>
-            
-            <Button
+                    <StackLayout Grid.Column="1">
+                        <Button
+                                VerticalOptions="Center"
+                                HeightRequest="50"
+                                x:Name="ChangePictogramButton"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                                Command="{Binding ChangePictogramCommand}"
+                                Text="Ændre Pictogram for ugen"></Button>
+                        <Picker ItemsSource="{Binding YearsAndWeeksStrings}" SelectedIndex="{Binding SelectedYearWeekIndex}"></Picker>
+                    </StackLayout>
+                    
+                </Grid>
+                <Button
                 x:Name="SaveWeekButton"
                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                 Command="{Binding SaveWeekScheduleCommand}"
                 Text="Gem Ny Uge" />
-        </StackLayout>
+            </StackLayout>
+        </ContentView>
     </ContentPage.Content>
-</ContentPage>
+</base:PageBase>

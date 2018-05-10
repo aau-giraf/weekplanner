@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using IO.Swagger.Api;
@@ -60,7 +61,10 @@ namespace WeekPlanner.ViewModels
 
 		    await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(departmentId),
-			    onSuccess: result => CitizenNames = new ObservableCollection<UserNameDTO>(result.Data));
+			    onSuccess: result => {
+					result.Data.OrderBy(x => x.UserName);
+					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data);
+				});
 	    }
 
 	    public override async Task InitializeAsync(object navigationData)

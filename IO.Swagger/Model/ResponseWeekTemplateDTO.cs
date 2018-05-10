@@ -25,10 +25,10 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// ResponseLauncherOptionsDTO
+    /// ResponseWeekTemplateDTO
     /// </summary>
     [DataContract]
-    public partial class ResponseLauncherOptionsDTO :  IEquatable<ResponseLauncherOptionsDTO>, IValidatableObject
+    public partial class ResponseWeekTemplateDTO :  IEquatable<ResponseWeekTemplateDTO>, IValidatableObject
     {
         /// <summary>
         /// Defines ErrorKey
@@ -368,10 +368,40 @@ namespace IO.Swagger.Model
             MissingSettings = 55,
             
             /// <summary>
+            /// Enum InvalidAmountOfWeekdays for value: InvalidAmountOfWeekdays
+            /// </summary>
+            [EnumMember(Value = "InvalidAmountOfWeekdays")]
+            InvalidAmountOfWeekdays = 56,
+            
+            /// <summary>
+            /// Enum WeekAlreadyExists for value: WeekAlreadyExists
+            /// </summary>
+            [EnumMember(Value = "WeekAlreadyExists")]
+            WeekAlreadyExists = 57,
+            
+            /// <summary>
+            /// Enum InvalidDay for value: InvalidDay
+            /// </summary>
+            [EnumMember(Value = "InvalidDay")]
+            InvalidDay = 58,
+            
+            /// <summary>
             /// Enum DuplicateWeekScheduleName for value: DuplicateWeekScheduleName
             /// </summary>
             [EnumMember(Value = "DuplicateWeekScheduleName")]
-            DuplicateWeekScheduleName = 56
+            DuplicateWeekScheduleName = 59,
+            
+            /// <summary>
+            /// Enum ColorMustHaveUniqueDay for value: ColorMustHaveUniqueDay
+            /// </summary>
+            [EnumMember(Value = "ColorMustHaveUniqueDay")]
+            ColorMustHaveUniqueDay = 60,
+            
+            /// <summary>
+            /// Enum InvalidHexValues for value: InvalidHexValues
+            /// </summary>
+            [EnumMember(Value = "InvalidHexValues")]
+            InvalidHexValues = 61
         }
 
         /// <summary>
@@ -380,12 +410,12 @@ namespace IO.Swagger.Model
         [DataMember(Name="errorKey", EmitDefaultValue=false)]
         public ErrorKeyEnum? ErrorKey { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResponseLauncherOptionsDTO" /> class.
+        /// Initializes a new instance of the <see cref="ResponseWeekTemplateDTO" /> class.
         /// </summary>
         /// <param name="Data">Data.</param>
         /// <param name="Success">Success.</param>
         /// <param name="ErrorProperties">ErrorProperties.</param>
-        public ResponseLauncherOptionsDTO(LauncherOptionsDTO Data = default(LauncherOptionsDTO), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
+        public ResponseWeekTemplateDTO(WeekTemplateDTO Data = default(WeekTemplateDTO), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
         {
             this.Data = Data;
             this.Success = Success;
@@ -396,7 +426,7 @@ namespace IO.Swagger.Model
         /// Gets or Sets Data
         /// </summary>
         [DataMember(Name="data", EmitDefaultValue=false)]
-        public LauncherOptionsDTO Data { get; set; }
+        public WeekTemplateDTO Data { get; set; }
 
         /// <summary>
         /// Gets or Sets Success
@@ -418,7 +448,7 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class ResponseLauncherOptionsDTO {\n");
+            sb.Append("class ResponseWeekTemplateDTO {\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Success: ").Append(Success).Append("\n");
             sb.Append("  ErrorProperties: ").Append(ErrorProperties).Append("\n");
@@ -443,15 +473,15 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as ResponseLauncherOptionsDTO);
+            return this.Equals(input as ResponseWeekTemplateDTO);
         }
 
         /// <summary>
-        /// Returns true if ResponseLauncherOptionsDTO instances are equal
+        /// Returns true if ResponseWeekTemplateDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of ResponseLauncherOptionsDTO to be compared</param>
+        /// <param name="input">Instance of ResponseWeekTemplateDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ResponseLauncherOptionsDTO input)
+        public bool Equals(ResponseWeekTemplateDTO input)
         {
             if (input == null)
                 return false;

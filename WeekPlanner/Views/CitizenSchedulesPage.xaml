@@ -1,32 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:base1="clr-namespace:WeekPlanner.ViewModels.Base;assembly=WeekPlanner"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
-             base1:ViewModelLocator.AutoWireViewModel="true"
-             x:Class="WeekPlanner.Views.CitizenSchedulesPage"
-             IsBusy="{Binding IsBusy}"
-             Title="Ugeplaner Frontpage"
+<base:PageBase
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+    xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
+    x:Class="WeekPlanner.Views.CitizenSchedulesPage"
+             Title="Vælg Skema"
              x:Name="root">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="icon_add.png" 
-                     Command="{Binding AddWeekScheduleCommand}" 
-                     IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"></ToolbarItem>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            
-            <flv:FlowListView
+        <ContentView ControlTemplate="{StaticResource NavBarWithToolbarTemplate}">
+            <StackLayout>
+                <flv:FlowListView
                     SeparatorVisibility="None"
                     HasUnevenRows="true"
                     FlowItemTappedCommand="{Binding WeekTappedCommand}"
                     FlowColumnMinWidth="210"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
-                    FlowItemsSource="{Binding Weeks}"
-                    x:Name="Level">
-                <flv:FlowListView.FlowColumnTemplate>
+                    FlowItemsSource="{Binding Weeks}">
+                    <flv:FlowListView.FlowColumnTemplate>
                         <DataTemplate>
                             <Grid Padding="10">
                                 <Grid.RowDefinitions>
@@ -42,17 +34,18 @@
                                     Aspect="AspectFit"
                                     LoadingPlaceholder="image_loading.png"
                                     ErrorPlaceholder="weekschedule.png"
-                                    Source="{Binding Thumbnail.ImageUrl, Converter={StaticResource RelativeUrlConverter}}"
+                                    Source="{Binding Thumbnail.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White"/>
-                            <Label TextColor="Black" FontSize="18" Margin="0" Text="{Binding Name}" 
+                                <Label TextColor="Black" FontSize="18" Margin="0" Text="{Binding Name}" 
                                    VerticalTextAlignment="End" HorizontalTextAlignment="Center" BackgroundColor="White" VerticalOptions="EndAndExpand"/>
-                            <Button Command="{Binding Source={x:Reference root}, Path=BindingContext.WeekDeletedCommand}" CommandParameter="{Binding .}" 
+                                <Button Command="{Binding Source={x:Reference root}, Path=BindingContext.WeekDeletedCommand}" CommandParameter="{Binding .}" 
                                     Image="icon_delete.png" VerticalOptions="Start" HorizontalOptions="End"
-                                    WidthRequest="30" HeightRequest="30" Margin="0" BackgroundColor="Transparent"/>
-                        </Grid>
+                                    WidthRequest="42" HeightRequest="42" Margin="0" BackgroundColor="Transparent"/>
+                            </Grid>
                         </DataTemplate>
                     </flv:FlowListView.FlowColumnTemplate>
                 </flv:FlowListView>
             </StackLayout>
+        </ContentView>
     </ContentPage.Content>
-</ContentPage>
+</base:PageBase>
