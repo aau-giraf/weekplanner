@@ -59,56 +59,10 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ThemeSelected);
             }
         }
+
         public string CitizenName
         {
             get { return _settingsService.CurrentCitizenName; }
-        }
-
-
-        private void SetThemeInSettingDTOAndUpdate(SettingDTO.ThemeEnum pickedTheme)
-        {
-            Settings.Theme = pickedTheme;
-            UpdateSettingsAsync();
-        }
-
-        private bool _orientationSlider;
-
-        public bool OrientationSwitch
-        {
-            get => _orientationSlider;
-            set
-            {
-                if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
-                {
-                    _orientationSlider = true;
-                }
-                else
-                {
-                    _orientationSlider = false;
-                }
-
-                RaisePropertyChanged(() => OrientationSwitch);
-                UpdateSettingsAsync();
-            }
-        }
-
-        public ICommand HandleSwitchChangedCommand => new Command(() =>
-        {
-            if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
-            {
-                Settings.Orientation = SettingDTO.OrientationEnum.Landscape;
-            }
-            else
-            {
-                Settings.Orientation = SettingDTO.OrientationEnum.Portrait;
-            }
-        });
-
-
-        private async Task UpdateSettingsAsync()
-        {
-            _settingsService.UseTokenFor(UserType.Citizen);
-            await _requestService.SendRequest(_userApi.V1UserSettingsPatchAsync(Settings));
         }
 
         public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
@@ -119,6 +73,18 @@ namespace WeekPlanner.ViewModels
             _settingsService = settingsService;
             _requestService = requestService;
             _userApi = userApi;
+        }
+
+		private void SetThemeInSettingDTOAndUpdate(SettingDTO.ThemeEnum pickedTheme)
+        {
+            Settings.Theme = pickedTheme;
+            UpdateSettingsAsync();
+        }
+
+        private async Task UpdateSettingsAsync()
+        {
+            _settingsService.UseTokenFor(UserType.Citizen);
+            await _requestService.SendRequest(_userApi.V1UserSettingsPatchAsync(Settings));
         }
 
         public async override Task InitializeAsync(object navigationData)
