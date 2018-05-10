@@ -30,8 +30,9 @@ namespace WeekPlanner.Tests.UnitTests.Base
                         var res = await requestAsync.Invoke();
                         await onSuccessAsync(res);
                     };
+            
             var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
-                    r.SendRequestAndThenAsync(It.IsAny<TS>(), It.IsAny<Func<Task<TR>>>(),
+                    r.SendRequestAndThenAsync(It.IsAny<Func<Task<TR>>>(),
                         It.IsAny<Func<TR, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
                         It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(sendRequestAndThenAsyncMock);
