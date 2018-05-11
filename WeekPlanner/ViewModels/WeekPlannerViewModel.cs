@@ -15,8 +15,12 @@ using static IO.Swagger.Model.WeekdayDTO;
 using WeekPlanner.Services;
 using WeekPlanner.Helpers;
 using static IO.Swagger.Model.ActivityDTO;
+<<<<<<< HEAD
 using System.Collections.Generic;
 using Syncfusion.ListView.XForms;
+=======
+using ItemTappedEventArgs = Syncfusion.ListView.XForms.ItemTappedEventArgs;
+>>>>>>> Finish drag'n'drop and add developer login button in debug mode
 
 namespace WeekPlanner.ViewModels
 {
@@ -62,6 +66,7 @@ namespace WeekPlanner.ViewModels
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _toolbarButtonIcon;
+<<<<<<< HEAD
         private ImageSource _userModeImage;
         private int _scheduleYear;
         private int _scheduleWeek;
@@ -78,6 +83,9 @@ namespace WeekPlanner.ViewModels
         }
 
 
+=======
+        
+>>>>>>> Finish drag'n'drop and add developer login button in debug mode
         public WeekDTO WeekDTO
         {
             get => _weekDto;
@@ -119,7 +127,6 @@ namespace WeekPlanner.ViewModels
         }
 
         public double PictoSize { get; } = Device.Idiom == TargetIdiom.Phone ? 100 : 150;
-
         public bool ShowToolbarButton { get; set; }
 
         public int ScheduleYear
@@ -153,12 +160,25 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
             IsBusy = false;
         });
+<<<<<<< HEAD
         public ICommand PictoClickedCommand => new Command<ActivityDTO>(async activity =>
         {
             if (IsBusy) return;
             IsBusy = true;
             _selectedActivity = activity;
             await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
+=======
+
+        public ICommand PictoClickedCommand => new Command<ItemTappedEventArgs>(async args =>
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            if (args.ItemData is ActivityDTO activity)
+            {
+                _selectedActivity = activity;
+                await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
+            }
+>>>>>>> Finish drag'n'drop and add developer login button in debug mode
             IsBusy = false;
         });
 
@@ -209,6 +229,10 @@ namespace WeekPlanner.ViewModels
             
             // Update order so indexes are correct on next use
             dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
+<<<<<<< HEAD
+=======
+
+>>>>>>> Finish drag'n'drop and add developer login button in debug mode
             _isDirty = true;
         }
 
@@ -425,7 +449,7 @@ namespace WeekPlanner.ViewModels
             if (dayToAddTo != null)
             {
                 // Insert pictogram in the very bottom of the day
-                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
+                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1 ?? 0;
                 dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal));
                 _isDirty = true;
                 RaisePropertyForDays();

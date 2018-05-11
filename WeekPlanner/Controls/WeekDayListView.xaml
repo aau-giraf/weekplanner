@@ -6,10 +6,11 @@
     xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
     xmlns:behaviors="clr-namespace:WeekPlanner.Behaviors;assembly=WeekPlanner"
     x:Class="WeekPlanner.Controls.WeekDayListView"
+    x:Name="ListView"
     AutoFitMode="Height"
     DragStartMode="OnHold"
     TapCommand="{Binding PictoClickedCommand}"
-    x:Name="ListView"
+    SelectionMode="None"
     >
     <syncfusion:SfListView.Behaviors>
         <behaviors:EventToCommandBehavior EventName="ItemDragging"
@@ -40,7 +41,7 @@
     </syncfusion:SfListView.ItemTemplate>
     <syncfusion:SfListView.DragItemTemplate>
         <DataTemplate>
-            <Grid Margin="4" Scale="0.8">
+            <Grid Margin="4" Scale="0.9" Opacity="0.8">
                 <ffimageloading:CachedImage
                     DownsampleToViewSize="True"
                     HorizontalOptions="CenterAndExpand"
@@ -58,42 +59,4 @@
             </Grid>
         </DataTemplate>
     </syncfusion:SfListView.DragItemTemplate>
-    <!-- HasUnevenRows="True" SeparatorVisibility="None" -->
-    <!--
-    <syncfusion:SfListView.Resources>
-        <ResourceDictionary>
-            <converters:StateToOutlineConverter x:Key="StateToOutlineConverter" />
-            <converters:StateToImageConverter x:Key="StateToImageConverter" />
-        </ResourceDictionary>
-    </syncfusion:SfListView.Resources>
-    <syncfusion:SfListView.Behaviors>
-        <behaviors:EventToCommandBehavior EventName="ItemTapped"
-                                          Command="{Binding PictoClickedCommand}"
-                                          EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
-        <behaviors:ListViewDeselectSelectedItemBehavior />
-    </syncfusion:SfListView.Behaviors>
-    <syncfusion:SfListView.ItemTemplate>
-        <DataTemplate>
-            <ViewCell>
-                <Grid Margin="4">
-                    <ffimageloading:CachedImage
-                        DownsampleToViewSize="True"
-                        HorizontalOptions="CenterAndExpand"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="{Binding Source={x:Reference page}, Path=BindingContext.PictoSize}"
-                        HeightRequest="{Binding Source={x:Reference page}, Path=BindingContext.PictoSize}"
-                        LoadingPlaceholder="image_loading.png"
-                        Source="{Binding Pictogram.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
-                        ErrorPlaceholder="image_loading.png" />
-                    <ffimageloading:CachedImage
-                        DownsampleToViewSize="true"
-                        WidthRequest="{Binding Source={x:Reference page}, Path=BindingContext.PictoSize}"
-                        HeightRequest="{Binding Source={x:Reference page}, Path=BindingContext.PictoSize}"
-                        Source="{Binding State, Converter={StaticResource StateToImageConverter}}" />
-                </Grid>
-            </ViewCell>
-        </DataTemplate>
-    </syncfusion:SfListView.ItemTemplate>-->
-    
-    
 </syncfusion:SfListView>
