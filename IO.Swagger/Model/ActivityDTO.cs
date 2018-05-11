@@ -204,8 +204,7 @@ namespace IO.Swagger.Model
                 return hashCode;
             }
         }
-
-        public bool IsChoiceBoard { get; set; }
+        
 
         /// <summary>
         /// To validate all properties of the instance

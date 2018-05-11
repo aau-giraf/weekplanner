@@ -164,7 +164,7 @@ namespace WeekPlanner.ViewModels
             {
                 _selectedActivity = a;
 
-                if (_selectedActivity.IsChoiceBoard)
+                if (_selectedActivity.IsChoiceBoard.HasValue && _selectedActivity.IsChoiceBoard.Value)
                 {
                     await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(GetActivitiesForChoiceBoard());
                 }
@@ -506,7 +506,7 @@ namespace WeekPlanner.ViewModels
 
                 foreach (var activity in day.Activities)
                 {
-                    if (activity.IsChoiceBoard)
+                    if (activity.IsChoiceBoard.Value)
                     {
                         choiceBoardActivities.Add(activity);
                     }
@@ -519,7 +519,7 @@ namespace WeekPlanner.ViewModels
                         day.Activities.AddRange(unfoldedActivities);
                     }
                 }
-                day.Activities.RemoveAll(a => a.IsChoiceBoard);
+                day.Activities.RemoveAll(a => a.IsChoiceBoard.Value);
             }
 
             _choiceBoardActivities.Clear();
