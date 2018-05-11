@@ -25,7 +25,7 @@ namespace IO.Swagger.Api
     {
         #region Synchronous Operations
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -37,7 +37,7 @@ namespace IO.Swagger.Api
         ResponseIEnumerableWeekDTO V1WeekByWeekYearByWeekNumberDelete (int? weekYear, int? weekNumber);
 
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -71,7 +71,7 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
         ApiResponse<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberGetWithHttpInfo (int? weekYear, int? weekNumber);
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -84,7 +84,7 @@ namespace IO.Swagger.Api
         ResponseWeekDTO V1WeekByWeekYearByWeekNumberPut (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
 
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -96,7 +96,7 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseWeekDTO</returns>
         ApiResponse<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberPutWithHttpInfo (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -106,7 +106,7 @@ namespace IO.Swagger.Api
         ResponseIEnumerableWeekNameDTO V1WeekGet ();
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -117,7 +117,7 @@ namespace IO.Swagger.Api
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -129,7 +129,7 @@ namespace IO.Swagger.Api
         System.Threading.Tasks.Task<ResponseIEnumerableWeekDTO> V1WeekByWeekYearByWeekNumberDeleteAsync (int? weekYear, int? weekNumber);
 
         /// <summary>
-        /// Deletes the entire week with the given id.
+        /// Deletes all information for the entire week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -163,7 +163,7 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberGetAsyncWithHttpInfo (int? weekYear, int? weekNumber);
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -176,7 +176,7 @@ namespace IO.Swagger.Api
         System.Threading.Tasks.Task<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberPutAsync (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
 
         /// <summary>
-        /// Updates the entire information of the week with the given id.
+        /// Updates the entire information of the week with the given year and week number.
         /// </summary>
         /// <remarks>
         /// 
@@ -188,7 +188,7 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseWeekDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberPutAsyncWithHttpInfo (int? weekYear, int? weekNumber, WeekDTO newWeek = null);
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -198,7 +198,7 @@ namespace IO.Swagger.Api
         System.Threading.Tasks.Task<ResponseIEnumerableWeekNameDTO> V1WeekGetAsync ();
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen.
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen.
         /// </summary>
         /// <remarks>
         /// 
@@ -307,7 +307,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -320,7 +320,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -386,7 +386,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -400,7 +400,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Deletes the entire week with the given id. 
+        /// Deletes all information for the entire week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -625,7 +625,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -639,7 +639,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -718,7 +718,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -733,7 +733,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Updates the entire information of the week with the given id. 
+        /// Updates the entire information of the week with the given year and week number. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="weekYear"></param>
@@ -812,7 +812,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ResponseIEnumerableWeekNameDTO</returns>
@@ -823,7 +823,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseIEnumerableWeekNameDTO</returns>
@@ -879,7 +879,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ResponseIEnumerableWeekNameDTO</returns>
@@ -891,7 +891,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule name and ids for the currently authenticated citizen. 
+        /// Gets all week schedule name and ids containing activities for the currently authenticated citizen. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekNameDTO)</returns>

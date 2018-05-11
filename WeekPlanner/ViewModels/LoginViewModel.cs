@@ -75,7 +75,8 @@ namespace WeekPlanner.ViewModels
                 IsBusy = true;
                 await _loginService.LoginAndThenAsync(UserType.Guardian, 
                     Username.Value, 
-                    Password.Value, async () => {
+                    Password.Value, 
+                    async () => {
                         await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
                         ClearUsernameAndPasswordFields();
                     });

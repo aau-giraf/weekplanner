@@ -413,5 +413,85 @@ namespace WeekPlanner.Services.Mocks
         {
             throw new System.NotImplementedException();
         }
+
+        public ResponseGirafUserDTO V1UserByIdPut(string id, string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseGirafUserDTO> V1UserByIdPutWithHttpInfo(string id, string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ResponseSettingDTO V1UserByIdSettingsPut(string id, SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseSettingDTO> V1UserByIdSettingsPutWithHttpInfo(string id, SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ResponseGirafUserDTO V1UserPut(string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseGirafUserDTO> V1UserPutWithHttpInfo(string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ResponseSettingDTO V1UserSettingsPut(SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ApiResponse<ResponseSettingDTO> V1UserSettingsPutWithHttpInfo(SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseGirafUserDTO> V1UserByIdPutAsync(string id, string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdPutAsyncWithHttpInfo(string id, string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseSettingDTO> V1UserByIdSettingsPutAsync(string id, SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseSettingDTO>> V1UserByIdSettingsPutAsyncWithHttpInfo(string id, SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseGirafUserDTO> V1UserPutAsync(string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseGirafUserDTO>> V1UserPutAsyncWithHttpInfo(string username = null, string screenName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseSettingDTO> V1UserSettingsPutAsync(SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsPutAsyncWithHttpInfo(SettingDTO options = null)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

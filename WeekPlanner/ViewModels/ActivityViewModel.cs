@@ -129,9 +129,9 @@ namespace WeekPlanner.ViewModels
         });
 
         public override async Task PoppedAsync(object navigationData) {
-            if (navigationData is PictogramDTO newPicto) {
-                WeekPictogramDTO newWeekPicto = PictoToWeekPictoDtoHelper.Convert(newPicto);
+            if (navigationData is WeekPictogramDTO newWeekPicto) {
                 Activity.Pictogram = newWeekPicto;
+
                 RaisePropertyChanged(() => Activity);
             }
         }

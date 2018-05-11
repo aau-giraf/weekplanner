@@ -16,7 +16,6 @@ using WeekPlanner.Services.Settings;
 using WeekPlanner.Views;
 using WeekPlanner.Services;
 using WeekPlanner.Helpers;
-using Xamarin.Forms;
 
 namespace WeekPlanner.ViewModels
 {
@@ -27,6 +26,11 @@ namespace WeekPlanner.ViewModels
         private readonly IWeekApi _weekApi;
         private readonly ILoginService _loginService;
         private readonly ISettingsService _settingsService;
+
+        private ObservableCollection<WeekNameDTO> _weekNameDTOs = new ObservableCollection<WeekNameDTO>();
+        private ObservableCollection<WeekDTO> _weeks = new ObservableCollection<WeekDTO>();
+        private ObservableCollection<PictogramDTO> _weekImage;
+
 
         public ICommand WeekTappedCommand => new Command<WeekDTO>(ListViewItemTapped);
         public ICommand WeekDeletedCommand => new Command<WeekDTO>(async week => await WeekDeletedTapped(week));
@@ -47,19 +51,15 @@ namespace WeekPlanner.ViewModels
             _settingsService = settingsService;
         }
 
-        private ObservableCollection<WeekNameDTO> _weekNameDtos = new ObservableCollection<WeekNameDTO>();
-
         public ObservableCollection<WeekNameDTO> WeekNameDTOS
         {
-            get => _weekNameDtos;
+            get => _weekNameDTOs;
             set
             {
-                _weekNameDtos = value;
+                _weekNameDTOs = value;
                 RaisePropertyChanged(() => WeekNameDTOS);
             }
         }
-
-        private ObservableCollection<WeekDTO> _weeks = new ObservableCollection<WeekDTO>();
 
         public ObservableCollection<WeekDTO> Weeks
         {
@@ -70,14 +70,28 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => Weeks);
             }
         }
+        public ObservableCollection<PictogramDTO> WeekImage
+        {
+            get => _weekImage;
+            set
+            {
+                _weekImage = value;
+                RaisePropertyChanged(() => WeekImage);
+            }
+        }
+
 
         private async void ListViewItemTapped(WeekDTO tappedItem)
         {
             if (IsBusy) return;
 
             IsBusy = true;
-            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(new Tuple<int?, int?>(tappedItem.WeekYear,
-                tappedItem.WeekNumber));
+
+            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(new Tuple<int, int>(
+                (int)tappedItem.WeekYear,
+                (int)tappedItem.WeekNumber)
+                );
+
             IsBusy = false;
         }
 
@@ -121,6 +135,7 @@ namespace WeekPlanner.ViewModels
                 requestAsync: () =>
                     _weekApi.V1WeekByWeekYearByWeekNumberDeleteAsync(weekNumber: week.WeekNumber,
                         weekYear: week.WeekYear), onSuccess: (r) => Weeks.Remove(week));
+
         }
 
         private async Task AddWeekSchedule()

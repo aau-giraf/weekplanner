@@ -62,9 +62,7 @@ OR with https://editor.swagger.io/
 ### 2. Fix the generated client
 
 1. If you didn't use `swagger_update.sh` then copy and paste (overwrite) the IO.Swagger folder from inside GeneratedClient/src/ to the root of weekplanner and delete the GeneratedClient/ directory
-2. Swagger has a problem generating enums, which is problem in the generated WeekDayDTO. The following hack solves it:
-Start the enum from 0 instead of 1 to reflect the actual backend
-3. Fix compile error:
+2. Fix compile error:
 ```
 foreach(var param in fileParams)
 {

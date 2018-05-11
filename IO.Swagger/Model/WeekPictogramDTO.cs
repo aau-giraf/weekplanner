@@ -83,27 +83,27 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <value>The last time the pictogram was edited.</value>
         [DataMember(Name="lastEdit", EmitDefaultValue=false)]
-        public DateTime? LastEdit { get; set; }
+        public DateTime? LastEdit { get; private set; }
 
         /// <summary>
         /// The title of the pictogram.
         /// </summary>
         /// <value>The title of the pictogram.</value>
         [DataMember(Name="title", EmitDefaultValue=false)]
-        public string Title { get; set; }
+        public string Title { get; private set; }
 
 
         /// <summary>
         /// Gets or Sets ImageUrl
         /// </summary>
         [DataMember(Name="imageUrl", EmitDefaultValue=false)]
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; private set; }
 
         /// <summary>
         /// Gets or Sets ImageHash
         /// </summary>
         [DataMember(Name="imageHash", EmitDefaultValue=false)]
-        public string ImageHash { get; set; }
+        public string ImageHash { get; private set; }
 
         /// <summary>
         /// Returns the string presentation of the object

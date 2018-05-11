@@ -1,29 +1,38 @@
 ﻿using IO.Swagger.Api;
 using IO.Swagger.Model;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WeekPlanner.Helpers;
 using WeekPlanner.Services;
+using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Validations;
+using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
+using static IO.Swagger.Model.WeekdayDTO;
 
 namespace WeekPlanner.ViewModels
 {
-    public class NewScheduleViewModel : Base.ViewModelBase
+    public class NewScheduleViewModel : ViewModelBase
     {
-        private WeekDTO _weekDTO = new WeekDTO();
-
         private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
         private readonly IDialogService _dialogService;
         private readonly IRequestService _requestService;
 
+        private WeekPictogramDTO _weekThumbNail;
+        private WeekDTO _weekDTO;
         private ValidatableObject<string> _scheduleName;
+        private int _scheduleYear;
+        private int _scheduleWeek;
+        private string _scheduleFromAndToDates;
+        private string _scheduleValidateYearAndWeek;
 
         public ValidatableObject<string> ScheduleName
         {
@@ -35,8 +44,6 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private WeekPictogramDTO _weekThumbNail;
-
         public WeekPictogramDTO WeekThumbNail
         {
             get => _weekThumbNail;
@@ -47,28 +54,50 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private const int NumberOfWeeksToChooseFrom = 5;
-        
-        private List<(int,int)> _yearsAndWeeks = Enumerable.Range(
-            DateTimeHelper.GetIso8601WeekOfYear(DateTime.Now),
-            NumberOfWeeksToChooseFrom).Select(WeekToYearsAndWeeks).ToList();
-
-        private static (int,int) WeekToYearsAndWeeks(int week)
+        public int ScheduleYear
         {
-            var year = DateTime.Now.Year;
-            return week > 52 
-                ? (year + 1, week + 1 % 53) 
-                : (year, week);
+            get => _scheduleYear;
+            set
+            {
+                _scheduleYear = value;
+                RaisePropertyChanged(() => ScheduleYear);
+            }
         }
-        public List<string> YearsAndWeeksStrings
-        {
-            get => _yearsAndWeeks.Select(yw => $"Uge {yw.Item2} - {yw.Item1}").ToList();
-        }
-        
-        public int SelectedYearWeekIndex { get; set; }
 
-        public ICommand SaveWeekScheduleCommand => new Command(SaveWeekSchedule);
+        public int ScheduleWeek
+        {
+            get => _scheduleWeek;
+            set
+            {
+                _scheduleWeek = value;
+                RaisePropertyChanged(() => ScheduleWeek);
+            }
+        }
+
+        public string ScheduleFromAndToDates
+        {
+            get => _scheduleFromAndToDates;
+            set
+            {
+                _scheduleFromAndToDates = value;
+                RaisePropertyChanged(() => ScheduleFromAndToDates);
+            }
+        }
+
+        public string ScheduleValidateYearAndWeek
+        {
+            get => _scheduleValidateYearAndWeek;
+            set
+            {
+                _scheduleValidateYearAndWeek = value;
+                RaisePropertyChanged(() => ScheduleValidateYearAndWeek);
+            }
+        }
+
         public ICommand ChangePictogramCommand => new Command(ChangePictogram);
+        public ICommand CreateWeekScheduleCommand => new Command<string>(async type => CreateWeekSchedule(type));
+        public ICommand GetScheduleDatesCommand => new Command(() => GetScheduleDates());
+        public ICommand ValidateWeekNameCommand => new Command(() => _scheduleName.Validate());
 
         public NewScheduleViewModel(
             INavigationService navigationService,
@@ -82,9 +111,13 @@ namespace WeekPlanner.ViewModels
             _requestService = requestService;
             _dialogService = dialogService;
 
+            _weekDTO = new WeekDTO();
+
             _scheduleName =
                 new ValidatableObject<string>(
                     new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et navn er påkrævet."});
+
+            SetYearAndWeek();
         }
 
         public async override Task InitializeAsync(object navigationData)
@@ -93,25 +126,33 @@ namespace WeekPlanner.ViewModels
                 requestAsync: async () => await _pictogramApi.V1PictogramByIdGetAsync(2),
                 onSuccess: result =>
                 {
-                    PictogramDTO defaultPicto = result.Data;
-                    WeekPictogramDTO weekPictogramDto = new WeekPictogramDTO(defaultPicto.Id);
-                    WeekThumbNail = weekPictogramDto;
+                    WeekThumbNail = result.Data;
                 },
                 onExceptionAsync: () => NavigationService.PopAsync(),
                 onRequestFailedAsync: () => NavigationService.PopAsync());
+
+            WeekThumbNail = _pictogramApi.V1PictogramByIdGet(2).Data;
         }
 
         public override Task PoppedAsync(object navigationData)
         {
             // Happens when selecting a picto in PictoSearch
-            if (navigationData is PictogramDTO pictoDTO)
+            if (navigationData is WeekPictogramDTO pictoDTO)
             {
-                WeekThumbNail = PictoToWeekPictoDtoHelper.Convert(pictoDTO);
+                WeekThumbNail = pictoDTO;
             }
 
             return Task.FromResult(false);
         }
 
+        private void SetYearAndWeek()
+        {
+            var nextWeek = DateTime.Now.AddDays(7);
+            ScheduleWeek = YearAndWeekHelper.GetIso8601WeekOfYear(nextWeek);
+            ScheduleYear = YearAndWeekHelper.GetDaysOfWeekByWeekNumber(nextWeek, ScheduleWeek)[0].Year;
+
+            GetScheduleDates();
+        }
 
         private void ChangePictogram()
         {
@@ -121,50 +162,90 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-
-        private async void SaveWeekSchedule()
+        private async void CreateWeekSchedule(string type)
         {
             if (IsBusy) return;
             IsBusy = true;
 
-            if (ValidateWeekScheduleName())
+            if (!string.IsNullOrWhiteSpace(type) && ValidateWeekScheduleName() && ValidateScheduleYearAndWeek())
             {
                 _weekDTO.Name = ScheduleName.Value;
+                WeekThumbNail.AccessLevel = WeekPictogramDTO.AccessLevelEnum.PUBLIC;
                 _weekDTO.Thumbnail = WeekThumbNail;
-                _weekDTO.Days = new List<WeekdayDTO>
-                {
-                    new WeekdayDTO(WeekdayDTO.DayEnum.Monday),
-                    new WeekdayDTO(WeekdayDTO.DayEnum.Tuesday),
-                    new WeekdayDTO(WeekdayDTO.DayEnum.Wednesday),
-                    new WeekdayDTO(WeekdayDTO.DayEnum.Thursday),
-                    new WeekdayDTO(WeekdayDTO.DayEnum.Friday),
-                    new WeekdayDTO(WeekdayDTO.DayEnum.Saturday),
-                    new WeekdayDTO(WeekdayDTO.DayEnum.Sunday)
-                };
 
-                await _requestService.SendRequestAndThenAsync(
-                    requestAsync: () =>
-                        _weekApi.V1WeekByWeekYearByWeekNumberPutAsync(
-                            weekNumber: _yearsAndWeeks[SelectedYearWeekIndex].Item2,
-                            weekYear: _yearsAndWeeks[SelectedYearWeekIndex].Item1, 
-                            newWeek: _weekDTO),
-                    onSuccess:
-                    async result =>
-                    {
-                        await _dialogService.ShowAlertAsync($"Ugeplanen '{result.Data.Name}' blev oprettet og gemt.");
-                        await NavigationService.PopAsync();
-                    });
+                var list = new List<WeekdayDTO>();
+
+                foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+                {
+                    WeekdayDTO weekdayDTO = new WeekdayDTO();
+                    weekdayDTO.Day = day;
+                    weekdayDTO.Activities = new List<ActivityDTO>();
+                    list.Add(weekdayDTO);
+                }
+
+                _weekDTO.Days = list;
+
+                if (type.Equals("Blank"))
+                    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
+                else if (type.Equals("Template")) //NOT IMPLEMENTED!
+                    await NavigationService.NavigateToAsync<ChooseTemplateViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
+
+                //Else do nothing
             }
 
             IsBusy = false;
         }
 
-        public ICommand ValidateWeekNameCommand => new Command(() => _scheduleName.Validate());
+        private void GetScheduleDates()
+        {
+            if (!ValidateScheduleYearAndWeek())
+            {
+                ScheduleFromAndToDates = ""; //Reset the from and to date label
+                return;
+            }
+
+            var dates = YearAndWeekHelper.GetDaysOfWeekByWeekNumber(new DateTime(ScheduleYear, 1, 1), ScheduleWeek);
+
+            string format = dates[0].Year == dates[6].Year ? "d. MMMM" : "d. MMMM, yyyy"; //Add years to the from and to date label, if the week intersects with two years
+
+            ScheduleFromAndToDates = $"{dates[0].ToString(format, CultureInfo.CreateSpecificCulture("da-DK"))} til {dates[6].ToString(format, CultureInfo.CreateSpecificCulture("da-DK"))}";
+        }
 
         private bool ValidateWeekScheduleName()
         {
             var isWeekNameValid = _scheduleName.Validate();
             return isWeekNameValid;
+        }
+
+        private bool ValidateScheduleYearAndWeek()
+        {
+            bool isValid = true;
+            string invalidMessage = "";
+
+            //Illegal arguments
+            if (ScheduleWeek > 53 || ScheduleWeek < 1)
+            {
+                invalidMessage += "Ugenummer skal være mellem 1 og 53. ";
+                isValid = false;
+            }
+
+            //Invalid arguments
+            if (ScheduleYear < DateTime.Now.Year || //A schedule for a past year
+                YearAndWeekHelper.GetDaysOfWeekByWeekNumber( // A schedule for past weeks (i.e for weeks in which the last day of the week has passed)
+                    new DateTime(ScheduleYear, 1, 1),
+                    ScheduleWeek)[6] < DateTime.Today ||
+                ScheduleWeek != YearAndWeekHelper.GetIso8601WeekOfYear( //Check if the week is valid (i.e. not week 53 for years with only 52 weeks)
+                    YearAndWeekHelper.GetDaysOfWeekByWeekNumber(
+                        new DateTime(ScheduleYear, 1, 1),
+                        ScheduleWeek)[0]))
+            {
+                invalidMessage += "Den valgte dato er ikke valid. Enten er der valgt en passeret dato, eller også er der valgt et ikke-gyldigt ugenummer.";
+                isValid = false;
+            }
+
+            ScheduleValidateYearAndWeek = invalidMessage;
+
+            return isValid;
         }
     }
 }

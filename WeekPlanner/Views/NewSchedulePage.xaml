@@ -18,33 +18,80 @@
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarTheme}">
             <StackLayout
-            Margin="12">
+                Margin="12"
+                Spacing="20">
                 <Label
-                Text="Ugeplan"
-                HorizontalTextAlignment="Center"
-                FontSize="32"/>
-                <Entry
-                x:Name="NewScheduleNameEntry"
-                Text="{Binding ScheduleName.Value}"
-                Placeholder="Navn på ny ugeplan">
-                    <Entry.Behaviors>
-                        <behaviors:EventToCommandBehavior
-                        EventName="TextChanged"
-                        Command="{Binding ValidateWeekNameCommand}" />
-                    </Entry.Behaviors>
-                </Entry>
-                <Label
-                Text="{Binding ScheduleName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                Style="{StaticResource ValidationErrorLabelStyle}" />
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="AUTO"/>
-                    </Grid.RowDefinitions>
-                    <ffimageloading:CachedImage
+                    Text="Ny ugeplan"
+                    HorizontalTextAlignment="Center"
+                    FontSize="Large"/>
+                <!-- NAME OF SCHEDULE START -->
+                <StackLayout>
+                    <Label Text="Navngiv din nye ugeplan" FontSize="Medium" Style="TitleStyle"/>
+                    <Entry
+                        x:Name="NewScheduleNameEntry"
+                        Text="{Binding ScheduleName.Value}"
+                        Placeholder="Eksempel: Min nye ugeplan">
+                        <Entry.Behaviors>
+                            <behaviors:EventToCommandBehavior
+                            EventName="TextChanged"
+                            Command="{Binding ValidateWeekNameCommand}" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label
+                        Text="{Binding ScheduleName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                        Style="{StaticResource ValidationErrorLabelStyle}" />
+                </StackLayout>
+                <!-- NAME OF SCHEDULE END -->
+
+                <!-- CHOOSE WEEK AND YEAR START -->
+                <StackLayout>
+                    <Label Text="Angiv hvilket år og hvilken uge, dit nye skema skal gælde for" FontSize="Medium" Style="TitleStyle"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Text="Årstal" FontSize="Medium" Grid.Row="0" Grid.Column="0"/>
+                        <Entry Keyboard="Numeric" x:Name="NewScheduleYearEntry" Text="{Binding ScheduleYear}" Grid.Row="1" Grid.Column="0">
+                            <Entry.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                EventName="Completed"
+                                Command="{Binding GetScheduleDatesCommand}"/>
+                            </Entry.Behaviors>
+                        </Entry>
+
+                        <Label Text="Ugenummer" FontSize="Medium" Grid.Row="0" Grid.Column="1"/>
+                        <Entry Keyboard="Numeric" x:Name="NewScheduleWeekEntry" Text="{Binding ScheduleWeek}" Grid.Row="1" Grid.Column="1">
+                            <Entry.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                EventName="Completed"
+                                Command="{Binding GetScheduleDatesCommand}"/>
+                            </Entry.Behaviors>
+                        </Entry>
+
+                    </Grid>
+                    <Label Text="{Binding ScheduleValidateYearAndWeek}" Style="{StaticResource ValidationErrorLabelStyle}"/>
+                    <Label Text="{Binding ScheduleFromAndToDates}" FontSize="Medium" TextColor="Green"/>
+                </StackLayout>
+                <!--CHOOSE WEEK AND YEAR END-->
+
+                <!-- SET THUMBNAIL START -->
+                <StackLayout>
+                    <Label Text="Vælg et passende piktogram til din nye ugeplan" FontSize="Medium" Style="TitleStyle"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="AUTO"/>
+                        </Grid.RowDefinitions>
+                        <ffimageloading:CachedImage
                                     Grid.Column="0"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
@@ -52,23 +99,45 @@
                                     ErrorPlaceholder="weekschedule.png"
                                     Source="{Binding WeekThumbNail.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White"/>
-                    <StackLayout Grid.Column="1">
-                        <Button
+                        <StackLayout Grid.Column="1">
+                            <Button
                                 VerticalOptions="Center"
                                 HeightRequest="50"
                                 x:Name="ChangePictogramButton"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                                 Command="{Binding ChangePictogramCommand}"
                                 Text="Ændre Pictogram for ugen"></Button>
-                        <Picker ItemsSource="{Binding YearsAndWeeksStrings}" SelectedIndex="{Binding SelectedYearWeekIndex}"></Picker>
-                    </StackLayout>
-                    
-                </Grid>
-                <Button
-                x:Name="SaveWeekButton"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
-                Command="{Binding SaveWeekScheduleCommand}"
-                Text="Gem Ny Uge" />
+                            <!--<Picker ItemsSource="{Binding YearsAndWeeksStrings}" SelectedIndex="{Binding SelectedYearWeekIndex}"></Picker>-->
+                        </StackLayout>
+                    </Grid>
+                </StackLayout>
+                <!-- SET THUMBNAIL END -->
+
+                <!-- CREATE SCHEDULE BUTTONS START -->
+                <StackLayout>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                                x:Name="CreateBlankWeekButton"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                                Command="{Binding CreateWeekScheduleCommand}"
+                                CommandParameter="Blank"
+                                Text="Lav blankt ugeskema" 
+                                Grid.Column="0"/>
+                        <Button
+                                x:Name="CreateTemplateWeekButton"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                                Command="{Binding CreateWeekScheduleCommand}"
+                                CommandParameter="Template"
+                                Text="Lav ugeskema fra skabelon" 
+                                Grid.Column="1"/>
+                    </Grid>
+                </StackLayout>
+                <!-- CREATE SCHEDULE BUTTONS START -->
             </StackLayout>
         </ContentView>
     </ContentPage.Content>
