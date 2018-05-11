@@ -59,7 +59,7 @@ namespace WeekPlanner.Helpers
         public static string ToFriendlyString(this ResponseDepartmentDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
-        public static string ToFriendlyString(this ResponsePictogramDTO.ErrorKeyEnum? errorKey) =>
+        public static string ToFriendlyString(this ResponseImageDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
         
         public static string ToFriendlyString(this ResponseIEnumerableWeekDTO.ErrorKeyEnum? errorKey) =>
@@ -67,11 +67,23 @@ namespace WeekPlanner.Helpers
 
         public static string ToFriendlyString(this ResponseIEnumerableWeekNameDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
-        
-        public static string ToFriendlyString(this ResponseListPictogramDTO.ErrorKeyEnum? errorKey) =>
-            ToFriendlyString(errorKey.ToString());
 
         public static string ToFriendlyString(this ResponseListUserNameDTO.ErrorKeyEnum? errorKey) =>
+            ToFriendlyString(errorKey.ToString());
+
+        public static string ToFriendlyString(this ResponseSettingDTO.ErrorKeyEnum? errorKey) =>
+            ToFriendlyString(errorKey.ToString());
+
+        public static string ToFriendlyString(this ResponseWeekTemplateDTO.ErrorKeyEnum? errorKey) =>
+            ToFriendlyString(errorKey.ToString());
+
+        public static string ToFriendlyString(this ResponseWeekPictogramDTO.ErrorKeyEnum? errorKey) =>
+            ToFriendlyString(errorKey.ToString());
+
+        public static string ToFriendlyString(this ResponseListWeekPictogramDTO.ErrorKeyEnum? errorKey) =>
+            ToFriendlyString(errorKey.ToString());
+
+        public static string ToFriendlyString(this ResponseIEnumerableWeekTemplateNameDTO.ErrorKeyEnum? errorKey) =>
             ToFriendlyString(errorKey.ToString());
     }
 }

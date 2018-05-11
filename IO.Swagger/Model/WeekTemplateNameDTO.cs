@@ -34,9 +34,11 @@ namespace IO.Swagger.Model
         /// Initializes a new instance of the <see cref="WeekTemplateNameDTO" /> class.
         /// </summary>
         /// <param name="Name">Name.</param>
-        public WeekTemplateNameDTO(string Name = default(string))
+        /// <param name="TemplateId">TemplateId.</param>
+        public WeekTemplateNameDTO(string Name = default(string), long? TemplateId = default(long?))
         {
             this.Name = Name;
+            this.TemplateId = TemplateId;
         }
         
         /// <summary>
@@ -44,6 +46,12 @@ namespace IO.Swagger.Model
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or Sets TemplateId
+        /// </summary>
+        [DataMember(Name="templateId", EmitDefaultValue=false)]
+        public long? TemplateId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -54,6 +62,7 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class WeekTemplateNameDTO {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  TemplateId: ").Append(TemplateId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -92,6 +101,11 @@ namespace IO.Swagger.Model
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.TemplateId == input.TemplateId ||
+                    (this.TemplateId != null &&
+                    this.TemplateId.Equals(input.TemplateId))
                 );
         }
 
@@ -106,6 +120,8 @@ namespace IO.Swagger.Model
                 int hashCode = 41;
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.TemplateId != null)
+                    hashCode = hashCode * 59 + this.TemplateId.GetHashCode();
                 return hashCode;
             }
         }

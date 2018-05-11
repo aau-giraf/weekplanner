@@ -18,17 +18,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\Mocks\" />
     <Folder Include="Controls\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Base" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
-    <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj">
-      <Project>{4AC971BD-FD70-4BCC-82A1-32F8CFB029FF}</Project>
-      <Name>IO.Swagger</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -51,5 +46,9 @@
     <EmbeddedResource Update="Views\SavePromptPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Services\Mocks\MockAccountApi.cs" />
+    <Compile Remove="Services\Mocks\MockDepartmentApi.cs" />
   </ItemGroup>
 </Project>

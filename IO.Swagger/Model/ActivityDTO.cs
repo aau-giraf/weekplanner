@@ -73,11 +73,13 @@ namespace IO.Swagger.Model
         /// <param name="Pictogram">Pictogram.</param>
         /// <param name="Order">Order.</param>
         /// <param name="State">State.</param>
-        public ActivityDTO(WeekPictogramDTO Pictogram = default(WeekPictogramDTO), int? Order = default(int?), StateEnum? State = default(StateEnum?))
+        /// <param name="IsChoiceBoard">This is used in the WeekPlanner app by the frontend groups and should never be set from our side.</param>
+        public ActivityDTO(WeekPictogramDTO Pictogram = default(WeekPictogramDTO), int? Order = default(int?), StateEnum? State = default(StateEnum?), bool? IsChoiceBoard = default(bool?))
         {
             this.Pictogram = Pictogram;
             this.Order = Order;
             this.State = State;
+            this.IsChoiceBoard = IsChoiceBoard;
         }
         
         /// <summary>
@@ -100,6 +102,13 @@ namespace IO.Swagger.Model
         public long? Id { get; private set; }
 
         /// <summary>
+        /// This is used in the WeekPlanner app by the frontend groups and should never be set from our side
+        /// </summary>
+        /// <value>This is used in the WeekPlanner app by the frontend groups and should never be set from our side</value>
+        [DataMember(Name="isChoiceBoard", EmitDefaultValue=false)]
+        public bool? IsChoiceBoard { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -111,6 +120,7 @@ namespace IO.Swagger.Model
             sb.Append("  Order: ").Append(Order).Append("\n");
             sb.Append("  State: ").Append(State).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  IsChoiceBoard: ").Append(IsChoiceBoard).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -164,6 +174,11 @@ namespace IO.Swagger.Model
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
+                ) && 
+                (
+                    this.IsChoiceBoard == input.IsChoiceBoard ||
+                    (this.IsChoiceBoard != null &&
+                    this.IsChoiceBoard.Equals(input.IsChoiceBoard))
                 );
         }
 
@@ -184,6 +199,8 @@ namespace IO.Swagger.Model
                     hashCode = hashCode * 59 + this.State.GetHashCode();
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.IsChoiceBoard != null)
+                    hashCode = hashCode * 59 + this.IsChoiceBoard.GetHashCode();
                 return hashCode;
             }
         }

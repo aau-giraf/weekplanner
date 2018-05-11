@@ -401,7 +401,25 @@ namespace IO.Swagger.Model
             /// Enum InvalidHexValues for value: InvalidHexValues
             /// </summary>
             [EnumMember(Value = "InvalidHexValues")]
-            InvalidHexValues = 61
+            InvalidHexValues = 61,
+            
+            /// <summary>
+            /// Enum WeekTemplateNotFound for value: WeekTemplateNotFound
+            /// </summary>
+            [EnumMember(Value = "WeekTemplateNotFound")]
+            WeekTemplateNotFound = 62,
+            
+            /// <summary>
+            /// Enum NotImplemented for value: NotImplemented
+            /// </summary>
+            [EnumMember(Value = "NotImplemented")]
+            NotImplemented = 63,
+            
+            /// <summary>
+            /// Enum UserMustBeInDepartment for value: UserMustBeInDepartment
+            /// </summary>
+            [EnumMember(Value = "UserMustBeInDepartment")]
+            UserMustBeInDepartment = 64
         }
 
         /// <summary>

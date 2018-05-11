@@ -31,6 +31,43 @@ namespace IO.Swagger.Model
     public partial class RegisterDTO :  IEquatable<RegisterDTO>, IValidatableObject
     {
         /// <summary>
+        /// Defines Role
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum RoleEnum
+        {
+            
+            /// <summary>
+            /// Enum Citizen for value: Citizen
+            /// </summary>
+            [EnumMember(Value = "Citizen")]
+            Citizen = 1,
+            
+            /// <summary>
+            /// Enum Department for value: Department
+            /// </summary>
+            [EnumMember(Value = "Department")]
+            Department = 2,
+            
+            /// <summary>
+            /// Enum Guardian for value: Guardian
+            /// </summary>
+            [EnumMember(Value = "Guardian")]
+            Guardian = 3,
+            
+            /// <summary>
+            /// Enum SuperUser for value: SuperUser
+            /// </summary>
+            [EnumMember(Value = "SuperUser")]
+            SuperUser = 4
+        }
+
+        /// <summary>
+        /// Gets or Sets Role
+        /// </summary>
+        [DataMember(Name="role", EmitDefaultValue=false)]
+        public RoleEnum Role { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="RegisterDTO" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -40,8 +77,10 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <param name="Username">The users username. (required).</param>
         /// <param name="Password">The users password. (required).</param>
+        /// <param name="DisplayName">The users DisplayName.</param>
         /// <param name="DepartmentId">The users departmentid. (required).</param>
-        public RegisterDTO(string Username = default(string), string Password = default(string), long? DepartmentId = default(long?))
+        /// <param name="Role">Role (required).</param>
+        public RegisterDTO(string Username = default(string), string Password = default(string), string DisplayName = default(string), long? DepartmentId = default(long?), RoleEnum Role = default(RoleEnum))
         {
             // to ensure "Username" is required (not null)
             if (Username == null)
@@ -70,6 +109,16 @@ namespace IO.Swagger.Model
             {
                 this.DepartmentId = DepartmentId;
             }
+            // to ensure "Role" is required (not null)
+            if (Role == null)
+            {
+                throw new InvalidDataException("Role is a required property for RegisterDTO and cannot be null");
+            }
+            else
+            {
+                this.Role = Role;
+            }
+            this.DisplayName = DisplayName;
         }
         
         /// <summary>
@@ -87,11 +136,19 @@ namespace IO.Swagger.Model
         public string Password { get; set; }
 
         /// <summary>
+        /// The users DisplayName
+        /// </summary>
+        /// <value>The users DisplayName</value>
+        [DataMember(Name="displayName", EmitDefaultValue=false)]
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// The users departmentid.
         /// </summary>
         /// <value>The users departmentid.</value>
         [DataMember(Name="departmentId", EmitDefaultValue=false)]
         public long? DepartmentId { get; set; }
+
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -103,7 +160,9 @@ namespace IO.Swagger.Model
             sb.Append("class RegisterDTO {\n");
             sb.Append("  Username: ").Append(Username).Append("\n");
             sb.Append("  Password: ").Append(Password).Append("\n");
+            sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
             sb.Append("  DepartmentId: ").Append(DepartmentId).Append("\n");
+            sb.Append("  Role: ").Append(Role).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -149,9 +208,19 @@ namespace IO.Swagger.Model
                     this.Password.Equals(input.Password))
                 ) && 
                 (
+                    this.DisplayName == input.DisplayName ||
+                    (this.DisplayName != null &&
+                    this.DisplayName.Equals(input.DisplayName))
+                ) && 
+                (
                     this.DepartmentId == input.DepartmentId ||
                     (this.DepartmentId != null &&
                     this.DepartmentId.Equals(input.DepartmentId))
+                ) && 
+                (
+                    this.Role == input.Role ||
+                    (this.Role != null &&
+                    this.Role.Equals(input.Role))
                 );
         }
 
@@ -168,8 +237,12 @@ namespace IO.Swagger.Model
                     hashCode = hashCode * 59 + this.Username.GetHashCode();
                 if (this.Password != null)
                     hashCode = hashCode * 59 + this.Password.GetHashCode();
+                if (this.DisplayName != null)
+                    hashCode = hashCode * 59 + this.DisplayName.GetHashCode();
                 if (this.DepartmentId != null)
                     hashCode = hashCode * 59 + this.DepartmentId.GetHashCode();
+                if (this.Role != null)
+                    hashCode = hashCode * 59 + this.Role.GetHashCode();
                 return hashCode;
             }
         }

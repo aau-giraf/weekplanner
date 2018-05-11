@@ -25,6 +25,113 @@ namespace IO.Swagger.Api
     {
         #region Synchronous Operations
         /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        ResponseGirafUserDTO V1UserByIdCitizensByCitizenIdPost (string id, string citizenId);
+
+        /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        ApiResponse<ResponseGirafUserDTO> V1UserByIdCitizensByCitizenIdPostWithHttpInfo (string id, string citizenId);
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ResponseListUserNameDTO</returns>
+        ResponseListUserNameDTO V1UserByIdCitizensGet (string id);
+
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
+        ApiResponse<ResponseListUserNameDTO> V1UserByIdCitizensGetWithHttpInfo (string id);
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        ResponseGirafUserDTO V1UserByIdGet (string id);
+
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        ApiResponse<ResponseGirafUserDTO> V1UserByIdGetWithHttpInfo (string id);
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>ResponseListUserNameDTO</returns>
+        ResponseListUserNameDTO V1UserByIdGuardiansGet (string id);
+
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
+        ApiResponse<ResponseListUserNameDTO> V1UserByIdGuardiansGetWithHttpInfo (string id);
+        /// <summary>
+        /// Allows the user to delete his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Response</returns>
+        Response V1UserByIdIconDelete (string id);
+
+        /// <summary>
+        /// Allows the user to delete his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of Response</returns>
+        ApiResponse<Response> V1UserByIdIconDeleteWithHttpInfo (string id);
+        /// <summary>
         /// Allows retrieval of user icon by anyone since an usericon should be public
         /// </summary>
         /// <remarks>
@@ -45,6 +152,27 @@ namespace IO.Swagger.Api
         /// <param name="id"></param>
         /// <returns>ApiResponse of ResponseImageDTO</returns>
         ApiResponse<ResponseImageDTO> V1UserByIdIconGetWithHttpInfo (string id);
+        /// <summary>
+        /// Allows the user to update his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Response</returns>
+        Response V1UserByIdIconPut (string id);
+
+        /// <summary>
+        /// Allows the user to update his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of Response</returns>
+        ApiResponse<Response> V1UserByIdIconPutWithHttpInfo (string id);
         /// <summary>
         /// Allows retrieval of user icon by anyone since an usericon should be public
         /// </summary>
@@ -74,10 +202,9 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserByIdPut (string id, string username = null, string screenName = null);
+        ResponseGirafUserDTO V1UserByIdPut (string id, GirafUserDTO newUser = null);
 
         /// <summary>
         /// Updates the user.
@@ -87,10 +214,55 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserByIdPutWithHttpInfo (string id, string username = null, string screenName = null);
+        ApiResponse<ResponseGirafUserDTO> V1UserByIdPutWithHttpInfo (string id, GirafUserDTO newUser = null);
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        ResponseGirafUserDTO V1UserByIdResourceDelete (string id, ResourceIdDTO resourceIdDTO = null);
+
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        ApiResponse<ResponseGirafUserDTO> V1UserByIdResourceDeleteWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null);
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        ResponseGirafUserDTO V1UserByIdResourcePost (string id, ResourceIdDTO resourceIdDTO = null);
+
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        ApiResponse<ResponseGirafUserDTO> V1UserByIdResourcePostWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null);
         /// <summary>
         /// Find information on the user with the id given
         /// </summary>
@@ -136,135 +308,7 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseSettingDTO</returns>
         ApiResponse<ResponseSettingDTO> V1UserByIdSettingsPutWithHttpInfo (string id, SettingDTO options = null);
         /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ResponseListUserNameDTO</returns>
-        ResponseListUserNameDTO V1UserByUsernameCitizensGet (string username);
-
-        /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
-        ApiResponse<ResponseListUserNameDTO> V1UserByUsernameCitizensGetWithHttpInfo (string username);
-        /// <summary>
-        /// Removes a user from its department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        ResponseDepartmentDTO V1UserByUsernameDepartmentDelete (string username);
-
-        /// <summary>
-        /// Removes a user from its department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        ApiResponse<ResponseDepartmentDTO> V1UserByUsernameDepartmentDeleteWithHttpInfo (string username);
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserByUsernameGet (string username);
-
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserByUsernameGetWithHttpInfo (string username);
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ResponseListUserNameDTO</returns>
-        ResponseListUserNameDTO V1UserByUsernameGuardiansGet (string username);
-
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
-        ApiResponse<ResponseListUserNameDTO> V1UserByUsernameGuardiansGetWithHttpInfo (string username);
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserByUsernameResourcePost (string username, ResourceIdDTO resourceIdDTO = null);
-
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserByUsernameResourcePostWithHttpInfo (string username, ResourceIdDTO resourceIdDTO = null);
-        /// <summary>
-        /// Updates the display name of the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserDisplayNamePut (string displayName = null);
-
-        /// <summary>
-        /// Updates the display name of the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserDisplayNamePutWithHttpInfo (string displayName = null);
-        /// <summary>
-        /// Get information about the logged in user.
+        /// Find information about the currently authenticated user.
         /// </summary>
         /// <remarks>
         /// 
@@ -274,7 +318,7 @@ namespace IO.Swagger.Api
         ResponseGirafUserDTO V1UserGet ();
 
         /// <summary>
-        /// Get information about the logged in user.
+        /// Find information about the currently authenticated user.
         /// </summary>
         /// <remarks>
         /// 
@@ -282,172 +326,115 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
         ApiResponse<ResponseGirafUserDTO> V1UserGetWithHttpInfo ();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserGuardianByGuardianIdCitizenByCitizenIdPost (string guardianId, string citizenId);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserGuardianByGuardianIdCitizenByCitizenIdPostWithHttpInfo (string guardianId, string citizenId);
-        /// <summary>
-        /// Allows the user to delete his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Response</returns>
-        Response V1UserIconDelete ();
-
-        /// <summary>
-        /// Allows the user to delete his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1UserIconDeleteWithHttpInfo ();
-        /// <summary>
-        /// Allows the user to update his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Response</returns>
-        Response V1UserIconPut ();
-
-        /// <summary>
-        /// Allows the user to update his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1UserIconPutWithHttpInfo ();
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserPut (string username = null, string screenName = null);
-
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserPutWithHttpInfo (string username = null, string screenName = null);
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserResourceDelete (ResourceIdDTO resourceIdDTO = null);
-
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserResourceDeleteWithHttpInfo (ResourceIdDTO resourceIdDTO = null);
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseSettingDTO</returns>
-        ResponseSettingDTO V1UserSettingsGet ();
-
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseSettingDTO</returns>
-        ApiResponse<ResponseSettingDTO> V1UserSettingsGetWithHttpInfo ();
-        /// <summary>
-        /// Updates the currently authenticated user settings.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>ResponseSettingDTO</returns>
-        ResponseSettingDTO V1UserSettingsPut (SettingDTO options = null);
-
-        /// <summary>
-        /// Updates the currently authenticated user settings.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>ApiResponse of ResponseSettingDTO</returns>
-        ApiResponse<ResponseSettingDTO> V1UserSettingsPutWithHttpInfo (SettingDTO options = null);
-        /// <summary>
-        /// Returns currently logged in users username
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseString</returns>
-        ResponseString V1UserUsernameGet ();
-
-        /// <summary>
-        /// Returns currently logged in users username
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseString</returns>
-        ApiResponse<ResponseString> V1UserUsernameGetWithHttpInfo ();
         #endregion Synchronous Operations
         #region Asynchronous Operations
+        /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdCitizensByCitizenIdPostAsync (string id, string citizenId);
+
+        /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdCitizensByCitizenIdPostAsyncWithHttpInfo (string id, string citizenId);
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ResponseListUserNameDTO</returns>
+        System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByIdCitizensGetAsync (string id);
+
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByIdCitizensGetAsyncWithHttpInfo (string id);
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdGetAsync (string id);
+
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdGetAsyncWithHttpInfo (string id);
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>Task of ResponseListUserNameDTO</returns>
+        System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByIdGuardiansGetAsync (string id);
+
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByIdGuardiansGetAsyncWithHttpInfo (string id);
+        /// <summary>
+        /// Allows the user to delete his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of Response</returns>
+        System.Threading.Tasks.Task<Response> V1UserByIdIconDeleteAsync (string id);
+
+        /// <summary>
+        /// Allows the user to delete his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1UserByIdIconDeleteAsyncWithHttpInfo (string id);
         /// <summary>
         /// Allows retrieval of user icon by anyone since an usericon should be public
         /// </summary>
@@ -469,6 +456,27 @@ namespace IO.Swagger.Api
         /// <param name="id"></param>
         /// <returns>Task of ApiResponse (ResponseImageDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseImageDTO>> V1UserByIdIconGetAsyncWithHttpInfo (string id);
+        /// <summary>
+        /// Allows the user to update his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of Response</returns>
+        System.Threading.Tasks.Task<Response> V1UserByIdIconPutAsync (string id);
+
+        /// <summary>
+        /// Allows the user to update his profile icon.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1UserByIdIconPutAsyncWithHttpInfo (string id);
         /// <summary>
         /// Allows retrieval of user icon by anyone since an usericon should be public
         /// </summary>
@@ -498,10 +506,9 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdPutAsync (string id, string username = null, string screenName = null);
+        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdPutAsync (string id, GirafUserDTO newUser = null);
 
         /// <summary>
         /// Updates the user.
@@ -511,10 +518,55 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdPutAsyncWithHttpInfo (string id, string username = null, string screenName = null);
+        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdPutAsyncWithHttpInfo (string id, GirafUserDTO newUser = null);
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdResourceDeleteAsync (string id, ResourceIdDTO resourceIdDTO = null);
+
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdResourceDeleteAsyncWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null);
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdResourcePostAsync (string id, ResourceIdDTO resourceIdDTO = null);
+
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdResourcePostAsyncWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null);
         /// <summary>
         /// Find information on the user with the id given
         /// </summary>
@@ -560,135 +612,7 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserByIdSettingsPutAsyncWithHttpInfo (string id, SettingDTO options = null);
         /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ResponseListUserNameDTO</returns>
-        System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByUsernameCitizensGetAsync (string username);
-
-        /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByUsernameCitizensGetAsyncWithHttpInfo (string username);
-        /// <summary>
-        /// Removes a user from its department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        System.Threading.Tasks.Task<ResponseDepartmentDTO> V1UserByUsernameDepartmentDeleteAsync (string username);
-
-        /// <summary>
-        /// Removes a user from its department.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1UserByUsernameDepartmentDeleteAsyncWithHttpInfo (string username);
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByUsernameGetAsync (string username);
-
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByUsernameGetAsyncWithHttpInfo (string username);
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ResponseListUserNameDTO</returns>
-        System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByUsernameGuardiansGetAsync (string username);
-
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByUsernameGuardiansGetAsyncWithHttpInfo (string username);
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByUsernameResourcePostAsync (string username, ResourceIdDTO resourceIdDTO = null);
-
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByUsernameResourcePostAsyncWithHttpInfo (string username, ResourceIdDTO resourceIdDTO = null);
-        /// <summary>
-        /// Updates the display name of the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserDisplayNamePutAsync (string displayName = null);
-
-        /// <summary>
-        /// Updates the display name of the current user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserDisplayNamePutAsyncWithHttpInfo (string displayName = null);
-        /// <summary>
-        /// Get information about the logged in user.
+        /// Find information about the currently authenticated user.
         /// </summary>
         /// <remarks>
         /// 
@@ -698,7 +622,7 @@ namespace IO.Swagger.Api
         System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserGetAsync ();
 
         /// <summary>
-        /// Get information about the logged in user.
+        /// Find information about the currently authenticated user.
         /// </summary>
         /// <remarks>
         /// 
@@ -706,170 +630,6 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserGetAsyncWithHttpInfo ();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserGuardianByGuardianIdCitizenByCitizenIdPostAsync (string guardianId, string citizenId);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserGuardianByGuardianIdCitizenByCitizenIdPostAsyncWithHttpInfo (string guardianId, string citizenId);
-        /// <summary>
-        /// Allows the user to delete his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1UserIconDeleteAsync ();
-
-        /// <summary>
-        /// Allows the user to delete his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1UserIconDeleteAsyncWithHttpInfo ();
-        /// <summary>
-        /// Allows the user to update his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1UserIconPutAsync ();
-
-        /// <summary>
-        /// Allows the user to update his profile icon.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1UserIconPutAsyncWithHttpInfo ();
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserPutAsync (string username = null, string screenName = null);
-
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserPutAsyncWithHttpInfo (string username = null, string screenName = null);
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserResourceDeleteAsync (ResourceIdDTO resourceIdDTO = null);
-
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserResourceDeleteAsyncWithHttpInfo (ResourceIdDTO resourceIdDTO = null);
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseSettingDTO</returns>
-        System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsGetAsync ();
-
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsGetAsyncWithHttpInfo ();
-        /// <summary>
-        /// Updates the currently authenticated user settings.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ResponseSettingDTO</returns>
-        System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsPutAsync (SettingDTO options = null);
-
-        /// <summary>
-        /// Updates the currently authenticated user settings.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsPutAsyncWithHttpInfo (SettingDTO options = null);
-        /// <summary>
-        /// Returns currently logged in users username
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseString</returns>
-        System.Threading.Tasks.Task<ResponseString> V1UserUsernameGetAsync ();
-
-        /// <summary>
-        /// Returns currently logged in users username
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseString)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseString>> V1UserUsernameGetAsyncWithHttpInfo ();
         #endregion Asynchronous Operations
     }
 
@@ -968,6 +728,753 @@ namespace IO.Swagger.Api
         public void AddDefaultHeader(string key, string value)
         {
             this.Configuration.AddDefaultHeader(key, value);
+        }
+
+        /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        public ResponseGirafUserDTO V1UserByIdCitizensByCitizenIdPost (string id, string citizenId)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByIdCitizensByCitizenIdPostWithHttpInfo(id, citizenId);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        public ApiResponse< ResponseGirafUserDTO > V1UserByIdCitizensByCitizenIdPostWithHttpInfo (string id, string citizenId)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdCitizensByCitizenIdPost");
+            // verify the required parameter 'citizenId' is set
+            if (citizenId == null)
+                throw new ApiException(400, "Missing required parameter 'citizenId' when calling UserApi->V1UserByIdCitizensByCitizenIdPost");
+
+            var localVarPath = "/v1/User/{id}/citizens/{citizenId}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (citizenId != null) localVarPathParams.Add("citizenId", Configuration.ApiClient.ParameterToString(citizenId)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdCitizensByCitizenIdPost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdCitizensByCitizenIdPostAsync (string id, string citizenId)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByIdCitizensByCitizenIdPostAsyncWithHttpInfo(id, citizenId);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Adds relation between an exisisting citizen and a guardian. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Guardian id</param>
+        /// <param name="citizenId">Citizen id</param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdCitizensByCitizenIdPostAsyncWithHttpInfo (string id, string citizenId)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdCitizensByCitizenIdPost");
+            // verify the required parameter 'citizenId' is set
+            if (citizenId == null)
+                throw new ApiException(400, "Missing required parameter 'citizenId' when calling UserApi->V1UserByIdCitizensByCitizenIdPost");
+
+            var localVarPath = "/v1/User/{id}/citizens/{citizenId}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (citizenId != null) localVarPathParams.Add("citizenId", Configuration.ApiClient.ParameterToString(citizenId)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdCitizensByCitizenIdPost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ResponseListUserNameDTO</returns>
+        public ResponseListUserNameDTO V1UserByIdCitizensGet (string id)
+        {
+             ApiResponse<ResponseListUserNameDTO> localVarResponse = V1UserByIdCitizensGetWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
+        public ApiResponse< ResponseListUserNameDTO > V1UserByIdCitizensGetWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdCitizensGet");
+
+            var localVarPath = "/v1/User/{id}/citizens";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdCitizensGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
+        }
+
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ResponseListUserNameDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByIdCitizensGetAsync (string id)
+        {
+             ApiResponse<ResponseListUserNameDTO> localVarResponse = await V1UserByIdCitizensGetAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Gets the citizens for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByIdCitizensGetAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdCitizensGet");
+
+            var localVarPath = "/v1/User/{id}/citizens";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdCitizensGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
+        }
+
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        public ResponseGirafUserDTO V1UserByIdGet (string id)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByIdGetWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        public ApiResponse< ResponseGirafUserDTO > V1UserByIdGetWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdGet");
+
+            var localVarPath = "/v1/User/{id}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdGetAsync (string id)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByIdGetAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Find information on the user with the username supplied as a url query parameter or the current user. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdGetAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdGet");
+
+            var localVarPath = "/v1/User/{id}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>ResponseListUserNameDTO</returns>
+        public ResponseListUserNameDTO V1UserByIdGuardiansGet (string id)
+        {
+             ApiResponse<ResponseListUserNameDTO> localVarResponse = V1UserByIdGuardiansGetWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
+        public ApiResponse< ResponseListUserNameDTO > V1UserByIdGuardiansGetWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdGuardiansGet");
+
+            var localVarPath = "/v1/User/{id}/guardians";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdGuardiansGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
+        }
+
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>Task of ResponseListUserNameDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByIdGuardiansGetAsync (string id)
+        {
+             ApiResponse<ResponseListUserNameDTO> localVarResponse = await V1UserByIdGuardiansGetAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Gets the guardians for the specific user corresponding to the provided id. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Username.</param>
+        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByIdGuardiansGetAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdGuardiansGet");
+
+            var localVarPath = "/v1/User/{id}/guardians";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdGuardiansGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
+        }
+
+        /// <summary>
+        /// Allows the user to delete his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Response</returns>
+        public Response V1UserByIdIconDelete (string id)
+        {
+             ApiResponse<Response> localVarResponse = V1UserByIdIconDeleteWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Allows the user to delete his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of Response</returns>
+        public ApiResponse< Response > V1UserByIdIconDeleteWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdIconDelete");
+
+            var localVarPath = "/v1/User/{id}/icon";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdIconDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
+        /// Allows the user to delete his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of Response</returns>
+        public async System.Threading.Tasks.Task<Response> V1UserByIdIconDeleteAsync (string id)
+        {
+             ApiResponse<Response> localVarResponse = await V1UserByIdIconDeleteAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Allows the user to delete his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1UserByIdIconDeleteAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdIconDelete");
+
+            var localVarPath = "/v1/User/{id}/icon";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdIconDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
         }
 
         /// <summary>
@@ -1118,6 +1625,153 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
+        /// Allows the user to update his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Response</returns>
+        public Response V1UserByIdIconPut (string id)
+        {
+             ApiResponse<Response> localVarResponse = V1UserByIdIconPutWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Allows the user to update his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of Response</returns>
+        public ApiResponse< Response > V1UserByIdIconPutWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdIconPut");
+
+            var localVarPath = "/v1/User/{id}/icon";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdIconPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
+        /// Allows the user to update his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of Response</returns>
+        public async System.Threading.Tasks.Task<Response> V1UserByIdIconPutAsync (string id)
+        {
+             ApiResponse<Response> localVarResponse = await V1UserByIdIconPutAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Allows the user to update his profile icon. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1UserByIdIconPutAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdIconPut");
+
+            var localVarPath = "/v1/User/{id}/icon";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdIconPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
         /// Allows retrieval of user icon by anyone since an usericon should be public 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
@@ -1261,12 +1915,11 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserByIdPut (string id, string username = null, string screenName = null)
+        public ResponseGirafUserDTO V1UserByIdPut (string id, GirafUserDTO newUser = null)
         {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByIdPutWithHttpInfo(id, username, screenName);
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByIdPutWithHttpInfo(id, newUser);
              return localVarResponse.Data;
         }
 
@@ -1275,10 +1928,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserByIdPutWithHttpInfo (string id, string username = null, string screenName = null)
+        public ApiResponse< ResponseGirafUserDTO > V1UserByIdPutWithHttpInfo (string id, GirafUserDTO newUser = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1297,10 +1949,6 @@ namespace IO.Swagger.Api
                 "application/json-patch+json", 
                 "application/json", 
                 "text/json", 
-                "application/_*+json", 
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
                 "application/_*+json"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -1316,13 +1964,13 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            if (screenName != null && screenName.GetType() != typeof(byte[]))
+            if (newUser != null && newUser.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(screenName); // http body (model) parameter
+                localVarPostBody = Configuration.ApiClient.Serialize(newUser); // http body (model) parameter
             }
             else
             {
-                localVarPostBody = screenName; // byte array
+                localVarPostBody = newUser; // byte array
             }
 
             // authentication (Bearer) required
@@ -1354,12 +2002,11 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdPutAsync (string id, string username = null, string screenName = null)
+        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdPutAsync (string id, GirafUserDTO newUser = null)
         {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByIdPutAsyncWithHttpInfo(id, username, screenName);
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByIdPutAsyncWithHttpInfo(id, newUser);
              return localVarResponse.Data;
 
         }
@@ -1369,10 +2016,9 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Identifier.</param>
-        /// <param name="username">Username. (optional)</param>
-        /// <param name="screenName">Screen name. (optional)</param>
+        /// <param name="newUser"> (optional)</param>
         /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdPutAsyncWithHttpInfo (string id, string username = null, string screenName = null)
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdPutAsyncWithHttpInfo (string id, GirafUserDTO newUser = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1391,10 +2037,6 @@ namespace IO.Swagger.Api
                 "application/json-patch+json", 
                 "application/json", 
                 "text/json", 
-                "application/_*+json", 
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
                 "application/_*+json"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -1410,13 +2052,13 @@ namespace IO.Swagger.Api
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            if (screenName != null && screenName.GetType() != typeof(byte[]))
+            if (newUser != null && newUser.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(screenName); // http body (model) parameter
+                localVarPostBody = Configuration.ApiClient.Serialize(newUser); // http body (model) parameter
             }
             else
             {
-                localVarPostBody = screenName; // byte array
+                localVarPostBody = newUser; // byte array
             }
 
             // authentication (Bearer) required
@@ -1435,6 +2077,356 @@ namespace IO.Swagger.Api
             if (ExceptionFactory != null)
             {
                 Exception exception = ExceptionFactory("V1UserByIdPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        public ResponseGirafUserDTO V1UserByIdResourceDelete (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByIdResourceDeleteWithHttpInfo(id, resourceIdDTO);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        public ApiResponse< ResponseGirafUserDTO > V1UserByIdResourceDeleteWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdResourceDelete");
+
+            var localVarPath = "/v1/User/{id}/resource";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = resourceIdDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdResourceDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdResourceDeleteAsync (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByIdResourceDeleteAsyncWithHttpInfo(id, resourceIdDTO);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdResourceDeleteAsyncWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdResourceDelete");
+
+            var localVarPath = "/v1/User/{id}/resource";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = resourceIdDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdResourceDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ResponseGirafUserDTO</returns>
+        public ResponseGirafUserDTO V1UserByIdResourcePost (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByIdResourcePostWithHttpInfo(id, resourceIdDTO);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
+        public ApiResponse< ResponseGirafUserDTO > V1UserByIdResourcePostWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdResourcePost");
+
+            var localVarPath = "/v1/User/{id}/resource";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = resourceIdDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdResourcePost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
+        }
+
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ResponseGirafUserDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByIdResourcePostAsync (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByIdResourcePostAsyncWithHttpInfo(id, resourceIdDTO);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Adds a resource to the given user&#39;s list of resources. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="resourceIdDTO"> (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByIdResourcePostAsyncWithHttpInfo (string id, ResourceIdDTO resourceIdDTO = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling UserApi->V1UserByIdResourcePost");
+
+            var localVarPath = "/v1/User/{id}/resource";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = resourceIdDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdResourcePost", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -1766,933 +2758,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ResponseListUserNameDTO</returns>
-        public ResponseListUserNameDTO V1UserByUsernameCitizensGet (string username)
-        {
-             ApiResponse<ResponseListUserNameDTO> localVarResponse = V1UserByUsernameCitizensGetWithHttpInfo(username);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
-        public ApiResponse< ResponseListUserNameDTO > V1UserByUsernameCitizensGetWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameCitizensGet");
-
-            var localVarPath = "/v1/User/{username}/citizens";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameCitizensGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
-        }
-
-        /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ResponseListUserNameDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByUsernameCitizensGetAsync (string username)
-        {
-             ApiResponse<ResponseListUserNameDTO> localVarResponse = await V1UserByUsernameCitizensGetAsyncWithHttpInfo(username);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Gets the citizens for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByUsernameCitizensGetAsyncWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameCitizensGet");
-
-            var localVarPath = "/v1/User/{username}/citizens";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameCitizensGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
-        }
-
-        /// <summary>
-        /// Removes a user from its department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ResponseDepartmentDTO</returns>
-        public ResponseDepartmentDTO V1UserByUsernameDepartmentDelete (string username)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = V1UserByUsernameDepartmentDeleteWithHttpInfo(username);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Removes a user from its department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ApiResponse of ResponseDepartmentDTO</returns>
-        public ApiResponse< ResponseDepartmentDTO > V1UserByUsernameDepartmentDeleteWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameDepartmentDelete");
-
-            var localVarPath = "/v1/User/{username}/department";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameDepartmentDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
-        /// Removes a user from its department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ResponseDepartmentDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseDepartmentDTO> V1UserByUsernameDepartmentDeleteAsync (string username)
-        {
-             ApiResponse<ResponseDepartmentDTO> localVarResponse = await V1UserByUsernameDepartmentDeleteAsyncWithHttpInfo(username);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Removes a user from its department. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ApiResponse (ResponseDepartmentDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseDepartmentDTO>> V1UserByUsernameDepartmentDeleteAsyncWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameDepartmentDelete");
-
-            var localVarPath = "/v1/User/{username}/department";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameDepartmentDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseDepartmentDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseDepartmentDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseDepartmentDTO)));
-        }
-
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserByUsernameGet (string username)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByUsernameGetWithHttpInfo(username);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserByUsernameGetWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameGet");
-
-            var localVarPath = "/v1/User/{username}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByUsernameGetAsync (string username)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByUsernameGetAsyncWithHttpInfo(username);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Find information on the user with the username supplied as a url query parameter or the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByUsernameGetAsyncWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameGet");
-
-            var localVarPath = "/v1/User/{username}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ResponseListUserNameDTO</returns>
-        public ResponseListUserNameDTO V1UserByUsernameGuardiansGet (string username)
-        {
-             ApiResponse<ResponseListUserNameDTO> localVarResponse = V1UserByUsernameGuardiansGetWithHttpInfo(username);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>ApiResponse of ResponseListUserNameDTO</returns>
-        public ApiResponse< ResponseListUserNameDTO > V1UserByUsernameGuardiansGetWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameGuardiansGet");
-
-            var localVarPath = "/v1/User/{username}/guardians";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameGuardiansGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
-        }
-
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ResponseListUserNameDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseListUserNameDTO> V1UserByUsernameGuardiansGetAsync (string username)
-        {
-             ApiResponse<ResponseListUserNameDTO> localVarResponse = await V1UserByUsernameGuardiansGetAsyncWithHttpInfo(username);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Gets the guardians for the specific user corresponding to the provided username. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">Username.</param>
-        /// <returns>Task of ApiResponse (ResponseListUserNameDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseListUserNameDTO>> V1UserByUsernameGuardiansGetAsyncWithHttpInfo (string username)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameGuardiansGet");
-
-            var localVarPath = "/v1/User/{username}/guardians";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameGuardiansGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseListUserNameDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseListUserNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListUserNameDTO)));
-        }
-
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserByUsernameResourcePost (string username, ResourceIdDTO resourceIdDTO = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserByUsernameResourcePostWithHttpInfo(username, resourceIdDTO);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserByUsernameResourcePostWithHttpInfo (string username, ResourceIdDTO resourceIdDTO = null)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameResourcePost");
-
-            var localVarPath = "/v1/User/{username}/resource";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceIdDTO; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameResourcePost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserByUsernameResourcePostAsync (string username, ResourceIdDTO resourceIdDTO = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserByUsernameResourcePostAsyncWithHttpInfo(username, resourceIdDTO);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Adds a resource to the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"></param>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserByUsernameResourcePostAsyncWithHttpInfo (string username, ResourceIdDTO resourceIdDTO = null)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling UserApi->V1UserByUsernameResourcePost");
-
-            var localVarPath = "/v1/User/{username}/resource";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarPathParams.Add("username", Configuration.ApiClient.ParameterToString(username)); // path parameter
-            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceIdDTO; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserByUsernameResourcePost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Updates the display name of the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserDisplayNamePut (string displayName = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserDisplayNamePutWithHttpInfo(displayName);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Updates the display name of the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserDisplayNamePutWithHttpInfo (string displayName = null)
-        {
-
-            var localVarPath = "/v1/User/display-name";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (displayName != null && displayName.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(displayName); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = displayName; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserDisplayNamePut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Updates the display name of the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserDisplayNamePutAsync (string displayName = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserDisplayNamePutAsyncWithHttpInfo(displayName);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Updates the display name of the current user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="displayName">The new display name of the user. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserDisplayNamePutAsyncWithHttpInfo (string displayName = null)
-        {
-
-            var localVarPath = "/v1/User/display-name";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (displayName != null && displayName.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(displayName); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = displayName; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserDisplayNamePut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Get information about the logged in user. 
+        /// Find information about the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ResponseGirafUserDTO</returns>
@@ -2703,7 +2769,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Get information about the logged in user. 
+        /// Find information about the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
@@ -2759,7 +2825,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Get information about the logged in user. 
+        /// Find information about the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ResponseGirafUserDTO</returns>
@@ -2771,7 +2837,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Get information about the logged in user. 
+        /// Find information about the currently authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
@@ -2824,1206 +2890,6 @@ namespace IO.Swagger.Api
             return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserGuardianByGuardianIdCitizenByCitizenIdPost (string guardianId, string citizenId)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserGuardianByGuardianIdCitizenByCitizenIdPostWithHttpInfo(guardianId, citizenId);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserGuardianByGuardianIdCitizenByCitizenIdPostWithHttpInfo (string guardianId, string citizenId)
-        {
-            // verify the required parameter 'guardianId' is set
-            if (guardianId == null)
-                throw new ApiException(400, "Missing required parameter 'guardianId' when calling UserApi->V1UserGuardianByGuardianIdCitizenByCitizenIdPost");
-            // verify the required parameter 'citizenId' is set
-            if (citizenId == null)
-                throw new ApiException(400, "Missing required parameter 'citizenId' when calling UserApi->V1UserGuardianByGuardianIdCitizenByCitizenIdPost");
-
-            var localVarPath = "/v1/User/guardian/{guardianId}/citizen/{citizenId}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (guardianId != null) localVarPathParams.Add("guardianId", Configuration.ApiClient.ParameterToString(guardianId)); // path parameter
-            if (citizenId != null) localVarPathParams.Add("citizenId", Configuration.ApiClient.ParameterToString(citizenId)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserGuardianByGuardianIdCitizenByCitizenIdPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserGuardianByGuardianIdCitizenByCitizenIdPostAsync (string guardianId, string citizenId)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserGuardianByGuardianIdCitizenByCitizenIdPostAsyncWithHttpInfo(guardianId, citizenId);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="guardianId"></param>
-        /// <param name="citizenId"></param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserGuardianByGuardianIdCitizenByCitizenIdPostAsyncWithHttpInfo (string guardianId, string citizenId)
-        {
-            // verify the required parameter 'guardianId' is set
-            if (guardianId == null)
-                throw new ApiException(400, "Missing required parameter 'guardianId' when calling UserApi->V1UserGuardianByGuardianIdCitizenByCitizenIdPost");
-            // verify the required parameter 'citizenId' is set
-            if (citizenId == null)
-                throw new ApiException(400, "Missing required parameter 'citizenId' when calling UserApi->V1UserGuardianByGuardianIdCitizenByCitizenIdPost");
-
-            var localVarPath = "/v1/User/guardian/{guardianId}/citizen/{citizenId}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (guardianId != null) localVarPathParams.Add("guardianId", Configuration.ApiClient.ParameterToString(guardianId)); // path parameter
-            if (citizenId != null) localVarPathParams.Add("citizenId", Configuration.ApiClient.ParameterToString(citizenId)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserGuardianByGuardianIdCitizenByCitizenIdPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Allows the user to delete his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Response</returns>
-        public Response V1UserIconDelete ()
-        {
-             ApiResponse<Response> localVarResponse = V1UserIconDeleteWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Allows the user to delete his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1UserIconDeleteWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/icon";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserIconDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Allows the user to delete his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1UserIconDeleteAsync ()
-        {
-             ApiResponse<Response> localVarResponse = await V1UserIconDeleteAsyncWithHttpInfo();
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Allows the user to delete his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1UserIconDeleteAsyncWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/icon";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserIconDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Allows the user to update his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Response</returns>
-        public Response V1UserIconPut ()
-        {
-             ApiResponse<Response> localVarResponse = V1UserIconPutWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Allows the user to update his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1UserIconPutWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/icon";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserIconPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Allows the user to update his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1UserIconPutAsync ()
-        {
-             ApiResponse<Response> localVarResponse = await V1UserIconPutAsyncWithHttpInfo();
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Allows the user to update his profile icon. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1UserIconPutAsyncWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/icon";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserIconPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserPut (string username = null, string screenName = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserPutWithHttpInfo(username, screenName);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserPutWithHttpInfo (string username = null, string screenName = null)
-        {
-
-            var localVarPath = "/v1/User";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json", 
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (screenName != null && screenName.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(screenName); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = screenName; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserPutAsync (string username = null, string screenName = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserPutAsyncWithHttpInfo(username, screenName);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Updates username and screenname for the current authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username"> (optional)</param>
-        /// <param name="screenName"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserPutAsyncWithHttpInfo (string username = null, string screenName = null)
-        {
-
-            var localVarPath = "/v1/User";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json", 
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (screenName != null && screenName.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(screenName); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = screenName; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserResourceDelete (ResourceIdDTO resourceIdDTO = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserResourceDeleteWithHttpInfo(resourceIdDTO);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserResourceDeleteWithHttpInfo (ResourceIdDTO resourceIdDTO = null)
-        {
-
-            var localVarPath = "/v1/User/resource";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceIdDTO; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserResourceDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserResourceDeleteAsync (ResourceIdDTO resourceIdDTO = null)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserResourceDeleteAsyncWithHttpInfo(resourceIdDTO);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Deletes a resource with the specified id from the given user&#39;s list of resources. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="resourceIdDTO"> (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserResourceDeleteAsyncWithHttpInfo (ResourceIdDTO resourceIdDTO = null)
-        {
-
-            var localVarPath = "/v1/User/resource";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (resourceIdDTO != null && resourceIdDTO.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(resourceIdDTO); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = resourceIdDTO; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserResourceDelete", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseSettingDTO</returns>
-        public ResponseSettingDTO V1UserSettingsGet ()
-        {
-             ApiResponse<ResponseSettingDTO> localVarResponse = V1UserSettingsGetWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseSettingDTO</returns>
-        public ApiResponse< ResponseSettingDTO > V1UserSettingsGetWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/settings";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserSettingsGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
-        }
-
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseSettingDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsGetAsync ()
-        {
-             ApiResponse<ResponseSettingDTO> localVarResponse = await V1UserSettingsGetAsyncWithHttpInfo();
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Read the currently authorized user&#39;s settings object. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsGetAsyncWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/settings";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserSettingsGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
-        }
-
-        /// <summary>
-        /// Updates the currently authenticated user settings. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>ResponseSettingDTO</returns>
-        public ResponseSettingDTO V1UserSettingsPut (SettingDTO options = null)
-        {
-             ApiResponse<ResponseSettingDTO> localVarResponse = V1UserSettingsPutWithHttpInfo(options);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Updates the currently authenticated user settings. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>ApiResponse of ResponseSettingDTO</returns>
-        public ApiResponse< ResponseSettingDTO > V1UserSettingsPutWithHttpInfo (SettingDTO options = null)
-        {
-
-            var localVarPath = "/v1/User/settings";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (options != null && options.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(options); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = options; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserSettingsPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
-        }
-
-        /// <summary>
-        /// Updates the currently authenticated user settings. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ResponseSettingDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsPutAsync (SettingDTO options = null)
-        {
-             ApiResponse<ResponseSettingDTO> localVarResponse = await V1UserSettingsPutAsyncWithHttpInfo(options);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Updates the currently authenticated user settings. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsPutAsyncWithHttpInfo (SettingDTO options = null)
-        {
-
-            var localVarPath = "/v1/User/settings";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (options != null && options.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(options); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = options; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserSettingsPut", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
-        }
-
-        /// <summary>
-        /// Returns currently logged in users username 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseString</returns>
-        public ResponseString V1UserUsernameGet ()
-        {
-             ApiResponse<ResponseString> localVarResponse = V1UserUsernameGetWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Returns currently logged in users username 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseString</returns>
-        public ApiResponse< ResponseString > V1UserUsernameGetWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/username";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserUsernameGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseString>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseString) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseString)));
-        }
-
-        /// <summary>
-        /// Returns currently logged in users username 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseString</returns>
-        public async System.Threading.Tasks.Task<ResponseString> V1UserUsernameGetAsync ()
-        {
-             ApiResponse<ResponseString> localVarResponse = await V1UserUsernameGetAsyncWithHttpInfo();
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Returns currently logged in users username 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseString)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseString>> V1UserUsernameGetAsyncWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/User/username";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserUsernameGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseString>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseString) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseString)));
         }
 
     }

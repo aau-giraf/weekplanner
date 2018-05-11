@@ -31,6 +31,43 @@ namespace IO.Swagger.Model
     public partial class UserNameDTO :  IEquatable<UserNameDTO>, IValidatableObject
     {
         /// <summary>
+        /// Defines UserRole
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum UserRoleEnum
+        {
+            
+            /// <summary>
+            /// Enum Citizen for value: Citizen
+            /// </summary>
+            [EnumMember(Value = "Citizen")]
+            Citizen = 1,
+            
+            /// <summary>
+            /// Enum Department for value: Department
+            /// </summary>
+            [EnumMember(Value = "Department")]
+            Department = 2,
+            
+            /// <summary>
+            /// Enum Guardian for value: Guardian
+            /// </summary>
+            [EnumMember(Value = "Guardian")]
+            Guardian = 3,
+            
+            /// <summary>
+            /// Enum SuperUser for value: SuperUser
+            /// </summary>
+            [EnumMember(Value = "SuperUser")]
+            SuperUser = 4
+        }
+
+        /// <summary>
+        /// Gets or Sets UserRole
+        /// </summary>
+        [DataMember(Name="userRole", EmitDefaultValue=false)]
+        public UserRoleEnum? UserRole { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserNameDTO" /> class.
         /// </summary>
         /// <param name="UserName">UserName.</param>
@@ -47,6 +84,7 @@ namespace IO.Swagger.Model
         [DataMember(Name="userName", EmitDefaultValue=false)]
         public string UserName { get; set; }
 
+
         /// <summary>
         /// Gets or Sets UserId
         /// </summary>
@@ -62,6 +100,7 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class UserNameDTO {\n");
             sb.Append("  UserName: ").Append(UserName).Append("\n");
+            sb.Append("  UserRole: ").Append(UserRole).Append("\n");
             sb.Append("  UserId: ").Append(UserId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -103,6 +142,11 @@ namespace IO.Swagger.Model
                     this.UserName.Equals(input.UserName))
                 ) && 
                 (
+                    this.UserRole == input.UserRole ||
+                    (this.UserRole != null &&
+                    this.UserRole.Equals(input.UserRole))
+                ) && 
+                (
                     this.UserId == input.UserId ||
                     (this.UserId != null &&
                     this.UserId.Equals(input.UserId))
@@ -120,6 +164,8 @@ namespace IO.Swagger.Model
                 int hashCode = 41;
                 if (this.UserName != null)
                     hashCode = hashCode * 59 + this.UserName.GetHashCode();
+                if (this.UserRole != null)
+                    hashCode = hashCode * 59 + this.UserRole.GetHashCode();
                 if (this.UserId != null)
                     hashCode = hashCode * 59 + this.UserId.GetHashCode();
                 return hashCode;

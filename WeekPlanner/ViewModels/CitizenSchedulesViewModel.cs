@@ -98,14 +98,14 @@ namespace WeekPlanner.ViewModels
         public async Task InitializeWeekSchedules()
         {
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _weekApi.V1WeekGetAsync(),
+                requestAsync: () => _weekApi.V1UserByUserIdWeekGetAsync(_settingsService.CurrentCitizenId),
                 onSuccess: result => { WeekNameDTOS = new ObservableCollection<WeekNameDTO>(result.Data); },
                 onRequestFailedAsync: () => Task.FromResult("'No week schedules found is not an error'-fix."));
 
             foreach (var item in WeekNameDTOS)
             {
                 await _requestService.SendRequestAndThenAsync(
-                    () => _weekApi.V1WeekByWeekYearByWeekNumberGetAsync(weekYear: item.WeekYear,
+                    () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(userId: _settingsService.CurrentCitizenId, weekYear: item.WeekYear,
                         weekNumber: item.WeekNumber), (res) => Weeks.Add(res.Data));
             }
         }
@@ -133,7 +133,7 @@ namespace WeekPlanner.ViewModels
 
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: () =>
-                    _weekApi.V1WeekByWeekYearByWeekNumberDeleteAsync(weekNumber: week.WeekNumber,
+                _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberDeleteAsync(userId: _settingsService.CurrentCitizenId, weekNumber: week.WeekNumber,
                         weekYear: week.WeekYear), onSuccess: (r) => Weeks.Remove(week));
 
         }

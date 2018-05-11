@@ -25,69 +25,6 @@ namespace IO.Swagger.Api
     {
         #region Synchronous Operations
         /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        void V1AccountAccessDeniedGet ();
-
-        /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> V1AccountAccessDeniedGetWithHttpInfo ();
-        /// <summary>
-        /// Allows the user to change his password.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>Response</returns>
-        Response V1AccountChangePasswordPost (string oldPassword, string newPassword);
-
-        /// <summary>
-        /// Allows the user to change his password.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1AccountChangePasswordPostWithHttpInfo (string oldPassword, string newPassword);
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>Response</returns>
-        Response V1AccountForgotPasswordPost (ForgotPasswordDTO model = null);
-
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1AccountForgotPasswordPostWithHttpInfo (ForgotPasswordDTO model = null);
-        /// <summary>
         /// This endpoint allows the user to sign in to his account by providing valid username and password.
         /// </summary>
         /// <remarks>
@@ -108,25 +45,6 @@ namespace IO.Swagger.Api
         /// <param name="model">A LoginDTO(LoginViewModelDTO), i.e. a json-string with a username and a password field. (optional)</param>
         /// <returns>ApiResponse of ResponseString</returns>
         ApiResponse<ResponseString> V1AccountLoginPostWithHttpInfo (LoginDTO model = null);
-        /// <summary>
-        /// Logs the currently authenticated user out of the system.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Response</returns>
-        Response V1AccountLogoutPost ();
-
-        /// <summary>
-        /// Logs the currently authenticated user out of the system.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1AccountLogoutPostWithHttpInfo ();
         /// <summary>
         /// Register a new user in the REST-API
         /// </summary>
@@ -149,156 +67,53 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
         ApiResponse<ResponseGirafUserDTO> V1AccountRegisterPostWithHttpInfo (RegisterDTO model = null);
         /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page.
+        /// 
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        void V1AccountResetPasswordConfirmationGet ();
+        /// <param name="userId"></param>
+        /// <returns>Response</returns>
+        Response V1AccountUserByUserIdDelete (string userId);
 
         /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page.
+        /// 
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> V1AccountResetPasswordConfirmationGetWithHttpInfo ();
+        /// <param name="userId"></param>
+        /// <returns>ApiResponse of Response</returns>
+        ApiResponse<Response> V1AccountUserByUserIdDeleteWithHttpInfo (string userId);
         /// <summary>
-        /// Gets the view associated with the ResetPassword page.
+        /// Allows the user to change his password.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns></returns>
-        void V1AccountResetPasswordGet (string code = null);
-
-        /// <summary>
-        /// Gets the view associated with the ResetPassword page.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> V1AccountResetPasswordGetWithHttpInfo (string code = null);
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns></returns>
-        void V1AccountResetPasswordPost (string username, string password, string code = null);
-
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> V1AccountResetPasswordPostWithHttpInfo (string username, string password, string code = null);
-        /// <summary>
-        /// Creates a new password for the currently authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
         /// <returns>Response</returns>
-        Response V1AccountSetPasswordPost (string newPassword);
+        Response V1UserByIdAccountChangePasswordPost (string id, string oldPassword, string newPassword);
 
         /// <summary>
-        /// Creates a new password for the currently authenticated user.
+        /// Allows the user to change his password.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1AccountSetPasswordPostWithHttpInfo (string newPassword);
+        ApiResponse<Response> V1UserByIdAccountChangePasswordPostWithHttpInfo (string id, string oldPassword, string newPassword);
         #endregion Synchronous Operations
         #region Asynchronous Operations
-        /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task V1AccountAccessDeniedGetAsync ();
-
-        /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountAccessDeniedGetAsyncWithHttpInfo ();
-        /// <summary>
-        /// Allows the user to change his password.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1AccountChangePasswordPostAsync (string oldPassword, string newPassword);
-
-        /// <summary>
-        /// Allows the user to change his password.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountChangePasswordPostAsyncWithHttpInfo (string oldPassword, string newPassword);
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1AccountForgotPasswordPostAsync (ForgotPasswordDTO model = null);
-
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountForgotPasswordPostAsyncWithHttpInfo (ForgotPasswordDTO model = null);
         /// <summary>
         /// This endpoint allows the user to sign in to his account by providing valid username and password.
         /// </summary>
@@ -321,25 +136,6 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseString)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseString>> V1AccountLoginPostAsyncWithHttpInfo (LoginDTO model = null);
         /// <summary>
-        /// Logs the currently authenticated user out of the system.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1AccountLogoutPostAsync ();
-
-        /// <summary>
-        /// Logs the currently authenticated user out of the system.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountLogoutPostAsyncWithHttpInfo ();
-        /// <summary>
         /// Register a new user in the REST-API
         /// </summary>
         /// <remarks>
@@ -361,91 +157,51 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1AccountRegisterPostAsyncWithHttpInfo (RegisterDTO model = null);
         /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page.
+        /// 
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task V1AccountResetPasswordConfirmationGetAsync ();
+        /// <param name="userId"></param>
+        /// <returns>Task of Response</returns>
+        System.Threading.Tasks.Task<Response> V1AccountUserByUserIdDeleteAsync (string userId);
 
         /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page.
+        /// 
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordConfirmationGetAsyncWithHttpInfo ();
+        /// <param name="userId"></param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountUserByUserIdDeleteAsyncWithHttpInfo (string userId);
         /// <summary>
-        /// Gets the view associated with the ResetPassword page.
+        /// Allows the user to change his password.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task V1AccountResetPasswordGetAsync (string code = null);
-
-        /// <summary>
-        /// Gets the view associated with the ResetPassword page.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordGetAsyncWithHttpInfo (string code = null);
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task V1AccountResetPasswordPostAsync (string username, string password, string code = null);
-
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordPostAsyncWithHttpInfo (string username, string password, string code = null);
-        /// <summary>
-        /// Creates a new password for the currently authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1AccountSetPasswordPostAsync (string newPassword);
+        System.Threading.Tasks.Task<Response> V1UserByIdAccountChangePasswordPostAsync (string id, string oldPassword, string newPassword);
 
         /// <summary>
-        /// Creates a new password for the currently authenticated user.
+        /// Allows the user to change his password.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
         /// <param name="newPassword">The desired password.</param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountSetPasswordPostAsyncWithHttpInfo (string newPassword);
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1UserByIdAccountChangePasswordPostAsyncWithHttpInfo (string id, string oldPassword, string newPassword);
         #endregion Asynchronous Operations
     }
 
@@ -544,455 +300,6 @@ namespace IO.Swagger.Api
         public void AddDefaultHeader(string key, string value)
         {
             this.Configuration.AddDefaultHeader(key, value);
-        }
-
-        /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        public void V1AccountAccessDeniedGet ()
-        {
-             V1AccountAccessDeniedGetWithHttpInfo();
-        }
-
-        /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> V1AccountAccessDeniedGetWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/Account/access-denied";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountAccessDeniedGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task V1AccountAccessDeniedGetAsync ()
-        {
-             await V1AccountAccessDeniedGetAsyncWithHttpInfo();
-
-        }
-
-        /// <summary>
-        /// An end-point that simply returns Unauthorized. It is redirected to by the runtime when an unauthorized request  to an end-point with the [Authorize] attribute is encountered. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountAccessDeniedGetAsyncWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/Account/access-denied";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountAccessDeniedGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// Allows the user to change his password. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>Response</returns>
-        public Response V1AccountChangePasswordPost (string oldPassword, string newPassword)
-        {
-             ApiResponse<Response> localVarResponse = V1AccountChangePasswordPostWithHttpInfo(oldPassword, newPassword);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Allows the user to change his password. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1AccountChangePasswordPostWithHttpInfo (string oldPassword, string newPassword)
-        {
-            // verify the required parameter 'oldPassword' is set
-            if (oldPassword == null)
-                throw new ApiException(400, "Missing required parameter 'oldPassword' when calling AccountApi->V1AccountChangePasswordPost");
-            // verify the required parameter 'newPassword' is set
-            if (newPassword == null)
-                throw new ApiException(400, "Missing required parameter 'newPassword' when calling AccountApi->V1AccountChangePasswordPost");
-
-            var localVarPath = "/v1/Account/change-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (oldPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "OldPassword", oldPassword)); // query parameter
-            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountChangePasswordPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Allows the user to change his password. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1AccountChangePasswordPostAsync (string oldPassword, string newPassword)
-        {
-             ApiResponse<Response> localVarResponse = await V1AccountChangePasswordPostAsyncWithHttpInfo(oldPassword, newPassword);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Allows the user to change his password. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="oldPassword">The users current password.</param>
-        /// <param name="newPassword">The desired password.</param>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountChangePasswordPostAsyncWithHttpInfo (string oldPassword, string newPassword)
-        {
-            // verify the required parameter 'oldPassword' is set
-            if (oldPassword == null)
-                throw new ApiException(400, "Missing required parameter 'oldPassword' when calling AccountApi->V1AccountChangePasswordPost");
-            // verify the required parameter 'newPassword' is set
-            if (newPassword == null)
-                throw new ApiException(400, "Missing required parameter 'newPassword' when calling AccountApi->V1AccountChangePasswordPost");
-
-            var localVarPath = "/v1/Account/change-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (oldPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "OldPassword", oldPassword)); // query parameter
-            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountChangePasswordPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>Response</returns>
-        public Response V1AccountForgotPasswordPost (ForgotPasswordDTO model = null)
-        {
-             ApiResponse<Response> localVarResponse = V1AccountForgotPasswordPostWithHttpInfo(model);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1AccountForgotPasswordPostWithHttpInfo (ForgotPasswordDTO model = null)
-        {
-
-            var localVarPath = "/v1/Account/forgot-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (model != null && model.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(model); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = model; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountForgotPasswordPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1AccountForgotPasswordPostAsync (ForgotPasswordDTO model = null)
-        {
-             ApiResponse<Response> localVarResponse = await V1AccountForgotPasswordPostAsyncWithHttpInfo(model);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Use this endpoint to request a password reset link, which is send to the user&#39;s email address. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="model">A ForgotPasswordDTO, which contains a username and an email address. (optional)</param>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountForgotPasswordPostAsyncWithHttpInfo (ForgotPasswordDTO model = null)
-        {
-
-            var localVarPath = "/v1/Account/forgot-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (model != null && model.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(model); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = model; // byte array
-            }
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountForgotPasswordPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
         }
 
         /// <summary>
@@ -1159,141 +466,6 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Logs the currently authenticated user out of the system. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Response</returns>
-        public Response V1AccountLogoutPost ()
-        {
-             ApiResponse<Response> localVarResponse = V1AccountLogoutPostWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Logs the currently authenticated user out of the system. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1AccountLogoutPostWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/Account/logout";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountLogoutPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
-        /// Logs the currently authenticated user out of the system. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1AccountLogoutPostAsync ()
-        {
-             ApiResponse<Response> localVarResponse = await V1AccountLogoutPostAsyncWithHttpInfo();
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Logs the currently authenticated user out of the system. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountLogoutPostAsyncWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/Account/logout";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountLogoutPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Response>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
-        }
-
-        /// <summary>
         /// Register a new user in the REST-API 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
@@ -1457,447 +629,30 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page. 
+        ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns></returns>
-        public void V1AccountResetPasswordConfirmationGet ()
-        {
-             V1AccountResetPasswordConfirmationGetWithHttpInfo();
-        }
-
-        /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> V1AccountResetPasswordConfirmationGetWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/Account/reset-password-confirmation";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountResetPasswordConfirmationGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task V1AccountResetPasswordConfirmationGetAsync ()
-        {
-             await V1AccountResetPasswordConfirmationGetAsyncWithHttpInfo();
-
-        }
-
-        /// <summary>
-        /// Get the view associated with the ResetPasswordConfirmation page. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordConfirmationGetAsyncWithHttpInfo ()
-        {
-
-            var localVarPath = "/v1/Account/reset-password-confirmation";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountResetPasswordConfirmationGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// Gets the view associated with the ResetPassword page. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns></returns>
-        public void V1AccountResetPasswordGet (string code = null)
-        {
-             V1AccountResetPasswordGetWithHttpInfo(code);
-        }
-
-        /// <summary>
-        /// Gets the view associated with the ResetPassword page. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> V1AccountResetPasswordGetWithHttpInfo (string code = null)
-        {
-
-            var localVarPath = "/v1/Account/reset-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "code", code)); // query parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountResetPasswordGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// Gets the view associated with the ResetPassword page. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task V1AccountResetPasswordGetAsync (string code = null)
-        {
-             await V1AccountResetPasswordGetAsyncWithHttpInfo(code);
-
-        }
-
-        /// <summary>
-        /// Gets the view associated with the ResetPassword page. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="code">The reset password token that has been sent to the user via his email. (optional)</param>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordGetAsyncWithHttpInfo (string code = null)
-        {
-
-            var localVarPath = "/v1/Account/reset-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "code", code)); // query parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountResetPasswordGet", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns></returns>
-        public void V1AccountResetPasswordPost (string username, string password, string code = null)
-        {
-             V1AccountResetPasswordPostWithHttpInfo(username, password, code);
-        }
-
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> V1AccountResetPasswordPostWithHttpInfo (string username, string password, string code = null)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling AccountApi->V1AccountResetPasswordPost");
-            // verify the required parameter 'password' is set
-            if (password == null)
-                throw new ApiException(400, "Missing required parameter 'password' when calling AccountApi->V1AccountResetPasswordPost");
-
-            var localVarPath = "/v1/Account/reset-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Username", username)); // query parameter
-            if (password != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Password", password)); // query parameter
-            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Code", code)); // query parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountResetPasswordPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task V1AccountResetPasswordPostAsync (string username, string password, string code = null)
-        {
-             await V1AccountResetPasswordPostAsyncWithHttpInfo(username, password, code);
-
-        }
-
-        /// <summary>
-        /// Attempts to change the given user&#39;s password. If the DTO did not contain valid information simply returns the view with  the current information that the user has specified. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="username">The users username.</param>
-        /// <param name="password">The users password.</param>
-        /// <param name="code">Reset password confirmation code. Used when a user request a password reset, this code needs to be added to the url in order to reset. (optional)</param>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> V1AccountResetPasswordPostAsyncWithHttpInfo (string username, string password, string code = null)
-        {
-            // verify the required parameter 'username' is set
-            if (username == null)
-                throw new ApiException(400, "Missing required parameter 'username' when calling AccountApi->V1AccountResetPasswordPost");
-            // verify the required parameter 'password' is set
-            if (password == null)
-                throw new ApiException(400, "Missing required parameter 'password' when calling AccountApi->V1AccountResetPasswordPost");
-
-            var localVarPath = "/v1/Account/reset-password";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (username != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Username", username)); // query parameter
-            if (password != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Password", password)); // query parameter
-            if (code != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "Code", code)); // query parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1AccountResetPasswordPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<Object>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-
-        /// <summary>
-        /// Creates a new password for the currently authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newPassword">The desired password.</param>
+        /// <param name="userId"></param>
         /// <returns>Response</returns>
-        public Response V1AccountSetPasswordPost (string newPassword)
+        public Response V1AccountUserByUserIdDelete (string userId)
         {
-             ApiResponse<Response> localVarResponse = V1AccountSetPasswordPostWithHttpInfo(newPassword);
+             ApiResponse<Response> localVarResponse = V1AccountUserByUserIdDeleteWithHttpInfo(userId);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Creates a new password for the currently authenticated user. 
+        ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newPassword">The desired password.</param>
+        /// <param name="userId"></param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1AccountSetPasswordPostWithHttpInfo (string newPassword)
+        public ApiResponse< Response > V1AccountUserByUserIdDeleteWithHttpInfo (string userId)
         {
-            // verify the required parameter 'newPassword' is set
-            if (newPassword == null)
-                throw new ApiException(400, "Missing required parameter 'newPassword' when calling AccountApi->V1AccountSetPasswordPost");
+            // verify the required parameter 'userId' is set
+            if (userId == null)
+                throw new ApiException(400, "Missing required parameter 'userId' when calling AccountApi->V1AccountUserByUserIdDelete");
 
-            var localVarPath = "/v1/Account/set-password";
+            var localVarPath = "/v1/Account/user/{userId}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1920,7 +675,7 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
+            if (userId != null) localVarPathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -1930,14 +685,14 @@ namespace IO.Swagger.Api
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1AccountSetPasswordPost", localVarResponse);
+                Exception exception = ExceptionFactory("V1AccountUserByUserIdDelete", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -1947,31 +702,31 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Creates a new password for the currently authenticated user. 
+        ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newPassword">The desired password.</param>
+        /// <param name="userId"></param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1AccountSetPasswordPostAsync (string newPassword)
+        public async System.Threading.Tasks.Task<Response> V1AccountUserByUserIdDeleteAsync (string userId)
         {
-             ApiResponse<Response> localVarResponse = await V1AccountSetPasswordPostAsyncWithHttpInfo(newPassword);
+             ApiResponse<Response> localVarResponse = await V1AccountUserByUserIdDeleteAsyncWithHttpInfo(userId);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Creates a new password for the currently authenticated user. 
+        ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="newPassword">The desired password.</param>
+        /// <param name="userId"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountSetPasswordPostAsyncWithHttpInfo (string newPassword)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1AccountUserByUserIdDeleteAsyncWithHttpInfo (string userId)
         {
-            // verify the required parameter 'newPassword' is set
-            if (newPassword == null)
-                throw new ApiException(400, "Missing required parameter 'newPassword' when calling AccountApi->V1AccountSetPasswordPost");
+            // verify the required parameter 'userId' is set
+            if (userId == null)
+                throw new ApiException(400, "Missing required parameter 'userId' when calling AccountApi->V1AccountUserByUserIdDelete");
 
-            var localVarPath = "/v1/Account/set-password";
+            var localVarPath = "/v1/Account/user/{userId}";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1994,6 +749,177 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
+            if (userId != null) localVarPathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1AccountUserByUserIdDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
+        /// Allows the user to change his password. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
+        /// <param name="newPassword">The desired password.</param>
+        /// <returns>Response</returns>
+        public Response V1UserByIdAccountChangePasswordPost (string id, string oldPassword, string newPassword)
+        {
+             ApiResponse<Response> localVarResponse = V1UserByIdAccountChangePasswordPostWithHttpInfo(id, oldPassword, newPassword);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Allows the user to change his password. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
+        /// <param name="newPassword">The desired password.</param>
+        /// <returns>ApiResponse of Response</returns>
+        public ApiResponse< Response > V1UserByIdAccountChangePasswordPostWithHttpInfo (string id, string oldPassword, string newPassword)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AccountApi->V1UserByIdAccountChangePasswordPost");
+            // verify the required parameter 'oldPassword' is set
+            if (oldPassword == null)
+                throw new ApiException(400, "Missing required parameter 'oldPassword' when calling AccountApi->V1UserByIdAccountChangePasswordPost");
+            // verify the required parameter 'newPassword' is set
+            if (newPassword == null)
+                throw new ApiException(400, "Missing required parameter 'newPassword' when calling AccountApi->V1UserByIdAccountChangePasswordPost");
+
+            var localVarPath = "/v1/User/{id}/Account/change-password";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (oldPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "OldPassword", oldPassword)); // query parameter
+            if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1UserByIdAccountChangePasswordPost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
+        /// Allows the user to change his password. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
+        /// <param name="newPassword">The desired password.</param>
+        /// <returns>Task of Response</returns>
+        public async System.Threading.Tasks.Task<Response> V1UserByIdAccountChangePasswordPostAsync (string id, string oldPassword, string newPassword)
+        {
+             ApiResponse<Response> localVarResponse = await V1UserByIdAccountChangePasswordPostAsyncWithHttpInfo(id, oldPassword, newPassword);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Allows the user to change his password. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <param name="oldPassword">The users current password.</param>
+        /// <param name="newPassword">The desired password.</param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1UserByIdAccountChangePasswordPostAsyncWithHttpInfo (string id, string oldPassword, string newPassword)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AccountApi->V1UserByIdAccountChangePasswordPost");
+            // verify the required parameter 'oldPassword' is set
+            if (oldPassword == null)
+                throw new ApiException(400, "Missing required parameter 'oldPassword' when calling AccountApi->V1UserByIdAccountChangePasswordPost");
+            // verify the required parameter 'newPassword' is set
+            if (newPassword == null)
+                throw new ApiException(400, "Missing required parameter 'newPassword' when calling AccountApi->V1UserByIdAccountChangePasswordPost");
+
+            var localVarPath = "/v1/User/{id}/Account/change-password";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (oldPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "OldPassword", oldPassword)); // query parameter
             if (newPassword != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "NewPassword", newPassword)); // query parameter
 
             // authentication (Bearer) required
@@ -2011,7 +937,7 @@ namespace IO.Swagger.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("V1AccountSetPasswordPost", localVarResponse);
+                Exception exception = ExceptionFactory("V1UserByIdAccountChangePasswordPost", localVarResponse);
                 if (exception != null) throw exception;
             }
 

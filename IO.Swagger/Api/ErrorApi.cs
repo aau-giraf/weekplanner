@@ -31,9 +31,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        Response V1ErrorDelete (int? status);
+        Response V1ErrorDelete ();
 
         /// <summary>
         /// 
@@ -42,9 +41,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1ErrorDeleteWithHttpInfo (int? status);
+        ApiResponse<Response> V1ErrorDeleteWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -52,9 +50,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        Response V1ErrorGet (int? status);
+        Response V1ErrorGet ();
 
         /// <summary>
         /// 
@@ -63,9 +60,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1ErrorGetWithHttpInfo (int? status);
+        ApiResponse<Response> V1ErrorGetWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -73,9 +69,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        Response V1ErrorPost (int? status);
+        Response V1ErrorPost ();
 
         /// <summary>
         /// 
@@ -84,9 +79,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1ErrorPostWithHttpInfo (int? status);
+        ApiResponse<Response> V1ErrorPostWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -94,9 +88,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        Response V1ErrorPut (int? status);
+        Response V1ErrorPut ();
 
         /// <summary>
         /// 
@@ -105,9 +98,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        ApiResponse<Response> V1ErrorPutWithHttpInfo (int? status);
+        ApiResponse<Response> V1ErrorPutWithHttpInfo ();
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -117,9 +109,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1ErrorDeleteAsync (int? status);
+        System.Threading.Tasks.Task<Response> V1ErrorDeleteAsync ();
 
         /// <summary>
         /// 
@@ -128,9 +119,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorDeleteAsyncWithHttpInfo (int? status);
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorDeleteAsyncWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -138,9 +128,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1ErrorGetAsync (int? status);
+        System.Threading.Tasks.Task<Response> V1ErrorGetAsync ();
 
         /// <summary>
         /// 
@@ -149,9 +138,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorGetAsyncWithHttpInfo (int? status);
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorGetAsyncWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -159,9 +147,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1ErrorPostAsync (int? status);
+        System.Threading.Tasks.Task<Response> V1ErrorPostAsync ();
 
         /// <summary>
         /// 
@@ -170,9 +157,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPostAsyncWithHttpInfo (int? status);
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPostAsyncWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -180,9 +166,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        System.Threading.Tasks.Task<Response> V1ErrorPutAsync (int? status);
+        System.Threading.Tasks.Task<Response> V1ErrorPutAsync ();
 
         /// <summary>
         /// 
@@ -191,9 +176,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPutAsyncWithHttpInfo (int? status);
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPutAsyncWithHttpInfo ();
         #endregion Asynchronous Operations
     }
 
@@ -298,11 +282,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        public Response V1ErrorDelete (int? status)
+        public Response V1ErrorDelete ()
         {
-             ApiResponse<Response> localVarResponse = V1ErrorDeleteWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = V1ErrorDeleteWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -310,13 +293,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1ErrorDeleteWithHttpInfo (int? status)
+        public ApiResponse< Response > V1ErrorDeleteWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorDelete");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -341,7 +320,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -371,11 +349,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1ErrorDeleteAsync (int? status)
+        public async System.Threading.Tasks.Task<Response> V1ErrorDeleteAsync ()
         {
-             ApiResponse<Response> localVarResponse = await V1ErrorDeleteAsyncWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = await V1ErrorDeleteAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -384,13 +361,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorDeleteAsyncWithHttpInfo (int? status)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorDeleteAsyncWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorDelete");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -415,7 +388,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -445,11 +417,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        public Response V1ErrorGet (int? status)
+        public Response V1ErrorGet ()
         {
-             ApiResponse<Response> localVarResponse = V1ErrorGetWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = V1ErrorGetWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -457,13 +428,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1ErrorGetWithHttpInfo (int? status)
+        public ApiResponse< Response > V1ErrorGetWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorGet");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -488,7 +455,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -518,11 +484,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1ErrorGetAsync (int? status)
+        public async System.Threading.Tasks.Task<Response> V1ErrorGetAsync ()
         {
-             ApiResponse<Response> localVarResponse = await V1ErrorGetAsyncWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = await V1ErrorGetAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -531,13 +496,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorGetAsyncWithHttpInfo (int? status)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorGetAsyncWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorGet");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -562,7 +523,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -592,11 +552,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        public Response V1ErrorPost (int? status)
+        public Response V1ErrorPost ()
         {
-             ApiResponse<Response> localVarResponse = V1ErrorPostWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = V1ErrorPostWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -604,13 +563,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1ErrorPostWithHttpInfo (int? status)
+        public ApiResponse< Response > V1ErrorPostWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorPost");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -635,7 +590,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -665,11 +619,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1ErrorPostAsync (int? status)
+        public async System.Threading.Tasks.Task<Response> V1ErrorPostAsync ()
         {
-             ApiResponse<Response> localVarResponse = await V1ErrorPostAsyncWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = await V1ErrorPostAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -678,13 +631,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPostAsyncWithHttpInfo (int? status)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPostAsyncWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorPost");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -709,7 +658,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -739,11 +687,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Response</returns>
-        public Response V1ErrorPut (int? status)
+        public Response V1ErrorPut ()
         {
-             ApiResponse<Response> localVarResponse = V1ErrorPutWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = V1ErrorPutWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -751,13 +698,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>ApiResponse of Response</returns>
-        public ApiResponse< Response > V1ErrorPutWithHttpInfo (int? status)
+        public ApiResponse< Response > V1ErrorPutWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorPut");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -782,7 +725,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
@@ -812,11 +754,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of Response</returns>
-        public async System.Threading.Tasks.Task<Response> V1ErrorPutAsync (int? status)
+        public async System.Threading.Tasks.Task<Response> V1ErrorPutAsync ()
         {
-             ApiResponse<Response> localVarResponse = await V1ErrorPutAsyncWithHttpInfo(status);
+             ApiResponse<Response> localVarResponse = await V1ErrorPutAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -825,13 +766,9 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="status"></param>
         /// <returns>Task of ApiResponse (Response)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPutAsyncWithHttpInfo (int? status)
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1ErrorPutAsyncWithHttpInfo ()
         {
-            // verify the required parameter 'status' is set
-            if (status == null)
-                throw new ApiException(400, "Missing required parameter 'status' when calling ErrorApi->V1ErrorPut");
 
             var localVarPath = "/v1/Error";
             var localVarPathParams = new Dictionary<String, String>();
@@ -856,7 +793,6 @@ namespace IO.Swagger.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (status != null) localVarQueryParams.AddRange(Configuration.ApiClient.ParameterToKeyValuePairs("", "status", status)); // query parameter
 
             // authentication (Bearer) required
             if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
