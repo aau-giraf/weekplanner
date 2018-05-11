@@ -44,7 +44,8 @@ namespace WeekPlanner.ViewModels
 	    {
 		    if (IsBusy) return;
 		    IsBusy = true;
-		    await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>(usernameDTO);
+            _settingsService.CurrentCitizen = usernameDTO;
+		    await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>();
 		    IsBusy = false;
 	    }
 
@@ -52,7 +53,7 @@ namespace WeekPlanner.ViewModels
 	    {
 
 		    await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.CurrentCitizen.Department),
+                requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.DepartmentId),
 			    onSuccess: result => {
 					result.Data.OrderBy(x => x.UserName);
 					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data);

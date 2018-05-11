@@ -60,10 +60,36 @@ namespace WeekPlanner.Services.Settings
                 RaisePropertyChanged(() => IsInGuardianMode);
             }
         }
-      
+        SettingDTO currentCitizenSettingDTO;
 
-        public SettingDTO CurrentCitizenSettingDTO { get; set; }
-        public GirafUserDTO CurrentCitizen { get; set; }
+        public SettingDTO CurrentCitizenSettingDTO
+        {
+            get => currentCitizenSettingDTO;
+            set
+            {
+                currentCitizenSettingDTO = value;
+                SetTheme();
+            }
+        }
+
+        UserNameDTO currentCitizen;
+
+        public UserNameDTO CurrentCitizen
+        {
+            get => currentCitizen;
+            set
+            {
+                currentCitizen = value;
+                // get and set settings
+                _requestService.SendRequestAndThenAsync(
+                    requestAsync: async () => await _userApi.V1UserByIdSettingsGetAsync(CurrentCitizen.UserId),
+                    onSuccess: result => CurrentCitizenSettingDTO = result.Data
+                );
+
+            }
+        }
+
+        public long DepartmentId { get; set; }
 
         public void SetTheme(){
             

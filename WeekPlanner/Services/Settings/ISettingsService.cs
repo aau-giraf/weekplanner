@@ -10,8 +10,9 @@ namespace WeekPlanner.Services.Settings
         string AuthToken { get; set; }
         bool IsInGuardianMode { get; set; }
         SettingDTO CurrentCitizenSettingDTO { get; set; }
-        GirafUserDTO CurrentCitizen { get; set; }
+        UserNameDTO CurrentCitizen { get; set; }
         void SetTheme();
+        long DepartmentId { get; set; }
     }
 
 

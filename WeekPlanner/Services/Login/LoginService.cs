@@ -42,16 +42,7 @@ namespace WeekPlanner.Services.Login
             {
                 _settingsService.AuthToken = result.Data;
 
-                if (userType == UserType.Citizen)
-                {
-                    await GetCitizenIdAndSetInSettings();
-                    await GetCitizenSettingsAndSetInSettings();
-                    _settingsService.SetTheme();
-                }
-                else // Guardian
-                {
-                    _settingsService.IsInGuardianMode = true;
-                }
+                await GetCitizenAndSetInSettings();
                 
                 if (onSuccess != null)
                 {
@@ -68,22 +59,24 @@ namespace WeekPlanner.Services.Login
         public async Task LoginAsync(UserType userType, string username, string password = "")
             => await LoginAndThenAsync(userType, username, password);
 
-        private Task GetCitizenIdAndSetInSettings()
+        private Task GetCitizenAndSetInSettings()
         {
             return _requestService.SendRequestAndThenAsync(() => _userApi.V1UserGetAsync(),
                 dto =>
                 {
-                    _settingsService.CurrentCitizen = dto.Data;
-                });
-        }
+                    _settingsService.DepartmentId = (long)dto.Data.Department;
 
-        private Task GetCitizenSettingsAndSetInSettings()
-        {
-            return _requestService.SendRequestAndThenAsync(
-                requestAsync: async () => await _userApi.V1UserByIdSettingsGetAsync(_settingsService.CurrentCitizen.Id),
-                onSuccess: result =>
-                {
-                    _settingsService.CurrentCitizenSettingDTO = result.Data;
+                    if(dto.Data.Role == GirafUserDTO.RoleEnum.Guardian) {
+                        _settingsService.IsInGuardianMode = true;
+                        // Don't set current citizen if Guardian since we don't want their settings
+                        return;
+                    }
+                    
+                    _settingsService.CurrentCitizen = new UserNameDTO { 
+                        UserId = dto.Data.Id, 
+                        UserName = dto.Data.Username, 
+                        UserRole = (IO.Swagger.Model.UserNameDTO.UserRoleEnum?)dto.Data.Role 
+                    };
                 });
         }
     }

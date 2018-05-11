@@ -98,14 +98,14 @@ namespace WeekPlanner.ViewModels
         public async Task InitializeWeekSchedules()
         {
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _weekApi.V1UserByUserIdWeekGetAsync(_settingsService.CurrentCitizen.Id),
+                requestAsync: () => _weekApi.V1UserByUserIdWeekGetAsync(_settingsService.CurrentCitizen.UserId),
                 onSuccess: result => { WeekNameDTOS = new ObservableCollection<WeekNameDTO>(result.Data); },
                 onRequestFailedAsync: () => Task.FromResult("'No week schedules found is not an error'-fix."));
 
             foreach (var item in WeekNameDTOS)
             {
                 await _requestService.SendRequestAndThenAsync(
-                    () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(userId: _settingsService.CurrentCitizen.Id, weekYear: item.WeekYear,
+                    () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(userId: _settingsService.CurrentCitizen.UserId, weekYear: item.WeekYear,
                         weekNumber: item.WeekNumber), (res) => Weeks.Add(res.Data));
             }
         }
@@ -133,7 +133,7 @@ namespace WeekPlanner.ViewModels
 
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: () =>
-                _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberDeleteAsync(userId: _settingsService.CurrentCitizen.Id, weekNumber: week.WeekNumber,
+                _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberDeleteAsync(userId: _settingsService.CurrentCitizen.UserId, weekNumber: week.WeekNumber,
                         weekYear: week.WeekYear), onSuccess: (r) => Weeks.Remove(week));
 
         }
@@ -156,14 +156,7 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is UserNameDTO userNameDTO)
-            {
-                await _loginService.LoginAndThenAsync(UserType.Citizen, userNameDTO.UserName, "", InitializeWeekSchedules);
-            }
-            else
-            {
-                throw new ArgumentException("Must be of type userNameDTO", nameof(navigationData));
-            }
+            await InitializeWeekSchedules();
         }
     }
 }
