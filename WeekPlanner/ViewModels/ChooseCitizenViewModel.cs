@@ -50,12 +50,9 @@ namespace WeekPlanner.ViewModels
 
 	    private async Task GetAndSetCitizenNamesAsync()
 	    {
-            //TODO Legacy from we had ChooseDepartment
-            // We need to refactor so we don't need the ID
-            var departmentId = 1;
 
 		    await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(departmentId),
+                requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.CurrentCitizen.Department),
 			    onSuccess: result => {
 					result.Data.OrderBy(x => x.UserName);
 					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data);

@@ -260,7 +260,7 @@ namespace WeekPlanner.ViewModels
         private async Task GetWeekPlanForCitizenAsync(int weekYear, int weekNumber)
         {
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(SettingsService.CurrentCitizenId, weekYear, weekNumber),
+                requestAsync: () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(SettingsService.CurrentCitizen.Id, weekYear, weekNumber),
                 onSuccess: result =>
                 {
                     WeekDTO = result.Data;
@@ -417,7 +417,7 @@ namespace WeekPlanner.ViewModels
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
             await _requestService.SendRequestAndThenAsync(
-                () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizenId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
+                () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.Id, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
                 result =>
                 {
                     _dialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));

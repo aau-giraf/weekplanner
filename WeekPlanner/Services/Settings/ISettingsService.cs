@@ -7,12 +7,10 @@ namespace WeekPlanner.Services.Settings
     public interface ISettingsService
     {
         string BaseEndpoint { get; set; }
-        bool UseMocks { get; set; }
         string AuthToken { get; set; }
         bool IsInGuardianMode { get; set; }
-        string CurrentCitizenId { get; set; }
-        string CurrentCitizenName { get; set; }
         SettingDTO CurrentCitizenSettingDTO { get; set; }
+        GirafUserDTO CurrentCitizen { get; set; }
         void SetTheme();
     }
 

@@ -37,10 +37,6 @@ namespace WeekPlanner.Services.Settings
             set { }
         }
 
-        public bool UseMocks { get; set; }
-
-        public DepartmentNameDTO Department { get; set; }
-
         public string AuthToken
         {
             get => _authToken;
@@ -52,6 +48,7 @@ namespace WeekPlanner.Services.Settings
         }
 
 
+        private string _authToken;
         private bool _isInGuardianMode;
 
         public bool IsInGuardianMode
@@ -63,32 +60,11 @@ namespace WeekPlanner.Services.Settings
                 RaisePropertyChanged(() => IsInGuardianMode);
             }
         }
-
-        private string _currentCitizenId;
-        public string CurrentCitizenId
-        {
-            get => _currentCitizenId;
-            set
-            {
-                _currentCitizenId = value;
-                RaisePropertyChanged(() => CurrentCitizenId);
-            } 
-        }
-        private string _currentCitizenName;
-        private string _authToken;
-
-        public string CurrentCitizenName
-        {
-            get => _currentCitizenName;
-            set
-            {
-                _currentCitizenName = value;
-                RaisePropertyChanged(() => CurrentCitizenName);
-            }
-        }
+      
 
         public SettingDTO CurrentCitizenSettingDTO { get; set; }
-        
+        public GirafUserDTO CurrentCitizen { get; set; }
+
         public void SetTheme(){
             
             var resources = Application.Current.Resources;
