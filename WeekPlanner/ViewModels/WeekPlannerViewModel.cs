@@ -506,7 +506,7 @@ namespace WeekPlanner.ViewModels
 
                 foreach (var activity in day.Activities)
                 {
-                    if (activity.IsChoiceBoard.Value)
+                    if (activity.IsChoiceBoard.HasValue &&activity.IsChoiceBoard.Value)
                     {
                         choiceBoardActivities.Add(activity);
                     }
@@ -519,7 +519,7 @@ namespace WeekPlanner.ViewModels
                         day.Activities.AddRange(unfoldedActivities);
                     }
                 }
-                day.Activities.RemoveAll(a => a.IsChoiceBoard.Value);
+                day.Activities.RemoveAll(a => a.IsChoiceBoard.HasValue && a.IsChoiceBoard.Value);
             }
 
             _choiceBoardActivities.Clear();
