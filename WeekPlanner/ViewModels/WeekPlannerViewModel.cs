@@ -244,23 +244,24 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is Tuple<int, int> weekDetails) //When initialized from CitizenSchedulesViewModel
+            switch (navigationData)
             {
-                ScheduleYear = weekDetails.Item1;
-                ScheduleWeek = weekDetails.Item2;
-                await GetWeekPlanForCitizenAsync(ScheduleYear, ScheduleWeek);
-            }
-            else if (navigationData is Tuple<int, int, WeekDTO> weekDetailsWithDTO) //When initialized from NewScheduleViewModel
-            {
-                ScheduleYear = weekDetailsWithDTO.Item1;
-                ScheduleWeek = weekDetailsWithDTO.Item2;
-                WeekDTO = weekDetailsWithDTO.Item3;
+                //When initialized from CitizenSchedulesViewModel
+                case Tuple<int, int> weekDetails:
+                    ScheduleYear = weekDetails.Item1;
+                    ScheduleWeek = weekDetails.Item2;
+                    await GetWeekPlanForCitizenAsync(ScheduleYear, ScheduleWeek);
+                    break;
+                //When initialized from NewScheduleViewModel
+                case Tuple<int, int, WeekDTO> weekDetailsWithDTO:
+                    ScheduleYear = weekDetailsWithDTO.Item1;
+                    ScheduleWeek = weekDetailsWithDTO.Item2;
+                    WeekDTO = weekDetailsWithDTO.Item3;
 
-                SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
-            }
-            else
-            {
-                throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
+                    SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
+                    break;
+                default:
+                    throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
             }
 
             FlipToggledDays();
@@ -270,42 +271,39 @@ namespace WeekPlanner.ViewModels
 
         public override async Task PoppedAsync(object navigationData)
         {
-            // Happens after choosing a pictogram in Pictosearch
-            if (navigationData is WeekPictogramDTO weekPictogramDTO)
+            switch (navigationData)
             {
-                InsertPicto(weekPictogramDTO);
-            }
+                // Happens after choosing a pictogram in Pictosearch
+                case WeekPictogramDTO weekPictogramDTO:
+                    InsertPicto(weekPictogramDTO);
+                    break;
+                // Happens when popping from ActivityViewModel
+                case ActivityViewModel activityViewModel when activityViewModel.Activity == null:
+                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
+                        .Activities
+                        .Remove(_selectedActivity);
+                    _isDirty = true;
 
-            // Happens when popping from ActivityViewModel
-            if (navigationData is ActivityViewModel activityViewModel && activityViewModel.Activity == null)
-            {
-                WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
-                    .Activities
-                    .Remove(_selectedActivity);
-                _isDirty = true;
+                    if (!SettingsService.IsInGuardianMode)
+                    {
+                        await SaveSchedule();
+                    }
+                    RaisePropertyForDays();
+                    break;
+                case ActivityViewModel activityVM:
+                    _selectedActivity = activityVM.Activity;
+                    _isDirty = true;
 
-                if (!SettingsService.IsInGuardianMode)
-                {
-                    await SaveSchedule();
-                }
-                RaisePropertyForDays();
-            }
-            else if (navigationData is ActivityViewModel activityVM)
-            {
-                _selectedActivity = activityVM.Activity;
-                _isDirty = true;
-
-                if (!SettingsService.IsInGuardianMode)
-                {
-                    await SaveSchedule(showDialog: false);
-                }
-                RaisePropertyForDays();
-            }
-
-            // Happens after logging in as guardian when switching to guardian mode
-            if (navigationData is bool enterGuardianMode)
-            {
-                SetToGuardianMode();
+                    if (!SettingsService.IsInGuardianMode)
+                    {
+                        await SaveSchedule(showDialog: false);
+                    }
+                    RaisePropertyForDays();
+                    break;
+                // Happens after logging in as guardian when switching to guardian mode
+                case bool enterGuardianMode:
+                    SetToGuardianMode();
+                    break;
             }
         }
 
@@ -426,7 +424,7 @@ namespace WeekPlanner.ViewModels
             if (dayToAddTo != null)
             {
                 // Insert pictogram in the very bottom of the day
-                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
+                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1 ?? 0;
                 dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal));
                 _isDirty = true;
                 RaisePropertyForDays();
