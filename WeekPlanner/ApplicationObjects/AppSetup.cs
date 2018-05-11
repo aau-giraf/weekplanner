@@ -37,6 +37,7 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<CitizenSchedulesViewModel>();
             cb.RegisterType<NewScheduleViewModel>();
             cb.RegisterType<ActivityViewModel>();
+            cb.RegisterType<ChoiceBoardViewModel>();
 
             // Services
 			cb.RegisterType<NavigationService>().As<INavigationService>();

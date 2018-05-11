@@ -204,6 +204,7 @@ namespace IO.Swagger.Model
                 return hashCode;
             }
         }
+        
 
         /// <summary>
         /// To validate all properties of the instance

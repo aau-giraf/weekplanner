@@ -25,6 +25,7 @@ namespace WeekPlanner.ViewModels
 
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
+        private readonly IPictogramApi _pictogramApi;
         private readonly IDialogService _dialogService;
         public ISettingsService SettingsService { get; }
         private bool _isDirty = false;
@@ -65,6 +66,8 @@ namespace WeekPlanner.ViewModels
         private ImageSource _userModeImage;
         private int _scheduleYear;
         private int _scheduleWeek;
+        private Dictionary<ActivityDTO, List<ActivityDTO>> _choiceBoardActivities = new Dictionary<ActivityDTO, List<ActivityDTO>>();
+        private WeekPictogramDTO _standardChoiceBoardPictoDTO;
         private ObservableCollection<DayToggledWrapper> _toggledDaysWrapper;
 
         public ObservableCollection<DayToggledWrapper> ToggledDaysWrapper
@@ -153,12 +156,24 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
             IsBusy = false;
         });
-        public ICommand PictoClickedCommand => new Command<ActivityDTO>(async activity =>
+        public ICommand PictoClickedCommand => new Command<Syncfusion.ListView.XForms.ItemTappedEventArgs>(async activity =>
         {
             if (IsBusy) return;
             IsBusy = true;
-            _selectedActivity = activity;
-            await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
+            if (activity.ItemData is ActivityDTO a)
+            {
+                _selectedActivity = a;
+
+                if (_selectedActivity.IsChoiceBoard.HasValue && _selectedActivity.IsChoiceBoard.Value)
+                {
+                    await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(GetActivitiesForChoiceBoard());
+                }
+                else
+                {
+                    await NavigationService.NavigateToAsync<ActivityViewModel>(_selectedActivity);
+                }
+            }
+
             IsBusy = false;
         });
 
@@ -219,11 +234,13 @@ namespace WeekPlanner.ViewModels
             IRequestService requestService,
             IWeekApi weekApi,
             IDialogService dialogService,
-            ISettingsService settingsService)
+            ISettingsService settingsService,
+            IPictogramApi pictogramApi)
             : base(navigationService)
         {
             _requestService = requestService;
             _weekApi = weekApi;
+            _pictogramApi = pictogramApi;
             _dialogService = dialogService;
             _requestService = requestService;
             SettingsService = settingsService;
@@ -244,6 +261,7 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
+            _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
             switch (navigationData)
             {
                 //When initialized from CitizenSchedulesViewModel
@@ -304,6 +322,9 @@ namespace WeekPlanner.ViewModels
                 case bool enterGuardianMode:
                     SetToGuardianMode();
                     break;
+                case ObservableCollection<ActivityDTO> activities:
+                    await HandleChoiceBoardAsync(activities);
+                    break;
             }
         }
 
@@ -318,14 +339,15 @@ namespace WeekPlanner.ViewModels
                     WeekName = WeekDTO.Name;
                 }
             );
+
+            FoldDaysToChoiceBoards();
         }
 
         private void OrderActivities()
         {
-            foreach (var days in WeekDTO.Days)
-            {
-                days.Activities = days.Activities.OrderBy(a => a.Order).ToList();
-            }
+            WeekDTO.Days.ForEach(d => d.Activities = d.Activities.OrderBy(a => a.Order).ToList());
+
+            RaisePropertyForDays();
         }
 
         private async void OnToggledDayEventHandler<ToggledEventArgs>(object sender, ToggledEventArgs e)
@@ -429,6 +451,127 @@ namespace WeekPlanner.ViewModels
             }
         }
 
+        #region ChoiceBoardMethods
+
+        private List<ActivityDTO> GetActivitiesForChoiceBoard()
+        {
+            if (_choiceBoardActivities.TryGetValue(_selectedActivity, out List<ActivityDTO> activities))
+            {
+                return activities;
+            }
+            return null;
+        }
+
+        private void DeleteChoiceBoard()
+        {
+            _choiceBoardActivities.Remove(_selectedActivity);
+        }
+
+        private void FoldDaysToChoiceBoards()
+        {
+            foreach (var days in WeekDTO.Days)
+            {
+                List<int?> orderOfChoiceBoards = new List<int?>();
+                List<ActivityDTO> choiceBoardItems = new List<ActivityDTO>();
+                ActivityDTO choiceBoard;
+
+                foreach (var a in days.Activities.GroupBy(d => d.Order, d => d))
+                {
+                    if (a.Count() > 1)
+                    {
+                        foreach (var item in a)
+                        {
+                            choiceBoardItems.Add(item);
+                        }
+                        orderOfChoiceBoards.Add(a.Key);
+                    }
+                }
+
+                foreach (var item in orderOfChoiceBoards)
+                {
+                    days.Activities.RemoveAll(a => a.Order == item);
+                    choiceBoard = new ActivityDTO(_standardChoiceBoardPictoDTO, item, StateEnum.Normal) { IsChoiceBoard = true };
+                    days.Activities.Add(choiceBoard);
+                    _choiceBoardActivities.Add(choiceBoard, choiceBoardItems);
+                }
+            }
+            OrderActivities();
+        }
+
+        private void PutChoiceActivitiesBackIntoSchedule()
+        {
+            foreach (var day in WeekDTO.Days)
+            {
+                List<ActivityDTO> choiceBoardActivities = new List<ActivityDTO>();
+
+                foreach (var activity in day.Activities)
+                {
+                    if (activity.IsChoiceBoard.HasValue &&activity.IsChoiceBoard.Value)
+                    {
+                        choiceBoardActivities.Add(activity);
+                    }
+                }
+
+                foreach (var item in choiceBoardActivities)
+                {
+                    if (_choiceBoardActivities.TryGetValue(item, out List<ActivityDTO> unfoldedActivities))
+                    {
+                        day.Activities.AddRange(unfoldedActivities);
+                    }
+                }
+                day.Activities.RemoveAll(a => a.IsChoiceBoard.HasValue && a.IsChoiceBoard.Value);
+            }
+
+            _choiceBoardActivities.Clear();
+        }
+
+        private async Task HandleChoiceBoardAsync(ObservableCollection<ActivityDTO> activities)
+        {
+            switch (activities.Count)
+            {
+                case 0:
+                    DeleteChoiceBoard();
+                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Remove(_selectedActivity);
+                    _isDirty = true;
+                    OrderActivities();
+                    break;
+                case 1:
+                    DeleteChoiceBoard();
+
+                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Add(activities.First());
+                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Remove(_selectedActivity);
+
+                    WeekDTO.Days.ForEach(a => a.Activities = a.Activities.OrderBy(x => x.Order).ToList());
+                    if (!SettingsService.IsInGuardianMode)
+                    {
+                        await SaveOrUpdateSchedule();
+                    }
+
+                    RaisePropertyForDays();
+
+                    break;
+                default:
+                    DayEnum? dayEnum = WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Day;
+                    ActivityDTO activityDTO = new ActivityDTO(_standardChoiceBoardPictoDTO, activities.First().Order, StateEnum.Normal) { IsChoiceBoard = true };
+
+                    _choiceBoardActivities.Remove(_selectedActivity);
+
+                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Remove(_selectedActivity);
+
+                    WeekDTO.Days.Single(d => d.Day == dayEnum).Activities.Add(activityDTO);
+
+                    _choiceBoardActivities.Add(activityDTO, activities.ToList());
+
+                    OrderActivities();
+
+                    _isDirty = true;
+                    break;
+            }
+        }
+        #endregion
+
+
+
         private async Task SaveSchedule(bool showDialog = true)
         {
             if (IsBusy) return;
@@ -463,6 +606,8 @@ namespace WeekPlanner.ViewModels
 
         private async Task SaveOrUpdateSchedule()
         {
+            PutChoiceActivitiesBackIntoSchedule();
+
             string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
@@ -474,6 +619,8 @@ namespace WeekPlanner.ViewModels
                     _dialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
                     WeekDTO = result.Data;
                 });
+
+            FoldDaysToChoiceBoards();
         }
 
         private bool RemoveItemFromDay(DayEnum day)
