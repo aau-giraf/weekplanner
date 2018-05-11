@@ -40,22 +40,19 @@ namespace WeekPlanner.Services.Login
 
             async Task OnRequestSuccess(ResponseString result)
             {
+                _settingsService.AuthToken = result.Data;
+
                 if (userType == UserType.Citizen)
                 {
-                    _settingsService.CitizenAuthToken = result.Data;
                     await GetCitizenIdAndSetInSettings();
                     await GetCitizenSettingsAndSetInSettings();
                     _settingsService.SetTheme();
-
                 }
                 else // Guardian
                 {
                     _settingsService.IsInGuardianMode = true;
-                    _settingsService.GuardianAuthToken = result.Data;
                 }
                 
-                _settingsService.UseTokenFor(userType);
-
                 if (onSuccess != null)
                 {
                     await onSuccess.Invoke();
@@ -73,7 +70,6 @@ namespace WeekPlanner.Services.Login
 
         private Task GetCitizenIdAndSetInSettings()
         {
-            _settingsService.UseTokenFor(UserType.Citizen);
             return _requestService.SendRequestAndThenAsync(() => _userApi.V1UserGetAsync(),
                 dto => {
                     _settingsService.CurrentCitizenId = dto.Data.Id;
@@ -88,7 +84,6 @@ namespace WeekPlanner.Services.Login
                 onSuccess: result =>
                 {
                     _settingsService.CurrentCitizenSettingDTO = result.Data;
-
                 });
         }
     }

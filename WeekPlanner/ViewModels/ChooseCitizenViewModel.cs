@@ -38,23 +38,18 @@ namespace WeekPlanner.ViewModels
         }
 
 	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
-		    await UseGuardianTokenAndNavigateToWeekPlan(usernameDTO));
+		    await NavigateToWeekPlan(usernameDTO));
 
-	    private async Task UseGuardianTokenAndNavigateToWeekPlan(UserNameDTO usernameDTO)
+	    private async Task NavigateToWeekPlan(UserNameDTO usernameDTO)
 	    {
 		    if (IsBusy) return;
 		    IsBusy = true;
-		    _settingsService.UseTokenFor(UserType.Guardian);
 		    await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>(usernameDTO);
 		    IsBusy = false;
 	    }
 
 	    private async Task GetAndSetCitizenNamesAsync()
 	    {
-		    // Always use the departmentToken when coming to this view.
-		    // It might have been changed to using the citizenToken
-            _settingsService.UseTokenFor(UserType.Guardian);
-
             //TODO Legacy from we had ChooseDepartment
             // We need to refactor so we don't need the ID
             var departmentId = 1;

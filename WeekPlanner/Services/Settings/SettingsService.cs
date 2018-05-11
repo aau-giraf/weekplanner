@@ -41,9 +41,16 @@ namespace WeekPlanner.Services.Settings
 
         public DepartmentNameDTO Department { get; set; }
 
-        public string GuardianAuthToken { get; set; }
+        public string AuthToken
+        {
+            get => _authToken;
+            set
+            {
+                _authToken = value;
+                _accountApi.Configuration.ApiKey["Authorization"] = $"bearer {value}";
+            }
+        }
 
-        public string CitizenAuthToken { get; set; }
 
         private bool _isInGuardianMode;
 
@@ -68,6 +75,8 @@ namespace WeekPlanner.Services.Settings
             } 
         }
         private string _currentCitizenName;
+        private string _authToken;
+
         public string CurrentCitizenName
         {
             get => _currentCitizenName;
@@ -79,42 +88,6 @@ namespace WeekPlanner.Services.Settings
         }
 
         public SettingDTO CurrentCitizenSettingDTO { get; set; }
-
-
-        /// <summary>
-        /// Sets the API up to using the specified type of authentication token.
-        /// </summary>
-        /// <param name="userType">The UserType to use a token for.</param>
-        /// <exception cref="ArgumentOutOfRangeException">When given an unknown UserType</exception>
-        /// <exception cref="ArgumentException">If the token for the specified UserType is not already set.</exception>
-        public void UseTokenFor(UserType userType)
-        {
-            switch(userType)
-            {
-                case UserType.Citizen:
-                    SetAuthTokenInAccountApi(CitizenAuthToken);
-                    _token = CitizenAuthToken;
-                    break;
-                case UserType.Guardian:
-                    SetAuthTokenInAccountApi(GuardianAuthToken);
-                    _token = GuardianAuthToken;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(userType), userType, null);
-            }
-        }
-        
-
-        private void SetAuthTokenInAccountApi(string authToken)
-        {
-            if (string.IsNullOrEmpty(authToken))
-            {
-                throw new ArgumentException("Can not be null or empty.", nameof(authToken));
-            }
-            
-            // The 'bearer' part is necessary, because it uses the Bearer Authentication
-            _accountApi.Configuration.AddApiKey("Authorization", $"bearer {authToken}");
-        }
         
         public void SetTheme(){
             

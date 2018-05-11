@@ -259,8 +259,6 @@ namespace WeekPlanner.ViewModels
         // TODO: Handle situation where no days exist
         private async Task GetWeekPlanForCitizenAsync(int weekYear, int weekNumber)
         {
-            SettingsService.UseTokenFor(UserType.Citizen);
-
             await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(SettingsService.CurrentCitizenId, weekYear, weekNumber),
                 onSuccess: result =>
@@ -406,8 +404,6 @@ namespace WeekPlanner.ViewModels
                 IsBusy = false;
                 return;
             }
-
-            SettingsService.UseTokenFor(UserType.Citizen);
 
             await SaveOrUpdateSchedule();
 

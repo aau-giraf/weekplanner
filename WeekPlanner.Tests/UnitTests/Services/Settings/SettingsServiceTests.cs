@@ -34,7 +34,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Settings
             var token = "ValidDepartmentToken";
             var accountApiMock = Fixture.Freeze<Mock<IAccountApi>>();
             var sut = Fixture.Build<SettingsService>()
-                .With(s => s.GuardianAuthToken, token)
+                .With(s => s.AuthToken, token)
                 .Create();
 
             // Act
@@ -65,7 +65,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Settings
         {
             // Arrange
             var sut = Fixture.Build<SettingsService>()
-                .With(s => s.GuardianAuthToken, token)
+                .With(s => s.AuthToken, token)
                 .Create();
             
             // Assert & Act

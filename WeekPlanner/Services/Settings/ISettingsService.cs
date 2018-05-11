@@ -8,15 +8,11 @@ namespace WeekPlanner.Services.Settings
     {
         string BaseEndpoint { get; set; }
         bool UseMocks { get; set; }
-        string GuardianAuthToken { get; set; }
-        string CitizenAuthToken { get; set; }
+        string AuthToken { get; set; }
         bool IsInGuardianMode { get; set; }
-        
         string CurrentCitizenId { get; set; }
         string CurrentCitizenName { get; set; }
         SettingDTO CurrentCitizenSettingDTO { get; set; }
-        
-        void UseTokenFor(UserType userType);
         void SetTheme();
     }
 

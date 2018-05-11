@@ -74,7 +74,6 @@ namespace WeekPlanner.ViewModels
         }
         private async Task UpdateSettingsAsync()
         {
-            _settingsService.UseTokenFor(UserType.Citizen);
             await _requestService.SendRequest(_userApi.V1UserByIdSettingsPutAsync(_settingsService.CurrentCitizenId, Settings));
         }
         public async override Task InitializeAsync(object navigationData)

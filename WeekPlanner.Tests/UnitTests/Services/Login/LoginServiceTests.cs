@@ -109,7 +109,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             await sut.LoginAndThenAsync(UserType.Guardian, "NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>());
             
             // Assert
-            settingsServiceMock.VerifySet(s => s.GuardianAuthToken = token);
+            settingsServiceMock.VerifySet(s => s.AuthToken = token);
         }
         
         [Fact]

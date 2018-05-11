@@ -151,7 +151,6 @@ namespace WeekPlanner.ViewModels
         {
             Weeks.Clear();
             WeekNameDTOS.Clear();
-            _settingsService.UseTokenFor(UserType.Citizen);
             await InitializeWeekSchedules();
         }
 
