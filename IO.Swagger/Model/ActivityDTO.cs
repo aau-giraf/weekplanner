@@ -188,6 +188,8 @@ namespace IO.Swagger.Model
             }
         }
 
+        public bool IsChoiceBoard { get; set; }
+
         /// <summary>
         /// To validate all properties of the instance
         /// </summary>
