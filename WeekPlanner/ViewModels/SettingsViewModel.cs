@@ -136,7 +136,7 @@ namespace WeekPlanner.ViewModels
         {
             WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
             // Update settings regardless of which property calls 'RaisePropertyChanged'
-            WeekdayColors.PropertyChanged += async (sender, e) => await UpdateSettingsAsync();
+            WeekdayColors.PropertyChanged += (sender, e) => UpdateSettingsAsync();
         }
     }
 }

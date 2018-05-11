@@ -152,7 +152,7 @@ namespace WeekPlanner.ViewModels
             if (dayToAddTo != null)
             {
                 // Insert pictogram in the very bottom of the day
-                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
+                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1 ?? 0;
                 dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal));
                 _isDirty = true;
                 RaisePropertyForDays();
@@ -224,40 +224,39 @@ namespace WeekPlanner.ViewModels
 
         public override async Task PoppedAsync(object navigationData)
         {
-            // Happens after choosing a pictogram in Pictosearch
-            if (navigationData is PictogramDTO pictogramDTO)
+            switch (navigationData)
             {
-                WeekPictogramDTO weekPictogramDTO = PictoToWeekPictoDtoHelper.Convert(pictogramDTO);
-                InsertPicto(weekPictogramDTO);
-            }
+                // Happens after choosing a pictogram in Pictosearch
+                case PictogramDTO pictogramDTO:
+                    WeekPictogramDTO weekPictogramDTO = PictoToWeekPictoDtoHelper.Convert(pictogramDTO);
+                    InsertPicto(weekPictogramDTO);
+                    break;
+                // Happens when popping from ActivityViewModel
+                case ActivityViewModel activityViewModel when activityViewModel.Activity == null:
+                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
+                        .Activities
+                        .Remove(_selectedActivity);
+                    _isDirty = true;
+                    RaisePropertyForDays();
+                    if (!SettingsService.IsInGuardianMode)
+                    {
+                        await UpdateExistingSchedule();
+                    }
+                    break;
+                case ActivityViewModel activityVM:
+                    _selectedActivity = activityVM.Activity;
+                    _isDirty = true;
+                    RaisePropertyForDays();
+                    if (!SettingsService.IsInGuardianMode)
+                    {
+                        await UpdateExistingSchedule(showDialog:false);
+                    }
 
-            // Happens when popping from ActivityViewModel
-            if (navigationData is ActivityViewModel activityViewModel && activityViewModel.Activity == null)
-            {
-                WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
-                    .Activities
-                    .Remove(_selectedActivity);
-                _isDirty = true;
-                RaisePropertyForDays();
-                if (!SettingsService.IsInGuardianMode)
-                {
-                    await UpdateExistingSchedule();
-                }
-            }
-            else if (navigationData is ActivityViewModel activityVM)
-            {
-                _selectedActivity = activityVM.Activity;
-                _isDirty = true;
-                RaisePropertyForDays();
-                if (!SettingsService.IsInGuardianMode)
-                {
-                    await UpdateExistingSchedule(showDialog:false);
-                }
-            }
-            // Happens after logging in as guardian when switching to guardian mode
-            if (navigationData is bool enterGuardianMode)
-            {
-                SetToGuardianMode();
+                    break;
+                // Happens after logging in as guardian when switching to guardian mode
+                case bool enterGuardianMode:
+                    SetToGuardianMode();
+                    break;
             }
         }
 
