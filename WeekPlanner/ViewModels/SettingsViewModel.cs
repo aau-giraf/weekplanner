@@ -20,16 +20,19 @@ namespace WeekPlanner.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IRequestService _requestService;
         private readonly IUserApi _userApi;
-        
+
         public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService,
             IRequestService requestService, IUserApi userApi) : base(navigationService)
         {
             _settingsService = settingsService;
             _requestService = requestService;
             _userApi = userApi;
+            WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
+            // Update settings regardless of which property calls 'RaisePropertyChanged'
+            WeekdayColors.PropertyChanged += (sender, e) => UpdateSettingsAsync();
         }
-        
-        public WeekdayColors WeekdayColors { get; set; }
+
+        public WeekdayColors WeekdayColors { get; }
         public IEnumerable<SettingDTO.ThemeEnum> Themes { get; } = new List<SettingDTO.ThemeEnum>
         {
             SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
@@ -67,8 +70,6 @@ namespace WeekPlanner.ViewModels
 
         public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
         
-        
-        
         private void SetThemeInSettingDTOAndUpdate(SettingDTO.ThemeEnum pickedTheme)
         {
             Settings.Theme = pickedTheme;
@@ -78,13 +79,6 @@ namespace WeekPlanner.ViewModels
         private async Task UpdateSettingsAsync()
         {
             await _requestService.SendRequest(_userApi.V1UserByIdSettingsPutAsync(_settingsService.CurrentCitizen.UserId, Settings));
-        }
-        
-        public async override Task InitializeAsync(object navigationData)
-        {
-            WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
-            // Update settings regardless of which property calls 'RaisePropertyChanged'
-            WeekdayColors.PropertyChanged += async (sender, e) => await UpdateSettingsAsync();
         }
     }
 }

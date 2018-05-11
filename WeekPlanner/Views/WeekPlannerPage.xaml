@@ -123,13 +123,13 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <controls:WeekDayListView BackgroundColor="{StaticResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" IsVisible="{Binding ToggledDaysWrapper[0].SwitchToggled}"/>
-                            <controls:WeekDayListView BackgroundColor="{StaticResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" IsVisible="{Binding ToggledDaysWrapper[1].SwitchToggled}"/>
-                            <controls:WeekDayListView BackgroundColor="{StaticResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" IsVisible="{Binding ToggledDaysWrapper[2].SwitchToggled}"/>
-                            <controls:WeekDayListView BackgroundColor="{StaticResource ThursdayColor}" ItemsSource="{Binding ThursdayPictos}" Grid.Column="3" IsVisible="{Binding ToggledDaysWrapper[3].SwitchToggled}"/>
-                            <controls:WeekDayListView BackgroundColor="{StaticResource FridayColor}" ItemsSource="{Binding FridayPictos}" Grid.Column="4" IsVisible="{Binding ToggledDaysWrapper[4].SwitchToggled}"/>
-                            <controls:WeekDayListView BackgroundColor="{StaticResource SaturdayColor}" ItemsSource="{Binding SaturdayPictos}" Grid.Column="5" IsVisible="{Binding ToggledDaysWrapper[5].SwitchToggled}"/>
-                            <controls:WeekDayListView BackgroundColor="{StaticResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" IsVisible="{Binding ToggledDaysWrapper[6].SwitchToggled}"/>
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource MondayColor}" ItemsSource="{Binding MondayPictos}" Grid.Column="0" IsVisible="{Binding ToggledDaysWrapper[0].SwitchToggled}"/>
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource TuesdayColor}" ItemsSource="{Binding TuesdayPictos}" Grid.Column="1" IsVisible="{Binding ToggledDaysWrapper[1].SwitchToggled}"/>
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource WednesdayColor}" ItemsSource="{Binding WednesdayPictos}" Grid.Column="2" IsVisible="{Binding ToggledDaysWrapper[2].SwitchToggled}"/>
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource ThursdayColor}" ItemsSource="{Binding ThursdayPictos}" Grid.Column="3" IsVisible="{Binding ToggledDaysWrapper[3].SwitchToggled}"/>
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource FridayColor}" ItemsSource="{Binding FridayPictos}" Grid.Column="4" IsVisible="{Binding ToggledDaysWrapper[4].SwitchToggled}"/>
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource SaturdayColor}" ItemsSource="{Binding SaturdayPictos}" Grid.Column="5" IsVisible="{Binding ToggledDaysWrapper[5].SwitchToggled}"/>
+                            <controls:WeekDayListView BackgroundColor="{DynamicResource SundayColor}" ItemsSource="{Binding SundayPictos}" Grid.Column="6" IsVisible="{Binding ToggledDaysWrapper[6].SwitchToggled}"/>
                         </Grid>
                     </ScrollView>
                 </Grid>
