@@ -153,12 +153,17 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
             IsBusy = false;
         });
-        public ICommand PictoClickedCommand => new Command<ActivityDTO>(async activity =>
+        public ICommand PictoClickedCommand => new Command<Syncfusion.ListView.XForms.ItemTappedEventArgs>(async activity =>
         {
             if (IsBusy) return;
             IsBusy = true;
-            _selectedActivity = activity;
-            await NavigationService.NavigateToAsync<ActivityViewModel>(activity);
+            if (activity.ItemData is ActivityDTO a)
+            {
+                _selectedActivity = a;
+
+                await NavigationService.NavigateToAsync<ActivityViewModel>(_selectedActivity);
+            }
+
             IsBusy = false;
         });
 
