@@ -59,7 +59,7 @@ namespace WeekPlanner.ViewModels
         public ICommand DeleteActivityCommand => new Command(async () =>
         {
             Activity = null;
-            await NavigationService.PopAsync(Activity);
+            await NavigationService.PopAsync(this);
         });
 
         public ICommand ToggleStateCommand => new Command(() =>
