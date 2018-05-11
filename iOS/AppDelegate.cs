@@ -1,6 +1,7 @@
 ﻿using FFImageLoading.Forms.Touch;
 using Foundation;
 using ObjCRuntime;
+using Syncfusion.ListView.XForms.iOS;
 using UIKit;
 using WeekPlanner.Views;
 
@@ -18,9 +19,11 @@ namespace WeekPlanner.iOS
 
 		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
+            Xamarin.Forms.Forms.Init();
             CachedImageRenderer.Init();
             
+	        SfListViewRenderer.Init();
+	        
             LoadApplication(new App());
             return base.FinishedLaunching(app, options);
         }

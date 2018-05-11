@@ -34,7 +34,6 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<PictogramSearchViewModel>();
 			cb.RegisterType<SettingsViewModel>();
             cb.RegisterType<MasterViewModel>();
-            cb.RegisterType<SavePromptViewModel>();
             cb.RegisterType<CitizenSchedulesViewModel>();
             cb.RegisterType<NewScheduleViewModel>();
             cb.RegisterType<ActivityViewModel>();

@@ -82,6 +82,26 @@
       <HintPath>..\packages\Acr.UserDialogs.7.0.1\lib\xamarinios10\Acr.UserDialogs.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Syncfusion.Core.XForms, Version=16.1451.0.37, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Syncfusion.Xamarin.Core.16.1.0.37\lib\Xamarin.iOS10\Syncfusion.Core.XForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.DataSource.Portable, Version=16.1451.0.37, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Syncfusion.Xamarin.DataSource.16.1.0.37\lib\Xamarin.iOS10\Syncfusion.DataSource.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.GridCommon.Portable, Version=16.1451.0.37, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Syncfusion.Xamarin.GridCommon.16.1.0.37\lib\Xamarin.iOS10\Syncfusion.GridCommon.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.SfListView.XForms, Version=16.1451.0.37, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Syncfusion.Xamarin.SfListView.16.1.0.37\lib\Xamarin.iOS10\Syncfusion.SfListView.XForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.SfListView.XForms.iOS, Version=16.1451.0.37, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Syncfusion.Xamarin.SfListView.16.1.0.37\lib\Xamarin.iOS10\Syncfusion.SfListView.XForms.iOS.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />

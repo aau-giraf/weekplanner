@@ -84,6 +84,8 @@
             <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
             <converters:IdToRawPictoUrlConverter x:Key="IdToRawPictoUrlConverter" />
             <converters:CitizenIdIsSetConverter x:Key="CitizenIdIsSetConverter" />
+            <converters:StateToOutlineConverter x:Key="StateToOutlineConverter" />
+            <converters:StateToImageConverter x:Key="StateToImageConverter" />
 
             <!-- CUSTOM NAVIGATION BAR - without toolbar button -->
             <ControlTemplate x:Key="NavBarTheme">

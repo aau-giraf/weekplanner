@@ -16,6 +16,7 @@ using WeekPlanner.Services;
 using WeekPlanner.Helpers;
 using static IO.Swagger.Model.ActivityDTO;
 using System.Collections.Generic;
+using Syncfusion.ListView.XForms;
 
 namespace WeekPlanner.ViewModels
 {
@@ -161,6 +162,58 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         });
 
+        public ICommand PictoDraggedCommand => new Command<ItemDraggingEventArgs>(args =>
+        {
+            // Disable dragging if in citizen mode
+            if (!SettingsService.IsInGuardianMode)
+            {
+                args.Cancel = true;
+                return;
+            }
+            
+            if (IsBusy) return;
+            IsBusy = true;
+            
+            if (args.Action == DragAction.Drop
+                && args.ItemData is ActivityDTO activity)
+            {
+                UpdateOrderingOfActivities(activity, args.OldIndex, args.NewIndex);
+            }
+            IsBusy = false;
+        });
+        
+        private void UpdateOrderingOfActivities(ActivityDTO activityDTO, int oldIndex, int newIndex)
+        {
+            if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityDTO == null) return;
+            WeekdayDTO dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Activities.Contains(activityDTO));
+            if (dayToReorder is null) return;
+            
+            // The activities have not updated yet, so we get the order value based on old indexes
+            var newOrder = dayToReorder.Activities[newIndex].Order;
+            
+            // Update the orders of all activities in the day          
+            if (newIndex < oldIndex) // Dragged upwards
+            {
+                for (int i = newIndex; i < oldIndex; i++)
+                {
+                    dayToReorder.Activities[i].Order += 1;
+                }
+            }
+            else // Dragged downwards
+            {
+                for (int i = oldIndex + 1; i <= newIndex; i++)
+                {
+                    dayToReorder.Activities[i].Order -= 1;
+                }
+            }
+            activityDTO.Order = newOrder;
+            
+            // Update order so indexes are correct on next use
+            dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
+            _isDirty = true;
+        }
+
+
         public WeekPlannerViewModel(
             INavigationService navigationService,
             IRequestService requestService,
@@ -191,23 +244,24 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            if (navigationData is Tuple<int, int> weekDetails) //When initialized from CitizenSchedulesViewModel
+            switch (navigationData)
             {
-                ScheduleYear = weekDetails.Item1;
-                ScheduleWeek = weekDetails.Item2;
-                await GetWeekPlanForCitizenAsync(ScheduleYear, ScheduleWeek);
-            }
-            else if (navigationData is Tuple<int, int, WeekDTO> weekDetailsWithDTO) //When initialized from NewScheduleViewModel
-            {
-                ScheduleYear = weekDetailsWithDTO.Item1;
-                ScheduleWeek = weekDetailsWithDTO.Item2;
-                WeekDTO = weekDetailsWithDTO.Item3;
+                //When initialized from CitizenSchedulesViewModel
+                case Tuple<int, int> weekDetails:
+                    ScheduleYear = weekDetails.Item1;
+                    ScheduleWeek = weekDetails.Item2;
+                    await GetWeekPlanForCitizenAsync(ScheduleYear, ScheduleWeek);
+                    break;
+                //When initialized from NewScheduleViewModel
+                case Tuple<int, int, WeekDTO> weekDetailsWithDTO:
+                    ScheduleYear = weekDetailsWithDTO.Item1;
+                    ScheduleWeek = weekDetailsWithDTO.Item2;
+                    WeekDTO = weekDetailsWithDTO.Item3;
 
-                SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
-            }
-            else
-            {
-                throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
+                    SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
+                    break;
+                default:
+                    throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
             }
 
             FlipToggledDays();
@@ -217,42 +271,39 @@ namespace WeekPlanner.ViewModels
 
         public override async Task PoppedAsync(object navigationData)
         {
-            // Happens after choosing a pictogram in Pictosearch
-            if (navigationData is WeekPictogramDTO weekPictogramDTO)
+            switch (navigationData)
             {
-                InsertPicto(weekPictogramDTO);
-            }
+                // Happens after choosing a pictogram in Pictosearch
+                case WeekPictogramDTO weekPictogramDTO:
+                    InsertPicto(weekPictogramDTO);
+                    break;
+                // Happens when popping from ActivityViewModel
+                case ActivityViewModel activityViewModel when activityViewModel.Activity == null:
+                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
+                        .Activities
+                        .Remove(_selectedActivity);
+                    _isDirty = true;
 
-            // Happens when popping from ActivityViewModel
-            if (navigationData is ActivityViewModel activityViewModel && activityViewModel.Activity == null)
-            {
-                WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
-                    .Activities
-                    .Remove(_selectedActivity);
-                _isDirty = true;
+                    if (!SettingsService.IsInGuardianMode)
+                    {
+                        await SaveSchedule();
+                    }
+                    RaisePropertyForDays();
+                    break;
+                case ActivityViewModel activityVM:
+                    _selectedActivity = activityVM.Activity;
+                    _isDirty = true;
 
-                if (!SettingsService.IsInGuardianMode)
-                {
-                    await SaveSchedule();
-                }
-                RaisePropertyForDays();
-            }
-            else if (navigationData is ActivityViewModel activityVM)
-            {
-                _selectedActivity = activityVM.Activity;
-                _isDirty = true;
-
-                if (!SettingsService.IsInGuardianMode)
-                {
-                    await SaveSchedule(showDialog: false);
-                }
-                RaisePropertyForDays();
-            }
-
-            // Happens after logging in as guardian when switching to guardian mode
-            if (navigationData is bool enterGuardianMode)
-            {
-                SetToGuardianMode();
+                    if (!SettingsService.IsInGuardianMode)
+                    {
+                        await SaveSchedule(showDialog: false);
+                    }
+                    RaisePropertyForDays();
+                    break;
+                // Happens after logging in as guardian when switching to guardian mode
+                case bool enterGuardianMode:
+                    SetToGuardianMode();
+                    break;
             }
         }
 
@@ -300,8 +351,8 @@ namespace WeekPlanner.ViewModels
 
                 bool confirmed = dayFromWeekDTO.Activities.Count > 0 ?
                     await _dialogService.ConfirmAsync(
-                        title: "Bekræft sletning af ugedag",
-                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker på, at du vil fortsætte?",
+                        title: "BekrÃ¦ft sletning af ugedag",
+                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker pÃ¥, at du vil fortsÃ¦tte?",
                         okText: "Slet ugedag",
                         cancelText: "Annuller") :
                     true;
@@ -371,7 +422,7 @@ namespace WeekPlanner.ViewModels
             if (dayToAddTo != null)
             {
                 // Insert pictogram in the very bottom of the day
-                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1;
+                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1 ?? 0;
                 dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal));
                 _isDirty = true;
                 RaisePropertyForDays();
@@ -447,15 +498,15 @@ namespace WeekPlanner.ViewModels
                     IsBusy = false;
                     return;
                 }
-                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
-                    "Annuller", null, "Gem ændringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
+                    "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
 
                 switch (result)
                 {
                     case "Annuller":
                         break;
 
-                    case "Gem ændringer":
+                    case "Gem Ã¦ndringer":
                         if (WeekNameIsEmpty)
                         {
                             await ShowWeekNameEmptyPrompt();
@@ -561,14 +612,14 @@ namespace WeekPlanner.ViewModels
                 return;
             }
             IsBusy = true;
-            var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
-                "Annuller", null, "Gem ændringer", "Gem ikke");
+            var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
+                "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
 
             switch (result)
             {
                 case "Annuller":
                     break;
-                case "Gem ændringer":
+                case "Gem Ã¦ndringer":
                     if (WeekNameIsEmpty)
                     {
                         await ShowWeekNameEmptyPrompt();

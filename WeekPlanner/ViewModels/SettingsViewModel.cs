@@ -33,10 +33,12 @@ namespace WeekPlanner.ViewModels
         }
 
         public WeekdayColors WeekdayColors { get; }
+
         public IEnumerable<SettingDTO.ThemeEnum> Themes { get; } = new List<SettingDTO.ThemeEnum>
         {
             SettingDTO.ThemeEnum.AndroidBlue, SettingDTO.ThemeEnum.GirafGreen, SettingDTO.ThemeEnum.GirafRed, SettingDTO.ThemeEnum.GirafYellow
         };
+
         public SettingDTO.ThemeEnum ThemeSelected
         {
             get => _settingsService.CurrentCitizenSettingDTO.Theme;
