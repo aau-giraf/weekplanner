@@ -22,7 +22,18 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IUserApi _userApi;
 
-        public WeekdayColors WeekdayColors { get; set; }
+		private WeekdayColors weekdayColors;
+
+		public WeekdayColors WeekdayColors
+		{
+			get => weekdayColors;
+
+			set
+			{
+				weekdayColors = value;
+				RaisePropertyChanged(() => WeekdayColors);
+			}
+		}
 
         public IEnumerable<SettingDTO.ThemeEnum> Themes { get; } = new List<SettingDTO.ThemeEnum>
         {
