@@ -25,6 +25,7 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                                 <ColumnDefinition />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
                                 Text="Ændre"
@@ -38,6 +39,10 @@
                                 Text="Slet"
                                 Command="{Binding DeleteActivityCommand}"
                                 IsVisible="{Binding SettingsService.IsInGuardianMode}" />
+                            <Button Grid.Column="3"
+                                Text="Choice-Board"
+                                Command="{Binding ChoiceBoardCommand}"
+                                IsVisible="{Binding SettingsService.IsInGuardianMode}"/>
                         </Grid>
                     </StackLayout>
                     <!--Right Side-->

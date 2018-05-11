@@ -56,6 +56,8 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
+        public ICommand ChoiceBoardCommand => new Command(async () => await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(Activity));
+
         public ICommand DeleteActivityCommand => new Command(async () =>
         {
             Activity = null;
