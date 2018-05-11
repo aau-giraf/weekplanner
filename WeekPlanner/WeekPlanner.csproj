@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="16.1.0.37" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.3.4" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />

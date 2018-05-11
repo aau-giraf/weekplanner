@@ -16,6 +16,7 @@ using WeekPlanner.Services;
 using WeekPlanner.Helpers;
 using static IO.Swagger.Model.ActivityDTO;
 using System.Collections.Generic;
+using Syncfusion.ListView.XForms;
 
 namespace WeekPlanner.ViewModels
 {
@@ -161,6 +162,58 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         });
 
+        public ICommand PictoDraggedCommand => new Command<ItemDraggingEventArgs>(args =>
+        {
+            // Disable dragging if in citizen mode
+            if (!SettingsService.IsInGuardianMode)
+            {
+                args.Cancel = true;
+                return;
+            }
+            
+            if (IsBusy) return;
+            IsBusy = true;
+            
+            if (args.Action == DragAction.Drop
+                && args.ItemData is ActivityDTO activity)
+            {
+                UpdateOrderingOfActivities(activity, args.OldIndex, args.NewIndex);
+            }
+            IsBusy = false;
+        });
+        
+        private void UpdateOrderingOfActivities(ActivityDTO activityDTO, int oldIndex, int newIndex)
+        {
+            if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityDTO == null) return;
+            WeekdayDTO dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Activities.Contains(activityDTO));
+            if (dayToReorder is null) return;
+            
+            // The activities have not updated yet, so we get the order value based on old indexes
+            var newOrder = dayToReorder.Activities[newIndex].Order;
+            
+            // Update the orders of all activities in the day          
+            if (newIndex < oldIndex) // Dragged upwards
+            {
+                for (int i = newIndex; i < oldIndex; i++)
+                {
+                    dayToReorder.Activities[i].Order += 1;
+                }
+            }
+            else // Dragged downwards
+            {
+                for (int i = oldIndex + 1; i <= newIndex; i++)
+                {
+                    dayToReorder.Activities[i].Order -= 1;
+                }
+            }
+            activityDTO.Order = newOrder;
+            
+            // Update order so indexes are correct on next use
+            dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
+            _isDirty = true;
+        }
+
+
         public WeekPlannerViewModel(
             INavigationService navigationService,
             IRequestService requestService,
@@ -302,8 +355,8 @@ namespace WeekPlanner.ViewModels
 
                 bool confirmed = dayFromWeekDTO.Activities.Count > 0 ?
                     await _dialogService.ConfirmAsync(
-                        title: "Bekræft sletning af ugedag",
-                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker på, at du vil fortsætte?",
+                        title: "BekrÃ¦ft sletning af ugedag",
+                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker pÃ¥, at du vil fortsÃ¦tte?",
                         okText: "Slet ugedag",
                         cancelText: "Annuller") :
                     true;
@@ -451,15 +504,15 @@ namespace WeekPlanner.ViewModels
                     IsBusy = false;
                     return;
                 }
-                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
-                    "Annuller", null, "Gem ændringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
+                    "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
 
                 switch (result)
                 {
                     case "Annuller":
                         break;
 
-                    case "Gem ændringer":
+                    case "Gem Ã¦ndringer":
                         if (WeekNameIsEmpty)
                         {
                             await ShowWeekNameEmptyPrompt();
@@ -565,14 +618,14 @@ namespace WeekPlanner.ViewModels
                 return;
             }
             IsBusy = true;
-            var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
-                "Annuller", null, "Gem ændringer", "Gem ikke");
+            var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
+                "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
 
             switch (result)
             {
                 case "Annuller":
                     break;
-                case "Gem ændringer":
+                case "Gem Ã¦ndringer":
                     if (WeekNameIsEmpty)
                     {
                         await ShowWeekNameEmptyPrompt();

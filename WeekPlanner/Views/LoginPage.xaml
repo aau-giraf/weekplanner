@@ -16,6 +16,7 @@
             <StackLayout>
                 <StackLayout VerticalOptions="CenterAndExpand"
                              HorizontalOptions="Center"
+                             x:Name="EntriesAndButtonsStackLayout"
                              Margin="12">
                     <StackLayout Orientation="Horizontal"
                                  VerticalOptions="Start"
@@ -73,7 +74,7 @@
                              HorizontalOptions="Center">
                     <Label Margin="0, 0, 0, 20"
                            HorizontalOptions="Center"
-                           Text="By Software årgang 2015 @ Aalborg University">
+                           Text="By Software @ Aalborg University">
                     </Label>
                 </StackLayout>
             </StackLayout>
