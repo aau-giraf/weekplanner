@@ -8,20 +8,22 @@ using Xamarin.Forms;
 
 namespace WeekPlanner.Services.Request
 {
-    public class RequestService : IRequestService
-    {
-        private readonly IDialogService _dialogService;
+	public class RequestService : IRequestService
+	{
+		private readonly IDialogService _dialogService;
 
-        public RequestService(IDialogService dialogService)
-        {
-            _dialogService = dialogService;
-        }
+		public RequestService(IDialogService dialogService)
+		{
+			_dialogService = dialogService;
+		}
 
-        public async Task SendRequestAndThenAsync<TS, TR>(TS sender, Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync,
+        public async Task SendRequestAndThenAsync<TR>(
+            Func<Task<TR>> requestAsync, 
+            Func<TR, Task> onSuccessAsync = null,
             Func<Task> onExceptionAsync = null,
             Func<Task> onRequestFailedAsync = null,
             string exceptionErrorMessageKey = MessageKeys.RequestFailed,
-            string requestFailedMessageKey = MessageKeys.RequestFailed) where TS : class
+            string requestFailedMessageKey = MessageKeys.RequestFailed)
         {
             // TODO: Check for internet connection first.
             dynamic result;
@@ -29,7 +31,7 @@ namespace WeekPlanner.Services.Request
             {
                 result = await requestAsync.Invoke();
             }
-            catch (ApiException)
+            catch (ApiException e)
             {
                 if (onExceptionAsync != null)
                 {
@@ -41,35 +43,41 @@ namespace WeekPlanner.Services.Request
                 return;
             }
 
-            if (result.Success == true)
-            {
-                await onSuccessAsync.Invoke(result);
-            }
-            else
-            {
-                if (onRequestFailedAsync != null)
-                {
-                    await onRequestFailedAsync.Invoke();
-                } else {
+			if (result.Success == true)
+			{
+				await onSuccessAsync?.Invoke(result);
+			}
+			else
+			{
+				if (onRequestFailedAsync != null)
+				{
+					await onRequestFailedAsync.Invoke();
+				}
+				else
+				{
                     var friendlyErrorMessage = ErrorCodeHelper.ToFriendlyString(result.ErrorKey);
-                    _dialogService.ShowAlertAsync(title: "Fejl", message: friendlyErrorMessage);
-                }
-            }
+                    await _dialogService.ShowAlertAsync(message: friendlyErrorMessage, title: "Fejl");
+				}
+			}
+		}
+
+        public async Task SendRequest<TR>(Task<TR> requestAsync) {
+            await SendRequestAndThenAsync(() => requestAsync);
         }
 
-        public async Task SendRequestAndThenAsync<TS, TR>(TS sender, Func<Task<TR>> requestAsync,
+        public async Task SendRequestAndThenAsync<TR>(Func<Task<TR>> requestAsync,
             Action<TR> onSuccess,
             Func<Task> onExceptionAsync = null,
             Func<Task> onRequestFailedAsync = null,
             string exceptionErrorMessageKey = MessageKeys.RequestFailed,
-            string requestFailedMessageKey = MessageKeys.RequestFailed) where TS : class
+            string requestFailedMessageKey = MessageKeys.RequestFailed)
         {
             async Task OnSuccessAsync(TR result)
             {
                 onSuccess.Invoke(result);
             }
                
-            await SendRequestAndThenAsync(sender, requestAsync, OnSuccessAsync,
+            await SendRequestAndThenAsync(requestAsync, OnSuccessAsync,
                 onExceptionAsync, onRequestFailedAsync, exceptionErrorMessageKey, requestFailedMessageKey);
         }
     }

@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.3.4" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
     <PackageReference Include="RestSharp" Version="106.2.1" />
@@ -19,23 +20,36 @@
   <ItemGroup>
     <Folder Include="Services\Mocks\" />
     <Folder Include="Controls\" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\Base" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj" />
+    <ProjectReference Include="..\IO.Swagger\IO.Swagger.csproj">
+      <Project>{4AC971BD-FD70-4BCC-82A1-32F8CFB029FF}</Project>
+      <Name>IO.Swagger</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Views\MyPage.xaml" />
+    <EmbeddedResource Include="appsettings.Development.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Views\UserModeSwitchPage.xaml">
+    <EmbeddedResource Update="Views\CitizenSchedulesPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\NewSchedulePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Views\MyPage.xaml.cs" />
-    <Compile Remove="Views\MyPage.xaml.cs" />
+    <None Remove="appsettings.Development.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\SavePromptPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

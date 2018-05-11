@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="dk.aau.cs.giraf.WeekPlanner">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="6" android:versionName="1.0.5" package="dk.aau.cs.giraf.ugeplan">
 	<uses-sdk android:minSdkVersion="15" />
-	<application android:label="WeekPlanner"></application>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<application android:label="Giraf Ugeplan" android:icon="@drawable/icon"></application>
 </manifest>

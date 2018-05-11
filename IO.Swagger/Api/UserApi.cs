@@ -99,8 +99,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>ResponseLauncherOptionsDTO</returns>
-        ResponseLauncherOptionsDTO V1UserByIdSettingsGet (string id);
+        /// <returns>ResponseSettingDTO</returns>
+        ResponseSettingDTO V1UserByIdSettingsGet (string id);
 
         /// <summary>
         /// Find information on the user with the username supplied as a url query parameter or the current user.
@@ -110,10 +110,10 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>ApiResponse of ResponseLauncherOptionsDTO</returns>
-        ApiResponse<ResponseLauncherOptionsDTO> V1UserByIdSettingsGetWithHttpInfo (string id);
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        ApiResponse<ResponseSettingDTO> V1UserByIdSettingsGetWithHttpInfo (string id);
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the user settings for a user with the given id
         /// </summary>
         /// <remarks>
         /// 
@@ -121,11 +121,11 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ResponseLauncherOptions</returns>
-        ResponseLauncherOptions V1UserByIdSettingsPatch (string id, LauncherOptionsDTO options = null);
+        /// <returns>ResponseSettingDTO</returns>
+        ResponseSettingDTO V1UserByIdSettingsPatch (string id, SettingDTO options = null);
 
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the user settings for a user with the given id
         /// </summary>
         /// <remarks>
         /// 
@@ -133,8 +133,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ApiResponse of ResponseLauncherOptions</returns>
-        ApiResponse<ResponseLauncherOptions> V1UserByIdSettingsPatchWithHttpInfo (string id, LauncherOptionsDTO options = null);
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        ApiResponse<ResponseSettingDTO> V1UserByIdSettingsPatchWithHttpInfo (string id, SettingDTO options = null);
         /// <summary>
         /// Gets the citizens for the specific user corresponding to the provided username.
         /// </summary>
@@ -344,27 +344,6 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of Response</returns>
         ApiResponse<Response> V1UserIconPutWithHttpInfo ();
         /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        ResponseGirafUserDTO V1UserLauncherAnimationsByEnabledPost (bool? enabled);
-
-        /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        ApiResponse<ResponseGirafUserDTO> V1UserLauncherAnimationsByEnabledPostWithHttpInfo (bool? enabled);
-        /// <summary>
         /// Updates username and screenname for the current authenticated user.
         /// </summary>
         /// <remarks>
@@ -415,8 +394,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseLauncherOptionsDTO</returns>
-        ResponseLauncherOptionsDTO V1UserSettingsGet ();
+        /// <returns>ResponseSettingDTO</returns>
+        ResponseSettingDTO V1UserSettingsGet ();
 
         /// <summary>
         /// Read the currently authorized user&#39;s settings object.
@@ -425,29 +404,29 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseLauncherOptionsDTO</returns>
-        ApiResponse<ResponseLauncherOptionsDTO> V1UserSettingsGetWithHttpInfo ();
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        ApiResponse<ResponseSettingDTO> V1UserSettingsGetWithHttpInfo ();
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the currently authenticated user settings.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ResponseLauncherOptions</returns>
-        ResponseLauncherOptions V1UserSettingsPatch (LauncherOptionsDTO options = null);
+        /// <returns>ResponseSettingDTO</returns>
+        ResponseSettingDTO V1UserSettingsPatch (SettingDTO options = null);
 
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the currently authenticated user settings.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ApiResponse of ResponseLauncherOptions</returns>
-        ApiResponse<ResponseLauncherOptions> V1UserSettingsPatchWithHttpInfo (LauncherOptionsDTO options = null);
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        ApiResponse<ResponseSettingDTO> V1UserSettingsPatchWithHttpInfo (SettingDTO options = null);
         /// <summary>
         /// Returns currently logged in users username
         /// </summary>
@@ -544,8 +523,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>Task of ResponseLauncherOptionsDTO</returns>
-        System.Threading.Tasks.Task<ResponseLauncherOptionsDTO> V1UserByIdSettingsGetAsync (string id);
+        /// <returns>Task of ResponseSettingDTO</returns>
+        System.Threading.Tasks.Task<ResponseSettingDTO> V1UserByIdSettingsGetAsync (string id);
 
         /// <summary>
         /// Find information on the user with the username supplied as a url query parameter or the current user.
@@ -555,10 +534,10 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptionsDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptionsDTO>> V1UserByIdSettingsGetAsyncWithHttpInfo (string id);
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserByIdSettingsGetAsyncWithHttpInfo (string id);
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the user settings for a user with the given id
         /// </summary>
         /// <remarks>
         /// 
@@ -566,11 +545,11 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ResponseLauncherOptions</returns>
-        System.Threading.Tasks.Task<ResponseLauncherOptions> V1UserByIdSettingsPatchAsync (string id, LauncherOptionsDTO options = null);
+        /// <returns>Task of ResponseSettingDTO</returns>
+        System.Threading.Tasks.Task<ResponseSettingDTO> V1UserByIdSettingsPatchAsync (string id, SettingDTO options = null);
 
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the user settings for a user with the given id
         /// </summary>
         /// <remarks>
         /// 
@@ -578,8 +557,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptions)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptions>> V1UserByIdSettingsPatchAsyncWithHttpInfo (string id, LauncherOptionsDTO options = null);
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserByIdSettingsPatchAsyncWithHttpInfo (string id, SettingDTO options = null);
         /// <summary>
         /// Gets the citizens for the specific user corresponding to the provided username.
         /// </summary>
@@ -789,27 +768,6 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (Response)</returns>
         System.Threading.Tasks.Task<ApiResponse<Response>> V1UserIconPutAsyncWithHttpInfo ();
         /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserLauncherAnimationsByEnabledPostAsync (bool? enabled);
-
-        /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user.
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserLauncherAnimationsByEnabledPostAsyncWithHttpInfo (bool? enabled);
-        /// <summary>
         /// Updates username and screenname for the current authenticated user.
         /// </summary>
         /// <remarks>
@@ -860,8 +818,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseLauncherOptionsDTO</returns>
-        System.Threading.Tasks.Task<ResponseLauncherOptionsDTO> V1UserSettingsGetAsync ();
+        /// <returns>Task of ResponseSettingDTO</returns>
+        System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsGetAsync ();
 
         /// <summary>
         /// Read the currently authorized user&#39;s settings object.
@@ -870,29 +828,29 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptionsDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptionsDTO>> V1UserSettingsGetAsyncWithHttpInfo ();
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsGetAsyncWithHttpInfo ();
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the currently authenticated user settings.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ResponseLauncherOptions</returns>
-        System.Threading.Tasks.Task<ResponseLauncherOptions> V1UserSettingsPatchAsync (LauncherOptionsDTO options = null);
+        /// <returns>Task of ResponseSettingDTO</returns>
+        System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsPatchAsync (SettingDTO options = null);
 
         /// <summary>
-        /// Updates the user settings.
+        /// Updates the currently authenticated user settings.
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptions)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptions>> V1UserSettingsPatchAsyncWithHttpInfo (LauncherOptionsDTO options = null);
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsPatchAsyncWithHttpInfo (SettingDTO options = null);
         /// <summary>
         /// Returns currently logged in users username
         /// </summary>
@@ -1490,10 +1448,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>ResponseLauncherOptionsDTO</returns>
-        public ResponseLauncherOptionsDTO V1UserByIdSettingsGet (string id)
+        /// <returns>ResponseSettingDTO</returns>
+        public ResponseSettingDTO V1UserByIdSettingsGet (string id)
         {
-             ApiResponse<ResponseLauncherOptionsDTO> localVarResponse = V1UserByIdSettingsGetWithHttpInfo(id);
+             ApiResponse<ResponseSettingDTO> localVarResponse = V1UserByIdSettingsGetWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -1502,8 +1460,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>ApiResponse of ResponseLauncherOptionsDTO</returns>
-        public ApiResponse< ResponseLauncherOptionsDTO > V1UserByIdSettingsGetWithHttpInfo (string id)
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        public ApiResponse< ResponseSettingDTO > V1UserByIdSettingsGetWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1553,9 +1511,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptionsDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptionsDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptionsDTO)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>
@@ -1563,10 +1521,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>Task of ResponseLauncherOptionsDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseLauncherOptionsDTO> V1UserByIdSettingsGetAsync (string id)
+        /// <returns>Task of ResponseSettingDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseSettingDTO> V1UserByIdSettingsGetAsync (string id)
         {
-             ApiResponse<ResponseLauncherOptionsDTO> localVarResponse = await V1UserByIdSettingsGetAsyncWithHttpInfo(id);
+             ApiResponse<ResponseSettingDTO> localVarResponse = await V1UserByIdSettingsGetAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -1576,8 +1534,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptionsDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptionsDTO>> V1UserByIdSettingsGetAsyncWithHttpInfo (string id)
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserByIdSettingsGetAsyncWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1627,32 +1585,32 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptionsDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptionsDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptionsDTO)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the user settings for a user with the given id 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ResponseLauncherOptions</returns>
-        public ResponseLauncherOptions V1UserByIdSettingsPatch (string id, LauncherOptionsDTO options = null)
+        /// <returns>ResponseSettingDTO</returns>
+        public ResponseSettingDTO V1UserByIdSettingsPatch (string id, SettingDTO options = null)
         {
-             ApiResponse<ResponseLauncherOptions> localVarResponse = V1UserByIdSettingsPatchWithHttpInfo(id, options);
+             ApiResponse<ResponseSettingDTO> localVarResponse = V1UserByIdSettingsPatchWithHttpInfo(id, options);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the user settings for a user with the given id 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ApiResponse of ResponseLauncherOptions</returns>
-        public ApiResponse< ResponseLauncherOptions > V1UserByIdSettingsPatchWithHttpInfo (string id, LauncherOptionsDTO options = null)
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        public ApiResponse< ResponseSettingDTO > V1UserByIdSettingsPatchWithHttpInfo (string id, SettingDTO options = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1714,33 +1672,33 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptions>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptions) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptions)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the user settings for a user with the given id 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ResponseLauncherOptions</returns>
-        public async System.Threading.Tasks.Task<ResponseLauncherOptions> V1UserByIdSettingsPatchAsync (string id, LauncherOptionsDTO options = null)
+        /// <returns>Task of ResponseSettingDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseSettingDTO> V1UserByIdSettingsPatchAsync (string id, SettingDTO options = null)
         {
-             ApiResponse<ResponseLauncherOptions> localVarResponse = await V1UserByIdSettingsPatchAsyncWithHttpInfo(id, options);
+             ApiResponse<ResponseSettingDTO> localVarResponse = await V1UserByIdSettingsPatchAsyncWithHttpInfo(id, options);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the user settings for a user with the given id 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptions)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptions>> V1UserByIdSettingsPatchAsyncWithHttpInfo (string id, LauncherOptionsDTO options = null)
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserByIdSettingsPatchAsyncWithHttpInfo (string id, SettingDTO options = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1802,9 +1760,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptions>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptions) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptions)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>
@@ -3298,153 +3256,6 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>ResponseGirafUserDTO</returns>
-        public ResponseGirafUserDTO V1UserLauncherAnimationsByEnabledPost (bool? enabled)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = V1UserLauncherAnimationsByEnabledPostWithHttpInfo(enabled);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>ApiResponse of ResponseGirafUserDTO</returns>
-        public ApiResponse< ResponseGirafUserDTO > V1UserLauncherAnimationsByEnabledPostWithHttpInfo (bool? enabled)
-        {
-            // verify the required parameter 'enabled' is set
-            if (enabled == null)
-                throw new ApiException(400, "Missing required parameter 'enabled' when calling UserApi->V1UserLauncherAnimationsByEnabledPost");
-
-            var localVarPath = "/v1/User/launcher_animations/{enabled}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (enabled != null) localVarPathParams.Add("enabled", Configuration.ApiClient.ParameterToString(enabled)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserLauncherAnimationsByEnabledPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>Task of ResponseGirafUserDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseGirafUserDTO> V1UserLauncherAnimationsByEnabledPostAsync (bool? enabled)
-        {
-             ApiResponse<ResponseGirafUserDTO> localVarResponse = await V1UserLauncherAnimationsByEnabledPostAsyncWithHttpInfo(enabled);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        /// Enables or disables launcher animations for the currently authenticated user. 
-        /// </summary>
-        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="enabled">A bool indicating whether launcher animations should be enabled or not.</param>
-        /// <returns>Task of ApiResponse (ResponseGirafUserDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseGirafUserDTO>> V1UserLauncherAnimationsByEnabledPostAsyncWithHttpInfo (bool? enabled)
-        {
-            // verify the required parameter 'enabled' is set
-            if (enabled == null)
-                throw new ApiException(400, "Missing required parameter 'enabled' when calling UserApi->V1UserLauncherAnimationsByEnabledPost");
-
-            var localVarPath = "/v1/User/launcher_animations/{enabled}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new List<KeyValuePair<String, String>>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
-            };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
-                "text/plain",
-                "application/json",
-                "text/json"
-            };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (enabled != null) localVarPathParams.Add("enabled", Configuration.ApiClient.ParameterToString(enabled)); // path parameter
-
-            // authentication (Bearer) required
-            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
-            {
-                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
-            }
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("V1UserLauncherAnimationsByEnabledPost", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ResponseGirafUserDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseGirafUserDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseGirafUserDTO)));
-        }
-
-        /// <summary>
         /// Updates username and screenname for the current authenticated user. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
@@ -3786,10 +3597,10 @@ namespace IO.Swagger.Api
         /// Read the currently authorized user&#39;s settings object. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ResponseLauncherOptionsDTO</returns>
-        public ResponseLauncherOptionsDTO V1UserSettingsGet ()
+        /// <returns>ResponseSettingDTO</returns>
+        public ResponseSettingDTO V1UserSettingsGet ()
         {
-             ApiResponse<ResponseLauncherOptionsDTO> localVarResponse = V1UserSettingsGetWithHttpInfo();
+             ApiResponse<ResponseSettingDTO> localVarResponse = V1UserSettingsGetWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -3797,8 +3608,8 @@ namespace IO.Swagger.Api
         /// Read the currently authorized user&#39;s settings object. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of ResponseLauncherOptionsDTO</returns>
-        public ApiResponse< ResponseLauncherOptionsDTO > V1UserSettingsGetWithHttpInfo ()
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        public ApiResponse< ResponseSettingDTO > V1UserSettingsGetWithHttpInfo ()
         {
 
             var localVarPath = "/v1/User/settings";
@@ -3844,19 +3655,19 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptionsDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptionsDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptionsDTO)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>
         /// Read the currently authorized user&#39;s settings object. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ResponseLauncherOptionsDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseLauncherOptionsDTO> V1UserSettingsGetAsync ()
+        /// <returns>Task of ResponseSettingDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsGetAsync ()
         {
-             ApiResponse<ResponseLauncherOptionsDTO> localVarResponse = await V1UserSettingsGetAsyncWithHttpInfo();
+             ApiResponse<ResponseSettingDTO> localVarResponse = await V1UserSettingsGetAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -3865,8 +3676,8 @@ namespace IO.Swagger.Api
         /// Read the currently authorized user&#39;s settings object. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptionsDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptionsDTO>> V1UserSettingsGetAsyncWithHttpInfo ()
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsGetAsyncWithHttpInfo ()
         {
 
             var localVarPath = "/v1/User/settings";
@@ -3912,30 +3723,30 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptionsDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptionsDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptionsDTO)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the currently authenticated user settings. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ResponseLauncherOptions</returns>
-        public ResponseLauncherOptions V1UserSettingsPatch (LauncherOptionsDTO options = null)
+        /// <returns>ResponseSettingDTO</returns>
+        public ResponseSettingDTO V1UserSettingsPatch (SettingDTO options = null)
         {
-             ApiResponse<ResponseLauncherOptions> localVarResponse = V1UserSettingsPatchWithHttpInfo(options);
+             ApiResponse<ResponseSettingDTO> localVarResponse = V1UserSettingsPatchWithHttpInfo(options);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the currently authenticated user settings. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>ApiResponse of ResponseLauncherOptions</returns>
-        public ApiResponse< ResponseLauncherOptions > V1UserSettingsPatchWithHttpInfo (LauncherOptionsDTO options = null)
+        /// <returns>ApiResponse of ResponseSettingDTO</returns>
+        public ApiResponse< ResponseSettingDTO > V1UserSettingsPatchWithHttpInfo (SettingDTO options = null)
         {
 
             var localVarPath = "/v1/User/settings";
@@ -3993,31 +3804,31 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptions>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptions) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptions)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the currently authenticated user settings. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ResponseLauncherOptions</returns>
-        public async System.Threading.Tasks.Task<ResponseLauncherOptions> V1UserSettingsPatchAsync (LauncherOptionsDTO options = null)
+        /// <returns>Task of ResponseSettingDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseSettingDTO> V1UserSettingsPatchAsync (SettingDTO options = null)
         {
-             ApiResponse<ResponseLauncherOptions> localVarResponse = await V1UserSettingsPatchAsyncWithHttpInfo(options);
+             ApiResponse<ResponseSettingDTO> localVarResponse = await V1UserSettingsPatchAsyncWithHttpInfo(options);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Updates the user settings. 
+        /// Updates the currently authenticated user settings. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="options">Options. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseLauncherOptions)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseLauncherOptions>> V1UserSettingsPatchAsyncWithHttpInfo (LauncherOptionsDTO options = null)
+        /// <returns>Task of ApiResponse (ResponseSettingDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseSettingDTO>> V1UserSettingsPatchAsyncWithHttpInfo (SettingDTO options = null)
         {
 
             var localVarPath = "/v1/User/settings";
@@ -4075,9 +3886,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseLauncherOptions>(localVarStatusCode,
+            return new ApiResponse<ResponseSettingDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseLauncherOptions) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseLauncherOptions)));
+                (ResponseSettingDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseSettingDTO)));
         }
 
         /// <summary>

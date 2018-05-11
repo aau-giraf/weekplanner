@@ -31,8 +31,9 @@ namespace IO.Swagger.Model
     public partial class PictogramDTO :  IEquatable<PictogramDTO>, IValidatableObject
     {
         /// <summary>
-        /// Defines AccessLevel
+        /// The accesslevel of the pictogram.
         /// </summary>
+        /// <value>The accesslevel of the pictogram.</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum AccessLevelEnum
         {
@@ -57,65 +58,41 @@ namespace IO.Swagger.Model
         }
 
         /// <summary>
-        /// Gets or Sets AccessLevel
+        /// The accesslevel of the pictogram.
         /// </summary>
+        /// <value>The accesslevel of the pictogram.</value>
         [DataMember(Name="accessLevel", EmitDefaultValue=false)]
-        public AccessLevelEnum AccessLevel { get; set; }
+        public AccessLevelEnum? AccessLevel { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="PictogramDTO" /> class.
         /// </summary>
-        [JsonConstructorAttribute]
-        protected PictogramDTO() { }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PictogramDTO" /> class.
-        /// </summary>
-        /// <param name="Title">Title (required).</param>
-        /// <param name="Id">The id of the pictogram..</param>
-        /// <param name="LastEdit">The last time the pictogram was edited..</param>
-        /// <param name="AccessLevel">AccessLevel (required).</param>
-        public PictogramDTO(string Title = default(string), long? Id = default(long?), DateTime? LastEdit = default(DateTime?), AccessLevelEnum AccessLevel = default(AccessLevelEnum))
+        /// <param name="Title">The title of the pictogram..</param>
+        /// <param name="AccessLevel">The accesslevel of the pictogram..</param>
+        public PictogramDTO(string Title = default(string), AccessLevelEnum? AccessLevel = default(AccessLevelEnum?))
         {
-            // to ensure "Title" is required (not null)
-            if (Title == null)
-            {
-                throw new InvalidDataException("Title is a required property for PictogramDTO and cannot be null");
-            }
-            else
-            {
-                this.Title = Title;
-            }
-            // to ensure "AccessLevel" is required (not null)
-            if (AccessLevel == null)
-            {
-                throw new InvalidDataException("AccessLevel is a required property for PictogramDTO and cannot be null");
-            }
-            else
-            {
-                this.AccessLevel = AccessLevel;
-            }
-            this.Id = Id;
-            this.LastEdit = LastEdit;
+            this.Title = Title;
+            this.AccessLevel = AccessLevel;
         }
         
         /// <summary>
-        /// Gets or Sets Title
+        /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name="title", EmitDefaultValue=false)]
-        public string Title { get; set; }
-
-        /// <summary>
-        /// The id of the pictogram.
-        /// </summary>
-        /// <value>The id of the pictogram.</value>
         [DataMember(Name="id", EmitDefaultValue=false)]
-        public long? Id { get; set; }
+        public long? Id { get; private set; }
 
         /// <summary>
         /// The last time the pictogram was edited.
         /// </summary>
         /// <value>The last time the pictogram was edited.</value>
         [DataMember(Name="lastEdit", EmitDefaultValue=false)]
-        public DateTime? LastEdit { get; set; }
+        public DateTime? LastEdit { get; private set; }
+
+        /// <summary>
+        /// The title of the pictogram.
+        /// </summary>
+        /// <value>The title of the pictogram.</value>
+        [DataMember(Name="title", EmitDefaultValue=false)]
+        public string Title { get; set; }
 
 
         /// <summary>
@@ -138,9 +115,9 @@ namespace IO.Swagger.Model
         {
             var sb = new StringBuilder();
             sb.Append("class PictogramDTO {\n");
-            sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  LastEdit: ").Append(LastEdit).Append("\n");
+            sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  AccessLevel: ").Append(AccessLevel).Append("\n");
             sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
             sb.Append("  ImageHash: ").Append(ImageHash).Append("\n");
@@ -179,11 +156,6 @@ namespace IO.Swagger.Model
 
             return 
                 (
-                    this.Title == input.Title ||
-                    (this.Title != null &&
-                    this.Title.Equals(input.Title))
-                ) && 
-                (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
@@ -192,6 +164,11 @@ namespace IO.Swagger.Model
                     this.LastEdit == input.LastEdit ||
                     (this.LastEdit != null &&
                     this.LastEdit.Equals(input.LastEdit))
+                ) && 
+                (
+                    this.Title == input.Title ||
+                    (this.Title != null &&
+                    this.Title.Equals(input.Title))
                 ) && 
                 (
                     this.AccessLevel == input.AccessLevel ||
@@ -219,12 +196,12 @@ namespace IO.Swagger.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.Title != null)
-                    hashCode = hashCode * 59 + this.Title.GetHashCode();
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.LastEdit != null)
                     hashCode = hashCode * 59 + this.LastEdit.GetHashCode();
+                if (this.Title != null)
+                    hashCode = hashCode * 59 + this.Title.GetHashCode();
                 if (this.AccessLevel != null)
                     hashCode = hashCode * 59 + this.AccessLevel.GetHashCode();
                 if (this.ImageUrl != null)

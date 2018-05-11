@@ -31,27 +31,73 @@ namespace IO.Swagger.Model
     public partial class ActivityDTO :  IEquatable<ActivityDTO>, IValidatableObject
     {
         /// <summary>
+        /// Defines State
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum StateEnum
+        {
+            
+            /// <summary>
+            /// Enum Normal for value: Normal
+            /// </summary>
+            [EnumMember(Value = "Normal")]
+            Normal = 1,
+            
+            /// <summary>
+            /// Enum Active for value: Active
+            /// </summary>
+            [EnumMember(Value = "Active")]
+            Active = 2,
+            
+            /// <summary>
+            /// Enum Canceled for value: Canceled
+            /// </summary>
+            [EnumMember(Value = "Canceled")]
+            Canceled = 3,
+            
+            /// <summary>
+            /// Enum Completed for value: Completed
+            /// </summary>
+            [EnumMember(Value = "Completed")]
+            Completed = 4
+        }
+
+        /// <summary>
+        /// Gets or Sets State
+        /// </summary>
+        [DataMember(Name="state", EmitDefaultValue=false)]
+        public StateEnum? State { get; set; }
+        /// <summary>
         /// Initializes a new instance of the <see cref="ActivityDTO" /> class.
         /// </summary>
         /// <param name="Pictogram">Pictogram.</param>
         /// <param name="Order">Order.</param>
-        public ActivityDTO(PictogramDTO Pictogram = default(PictogramDTO), int? Order = default(int?))
+        /// <param name="State">State.</param>
+        public ActivityDTO(WeekPictogramDTO Pictogram = default(WeekPictogramDTO), int? Order = default(int?), StateEnum? State = default(StateEnum?))
         {
             this.Pictogram = Pictogram;
             this.Order = Order;
+            this.State = State;
         }
         
         /// <summary>
         /// Gets or Sets Pictogram
         /// </summary>
         [DataMember(Name="pictogram", EmitDefaultValue=false)]
-        public PictogramDTO Pictogram { get; set; }
+        public WeekPictogramDTO Pictogram { get; set; }
 
         /// <summary>
         /// Gets or Sets Order
         /// </summary>
         [DataMember(Name="order", EmitDefaultValue=false)]
         public int? Order { get; set; }
+
+
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public long? Id { get; private set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -63,6 +109,8 @@ namespace IO.Swagger.Model
             sb.Append("class ActivityDTO {\n");
             sb.Append("  Pictogram: ").Append(Pictogram).Append("\n");
             sb.Append("  Order: ").Append(Order).Append("\n");
+            sb.Append("  State: ").Append(State).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -106,6 +154,16 @@ namespace IO.Swagger.Model
                     this.Order == input.Order ||
                     (this.Order != null &&
                     this.Order.Equals(input.Order))
+                ) && 
+                (
+                    this.State == input.State ||
+                    (this.State != null &&
+                    this.State.Equals(input.State))
+                ) && 
+                (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
                 );
         }
 
@@ -122,6 +180,10 @@ namespace IO.Swagger.Model
                     hashCode = hashCode * 59 + this.Pictogram.GetHashCode();
                 if (this.Order != null)
                     hashCode = hashCode * 59 + this.Order.GetHashCode();
+                if (this.State != null)
+                    hashCode = hashCode * 59 + this.State.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 return hashCode;
             }
         }

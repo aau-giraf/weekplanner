@@ -15,122 +15,82 @@ namespace WeekPlanner.Services.Mocks
         }
 
         public ExceptionFactory ExceptionFactory { get; set; }
-        public ResponseIEnumerableWeekDTO V1WeekByIdDelete(long? id)
+        public ResponseIEnumerableWeekDTO V1WeekByWeekYearByWeekNumberDelete(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public ApiResponse<ResponseIEnumerableWeekDTO> V1WeekByIdDeleteWithHttpInfo(long? id)
+        public ApiResponse<ResponseIEnumerableWeekDTO> V1WeekByWeekYearByWeekNumberDeleteWithHttpInfo(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public ResponseWeekDTO V1WeekByIdGet(long? id)
+        public ResponseWeekDTO V1WeekByWeekYearByWeekNumberGet(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public ApiResponse<ResponseWeekDTO> V1WeekByIdGetWithHttpInfo(long? id)
+        public ApiResponse<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberGetWithHttpInfo(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public ResponseWeekDTO V1WeekByIdPut(long? id, WeekDTO newWeek = null)
+        public ResponseWeekDTO V1WeekByWeekYearByWeekNumberPut(int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public ApiResponse<ResponseWeekDTO> V1WeekByIdPutWithHttpInfo(long? id, WeekDTO newWeek = null)
+        public ApiResponse<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberPutWithHttpInfo(int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public ResponseIEnumerableWeekDTO V1WeekGet()
+        public ResponseIEnumerableWeekNameDTO V1WeekGet()
         {
             throw new System.NotImplementedException();
         }
 
-        public ApiResponse<ResponseIEnumerableWeekDTO> V1WeekGetWithHttpInfo()
+        public ApiResponse<ResponseIEnumerableWeekNameDTO> V1WeekGetWithHttpInfo()
         {
             throw new System.NotImplementedException();
         }
 
-        public ResponseWeekDTO V1WeekPost(WeekDTO newWeek = null)
+        public Task<ResponseIEnumerableWeekDTO> V1WeekByWeekYearByWeekNumberDeleteAsync(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public ApiResponse<ResponseWeekDTO> V1WeekPostWithHttpInfo(WeekDTO newWeek = null)
+        public Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekByWeekYearByWeekNumberDeleteAsyncWithHttpInfo(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ResponseIEnumerableWeekDTO> V1WeekByIdDeleteAsync(long? id)
+        public Task<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberGetAsync(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekByIdDeleteAsyncWithHttpInfo(long? id)
+        public Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberGetAsyncWithHttpInfo(int? weekYear, int? weekNumber)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ResponseWeekDTO> V1WeekByIdGetAsync(long? id)
+        public Task<ResponseWeekDTO> V1WeekByWeekYearByWeekNumberPutAsync(int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ApiResponse<ResponseWeekDTO>> V1WeekByIdGetAsyncWithHttpInfo(long? id)
+        public Task<ApiResponse<ResponseWeekDTO>> V1WeekByWeekYearByWeekNumberPutAsyncWithHttpInfo(int? weekYear, int? weekNumber, WeekDTO newWeek = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ResponseWeekDTO> V1WeekByIdPutAsync(long? id, WeekDTO newWeek = null)
+        public Task<ResponseIEnumerableWeekNameDTO> V1WeekGetAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ApiResponse<ResponseWeekDTO>> V1WeekByIdPutAsyncWithHttpInfo(long? id, WeekDTO newWeek = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<ResponseIEnumerableWeekDTO> V1WeekGetAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<ApiResponse<ResponseIEnumerableWeekDTO>> V1WeekGetAsyncWithHttpInfo()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<ResponseWeekDTO> V1WeekPostAsync(WeekDTO newWeek = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<ApiResponse<ResponseWeekDTO>> V1WeekPostAsyncWithHttpInfo(WeekDTO newWeek = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        ResponseIEnumerableWeekNameDTO IWeekApi.V1WeekGet()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        ApiResponse<ResponseIEnumerableWeekNameDTO> IWeekApi.V1WeekGetWithHttpInfo()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        Task<ResponseIEnumerableWeekNameDTO> IWeekApi.V1WeekGetAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        Task<ApiResponse<ResponseIEnumerableWeekNameDTO>> IWeekApi.V1WeekGetAsyncWithHttpInfo()
+        public Task<ApiResponse<ResponseIEnumerableWeekNameDTO>> V1WeekGetAsyncWithHttpInfo()
         {
             throw new System.NotImplementedException();
         }
