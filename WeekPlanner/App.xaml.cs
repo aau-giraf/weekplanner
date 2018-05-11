@@ -10,6 +10,7 @@ using SimpleJson;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.Views;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace WeekPlanner
 {
@@ -39,12 +40,17 @@ namespace WeekPlanner
 
         private static void InitFFImage()
         {
-            FFImageLoading.ImageService.Instance.Initialize(new Configuration
+            using (var scope = AppContainer.Container.BeginLifetimeScope())
             {
-                HttpClient =
+                var settingsService = scope.Resolve<ISettingsService>();
+                FFImageLoading.ImageService.Instance.Initialize(new Configuration
+                {
+                    HttpClient =
                     new HttpClient(
-                        new GirafAuthenticatedHttpImageClientHelper(SettingsService.GetToken))
-            });
+                        new GirafAuthenticatedHttpImageClientHelper(() => Task.FromResult(settingsService.AuthToken)))
+                });
+            }
+
         }
 
         private static JsonObject GetApplicationSettings()

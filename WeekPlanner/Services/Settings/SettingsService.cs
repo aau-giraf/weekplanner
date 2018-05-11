@@ -16,12 +16,6 @@ namespace WeekPlanner.Services.Settings
         private readonly JsonObject _appSettings;
         private readonly IUserApi _userApi;
         private readonly IRequestService _requestService;
-        
-        private static string _token;
-        public static Task<string> GetToken()
-        {
-            return Task.FromResult(_token);
-        }
 
         public SettingsService(IAccountApi accountApi, JsonObject appSettings, IUserApi userApi, IRequestService requestService)
         {
