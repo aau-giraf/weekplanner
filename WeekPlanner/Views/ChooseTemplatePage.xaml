@@ -14,7 +14,7 @@
                 <flv:FlowListView
                     SeparatorVisibility="None"
                     HasUnevenRows="true"
-                    FlowItemTappedCommand="{Binding WeekTappedCommand}"
+                    FlowItemTappedCommand="{Binding WeekTemplateTappedCommand}"
                     FlowColumnMinWidth="210"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                     FlowItemsSource="{Binding WeekTemplates}">

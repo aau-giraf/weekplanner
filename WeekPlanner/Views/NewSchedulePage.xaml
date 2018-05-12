@@ -8,7 +8,7 @@
     xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
     xmlns:system="clr-namespace:System;assembly=netstandard"
     x:Class="WeekPlanner.Views.NewSchedulePage"
-    Title="Tilføj en ny ugeplan">
+    Title="{Binding ViewName}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:FirstValidationErrorConverter
@@ -21,16 +21,16 @@
                 Margin="12"
                 Spacing="20">
                 <Label
-                    Text="Ny ugeplan"
+                    Text="{Binding NewTempOrSchedule}"
                     HorizontalTextAlignment="Center"
                     FontSize="Large"/>
                 <!-- NAME OF SCHEDULE START -->
                 <StackLayout>
-                    <Label Text="Navngiv din nye ugeplan" FontSize="Medium" Style="TitleStyle"/>
+                    <Label Text="{Binding NamingTempOrSchedule}" FontSize="Medium" Style="TitleStyle"/>
                     <Entry
                         x:Name="NewScheduleNameEntry"
                         Text="{Binding ScheduleName.Value}"
-                        Placeholder="Eksempel: Min nye ugeplan">
+                        Placeholder="{Binding ExampleTempOrSchedule}">
                         <Entry.Behaviors>
                             <behaviors:EventToCommandBehavior
                             EventName="TextChanged"
@@ -44,7 +44,7 @@
                 <!-- NAME OF SCHEDULE END -->
 
                 <!-- CHOOSE WEEK AND YEAR START -->
-                <StackLayout>
+                <StackLayout IsVisible="{Binding IsNewSchedule}">
                     <Label Text="Angiv hvilket år og hvilken uge, dit nye skema skal gælde for" FontSize="Medium" Style="TitleStyle"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -82,7 +82,7 @@
 
                 <!-- SET THUMBNAIL START -->
                 <StackLayout>
-                    <Label Text="Vælg et passende piktogram til din nye ugeplan" FontSize="Medium" Style="TitleStyle"/>
+                    <Label Text="{Binding PictoForTempOrSchedule}" FontSize="Medium" Style="TitleStyle"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -122,6 +122,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Button
+                                IsVisible="{Binding IsNewSchedule}"
                                 x:Name="CreateBlankWeekButton"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                                 Command="{Binding CreateWeekScheduleCommand}"
@@ -129,12 +130,20 @@
                                 Text="Lav blankt ugeskema" 
                                 Grid.Column="0"/>
                         <Button
+                                IsVisible="{Binding IsNewSchedule}"
                                 x:Name="CreateTemplateWeekButton"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                                 Command="{Binding CreateWeekScheduleCommand}"
                                 CommandParameter="Template"
                                 Text="Lav ugeskema fra skabelon" 
                                 Grid.Column="1"/>
+                        <Button
+                                IsVisible="{Binding IsTemplate}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
+                                Command="{Binding CreateTemplateCommand}"
+                                CommandParameter="Template"
+                                Text="Lav skabelon" 
+                                Grid.ColumnSpan="2"/>
                     </Grid>
                 </StackLayout>
                 <!-- CREATE SCHEDULE BUTTONS START -->

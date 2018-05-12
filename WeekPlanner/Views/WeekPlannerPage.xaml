@@ -22,7 +22,7 @@
                         <RowDefinition Height="AUTO"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Column="0">
-                        <Button BackgroundColor="{StaticResource SuccessColor}" Text="Gem ugeplan" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
+                        <Button BackgroundColor="{StaticResource SuccessColor}" Text="{Binding SaveText}" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
                     </Grid>
                     <Grid Grid.Column="1">
                         <Entry HorizontalTextAlignment="Center" Text="{Binding WeekName}" Placeholder="Unavngivet skema" TextColor="{StaticResource BlackColor}">
