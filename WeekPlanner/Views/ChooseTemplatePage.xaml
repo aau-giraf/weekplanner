@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
-    x:Class="WeekPlanner.Views.ChooseTemplatePage"
     xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
+    x:Class="WeekPlanner.Views.ChooseTemplatePage"
     Title="Vælg Skabelon"
     x:Name="roots">
     <ContentPage.Content>
