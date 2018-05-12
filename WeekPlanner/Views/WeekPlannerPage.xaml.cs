@@ -1,5 +1,7 @@
 using WeekPlanner.Views.Base;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using WeekPlanner.ViewModels;
 
 namespace WeekPlanner.Views
 {
@@ -10,6 +12,22 @@ namespace WeekPlanner.Views
 		public WeekPlannerPage()
 		{
 			InitializeComponent();
+
+			MessagingCenter.Subscribe<WeekPlannerViewModel, string>(this, "ChangeView", ChangeView);
 		}
-    }
+
+		private void ChangeView(WeekPlannerViewModel m, string s)
+		{
+			if (s == "Portrait")
+			{
+				MultiDayView.IsVisible = false;
+				OneDayView.IsVisible = true;
+			}
+			else
+			{
+				OneDayView.IsVisible = false;
+				MultiDayView.IsVisible = true;
+			}
+		}
+	}
 }

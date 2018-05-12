@@ -10,10 +10,18 @@
             <StackLayout>
                 <TableView Intent="Settings">
                     <TableRoot>
-                        <!--Number of activity-->
-                        <!--Number of days shown-->
-                        <!--Different completion mark-->
                         <!--Orientation lock-->
+                        <TableSection Title="Orientering">
+                            <ViewCell>
+                                <ViewCell.View>
+                                    <StackLayout Orientation="Horizontal" Padding="15, 0">
+                                        <Label Text="Vælg orientering" VerticalOptions="Center"></Label>
+                                        <Picker Title="Orientering" ItemsSource="{Binding Orientations}" SelectedItem="{Binding Orientation}"/>
+                                    </StackLayout>
+                                </ViewCell.View>
+                            </ViewCell>
+                        </TableSection>
+                        <!--Colour theme-->
                         <TableSection Title="Vælg Farvetema">
                             <ViewCell>
                                 <ViewCell.View>

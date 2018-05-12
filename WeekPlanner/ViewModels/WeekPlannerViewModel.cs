@@ -572,14 +572,16 @@ namespace WeekPlanner.ViewModels
             {
                 if (!_isDirty)
                 {
-                    SetToCitizenMode();
+					SetOrientation();
+					SetToCitizenMode();
                     IsBusy = false;
                     return;
                 }
                 var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
                     "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
+				SetOrientation();
 
-                switch (result)
+				switch (result)
                 {
                     case "Annuller":
                         break;
@@ -603,7 +605,9 @@ namespace WeekPlanner.ViewModels
             }
             else
             {
-                await NavigationService.NavigateToAsync<LoginViewModel>(this);
+				SetOrientation();
+
+				await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
 
             RaisePropertyChangedForDayLabels();
@@ -611,7 +615,35 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
+		public void SetOrientation()
+		{
+			if (!SettingsService.IsInGuardianMode)
+			{
+				LandscapeOrientation();
+			}
+			else if (SettingsService.CurrentCitizenSettingDTO.Orientation == SettingDTO.OrientationEnum.Portrait)
+			{
+				PortraitOrientation();
+			}
+			else
+			{
+				LandscapeOrientation();
+			}
+		}
+
+		private void PortraitOrientation()
+		{
+			MessagingCenter.Send(this, "SetOrientation", "Portrait");
+			MessagingCenter.Send(this, "ChangeView", "Portrait");
+		}
+
+		private void LandscapeOrientation()
+		{
+			MessagingCenter.Send(this, "SetOrientation", "Landscape");
+			MessagingCenter.Send(this, "ChangeView", "Landscape");
+		}
+
+		private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
 
         private Task ShowWeekNameEmptyPrompt() =>
             _dialogService.ShowAlertAsync("Giv venligst ugeplanen et navn, og gem igen.", "Ok",
