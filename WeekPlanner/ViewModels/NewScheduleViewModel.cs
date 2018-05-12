@@ -95,7 +95,7 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand ChangePictogramCommand => new Command(ChangePictogram);
-        public ICommand CreateWeekScheduleCommand => new Command<string>(async type => CreateWeekSchedule(type));
+        public ICommand CreateWeekScheduleCommand => new Command<string>(async type => await CreateWeekSchedule(type));
         public ICommand GetScheduleDatesCommand => new Command(() => GetScheduleDates());
         public ICommand ValidateWeekNameCommand => new Command(() => _scheduleName.Validate());
 
@@ -162,7 +162,7 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        private async void CreateWeekSchedule(string type)
+        private async Task CreateWeekSchedule(string type)
         {
             if (IsBusy) return;
             IsBusy = true;
@@ -177,9 +177,11 @@ namespace WeekPlanner.ViewModels
 
                 foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
                 {
-                    WeekdayDTO weekdayDTO = new WeekdayDTO();
-                    weekdayDTO.Day = day;
-                    weekdayDTO.Activities = new List<ActivityDTO>();
+                    WeekdayDTO weekdayDTO = new WeekdayDTO
+                    {
+                        Day = day,
+                        Activities = new List<ActivityDTO>()
+                    };
                     list.Add(weekdayDTO);
                 }
 

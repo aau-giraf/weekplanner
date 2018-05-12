@@ -49,7 +49,7 @@
                                         BackgroundColor="White"/>
                                     <Button
                                         Command="{Binding Source={x:Reference root}, Path=BindingContext.FlowItemDeletedCommand}" CommandParameter="{Binding .}" 
-                                        Image="icon_delete.png" VerticalOptions="Start" HorizontalOptions="End"
+                                        Image="icon_delete.png" VerticalOptions="Start" HorizontalOptions="End" IsVisible="{Binding SettingsService.IsInGuardianMode}"
                                         WidthRequest="42" HeightRequest="42" Margin="0" BackgroundColor="Transparent"/>
                                 </Grid>
                             </DataTemplate>
