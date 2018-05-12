@@ -143,9 +143,11 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-		public DayEnum CurrentDay { get => GetCurrentDay(); }
+		public string CurrentDayLabel { get => TranslateCurrentDay(); }
 
-		public WeekDayColorDTO CurrentDayColor { get => SettingsService.CurrentCitizenSettingDTO.WeekDayColors.Single(x => x.Day == GetCurrentColorDay()); }
+		public Color CurrentDayColor => Color.FromHex(SettingsService.CurrentCitizenSettingDTO.WeekDayColors.Single(x => x.Day == GetCurrentColorDay()).HexColor);
+
+		public ObservableCollection<ActivityDTO> CurrentDayPictos => GetPictosOrEmptyList(GetCurrentDay());
 
 		public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
         public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
@@ -773,6 +775,29 @@ namespace WeekPlanner.ViewModels
 
         }
 
+		private string TranslateCurrentDay()
+		{
+			switch (GetCurrentDay())
+			{
+				case DayEnum.Monday:
+					return "Mandag";
+				case DayEnum.Tuesday:
+					return "Tirsdag";
+				case DayEnum.Wednesday:
+					return "Onsdag";
+				case DayEnum.Thursday:
+					return "Torsdag";
+				case DayEnum.Friday:
+					return "Fredag";
+				case DayEnum.Saturday:
+					return "Lørdag";
+				case DayEnum.Sunday:
+					return "Søndag";
+				default:
+					throw new NotSupportedException("DayEnum out of bounds");
+			}
+		}
+
 		private WeekDayColorDTO.DayEnum GetCurrentColorDay()
 		{
 			switch (GetCurrentDay())
@@ -830,6 +855,7 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => FridayPictos);
             RaisePropertyChanged(() => SaturdayPictos);
             RaisePropertyChanged(() => SundayPictos);
+			RaisePropertyChanged(() => CurrentDayPictos);
             RaisePropertyChanged(() => Height);
         }
 

@@ -20,17 +20,13 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <Label Text="{Binding CurrentDay}" TextColor="{StaticResource BlackColor}" HorizontalTextAlignment="Center" FontSize="Large"/>
+                        <Label Text="{Binding CurrentDayLabel}" TextColor="{StaticResource BlackColor}" HorizontalTextAlignment="Center" FontSize="Large"/>
                         <ScrollView Grid.Row="1">
                             <StackLayout HeightRequest="{Binding Height}">
-                                <controls:WeekDayListView BackgroundColor="{Binding CurrentDayColor}" ItemsSource="{Binding SundayPictos}"/>
+                                <controls:WeekDayListView BackgroundColor="{Binding CurrentDayColor}" ItemsSource="{Binding CurrentDayPictos}"/>
                             </StackLayout>
                         </ScrollView>
-
                     </Grid>
-
-                    
-
                 </StackLayout>
 
                 <!--Multiview-->
