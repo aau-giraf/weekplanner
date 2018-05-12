@@ -143,7 +143,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-		public string CurrentDayLabel { get => TranslateCurrentDay(); }
+		public string CurrentDayLabel  => TranslateCurrentDay(); 
 
 		public Color CurrentDayColor => Color.FromHex(SettingsService.CurrentCitizenSettingDTO.WeekDayColors.Single(x => x.Day == GetCurrentColorDay()).HexColor);
 
@@ -597,7 +597,7 @@ namespace WeekPlanner.ViewModels
                             break;
                         }
                         await SaveOrUpdateSchedule();
-                        SetToCitizenMode();
+						SetToCitizenMode();
                         break;
 
                     case "Gem ikke":
@@ -606,11 +606,10 @@ namespace WeekPlanner.ViewModels
                         SetToCitizenMode();
                         break;
                 }
-            }
+			}
             else
             {
 				SetOrientation();
-
 				await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
 
@@ -673,7 +672,7 @@ namespace WeekPlanner.ViewModels
 
         private void SetToCitizenMode()
         {
-            ShowBackButton = false;
+			ShowBackButton = false;
             SettingsService.IsInGuardianMode = false;
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
 
