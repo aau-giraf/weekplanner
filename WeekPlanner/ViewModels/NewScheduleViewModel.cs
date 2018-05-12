@@ -33,6 +33,12 @@ namespace WeekPlanner.ViewModels
         private int _scheduleWeek;
         private string _scheduleFromAndToDates;
         private string _scheduleValidateYearAndWeek;
+        private bool _isTemplate = false;
+        private string _viewName;
+        private string _newTempOrSchedule;
+        private string _namingTempOrSchedule;
+        private string _exampleTempOrSchedule;
+        private string _pictoForTempOrSchedule;
 
         public ValidatableObject<string> ScheduleName
         {
@@ -51,6 +57,68 @@ namespace WeekPlanner.ViewModels
             {
                 _weekThumbNail = value;
                 RaisePropertyChanged(() => WeekThumbNail);
+            }
+        }
+
+        public bool IsNewSchedule => !_isTemplate;
+        
+        public bool IsTemplate
+        {
+            get => _isTemplate;
+            set
+            {
+                _isTemplate = value;
+                RaisePropertyChanged(() => IsTemplate);
+                RaisePropertyChanged(() => IsNewSchedule);
+            }
+        }
+
+        public string ViewName
+        {
+            get => _viewName;
+            private set
+            {
+                _viewName = value;
+                RaisePropertyChanged(() => ViewName);
+            }
+        }
+        public string NewTempOrSchedule
+        {
+            get => _newTempOrSchedule;
+            private set
+            {
+                _newTempOrSchedule = value;
+                RaisePropertyChanged(() => NewTempOrSchedule);
+            }
+        }
+
+        public string ExampleTempOrSchedule
+        {
+            get => _exampleTempOrSchedule;
+            set
+            {
+                _exampleTempOrSchedule = value;
+                RaisePropertyChanged(() => ExampleTempOrSchedule);
+            }
+        }
+
+        public string PictoForTempOrSchedule
+        {
+            get => _pictoForTempOrSchedule;
+            private set
+            {
+                _pictoForTempOrSchedule = value;
+                RaisePropertyChanged(() => PictoForTempOrSchedule);
+            }
+        }
+
+        public string NamingTempOrSchedule
+        {
+            get => _namingTempOrSchedule;
+            private set
+            {
+                _namingTempOrSchedule = value;
+                RaisePropertyChanged(() => NamingTempOrSchedule);
             }
         }
 
@@ -98,6 +166,7 @@ namespace WeekPlanner.ViewModels
         public ICommand CreateWeekScheduleCommand => new Command<string>(async type => await CreateWeekSchedule(type));
         public ICommand GetScheduleDatesCommand => new Command(() => GetScheduleDates());
         public ICommand ValidateWeekNameCommand => new Command(() => _scheduleName.Validate());
+        public ICommand CreateTemplateCommand => new Command(async () => await CreateTemplate());
 
         public NewScheduleViewModel(
             INavigationService navigationService,
@@ -131,7 +200,26 @@ namespace WeekPlanner.ViewModels
                 onExceptionAsync: () => NavigationService.PopAsync(),
                 onRequestFailedAsync: () => NavigationService.PopAsync());
 
-            WeekThumbNail = _pictogramApi.V1PictogramByIdGet(2).Data;
+            if (navigationData is string s)
+            {
+                if (s == "Template")
+                {
+                    IsTemplate = true;
+                    ViewName = "Tilføj en ny skabelon";
+                    NewTempOrSchedule = "Ny skabelon";
+                    NamingTempOrSchedule = "Navngiv din nye skabelon";
+                    ExampleTempOrSchedule = "Eksempel: Min nye skabelon";
+                    PictoForTempOrSchedule = "Vælg et passende piktogram til din nye skabelon";
+                }
+            }
+            else
+            {
+                ViewName = "Tilføj en ny ugeplan";
+                NewTempOrSchedule = "Ny ugeplan";
+                NamingTempOrSchedule = "Navngiv din nye ugeplan";
+                ExampleTempOrSchedule = "Eksempel: Min nye ugeplan";
+                PictoForTempOrSchedule = "Vælg et passende piktogram til din nye ugeplan";
+            }
         }
 
         public override Task PoppedAsync(object navigationData)
@@ -189,13 +277,41 @@ namespace WeekPlanner.ViewModels
 
                 if (type.Equals("Blank"))
                     await NavigationService.NavigateToAsync<WeekPlannerViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
-                else if (type.Equals("Template")) //NOT IMPLEMENTED!
+                else if (type.Equals("Template")) //IMPLEMENTED!
                     await NavigationService.NavigateToAsync<ChooseTemplateViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
 
                 //Else do nothing
             }
 
             IsBusy = false;
+        }
+
+        private async Task CreateTemplate()
+        {
+            WeekThumbNail.AccessLevel = WeekPictogramDTO.AccessLevelEnum.PUBLIC;
+
+            WeekTemplateDTO weekTemplate = new WeekTemplateDTO()
+            {
+                Name = ScheduleName.Value,
+                Thumbnail = WeekThumbNail
+            };
+
+            var list = new List<WeekdayDTO>();
+
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+            {
+                WeekdayDTO weekdayDTO = new WeekdayDTO
+                {
+                    Day = day,
+                    Activities = new List<ActivityDTO>()
+                };
+                list.Add(weekdayDTO);
+            }
+
+            weekTemplate.Days = list;
+
+            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(weekTemplate);
+            
         }
 
         private void GetScheduleDates()

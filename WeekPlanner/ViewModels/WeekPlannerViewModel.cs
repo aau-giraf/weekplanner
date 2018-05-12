@@ -26,9 +26,11 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
+        private readonly IWeekTemplateApi _weekTemplateApi;
         private readonly IDialogService _dialogService;
         public ISettingsService SettingsService { get; }
         private bool _isDirty = false;
+        private bool _isTemplate = false;
         private long? _choiceID = 0;
 
         /// <summary>
@@ -64,12 +66,13 @@ namespace WeekPlanner.ViewModels
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _toolbarButtonIcon;
-        private ImageSource _userModeImage;
         private int _scheduleYear;
         private int _scheduleWeek;
         private Dictionary<long?, List<ActivityDTO>> _choiceBoardActivities = new Dictionary<long?, List<ActivityDTO>>();
         private WeekPictogramDTO _standardChoiceBoardPictoDTO;
         private ObservableCollection<DayToggledWrapper> _toggledDaysWrapper;
+        private WeekTemplateDTO _weekTemplate;
+        private string _saveText;
 
         public ObservableCollection<DayToggledWrapper> ToggledDaysWrapper
         {
@@ -91,6 +94,16 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => WeekDTO);
                 RaisePropertyChanged(() => WeekName);
                 RaisePropertyForDays();
+            }
+        }
+
+        public string SaveText
+        {
+            get => _saveText;
+            set
+            {
+                _saveText = value;
+                RaisePropertyChanged(() => SaveText);
             }
         }
 
@@ -186,10 +199,10 @@ namespace WeekPlanner.ViewModels
                 args.Cancel = true;
                 return;
             }
-            
+
             if (IsBusy) return;
             IsBusy = true;
-            
+
             if (args.Action == DragAction.Drop
                 && args.ItemData is ActivityDTO activity)
             {
@@ -197,16 +210,16 @@ namespace WeekPlanner.ViewModels
             }
             IsBusy = false;
         });
-        
+
         private void UpdateOrderingOfActivities(ActivityDTO activityDTO, int oldIndex, int newIndex)
         {
             if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityDTO == null) return;
             WeekdayDTO dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Activities.Contains(activityDTO));
             if (dayToReorder is null) return;
-            
+
             // The activities have not updated yet, so we get the order value based on old indexes
             var newOrder = dayToReorder.Activities[newIndex].Order;
-            
+
             // Update the orders of all activities in the day          
             if (newIndex < oldIndex) // Dragged upwards
             {
@@ -223,7 +236,7 @@ namespace WeekPlanner.ViewModels
                 }
             }
             activityDTO.Order = newOrder;
-            
+
             // Update order so indexes are correct on next use
             dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
             _isDirty = true;
@@ -236,12 +249,14 @@ namespace WeekPlanner.ViewModels
             IWeekApi weekApi,
             IDialogService dialogService,
             ISettingsService settingsService,
-            IPictogramApi pictogramApi)
+            IPictogramApi pictogramApi,
+            IWeekTemplateApi weekTemplateApi)
             : base(navigationService)
         {
             _requestService = requestService;
             _weekApi = weekApi;
             _pictogramApi = pictogramApi;
+            _weekTemplateApi = weekTemplateApi;
             _dialogService = dialogService;
             _requestService = requestService;
             SettingsService = settingsService;
@@ -439,7 +454,7 @@ namespace WeekPlanner.ViewModels
 
                 foreach (var activity in day.Activities)
                 {
-                    if (activity.IsChoiceBoard.HasValue &&activity.IsChoiceBoard.Value)
+                    if (activity.IsChoiceBoard.HasValue && activity.IsChoiceBoard.Value)
                     {
                         choiceBoardActivities.Add(activity);
                     }
@@ -527,10 +542,20 @@ namespace WeekPlanner.ViewModels
                 return;
             }
 
+            string saveMessage;
+            if (_isTemplate)
+            {
+                saveMessage = "Vil du gemme skabelonen?";
+            }
+            else
+            {
+                saveMessage = "Vi du gemme ugeplanen?";
+            }
+
             bool confirmed = showDialog ?
                 await _dialogService.ConfirmAsync(
                 title: "Gem ugeplan",
-                message: "Vil du gemme ugeplanen?",
+                message: saveMessage,
                 okText: "Gem",
                 cancelText: "Annuller") :
                 true;
@@ -550,19 +575,44 @@ namespace WeekPlanner.ViewModels
         {
             PutChoiceActivitiesBackIntoSchedule();
 
-            string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
+            if (_isTemplate)
+            {
+                CreateTemplateFromWeek();
+
+                await _requestService.SendRequestAndThenAsync(
+                    () => _weekTemplateApi.V1WeekTemplatePostAsync(_weekTemplate),
+                    result =>
+                    {
+                        _dialogService.ShowAlertAsync(message: string.Format("Skabelonen blev gemt", result.Data.Name));
+                    });
+            }
+            else
+            {
+                string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
-            await _requestService.SendRequestAndThenAsync(
-                () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.UserId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
-                result =>
-                {
-                    _dialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
-                    WeekDTO = result.Data;
-                });
+                await _requestService.SendRequestAndThenAsync(
+                    () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.UserId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
+                    result =>
+                    {
+                        _dialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
+                        WeekDTO = result.Data;
+                    });
+            }
 
             FoldDaysToChoiceBoards();
+        }
+
+        private void CreateTemplateFromWeek()
+        {
+            _weekTemplate.Days.Clear();
+            foreach (var day in WeekDTO.Days)
+            {
+                _weekTemplate.Days.Add(day);
+            }
+
+            _weekTemplate.Name = WeekDTO.Name;
         }
 
         private bool RemoveItemFromDay(DayEnum day)
@@ -624,9 +674,17 @@ namespace WeekPlanner.ViewModels
 
         private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
 
-        private Task ShowWeekNameEmptyPrompt() =>
-            _dialogService.ShowAlertAsync("Giv venligst ugeplanen et navn, og gem igen.", "Ok",
-                "Ugeplanen blev ikke gemt");
+        private async Task ShowWeekNameEmptyPrompt()
+        {
+            string temp = " usgeplanen ", temp1 = "Ugeplanen ";
+            if (_isTemplate)
+            {
+                temp = " skabelonen ";
+                temp1 = "Skabelonen ";
+            }
+            await _dialogService.ShowAlertAsync("Giv venligst" + temp + "et navn, og gem igen.", "Ok",
+                temp1 + "blev ikke gemt");
+        }
 
         public int Height
         {
@@ -805,6 +863,16 @@ namespace WeekPlanner.ViewModels
                 }
             }
         }
+        private void SetTemplateToWeek()
+        {
+            WeekDTO = new WeekDTO()
+            {
+                Name = _weekTemplate.Name,
+                Days = new List<WeekdayDTO>()
+            };
+            WeekDTO.Days.AddRange(_weekTemplate.Days);
+            WeekDTO.Name = _weekTemplate.Name;
+        }
 
         public override async Task PoppedAsync(object navigationData)
         {
@@ -850,6 +918,7 @@ namespace WeekPlanner.ViewModels
         public override async Task InitializeAsync(object navigationData)
         {
             _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
+            SaveText = "Gem Ugeplan";
             switch (navigationData)
             {
                 //When initialized from CitizenSchedulesViewModel
@@ -863,8 +932,16 @@ namespace WeekPlanner.ViewModels
                     ScheduleYear = weekDetailsWithDTO.Item1;
                     ScheduleWeek = weekDetailsWithDTO.Item2;
                     WeekDTO = weekDetailsWithDTO.Item3;
-
+                    FoldDaysToChoiceBoards();
+                    await NavigationService.RemoveLastFromBackStackAsync();
                     SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
+                    break;
+                case WeekTemplateDTO templateDTO:
+                    SaveText = "Gem Skabelon";
+                    _weekTemplate = templateDTO;
+                    _isTemplate = true;
+                    SetTemplateToWeek();
+                    await NavigationService.RemoveLastFromBackStackAsync();
                     break;
                 default:
                     throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
@@ -874,5 +951,7 @@ namespace WeekPlanner.ViewModels
 
             OrderActivities();
         }
+
+        
     }
 }

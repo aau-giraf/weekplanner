@@ -34,11 +34,11 @@ namespace WeekPlanner.ViewModels
         private Tuple<int, int, WeekDTO> _yearScheduleweekAndWeek;
 
 
-        public ICommand WeekTappedCommand => new Command<WeekTemplateDTO>(ListViewItemTapped);
+        public ICommand WeekTemplateTappedCommand => new Command<WeekTemplateDTO>(ListViewItemTapped);
         public ICommand WeekDeletedCommand => new Command<WeekTemplateDTO>(async week => await WeekDeletedTapped(week));
 
         // Create new weekschedule button in toolbar
-        public ICommand ToolbarButtonCommand => new Command(async () => await AddWeekSchedule());
+        public ICommand ToolbarButtonCommand => new Command(async () => await AddWeekTemplate());
         public bool ShowToolbarButton => true;
         public ImageSource ToolbarButtonIcon => (FileImageSource)ImageSource.FromFile("icon_add.png");
 
@@ -141,12 +141,12 @@ namespace WeekPlanner.ViewModels
 
         }
 
-        private async Task AddWeekSchedule()
+        private async Task AddWeekTemplate()
         {
             if (IsBusy) return;
 
             IsBusy = true;
-            await NavigationService.NavigateToAsync<NewScheduleViewModel>();
+            await NavigationService.NavigateToAsync<NewScheduleViewModel>("Template");
             IsBusy = false;
         }
 
@@ -167,6 +167,7 @@ namespace WeekPlanner.ViewModels
                 default:
                     break;
             }
+            await NavigationService.RemoveLastFromBackStackAsync();
             await InitializeWeekSchedules();
         }
     }
