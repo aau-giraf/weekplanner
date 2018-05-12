@@ -70,7 +70,23 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
+		public IEnumerable<SettingDTO.OrientationEnum> Orientations { get; } = new List<SettingDTO.OrientationEnum>
+		{
+			SettingDTO.OrientationEnum.Landscape, SettingDTO.OrientationEnum.Portrait
+		};
+
+		public SettingDTO.OrientationEnum Orientation
+		{
+			get => _settingsService.CurrentCitizenSettingDTO.Orientation;
+			set
+			{
+				Settings.Orientation = value;
+				RaisePropertyChanged(() => Orientation);
+				UpdateSettingsAsync();
+			}
+		}
+
+		public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
         
         private void SetThemeInSettingDTOAndUpdate(SettingDTO.ThemeEnum pickedTheme)
         {
