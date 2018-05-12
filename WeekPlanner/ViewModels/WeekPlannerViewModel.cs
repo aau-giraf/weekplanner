@@ -1,26 +1,24 @@
+using IO.Swagger.Api;
+using IO.Swagger.Model;
+using Syncfusion.ListView.XForms;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using IO.Swagger.Api;
-using IO.Swagger.Model;
+using WeekPlanner.Services;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
-using static IO.Swagger.Model.WeekdayDTO;
-using WeekPlanner.Services;
-using WeekPlanner.Helpers;
 using static IO.Swagger.Model.ActivityDTO;
-using System.Collections.Generic;
-using Syncfusion.ListView.XForms;
+using static IO.Swagger.Model.WeekdayDTO;
 
 namespace WeekPlanner.ViewModels
 {
-    public class WeekPlannerViewModel : ViewModelBase
+	public class WeekPlannerViewModel : ViewModelBase
     {
 
         private readonly IRequestService _requestService;
@@ -145,7 +143,11 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
+		public DayEnum CurrentDay { get => GetCurrentDay(); }
+
+		public WeekDayColorDTO CurrentDayColor { get => SettingsService.CurrentCitizenSettingDTO.WeekDayColors.Single(x => x.Day == GetCurrentColorDay()); }
+
+		public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
         public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
@@ -770,6 +772,29 @@ namespace WeekPlanner.ViewModels
             }
 
         }
+
+		private WeekDayColorDTO.DayEnum GetCurrentColorDay()
+		{
+			switch (GetCurrentDay())
+			{
+				case DayEnum.Monday:
+					return WeekDayColorDTO.DayEnum.Monday;
+				case DayEnum.Tuesday:
+					return WeekDayColorDTO.DayEnum.Tuesday;
+				case DayEnum.Wednesday:
+					return WeekDayColorDTO.DayEnum.Wednesday;
+				case DayEnum.Thursday:
+					return WeekDayColorDTO.DayEnum.Thursday;
+				case DayEnum.Friday:
+					return WeekDayColorDTO.DayEnum.Friday;
+				case DayEnum.Saturday:
+					return WeekDayColorDTO.DayEnum.Saturday;
+				case DayEnum.Sunday:
+					return WeekDayColorDTO.DayEnum.Sunday;
+				default:
+					throw new NotSupportedException("ColorDayEnum out of bounds");
+			}
+		}
         // TODO: Override the navigation bar backbutton when this is available.
         // Will most likely only be available if/when the custom navigation bar gets implemented.
 

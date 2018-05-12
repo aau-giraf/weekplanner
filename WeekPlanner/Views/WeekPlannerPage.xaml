@@ -13,8 +13,23 @@
         <ContentView ControlTemplate="{StaticResource NavBarWithToolbarAndStackTemplate}">
             <AbsoluteLayout >
                 <!--Single day-->
-                <StackLayout x:Name="OneDayView" IsVisible="False" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="SizeProportional"
-                             BackgroundColor="Black">
+                <StackLayout x:Name="OneDayView" IsVisible="False" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="SizeProportional">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="AUTO" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Label Text="{Binding CurrentDay}" TextColor="{StaticResource BlackColor}" HorizontalTextAlignment="Center" FontSize="Large"/>
+                        <ScrollView Grid.Row="1">
+                            <StackLayout HeightRequest="{Binding Height}">
+                                <controls:WeekDayListView BackgroundColor="{Binding CurrentDayColor}" ItemsSource="{Binding SundayPictos}"/>
+                            </StackLayout>
+                        </ScrollView>
+
+                    </Grid>
+
+                    
 
                 </StackLayout>
 
@@ -119,7 +134,7 @@
                         <!-- WEEKDAY LISTS -->
                         <ScrollView Grid.Row="1" Grid.ColumnSpan="7">
                             <!-- HACK: The HeightRequest is set to make the Grid's height larger
-                than the ListViews height in effect disabling their scrolling, so all days scroll together -->
+                            than the ListViews height in effect disabling their scrolling, so all days scroll together -->
 
                             <Grid HeightRequest="{Binding Height}">
                                 <Grid.ColumnDefinitions>
@@ -164,10 +179,6 @@
                     </Grid>
                 </StackLayout>
             </AbsoluteLayout>
-
-
-            <!--Multiday-->
-
         </ContentView>
     </ContentPage.Content>
 </base:PageBase>
