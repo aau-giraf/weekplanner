@@ -11,27 +11,28 @@ namespace WeekPlanner.iOS
 	[Register("AppDelegate")]
 	public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
-		
-		//public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(UIApplication application, [Transient] UIWindow forWindow)
-		//{
-		//	MessagingCenter.Subscribe<WeekPlannerViewModel, string>(this, "SetOrientation", (m, orientation) => 
-		//	{
-		//		switch (orientation)
-		//		{
-		//			case "Landscape":
-		//				RequestedOrientation = ScreenOrientation.Landscape;
-		//				break;
-		//			case "Portrait":
-		//				RequestedOrientation = ScreenOrientation.Portrait;
-		//				break;
-		//			default:
-		//				return UIInterfaceOrientationMask.LandscapeRight;
+		private UIInterfaceOrientationMask Orientation = UIInterfaceOrientationMask.Landscape;
+		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(UIApplication application, [Transient] UIWindow forWindow)
+		{
+			MessagingCenter.Subscribe<WeekPlannerViewModel, string>(this, "SetOrientation", (m, orientation) =>
+			{
+				switch (orientation)
+				{
+					case "Landscape":
+						Orientation = UIInterfaceOrientationMask.LandscapeRight;
+						break;
+					case "Portrait":
+						Orientation = UIInterfaceOrientationMask.Portrait;
+						break;
+					default:
+						Orientation = UIInterfaceOrientationMask.LandscapeRight;
+						break;
 
-		//		}
-		//	});
-			
-			
-		//}
+				}
+			});
+
+			return Orientation;
+		}
 
 		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
