@@ -1,26 +1,24 @@
+using IO.Swagger.Api;
+using IO.Swagger.Model;
+using Syncfusion.ListView.XForms;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using IO.Swagger.Api;
-using IO.Swagger.Model;
+using WeekPlanner.Services;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
-using static IO.Swagger.Model.WeekdayDTO;
-using WeekPlanner.Services;
-using WeekPlanner.Helpers;
 using static IO.Swagger.Model.ActivityDTO;
-using System.Collections.Generic;
-using Syncfusion.ListView.XForms;
+using static IO.Swagger.Model.WeekdayDTO;
 
 namespace WeekPlanner.ViewModels
 {
-    public class WeekPlannerViewModel : ViewModelBase
+	public class WeekPlannerViewModel : ViewModelBase
     {
 
         private readonly IRequestService _requestService;
@@ -159,7 +157,13 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
+		public string CurrentDayLabel  => TranslateCurrentDay(); 
+
+		public Color CurrentDayColor => Color.FromHex(SettingsService.CurrentCitizenSettingDTO.WeekDayColors.Single(x => x.Day == GetCurrentColorDay()).HexColor);
+
+		public ObservableCollection<ActivityDTO> CurrentDayPictos => GetPictosOrEmptyList(GetCurrentDay());
+
+		public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
         public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
@@ -633,14 +637,16 @@ namespace WeekPlanner.ViewModels
             {
                 if (!_isDirty)
                 {
-                    SetToCitizenMode();
+					SetOrientation();
+					SetToCitizenMode();
                     IsBusy = false;
                     return;
                 }
                 var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
                     "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
+				SetOrientation();
 
-                switch (result)
+				switch (result)
                 {
                     case "Annuller":
                         break;
@@ -652,7 +658,7 @@ namespace WeekPlanner.ViewModels
                             break;
                         }
                         await SaveOrUpdateSchedule();
-                        SetToCitizenMode();
+						SetToCitizenMode();
                         break;
 
                     case "Gem ikke":
@@ -661,10 +667,11 @@ namespace WeekPlanner.ViewModels
                         SetToCitizenMode();
                         break;
                 }
-            }
+			}
             else
             {
-                await NavigationService.NavigateToAsync<LoginViewModel>(this);
+				SetOrientation();
+				await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
 
             RaisePropertyChangedForDayLabels();
@@ -672,7 +679,35 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
+		public void SetOrientation()
+		{
+			if (!SettingsService.IsInGuardianMode)
+			{
+				LandscapeOrientation();
+			}
+			else if (SettingsService.CurrentCitizenSettingDTO.Orientation == SettingDTO.OrientationEnum.Portrait)
+			{
+				PortraitOrientation();
+			}
+			else
+			{
+				LandscapeOrientation();
+			}
+		}
+
+		private void PortraitOrientation()
+		{
+			MessagingCenter.Send(this, "SetOrientation", "Portrait");
+			MessagingCenter.Send(this, "ChangeView", "Portrait");
+		}
+
+		private void LandscapeOrientation()
+		{
+			MessagingCenter.Send(this, "SetOrientation", "Landscape");
+			MessagingCenter.Send(this, "ChangeView", "Landscape");
+		}
+
+		private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
 
         private async Task ShowWeekNameEmptyPrompt()
         {
@@ -706,7 +741,7 @@ namespace WeekPlanner.ViewModels
 
         private void SetToCitizenMode()
         {
-            ShowBackButton = false;
+			ShowBackButton = false;
             SettingsService.IsInGuardianMode = false;
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
 
@@ -807,6 +842,52 @@ namespace WeekPlanner.ViewModels
             }
 
         }
+
+		private string TranslateCurrentDay()
+		{
+			switch (GetCurrentDay())
+			{
+				case DayEnum.Monday:
+					return "Mandag";
+				case DayEnum.Tuesday:
+					return "Tirsdag";
+				case DayEnum.Wednesday:
+					return "Onsdag";
+				case DayEnum.Thursday:
+					return "Torsdag";
+				case DayEnum.Friday:
+					return "Fredag";
+				case DayEnum.Saturday:
+					return "Lørdag";
+				case DayEnum.Sunday:
+					return "Søndag";
+				default:
+					throw new NotSupportedException("DayEnum out of bounds");
+			}
+		}
+
+		private WeekDayColorDTO.DayEnum GetCurrentColorDay()
+		{
+			switch (GetCurrentDay())
+			{
+				case DayEnum.Monday:
+					return WeekDayColorDTO.DayEnum.Monday;
+				case DayEnum.Tuesday:
+					return WeekDayColorDTO.DayEnum.Tuesday;
+				case DayEnum.Wednesday:
+					return WeekDayColorDTO.DayEnum.Wednesday;
+				case DayEnum.Thursday:
+					return WeekDayColorDTO.DayEnum.Thursday;
+				case DayEnum.Friday:
+					return WeekDayColorDTO.DayEnum.Friday;
+				case DayEnum.Saturday:
+					return WeekDayColorDTO.DayEnum.Saturday;
+				case DayEnum.Sunday:
+					return WeekDayColorDTO.DayEnum.Sunday;
+				default:
+					throw new NotSupportedException("ColorDayEnum out of bounds");
+			}
+		}
         // TODO: Override the navigation bar backbutton when this is available.
         // Will most likely only be available if/when the custom navigation bar gets implemented.
 
@@ -842,6 +923,7 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => FridayPictos);
             RaisePropertyChanged(() => SaturdayPictos);
             RaisePropertyChanged(() => SundayPictos);
+			RaisePropertyChanged(() => CurrentDayPictos);
             RaisePropertyChanged(() => Height);
         }
 
