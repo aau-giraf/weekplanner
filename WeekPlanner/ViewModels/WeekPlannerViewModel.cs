@@ -760,8 +760,8 @@ namespace WeekPlanner.ViewModels
         public bool ShowWednesdayLabel => ShowDayLabel(DayEnum.Wednesday);
         public bool ShowThursdayLabel => ShowDayLabel(DayEnum.Thursday);
         public bool ShowFridayLabel => ShowDayLabel(DayEnum.Friday);
-        public bool ShowSundayLabel => ShowDayLabel(DayEnum.Saturday);
-        public bool ShowSaturdayLabel => ShowDayLabel(DayEnum.Sunday);
+		public bool ShowSaturdayLabel => ShowDayLabel(DayEnum.Saturday);
+		public bool ShowSundayLabel => ShowDayLabel(DayEnum.Sunday);
         private bool ShowDayLabel(DayEnum day)
         {
             return SettingsService.IsInGuardianMode ||   //When IsInGuardianMode we want to see the day labels
