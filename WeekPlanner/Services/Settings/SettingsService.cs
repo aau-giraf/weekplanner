@@ -31,6 +31,7 @@ namespace WeekPlanner.Services.Settings
             set { }
         }
 
+        private string _authToken;
         public string AuthToken
         {
             get => _authToken;
@@ -40,11 +41,8 @@ namespace WeekPlanner.Services.Settings
                 _accountApi.Configuration.ApiKey["Authorization"] = $"bearer {value}";
             }
         }
-
-
-        private string _authToken;
+        
         private bool _isInGuardianMode;
-
         public bool IsInGuardianMode
         {
             get => _isInGuardianMode;
@@ -54,26 +52,26 @@ namespace WeekPlanner.Services.Settings
                 RaisePropertyChanged(() => IsInGuardianMode);
             }
         }
-        SettingDTO currentCitizenSettingDTO;
 
+        private SettingDTO _currentCitizenSettingDTO;
         public SettingDTO CurrentCitizenSettingDTO
         {
-            get => currentCitizenSettingDTO;
+            get => _currentCitizenSettingDTO;
             set
             {
-                currentCitizenSettingDTO = value;
+                _currentCitizenSettingDTO = value;
                 SetTheme();
             }
         }
 
-        UserNameDTO currentCitizen;
-
+        private UserNameDTO _currentCitizen;
+        
         public UserNameDTO CurrentCitizen
         {
-            get => currentCitizen;
+            get => _currentCitizen;
             set
             {
-                currentCitizen = value;
+                _currentCitizen = value;
                 // get and set settings
                 _requestService.SendRequestAndThenAsync(
                     requestAsync: async () => await _userApi.V1UserByIdSettingsGetAsync(CurrentCitizen.UserId),
