@@ -744,15 +744,19 @@ namespace WeekPlanner.ViewModels
         private async Task BackButtonPressed()
         {
             if (IsBusy) return;
+
+			if (!SettingsService.IsInGuardianMode)
+            {
+                return;
+            }
             if (!_isDirty)
             {
+                IsBusy = true;
                 await NavigationService.PopAsync();
+                IsBusy = false;
                 return;
             }
-            if (!SettingsService.IsInGuardianMode)
-            {
-                return;
-            }
+
             IsBusy = true;
             var result = await DialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
                 "Annuller", null, "Gem ændringer", "Gem ikke");
