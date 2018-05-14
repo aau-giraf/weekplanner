@@ -30,7 +30,7 @@ namespace WeekPlanner.ViewModels
         private ObservableCollection<WeekNameDTO> _weekNameDTOs = new ObservableCollection<WeekNameDTO>();
         private ObservableCollection<WeekDTO> _weeks = new ObservableCollection<WeekDTO>();
         private ObservableCollection<PictogramDTO> _weekImage;
-
+        private List<Tuple<int, int>> _yearAndWeek = new List<Tuple<int, int>>();
 
         public ICommand WeekTappedCommand => new Command<WeekDTO>(ListViewItemTapped);
         public ICommand WeekDeletedCommand => new Command<WeekDTO>(async week => await WeekDeletedTapped(week));
@@ -104,6 +104,8 @@ namespace WeekPlanner.ViewModels
 
             foreach (var item in WeekNameDTOS)
             {
+                _yearAndWeek.Add(new Tuple<int, int>(item.WeekYear.Value, item.WeekNumber.Value));
+
                 await _requestService.SendRequestAndThenAsync(
                     () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(userId: _settingsService.CurrentCitizen.UserId, weekYear: item.WeekYear,
                         weekNumber: item.WeekNumber), (res) => Weeks.Add(res.Data));
@@ -143,7 +145,7 @@ namespace WeekPlanner.ViewModels
             if (IsBusy) return;
 
             IsBusy = true;
-            await NavigationService.NavigateToAsync<NewScheduleViewModel>();
+            await NavigationService.NavigateToAsync<NewScheduleViewModel>(_yearAndWeek);
             IsBusy = false;
         }
 
