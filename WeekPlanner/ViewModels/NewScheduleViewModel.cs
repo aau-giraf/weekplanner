@@ -39,6 +39,7 @@ namespace WeekPlanner.ViewModels
         private string _namingTempOrSchedule;
         private string _exampleTempOrSchedule;
         private string _pictoForTempOrSchedule;
+        private List<Tuple<int, int>> _yearAndWeek;
 
         public ValidatableObject<string> ScheduleName
         {
@@ -200,6 +201,12 @@ namespace WeekPlanner.ViewModels
                 onExceptionAsync: () => NavigationService.PopAsync(),
                 onRequestFailedAsync: () => NavigationService.PopAsync());
 
+            ViewName = "Tilføj en ny ugeplan";
+            NewTempOrSchedule = "Ny ugeplan";
+            NamingTempOrSchedule = "Navngiv din nye ugeplan";
+            ExampleTempOrSchedule = "Eksempel: Min nye ugeplan";
+            PictoForTempOrSchedule = "Vælg et passende piktogram til din nye ugeplan";
+
             if (navigationData is string s)
             {
                 if (s == "Template")
@@ -212,13 +219,9 @@ namespace WeekPlanner.ViewModels
                     PictoForTempOrSchedule = "Vælg et passende piktogram til din nye skabelon";
                 }
             }
-            else
+            else if (navigationData is List<Tuple<int, int>> list)
             {
-                ViewName = "Tilføj en ny ugeplan";
-                NewTempOrSchedule = "Ny ugeplan";
-                NamingTempOrSchedule = "Navngiv din nye ugeplan";
-                ExampleTempOrSchedule = "Eksempel: Min nye ugeplan";
-                PictoForTempOrSchedule = "Vælg et passende piktogram til din nye ugeplan";
+                _yearAndWeek = list;
             }
         }
 
@@ -257,6 +260,7 @@ namespace WeekPlanner.ViewModels
 
             if (!string.IsNullOrWhiteSpace(type) && ValidateWeekScheduleName() && ValidateScheduleYearAndWeek())
             {
+                bool overwriteSchedule = true;
                 _weekDTO.Name = ScheduleName.Value;
                 WeekThumbNail.AccessLevel = WeekPictogramDTO.AccessLevelEnum.PUBLIC;
                 _weekDTO.Thumbnail = WeekThumbNail;
@@ -275,10 +279,23 @@ namespace WeekPlanner.ViewModels
 
                 _weekDTO.Days = list;
 
-                if (type.Equals("Blank"))
-                    await NavigationService.NavigateToAsync<WeekPlannerViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
-                else if (type.Equals("Template")) //IMPLEMENTED!
-                    await NavigationService.NavigateToAsync<ChooseTemplateViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
+                //If week already exists
+                foreach (var item in _yearAndWeek)
+                {
+                    if (item.Item1 == ScheduleYear && item.Item2 == ScheduleWeek)
+                    {
+                        overwriteSchedule = await _dialogService.ConfirmAsync("Du er ved at overskrive en allerede gemt ugeplan i samme uge", "Overskriv Uge", "Annuller", "Overskriv");
+                    }
+                }
+
+                if (overwriteSchedule)
+                {
+                    if (type.Equals("Blank"))
+                        await NavigationService.NavigateToAsync<WeekPlannerViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
+                    else if (type.Equals("Template")) //IMPLEMENTED!
+                        await NavigationService.NavigateToAsync<ChooseTemplateViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
+                }
+                
 
                 //Else do nothing
             }
