@@ -51,11 +51,14 @@ namespace WeekPlanner.ViewModels
                 }
             }
 
+			public bool InternalChange;
+
             public DayToggledWrapper(DayEnum day, EventHandler<ToggledEventArgs> toggledEventCallback)
             {
                 IsToggled = SwitchToggled = true;
                 Day = day;
                 Toggled += toggledEventCallback;
+				InternalChange = false;
             }
         }
 
@@ -304,6 +307,8 @@ namespace WeekPlanner.ViewModels
         private async void OnToggledDayEventHandler<ToggledEventArgs>(object sender, ToggledEventArgs e)
         {
             if (!(sender is DayToggledWrapper dayToggleWrapper)) return;
+			if (dayToggleWrapper.InternalChange) { dayToggleWrapper.InternalChange = false; return; } 
+			// InternalChange is used here to ensure that this method does not perform changes when the toggle has been changed internally(ie. not by the user) 
 
             //Alright, here's the scenarios and quick truth table:
             //There are 2 scenarios here; either IsToggled went from T => F or F => T (obviously)
@@ -324,20 +329,23 @@ namespace WeekPlanner.ViewModels
 
                 bool confirmed = dayFromWeekDTO.Activities.Count > 0 ?
                     await _dialogService.ConfirmAsync(
-                        title: "BekrÃ¦ft sletning af ugedag",
-                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker pÃ¥, at du vil fortsÃ¦tte?",
+                        title: "Bekræft sletning af ugedag",
+                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker på, at du vil fortsætte?",
                         okText: "Slet ugedag",
                         cancelText: "Annuller") :
                     true;
 
-                if (confirmed)
-                {
-                    var removedDay = WeekDTO.Days.FirstOrDefault(dayObj => dayObj.Day == dayToggleWrapper.Day);
-                    if (removedDay == null) return;
-                    _removedWeekdayDTOs.Add(removedDay);
-                    WeekDTO.Days.Remove(removedDay);
-                }
-
+				if (confirmed)
+				{
+					var removedDay = WeekDTO.Days.FirstOrDefault(dayObj => dayObj.Day == dayToggleWrapper.Day);
+					if (removedDay == null) return;
+					_removedWeekdayDTOs.Add(removedDay);
+					WeekDTO.Days.Remove(removedDay);
+				}
+				else
+				{
+					dayToggleWrapper.InternalChange = true;
+				}
                 dayToggleWrapper.IsToggled = dayToggleWrapper.SwitchToggled = !confirmed;
             }
             //Scenario 2
@@ -642,8 +650,8 @@ namespace WeekPlanner.ViewModels
                     IsBusy = false;
                     return;
                 }
-                var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
-                    "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
+                var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
+                    "Annuller", null, "Gem ændringer", "Gem ikke");
 				SetOrientation();
 
 				switch (result)
@@ -651,7 +659,7 @@ namespace WeekPlanner.ViewModels
                     case "Annuller":
                         break;
 
-                    case "Gem Ã¦ndringer":
+                    case "Gem ændringer":
                         if (WeekNameIsEmpty)
                         {
                             await ShowWeekNameEmptyPrompt();
@@ -794,14 +802,14 @@ namespace WeekPlanner.ViewModels
                 return;
             }
             IsBusy = true;
-            var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
-                "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
+            var result = await _dialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
+                "Annuller", null, "Gem ændringer", "Gem ikke");
 
             switch (result)
             {
                 case "Annuller":
                     break;
-                case "Gem Ã¦ndringer":
+                case "Gem ændringer":
                     if (WeekNameIsEmpty)
                     {
                         await ShowWeekNameEmptyPrompt();
