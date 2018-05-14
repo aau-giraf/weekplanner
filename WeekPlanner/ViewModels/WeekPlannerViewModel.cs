@@ -186,7 +186,7 @@ namespace WeekPlanner.ViewModels
                 {
                     await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(GetActivitiesForChoiceBoard());
                 }
-                else
+                else if (SettingsService.IsInGuardianMode || !a.State.Value.Equals(StateEnum.Canceled))
                 {
                     await NavigationService.NavigateToAsync<ActivityViewModel>(_selectedActivity);
                 }
