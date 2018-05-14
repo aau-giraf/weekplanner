@@ -574,13 +574,25 @@ namespace WeekPlanner.ViewModels
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
-            await RequestService.SendRequestAndThenAsync(
-                () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.UserId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
-                result =>
-                {
-                    DialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
-                    WeekDTO = result.Data;
-                });
+			if (SettingsService.IsInGuardianMode)
+			{
+				await RequestService.SendRequestAndThenAsync(
+				() => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.UserId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
+				result =>
+				{
+					DialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
+					WeekDTO = result.Data;
+				});
+			}
+			else
+			{
+				await RequestService.SendRequestAndThenAsync(
+				() => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.UserId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
+				result =>
+				{
+					WeekDTO = result.Data;
+				});
+			}
 
             FoldDaysToChoiceBoards();
         }
@@ -623,8 +635,8 @@ namespace WeekPlanner.ViewModels
                             await ShowWeekNameEmptyPrompt();
                             break;
                         }
-                        await SaveOrUpdateSchedule();
 						SetToCitizenMode();
+						await SaveOrUpdateSchedule();
                         break;
 
                     case "Gem ikke":
