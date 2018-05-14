@@ -310,7 +310,7 @@ namespace WeekPlanner.ViewModels
 
             weekTemplate.Days = list;
 
-            await NavigationService.NavigateToAsync<WeekPlannerViewModel>(weekTemplate);
+            await NavigationService.NavigateToAsync<WeekPlannerTemplateViewModel>(weekTemplate);
             
         }
 

@@ -34,25 +34,21 @@
                 <StackLayout x:Name="MultiDayView" IsVisible="True" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="SizeProportional">
                     <Grid IsVisible="{Binding SettingsService.IsInGuardianMode}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="3*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="AUTO"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Column="0">
-                                    <Button BackgroundColor="{StaticResource SuccessColor}" Text="{Binding SaveText}" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
-                        </Grid>
-                        <Grid Grid.Column="1">
                             <Entry HorizontalTextAlignment="Center" Text="{Binding WeekName}" Placeholder="Unavngivet skema" TextColor="{StaticResource BlackColor}">
                                 <Entry.Behaviors>
                                     <behaviors:EventToCommandBehavior EventName="TextChanged" Command="{Binding SaveScheduleName}" />
                                 </Entry.Behaviors>
                             </Entry>
                         </Grid>
-                        <Grid Grid.Column="2">
-                            <Button Text="Annuller" BackgroundColor="{StaticResource CancelColor}" Command="{Binding ToolbarButtonCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"/>
+                        <Grid Grid.Column="1">
+                            <Button BackgroundColor="{StaticResource SuccessColor}" Text="{Binding SaveText}" Command="{Binding SaveCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}" />
                         </Grid>
                     </Grid>
                     <Grid>

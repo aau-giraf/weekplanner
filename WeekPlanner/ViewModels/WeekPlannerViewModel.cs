@@ -21,14 +21,13 @@ namespace WeekPlanner.ViewModels
 	public class WeekPlannerViewModel : ViewModelBase
     {
 
-        private readonly IRequestService _requestService;
+        protected readonly IRequestService RequestService;
         private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
-        private readonly IWeekTemplateApi _weekTemplateApi;
-        private readonly IDialogService _dialogService;
+        
+        protected readonly IDialogService DialogService;
         public ISettingsService SettingsService { get; }
         private bool _isDirty = false;
-        private bool _isTemplate = false;
         private long? _choiceID = 0;
 
         /// <summary>
@@ -67,9 +66,8 @@ namespace WeekPlanner.ViewModels
         private int _scheduleYear;
         private int _scheduleWeek;
         private Dictionary<long?, List<ActivityDTO>> _choiceBoardActivities = new Dictionary<long?, List<ActivityDTO>>();
-        private WeekPictogramDTO _standardChoiceBoardPictoDTO;
+        protected WeekPictogramDTO _standardChoiceBoardPictoDTO;
         private ObservableCollection<DayToggledWrapper> _toggledDaysWrapper;
-        private WeekTemplateDTO _weekTemplate;
         private string _saveText;
 
         public ObservableCollection<DayToggledWrapper> ToggledDaysWrapper
@@ -253,16 +251,14 @@ namespace WeekPlanner.ViewModels
             IWeekApi weekApi,
             IDialogService dialogService,
             ISettingsService settingsService,
-            IPictogramApi pictogramApi,
-            IWeekTemplateApi weekTemplateApi)
+            IPictogramApi pictogramApi)
             : base(navigationService)
         {
-            _requestService = requestService;
+            RequestService = requestService;
             _weekApi = weekApi;
             _pictogramApi = pictogramApi;
-            _weekTemplateApi = weekTemplateApi;
-            _dialogService = dialogService;
-            _requestService = requestService;
+            DialogService = dialogService;
+            RequestService = requestService;
             SettingsService = settingsService;
 
             _removedWeekdayDTOs = new List<WeekdayDTO>();
@@ -282,7 +278,7 @@ namespace WeekPlanner.ViewModels
         // TODO: Handle situation where no days exist
         private async Task GetWeekPlanForCitizenAsync(int weekYear, int weekNumber)
         {
-            await _requestService.SendRequestAndThenAsync(
+            await RequestService.SendRequestAndThenAsync(
                 requestAsync: () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberGetAsync(SettingsService.CurrentCitizen.UserId, weekYear, weekNumber),
                 onSuccess: result =>
                 {
@@ -323,7 +319,7 @@ namespace WeekPlanner.ViewModels
                 if (dayFromWeekDTO == null) return;
 
                 bool confirmed = dayFromWeekDTO.Activities.Count > 0 ?
-                    await _dialogService.ConfirmAsync(
+                    await DialogService.ConfirmAsync(
                         title: "BekrÃ¦ft sletning af ugedag",
                         message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker pÃ¥, at du vil fortsÃ¦tte?",
                         okText: "Slet ugedag",
@@ -418,7 +414,7 @@ namespace WeekPlanner.ViewModels
             _choiceBoardActivities.Remove(_selectedActivity.ChoiceBoardID);
         }
 
-        private void FoldDaysToChoiceBoards()
+        protected void FoldDaysToChoiceBoards()
         {
             foreach (var days in WeekDTO.Days)
             {
@@ -450,7 +446,7 @@ namespace WeekPlanner.ViewModels
             OrderActivities();
         }
 
-        private void PutChoiceActivitiesBackIntoSchedule()
+        protected void PutChoiceActivitiesBackIntoSchedule()
         {
             foreach (var day in WeekDTO.Days)
             {
@@ -532,7 +528,8 @@ namespace WeekPlanner.ViewModels
         #endregion
 
 
-
+        
+        
         private async Task SaveSchedule(bool showDialog = true)
         {
             if (IsBusy) return;
@@ -546,23 +543,7 @@ namespace WeekPlanner.ViewModels
                 return;
             }
 
-            string saveMessage;
-            if (_isTemplate)
-            {
-                saveMessage = "Vil du gemme skabelonen?";
-            }
-            else
-            {
-                saveMessage = "Vi du gemme ugeplanen?";
-            }
-
-            bool confirmed = showDialog ?
-                await _dialogService.ConfirmAsync(
-                title: "Gem ugeplan",
-                message: saveMessage,
-                okText: "Gem",
-                cancelText: "Annuller") :
-                true;
+            var confirmed = await SaveDialog(showDialog);
 
             if (!confirmed)
             {
@@ -575,54 +556,39 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        private async Task SaveOrUpdateSchedule()
+        protected virtual async Task<bool> SaveDialog(bool showDialog)
+        {
+            return !showDialog || await DialogService.ConfirmAsync(
+                                 title: "Gem ugeplan",
+                                 message: "Vil du gemme ugeplanen?",
+                                 okText: "Gem",
+                                 cancelText: "Annuller");
+            
+        }
+
+        protected virtual async Task SaveOrUpdateSchedule()
         {
             PutChoiceActivitiesBackIntoSchedule();
 
-            if (_isTemplate)
-            {
-                CreateTemplateFromWeek();
-
-                await _requestService.SendRequestAndThenAsync(
-                    () => _weekTemplateApi.V1WeekTemplatePostAsync(_weekTemplate),
-                    result =>
-                    {
-                        _dialogService.ShowAlertAsync(message: string.Format("Skabelonen blev gemt", result.Data.Name));
-                    });
-            }
-            else
-            {
-                string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
+            string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
-                await _requestService.SendRequestAndThenAsync(
-                    () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.UserId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
-                    result =>
-                    {
-                        _dialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
-                        WeekDTO = result.Data;
-                    });
-            }
+            await RequestService.SendRequestAndThenAsync(
+                () => _weekApi.V1UserByUserIdWeekByWeekYearByWeekNumberPutAsync(SettingsService.CurrentCitizen.UserId, ScheduleYear, ScheduleWeek, newWeek: WeekDTO),
+                result =>
+                {
+                    DialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
+                    WeekDTO = result.Data;
+                });
 
             FoldDaysToChoiceBoards();
         }
-
-        private void CreateTemplateFromWeek()
-        {
-            _weekTemplate.Days.Clear();
-            foreach (var day in WeekDTO.Days)
-            {
-                _weekTemplate.Days.Add(day);
-            }
-
-            _weekTemplate.Name = WeekDTO.Name;
-        }
-
+        
         private bool RemoveItemFromDay(DayEnum day)
         {
-            var a = WeekDTO.Days.FirstOrDefault(x => x.Day == day).Activities;
-            if (a == null || a == default(List<ActivityDTO>) || a.Count == 0)
+            var a = WeekDTO.Days.FirstOrDefault(x => x.Day == day)?.Activities;
+            if (a == null || a.Count == 0)
             {
                 return false;
             }
@@ -642,8 +608,8 @@ namespace WeekPlanner.ViewModels
                     IsBusy = false;
                     return;
                 }
-                var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
-                    "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
+                var result = await DialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
+                    "Annuller", null, "Gem ændringer", "Gem ikke");
 				SetOrientation();
 
 				switch (result)
@@ -651,7 +617,7 @@ namespace WeekPlanner.ViewModels
                     case "Annuller":
                         break;
 
-                    case "Gem Ã¦ndringer":
+                    case "Gem ændringer":
                         if (WeekNameIsEmpty)
                         {
                             await ShowWeekNameEmptyPrompt();
@@ -709,16 +675,10 @@ namespace WeekPlanner.ViewModels
 
 		private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
 
-        private async Task ShowWeekNameEmptyPrompt()
+        protected virtual async Task ShowWeekNameEmptyPrompt()
         {
-            string temp = " usgeplanen ", temp1 = "Ugeplanen ";
-            if (_isTemplate)
-            {
-                temp = " skabelonen ";
-                temp1 = "Skabelonen ";
-            }
-            await _dialogService.ShowAlertAsync("Giv venligst" + temp + "et navn, og gem igen.", "Ok",
-                temp1 + "blev ikke gemt");
+            await DialogService.ShowAlertAsync("Giv venligst ugeplanen et navn, og gem igen.", "Ok",
+                "Ugeplanen blev ikke gemt");
         }
 
         public int Height
@@ -794,14 +754,14 @@ namespace WeekPlanner.ViewModels
                 return;
             }
             IsBusy = true;
-            var result = await _dialogService.ActionSheetAsync("Der er Ã¦ndringer der ikke er gemt. Vil du gemme?",
-                "Annuller", null, "Gem Ã¦ndringer", "Gem ikke");
+            var result = await DialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
+                "Annuller", null, "Gem ændringer", "Gem ikke");
 
             switch (result)
             {
                 case "Annuller":
                     break;
-                case "Gem Ã¦ndringer":
+                case "Gem ændringer":
                     if (WeekNameIsEmpty)
                     {
                         await ShowWeekNameEmptyPrompt();
@@ -945,16 +905,7 @@ namespace WeekPlanner.ViewModels
                 }
             }
         }
-        private void SetTemplateToWeek()
-        {
-            WeekDTO = new WeekDTO()
-            {
-                Name = _weekTemplate.Name,
-                Days = new List<WeekdayDTO>()
-            };
-            WeekDTO.Days.AddRange(_weekTemplate.Days);
-            WeekDTO.Name = _weekTemplate.Name;
-        }
+        
 
         public override async Task PoppedAsync(object navigationData)
         {
@@ -999,8 +950,6 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
-            SaveText = "Gem Ugeplan";
             switch (navigationData)
             {
                 //When initialized from CitizenSchedulesViewModel
@@ -1018,22 +967,20 @@ namespace WeekPlanner.ViewModels
                     await NavigationService.RemoveLastFromBackStackAsync();
                     SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
                     break;
-                case WeekTemplateDTO templateDTO:
-                    SaveText = "Gem Skabelon";
-                    _weekTemplate = templateDTO;
-                    _isTemplate = true;
-                    SetTemplateToWeek();
-                    await NavigationService.RemoveLastFromBackStackAsync();
-                    break;
                 default:
                     throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
             }
-
-            FlipToggledDays();
-
-            OrderActivities();
+            SaveText = "Gem Ugeplan";
+            
+            ToggleDaysAndOrderActivities();
         }
 
+        protected void ToggleDaysAndOrderActivities()
+        {
+            _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
+            FlipToggledDays();
+            OrderActivities();
+        }
         
     }
 }
