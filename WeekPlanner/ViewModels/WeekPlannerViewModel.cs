@@ -324,7 +324,7 @@ namespace WeekPlanner.ViewModels
                 if (dayFromWeekDTO == null) return;
 
                 bool confirmed = dayFromWeekDTO.Activities.Count > 0 ?
-                    await _dialogService.ConfirmAsync(
+                    await DialogService.ConfirmAsync(
                         title: "Bekræft sletning af ugedag",
                         message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker på, at du vil fortsætte?",
                         okText: "Slet ugedag",
