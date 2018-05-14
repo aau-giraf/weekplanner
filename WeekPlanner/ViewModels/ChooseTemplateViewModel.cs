@@ -32,6 +32,7 @@ namespace WeekPlanner.ViewModels
         private ObservableCollection<WeekTemplateDTO> _weekTemplates = new ObservableCollection<WeekTemplateDTO>();
         private ObservableCollection<PictogramDTO> _templateImages;
         private Tuple<int, int, WeekDTO> _yearScheduleweekAndWeek;
+        private List<string> _templateNames = new List<string>();
 
 
         public ICommand WeekTemplateTappedCommand => new Command<WeekTemplateDTO>(ListViewItemTapped);
@@ -111,6 +112,8 @@ namespace WeekPlanner.ViewModels
             {
                 await _requestService.SendRequestAndThenAsync(
                     () => _weekTemplateApi.V1WeekTemplateByIdGetAsync(item.TemplateId), (res) => WeekTemplates.Add(res.Data));
+
+                _templateNames.Add(item.Name);
             }
         }
 
@@ -146,7 +149,7 @@ namespace WeekPlanner.ViewModels
             if (IsBusy) return;
 
             IsBusy = true;
-            await NavigationService.NavigateToAsync<NewScheduleViewModel>("Template");
+            await NavigationService.NavigateToAsync<NewScheduleViewModel>(_templateNames);
             IsBusy = false;
         }
 
