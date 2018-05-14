@@ -29,6 +29,7 @@ namespace WeekPlanner.ViewModels
         private WeekPictogramDTO _weekThumbNail;
         private WeekDTO _weekDTO;
         private ValidatableObject<string> _scheduleName;
+        private List<string> _oldTemplateNames = new List<string>();
         private int _scheduleYear;
         private int _scheduleWeek;
         private string _scheduleFromAndToDates;
@@ -207,17 +208,15 @@ namespace WeekPlanner.ViewModels
             ExampleTempOrSchedule = "Eksempel: Min nye ugeplan";
             PictoForTempOrSchedule = "Vælg et passende piktogram til din nye ugeplan";
 
-            if (navigationData is string s)
+            if (navigationData is List<string> templateNames)
             {
-                if (s == "Template")
-                {
-                    IsTemplate = true;
-                    ViewName = "Tilføj en ny skabelon";
-                    NewTempOrSchedule = "Ny skabelon";
-                    NamingTempOrSchedule = "Navngiv din nye skabelon";
-                    ExampleTempOrSchedule = "Eksempel: Min nye skabelon";
-                    PictoForTempOrSchedule = "Vælg et passende piktogram til din nye skabelon";
-                }
+                IsTemplate = true;
+                ViewName = "Tilføj en ny skabelon";
+                NewTempOrSchedule = "Ny skabelon";
+                NamingTempOrSchedule = "Navngiv din nye skabelon";
+                ExampleTempOrSchedule = "Eksempel: Min nye skabelon";
+                PictoForTempOrSchedule = "Vælg et passende piktogram til din nye skabelon";
+                _oldTemplateNames = templateNames;
             }
             else if (navigationData is List<Tuple<int, int>> list)
             {
@@ -305,6 +304,7 @@ namespace WeekPlanner.ViewModels
 
         private async Task CreateTemplate()
         {
+            bool creatingTemplateWithSameName = false;
             WeekThumbNail.AccessLevel = WeekPictogramDTO.AccessLevelEnum.PUBLIC;
 
             WeekTemplateDTO weekTemplate = new WeekTemplateDTO()
@@ -327,7 +327,21 @@ namespace WeekPlanner.ViewModels
 
             weekTemplate.Days = list;
 
-            await NavigationService.NavigateToAsync<WeekPlannerTemplateViewModel>(weekTemplate);
+            foreach (var item in _oldTemplateNames)
+            {
+                if (item == weekTemplate.Name)
+                {
+                    creatingTemplateWithSameName = true;
+                    await _dialogService.ShowAlertAsync("Der findes allerede en skabelon med navnet:\n" + item, "OK", "Skabelon med samme navn");
+                }
+            }
+
+
+            if (!creatingTemplateWithSameName)
+            {
+                await NavigationService.NavigateToAsync<WeekPlannerTemplateViewModel>(weekTemplate);
+            }
+            
             
         }
 
