@@ -582,6 +582,7 @@ namespace WeekPlanner.ViewModels
 				{
 					DialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
 					WeekDTO = result.Data;
+                    _isDirty = false;
 				});
 			}
 			else
@@ -591,6 +592,7 @@ namespace WeekPlanner.ViewModels
 				result =>
 				{
 					WeekDTO = result.Data;
+                    _isDirty = false;
 				});
 			}
 
