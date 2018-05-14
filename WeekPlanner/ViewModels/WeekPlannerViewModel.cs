@@ -612,7 +612,7 @@ namespace WeekPlanner.ViewModels
                         WeekDTO = result.Data;
                     });
             }
-
+			_removedWeekdayDTOs.Clear();
             FoldDaysToChoiceBoards();
         }
 
