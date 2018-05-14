@@ -332,7 +332,7 @@ namespace WeekPlanner.ViewModels
                 if (item == weekTemplate.Name)
                 {
                     creatingTemplateWithSameName = true;
-                    await _dialogService.ShowAlertAsync("Du kan ikke lave en skabelon med det samme navn som en anden skabelon", "OK", "Skabelon med samme navn");
+                    await _dialogService.ShowAlertAsync("Der findes allerede en skabelon med navnet: " + item, "OK", "Skabelon med samme navn");
                 }
             }
 
