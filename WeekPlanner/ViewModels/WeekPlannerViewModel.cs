@@ -794,7 +794,7 @@ namespace WeekPlanner.ViewModels
                         await ShowWeekNameEmptyPrompt();
                         break;
                     }
-                    await SaveOrUpdateSchedule();
+                    SaveOrUpdateSchedule();
                     await NavigationService.PopAsync();
                     break;
                 case "Gem ikke":
