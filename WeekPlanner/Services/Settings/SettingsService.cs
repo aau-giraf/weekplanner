@@ -41,6 +41,8 @@ namespace WeekPlanner.Services.Settings
                 _accountApi.Configuration.ApiKey["Authorization"] = $"bearer {value}";
             }
         }
+
+		public bool MasterPageShowable => IsInGuardianMode && CurrentCitizen != null;
         
         private bool _isInGuardianMode;
         public bool IsInGuardianMode
@@ -50,6 +52,7 @@ namespace WeekPlanner.Services.Settings
             {
                 _isInGuardianMode = value;
                 RaisePropertyChanged(() => IsInGuardianMode);
+                RaisePropertyChanged(() => MasterPageShowable);
             }
         }
 
@@ -77,7 +80,7 @@ namespace WeekPlanner.Services.Settings
                     requestAsync: async () => await _userApi.V1UserByIdSettingsGetAsync(CurrentCitizen.UserId),
                     onSuccess: result => CurrentCitizenSettingDTO = result.Data
                 );
-
+                RaisePropertyChanged(() => MasterPageShowable);
             }
         }
 

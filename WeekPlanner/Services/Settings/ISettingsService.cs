@@ -13,6 +13,7 @@ namespace WeekPlanner.Services.Settings
         UserNameDTO CurrentCitizen { get; set; }
         void SetTheme();
         long DepartmentId { get; set; }
+		bool MasterPageShowable { get; }
     }
 
 
