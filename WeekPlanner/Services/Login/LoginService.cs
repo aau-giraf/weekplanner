@@ -75,7 +75,7 @@ namespace WeekPlanner.Services.Login
                     _settingsService.CurrentCitizen = new UserNameDTO { 
                         UserId = dto.Data.Id, 
                         UserName = dto.Data.Username, 
-                        UserRole = (IO.Swagger.Model.UserNameDTO.UserRoleEnum?)dto.Data.Role 
+                        UserRole = (UserNameDTO.UserRoleEnum?)dto.Data.Role 
                     };
                 });
         }

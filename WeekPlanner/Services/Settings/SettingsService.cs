@@ -27,7 +27,7 @@ namespace WeekPlanner.Services.Settings
 
         public string BaseEndpoint
         {
-            get { return _appSettings["BaseEndpoint"].ToString(); }
+            get => _appSettings["BaseEndpoint"].ToString();
             set { }
         }
 
@@ -44,6 +44,18 @@ namespace WeekPlanner.Services.Settings
 
 		public bool MasterPageShowable => IsInGuardianMode && CurrentCitizen != null;
         
+        public void ClearSettings()
+        {
+            AuthToken = default(string);
+            IsInGuardianMode = default(bool);
+            
+            SetTheme(toDefault: true);
+            
+            _currentCitizen = default(UserNameDTO);
+            CurrentCitizenSettingDTO = default(SettingDTO);
+            DepartmentId = default(long);
+        }
+
         private bool _isInGuardianMode;
         public bool IsInGuardianMode
         {
@@ -56,16 +68,7 @@ namespace WeekPlanner.Services.Settings
             }
         }
 
-        private SettingDTO _currentCitizenSettingDTO;
-        public SettingDTO CurrentCitizenSettingDTO
-        {
-            get => _currentCitizenSettingDTO;
-            set
-            {
-                _currentCitizenSettingDTO = value;
-                SetTheme();
-            }
-        }
+        public SettingDTO CurrentCitizenSettingDTO { get; set; }
 
         private UserNameDTO _currentCitizen;
         
@@ -75,20 +78,21 @@ namespace WeekPlanner.Services.Settings
             set
             {
                 _currentCitizen = value;
-                // get and set settings
-                _requestService.SendRequestAndThenAsync(
-                    requestAsync: async () => await _userApi.V1UserByIdSettingsGetAsync(CurrentCitizen.UserId),
-                    onSuccess: result => CurrentCitizenSettingDTO = result.Data
-                );
                 RaisePropertyChanged(() => MasterPageShowable);
             }
         }
 
         public long DepartmentId { get; set; }
 
-        public void SetTheme(){
+        public void SetTheme(bool toDefault = false){
             
             var resources = Application.Current.Resources;
+
+            if (toDefault)
+            {
+                resources.MergedWith = typeof(Themes.BlueTheme);
+                return;
+            }
                        
             resources["MondayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[0].HexColor);
             resources["TuesdayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[1].HexColor);

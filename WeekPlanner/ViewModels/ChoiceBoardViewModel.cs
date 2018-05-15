@@ -86,7 +86,7 @@ namespace WeekPlanner.ViewModels
             NavigationService.PopAsync(ActivityDTOs);
         }
 
-        public override async Task PoppedAsync(object navigationData)
+        public override async Task OnReturnedToAsync(object navigationData)
         {
             // Happens after choosing a pictogram in Pictosearch
             if (navigationData is WeekPictogramDTO weekPictogramDTO)

@@ -39,25 +39,30 @@ namespace WeekPlanner.ViewModels
 
 	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
 		    await NavigateToWeekPlan(usernameDTO));
-
+	    
 	    private async Task NavigateToWeekPlan(UserNameDTO usernameDTO)
 	    {
 		    if (IsBusy) return;
 		    IsBusy = true;
-            _settingsService.CurrentCitizen = usernameDTO;
-		    await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>();
+            await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>(usernameDTO);
 		    IsBusy = false;
 	    }
-
+	    
 	    private async Task GetAndSetCitizenNamesAsync()
 	    {
 
 		    await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.DepartmentId),
 			    onSuccess: result => {
-					result.Data.OrderBy(x => x.UserName);
-					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data);
+					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data.OrderBy(x => x.UserName));
 				});
+	    }
+
+	    public override async Task OnReturnedToAsync(object navigationData)
+	    {
+		    _settingsService.CurrentCitizen = null;
+		    _settingsService.CurrentCitizenSettingDTO = null;
+		    _settingsService.SetTheme(true);
 	    }
 
 	    public override async Task InitializeAsync(object navigationData)

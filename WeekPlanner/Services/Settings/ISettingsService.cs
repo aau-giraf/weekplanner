@@ -11,9 +11,10 @@ namespace WeekPlanner.Services.Settings
         bool IsInGuardianMode { get; set; }
         SettingDTO CurrentCitizenSettingDTO { get; set; }
         UserNameDTO CurrentCitizen { get; set; }
-        void SetTheme();
+        void SetTheme(bool toDefault = false);
         long DepartmentId { get; set; }
 		bool MasterPageShowable { get; }
+        void ClearSettings();
     }
 
 
