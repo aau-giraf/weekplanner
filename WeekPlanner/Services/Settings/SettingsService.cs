@@ -44,6 +44,20 @@ namespace WeekPlanner.Services.Settings
 
 		public bool MasterPageShowable => IsInGuardianMode && CurrentCitizen != null;
         
+        public void ClearSettings()
+        {
+            AuthToken = default(string);
+            IsInGuardianMode = default(bool);
+            
+            // Set back to default theme
+            _currentCitizenSettingDTO.Theme = SettingDTO.ThemeEnum.AndroidBlue;
+            SetTheme();
+            
+            _currentCitizen = default(UserNameDTO);
+            _currentCitizenSettingDTO = default(SettingDTO);
+            DepartmentId = default(long);
+        }
+
         private bool _isInGuardianMode;
         public bool IsInGuardianMode
         {

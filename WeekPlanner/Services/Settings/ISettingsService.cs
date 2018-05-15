@@ -14,6 +14,8 @@ namespace WeekPlanner.Services.Settings
         void SetTheme();
         long DepartmentId { get; set; }
 		bool MasterPageShowable { get; }
+
+        void ClearSettings();
     }
 
 

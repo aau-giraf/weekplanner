@@ -35,11 +35,20 @@ namespace WeekPlanner.ViewModels
 	        _departmentApi = departmentApi;
 	        _requestService = requestService;
 	        _settingsService = settingsService;
+	        
+	        OnBackButtonPressedCommand = new Command(async () =>
+	        {
+		        if (IsBusy) return;
+		        IsBusy = true;
+		        await NavigationService.PopAsync();
+		        _settingsService.ClearSettings();
+		        IsBusy = false;
+	        });
         }
 
 	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
 		    await NavigateToWeekPlan(usernameDTO));
-
+	    
 	    private async Task NavigateToWeekPlan(UserNameDTO usernameDTO)
 	    {
 		    if (IsBusy) return;
@@ -48,15 +57,14 @@ namespace WeekPlanner.ViewModels
 		    await NavigationService.NavigateToAsync<CitizenSchedulesViewModel>();
 		    IsBusy = false;
 	    }
-
+	    
 	    private async Task GetAndSetCitizenNamesAsync()
 	    {
 
 		    await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.DepartmentId),
 			    onSuccess: result => {
-					result.Data.OrderBy(x => x.UserName);
-					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data);
+					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data.OrderBy(x => x.UserName));
 				});
 	    }
 
