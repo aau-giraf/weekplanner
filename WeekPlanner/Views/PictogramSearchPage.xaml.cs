@@ -8,7 +8,12 @@ namespace WeekPlanner.Views
     {
         public PictogramSearchPage()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
             searchField.Focus();
         }
     }
