@@ -15,6 +15,7 @@ namespace WeekPlanner.ViewModels
         
         private readonly IWeekTemplateApi _weekTemplateApi;
         private WeekTemplateDTO _weekTemplate;
+        private bool _newTemplate = true;
         
         public WeekPlannerTemplateViewModel(INavigationService navigationService, IRequestService requestService, 
             IWeekApi weekApi, IDialogService dialogService, ISettingsService settingsService, 
@@ -24,24 +25,35 @@ namespace WeekPlanner.ViewModels
         {
             _weekTemplateApi = weekTemplateApi;
             ShowToolbarButton = false;
-            
-            
         }
-
 
         protected override async Task SaveOrUpdateSchedule()
         {
             PutChoiceActivitiesBackIntoSchedule();
             
             CreateTemplateFromWeek();
-
-            await RequestService.SendRequestAndThenAsync(
+            if (_newTemplate)
+            {
+                await RequestService.SendRequestAndThenAsync(
                 () => _weekTemplateApi.V1WeekTemplatePostAsync(_weekTemplate),
                 result =>
                 {
                     DialogService.ShowAlertAsync(message: string.Format("Skabelonen blev gemt", result.Data.Name));
+                    _weekTemplate = result.Data;
                 });
-            
+
+                _newTemplate = false;
+            }
+            else
+            {
+                await RequestService.SendRequestAndThenAsync(
+                () => _weekTemplateApi.V1WeekTemplateByIdPutAsync(_weekTemplate.Id),
+                result =>
+                {
+                    DialogService.ShowAlertAsync(message: string.Format("Skabelonen blev gemt", result.Data.Name));
+                    _weekTemplate = result.Data;
+                });
+            }
             FoldDaysToChoiceBoards();
         }
         
