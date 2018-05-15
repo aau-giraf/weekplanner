@@ -130,7 +130,7 @@ namespace WeekPlanner.ViewModels
             await NavigationService.PopAsync(this);
         });
 
-        public override async Task PoppedAsync(object navigationData) {
+        public override async Task OnReturnedToAsync(object navigationData) {
             if (navigationData is WeekPictogramDTO newWeekPicto) {
                 Activity.Pictogram = newWeekPicto;
 

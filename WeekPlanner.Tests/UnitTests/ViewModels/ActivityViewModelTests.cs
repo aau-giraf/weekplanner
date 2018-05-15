@@ -41,7 +41,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
            // bool propertyOnChangedIsInvoked = false;
 
            // // Act
-           // await sut.PoppedAsync(picto);
+           // await sut.OnReturnedToAsync(picto);
            // sut.PropertyChanged += (sender, e) => {
            //     if (e.PropertyName == nameof(sut.ImageUrl))
            //         propertyOnChangedIsInvoked = true;

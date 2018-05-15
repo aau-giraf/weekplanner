@@ -153,7 +153,7 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        public override async Task PoppedAsync(object navigationData)
+        public override async Task OnReturnedToAsync(object navigationData)
         {
             WeekTemplates.Clear();
             WeekTemplateNameDTOS.Clear();

@@ -13,6 +13,7 @@ namespace WeekPlanner.ViewModels
     public class LoginViewModel : ViewModelBase
     {
         private readonly ILoginService _loginService;
+        private readonly ISettingsService _settingsService;
 
         private ValidatableObject<string> _username;
         private ValidatableObject<string> _password;
@@ -21,13 +22,17 @@ namespace WeekPlanner.ViewModels
         
 
         public LoginViewModel(INavigationService navigationService,
-            ILoginService loginService) : base(navigationService)
+            ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {
             _loginService = loginService;
             Password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
             Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
 
-            ShowNavigationBar = false;              
+            ShowNavigationBar = false;     
+            
+            // Clear settings when logging out
+            _settingsService = settingsService;
+            _settingsService.ClearSettings();
         }
 
         public ValidatableObject<string> Username

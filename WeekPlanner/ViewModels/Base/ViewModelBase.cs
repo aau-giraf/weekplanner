@@ -75,7 +75,7 @@ namespace WeekPlanner.ViewModels.Base
             return Task.FromResult(false);
         }
 
-        public virtual Task PoppedAsync(object navigationData) {
+        public virtual Task OnReturnedToAsync(object navigationData) {
             return Task.FromResult(false);
          }
     }

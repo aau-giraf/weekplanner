@@ -26,6 +26,7 @@ namespace WeekPlanner.ViewModels
         private readonly IWeekApi _weekApi;
         private readonly ILoginService _loginService;
         private readonly ISettingsService _settingsService;
+        private readonly IUserApi _userApi;
 
         private ObservableCollection<WeekNameDTO> _weekNameDTOs = new ObservableCollection<WeekNameDTO>();
         private ObservableCollection<WeekDTO> _weeks = new ObservableCollection<WeekDTO>();
@@ -42,13 +43,14 @@ namespace WeekPlanner.ViewModels
 
         public CitizenSchedulesViewModel(INavigationService navigationService, IRequestService requestService,
             IDialogService dialogService, IWeekApi weekApi, ILoginService loginService,
-            ISettingsService settingsService) : base(navigationService)
+            ISettingsService settingsService, IUserApi userApi) : base(navigationService)
         {
             _requestService = requestService;
             _dialogService = dialogService;
             _weekApi = weekApi;
             _loginService = loginService;
             _settingsService = settingsService;
+            _userApi = userApi;
         }
 
         public ObservableCollection<WeekNameDTO> WeekNameDTOS
@@ -149,7 +151,7 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        public override async Task PoppedAsync(object navigationData)
+        public override async Task OnReturnedToAsync(object navigationData)
         {
             Weeks.Clear();
             WeekNameDTOS.Clear();
@@ -158,7 +160,20 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
-            await InitializeWeekSchedules();
+            if (navigationData is UserNameDTO usernameDTO)
+            {
+                _settingsService.CurrentCitizen = usernameDTO;
+                await _requestService.SendRequestAndThenAsync(
+                    requestAsync: async () => await _userApi.V1UserByIdSettingsGetAsync(usernameDTO.UserId),
+                    onSuccess: result => { _settingsService.CurrentCitizenSettingDTO = result.Data; }
+                );
+                _settingsService.SetTheme();
+                await InitializeWeekSchedules();
+            }
+            else
+            {
+                throw new ArgumentException("Should be of type UserNameDTO", nameof(navigationData));
+            }
         }
     }
 }

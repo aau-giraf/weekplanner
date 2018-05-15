@@ -934,7 +934,7 @@ namespace WeekPlanner.ViewModels
         }
         
 
-        public override async Task PoppedAsync(object navigationData)
+        public override async Task OnReturnedToAsync(object navigationData)
         {
             switch (navigationData)
             {
