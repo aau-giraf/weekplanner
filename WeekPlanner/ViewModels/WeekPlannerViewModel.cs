@@ -628,14 +628,12 @@ namespace WeekPlanner.ViewModels
             {
                 if (!_isDirty)
                 {
-					SetOrientation();
 					SetToCitizenMode();
                     IsBusy = false;
                     return;
                 }
                 var result = await DialogService.ActionSheetAsync("Der er ændringer der ikke er gemt. Vil du gemme?",
                     "Annuller", null, "Gem ændringer", "Gem ikke");
-				SetOrientation();
 
 				switch (result)
                 {
@@ -661,8 +659,8 @@ namespace WeekPlanner.ViewModels
 			}
             else
             {
-				SetOrientation();
-				await NavigationService.NavigateToAsync<LoginViewModel>(this);
+                LandscapeOrientation();
+                await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
 
             RaisePropertyChangedForDayLabels();
@@ -672,7 +670,7 @@ namespace WeekPlanner.ViewModels
 
 		public void SetOrientation()
 		{
-			if (!SettingsService.IsInGuardianMode)
+			if (SettingsService.IsInGuardianMode)
 			{
 				LandscapeOrientation();
 			}
@@ -731,6 +729,8 @@ namespace WeekPlanner.ViewModels
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
 
             RaisePropertyChangedForDayLabels();
+
+            SetOrientation();
         }
         public bool ShowMondayLabel => ShowDayLabel(DayEnum.Monday);
         public bool ShowTuesdayLabel => ShowDayLabel(DayEnum.Tuesday);
@@ -982,6 +982,7 @@ namespace WeekPlanner.ViewModels
                     await HandleChoiceBoardAsync(activities);
                     break;
             }
+            SetOrientation();
         }
 
         public override async Task InitializeAsync(object navigationData)

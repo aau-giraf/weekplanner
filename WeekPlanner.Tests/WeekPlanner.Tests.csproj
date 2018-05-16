@@ -9,15 +9,15 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.1.1" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.1.444934" />
-    <PackageReference Include="Autofac" Version="4.7.0" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
+    <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="AutoFixture.Xunit2" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="AutoFixture" Version="4.2.1" />
-    <PackageReference Include="AutoFixture.AutoMoq" Version="4.2.1" />
+    <PackageReference Include="AutoFixture.Xunit2" Version="4.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="AutoFixture" Version="4.3.0" />
+    <PackageReference Include="AutoFixture.AutoMoq" Version="4.3.0" />
     <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.10" />
   </ItemGroup>
   <ItemGroup>
