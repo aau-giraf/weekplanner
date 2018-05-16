@@ -11,7 +11,11 @@ namespace WeekPlanner.Models
     /// </summary>
     public class ActivityWithNotifyDTO : INotifyPropertyChanged
     {
-        public ActivityDTO.StateEnum? State { get; set; }
+        private ActivityDTO.StateEnum? _state;
+        private WeekPictogramDTO _pictogram;
+        private int? _order;
+        private bool? _isChoiceBoard;
+        private long? _choiceBoardId;
 
         public ActivityWithNotifyDTO(WeekPictogramDTO Pictogram = default(WeekPictogramDTO), int? Order = default(int?), ActivityDTO.StateEnum? State = default(ActivityDTO.StateEnum?), bool? IsChoiceBoard = default(bool?), long? Id = default(long?))
         {
@@ -21,15 +25,63 @@ namespace WeekPlanner.Models
             this.IsChoiceBoard = IsChoiceBoard;
             this.Id = Id;
         }
-        
-        public WeekPictogramDTO Pictogram { get; set; }
 
-        public int? Order { get; set; }
+        public ActivityDTO.StateEnum? State
+        {
+            get => _state;
+            set
+            {
+                if (value == _state) return;
+                _state = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public WeekPictogramDTO Pictogram
+        {
+            get => _pictogram;
+            set
+            {
+                if (Equals(value, _pictogram)) return;
+                _pictogram = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int? Order
+        {
+            get => _order;
+            set
+            {
+                if (value == _order) return;
+                _order = value;
+                OnPropertyChanged();
+            }
+        }
 
         public long? Id { get; private set; }
 
-        public bool? IsChoiceBoard { get; set; }
-        public long? ChoiceBoardID { get; set; }
+        public bool? IsChoiceBoard
+        {
+            get => _isChoiceBoard;
+            set
+            {
+                if (value == _isChoiceBoard) return;
+                _isChoiceBoard = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public long? ChoiceBoardID
+        {
+            get => _choiceBoardId;
+            set
+            {
+                if (value == _choiceBoardId) return;
+                _choiceBoardId = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -11,14 +11,20 @@ namespace WeekPlanner.Helpers
     {
         public static ActivityWithNotifyDTO ToActivityWithNotifyDTO(this ActivityDTO activityDTO)
         {
-            return new ActivityWithNotifyDTO(activityDTO.Pictogram, activityDTO.Order, 
-                activityDTO.State, activityDTO.IsChoiceBoard, activityDTO.Id);
+            return new ActivityWithNotifyDTO(activityDTO.Pictogram, activityDTO.Order,
+                activityDTO.State, activityDTO.IsChoiceBoard, activityDTO.Id)
+            {
+                ChoiceBoardID = activityDTO.ChoiceBoardID
+            };
         }
 
         public static ActivityDTO ToActivityDTO(this ActivityWithNotifyDTO activityWithNotifyDTO)
         {
             return new ActivityDTO(activityWithNotifyDTO.Pictogram, activityWithNotifyDTO.Order, 
-                activityWithNotifyDTO.State, activityWithNotifyDTO.IsChoiceBoard, activityWithNotifyDTO.Id);
+                activityWithNotifyDTO.State, activityWithNotifyDTO.IsChoiceBoard, activityWithNotifyDTO.Id)
+                {
+                ChoiceBoardID = activityWithNotifyDTO.ChoiceBoardID
+                };
         }
 
         public static IEnumerable<ActivityWithNotifyDTO> ToActivityWithNotifyDTOs(
