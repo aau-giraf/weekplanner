@@ -436,6 +436,7 @@ namespace WeekPlanner.ViewModels
                     {
                         foreach (var item in a)
                         {
+                            item.State = StateEnum.Normal;
                             choiceBoardItems.Add(item);
                         }
                         orderOfChoiceBoards.Add(a.Key);
@@ -472,6 +473,10 @@ namespace WeekPlanner.ViewModels
                 {
                     if (_choiceBoardActivities.TryGetValue(item.ChoiceBoardID, out List<ActivityDTO> unfoldedActivities))
                     {
+                        foreach (var activity in unfoldedActivities)
+                        {
+                            activity.Order = item.Order;
+                        }
                         day.Activities.AddRange(unfoldedActivities);
                     }
                 }
@@ -535,9 +540,6 @@ namespace WeekPlanner.ViewModels
         }
         #endregion
 
-
-        
-        
         private async Task SaveSchedule(bool showDialog = true)
         {
             if (IsBusy) return;
@@ -932,7 +934,14 @@ namespace WeekPlanner.ViewModels
                 }
             }
         }
-        
+
+        protected void ToggleDaysAndOrderActivities()
+        {
+            FlipToggledDays();
+            OrderActivities();
+        }
+
+
 
         public override async Task OnReturnedToAsync(object navigationData)
         {
@@ -977,6 +986,7 @@ namespace WeekPlanner.ViewModels
 
         public override async Task InitializeAsync(object navigationData)
         {
+            _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
             switch (navigationData)
             {
                 //When initialized from CitizenSchedulesViewModel
@@ -1001,13 +1011,5 @@ namespace WeekPlanner.ViewModels
             
             ToggleDaysAndOrderActivities();
         }
-
-        protected void ToggleDaysAndOrderActivities()
-        {
-            _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
-            FlipToggledDays();
-            OrderActivities();
-        }
-        
     }
 }
