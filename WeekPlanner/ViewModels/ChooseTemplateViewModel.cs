@@ -117,31 +117,22 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        private async Task WeekDeletedTapped(WeekTemplateDTO week)
+        private async Task WeekDeletedTapped(WeekTemplateDTO weekTemplate)
         {
             if (IsBusy) return;
             IsBusy = true;
 
-            if (week is WeekTemplateDTO weekDTO)
-            {
-                await DeleteWeek(weekDTO);
-            }
-
-            IsBusy = false;
-        }
-
-        private async Task DeleteWeek(WeekTemplateDTO week)
-        {
-            var confirmed = await _dialogService.ConfirmAsync($"Vil du slette {week.Name}?", "Slet Ugeplan");
+            var confirmed = await _dialogService.ConfirmAsync($"Vil du slette {weekTemplate.Name}?", "Slet Ugeplan");
             if (!confirmed)
             {
                 return;
             }
 
             await _requestService.SendRequestAndThenAsync(
-                requestAsync: () => _weekTemplateApi.V1WeekTemplateByIdDeleteAsync(week.Id), 
-                onSuccess: (r) => WeekTemplates.Remove(week));
+                requestAsync: () => _weekTemplateApi.V1WeekTemplateByIdDeleteAsync(weekTemplate.Id),
+                onSuccess: (r) => WeekTemplates.Remove(weekTemplate));
 
+            IsBusy = false;
         }
 
         private async Task AddWeekTemplate()

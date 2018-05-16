@@ -47,7 +47,7 @@ namespace WeekPlanner.ViewModels
             else
             {
                 await RequestService.SendRequestAndThenAsync(
-                () => _weekTemplateApi.V1WeekTemplateByIdPutAsync(_weekTemplate.Id),
+                () => _weekTemplateApi.V1WeekTemplateByIdPutAsync(_weekTemplate.Id, _weekTemplate),
                 result =>
                 {
                     DialogService.ShowAlertAsync(message: string.Format("Skabelonen blev gemt", result.Data.Name));
