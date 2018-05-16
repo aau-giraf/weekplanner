@@ -37,12 +37,6 @@ namespace WeekPlanner.Helpers
             this IEnumerable<ActivityWithNotifyDTO> activityWithNotifyDTOs)
         {
             return activityWithNotifyDTOs.Select(a => a.ToActivityDTO());
-        }
-
-        public static void AddRange<T>(this ObservableCollection<T> observableCollection, 
-            IEnumerable<T> rangeToAdd)
-        {
-            rangeToAdd.ForEach(observableCollection.Add);
-        }
+        }       
     }
 }

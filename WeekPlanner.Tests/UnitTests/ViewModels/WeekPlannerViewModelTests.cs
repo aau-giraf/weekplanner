@@ -274,7 +274,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var oldPositions = activities.Select(a => ((long) a.Id, (int) a.Order));
                 
             // Act
-            sut.PictoDraggedCommand.Execute(fakeArgs);
+            sut.ActivityDraggedCommand.Execute(fakeArgs);
             
             // Assert
             var lowestIndexAffected = Math.Min(oldIndex, newIndex);

@@ -100,7 +100,7 @@ namespace IO.Swagger.Model
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
-        public long? Id { get; private set; }
+        public long? Id { get; set; }
 
         /// <summary>
         /// This is used in the WeekPlanner app by the frontend groups and should never be set from our side

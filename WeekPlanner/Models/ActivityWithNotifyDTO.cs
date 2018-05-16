@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using IO.Swagger.Model;
@@ -9,7 +10,7 @@ namespace WeekPlanner.Models
     /// <summary>
     /// ActivityDTO
     /// </summary>
-    public class ActivityWithNotifyDTO : INotifyPropertyChanged
+    public class ActivityWithNotifyDTO : INotifyPropertyChanged, IComparable<ActivityWithNotifyDTO>
     {
         private ActivityDTO.StateEnum? _state;
         private WeekPictogramDTO _pictogram;
@@ -90,7 +91,14 @@ namespace WeekPlanner.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
+
+        public int CompareTo(ActivityWithNotifyDTO other)
+        {
+            if (Order < other.Order) return -1;
+            if (Order > other.Order) return 1;
+            return 0;
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
