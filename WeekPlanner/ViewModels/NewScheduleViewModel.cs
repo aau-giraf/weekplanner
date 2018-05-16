@@ -21,6 +21,7 @@ namespace WeekPlanner.ViewModels
 {
     public class NewScheduleViewModel : ViewModelBase
     {
+        #region Fields And Properties
         private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
         private readonly IDialogService _dialogService;
@@ -163,6 +164,7 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ScheduleValidateYearAndWeek);
             }
         }
+        #endregion
 
         public ICommand ChangePictogramCommand => new Command(ChangePictogram);
         public ICommand CreateWeekScheduleCommand => new Command<string>(async type => await CreateWeekSchedule(type));
@@ -189,50 +191,6 @@ namespace WeekPlanner.ViewModels
                     new IsNotNullOrEmptyRule<string> {ValidationMessage = "Et navn er påkrævet."});
 
             SetYearAndWeek();
-        }
-
-        public async override Task InitializeAsync(object navigationData)
-        {
-            await _requestService.SendRequestAndThenAsync(
-                requestAsync: async () => await _pictogramApi.V1PictogramByIdGetAsync(2),
-                onSuccess: result =>
-                {
-                    WeekThumbNail = result.Data;
-                },
-                onExceptionAsync: () => NavigationService.PopAsync(),
-                onRequestFailedAsync: () => NavigationService.PopAsync());
-
-            ViewName = "Tilføj en ny ugeplan";
-            NewTempOrSchedule = "Ny ugeplan";
-            NamingTempOrSchedule = "Navngiv din nye ugeplan";
-            ExampleTempOrSchedule = "Eksempel: Min nye ugeplan";
-            PictoForTempOrSchedule = "Vælg et passende piktogram til din nye ugeplan";
-
-            if (navigationData is List<string> templateNames)
-            {
-                IsTemplate = true;
-                ViewName = "Tilføj en ny skabelon";
-                NewTempOrSchedule = "Ny skabelon";
-                NamingTempOrSchedule = "Navngiv din nye skabelon";
-                ExampleTempOrSchedule = "Eksempel: Min nye skabelon";
-                PictoForTempOrSchedule = "Vælg et passende piktogram til din nye skabelon";
-                _oldTemplateNames = templateNames;
-            }
-            else if (navigationData is List<Tuple<int, int>> list)
-            {
-                _yearAndWeek = list;
-            }
-        }
-
-        public override Task OnReturnedToAsync(object navigationData)
-        {
-            // Happens when selecting a picto in PictoSearch
-            if (navigationData is WeekPictogramDTO pictoDTO)
-            {
-                WeekThumbNail = pictoDTO;
-            }
-
-            return Task.FromResult(false);
         }
 
         private void SetYearAndWeek()
@@ -294,9 +252,6 @@ namespace WeekPlanner.ViewModels
                     else if (type.Equals("Template")) //IMPLEMENTED!
                         await NavigationService.NavigateToAsync<ChooseTemplateViewModel>(parameter: new Tuple<int, int, WeekDTO>(ScheduleYear, ScheduleWeek, _weekDTO));
                 }
-                
-
-                //Else do nothing
             }
 
             IsBusy = false;
@@ -336,13 +291,10 @@ namespace WeekPlanner.ViewModels
                 }
             }
 
-
             if (!creatingTemplateWithSameName)
             {
                 await NavigationService.NavigateToAsync<WeekPlannerTemplateViewModel>(weekTemplate);
             }
-            
-            
         }
 
         private void GetScheduleDates()
@@ -395,6 +347,50 @@ namespace WeekPlanner.ViewModels
             ScheduleValidateYearAndWeek = invalidMessage;
 
             return isValid;
+        }
+
+        public override Task OnReturnedToAsync(object navigationData)
+        {
+            // Happens when selecting a picto in PictoSearch
+            if (navigationData is WeekPictogramDTO pictoDTO)
+            {
+                WeekThumbNail = pictoDTO;
+            }
+
+            return Task.FromResult(false);
+        }
+
+        public async override Task InitializeAsync(object navigationData)
+        {
+            await _requestService.SendRequestAndThenAsync(
+                requestAsync: async () => await _pictogramApi.V1PictogramByIdGetAsync(2),
+                onSuccess: result =>
+                {
+                    WeekThumbNail = result.Data;
+                },
+                onExceptionAsync: () => NavigationService.PopAsync(),
+                onRequestFailedAsync: () => NavigationService.PopAsync());
+
+            ViewName = "Tilføj en ny ugeplan";
+            NewTempOrSchedule = "Ny ugeplan";
+            NamingTempOrSchedule = "Navngiv din nye ugeplan";
+            ExampleTempOrSchedule = "Eksempel: Min nye ugeplan";
+            PictoForTempOrSchedule = "Vælg et passende piktogram til din nye ugeplan";
+
+            if (navigationData is List<string> templateNames)
+            {
+                IsTemplate = true;
+                ViewName = "Tilføj en ny skabelon";
+                NewTempOrSchedule = "Ny skabelon";
+                NamingTempOrSchedule = "Navngiv din nye skabelon";
+                ExampleTempOrSchedule = "Eksempel: Min nye skabelon";
+                PictoForTempOrSchedule = "Vælg et passende piktogram til din nye skabelon";
+                _oldTemplateNames = templateNames;
+            }
+            else if (navigationData is List<Tuple<int, int>> list)
+            {
+                _yearAndWeek = list;
+            }
         }
     }
 }
