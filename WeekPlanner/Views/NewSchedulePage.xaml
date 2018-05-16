@@ -17,81 +17,82 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ContentView ControlTemplate="{StaticResource NavBarTheme}">
-            <StackLayout
+            <ScrollView>
+                <StackLayout
                 Margin="12"
                 Spacing="20">
-                <Label
+                    <Label
                     Text="{Binding NewTempOrSchedule}"
                     HorizontalTextAlignment="Center"
                     FontSize="Large"/>
-                <!-- NAME OF SCHEDULE START -->
-                <StackLayout>
-                    <Label Text="{Binding NamingTempOrSchedule}" FontSize="Medium" Style="TitleStyle"/>
-                    <Entry
+                    <!-- NAME OF SCHEDULE START -->
+                    <StackLayout>
+                        <Label Text="{Binding NamingTempOrSchedule}" FontSize="Medium" Style="TitleStyle"/>
+                        <Entry
                         x:Name="NewScheduleNameEntry"
                         Text="{Binding ScheduleName.Value}"
                         Placeholder="{Binding ExampleTempOrSchedule}">
-                        <Entry.Behaviors>
-                            <behaviors:EventToCommandBehavior
+                            <Entry.Behaviors>
+                                <behaviors:EventToCommandBehavior
                             EventName="TextChanged"
                             Command="{Binding ValidateWeekNameCommand}" />
-                        </Entry.Behaviors>
-                    </Entry>
-                    <Label
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label
                         Text="{Binding ScheduleName.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                         Style="{StaticResource ValidationErrorLabelStyle}" />
-                </StackLayout>
-                <!-- NAME OF SCHEDULE END -->
+                    </StackLayout>
+                    <!-- NAME OF SCHEDULE END -->
 
-                <!-- CHOOSE WEEK AND YEAR START -->
-                <StackLayout IsVisible="{Binding IsNewSchedule}">
-                    <Label Text="Angiv hvilket år og hvilken uge, dit nye skema skal gælde for" FontSize="Medium" Style="TitleStyle"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.5*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                    <!-- CHOOSE WEEK AND YEAR START -->
+                    <StackLayout IsVisible="{Binding IsNewSchedule}">
+                        <Label Text="Angiv hvilket år og hvilken uge, dit nye skema skal gælde for" FontSize="Medium" Style="TitleStyle"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                        <Label Text="Årstal" FontSize="Medium" Grid.Row="0" Grid.Column="0"/>
-                        <Entry Keyboard="Numeric" x:Name="NewScheduleYearEntry" Text="{Binding ScheduleYear}" Grid.Row="1" Grid.Column="0">
-                            <Entry.Behaviors>
-                                <behaviors:EventToCommandBehavior
+                            <Label Text="Årstal" FontSize="Medium" Grid.Row="0" Grid.Column="0"/>
+                            <Entry Keyboard="Numeric" x:Name="NewScheduleYearEntry" Text="{Binding ScheduleYear}" Grid.Row="1" Grid.Column="0">
+                                <Entry.Behaviors>
+                                    <behaviors:EventToCommandBehavior
                                 EventName="Completed"
                                 Command="{Binding GetScheduleDatesCommand}"/>
-                            </Entry.Behaviors>
-                        </Entry>
+                                </Entry.Behaviors>
+                            </Entry>
 
-                        <Label Text="Ugenummer" FontSize="Medium" Grid.Row="0" Grid.Column="1"/>
-                        <Entry Keyboard="Numeric" x:Name="NewScheduleWeekEntry" Text="{Binding ScheduleWeek}" Grid.Row="1" Grid.Column="1">
-                            <Entry.Behaviors>
-                                <behaviors:EventToCommandBehavior
+                            <Label Text="Ugenummer" FontSize="Medium" Grid.Row="0" Grid.Column="1"/>
+                            <Entry Keyboard="Numeric" x:Name="NewScheduleWeekEntry" Text="{Binding ScheduleWeek}" Grid.Row="1" Grid.Column="1">
+                                <Entry.Behaviors>
+                                    <behaviors:EventToCommandBehavior
                                 EventName="Completed"
                                 Command="{Binding GetScheduleDatesCommand}"/>
-                            </Entry.Behaviors>
-                        </Entry>
+                                </Entry.Behaviors>
+                            </Entry>
 
-                    </Grid>
-                    <Label Text="{Binding ScheduleValidateYearAndWeek}" Style="{StaticResource ValidationErrorLabelStyle}"/>
-                    <Label Text="{Binding ScheduleFromAndToDates}" FontSize="Medium" TextColor="Green"/>
-                </StackLayout>
-                <!--CHOOSE WEEK AND YEAR END-->
+                        </Grid>
+                        <Label Text="{Binding ScheduleValidateYearAndWeek}" Style="{StaticResource ValidationErrorLabelStyle}"/>
+                        <Label Text="{Binding ScheduleFromAndToDates}" FontSize="Medium" TextColor="Green"/>
+                    </StackLayout>
+                    <!--CHOOSE WEEK AND YEAR END-->
 
-                <!-- SET THUMBNAIL START -->
-                <StackLayout>
-                    <Label Text="{Binding PictoForTempOrSchedule}" FontSize="Medium" Style="TitleStyle"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="AUTO"/>
-                        </Grid.RowDefinitions>
-                        <ffimageloading:CachedImage
+                    <!-- SET THUMBNAIL START -->
+                    <StackLayout>
+                        <Label Text="{Binding PictoForTempOrSchedule}" FontSize="Medium" Style="TitleStyle"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="AUTO"/>
+                            </Grid.RowDefinitions>
+                            <ffimageloading:CachedImage
                                     Grid.Column="0"
                                     HeightRequest="100"
                                     Aspect="AspectFit"
@@ -99,29 +100,29 @@
                                     ErrorPlaceholder="weekschedule.png"
                                     Source="{Binding WeekThumbNail.Id, Converter={StaticResource IdToRawPictoUrlConverter}}"
                                     BackgroundColor="White"/>
-                        <StackLayout Grid.Column="1">
-                            <Button
+                            <StackLayout Grid.Column="1">
+                                <Button
                                 VerticalOptions="Center"
                                 HeightRequest="50"
                                 x:Name="ChangePictogramButton"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                                 Command="{Binding ChangePictogramCommand}"
                                 Text="Ændre Pictogram for ugen"></Button>
-                            <!--<Picker ItemsSource="{Binding YearsAndWeeksStrings}" SelectedIndex="{Binding SelectedYearWeekIndex}"></Picker>-->
-                        </StackLayout>
-                    </Grid>
-                </StackLayout>
-                <!-- SET THUMBNAIL END -->
+                                <!--<Picker ItemsSource="{Binding YearsAndWeeksStrings}" SelectedIndex="{Binding SelectedYearWeekIndex}"></Picker>-->
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                    <!-- SET THUMBNAIL END -->
 
-                <!-- CREATE SCHEDULE BUTTONS START -->
-                <StackLayout>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <!-- CREATE SCHEDULE BUTTONS START -->
+                    <StackLayout>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Button
+                            <Button
                                 IsVisible="{Binding IsNewSchedule}"
                                 x:Name="CreateBlankWeekButton"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
@@ -129,7 +130,7 @@
                                 CommandParameter="Blank"
                                 Text="Lav blankt ugeskema" 
                                 Grid.Column="0"/>
-                        <Button
+                            <Button
                                 IsVisible="{Binding IsNewSchedule}"
                                 x:Name="CreateTemplateWeekButton"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
@@ -137,17 +138,18 @@
                                 CommandParameter="Template"
                                 Text="Lav ugeskema fra skabelon" 
                                 Grid.Column="1"/>
-                        <Button
+                            <Button
                                 IsVisible="{Binding IsTemplate}"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
                                 Command="{Binding CreateTemplateCommand}"
                                 CommandParameter="Template"
                                 Text="Lav skabelon" 
                                 Grid.ColumnSpan="2"/>
-                    </Grid>
+                        </Grid>
+                    </StackLayout>
+                    <!-- CREATE SCHEDULE BUTTONS START -->
                 </StackLayout>
-                <!-- CREATE SCHEDULE BUTTONS START -->
-            </StackLayout>
+            </ScrollView>
         </ContentView>
     </ContentPage.Content>
 </base:PageBase>
