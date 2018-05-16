@@ -29,10 +29,7 @@ namespace WeekPlanner.ViewModels
             Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
 
             ShowNavigationBar = false;     
-            
-            // Clear settings when logging out
-            _settingsService = settingsService;
-            _settingsService.ClearSettings();
+			_settingsService = settingsService;
         }
 
         public ValidatableObject<string> Username
@@ -111,7 +108,12 @@ namespace WeekPlanner.ViewModels
             if (navigationData is WeekPlannerViewModel)
             {
                 _userModeSwitch = true;
+				return Task.FromResult(true);
             }
+
+			// This is a logout, so clear settings
+            _settingsService.ClearSettings();
+
             return Task.FromResult(false);
         }
     }
