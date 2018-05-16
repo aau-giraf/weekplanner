@@ -108,6 +108,7 @@ namespace WeekPlanner.ViewModels
             if (navigationData is WeekPlannerViewModel)
             {
                 _userModeSwitch = true;
+                ShowNavigationBar = true;
 				return Task.FromResult(true);
             }
 
