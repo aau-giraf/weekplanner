@@ -1,7 +1,9 @@
+using Syncfusion.ListView.XForms;
 using WeekPlanner.Views.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using WeekPlanner.ViewModels;
+using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.Views
 {
