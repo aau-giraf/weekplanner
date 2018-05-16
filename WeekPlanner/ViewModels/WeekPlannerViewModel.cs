@@ -37,6 +37,7 @@ namespace WeekPlanner.ViewModels
         
         private bool _isDirty = false;
         private int _choiceBoardIds;
+        private long _temporaryActivityIds = long.MinValue;
         
         private readonly List<WeekdayDTO> _removedWeekdayDTOs;
         private WeekDTO _weekDto;
@@ -58,7 +59,6 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ToggledDaysWrapper);
             }
         }
-
 
         public WeekDTO WeekDTO
         {
@@ -605,7 +605,10 @@ namespace WeekPlanner.ViewModels
 
         protected virtual async Task SaveOrUpdateSchedule()
         {
-            string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
+            // Needed due to the hack with temporary ids, which, in turn, is needed for the ActivityWithNotifyDTO-hack
+            SetTemporaryIdsToNullInWeekDTO();
+            
+            string onSuccesMessage = WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null ?
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
@@ -853,6 +856,13 @@ namespace WeekPlanner.ViewModels
             RaisePropertyChanged(() => Height);
         }
 
+        private void SetTemporaryIdsToNullInWeekDTO()
+        {
+            WeekDTO.Days.SelectMany(d => d.Activities)
+                .Where(a => a.Id <= _temporaryActivityIds)
+                .ForEach(a => { a.Id = null; });
+        }
+
         protected void ToggleDaysAndOrderActivities()
         {
             FlipToggledDays();
@@ -885,7 +895,7 @@ namespace WeekPlanner.ViewModels
                 case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>, string> triple when triple.Item3 == MessageKeys.UpdateChoiceBoard:
                     if (triple.Item2.Count == 1)
                     {
-                        RevertChoiceBoardToRegular(triple.Item1, triple.Item2.Single());
+                        RevertChoiceBoardToRegular(triple.Item1, triple.Item2.SingleOrDefault());
                     }
                     else
                     {
@@ -934,7 +944,7 @@ namespace WeekPlanner.ViewModels
             
             // Insert pictogram in the very bottom of the day
             var newOrderInBottom = dayToAddTo?.Activities.Max(d => d.Order) + 1 ?? 0;
-            ActivityDTO newActivityDTO = new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal);
+            ActivityDTO newActivityDTO = new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal, Id: _temporaryActivityIds++);
             dayToAddTo?.Activities.Add(newActivityDTO);
             
             // Add to collection
@@ -954,9 +964,12 @@ namespace WeekPlanner.ViewModels
                 // Remove from WeekDTO
                 dayChangedIn.Activities.Remove(activityToBeRemoved);
             }
+
+            var (_, activityInCollection) =
+                FindDayAndActivityWithNotifyDTOInWeekObservablesById(activityWithNotifyToBeRemoved.Id);
             
             // Remove from ObservableCollection
-            _dayActivityCollections[dayChangedIn.Day].Remove(activityWithNotifyToBeRemoved);
+            _dayActivityCollections[dayChangedIn.Day].Remove(activityInCollection);
 
             _isDirty = true;
         }
@@ -965,7 +978,7 @@ namespace WeekPlanner.ViewModels
         #region FindHelpers
         private (WeekdayDTO, ActivityDTO) FindDayAndActivityDTOInWeekDTOById(long? id)
         {
-            var dayContaining = WeekDTO.Days.First(d => d.Activities.FirstOrDefault(a => a.Id == id) != null);
+            var dayContaining = WeekDTO.Days.FirstOrDefault(d => d.Activities.FirstOrDefault(a => a.Id == id) != null);
             return (dayContaining, dayContaining?.Activities.FirstOrDefault(a => a.Id == id));
         }
 
