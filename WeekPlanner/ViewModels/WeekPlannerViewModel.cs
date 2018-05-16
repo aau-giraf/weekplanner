@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NUnit.Framework;
+using Syncfusion.DataSource.Extensions;
 using WeekPlanner.Helpers;
 using WeekPlanner.Models;
 using WeekPlanner.Services;
@@ -442,40 +444,45 @@ namespace WeekPlanner.ViewModels
         {
             _choiceBoardActivities.Remove(_selectedActivity.ChoiceBoardID);
         }
-
-        protected void FoldDaysToChoiceBoards()
+        */
+        protected Dictionary<DayEnum?, ObservableCollection<ActivityWithNotifyDTO>> FoldDaysToChoiceBoards(WeekDTO weekDTO)
         {
-            foreach (var days in WeekDTO.Days)
+            Dictionary<DayEnum?, List<ActivityWithNotifyDTO>> activitiesForDays = weekDTO.Days
+                .ToDictionary(key => key.Day, value => value.Activities.ToActivityWithNotifyDTOs().ToList());
+            
+            foreach (var dayActivities in activitiesForDays)
             {
                 List<int?> orderOfChoiceBoards = new List<int?>();
                 List<ActivityWithNotifyDTO> choiceBoardItems = new List<ActivityWithNotifyDTO>();
-                ActivityWithNotifyDTO choiceBoard;
 
-                foreach (var activityGroup in days.Activities.GroupBy(d => d.Order, d => d))
+                foreach (var activityGroup in dayActivities.Value.GroupBy(d => d.Order, d => d))
                 {
-                    if (activityGroup.Count() > 1)
+                    if (activityGroup.Count() <= 1) continue;
+                    
+                    foreach (var activity in activityGroup)
                     {
-                        foreach (var activity in activityGroup)
-                        {
-                            activity.State = StateEnum.Normal;
-                            choiceBoardItems.Add(activity.ToActivityWithNotifyDTO());
-                        }
-                        orderOfChoiceBoards.Add(activityGroup.Key);
+                        activity.State = StateEnum.Normal;
+                        choiceBoardItems.Add(activity);
                     }
+                    orderOfChoiceBoards.Add(activityGroup.Key);
                 }
 
                 foreach (var order in orderOfChoiceBoards)
                 {
-                    days.Activities.RemoveAll(a => a.Order == order);
-                    choiceBoard = new ActivityWithNotifyDTO(_standardChoiceBoardPictoDTO, order, StateEnum.Normal) { IsChoiceBoard = true, ChoiceBoardID = _choiceID.Value };
-                    days.Activities.Add(choiceBoard.ToActivityDTO());
+                    dayActivities.Value.RemoveAll(a => a.Order == order);
+                    var choiceBoard = new ActivityWithNotifyDTO(_standardChoiceBoardPictoDTO, order, StateEnum.Normal) 
+                        { IsChoiceBoard = true, ChoiceBoardID = _choiceID.Value };
+                    dayActivities.Value.Add(choiceBoard);
+                    
+                    // Add to choiceboards list
                     _choiceBoardActivities.Add(choiceBoard.ChoiceBoardID, choiceBoardItems);
                     _choiceID++;
                 }
             }
-            OrderActivities();
-        }
 
+            return activitiesForDays.ToDictionary(k => k.Key, v => v.Value.ToObservableCollection());
+        }
+        /*
         protected void PutChoiceActivitiesBackIntoSchedule()
         {
             foreach (var day in WeekDTO.Days)
@@ -912,10 +919,15 @@ namespace WeekPlanner.ViewModels
 
         private void InsertActivityNotifyDTOsInWeekDays(WeekDTO weekDTO)
         {
-            weekDTO.Days.ForEach(d =>
+            var activiesForDays = FoldDaysToChoiceBoards(weekDTO);
+            
+            // Add so we keep the binding to observable collection
+            activiesForDays.ForEach(kvp =>
             {
-                dayActivityCollections[d.Day].AddRange(d.Activities.ToActivityWithNotifyDTOs());
+                dayActivityCollections[kvp.Key].AddRange(kvp.Value);
             });
+            
+            OrderActivities();
         }
 
 
