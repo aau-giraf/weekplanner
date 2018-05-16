@@ -54,7 +54,7 @@ namespace WeekPlanner.ViewModels
 
         [UsedImplicitly] public ICommand SaveChoiceCommand => new Command(async () => await SaveChoiceBoard());
 
-        [UsedImplicitly] public ICommand DeleteActivityCommand => new Command(() => NavigationService.PopAsync((_activityChanged, MessageKeys.DeleteChoiceBoard)));
+        [UsedImplicitly] public ICommand DeleteActivityCommand => new Command(async () => await DeleteChoiceBoard());
 
         [UsedImplicitly] public ICommand AddActivityCommand => new Command(async () => await NavigationService.NavigateToAsync<PictogramSearchViewModel>());
         #endregion
@@ -70,17 +70,30 @@ namespace WeekPlanner.ViewModels
         {
             ActivityDTOs.Add(new ActivityDTO(weekPictogramDTO, _order, StateEnum.Normal));
         }
+        
+        private async Task DeleteChoiceBoard()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            await NavigationService.PopAsync((_activityChanged, MessageKeys.DeleteChoiceBoard));
+            IsBusy = false;
+        }
 
         private async Task SaveChoiceBoard()
         {
             if (IsBusy) return;         
 
             IsBusy = true;
-            
-            if (ActivityDTOs.Count <= 2)
+
+            if (ActivityDTOs.Count == 0)
             {
-                await _dialogService.ShowAlertAsync("Der skal være mindst to muligheder.");
+                var deleteChosen = await _dialogService.ConfirmAsync("Hvad vil du gøre?", "Der er ingen aktiviteter", "Annuller gemning",
+                    "Slet valgmuligheds-aktivitet");
                 IsBusy = false;
+                if (deleteChosen)
+                {
+                    await DeleteChoiceBoard();
+                }
                 return;
             }
             

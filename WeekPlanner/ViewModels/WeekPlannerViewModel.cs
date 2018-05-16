@@ -36,7 +36,8 @@ namespace WeekPlanner.ViewModels
         #endregion
         
         private bool _isDirty = false;
-
+        private int _choiceBoardIds;
+        
         private readonly List<WeekdayDTO> _removedWeekdayDTOs;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
@@ -260,7 +261,7 @@ namespace WeekPlanner.ViewModels
             {
                 case ActivityWithNotifyDTO activityWithNotifyDTO when activityWithNotifyDTO.IsChoiceBoard == true:
                     await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(
-                        (activityWithNotifyDTO.ToActivityDTO(), GetActivitiesForChoiceBoard(activityWithNotifyDTO.Id)));
+                        (activityWithNotifyDTO.ToActivityDTO(), GetActivitiesForChoiceBoard(activityWithNotifyDTO.ChoiceBoardID)));
                     break;
                 case ActivityWithNotifyDTO activityWithNotifyDTO:
                     if (activityWithNotifyDTO.State != null &&
@@ -420,9 +421,9 @@ namespace WeekPlanner.ViewModels
         
         #region ChoiceBoardMethods
         
-        private List<ActivityDTO> GetActivitiesForChoiceBoard(long? activityId)
+        private List<ActivityDTO> GetActivitiesForChoiceBoard(long? choiceBoardId)
         {
-            return _choiceBoardActivities.TryGetValue(activityId, out List<ActivityWithNotifyDTO> activities)
+            return _choiceBoardActivities.TryGetValue(choiceBoardId, out List<ActivityWithNotifyDTO> activities)
                 ? activities.ToActivityDTOs().ToList()
                 : null;
         }
@@ -453,19 +454,23 @@ namespace WeekPlanner.ViewModels
                 // Remove the choiceboard activities from the day and replace with a choiceboardActivity
                 foreach (var order in orderOfChoiceBoards)
                 {
-                    var idForChoiceBoard = dayActivities.Value.First(d => d.Order == order).Id;
-                    
+                    var choiceId = _choiceBoardIds++;
                     dayActivities.Value.RemoveAll(a => a.Order == order);
                     var choiceBoard = new ActivityWithNotifyDTO(_standardChoiceBoardPictoDTO, order, StateEnum.Normal,
-                        true, idForChoiceBoard);
+                        true)
+                    {
+                        ChoiceBoardID = choiceId
+                    };
                     dayActivities.Value.Add(choiceBoard);
                     
-                    _choiceBoardActivities.Add(choiceBoard.Id, choiceBoardItems);
+                    _choiceBoardActivities.Add(choiceId, choiceBoardItems);
                 }
             }
 
             return activitiesForDays.ToDictionary(k => k.Key, v => v.Value.ToObservableCollection());
         }
+        
+        // TODO: Refactor these methods below
         
         private void UpdateChoiceBoard(ActivityDTO choiceBoard, ObservableCollection<ActivityDTO> choiceBoardItems)
         {
@@ -481,33 +486,64 @@ namespace WeekPlanner.ViewModels
             day.Activities.AddRange(choiceBoardItems);
             
             // Insert into ChoiceBoardDictionary
-            _choiceBoardActivities[choiceBoard.Id] =
+            _choiceBoardActivities[choiceBoard.ChoiceBoardID] =
                 choiceBoardItems.ToActivityWithNotifyDTOs().ToList();
+
+            _isDirty = true;
+        }
+
+        private void RevertChoiceBoardToRegular(ActivityDTO choiceBoard, ActivityDTO replacementActivityDTO)
+        {
+            choiceBoard.IsChoiceBoard = false;
+            
+            // Cleanup choiceBoardDict
+            _choiceBoardActivities.Remove(choiceBoard.ChoiceBoardID);
+            
+            // Change Activity in collection
+            var (_, activityInCollection) = FindDayAndActivityWithNotifyDTOInWeekObservablesById(choiceBoard.Id);
+            activityInCollection.IsChoiceBoard = false;
+            activityInCollection.Pictogram = replacementActivityDTO.Pictogram;
+            
+            // Remove old choiceBoardItems from WeekDTO except for remaining
+            var (day, activity) = FindDayAndActivityDTOInWeekDTOById(choiceBoard.Id);
+            day.Activities.RemoveAll(a => a.Order == choiceBoard.Order && a.Id != choiceBoard.Id);
+            activity.IsChoiceBoard = false;
+            activity.State = StateEnum.Normal;
+            activity.Pictogram = replacementActivityDTO.Pictogram;
 
             _isDirty = true;
         }
 
         private void ReplaceActivityWithChoiceBoard(ActivityDTO activityChangedToChoiceBoard, ObservableCollection<ActivityDTO> choiceBoardItems)
         {
+            // Ignore choiceboards of size 1
+            if (choiceBoardItems.Count == 1) return;
+            
             var (day, activity) = FindDayAndActivityDTOInWeekDTOById(activityChangedToChoiceBoard.Id);
+            
             
             // Update WeekDTO
             // Set ids to match the activityChanged
             choiceBoardItems.ForEach(cbi => cbi.Id = activity.Id);
+            var newChoiceBoardId = _choiceBoardIds++;
+            activity.ChoiceBoardID = newChoiceBoardId;
+            activity.State = StateEnum.Normal;
             
             // Remove the activityChanged and insert all of the choiceBoardItems
             day.Activities.Remove(activity);
             day.Activities.AddRange(choiceBoardItems);
             
             // Insert into ChoiceBoardDictionary
-            _choiceBoardActivities[activity.Id] =
+            _choiceBoardActivities[activity.ChoiceBoardID] =
                 choiceBoardItems.ToActivityWithNotifyDTOs().ToList();
             
             // Update activity in ObservableCollection
             var (_, activityInCollection) =
                 FindDayAndActivityWithNotifyDTOInWeekObservablesById(activityChangedToChoiceBoard.Id);
             activityInCollection.IsChoiceBoard = true;
+            activityInCollection.ChoiceBoardID = newChoiceBoardId;
             activityInCollection.Pictogram = _standardChoiceBoardPictoDTO;
+            activityInCollection.State = StateEnum.Normal;
             
             _isDirty = true;
         }
@@ -524,7 +560,9 @@ namespace WeekPlanner.ViewModels
             dayCollection.Remove(activityInCollection);
 
 			// Remove from choiceBoardDict
-			_choiceBoardActivities.Remove(choiceBoardDeleted.Id);
+			_choiceBoardActivities.Remove(choiceBoardDeleted.ChoiceBoardID);
+
+            _isDirty = true;
         }
         
         #endregion
@@ -845,7 +883,14 @@ namespace WeekPlanner.ViewModels
                     ReplaceActivityWithChoiceBoard(triple.Item1, triple.Item2);
                     break;
                 case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>, string> triple when triple.Item3 == MessageKeys.UpdateChoiceBoard:
-                    UpdateChoiceBoard(triple.Item1, triple.Item2);
+                    if (triple.Item2.Count == 1)
+                    {
+                        RevertChoiceBoardToRegular(triple.Item1, triple.Item2.Single());
+                    }
+                    else
+                    {
+                        UpdateChoiceBoard(triple.Item1, triple.Item2);
+                    }
                     break;
                 case ValueTuple<ActivityDTO, string> tuple when tuple.Item2 == MessageKeys.DeleteChoiceBoard:
                     DeleteChoiceBoard(tuple.Item1);
