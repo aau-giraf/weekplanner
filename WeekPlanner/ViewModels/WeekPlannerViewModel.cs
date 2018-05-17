@@ -1047,7 +1047,8 @@ namespace WeekPlanner.ViewModels
                     DeleteChoiceBoard(tuple.Item1);
                     WeekDTO.Days.Single(d => d.Day == day).Activities.Add(tuple.Item2.First());
                     _dayActivityCollections[day].Add(tuple.Item2.First().ToActivityWithNotifyDTO());
-                    
+
+                    await SaveOrUpdateSchedule();
                     break;
             }
             SetOrientation();
