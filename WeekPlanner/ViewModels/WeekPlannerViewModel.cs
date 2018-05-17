@@ -494,16 +494,16 @@ namespace WeekPlanner.ViewModels
         
         private void UpdateChoiceBoard(ActivityDTO choiceBoard, ObservableCollection<ActivityDTO> choiceBoardItems)
         {
-            var (day, activity) = FindDayAndActivityDTOInWeekDTOById(choiceBoard.Id);
-            
+            var day = FindDayOfChoiceBoard(choiceBoard.Id);
+
             // Update WeekDTO
             // Set ids to match the activityChanged
-            choiceBoardItems.ForEach(cbi => cbi.Id = activity.Id);
+            //choiceBoardItems.ForEach(cbi => cbi.Id = choiceBoard.Id);
             
             // Remove old choiceboardItems and insert new ones
             var orderForChoiceBoards = choiceBoard.Order;
-            day.Activities.RemoveAll(a => a.Order == orderForChoiceBoards);
-            day.Activities.AddRange(choiceBoardItems);
+            WeekDTO.Days.FirstOrDefault(d => d.Day == day).Activities.RemoveAll(a => a.Order == orderForChoiceBoards);
+            WeekDTO.Days.FirstOrDefault(d => d.Day == day).Activities.AddRange(choiceBoardItems);
             
             // Insert into ChoiceBoardDictionary
             _choiceBoardActivities[choiceBoard.ChoiceBoardID] =
