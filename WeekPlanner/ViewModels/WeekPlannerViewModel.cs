@@ -274,9 +274,10 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        private void OrderActivitiesInAllDayCollections()
+        private void OrderActivitiesInAllDayCollectionsAndWeekDTO()
         {
             _dayActivityCollections.ForEach(dayActivities => dayActivities.Value.Sort((a, b) => a.CompareTo(b)));
+            WeekDTO.Days.ForEach(d => d.Activities = d.Activities.OrderBy(a => a.Order).ToList());
         }
         
         #region Drag'n'Drop
@@ -295,20 +296,37 @@ namespace WeekPlanner.ViewModels
             if (args.Action == DragAction.Drop
                 && args.ItemData is ActivityWithNotifyDTO activity)
             {
-				UpdateOrderingOfActivities(activity.Id, args.OldIndex, args.NewIndex);
+				//UpdateOrderingOfActivities(activity, args.OldIndex, args.NewIndex);
             }
 
             IsBusy = false;
         }
 
-        private void UpdateOrderingOfActivities(long? activityId, int oldIndex, int newIndex)
+		private void UpdateOrderingOfActivities(ActivityWithNotifyDTO activityWithNotify, int oldIndex, int newIndex)
         {
-            if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityId == null) return;
+            /*if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityWithNotify.Id == null) return;
 
-            var (dayToReorder, activity) = FindDayAndActivityDTOInWeekDTOById(activityId);
+            var (dayCollection, _) = FindDayAndActivityWithNotifyDTOInWeekObservablesById(activityWithNotify.Id);
+
+            var newOrder = dayCollection[newIndex].Order;
+            
+            
+            WeekdayDTO dayToReorder;
+            ActivityDTO activity;
+            
+            if(activityWithNotify.IsChoiceBoard == true)
+			{
+				_choiceBoardActivities[activityWithNotify.Id].ForEach(awn =>
+				    {
+				        var (_, activityInWeekDTO) = FindDayAndActivityDTOInWeekDTOById(awn.Id);
+				        activityInWeekDTO.Order = newOrder;
+				    });
+			}
+
+			(dayToReorder, activity) = FindDayAndActivityDTOInWeekDTOById(activity.Id);
             
             // The activities have not updated yet, so we get the order value based on old indexes
-            var newOrder = dayToReorder.Activities[newIndex].Order;
+            //var newOrder = dayToReorder.Activities[newIndex].Order;
 
             // Update the orders of all activities in the day          
             if (newIndex < oldIndex) // Dragged upwards
@@ -329,7 +347,7 @@ namespace WeekPlanner.ViewModels
 
             // Update order so indexes are correct on next use
             dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
-            _isDirty = true;
+            _isDirty = true;*/
         }
 
         #endregion
@@ -454,10 +472,12 @@ namespace WeekPlanner.ViewModels
                 // Remove the choiceboard activities from the day and replace with a choiceboardActivity
                 foreach (var order in orderOfChoiceBoards)
                 {
+					
                     var choiceId = _choiceBoardIds++;
+
                     dayActivities.Value.RemoveAll(a => a.Order == order);
                     var choiceBoard = new ActivityWithNotifyDTO(_standardChoiceBoardPictoDTO, order, StateEnum.Normal,
-                        true)
+                        true, choiceId)
                     {
                         ChoiceBoardID = choiceId
                     };
@@ -743,7 +763,8 @@ namespace WeekPlanner.ViewModels
                     return minimumHeight;
                 }
 
-                int dynamicHeight = WeekDTO.Days.Max(d => d.Activities.Count) * elementHeight;
+                // Set height based on observable collection max element count
+                int dynamicHeight = _dayActivityCollections.Values.Max(d => d.Count) * elementHeight;
 
                 return dynamicHeight > minimumHeight ? dynamicHeight : minimumHeight;
             }
@@ -875,7 +896,7 @@ namespace WeekPlanner.ViewModels
         protected void ToggleDaysAndOrderActivities()
         {
             FlipToggledDays();
-            OrderActivitiesInAllDayCollections();
+            OrderActivitiesInAllDayCollectionsAndWeekDTO();
         }
 
         public override async Task OnReturnedToAsync(object navigationData)
@@ -997,6 +1018,12 @@ namespace WeekPlanner.ViewModels
                 _dayActivityCollections.Values.FirstOrDefault(day => day.FirstOrDefault(act => act.Id == id) != null);
             var activity = dayCollection?.FirstOrDefault(act => act.Id == id);
             return (dayCollection, activity);
+        }
+
+        private DayEnum? FindDayOfChoiceBoard(long? choiceBoardId)
+        {
+            return _dayActivityCollections
+                .FirstOrDefault(kvp => kvp.Value.FirstOrDefault(a => a.Id == choiceBoardId) != null).Key;
         }
         #endregion
     }
