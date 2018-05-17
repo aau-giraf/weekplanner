@@ -7,6 +7,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Syncfusion.DataSource.Extensions;
+using WeekPlanner.Annotations;
+using WeekPlanner.Helpers;
+using WeekPlanner.Models;
 using WeekPlanner.Services;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services.Request;
@@ -15,61 +19,34 @@ using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
 using static IO.Swagger.Model.ActivityDTO;
 using static IO.Swagger.Model.WeekdayDTO;
+using ItemTappedEventArgs = Syncfusion.ListView.XForms.ItemTappedEventArgs;
 
 namespace WeekPlanner.ViewModels
 {
-	public class WeekPlannerViewModel : ViewModelBase
+	public partial class WeekPlannerViewModel : ViewModelBase
     {
 
+        #region Properties
+        #region ServicesAndApis
         protected readonly IRequestService RequestService;
         private readonly IWeekApi _weekApi;
         private readonly IPictogramApi _pictogramApi;
-        
         protected readonly IDialogService DialogService;
         public ISettingsService SettingsService { get; }
+        #endregion
+        
         private bool _isDirty = false;
-        private long? _choiceID = 0;
-
-        /// <summary>
-        /// Small wrapper for handling which days have been toggled.
-        /// Inheritance from Switch means we don't have to manually handle PropertyChanged etc.
-        /// </summary>
-        public class DayToggledWrapper : Switch
-        {
-            public readonly DayEnum Day;
-
-            //SwitchToggled is used for visual purposes (see binding of schedule days in .XAML)
-            private bool _switchToggled;
-            public bool SwitchToggled
-            {
-                get => _switchToggled;
-                set
-                {
-                    _switchToggled = value;
-                    OnPropertyChanged(nameof(SwitchToggled));
-                }
-            }
-
-			public bool InternalChange;
-
-            public DayToggledWrapper(DayEnum day, EventHandler<ToggledEventArgs> toggledEventCallback)
-            {
-                IsToggled = SwitchToggled = true;
-                Day = day;
-                Toggled += toggledEventCallback;
-				InternalChange = false;
-            }
-        }
-
+        private int _choiceBoardIds;
+        private long _temporaryActivityIds = long.MinValue;
+        
         private readonly List<WeekdayDTO> _removedWeekdayDTOs;
-        private ActivityDTO _selectedActivity;
         private WeekDTO _weekDto;
         private DayEnum _weekdayToAddPictogramTo;
         private ImageSource _toolbarButtonIcon;
         private int _scheduleYear;
         private int _scheduleWeek;
-        private Dictionary<long?, List<ActivityDTO>> _choiceBoardActivities = new Dictionary<long?, List<ActivityDTO>>();
-        protected WeekPictogramDTO _standardChoiceBoardPictoDTO;
+        private readonly Dictionary<long?, List<ActivityWithNotifyDTO>> _choiceBoardActivities = new Dictionary<long?, List<ActivityWithNotifyDTO>>();
+        private WeekPictogramDTO _standardChoiceBoardPictoDTO;
         private ObservableCollection<DayToggledWrapper> _toggledDaysWrapper;
         private string _saveText;
 
@@ -83,7 +60,6 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-
         public WeekDTO WeekDTO
         {
             get => _weekDto;
@@ -92,7 +68,6 @@ namespace WeekPlanner.ViewModels
                 _weekDto = value;
                 RaisePropertyChanged(() => WeekDTO);
                 RaisePropertyChanged(() => WeekName);
-                RaisePropertyForDays();
             }
         }
 
@@ -134,7 +109,7 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-        public double PictoSize { get; } = Device.Idiom == TargetIdiom.Phone ? 100 : 150;
+        [UsedImplicitly] public double PictoSize { get; } = Device.Idiom == TargetIdiom.Phone ? 100 : 150;
 
         public bool ShowToolbarButton { get; set; }
 
@@ -158,15 +133,24 @@ namespace WeekPlanner.ViewModels
             }
         }
 
-		public string CurrentDayLabel  => TranslateCurrentDay(); 
+		[UsedImplicitly] public string CurrentDayLabel => DayHelpers.TranslateCurrentDay(); 
 
-		public Color CurrentDayColor => Color.FromHex(SettingsService.CurrentCitizenSettingDTO.WeekDayColors.Single(x => x.Day == GetCurrentColorDay()).HexColor);
+		[UsedImplicitly]
+		public Color CurrentDayColor 
+		    => Color.FromHex(SettingsService.CurrentCitizenSettingDTO.WeekDayColors
+		    .Single(x => x.Day == DayHelpers.GetCurrentColorDay()).HexColor);
 
-		public ObservableCollection<ActivityDTO> CurrentDayPictos => GetPictosOrEmptyList(GetCurrentDay());
+        [UsedImplicitly]
+        public ObservableCollection<ActivityWithNotifyDTO> CurrentDayPictos 
+            => _dayActivityCollections[DayHelpers.GetCurrentDay()];
 
-		public ICommand ToggleEditModeCommand => new Command(async () => await SwitchUserModeAsync());
+        #region Commands
+        
+        [UsedImplicitly] 
         public ICommand ToolbarButtonCommand => new Command(async () => await SwitchUserModeAsync());
+        [UsedImplicitly] 
         public ICommand SaveCommand => new Command(async () => await SaveSchedule());
+        [UsedImplicitly]
         public ICommand NavigateToPictoSearchCommand => new Command<DayEnum>(async weekday =>
         {
             if (IsBusy) return;
@@ -175,79 +159,17 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
             IsBusy = false;
         });
-        public ICommand PictoClickedCommand => new Command<Syncfusion.ListView.XForms.ItemTappedEventArgs>(async activity =>
-        {
-            if (IsBusy) return;
-            IsBusy = true;
-            if (activity.ItemData is ActivityDTO a)
-            {
-                _selectedActivity = a;
 
-                if (_selectedActivity.IsChoiceBoard.HasValue && _selectedActivity.IsChoiceBoard.Value)
-                {
-                    await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(GetActivitiesForChoiceBoard());
-                }
-                else if (SettingsService.IsInGuardianMode || !a.State.Value.Equals(StateEnum.Canceled))
-                {
-                    await NavigationService.NavigateToAsync<ActivityViewModel>(_selectedActivity);
-                }
-            }
-
-            IsBusy = false;
-        });
-
-        public ICommand PictoDraggedCommand => new Command<ItemDraggingEventArgs>(args =>
-        {
-            // Disable dragging if in citizen mode
-            if (!SettingsService.IsInGuardianMode)
-            {
-                args.Cancel = true;
-                return;
-            }
-
-            if (IsBusy) return;
-            IsBusy = true;
-
-            if (args.Action == DragAction.Drop
-                && args.ItemData is ActivityDTO activity)
-            {
-                UpdateOrderingOfActivities(activity, args.OldIndex, args.NewIndex);
-            }
-            IsBusy = false;
-        });
-
-        private void UpdateOrderingOfActivities(ActivityDTO activityDTO, int oldIndex, int newIndex)
-        {
-            if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityDTO == null) return;
-            WeekdayDTO dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Activities.Contains(activityDTO));
-            if (dayToReorder is null) return;
-
-            // The activities have not updated yet, so we get the order value based on old indexes
-            var newOrder = dayToReorder.Activities[newIndex].Order;
-
-            // Update the orders of all activities in the day          
-            if (newIndex < oldIndex) // Dragged upwards
-            {
-                for (int i = newIndex; i < oldIndex; i++)
-                {
-                    dayToReorder.Activities[i].Order += 1;
-                }
-            }
-            else // Dragged downwards
-            {
-                for (int i = oldIndex + 1; i <= newIndex; i++)
-                {
-                    dayToReorder.Activities[i].Order -= 1;
-                }
-            }
-            activityDTO.Order = newOrder;
-
-            // Update order so indexes are correct on next use
-            dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
-            _isDirty = true;
-        }
-
-
+        [UsedImplicitly]
+        public ICommand ActivityTappedCommand =>
+            new Command<ItemTappedEventArgs>(async args => await OnActivityTapped(args));
+        
+        public ICommand ActivityDraggedCommand => new Command<ItemDraggingEventArgs>(OnActivityDragged);
+        
+        #endregion
+        #endregion
+        
+        #region Initialization
         public WeekPlannerViewModel(
             INavigationService navigationService,
             IRequestService requestService,
@@ -276,9 +198,54 @@ namespace WeekPlanner.ViewModels
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
 
             OnBackButtonPressedCommand = new Command(async () => await BackButtonPressed());
-        }
 
-        // TODO: Handle situation where no days exist
+            _dayActivityCollections = new Dictionary<DayEnum?, ObservableCollection<ActivityWithNotifyDTO>>
+            {
+                {DayEnum.Monday, MondayPictos},
+                {DayEnum.Tuesday, TuesdayPictos},
+                {DayEnum.Wednesday, WednesdayPictos},
+                {DayEnum.Thursday, ThursdayPictos},
+                {DayEnum.Friday, FridayPictos},
+                {DayEnum.Saturday, SaturdayPictos},
+                {DayEnum.Sunday, SundayPictos}
+            };
+        }
+        
+        public override async Task InitializeAsync(object navigationData)
+        {
+            await RequestService.SendRequestAndThenAsync(
+                requestAsync: () => _pictogramApi.V1PictogramByIdGetAsync(2),
+                onSuccess: result =>
+                {
+                    _standardChoiceBoardPictoDTO = result.Data;
+                }
+            );
+            switch (navigationData)
+            {
+                //When initialized from CitizenSchedulesViewModel
+                case Tuple<int, int> weekDetails:
+                    ScheduleYear = weekDetails.Item1;
+                    ScheduleWeek = weekDetails.Item2;
+                    await GetWeekPlanForCitizenAsync(ScheduleYear, ScheduleWeek);
+                    break;
+                //When initialized from NewScheduleViewModel
+                case Tuple<int, int, WeekDTO> weekDetailsWithDTO:
+                    ScheduleYear = weekDetailsWithDTO.Item1;
+                    ScheduleWeek = weekDetailsWithDTO.Item2;
+                    WeekDTO = weekDetailsWithDTO.Item3;
+                    InsertActivityNotifyDTOsInWeekDays(WeekDTO);
+                    await NavigationService.RemoveLastFromBackStackAsync();
+                    SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
+                    break;
+                default:
+                    throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType()} as parameter.", nameof(navigationData));
+            }
+            SaveText = "Gem Ugeplan";
+            
+            ToggleDaysAndOrderActivities();
+        }
+        #endregion
+
         private async Task GetWeekPlanForCitizenAsync(int weekYear, int weekNumber)
         {
             await RequestService.SendRequestAndThenAsync(
@@ -287,19 +254,168 @@ namespace WeekPlanner.ViewModels
                 {
                     WeekDTO = result.Data;
                     WeekName = WeekDTO.Name;
+                    InsertActivityNotifyDTOsInWeekDays(WeekDTO);
                 }
             );
-
-            FoldDaysToChoiceBoards();
         }
-
-        private void OrderActivities()
+        
+        private async Task OnActivityTapped(ItemTappedEventArgs args)
         {
-            WeekDTO.Days.ForEach(d => d.Activities = d.Activities.OrderBy(a => a.Order).ToList());
-
-            RaisePropertyForDays();
+            if (IsBusy) return;
+            IsBusy = true;
+            switch (args.ItemData)
+            {
+                case ActivityWithNotifyDTO activityWithNotifyDTO when activityWithNotifyDTO.IsChoiceBoard == true:
+                    await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(
+                        (activityWithNotifyDTO.ToActivityDTO(), GetActivitiesForChoiceBoard(activityWithNotifyDTO.ChoiceBoardID)));
+                    break;
+                case ActivityWithNotifyDTO activityWithNotifyDTO:
+                    if (activityWithNotifyDTO.State != null &&
+                        (SettingsService.IsInGuardianMode || !activityWithNotifyDTO.State.Value.Equals(StateEnum.Canceled)))
+                    {
+                        await NavigationService.NavigateToAsync<ActivityViewModel>(activityWithNotifyDTO.ToActivityDTO());
+                    }
+                    break;
+            }
+            IsBusy = false;
         }
 
+        private void OrderActivitiesInAllDayCollectionsAndWeekDTO()
+        {
+            _dayActivityCollections.ForEach(dayActivities => dayActivities.Value.Sort((a, b) => a.CompareTo(b)));
+            WeekDTO.Days.ForEach(d => d.Activities = d.Activities.OrderBy(a => a.Order).ToList());
+        }
+        
+        #region Drag'n'Drop
+        private void OnActivityDragged(ItemDraggingEventArgs args)
+        {
+            // Disable dragging if in citizen mode
+            if (!SettingsService.IsInGuardianMode)
+            {
+                args.Cancel = true;
+                return;
+            }
+
+            if (IsBusy) return;
+            IsBusy = true;
+
+            if (args.Action == DragAction.Drop
+                && args.ItemData is ActivityWithNotifyDTO activity)
+            {
+				UpdateOrderingOfActivities(activity, args.OldIndex, args.NewIndex);
+            }
+
+            IsBusy = false;
+        }
+
+		private void UpdateOrderingOfActivities(ActivityWithNotifyDTO activityWithNotify, int oldIndex, int newIndex)
+        {
+            if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityWithNotify.Id == null) return;
+            
+            // Find dayEnum for day dragged in
+            var dayChanged = FindDayEnumOfActivityById(activityWithNotify.Id);
+                
+            // Find new order with newIndex in observableCollection, since it hasn't updated yet
+            var newOrder = _dayActivityCollections[dayChanged][newIndex].Order;
+            
+            var (dayCollection, _) = FindDayAndActivityWithNotifyDTOInWeekObservablesById(activityWithNotify.Id);
+
+            var dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Day == dayChanged);
+
+            // Update the orders of all activities in the day          
+            if (newIndex < oldIndex) // Dragged upwards
+            {
+                for (int i = newIndex; i < oldIndex; i++)
+                {
+                    var activityInCollection = dayCollection[i];
+                    var changedOrder = activityInCollection.Order + 1;
+                    
+                    if (activityInCollection.IsChoiceBoard == true)
+                    {
+                        UpdateOrderInChoiceBoardAndItems(activityInCollection, changedOrder);
+                    }
+                    else
+                    {
+                        activityInCollection.Order = changedOrder;
+                    }
+                }
+            }
+            else // Dragged downwards
+            {
+                for (int i = oldIndex + 1; i <= newIndex; i++)
+                {
+                    var activityInCollection = dayCollection[i];
+                    var changedOrder = activityInCollection.Order - 1;
+                    
+                    if (activityInCollection.IsChoiceBoard == true)
+                    {
+                        UpdateOrderInChoiceBoardAndItems(activityInCollection, changedOrder);
+                    }
+                    else
+                    {
+                        activityInCollection.Order = changedOrder;
+                    }
+                }
+            }
+
+            
+            if (activityWithNotify.IsChoiceBoard == true)
+            {
+                UpdateOrderInChoiceBoardAndItems(activityWithNotify, newOrder);
+            }
+            else
+            {
+                activityWithNotify.Order = newOrder;
+            }
+
+            // Sort Collection
+            //dayCollection.Sort((a,b) => a.CompareTo(b));
+            dayCollection = dayCollection.OrderBy(a => a.Order).ToObservableCollection();
+            _dayActivityCollections[dayChanged] = dayCollection;
+            
+            // Update order so indexes are correct on next use
+            dayToReorder?.Activities.ForEach(a =>
+            {
+                var activityFromCollection = dayCollection.FirstOrDefault(awn => awn.Id == a.Id);
+                if (activityFromCollection != null)
+                {
+                    a.Order = activityFromCollection?.Order;
+                }
+                
+            });
+            dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
+            
+            _isDirty = true;
+        }
+
+        private void UpdateOrderInChoiceBoardAndItems(ActivityWithNotifyDTO choiceBoard, int? newOrder)
+        {
+            if (choiceBoard == null || choiceBoard.IsChoiceBoard != true || choiceBoard.ChoiceBoardID == null || newOrder == null)
+            {
+                throw new ArgumentException("One or both of provided arguments are invalid.");
+            }
+
+
+            if (_choiceBoardActivities.ContainsKey(choiceBoard.ChoiceBoardID))
+            {
+                DayEnum? day = FindDayEnumOfActivityById(choiceBoard.Id);
+                var dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Day == day);
+
+                foreach (var item in _choiceBoardActivities[choiceBoard.ChoiceBoardID])
+                {
+                    dayToReorder.Activities.FirstOrDefault(a => a.Id == item.Id).Order = newOrder;
+                }
+                _choiceBoardActivities[choiceBoard.ChoiceBoardID]?.ForEach(a => a.Order = newOrder);
+            }
+
+            choiceBoard.Order = newOrder;
+        }
+
+        #endregion
+
+        
+        #region ToggleDays
+        
         private async void OnToggledDayEventHandler<ToggledEventArgs>(object sender, ToggledEventArgs e)
         {
             if (!(sender is DayToggledWrapper dayToggleWrapper)) return;
@@ -323,13 +439,11 @@ namespace WeekPlanner.ViewModels
 
                 if (dayFromWeekDTO == null) return;
 
-                bool confirmed = dayFromWeekDTO.Activities.Count > 0 ?
-                    await DialogService.ConfirmAsync(
-                        title: "Bekræft sletning af ugedag",
-                        message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker på, at du vil fortsætte?",
-                        okText: "Slet ugedag",
-                        cancelText: "Annuller") :
-                    true;
+                bool confirmed = dayFromWeekDTO.Activities.Count <= 0 || await DialogService.ConfirmAsync(
+                                     title: "Bekræft sletning af ugedag",
+                                     message: "Hvis du sletter en ugedag med aktiviteter, sletter du samtidigt disse aktiviter. Er du sikker på, at du vil fortsætte?",
+                                     okText: "Slet ugedag",
+                                     cancelText: "Annuller");
 
 				if (confirmed)
 				{
@@ -337,6 +451,7 @@ namespace WeekPlanner.ViewModels
 					if (removedDay == null) return;
 					_removedWeekdayDTOs.Add(removedDay);
 					WeekDTO.Days.Remove(removedDay);
+				    _isDirty = true;
 				}
 				else
 				{
@@ -358,27 +473,16 @@ namespace WeekPlanner.ViewModels
                 }
 
                 WeekDTO.Days.Add(removedDay);
-                WeekDTO.Days.OrderBy(dayObj => (int)dayObj.Day);
+                WeekDTO.Days = WeekDTO.Days.OrderBy(dayObj => (int)dayObj.Day).ToList();
+                _isDirty = true;
 
                 dayToggleWrapper.IsToggled = dayToggleWrapper.SwitchToggled = true;
             }
-
-            try
-            {
-                RaisePropertyForDays(); //Not sure if this is nedded; but we may remove very large schedules, which may motivate an adjustment in Height etc.
-            }
-            catch
-            {
-                Console.WriteLine("Something8");
-            }
-
         }
 
         private void FlipToggledDays()
         {
             if (ToggledDaysWrapper.Count == 0 || WeekDTO == null) return;
-
-            bool isNewSchedule = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ? true : false;
 
             foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
@@ -392,152 +496,165 @@ namespace WeekPlanner.ViewModels
 
             RaisePropertyChangedForDayLabels();
         }
+        
+        #endregion
 
-        private void InsertPicto(WeekPictogramDTO pictogramDTO)
-        {
-            var dayToAddTo = WeekDTO.Days.FirstOrDefault(d => d.Day == _weekdayToAddPictogramTo);
-            if (dayToAddTo != null)
-            {
-                // Insert pictogram in the very bottom of the day
-                var newOrderInBottom = dayToAddTo.Activities.Max(d => d.Order) + 1 ?? 0;
-                dayToAddTo.Activities.Add(new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal));
-                _isDirty = true;
-                RaisePropertyForDays();
-            }
-        }
-
+        
         #region ChoiceBoardMethods
-
-        private List<ActivityDTO> GetActivitiesForChoiceBoard()
+        
+        private List<ActivityDTO> GetActivitiesForChoiceBoard(long? choiceBoardId)
         {
-            if (_choiceBoardActivities.TryGetValue(_selectedActivity.ChoiceBoardID, out List<ActivityDTO> activities))
+            if (_choiceBoardActivities.ContainsKey(choiceBoardId))
             {
-                return activities;
+                return _choiceBoardActivities[choiceBoardId].ToActivityDTOs().ToList();
             }
             return null;
         }
-
-        private void DeleteChoiceBoard()
+        
+        protected Dictionary<DayEnum?, ObservableCollection<ActivityWithNotifyDTO>> FoldDaysToChoiceBoards(WeekDTO weekDTO)
         {
-            _choiceBoardActivities.Remove(_selectedActivity.ChoiceBoardID);
-        }
-
-        protected void FoldDaysToChoiceBoards()
-        {
-            foreach (var days in WeekDTO.Days)
+            Dictionary<DayEnum?, List<ActivityWithNotifyDTO>> activitiesForDays = weekDTO.Days
+                .ToDictionary(key => key.Day, value => value.Activities.ToActivityWithNotifyDTOs().ToList());
+            
+            foreach (var dayActivities in activitiesForDays)
             {
                 List<int?> orderOfChoiceBoards = new List<int?>();
-                List<ActivityDTO> choiceBoardItems = new List<ActivityDTO>();
-                ActivityDTO choiceBoard;
+                Queue<List<ActivityWithNotifyDTO>> choiceBoardItems = new Queue<List<ActivityWithNotifyDTO>>();
 
-                foreach (var a in days.Activities.GroupBy(d => d.Order, d => d))
+                // Find activities with same order, and add them to the choiceboard
+                foreach (var activityGroup in dayActivities.Value.GroupBy(d => d.Order, d => d))
                 {
-                    if (a.Count() > 1)
+                    if (activityGroup.Count() <= 1) continue;
+
+                    List<ActivityWithNotifyDTO> aChoiceBoardItems = new List<ActivityWithNotifyDTO>();
+
+                    foreach (var activity in activityGroup)
                     {
-                        foreach (var item in a)
-                        {
-                            item.State = StateEnum.Normal;
-                            choiceBoardItems.Add(item);
-                        }
-                        orderOfChoiceBoards.Add(a.Key);
+                        activity.State = StateEnum.Normal;
+                        aChoiceBoardItems.Add(activity);
                     }
+                    choiceBoardItems.Enqueue(aChoiceBoardItems);
+                    orderOfChoiceBoards.Add(activityGroup.Key);
                 }
 
-                foreach (var item in orderOfChoiceBoards)
+                // Remove the choiceboard activities from the day and replace with a choiceboardActivity
+                foreach (var order in orderOfChoiceBoards)
                 {
-                    days.Activities.RemoveAll(a => a.Order == item);
-                    choiceBoard = new ActivityDTO(_standardChoiceBoardPictoDTO, item, StateEnum.Normal) { IsChoiceBoard = true, ChoiceBoardID = _choiceID.Value };
-                    days.Activities.Add(choiceBoard);
-                    _choiceBoardActivities.Add(choiceBoard.ChoiceBoardID, choiceBoardItems);
-                    _choiceID++;
+					
+                    var choiceId = _choiceBoardIds++;
+
+                    dayActivities.Value.RemoveAll(a => a.Order == order);
+                    var choiceBoard = new ActivityWithNotifyDTO(_standardChoiceBoardPictoDTO, order, StateEnum.Normal,
+                        true, choiceId)
+                    {
+                        ChoiceBoardID = choiceId
+                    };
+                    dayActivities.Value.Add(choiceBoard);
+                    
+                    _choiceBoardActivities.Add(choiceId, choiceBoardItems.Dequeue());
                 }
             }
-            OrderActivities();
-        }
 
-        protected void PutChoiceActivitiesBackIntoSchedule()
+            return activitiesForDays.ToDictionary(k => k.Key, v => v.Value.ToObservableCollection());
+        }
+        
+        // TODO: Refactor these methods below
+        
+        private void UpdateChoiceBoard(ActivityDTO choiceBoard, ObservableCollection<ActivityDTO> choiceBoardItems)
         {
-            foreach (var day in WeekDTO.Days)
-            {
-                List<ActivityDTO> choiceBoardActivities = new List<ActivityDTO>();
+            var day = FindDayEnumOfActivityById(choiceBoard.Id);
+            var activities = WeekDTO.Days.FirstOrDefault(d => d.Day == day).Activities;
+            var orderForChoiceBoards = choiceBoard.Order;
 
-                foreach (var activity in day.Activities)
-                {
-                    if (activity.IsChoiceBoard.HasValue && activity.IsChoiceBoard.Value)
-                    {
-                        choiceBoardActivities.Add(activity);
-                    }
-                }
+            // Update WeekDTO
+            // Set order to match the activityChanged
+            choiceBoardItems.ForEach(cbi => cbi.Order = orderForChoiceBoards);
 
-                foreach (var item in choiceBoardActivities)
-                {
-                    if (_choiceBoardActivities.TryGetValue(item.ChoiceBoardID, out List<ActivityDTO> unfoldedActivities))
-                    {
-                        foreach (var activity in unfoldedActivities)
-                        {
-                            activity.Order = item.Order;
-                        }
-                        day.Activities.AddRange(unfoldedActivities);
-                    }
-                }
-                day.Activities.RemoveAll(a => a.IsChoiceBoard.HasValue && a.IsChoiceBoard.Value);
-            }
+            
+            // Remove old choiceboardItems and insert new ones in the weekDTO
+            activities.RemoveAll(a => a.Order == orderForChoiceBoards);
+            activities.AddRange(choiceBoardItems);
+            
+            // Insert into ChoiceBoardDictionary
+            _choiceBoardActivities[choiceBoard.ChoiceBoardID] =
+                choiceBoardItems.ToActivityWithNotifyDTOs().ToList();
 
-            _choiceBoardActivities.Clear();
+            _isDirty = true;
         }
 
-        private async Task HandleChoiceBoardAsync(ObservableCollection<ActivityDTO> activities)
+        private void RevertChoiceBoardToRegular(ActivityDTO choiceBoard, ActivityDTO replacementActivityDTO)
         {
-            switch (activities.Count)
-            {
-                case 0:
-                    DeleteChoiceBoard();
-                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Remove(_selectedActivity);
-                    _isDirty = true;
-                    OrderActivities();
-                    break;
-                case 1:
-                    DeleteChoiceBoard();
+            choiceBoard.IsChoiceBoard = false;
+            
+            // Cleanup choiceBoardDict
+            _choiceBoardActivities.Remove(choiceBoard.ChoiceBoardID);
+            
+            // Change Activity in collection
+            var (_, activityInCollection) = FindDayAndActivityWithNotifyDTOInWeekObservablesById(choiceBoard.Id);
+            activityInCollection.IsChoiceBoard = false;
+            activityInCollection.Pictogram = replacementActivityDTO.Pictogram;
+            
+            // Remove old choiceBoardItems from WeekDTO except for remaining
+            var (day, activity) = FindDayAndActivityDTOInWeekDTOById(choiceBoard.Id);
+            day.Activities.RemoveAll(a => a.Order == choiceBoard.Order && a.Id != choiceBoard.Id);
+            activity.IsChoiceBoard = false;
+            activity.State = StateEnum.Normal;
+            activity.Pictogram = replacementActivityDTO.Pictogram;
 
-                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Add(activities.First());
-                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Remove(_selectedActivity);
-
-                    WeekDTO.Days.ForEach(a => a.Activities = a.Activities.OrderBy(x => x.Order).ToList());
-                    if (!SettingsService.IsInGuardianMode)
-                    {
-                        await SaveOrUpdateSchedule();
-                    }
-
-                    RaisePropertyForDays();
-
-                    break;
-                default:
-                    DayEnum? dayEnum = WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Day;
-                    ActivityDTO activityDTO = new ActivityDTO(_standardChoiceBoardPictoDTO, activities.First().Order, StateEnum.Normal);
-                    if (_selectedActivity.IsChoiceBoard.HasValue && _selectedActivity.IsChoiceBoard.Value)
-                    {
-                        activityDTO.ChoiceBoardID = _selectedActivity.ChoiceBoardID;
-                        _choiceBoardActivities.Remove(_selectedActivity.ChoiceBoardID);
-                    }
-                    else
-                    {
-                        activityDTO.ChoiceBoardID = _choiceID;
-                        _choiceID++;
-                    }
-                    activityDTO.IsChoiceBoard = true;
-
-                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity)).Activities.Remove(_selectedActivity);
-
-                    WeekDTO.Days.Single(d => d.Day == dayEnum).Activities.Add(activityDTO);
-
-                    _choiceBoardActivities.Add(activityDTO.ChoiceBoardID, activities.ToList());
-
-                    OrderActivities();
-
-                    _isDirty = true;
-                    break;
-            }
+            _isDirty = true;
         }
+
+        private void ReplaceActivityWithChoiceBoard(ActivityDTO activityChangedToChoiceBoard, ObservableCollection<ActivityDTO> choiceBoardItems)
+        {
+            // Ignore choiceboards of size 1
+            if (choiceBoardItems.Count == 1) return;
+            
+            var (day, activity) = FindDayAndActivityDTOInWeekDTOById(activityChangedToChoiceBoard.Id);
+            
+            
+            // Update WeekDTO
+            // Set ids to match the activityChanged
+            choiceBoardItems.ForEach(cbi => cbi.Id = activity.Id);
+            var newChoiceBoardId = _choiceBoardIds++;
+            activity.ChoiceBoardID = newChoiceBoardId;
+            activity.State = StateEnum.Normal;
+            
+            // Remove the activityChanged and insert all of the choiceBoardItems
+            day.Activities.Remove(activity);
+            day.Activities.AddRange(choiceBoardItems);
+            
+            // Insert into ChoiceBoardDictionary
+            _choiceBoardActivities[activity.ChoiceBoardID] =
+                choiceBoardItems.ToActivityWithNotifyDTOs().ToList();
+            
+            // Update activity in ObservableCollection
+            var (_, activityInCollection) =
+                FindDayAndActivityWithNotifyDTOInWeekObservablesById(activityChangedToChoiceBoard.Id);
+            activityInCollection.IsChoiceBoard = true;
+            activityInCollection.ChoiceBoardID = newChoiceBoardId;
+            activityInCollection.Pictogram = _standardChoiceBoardPictoDTO;
+            activityInCollection.State = StateEnum.Normal;
+            
+            _isDirty = true;
+        }
+        
+        private void DeleteChoiceBoard(ActivityDTO choiceBoardDeleted)
+        {
+            var dayEnum = FindDayEnumOfActivityById(choiceBoardDeleted.Id);
+            // Delete activities in weekDTO
+            WeekDTO.Days.FirstOrDefault(d => d.Day == dayEnum).Activities.RemoveAll(a => a.Order == choiceBoardDeleted.Order);
+            
+            // Delete from observables
+            var (dayCollection, activityInCollection) =
+                FindDayAndActivityWithNotifyDTOInWeekObservablesById(choiceBoardDeleted.Id);
+            dayCollection.Remove(activityInCollection);
+
+			// Remove from choiceBoardDict
+			_choiceBoardActivities.Remove(choiceBoardDeleted.ChoiceBoardID);
+
+            _isDirty = true;
+        }
+        
         #endregion
 
         private async Task SaveSchedule(bool showDialog = true)
@@ -578,9 +695,10 @@ namespace WeekPlanner.ViewModels
 
         protected virtual async Task SaveOrUpdateSchedule()
         {
-            PutChoiceActivitiesBackIntoSchedule();
-
-            string onSuccesMessage = (WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null) ?
+            // Needed due to the hack with temporary ids, which, in turn, is needed for the ActivityWithNotifyDTO-hack
+            SetTemporaryIdsToNullInWeekDTO();
+            
+            string onSuccesMessage = WeekDTO.WeekYear == null || WeekDTO.WeekNumber == null ?
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
@@ -607,17 +725,40 @@ namespace WeekPlanner.ViewModels
 			}
 
 			_removedWeekdayDTOs.Clear();
-            FoldDaysToChoiceBoards();
+
+            ClearObservableAndInsert();
         }
-        
-        private bool RemoveItemFromDay(DayEnum day)
+
+        private void ClearObservableAndInsert()
         {
-            var a = WeekDTO.Days.FirstOrDefault(x => x.Day == day)?.Activities;
-            if (a == null || a.Count == 0)
-            {
-                return false;
-            }
-            return a.Remove(_selectedActivity);
+            _dayActivityCollections.ForEach(d => d.Value.Clear());
+            ClearDays();
+            AddReferenceToDays();
+            
+            InsertActivityNotifyDTOsInWeekDays(WeekDTO);
+            
+        }
+
+        private void ClearDays()
+        {
+            MondayPictos.Clear();
+            TuesdayPictos.Clear();
+            WednesdayPictos.Clear();
+            ThursdayPictos.Clear();
+            FridayPictos.Clear();
+            SaturdayPictos.Clear();
+            SundayPictos.Clear();
+        }
+
+        private void AddReferenceToDays()
+        {
+            _dayActivityCollections[DayEnum.Monday] = MondayPictos;
+            _dayActivityCollections[DayEnum.Tuesday] = TuesdayPictos;
+            _dayActivityCollections[DayEnum.Wednesday] = WednesdayPictos;
+            _dayActivityCollections[DayEnum.Thursday] = ThursdayPictos;
+            _dayActivityCollections[DayEnum.Friday] = FridayPictos;
+            _dayActivityCollections[DayEnum.Saturday] = SaturdayPictos;
+            _dayActivityCollections[DayEnum.Sunday] = SundayPictos;
         }
 
         private async Task SwitchUserModeAsync()
@@ -686,14 +827,14 @@ namespace WeekPlanner.ViewModels
 
 		private void PortraitOrientation()
 		{
-			MessagingCenter.Send(this, "SetOrientation", "Portrait");
-			MessagingCenter.Send(this, "ChangeView", "Portrait");
+			MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Portrait);
+			MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Portrait);
 		}
 
 		private void LandscapeOrientation()
 		{
-			MessagingCenter.Send(this, "SetOrientation", "Landscape");
-			MessagingCenter.Send(this, "ChangeView", "Landscape");
+			MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Landscape);
+			MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Landscape);
 		}
 
 		private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
@@ -704,19 +845,21 @@ namespace WeekPlanner.ViewModels
                 "Ugeplanen blev ikke gemt");
         }
 
+        [UsedImplicitly]
         public int Height
         {
             get
             {
-                int minimumHeight = 1500;
-                int elementHeight = 250;
+                const int minimumHeight = 1500;
+                const int elementHeight = 250;
 
                 if (WeekDTO == null || WeekDTO.Days.Count == 0)
                 {
                     return minimumHeight;
                 }
 
-                int dynamicHeight = WeekDTO.Days.Max(d => d.Activities.Count) * elementHeight;
+                // Set height based on observable collection max element count
+                int dynamicHeight = _dayActivityCollections.Values.Max(d => d.Count) * elementHeight;
 
                 return dynamicHeight > minimumHeight ? dynamicHeight : minimumHeight;
             }
@@ -739,11 +882,12 @@ namespace WeekPlanner.ViewModels
         public bool ShowFridayLabel => ShowDayLabel(DayEnum.Friday);
 		public bool ShowSaturdayLabel => ShowDayLabel(DayEnum.Saturday);
 		public bool ShowSundayLabel => ShowDayLabel(DayEnum.Sunday);
+        
         private bool ShowDayLabel(DayEnum day)
         {
             return SettingsService.IsInGuardianMode ||   //When IsInGuardianMode we want to see the day labels
-                (WeekDTO == null && ToggledDaysWrapper.First(dayObj => dayObj.Day == day).SwitchToggled) || //Happens upon initialization of the view. WeekDTO is still null at this point, so we rely on SwitchToggled for the day
-                (WeekDTO != null && WeekDTO.Days.Any(dayObj => dayObj.Day == day)); //Happens when refreshing the view
+                WeekDTO == null && ToggledDaysWrapper.First(dayObj => dayObj.Day == day).SwitchToggled || //Happens upon initialization of the view. WeekDTO is still null at this point, so we rely on SwitchToggled for the day
+                WeekDTO != null && WeekDTO.Days.Any(dayObj => dayObj.Day == day); //Happens when refreshing the view
         }
 
         private void SetToGuardianMode()
@@ -796,7 +940,7 @@ namespace WeekPlanner.ViewModels
                         await ShowWeekNameEmptyPrompt();
                         break;
                     }
-                    SaveOrUpdateSchedule();
+                    await SaveOrUpdateSchedule();
                     await NavigationService.PopAsync();
                     break;
                 case "Gem ikke":
@@ -807,210 +951,194 @@ namespace WeekPlanner.ViewModels
             IsBusy = false;
         }
 
-        private DayEnum GetCurrentDay()
+        public ObservableCollection<ActivityWithNotifyDTO> MondayPictos { get; } =
+            new ObservableCollection<ActivityWithNotifyDTO>();
+        public ObservableCollection<ActivityWithNotifyDTO> TuesdayPictos { get; } =
+            new ObservableCollection<ActivityWithNotifyDTO>();
+        public ObservableCollection<ActivityWithNotifyDTO> WednesdayPictos { get; } =
+            new ObservableCollection<ActivityWithNotifyDTO>();
+        public ObservableCollection<ActivityWithNotifyDTO> ThursdayPictos { get; } =
+            new ObservableCollection<ActivityWithNotifyDTO>();
+        public ObservableCollection<ActivityWithNotifyDTO> FridayPictos { get; } =
+            new ObservableCollection<ActivityWithNotifyDTO>();
+        public ObservableCollection<ActivityWithNotifyDTO> SaturdayPictos { get; } =
+            new ObservableCollection<ActivityWithNotifyDTO>();
+        public ObservableCollection<ActivityWithNotifyDTO> SundayPictos { get; } =
+            new ObservableCollection<ActivityWithNotifyDTO>();
+
+        private readonly Dictionary<DayEnum?, ObservableCollection<ActivityWithNotifyDTO>> _dayActivityCollections;
+
+        private void InsertActivityNotifyDTOsInWeekDays(WeekDTO weekDTO)
         {
-            var today = DateTime.Today.DayOfWeek;
-            switch (today)
+            var activiesForDays = FoldDaysToChoiceBoards(weekDTO);
+
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
-                case DayOfWeek.Monday:
-                    return DayEnum.Monday;
-                case DayOfWeek.Tuesday:
-                    return DayEnum.Tuesday;
-                case DayOfWeek.Wednesday:
-                    return DayEnum.Wednesday;
-                case DayOfWeek.Thursday:
-                    return DayEnum.Thursday;
-                case DayOfWeek.Friday:
-                    return DayEnum.Friday;
-                case DayOfWeek.Saturday:
-                    return DayEnum.Saturday;
-                case DayOfWeek.Sunday:
-                    return DayEnum.Sunday;
-                default:
-                    throw new NotSupportedException("DayEnum out of bounds");
+                if (activiesForDays.ContainsKey(day))
+                {
+                    activiesForDays[day] = activiesForDays[day].OrderBy(a => a.Order).ToObservableCollection();
+                }
             }
 
-        }
+            AddReferenceToDays();
 
-		private string TranslateCurrentDay()
-		{
-			switch (GetCurrentDay())
-			{
-				case DayEnum.Monday:
-					return "Mandag";
-				case DayEnum.Tuesday:
-					return "Tirsdag";
-				case DayEnum.Wednesday:
-					return "Onsdag";
-				case DayEnum.Thursday:
-					return "Torsdag";
-				case DayEnum.Friday:
-					return "Fredag";
-				case DayEnum.Saturday:
-					return "Lørdag";
-				case DayEnum.Sunday:
-					return "Søndag";
-				default:
-					throw new NotSupportedException("DayEnum out of bounds");
-			}
-		}
-
-		private WeekDayColorDTO.DayEnum GetCurrentColorDay()
-		{
-			switch (GetCurrentDay())
-			{
-				case DayEnum.Monday:
-					return WeekDayColorDTO.DayEnum.Monday;
-				case DayEnum.Tuesday:
-					return WeekDayColorDTO.DayEnum.Tuesday;
-				case DayEnum.Wednesday:
-					return WeekDayColorDTO.DayEnum.Wednesday;
-				case DayEnum.Thursday:
-					return WeekDayColorDTO.DayEnum.Thursday;
-				case DayEnum.Friday:
-					return WeekDayColorDTO.DayEnum.Friday;
-				case DayEnum.Saturday:
-					return WeekDayColorDTO.DayEnum.Saturday;
-				case DayEnum.Sunday:
-					return WeekDayColorDTO.DayEnum.Sunday;
-				default:
-					throw new NotSupportedException("ColorDayEnum out of bounds");
-			}
-		}
-        // TODO: Override the navigation bar backbutton when this is available.
-        // Will most likely only be available if/when the custom navigation bar gets implemented.
-
-
-        public ObservableCollection<ActivityDTO> MondayPictos => GetPictosOrEmptyList(DayEnum.Monday);
-        public ObservableCollection<ActivityDTO> TuesdayPictos => GetPictosOrEmptyList(DayEnum.Tuesday);
-        public ObservableCollection<ActivityDTO> WednesdayPictos => GetPictosOrEmptyList(DayEnum.Wednesday);
-        public ObservableCollection<ActivityDTO> ThursdayPictos => GetPictosOrEmptyList(DayEnum.Thursday);
-        public ObservableCollection<ActivityDTO> FridayPictos => GetPictosOrEmptyList(DayEnum.Friday);
-        public ObservableCollection<ActivityDTO> SaturdayPictos => GetPictosOrEmptyList(DayEnum.Saturday);
-        public ObservableCollection<ActivityDTO> SundayPictos => GetPictosOrEmptyList(DayEnum.Sunday);
-
-        private ObservableCollection<ActivityDTO> GetPictosOrEmptyList(DayEnum dayEnum)
-        {
-            var day = WeekDTO?.Days.FirstOrDefault(x => x.Day == dayEnum);
-            if (day == null)
+            // Add so we keep the binding to observable collection
+            activiesForDays.ForEach(kvp =>
             {
-                return new ObservableCollection<ActivityDTO>();
-            }
-
-            return new ObservableCollection<ActivityDTO>(day.Activities);
-        }
-
-
-        private void RaisePropertyForDays()
-        {
-            SetActiveActivity();
-
-            RaisePropertyChanged(() => MondayPictos);
-            RaisePropertyChanged(() => TuesdayPictos);
-            RaisePropertyChanged(() => WednesdayPictos);
-            RaisePropertyChanged(() => ThursdayPictos);
-            RaisePropertyChanged(() => FridayPictos);
-            RaisePropertyChanged(() => SaturdayPictos);
-            RaisePropertyChanged(() => SundayPictos);
-			RaisePropertyChanged(() => CurrentDayPictos);
+                _dayActivityCollections[kvp.Key].AddRange(kvp.Value);
+            });
+            
+            
             RaisePropertyChanged(() => Height);
         }
 
-        private void SetActiveActivity()
+        private void SetTemporaryIdsToNullInWeekDTO()
         {
-            var today = GetCurrentDay();
-            var todaysDTO = WeekDTO.Days.SingleOrDefault(d => d.Day == today);
-
-            if (todaysDTO == null) return;
-
-            var todaysActivities = todaysDTO.Activities;
-
-            foreach (var activity in todaysActivities)
-            {
-                if (activity.State == StateEnum.Normal)
-                {
-                    activity.State = StateEnum.Active;
-                    return;
-                }
-            }
+            WeekDTO.Days.SelectMany(d => d.Activities)
+                .Where(a => a.Id <= _temporaryActivityIds)
+                .ForEach(a => { a.Id = null; });
         }
 
         protected void ToggleDaysAndOrderActivities()
         {
             FlipToggledDays();
-            OrderActivities();
+            OrderActivitiesInAllDayCollectionsAndWeekDTO();
         }
-
-
 
         public override async Task OnReturnedToAsync(object navigationData)
         {
             switch (navigationData)
             {
-                // Happens after choosing a pictogram in Pictosearch
                 case WeekPictogramDTO weekPictogramDTO:
-                    InsertPicto(weekPictogramDTO);
+                    // Happens after choosing a pictogram in Pictosearch
+                    InsertNewActivity(weekPictogramDTO);
                     break;
-                // Happens when popping from ActivityViewModel
-                case ActivityViewModel activityViewModel when activityViewModel.Activity == null:
-                    WeekDTO.Days.First(d => d.Activities.Contains(_selectedActivity))
-                        .Activities
-                        .Remove(_selectedActivity);
-                    _isDirty = true;
-
-                    if (!SettingsService.IsInGuardianMode)
-                    {
-                        await SaveSchedule();
-                    }
-                    RaisePropertyForDays();
+                case ValueTuple<ActivityDTO, string> tuple when tuple.Item2 == MessageKeys.ActivityDeleted:
+                    // Happens when popping from ActivityViewModel and activity was deleted
+                    RemoveActivity(tuple.Item1.ToActivityWithNotifyDTO());
                     break;
-                case ActivityViewModel activityVM:
-                    _selectedActivity = activityVM.Activity;
-                    _isDirty = true;
-
-                    if (!SettingsService.IsInGuardianMode)
-                    {
-                        await SaveSchedule(showDialog: false);
-                    }
-                    RaisePropertyForDays();
+                case ValueTuple<ActivityDTO, string> tuple when tuple.Item2 == MessageKeys.ActivityUpdated:
+                    // Happens when popping from ActivityViewModel and activity was updated
+                    await UpdateActivity(tuple.Item1);
                     break;
                 // Happens after logging in as guardian when switching to guardian mode
-                case bool enterGuardianMode:
+                case string s when s == MessageKeys.GuardianLoggedIn:
                     SetToGuardianMode();
                     break;
-                case ObservableCollection<ActivityDTO> activities:
-                    await HandleChoiceBoardAsync(activities);
+                case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>, string> triple when triple.Item3 == MessageKeys.NewChoiceBoard:
+                    ReplaceActivityWithChoiceBoard(triple.Item1, triple.Item2);
+                    break;
+                case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>, string> triple when triple.Item3 == MessageKeys.UpdateChoiceBoard:
+                    if (triple.Item2.Count == 1)
+                    {
+                        RevertChoiceBoardToRegular(triple.Item1, triple.Item2.SingleOrDefault());
+                    }
+                    else
+                    {
+                        UpdateChoiceBoard(triple.Item1, triple.Item2);
+                    }
+                    break;
+                case ValueTuple<ActivityDTO, string> tuple when tuple.Item2 == MessageKeys.DeleteChoiceBoard:
+                    DeleteChoiceBoard(tuple.Item1);
+                    break;
+                case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>> tuple:
+
+                    var day = FindDayEnumOfActivityById(tuple.Item1.Id);
+                    DeleteChoiceBoard(tuple.Item1);
+                    WeekDTO.Days.Single(d => d.Day == day).Activities.Add(tuple.Item2.First());
+                    _dayActivityCollections[day].Add(tuple.Item2.First().ToActivityWithNotifyDTO());
+                    
                     break;
             }
             SetOrientation();
         }
 
-        public override async Task InitializeAsync(object navigationData)
+        
+        #region CRUD
+        private async Task UpdateActivity(ActivityDTO alteredActivityDTO)
         {
-            _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
-            switch (navigationData)
-            {
-                //When initialized from CitizenSchedulesViewModel
-                case Tuple<int, int> weekDetails:
-                    ScheduleYear = weekDetails.Item1;
-                    ScheduleWeek = weekDetails.Item2;
-                    await GetWeekPlanForCitizenAsync(ScheduleYear, ScheduleWeek);
-                    break;
-                //When initialized from NewScheduleViewModel
-                case Tuple<int, int, WeekDTO> weekDetailsWithDTO:
-                    ScheduleYear = weekDetailsWithDTO.Item1;
-                    ScheduleWeek = weekDetailsWithDTO.Item2;
-                    WeekDTO = weekDetailsWithDTO.Item3;
-                    FoldDaysToChoiceBoards();
-                    await NavigationService.RemoveLastFromBackStackAsync();
-                    SetToGuardianMode(); //When initialized from NewScheduleViewModel, we set the mode to GuardianMode, so we can edit the schedule straight away
-                    break;
-                default:
-                    throw new ArgumentException($"No instance of WeekPlannerViewModel takes {navigationData.GetType().ToString()} as parameter.", nameof(navigationData));
-            }
-            SaveText = "Gem Ugeplan";
+            // Find activity in WeekDTO and update it
+            var (dayChangedIn, activityToBeUpdated) = FindDayAndActivityDTOInWeekDTOById(alteredActivityDTO.Id);
+            activityToBeUpdated.Pictogram = alteredActivityDTO.Pictogram;
+            activityToBeUpdated.State = alteredActivityDTO.State;
+
+            // Update it in observable collection
+            var (_, activityWithNotifyToBeUpdated) =
+                FindDayAndActivityWithNotifyDTOInWeekObservablesById(alteredActivityDTO.Id);
+            if (activityWithNotifyToBeUpdated == null) return;
+            activityWithNotifyToBeUpdated.Pictogram = alteredActivityDTO.Pictogram;
+            activityWithNotifyToBeUpdated.State = alteredActivityDTO.State;
             
-            ToggleDaysAndOrderActivities();
+            // Set diry flag
+            _isDirty = true;
+            
+            // Save if in citizen mode
+            if (!SettingsService.IsInGuardianMode)
+            {
+                await SaveSchedule(showDialog: false);
+            }
         }
+        
+        private void InsertNewActivity(WeekPictogramDTO pictogramDTO)
+        {
+            var dayToAddTo = WeekDTO.Days.FirstOrDefault(d => d.Day == _weekdayToAddPictogramTo);
+            var pictoCollectoToAddTo = _dayActivityCollections[_weekdayToAddPictogramTo];
+            
+            if (dayToAddTo == null && pictoCollectoToAddTo == null) return;
+            
+            // Insert pictogram in the very bottom of the day
+            var newOrderInBottom = dayToAddTo?.Activities.Max(d => d.Order) + 1 ?? 0;
+            ActivityDTO newActivityDTO = new ActivityDTO(pictogramDTO, newOrderInBottom, StateEnum.Normal, Id: _temporaryActivityIds++);
+            dayToAddTo?.Activities.Add(newActivityDTO);
+            
+            // Add to collection
+            pictoCollectoToAddTo.Add(newActivityDTO.ToActivityWithNotifyDTO());
+            
+            _isDirty = true;
+            
+            RaisePropertyChanged(() => Height);
+        }
+
+        private void RemoveActivity(ActivityWithNotifyDTO activityWithNotifyToBeRemoved)
+        {
+            var (dayChangedIn, activityToBeRemoved) = FindDayAndActivityDTOInWeekDTOById(activityWithNotifyToBeRemoved.Id);
+           
+            if (dayChangedIn != null && activityToBeRemoved != null)
+            {
+                // Remove from WeekDTO
+                dayChangedIn.Activities.Remove(activityToBeRemoved);
+            }
+
+            var (_, activityInCollection) =
+                FindDayAndActivityWithNotifyDTOInWeekObservablesById(activityWithNotifyToBeRemoved.Id);
+            
+            // Remove from ObservableCollection
+            _dayActivityCollections[dayChangedIn.Day].Remove(activityInCollection);
+
+            _isDirty = true;
+        }
+        #endregion
+        
+        #region FindHelpers
+        private (WeekdayDTO, ActivityDTO) FindDayAndActivityDTOInWeekDTOById(long? id)
+        {
+            var dayContaining = WeekDTO.Days.FirstOrDefault(d => d.Activities.FirstOrDefault(a => a.Id == id) != null);
+            return (dayContaining, dayContaining?.Activities.FirstOrDefault(a => a.Id == id));
+        }
+
+        private (ObservableCollection<ActivityWithNotifyDTO>, ActivityWithNotifyDTO) FindDayAndActivityWithNotifyDTOInWeekObservablesById(long? id)
+        {
+            var dayCollection =
+                _dayActivityCollections.Values.FirstOrDefault(day => day.FirstOrDefault(act => act.Id == id) != null);
+            var activity = dayCollection?.FirstOrDefault(act => act.Id == id);
+            return (dayCollection, activity);
+        }
+
+        private DayEnum? FindDayEnumOfActivityById(long? activityId)
+        {
+            return _dayActivityCollections
+                .FirstOrDefault(kvp => kvp.Value.FirstOrDefault(a => a.Id == activityId) != null).Key;
+        }
+        #endregion
     }
 }

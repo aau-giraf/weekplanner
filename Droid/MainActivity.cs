@@ -4,8 +4,10 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using FFImageLoading.Forms.Droid;
+using IO.Swagger.Model;
 using Xamarin.Forms;
 using WeekPlanner.ViewModels;
+using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.Droid
 {
@@ -18,14 +20,14 @@ namespace WeekPlanner.Droid
               , LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-		private void ChangeOrientation(WeekPlannerViewModel m, string orientation)
+		private void ChangeOrientation(WeekPlannerViewModel m, SettingDTO.OrientationEnum orientation)
 		{
 			switch (orientation)
 			{
-				case "Landscape":
+				case SettingDTO.OrientationEnum.Landscape:
 					RequestedOrientation = ScreenOrientation.Landscape;
 					break;
-				case "Portrait":
+				case SettingDTO.OrientationEnum.Portrait:
 					RequestedOrientation = ScreenOrientation.Portrait;
 					break;
 				default:
@@ -36,7 +38,7 @@ namespace WeekPlanner.Droid
 
 		protected override void OnCreate(Bundle savedInstanceState)
         {
-			MessagingCenter.Subscribe<WeekPlannerViewModel, string>(this, "SetOrientation", ChangeOrientation);
+			MessagingCenter.Subscribe<WeekPlannerViewModel, SettingDTO.OrientationEnum>(this, MessageKeys.SetOrientation, ChangeOrientation);
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 

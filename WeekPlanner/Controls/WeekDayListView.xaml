@@ -9,12 +9,12 @@
     x:Name="ListView"
     AutoFitMode="Height"
     DragStartMode="OnHold"
-    TapCommand="{Binding PictoClickedCommand}"
+    TapCommand="{Binding ActivityTappedCommand}"
     SelectionMode="None"
     >
     <syncfusion:SfListView.Behaviors>
         <behaviors:EventToCommandBehavior EventName="ItemDragging"
-                                      Command="{Binding PictoDraggedCommand}">
+                                      Command="{Binding ActivityDraggedCommand}">
         </behaviors:EventToCommandBehavior>
     </syncfusion:SfListView.Behaviors>
     <syncfusion:SfListView.ItemTemplate>

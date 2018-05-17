@@ -24,7 +24,7 @@
                         -->
                 <flv:FlowListView Grid.Row="0"
                                   SeparatorVisibility="None"
-                                  BackgroundColor="DarkSlateBlue"
+                                  BackgroundColor="LightGray"
                                   HasUnevenRows="true"
                                   FlowColumnMinWidth="210"
                                   FlowItemTappedCommand="{Binding FlowItemTappedCommand}"
@@ -48,7 +48,7 @@
                                         Image="icon_delete.png"
                                         VerticalOptions="Start"
                                         HorizontalOptions="End"
-                                        IsVisible="{Binding SettingsService.IsInGuardianMode}"
+                                        IsVisible="{Binding Source={x:Reference root}, Path=BindingContext.SettingsService.IsInGuardianMode}"
                                         WidthRequest="42"
                                         HeightRequest="42"
                                         Margin="0"

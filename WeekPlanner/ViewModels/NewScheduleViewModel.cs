@@ -329,9 +329,14 @@ namespace WeekPlanner.ViewModels
                 invalidMessage += "Ugenummer skal være mellem 1 og 53. ";
                 isValid = false;
             }
+            else if (ScheduleYear > 3000)
+            {
+                invalidMessage += "Der understøttes kun ugeplaner op til år 3000. ";
+                isValid = false;
+            }
 
             //Invalid arguments
-            if (ScheduleYear < DateTime.Now.Year || //A schedule for a past year
+            else if (ScheduleYear < DateTime.Now.Year || //A schedule for a past year
                 YearAndWeekHelper.GetDaysOfWeekByWeekNumber( // A schedule for past weeks (i.e for weeks in which the last day of the week has passed)
                     new DateTime(ScheduleYear, 1, 1),
                     ScheduleWeek)[6] < DateTime.Today ||

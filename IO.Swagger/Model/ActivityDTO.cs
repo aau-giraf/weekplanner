@@ -74,12 +74,13 @@ namespace IO.Swagger.Model
         /// <param name="Order">Order.</param>
         /// <param name="State">State.</param>
         /// <param name="IsChoiceBoard">This is used in the WeekPlanner app by the frontend groups and should never be set from our side.</param>
-        public ActivityDTO(WeekPictogramDTO Pictogram = default(WeekPictogramDTO), int? Order = default(int?), StateEnum? State = default(StateEnum?), bool? IsChoiceBoard = default(bool?))
+        public ActivityDTO(WeekPictogramDTO Pictogram = default(WeekPictogramDTO), int? Order = default(int?), StateEnum? State = default(StateEnum?), bool? IsChoiceBoard = default(bool?), long? Id = default(long?))
         {
             this.Pictogram = Pictogram;
             this.Order = Order;
             this.State = State;
             this.IsChoiceBoard = IsChoiceBoard;
+            this.Id = Id;
         }
         
         /// <summary>
@@ -99,7 +100,7 @@ namespace IO.Swagger.Model
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
-        public long? Id { get; private set; }
+        public long? Id { get; set; }
 
         /// <summary>
         /// This is used in the WeekPlanner app by the frontend groups and should never be set from our side

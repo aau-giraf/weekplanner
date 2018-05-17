@@ -64,11 +64,10 @@ namespace WeekPlanner.ViewModels
             if (_userModeSwitch)
             {
                 IsBusy = true;
-                bool enableGuardianMode = true;
                 await _loginService.LoginAndThenAsync(UserType.Guardian, 
                     Username.Value, 
                     Password.Value, async () => {
-                        await NavigationService.PopAsync(enableGuardianMode);
+                        await NavigationService.PopAsync(MessageKeys.GuardianLoggedIn);
                         ClearUsernameAndPasswordFields();
                     });
                 IsBusy = false;

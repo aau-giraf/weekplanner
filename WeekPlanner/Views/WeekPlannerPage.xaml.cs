@@ -1,7 +1,10 @@
+using System.ComponentModel;
+using IO.Swagger.Model;
 using WeekPlanner.Views.Base;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using WeekPlanner.ViewModels;
+using WeekPlanner.ViewModels.Base;
 
 namespace WeekPlanner.Views
 {
@@ -13,20 +16,23 @@ namespace WeekPlanner.Views
 		{
 			InitializeComponent();
 
-			MessagingCenter.Subscribe<WeekPlannerViewModel, string>(this, "ChangeView", ChangeView);
+			MessagingCenter.Subscribe<WeekPlannerViewModel, SettingDTO.OrientationEnum>(this, MessageKeys.ChangeView, ChangeView);
 		}
 
-		private void ChangeView(WeekPlannerViewModel m, string s)
+		private void ChangeView(WeekPlannerViewModel m, SettingDTO.OrientationEnum s)
 		{
-			if (s == "Portrait")
+			switch (s)
 			{
-				MultiDayView.IsVisible = false;
-				OneDayView.IsVisible = true;
-			}
-			else
-			{
-				OneDayView.IsVisible = false;
-				MultiDayView.IsVisible = true;
+				case SettingDTO.OrientationEnum.Portrait:
+					MultiDayView.IsVisible = false;
+					OneDayView.IsVisible = true;
+					break;
+				case SettingDTO.OrientationEnum.Landscape:
+					OneDayView.IsVisible = false;
+					MultiDayView.IsVisible = true;
+					break;
+				default:
+					throw new InvalidEnumArgumentException();
 			}
 		}
 	}

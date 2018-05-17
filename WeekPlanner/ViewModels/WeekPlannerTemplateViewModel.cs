@@ -29,7 +29,7 @@ namespace WeekPlanner.ViewModels
 
         protected override async Task SaveOrUpdateSchedule()
         {
-            PutChoiceActivitiesBackIntoSchedule();
+            //PutChoiceActivitiesBackIntoSchedule();
             
             CreateTemplateFromWeek();
             if (_newTemplate)
@@ -54,7 +54,7 @@ namespace WeekPlanner.ViewModels
                     _weekTemplate = result.Data;
                 });
             }
-            FoldDaysToChoiceBoards();
+            //FoldDaysToChoiceBoards();
         }
         
         private void CreateTemplateFromWeek()
