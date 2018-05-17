@@ -20,7 +20,7 @@ namespace WeekPlanner.ViewModels
     {
         #region Properties
 
-        public readonly ISettingsService SettingsService;
+        public ISettingsService SettingsService { get; }
         private readonly IDialogService _dialogService;
 
         private int? _order;
@@ -48,7 +48,7 @@ namespace WeekPlanner.ViewModels
         {
             if (!SettingsService.IsInGuardianMode && tappedItem is ActivityDTO item)
             {
-                await NavigationService.PopAsync(new ObservableCollection<ActivityDTO> { item });
+                await NavigationService.PopAsync((_activityChanged, new ObservableCollection<ActivityDTO> { item }));
             }
         });
 

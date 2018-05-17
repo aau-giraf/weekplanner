@@ -935,6 +935,14 @@ namespace WeekPlanner.ViewModels
                 case ValueTuple<ActivityDTO, string> tuple when tuple.Item2 == MessageKeys.DeleteChoiceBoard:
                     DeleteChoiceBoard(tuple.Item1);
                     break;
+                case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>> tuple:
+
+                    var (day, _) = FindDayAndActivityDTOInWeekDTOById(tuple.Item1.Id);
+                    DeleteChoiceBoard(tuple.Item1);
+                    WeekDTO.Days.Single(d => d == day).Activities.Add(tuple.Item2.First());
+                    _dayActivityCollections[day.Day].Add(tuple.Item2.First().ToActivityWithNotifyDTO());
+                    
+                    break;
             }
             SetOrientation();
         }

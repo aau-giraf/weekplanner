@@ -24,7 +24,7 @@
                         -->
                 <flv:FlowListView Grid.Row="0"
                                   SeparatorVisibility="None"
-                                  BackgroundColor="DarkSlateBlue"
+                                  BackgroundColor="LightGray"
                                   HasUnevenRows="true"
                                   FlowColumnMinWidth="210"
                                   FlowItemTappedCommand="{Binding FlowItemTappedCommand}"
