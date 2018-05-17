@@ -363,7 +363,10 @@ namespace WeekPlanner.ViewModels
             }
 
             // Sort Collection
-            dayCollection.Sort((a,b) => a.CompareTo(b));
+            //dayCollection.Sort((a,b) => a.CompareTo(b));
+            dayCollection = dayCollection.OrderBy(a => a.Order).ToObservableCollection();
+            _dayActivityCollections[dayChanged] = dayCollection;
+            RaisePropertyChanged(() => dayCollection);
             
             // Update order so indexes are correct on next use
             dayToReorder?.Activities.ForEach(a =>
@@ -675,6 +678,8 @@ namespace WeekPlanner.ViewModels
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
+            WeekDTO weekAfterSave = null;
+
 			if (SettingsService.IsInGuardianMode)
 			{
 				await RequestService.SendRequestAndThenAsync(
@@ -683,6 +688,7 @@ namespace WeekPlanner.ViewModels
 				{
 					DialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
 					WeekDTO = result.Data;
+                    weekAfterSave = result.Data;
                     _isDirty = false;
 				});
 			}
@@ -693,20 +699,25 @@ namespace WeekPlanner.ViewModels
 				result =>
 				{
 					WeekDTO = result.Data;
+                    weekAfterSave = result.Data;
                     _isDirty = false;
 				});
 			}
 
 			_removedWeekdayDTOs.Clear();
 
-            ClearObservableAndInsert();
+            ClearObservableAndInsert(weekAfterSave);
         }
 
-        private void ClearObservableAndInsert()
+        private void ClearObservableAndInsert(WeekDTO week)
         {
+            if (week == null)
+            {
+                throw new ArgumentNullException(nameof(week));
+            }
             _dayActivityCollections.ForEach(d => d.Value.Clear());
 
-            InsertActivityNotifyDTOsInWeekDays(WeekDTO);
+            InsertActivityNotifyDTOsInWeekDays(week);
         }
 
         private async Task SwitchUserModeAsync()

@@ -48,7 +48,7 @@
                                         Image="icon_delete.png"
                                         VerticalOptions="Start"
                                         HorizontalOptions="End"
-                                        IsVisible="{Binding SettingsService.IsInGuardianMode}"
+                                        IsVisible="{Binding Source={x:Reference root}, Path=BindingContext.SettingsService.IsInGuardianMode}"
                                         WidthRequest="42"
                                         HeightRequest="42"
                                         Margin="0"
