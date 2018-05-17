@@ -946,7 +946,14 @@ namespace WeekPlanner.ViewModels
         private void InsertActivityNotifyDTOsInWeekDays(WeekDTO weekDTO)
         {
             var activiesForDays = FoldDaysToChoiceBoards(weekDTO);
-            
+
+            foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
+            {
+                activiesForDays[day] = activiesForDays[day].OrderBy(a => a.Order).ToObservableCollection();
+            }
+
+            AddReferenceToDays();
+
             // Add so we keep the binding to observable collection
             activiesForDays.ForEach(kvp =>
             {
