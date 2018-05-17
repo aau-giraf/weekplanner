@@ -570,9 +570,9 @@ namespace WeekPlanner.ViewModels
         
         private void DeleteChoiceBoard(ActivityDTO choiceBoardDeleted)
         {
-            var (day, activity) = FindDayAndActivityDTOInWeekDTOById(choiceBoardDeleted.Id);
+            var dayEnum = FindDayOfChoiceBoard(choiceBoardDeleted.Id);
             // Delete activities in weekDTO
-            day.Activities.RemoveAll(a => a.Order == choiceBoardDeleted.Order);
+            WeekDTO.Days.FirstOrDefault(d => d.Day == dayEnum).Activities.RemoveAll(a => a.Order == choiceBoardDeleted.Order);
             
             // Delete from observables
             var (dayCollection, activityInCollection) =
@@ -937,10 +937,10 @@ namespace WeekPlanner.ViewModels
                     break;
                 case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>> tuple:
 
-                    var (day, _) = FindDayAndActivityDTOInWeekDTOById(tuple.Item1.Id);
+                    var day = FindDayOfChoiceBoard(tuple.Item1.Id);
                     DeleteChoiceBoard(tuple.Item1);
-                    WeekDTO.Days.Single(d => d == day).Activities.Add(tuple.Item2.First());
-                    _dayActivityCollections[day.Day].Add(tuple.Item2.First().ToActivityWithNotifyDTO());
+                    WeekDTO.Days.Single(d => d.Day == day).Activities.Add(tuple.Item2.First());
+                    _dayActivityCollections[day].Add(tuple.Item2.First().ToActivityWithNotifyDTO());
                     
                     break;
             }
