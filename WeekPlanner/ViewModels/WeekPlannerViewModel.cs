@@ -949,7 +949,10 @@ namespace WeekPlanner.ViewModels
 
             foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
-                activiesForDays[day] = activiesForDays[day].OrderBy(a => a.Order).ToObservableCollection();
+                if (day != null)
+                {
+                    activiesForDays[day] = activiesForDays[day].OrderBy(a => a.Order).ToObservableCollection();
+                }
             }
 
             AddReferenceToDays();
