@@ -296,7 +296,7 @@ namespace WeekPlanner.ViewModels
             if (args.Action == DragAction.Drop
                 && args.ItemData is ActivityWithNotifyDTO activity)
             {
-				//UpdateOrderingOfActivities(activity, args.OldIndex, args.NewIndex);
+				UpdateOrderingOfActivities(activity, args.OldIndex, args.NewIndex);
             }
 
             IsBusy = false;
@@ -304,50 +304,89 @@ namespace WeekPlanner.ViewModels
 
 		private void UpdateOrderingOfActivities(ActivityWithNotifyDTO activityWithNotify, int oldIndex, int newIndex)
         {
-            /*if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityWithNotify.Id == null) return;
-
+            if (oldIndex == newIndex || oldIndex < 0 || newIndex < 0 || activityWithNotify.Id == null) return;
+            
+            // Find dayEnum for day dragged in
+            var dayChanged = FindDayEnumOfActivityById(activityWithNotify.Id);
+                
+            // Find new order with newIndex in observableCollection, since it hasn't updated yet
+            var newOrder = _dayActivityCollections[dayChanged][newIndex].Order;
+            
             var (dayCollection, _) = FindDayAndActivityWithNotifyDTOInWeekObservablesById(activityWithNotify.Id);
 
-            var newOrder = dayCollection[newIndex].Order;
-            
-            
-            WeekdayDTO dayToReorder;
-            ActivityDTO activity;
-            
-            if(activityWithNotify.IsChoiceBoard == true)
-			{
-				_choiceBoardActivities[activityWithNotify.Id].ForEach(awn =>
-				    {
-				        var (_, activityInWeekDTO) = FindDayAndActivityDTOInWeekDTOById(awn.Id);
-				        activityInWeekDTO.Order = newOrder;
-				    });
-			}
-
-			(dayToReorder, activity) = FindDayAndActivityDTOInWeekDTOById(activity.Id);
-            
-            // The activities have not updated yet, so we get the order value based on old indexes
-            //var newOrder = dayToReorder.Activities[newIndex].Order;
+            var dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Day == dayChanged);
 
             // Update the orders of all activities in the day          
             if (newIndex < oldIndex) // Dragged upwards
             {
                 for (int i = newIndex; i < oldIndex; i++)
                 {
-                    dayToReorder.Activities[i].Order += 1;
+                    var activityInCollection = dayCollection[i];
+                    var changedOrder = activityInCollection.Order + 1;
+                    
+                    if (activityInCollection.IsChoiceBoard == true)
+                    {
+                        UpdateOrderInChoiceBoardAndItems(activityInCollection, changedOrder);
+                    }
+                    else
+                    {
+                        activityInCollection.Order = changedOrder;
+                    }
                 }
             }
             else // Dragged downwards
             {
                 for (int i = oldIndex + 1; i <= newIndex; i++)
                 {
-                    dayToReorder.Activities[i].Order -= 1;
+                    var activityInCollection = dayCollection[i];
+                    var changedOrder = activityInCollection.Order - 1;
+                    
+                    if (activityInCollection.IsChoiceBoard == true)
+                    {
+                        UpdateOrderInChoiceBoardAndItems(activityInCollection, changedOrder);
+                    }
+                    else
+                    {
+                        activityInCollection.Order = changedOrder;
+                    }
                 }
             }
-            activity.Order = newOrder;
 
+            
+            if (activityWithNotify.IsChoiceBoard == true)
+            {
+                UpdateOrderInChoiceBoardAndItems(activityWithNotify, newOrder);
+            }
+            else
+            {
+                activityWithNotify.Order = newOrder;
+            }
+
+            // Sort Collection
+            dayCollection.Sort((a,b) => a.CompareTo(b));
+            
             // Update order so indexes are correct on next use
+            dayToReorder?.Activities.ForEach(a =>
+            {
+                var activityFromCollection = dayCollection.FirstOrDefault(awn => awn.Id == a.Id);
+                a.Order = activityFromCollection?.Order;
+            });
             dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
-            _isDirty = true;*/
+            
+            _isDirty = true;
+        }
+
+        private void UpdateOrderInChoiceBoardAndItems(ActivityWithNotifyDTO choiceBoard, int? newOrder)
+        {
+            if (choiceBoard == null || choiceBoard.IsChoiceBoard != true || choiceBoard.ChoiceBoardID == null || newOrder == null)
+            {
+                throw new ArgumentException("One or both of provided arguments are invalid.");
+            }
+
+            _choiceBoardActivities.TryGetValue(choiceBoard.ChoiceBoardID, out List<ActivityWithNotifyDTO> activitiesInThisChoiceBoard);
+            
+            activitiesInThisChoiceBoard?.ForEach(a => a.Order = newOrder);
+            choiceBoard.Order = newOrder;
         }
 
         #endregion
@@ -494,7 +533,7 @@ namespace WeekPlanner.ViewModels
         
         private void UpdateChoiceBoard(ActivityDTO choiceBoard, ObservableCollection<ActivityDTO> choiceBoardItems)
         {
-            var day = FindDayOfChoiceBoard(choiceBoard.Id);
+            var day = FindDayEnumOfActivityById(choiceBoard.Id);
             var activities = WeekDTO.Days.FirstOrDefault(d => d.Day == day).Activities;
             var orderForChoiceBoards = choiceBoard.Order;
 
@@ -572,7 +611,7 @@ namespace WeekPlanner.ViewModels
         
         private void DeleteChoiceBoard(ActivityDTO choiceBoardDeleted)
         {
-            var dayEnum = FindDayOfChoiceBoard(choiceBoardDeleted.Id);
+            var dayEnum = FindDayEnumOfActivityById(choiceBoardDeleted.Id);
             // Delete activities in weekDTO
             WeekDTO.Days.FirstOrDefault(d => d.Day == dayEnum).Activities.RemoveAll(a => a.Order == choiceBoardDeleted.Order);
             
@@ -939,7 +978,7 @@ namespace WeekPlanner.ViewModels
                     break;
                 case ValueTuple<ActivityDTO, ObservableCollection<ActivityDTO>> tuple:
 
-                    var day = FindDayOfChoiceBoard(tuple.Item1.Id);
+                    var day = FindDayEnumOfActivityById(tuple.Item1.Id);
                     DeleteChoiceBoard(tuple.Item1);
                     WeekDTO.Days.Single(d => d.Day == day).Activities.Add(tuple.Item2.First());
                     _dayActivityCollections[day].Add(tuple.Item2.First().ToActivityWithNotifyDTO());
@@ -1030,10 +1069,10 @@ namespace WeekPlanner.ViewModels
             return (dayCollection, activity);
         }
 
-        private DayEnum? FindDayOfChoiceBoard(long? choiceBoardId)
+        private DayEnum? FindDayEnumOfActivityById(long? activityId)
         {
             return _dayActivityCollections
-                .FirstOrDefault(kvp => kvp.Value.FirstOrDefault(a => a.Id == choiceBoardId) != null).Key;
+                .FirstOrDefault(kvp => kvp.Value.FirstOrDefault(a => a.Id == activityId) != null).Key;
         }
         #endregion
     }
