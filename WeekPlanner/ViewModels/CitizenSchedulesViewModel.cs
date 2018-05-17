@@ -104,6 +104,7 @@ namespace WeekPlanner.ViewModels
                 onSuccess: result => { WeekNameDTOS = new ObservableCollection<WeekNameDTO>(result.Data); },
                 onRequestFailedAsync: () => Task.FromResult("'No week schedules found is not an error'-fix."));
 
+            _yearAndWeek.Clear();
             foreach (var item in WeekNameDTOS)
             {
                 _yearAndWeek.Add(new Tuple<int, int>(item.WeekYear.Value, item.WeekNumber.Value));
