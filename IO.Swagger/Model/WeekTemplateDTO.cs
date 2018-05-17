@@ -33,13 +33,13 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="WeekTemplateDTO" /> class.
         /// </summary>
-        /// <param name="DepartmentKey">DepartmentKey.</param>
+        /// <param name="Id">Id.</param>
         /// <param name="Thumbnail">The weeks thumbnail..</param>
         /// <param name="Name">A Name describing the week..</param>
         /// <param name="Days">A list of the days in the week schedule..</param>
-        public WeekTemplateDTO(long? DepartmentKey = default(long?), WeekPictogramDTO Thumbnail = default(WeekPictogramDTO), string Name = default(string), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
+        public WeekTemplateDTO(long? Id = default(long?), WeekPictogramDTO Thumbnail = default(WeekPictogramDTO), string Name = default(string), List<WeekdayDTO> Days = default(List<WeekdayDTO>))
         {
-            this.DepartmentKey = DepartmentKey;
+            this.Id = Id;
             this.Thumbnail = Thumbnail;
             this.Name = Name;
             this.Days = Days;
@@ -49,7 +49,13 @@ namespace IO.Swagger.Model
         /// Gets or Sets DepartmentKey
         /// </summary>
         [DataMember(Name="departmentKey", EmitDefaultValue=false)]
-        public long? DepartmentKey { get; set; }
+        public long? DepartmentKey { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public long? Id { get; set; }
 
         /// <summary>
         /// The weeks thumbnail.
@@ -81,6 +87,7 @@ namespace IO.Swagger.Model
             var sb = new StringBuilder();
             sb.Append("class WeekTemplateDTO {\n");
             sb.Append("  DepartmentKey: ").Append(DepartmentKey).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Thumbnail: ").Append(Thumbnail).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Days: ").Append(Days).Append("\n");
@@ -124,6 +131,11 @@ namespace IO.Swagger.Model
                     this.DepartmentKey.Equals(input.DepartmentKey))
                 ) && 
                 (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
+                (
                     this.Thumbnail == input.Thumbnail ||
                     (this.Thumbnail != null &&
                     this.Thumbnail.Equals(input.Thumbnail))
@@ -151,6 +163,8 @@ namespace IO.Swagger.Model
                 int hashCode = 41;
                 if (this.DepartmentKey != null)
                     hashCode = hashCode * 59 + this.DepartmentKey.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.Thumbnail != null)
                     hashCode = hashCode * 59 + this.Thumbnail.GetHashCode();
                 if (this.Name != null)

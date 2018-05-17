@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using RestSharp;
 using IO.Swagger.Client;
+using IO.Swagger.Model;
 
 namespace IO.Swagger.Api
 {
@@ -30,8 +31,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>string</returns>
-        string V1StatusDatabaseGet ();
+        /// <returns>Response</returns>
+        Response V1StatusDatabaseGet ();
 
         /// <summary>
         /// 
@@ -40,8 +41,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of string</returns>
-        ApiResponse<string> V1StatusDatabaseGetWithHttpInfo ();
+        /// <returns>ApiResponse of Response</returns>
+        ApiResponse<Response> V1StatusDatabaseGetWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -49,8 +50,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>string</returns>
-        string V1StatusGet ();
+        /// <returns>Response</returns>
+        Response V1StatusGet ();
 
         /// <summary>
         /// 
@@ -59,8 +60,27 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of string</returns>
-        ApiResponse<string> V1StatusGetWithHttpInfo ();
+        /// <returns>ApiResponse of Response</returns>
+        ApiResponse<Response> V1StatusGetWithHttpInfo ();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ResponseString</returns>
+        ResponseString V1StatusVersionInfoGet ();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of ResponseString</returns>
+        ApiResponse<ResponseString> V1StatusVersionInfoGetWithHttpInfo ();
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -70,8 +90,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of string</returns>
-        System.Threading.Tasks.Task<string> V1StatusDatabaseGetAsync ();
+        /// <returns>Task of Response</returns>
+        System.Threading.Tasks.Task<Response> V1StatusDatabaseGetAsync ();
 
         /// <summary>
         /// 
@@ -80,8 +100,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (string)</returns>
-        System.Threading.Tasks.Task<ApiResponse<string>> V1StatusDatabaseGetAsyncWithHttpInfo ();
+        /// <returns>Task of ApiResponse (Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1StatusDatabaseGetAsyncWithHttpInfo ();
         /// <summary>
         /// 
         /// </summary>
@@ -89,8 +109,8 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of string</returns>
-        System.Threading.Tasks.Task<string> V1StatusGetAsync ();
+        /// <returns>Task of Response</returns>
+        System.Threading.Tasks.Task<Response> V1StatusGetAsync ();
 
         /// <summary>
         /// 
@@ -99,8 +119,27 @@ namespace IO.Swagger.Api
         /// 
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (string)</returns>
-        System.Threading.Tasks.Task<ApiResponse<string>> V1StatusGetAsyncWithHttpInfo ();
+        /// <returns>Task of ApiResponse (Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1StatusGetAsyncWithHttpInfo ();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ResponseString</returns>
+        System.Threading.Tasks.Task<ResponseString> V1StatusVersionInfoGetAsync ();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (ResponseString)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseString>> V1StatusVersionInfoGetAsyncWithHttpInfo ();
         #endregion Asynchronous Operations
     }
 
@@ -205,10 +244,10 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>string</returns>
-        public string V1StatusDatabaseGet ()
+        /// <returns>Response</returns>
+        public Response V1StatusDatabaseGet ()
         {
-             ApiResponse<string> localVarResponse = V1StatusDatabaseGetWithHttpInfo();
+             ApiResponse<Response> localVarResponse = V1StatusDatabaseGetWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -216,8 +255,8 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of string</returns>
-        public ApiResponse< string > V1StatusDatabaseGetWithHttpInfo ()
+        /// <returns>ApiResponse of Response</returns>
+        public ApiResponse< Response > V1StatusDatabaseGetWithHttpInfo ()
         {
 
             var localVarPath = "/v1/Status/database";
@@ -263,19 +302,19 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<string>(localVarStatusCode,
+            return new ApiResponse<Response>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (string) Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
         }
 
         /// <summary>
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of string</returns>
-        public async System.Threading.Tasks.Task<string> V1StatusDatabaseGetAsync ()
+        /// <returns>Task of Response</returns>
+        public async System.Threading.Tasks.Task<Response> V1StatusDatabaseGetAsync ()
         {
-             ApiResponse<string> localVarResponse = await V1StatusDatabaseGetAsyncWithHttpInfo();
+             ApiResponse<Response> localVarResponse = await V1StatusDatabaseGetAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -284,8 +323,8 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (string)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<string>> V1StatusDatabaseGetAsyncWithHttpInfo ()
+        /// <returns>Task of ApiResponse (Response)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1StatusDatabaseGetAsyncWithHttpInfo ()
         {
 
             var localVarPath = "/v1/Status/database";
@@ -331,19 +370,19 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<string>(localVarStatusCode,
+            return new ApiResponse<Response>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (string) Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
         }
 
         /// <summary>
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>string</returns>
-        public string V1StatusGet ()
+        /// <returns>Response</returns>
+        public Response V1StatusGet ()
         {
-             ApiResponse<string> localVarResponse = V1StatusGetWithHttpInfo();
+             ApiResponse<Response> localVarResponse = V1StatusGetWithHttpInfo();
              return localVarResponse.Data;
         }
 
@@ -351,8 +390,8 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of string</returns>
-        public ApiResponse< string > V1StatusGetWithHttpInfo ()
+        /// <returns>ApiResponse of Response</returns>
+        public ApiResponse< Response > V1StatusGetWithHttpInfo ()
         {
 
             var localVarPath = "/v1/Status";
@@ -398,19 +437,19 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<string>(localVarStatusCode,
+            return new ApiResponse<Response>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (string) Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
         }
 
         /// <summary>
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of string</returns>
-        public async System.Threading.Tasks.Task<string> V1StatusGetAsync ()
+        /// <returns>Task of Response</returns>
+        public async System.Threading.Tasks.Task<Response> V1StatusGetAsync ()
         {
-             ApiResponse<string> localVarResponse = await V1StatusGetAsyncWithHttpInfo();
+             ApiResponse<Response> localVarResponse = await V1StatusGetAsyncWithHttpInfo();
              return localVarResponse.Data;
 
         }
@@ -419,8 +458,8 @@ namespace IO.Swagger.Api
         ///  
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <returns>Task of ApiResponse (string)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<string>> V1StatusGetAsyncWithHttpInfo ()
+        /// <returns>Task of ApiResponse (Response)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1StatusGetAsyncWithHttpInfo ()
         {
 
             var localVarPath = "/v1/Status";
@@ -466,9 +505,144 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<string>(localVarStatusCode,
+            return new ApiResponse<Response>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (string) Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ResponseString</returns>
+        public ResponseString V1StatusVersionInfoGet ()
+        {
+             ApiResponse<ResponseString> localVarResponse = V1StatusVersionInfoGetWithHttpInfo();
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of ResponseString</returns>
+        public ApiResponse< ResponseString > V1StatusVersionInfoGetWithHttpInfo ()
+        {
+
+            var localVarPath = "/v1/Status/version-info";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1StatusVersionInfoGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseString>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseString) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseString)));
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ResponseString</returns>
+        public async System.Threading.Tasks.Task<ResponseString> V1StatusVersionInfoGetAsync ()
+        {
+             ApiResponse<ResponseString> localVarResponse = await V1StatusVersionInfoGetAsyncWithHttpInfo();
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (ResponseString)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseString>> V1StatusVersionInfoGetAsyncWithHttpInfo ()
+        {
+
+            var localVarPath = "/v1/Status/version-info";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1StatusVersionInfoGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseString>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseString) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseString)));
         }
 
     }

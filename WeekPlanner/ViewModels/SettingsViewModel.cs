@@ -13,7 +13,6 @@ using WeekPlanner.Services.Request;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.ViewModels.Base;
 using Xamarin.Forms;
-
 namespace WeekPlanner.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
@@ -22,18 +21,18 @@ namespace WeekPlanner.ViewModels
         private readonly IRequestService _requestService;
         private readonly IUserApi _userApi;
 
-		private WeekdayColors weekdayColors;
+        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService,
+            IRequestService requestService, IUserApi userApi) : base(navigationService)
+        {
+            _settingsService = settingsService;
+            _requestService = requestService;
+            _userApi = userApi;
+            WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
+            // Update settings regardless of which property calls 'RaisePropertyChanged'
+            WeekdayColors.PropertyChanged += (sender, e) => UpdateSettingsAsync();
+        }
 
-		public WeekdayColors WeekdayColors
-		{
-			get => weekdayColors;
-
-			set
-			{
-				weekdayColors = value;
-				RaisePropertyChanged(() => WeekdayColors);
-			}
-		}
+        public WeekdayColors WeekdayColors { get; }
 
         public IEnumerable<SettingDTO.ThemeEnum> Themes { get; } = new List<SettingDTO.ThemeEnum>
         {
@@ -70,73 +69,34 @@ namespace WeekPlanner.ViewModels
                 RaisePropertyChanged(() => ThemeSelected);
             }
         }
-        public string CitizenName
-        {
-            get { return _settingsService.CurrentCitizenName; }
-        }
 
+		public IEnumerable<SettingDTO.OrientationEnum> Orientations { get; } = new List<SettingDTO.OrientationEnum>
+		{
+			SettingDTO.OrientationEnum.Landscape, SettingDTO.OrientationEnum.Portrait
+		};
 
+		public SettingDTO.OrientationEnum Orientation
+		{
+			get => _settingsService.CurrentCitizenSettingDTO.Orientation;
+			set
+			{
+				Settings.Orientation = value;
+				RaisePropertyChanged(() => Orientation);
+				UpdateSettingsAsync();
+			}
+		}
+
+		public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
+        
         private void SetThemeInSettingDTOAndUpdate(SettingDTO.ThemeEnum pickedTheme)
         {
             Settings.Theme = pickedTheme;
             UpdateSettingsAsync();
         }
-
-        private bool _orientationSlider;
-
-        public bool OrientationSwitch
-        {
-            get => _orientationSlider;
-            set
-            {
-                if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
-                {
-                    _orientationSlider = true;
-                }
-                else
-                {
-                    _orientationSlider = false;
-                }
-
-                RaisePropertyChanged(() => OrientationSwitch);
-                UpdateSettingsAsync();
-            }
-        }
-
-        public ICommand HandleSwitchChangedCommand => new Command(() =>
-        {
-            if (Settings.Orientation == SettingDTO.OrientationEnum.Portrait)
-            {
-                Settings.Orientation = SettingDTO.OrientationEnum.Landscape;
-            }
-            else
-            {
-                Settings.Orientation = SettingDTO.OrientationEnum.Portrait;
-            }
-        });
-
-
+        
         private async Task UpdateSettingsAsync()
         {
-            _settingsService.UseTokenFor(UserType.Citizen);
-            await _requestService.SendRequest(_userApi.V1UserSettingsPatchAsync(Settings));
-        }
-
-        public SettingDTO Settings => _settingsService.CurrentCitizenSettingDTO;
-
-        public SettingsViewModel(ISettingsService settingsService, INavigationService navigationService, 
-            IRequestService requestService, IUserApi userApi) : base(navigationService)
-        {
-            _settingsService = settingsService;
-            _requestService = requestService;
-            _userApi = userApi;
-        }
-
-        public async override Task InitializeAsync(object navigationData)
-        {
-            WeekdayColors = new WeekdayColors(_settingsService.CurrentCitizenSettingDTO);
-            // Update settings regardless of which property calls 'RaisePropertyChanged'
-            WeekdayColors.PropertyChanged += (sender, e) => UpdateSettingsAsync();
+            await _requestService.SendRequest(_userApi.V1UserByIdSettingsPutAsync(_settingsService.CurrentCitizen.UserId, Settings));
         }
     }
 }

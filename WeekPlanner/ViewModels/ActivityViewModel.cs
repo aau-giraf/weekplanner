@@ -37,6 +37,10 @@ namespace WeekPlanner.ViewModels
             {
                 Activity = activity;
             }
+            else
+            {
+                throw new ArgumentException("Should always be of type ActivityDTO", nameof(navigationData));
+            }
         }
 
         public ActivityDTO Activity
@@ -56,10 +60,11 @@ namespace WeekPlanner.ViewModels
             await NavigationService.NavigateToAsync<PictogramSearchViewModel>();
         });
 
+        public ICommand ChoiceBoardCommand => new Command(async () => await NavigationService.NavigateToAsync<ChoiceBoardViewModel>(Activity));
+
         public ICommand DeleteActivityCommand => new Command(async () =>
         {
-            Activity = null;
-            await NavigationService.PopAsync(this);
+            await NavigationService.PopAsync((Activity, MessageKeys.ActivityDeleted));
         });
 
         public ICommand ToggleStateCommand => new Command(() =>
@@ -125,13 +130,13 @@ namespace WeekPlanner.ViewModels
 
         public ICommand SaveCommand => new Command(async () =>
         {
-            await NavigationService.PopAsync(this);
+            await NavigationService.PopAsync((Activity, MessageKeys.ActivityUpdated));
         });
 
-        public override async Task PoppedAsync(object navigationData) {
-            if (navigationData is PictogramDTO newPicto) {
-                WeekPictogramDTO newWeekPicto = PictoToWeekPictoDtoHelper.Convert(newPicto);
+        public override async Task OnReturnedToAsync(object navigationData) {
+            if (navigationData is WeekPictogramDTO newWeekPicto) {
                 Activity.Pictogram = newWeekPicto;
+
                 RaisePropertyChanged(() => Activity);
             }
         }

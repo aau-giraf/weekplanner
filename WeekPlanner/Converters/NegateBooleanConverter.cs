@@ -10,7 +10,7 @@ namespace WeekPlanner.Converters
         {
             bool? editModeEnabled = value as bool?;
 
-            return !editModeEnabled;
+            return editModeEnabled == null ? false : !editModeEnabled;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

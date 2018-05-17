@@ -13,20 +13,23 @@ namespace WeekPlanner.ViewModels
     public class LoginViewModel : ViewModelBase
     {
         private readonly ILoginService _loginService;
+        private readonly ISettingsService _settingsService;
 
         private ValidatableObject<string> _username;
         private ValidatableObject<string> _password;
         
         private bool _userModeSwitch = false;
+        
 
         public LoginViewModel(INavigationService navigationService,
-            ILoginService loginService) : base(navigationService)
+            ILoginService loginService, ISettingsService settingsService) : base(navigationService)
         {
             _loginService = loginService;
             Password = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "En adgangskode er påkrævet." });
             Username = new ValidatableObject<string>(new IsNotNullOrEmptyRule<string> { ValidationMessage = "Et brugernavn er påkrævet." });
 
-            ShowNavigationBar = false;
+            ShowNavigationBar = false;     
+			_settingsService = settingsService;
         }
 
         public ValidatableObject<string> Username
@@ -61,11 +64,10 @@ namespace WeekPlanner.ViewModels
             if (_userModeSwitch)
             {
                 IsBusy = true;
-                bool enableGuardianMode = true;
                 await _loginService.LoginAndThenAsync(UserType.Guardian, 
                     Username.Value, 
                     Password.Value, async () => {
-                        await NavigationService.PopAsync(enableGuardianMode);
+                        await NavigationService.PopAsync(MessageKeys.GuardianLoggedIn);
                         ClearUsernameAndPasswordFields();
                     });
                 IsBusy = false;
@@ -75,7 +77,8 @@ namespace WeekPlanner.ViewModels
                 IsBusy = true;
                 await _loginService.LoginAndThenAsync(UserType.Guardian, 
                     Username.Value, 
-                    Password.Value, async () => {
+                    Password.Value, 
+                    async () => {
                         await NavigationService.NavigateToAsync<ChooseCitizenViewModel>();
                         ClearUsernameAndPasswordFields();
                     });
@@ -104,7 +107,13 @@ namespace WeekPlanner.ViewModels
             if (navigationData is WeekPlannerViewModel)
             {
                 _userModeSwitch = true;
+                ShowNavigationBar = true;
+				return Task.FromResult(true);
             }
+
+			// This is a logout, so clear settings
+            _settingsService.ClearSettings();
+
             return Task.FromResult(false);
         }
     }

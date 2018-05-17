@@ -56,7 +56,7 @@ namespace WeekPlanner.Services.Navigation
                 }
 
                 await navigationPage.PopAsync();
-                await CurrentPageViewModel.PoppedAsync(navigationData);
+                await CurrentPageViewModel.OnReturnedToAsync(navigationData);
             }
         }
 

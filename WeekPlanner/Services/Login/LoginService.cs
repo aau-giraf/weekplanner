@@ -40,22 +40,10 @@ namespace WeekPlanner.Services.Login
 
             async Task OnRequestSuccess(ResponseString result)
             {
-                if (userType == UserType.Citizen)
-                {
-                    _settingsService.CitizenAuthToken = result.Data;
-                    await GetCitizenIdAndSetInSettings();
-                    await GetCitizenSettingsAndSetInSettings();
-                    _settingsService.SetTheme();
+                _settingsService.AuthToken = result.Data;
 
-                }
-                else // Guardian
-                {
-                    _settingsService.IsInGuardianMode = true;
-                    _settingsService.GuardianAuthToken = result.Data;
-                }
+                await GetCitizenAndSetInSettings();
                 
-                _settingsService.UseTokenFor(userType);
-
                 if (onSuccess != null)
                 {
                     await onSuccess.Invoke();
@@ -71,24 +59,24 @@ namespace WeekPlanner.Services.Login
         public async Task LoginAsync(UserType userType, string username, string password = "")
             => await LoginAndThenAsync(userType, username, password);
 
-        private Task GetCitizenIdAndSetInSettings()
+        private Task GetCitizenAndSetInSettings()
         {
-            _settingsService.UseTokenFor(UserType.Citizen);
             return _requestService.SendRequestAndThenAsync(() => _userApi.V1UserGetAsync(),
-                dto => {
-                    _settingsService.CurrentCitizenId = dto.Data.Id;
-                    _settingsService.CurrentCitizenName = dto.Data.Username;
-                    });
-        }
-
-        private Task GetCitizenSettingsAndSetInSettings()
-        {
-            return _requestService.SendRequestAndThenAsync(
-                requestAsync: async () => await _userApi.V1UserByIdSettingsGetAsync(_settingsService.CurrentCitizenId),
-                onSuccess: result =>
+                dto =>
                 {
-                    _settingsService.CurrentCitizenSettingDTO = result.Data;
+                    _settingsService.DepartmentId = (long)dto.Data.Department;
 
+                    if(dto.Data.Role == GirafUserDTO.RoleEnum.Guardian) {
+                        _settingsService.IsInGuardianMode = true;
+                        // Don't set current citizen if Guardian since we don't want their settings
+                        return;
+                    }
+                    
+                    _settingsService.CurrentCitizen = new UserNameDTO { 
+                        UserId = dto.Data.Id, 
+                        UserName = dto.Data.Username, 
+                        UserRole = (UserNameDTO.UserRoleEnum?)dto.Data.Role 
+                    };
                 });
         }
     }

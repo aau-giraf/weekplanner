@@ -184,33 +184,6 @@ namespace IO.Swagger.Model
         [DataMember(Name="theme", EmitDefaultValue=false)]
         public ThemeEnum Theme { get; set; }
         /// <summary>
-        /// Property for setting the color theme of weekschedules
-        /// </summary>
-        /// <value>Property for setting the color theme of weekschedules</value>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum ColorThemeWeekSchedulesEnum
-        {
-            
-            /// <summary>
-            /// Enum Standard for value: standard
-            /// </summary>
-            [EnumMember(Value = "standard")]
-            Standard = 1,
-            
-            /// <summary>
-            /// Enum YellowAndWhite for value: yellowAndWhite
-            /// </summary>
-            [EnumMember(Value = "yellowAndWhite")]
-            YellowAndWhite = 2
-        }
-
-        /// <summary>
-        /// Property for setting the color theme of weekschedules
-        /// </summary>
-        /// <value>Property for setting the color theme of weekschedules</value>
-        [DataMember(Name="colorThemeWeekSchedules", EmitDefaultValue=false)]
-        public ColorThemeWeekSchedulesEnum ColorThemeWeekSchedules { get; set; }
-        /// <summary>
         /// Initializes a new instance of the <see cref="SettingDTO" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -225,11 +198,10 @@ namespace IO.Swagger.Model
         /// <param name="TimerSeconds">Number of seconds for timer.</param>
         /// <param name="ActivitiesCount">Number of activities.</param>
         /// <param name="Theme">The preferred theme (required).</param>
-        /// <param name="ColorThemeWeekSchedules">Property for setting the color theme of weekschedules (required).</param>
         /// <param name="NrOfDaysToDisplay">defines the number of days to display for a user in a weekschedule.</param>
         /// <param name="GreyScale">Flag for indicating whether or not greyscale is enabled.</param>
         /// <param name="WeekDayColors">WeekDayColors.</param>
-        public SettingDTO(OrientationEnum Orientation = default(OrientationEnum), CompleteMarkEnum CompleteMark = default(CompleteMarkEnum), CancelMarkEnum CancelMark = default(CancelMarkEnum), DefaultTimerEnum DefaultTimer = default(DefaultTimerEnum), int? TimerSeconds = default(int?), int? ActivitiesCount = default(int?), ThemeEnum Theme = default(ThemeEnum), ColorThemeWeekSchedulesEnum ColorThemeWeekSchedules = default(ColorThemeWeekSchedulesEnum), int? NrOfDaysToDisplay = default(int?), bool? GreyScale = default(bool?), List<WeekDayColorDTO> WeekDayColors = default(List<WeekDayColorDTO>))
+        public SettingDTO(OrientationEnum Orientation = default(OrientationEnum), CompleteMarkEnum CompleteMark = default(CompleteMarkEnum), CancelMarkEnum CancelMark = default(CancelMarkEnum), DefaultTimerEnum DefaultTimer = default(DefaultTimerEnum), int? TimerSeconds = default(int?), int? ActivitiesCount = default(int?), ThemeEnum Theme = default(ThemeEnum), int? NrOfDaysToDisplay = default(int?), bool? GreyScale = default(bool?), List<WeekDayColorDTO> WeekDayColors = default(List<WeekDayColorDTO>))
         {
             // to ensure "Orientation" is required (not null)
             if (Orientation == null)
@@ -276,15 +248,6 @@ namespace IO.Swagger.Model
             {
                 this.Theme = Theme;
             }
-            // to ensure "ColorThemeWeekSchedules" is required (not null)
-            if (ColorThemeWeekSchedules == null)
-            {
-                throw new InvalidDataException("ColorThemeWeekSchedules is a required property for SettingDTO and cannot be null");
-            }
-            else
-            {
-                this.ColorThemeWeekSchedules = ColorThemeWeekSchedules;
-            }
             this.TimerSeconds = TimerSeconds;
             this.ActivitiesCount = ActivitiesCount;
             this.NrOfDaysToDisplay = NrOfDaysToDisplay;
@@ -309,7 +272,6 @@ namespace IO.Swagger.Model
         /// <value>Number of activities</value>
         [DataMember(Name="activitiesCount", EmitDefaultValue=false)]
         public int? ActivitiesCount { get; set; }
-
 
 
         /// <summary>
@@ -347,7 +309,6 @@ namespace IO.Swagger.Model
             sb.Append("  TimerSeconds: ").Append(TimerSeconds).Append("\n");
             sb.Append("  ActivitiesCount: ").Append(ActivitiesCount).Append("\n");
             sb.Append("  Theme: ").Append(Theme).Append("\n");
-            sb.Append("  ColorThemeWeekSchedules: ").Append(ColorThemeWeekSchedules).Append("\n");
             sb.Append("  NrOfDaysToDisplay: ").Append(NrOfDaysToDisplay).Append("\n");
             sb.Append("  GreyScale: ").Append(GreyScale).Append("\n");
             sb.Append("  WeekDayColors: ").Append(WeekDayColors).Append("\n");
@@ -421,11 +382,6 @@ namespace IO.Swagger.Model
                     this.Theme.Equals(input.Theme))
                 ) && 
                 (
-                    this.ColorThemeWeekSchedules == input.ColorThemeWeekSchedules ||
-                    (this.ColorThemeWeekSchedules != null &&
-                    this.ColorThemeWeekSchedules.Equals(input.ColorThemeWeekSchedules))
-                ) && 
-                (
                     this.NrOfDaysToDisplay == input.NrOfDaysToDisplay ||
                     (this.NrOfDaysToDisplay != null &&
                     this.NrOfDaysToDisplay.Equals(input.NrOfDaysToDisplay))
@@ -465,8 +421,6 @@ namespace IO.Swagger.Model
                     hashCode = hashCode * 59 + this.ActivitiesCount.GetHashCode();
                 if (this.Theme != null)
                     hashCode = hashCode * 59 + this.Theme.GetHashCode();
-                if (this.ColorThemeWeekSchedules != null)
-                    hashCode = hashCode * 59 + this.ColorThemeWeekSchedules.GetHashCode();
                 if (this.NrOfDaysToDisplay != null)
                     hashCode = hashCode * 59 + this.NrOfDaysToDisplay.GetHashCode();
                 if (this.GreyScale != null)

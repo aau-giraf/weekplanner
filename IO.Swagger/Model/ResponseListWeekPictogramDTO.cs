@@ -25,10 +25,10 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// ResponseListPictogramDTO
+    /// ResponseListWeekPictogramDTO
     /// </summary>
     [DataContract]
-    public partial class ResponseListPictogramDTO :  IEquatable<ResponseListPictogramDTO>, IValidatableObject
+    public partial class ResponseListWeekPictogramDTO :  IEquatable<ResponseListWeekPictogramDTO>, IValidatableObject
     {
         /// <summary>
         /// Defines ErrorKey
@@ -401,7 +401,25 @@ namespace IO.Swagger.Model
             /// Enum InvalidHexValues for value: InvalidHexValues
             /// </summary>
             [EnumMember(Value = "InvalidHexValues")]
-            InvalidHexValues = 61
+            InvalidHexValues = 61,
+            
+            /// <summary>
+            /// Enum WeekTemplateNotFound for value: WeekTemplateNotFound
+            /// </summary>
+            [EnumMember(Value = "WeekTemplateNotFound")]
+            WeekTemplateNotFound = 62,
+            
+            /// <summary>
+            /// Enum NotImplemented for value: NotImplemented
+            /// </summary>
+            [EnumMember(Value = "NotImplemented")]
+            NotImplemented = 63,
+            
+            /// <summary>
+            /// Enum UserMustBeInDepartment for value: UserMustBeInDepartment
+            /// </summary>
+            [EnumMember(Value = "UserMustBeInDepartment")]
+            UserMustBeInDepartment = 64
         }
 
         /// <summary>
@@ -410,12 +428,12 @@ namespace IO.Swagger.Model
         [DataMember(Name="errorKey", EmitDefaultValue=false)]
         public ErrorKeyEnum? ErrorKey { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResponseListPictogramDTO" /> class.
+        /// Initializes a new instance of the <see cref="ResponseListWeekPictogramDTO" /> class.
         /// </summary>
         /// <param name="Data">Data.</param>
         /// <param name="Success">Success.</param>
         /// <param name="ErrorProperties">ErrorProperties.</param>
-        public ResponseListPictogramDTO(List<PictogramDTO> Data = default(List<PictogramDTO>), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
+        public ResponseListWeekPictogramDTO(List<WeekPictogramDTO> Data = default(List<WeekPictogramDTO>), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
         {
             this.Data = Data;
             this.Success = Success;
@@ -426,7 +444,7 @@ namespace IO.Swagger.Model
         /// Gets or Sets Data
         /// </summary>
         [DataMember(Name="data", EmitDefaultValue=false)]
-        public List<PictogramDTO> Data { get; set; }
+        public List<WeekPictogramDTO> Data { get; set; }
 
         /// <summary>
         /// Gets or Sets Success
@@ -448,7 +466,7 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class ResponseListPictogramDTO {\n");
+            sb.Append("class ResponseListWeekPictogramDTO {\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Success: ").Append(Success).Append("\n");
             sb.Append("  ErrorProperties: ").Append(ErrorProperties).Append("\n");
@@ -473,15 +491,15 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as ResponseListPictogramDTO);
+            return this.Equals(input as ResponseListWeekPictogramDTO);
         }
 
         /// <summary>
-        /// Returns true if ResponseListPictogramDTO instances are equal
+        /// Returns true if ResponseListWeekPictogramDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of ResponseListPictogramDTO to be compared</param>
+        /// <param name="input">Instance of ResponseListWeekPictogramDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ResponseListPictogramDTO input)
+        public bool Equals(ResponseListWeekPictogramDTO input)
         {
             if (input == null)
                 return false;

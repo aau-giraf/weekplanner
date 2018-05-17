@@ -16,12 +16,6 @@ namespace WeekPlanner.Services.Settings
         private readonly JsonObject _appSettings;
         private readonly IUserApi _userApi;
         private readonly IRequestService _requestService;
-        
-        private static string _token;
-        public static Task<string> GetToken()
-        {
-            return Task.FromResult(_token);
-        }
 
         public SettingsService(IAccountApi accountApi, JsonObject appSettings, IUserApi userApi, IRequestService requestService)
         {
@@ -33,20 +27,36 @@ namespace WeekPlanner.Services.Settings
 
         public string BaseEndpoint
         {
-            get { return _appSettings["BaseEndpoint"].ToString(); }
+            get => _appSettings["BaseEndpoint"].ToString();
             set { }
         }
 
-        public bool UseMocks { get; set; }
+        private string _authToken;
+        public string AuthToken
+        {
+            get => _authToken;
+            set
+            {
+                _authToken = value;
+                _accountApi.Configuration.ApiKey["Authorization"] = $"bearer {value}";
+            }
+        }
 
-        public DepartmentNameDTO Department { get; set; }
-
-        public string GuardianAuthToken { get; set; }
-
-        public string CitizenAuthToken { get; set; }
+		public bool MasterPageShowable => IsInGuardianMode && CurrentCitizen != null;
+        
+        public void ClearSettings()
+        {
+            AuthToken = default(string);
+            IsInGuardianMode = default(bool);
+            
+            SetTheme(toDefault: true);
+            
+            _currentCitizen = default(UserNameDTO);
+            CurrentCitizenSettingDTO = default(SettingDTO);
+            DepartmentId = default(long);
+        }
 
         private bool _isInGuardianMode;
-
         public bool IsInGuardianMode
         {
             get => _isInGuardianMode;
@@ -54,71 +64,35 @@ namespace WeekPlanner.Services.Settings
             {
                 _isInGuardianMode = value;
                 RaisePropertyChanged(() => IsInGuardianMode);
-            }
-        }
-
-        private string _currentCitizenId;
-        public string CurrentCitizenId
-        {
-            get => _currentCitizenId;
-            set
-            {
-                _currentCitizenId = value;
-                RaisePropertyChanged(() => CurrentCitizenId);
-            } 
-        }
-        private string _currentCitizenName;
-        public string CurrentCitizenName
-        {
-            get => _currentCitizenName;
-            set
-            {
-                _currentCitizenName = value;
-                RaisePropertyChanged(() => CurrentCitizenName);
+                RaisePropertyChanged(() => MasterPageShowable);
             }
         }
 
         public SettingDTO CurrentCitizenSettingDTO { get; set; }
 
-
-        /// <summary>
-        /// Sets the API up to using the specified type of authentication token.
-        /// </summary>
-        /// <param name="userType">The UserType to use a token for.</param>
-        /// <exception cref="ArgumentOutOfRangeException">When given an unknown UserType</exception>
-        /// <exception cref="ArgumentException">If the token for the specified UserType is not already set.</exception>
-        public void UseTokenFor(UserType userType)
+        private UserNameDTO _currentCitizen;
+        
+        public UserNameDTO CurrentCitizen
         {
-            switch(userType)
+            get => _currentCitizen;
+            set
             {
-                case UserType.Citizen:
-                    SetAuthTokenInAccountApi(CitizenAuthToken);
-                    _token = CitizenAuthToken;
-                    break;
-                case UserType.Guardian:
-                    SetAuthTokenInAccountApi(GuardianAuthToken);
-                    _token = GuardianAuthToken;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(userType), userType, null);
+                _currentCitizen = value;
+                RaisePropertyChanged(() => MasterPageShowable);
             }
         }
-        
 
-        private void SetAuthTokenInAccountApi(string authToken)
-        {
-            if (string.IsNullOrEmpty(authToken))
-            {
-                throw new ArgumentException("Can not be null or empty.", nameof(authToken));
-            }
-            
-            // The 'bearer' part is necessary, because it uses the Bearer Authentication
-            _accountApi.Configuration.AddApiKey("Authorization", $"bearer {authToken}");
-        }
-        
-        public void SetTheme(){
+        public long DepartmentId { get; set; }
+
+        public void SetTheme(bool toDefault = false){
             
             var resources = Application.Current.Resources;
+
+            if (toDefault)
+            {
+                resources.MergedWith = typeof(Themes.BlueTheme);
+                return;
+            }
                        
             resources["MondayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[0].HexColor);
             resources["TuesdayColor"] = Color.FromHex(CurrentCitizenSettingDTO.WeekDayColors[1].HexColor);

@@ -77,23 +77,10 @@ namespace IO.Swagger.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="GirafUserDTO" /> class.
         /// </summary>
-        /// <param name="Role">List of the roles the current user is defined as in the system..</param>
-        /// <param name="RoleName">List of the roles the current user is defined as in the system, as strings.</param>
-        /// <param name="Id">The Id of the user. (required).</param>
         /// <param name="Username">The username of the user. (required).</param>
         /// <param name="ScreenName">The display name of the user..</param>
-        /// <param name="Department">The key of the user&#39;s department..</param>
-        public GirafUserDTO(RoleEnum? Role = default(RoleEnum?), string RoleName = default(string), string Id = default(string), string Username = default(string), string ScreenName = default(string), long? Department = default(long?))
+        public GirafUserDTO(string Username = default(string), string ScreenName = default(string))
         {
-            // to ensure "Id" is required (not null)
-            if (Id == null)
-            {
-                throw new InvalidDataException("Id is a required property for GirafUserDTO and cannot be null");
-            }
-            else
-            {
-                this.Id = Id;
-            }
             // to ensure "Username" is required (not null)
             if (Username == null)
             {
@@ -103,10 +90,7 @@ namespace IO.Swagger.Model
             {
                 this.Username = Username;
             }
-            this.Role = Role;
-            this.RoleName = RoleName;
             this.ScreenName = ScreenName;
-            this.Department = Department;
         }
         
 
@@ -115,14 +99,14 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <value>List of the roles the current user is defined as in the system, as strings</value>
         [DataMember(Name="roleName", EmitDefaultValue=false)]
-        public string RoleName { get; set; }
+        public string RoleName { get; private set; }
 
         /// <summary>
         /// The Id of the user.
         /// </summary>
         /// <value>The Id of the user.</value>
         [DataMember(Name="id", EmitDefaultValue=false)]
-        public string Id { get; set; }
+        public string Id { get; private set; }
 
         /// <summary>
         /// The username of the user.
@@ -143,7 +127,7 @@ namespace IO.Swagger.Model
         /// </summary>
         /// <value>The key of the user&#39;s department.</value>
         [DataMember(Name="department", EmitDefaultValue=false)]
-        public long? Department { get; set; }
+        public long? Department { get; private set; }
 
         /// <summary>
         /// Returns the string presentation of the object

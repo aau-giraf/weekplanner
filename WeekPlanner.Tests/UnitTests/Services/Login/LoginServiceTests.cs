@@ -81,7 +81,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
                 (sender, args) => { messageReceived = true;});
 
             // Act
-            await sut.LoginAndThenAsync("NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>(), UserType.Guardian);
+            await sut.LoginAndThenAsync(UserType.Guardian, "NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>());
             
             // Assert
             Assert.True(messageReceived);
@@ -109,7 +109,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             await sut.LoginAndThenAsync(UserType.Guardian, "NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>());
             
             // Assert
-            settingsServiceMock.VerifySet(s => s.GuardianAuthToken = token);
+            settingsServiceMock.VerifySet(s => s.AuthToken = token);
         }
         
         [Fact]
@@ -156,7 +156,7 @@ namespace WeekPlanner.Tests.UnitTests.Services.Login
             var sut = Fixture.Create<LoginService>();
             
             // Act
-            await sut.LoginAndThenAsync("NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>(), userType);
+            await sut.LoginAndThenAsync(userType, "NotEmpty", "NotEmpty", Fixture.Create<Func<Task>>());
             
             // Assert
             settingsServiceMock.Verify(s => s.UseTokenFor(userType));

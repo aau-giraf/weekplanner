@@ -3,7 +3,6 @@ using WeekPlanner.Services.Navigation;
 using WeekPlanner.ViewModels;
 using IO.Swagger.Api;
 using SimpleJson;
-using WeekPlanner.Services.Mocks;
 using WeekPlanner.Services.Settings;
 using WeekPlanner.Services.Login;
 using WeekPlanner.Services.Request;
@@ -35,10 +34,11 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<PictogramSearchViewModel>();
 			cb.RegisterType<SettingsViewModel>();
             cb.RegisterType<MasterViewModel>();
-            cb.RegisterType<SavePromptViewModel>();
             cb.RegisterType<CitizenSchedulesViewModel>();
             cb.RegisterType<NewScheduleViewModel>();
             cb.RegisterType<ActivityViewModel>();
+            cb.RegisterType<ChoiceBoardViewModel>();
+            cb.RegisterType<WeekPlannerTemplateViewModel>();
 
             // Services
 			cb.RegisterType<NavigationService>().As<INavigationService>();
@@ -47,28 +47,16 @@ namespace WeekPlanner.ApplicationObjects
             cb.RegisterType<SettingsService>().As<ISettingsService>()
                 .SingleInstance()
                 .WithParameter("appSettings", _appSettings);
-
-            // *** Conditional Registrations ***
-            if (_appSettings["UseMocks"].ToString() == "true")
-            {
-                cb.RegisterType<MockAccountApi>().As<IAccountApi>();
-                cb.RegisterType<MockDepartmentApi>().As<IDepartmentApi>();
-                cb.RegisterType<MockWeekApi>().As<IWeekApi>();
-                cb.RegisterType<MockPictogramApi>().As<IPictogramApi>();
-                cb.RegisterType<MockLoginService>().As<ILoginService>();
-                cb.RegisterType<MockUserApi>().As<IUserApi>();
-            }
-            else
-            {
-                var accountApi = new AccountApi {Configuration = {BasePath = _appSettings["BaseEndpoint"].ToString()}};
-                cb.RegisterInstance<IAccountApi>(accountApi);
-                cb.RegisterType<LoginService>().As<ILoginService>();
-                cb.RegisterType<WeekApi>().As<IWeekApi>();
-                cb.RegisterType<PictogramApi>().As<IPictogramApi>();
-                cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
-                cb.RegisterType<PictogramApi>().As<IPictogramApi>();
-				cb.RegisterType<UserApi>().As<IUserApi>();
-			}
+        
+            var accountApi = new AccountApi {Configuration = {BasePath = _appSettings["BaseEndpoint"].ToString()}};
+            cb.RegisterInstance<IAccountApi>(accountApi);
+            cb.RegisterType<LoginService>().As<ILoginService>();
+            cb.RegisterType<WeekApi>().As<IWeekApi>();
+            cb.RegisterType<PictogramApi>().As<IPictogramApi>();
+            cb.RegisterType<DepartmentApi>().As<IDepartmentApi>();
+            cb.RegisterType<PictogramApi>().As<IPictogramApi>();
+			cb.RegisterType<UserApi>().As<IUserApi>();
+            cb.RegisterType<WeekTemplateApi>().As<IWeekTemplateApi>();
         }
     }
 }

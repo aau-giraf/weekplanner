@@ -27,8 +27,8 @@ namespace WeekPlanner.ViewModels
             _requestService = requestService;
         }
 
-        private ObservableCollection<PictogramDTO> _imageSources;
-        public ObservableCollection<PictogramDTO> ImageSources
+        private ObservableCollection<WeekPictogramDTO> _imageSources;
+        public ObservableCollection<WeekPictogramDTO> ImageSources
         {
             get => _imageSources;
             set
@@ -39,12 +39,14 @@ namespace WeekPlanner.ViewModels
         }
 
         public ICommand SearchCommand => new Command<string>(async searchTerm => await OnSearchGetPictograms(searchTerm));
-        public ICommand ItemTappedCommand => new Command<PictogramDTO>(ListViewItemTapped);
 
-        async void ListViewItemTapped(PictogramDTO tappedItem)
+        public ICommand ItemTappedCommand => new Command<WeekPictogramDTO>(tappedItem => ListViewItemTapped(tappedItem));
+
+
+        async void ListViewItemTapped(WeekPictogramDTO tappedItem)
         {
             if (IsBusy) return;
-            IsBusy = true;
+            IsBusy = true; 
             await NavigationService.PopAsync(tappedItem);
             IsBusy = false;
         }
@@ -54,7 +56,7 @@ namespace WeekPlanner.ViewModels
         {
             return _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _pictogramApi.V1PictogramGetAsync(1, 10, searchTerm),
-                onSuccess: result => { ImageSources = new ObservableCollection<PictogramDTO>(result.Data); });
+                onSuccess: result => { ImageSources = new ObservableCollection<WeekPictogramDTO>(result.Data); });
         }
     } 
 }

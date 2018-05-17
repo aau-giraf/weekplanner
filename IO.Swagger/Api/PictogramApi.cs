@@ -53,8 +53,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        ResponsePictogramDTO V1PictogramByIdGet (long? id);
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        ResponseWeekPictogramDTO V1PictogramByIdGet (long? id);
 
         /// <summary>
         /// Read the GirafRest.Models.Pictogram pictogram with the specified id id and  check if the user is authorized to see it.
@@ -64,8 +64,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        ApiResponse<ResponsePictogramDTO> V1PictogramByIdGetWithHttpInfo (long? id);
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        ApiResponse<ResponseWeekPictogramDTO> V1PictogramByIdGetWithHttpInfo (long? id);
         /// <summary>
         /// Read the image of a given pictogram as raw.
         /// </summary>
@@ -95,8 +95,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        ResponsePictogramDTO V1PictogramByIdImagePut (long? id);
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        ResponseWeekPictogramDTO V1PictogramByIdImagePut (long? id);
 
         /// <summary>
         /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
@@ -106,8 +106,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        ApiResponse<ResponsePictogramDTO> V1PictogramByIdImagePutWithHttpInfo (long? id);
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        ApiResponse<ResponseWeekPictogramDTO> V1PictogramByIdImagePutWithHttpInfo (long? id);
         /// <summary>
         /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department
         /// </summary>
@@ -138,8 +138,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        ResponsePictogramDTO V1PictogramByIdPut (long? id, PictogramDTO pictogram = null);
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        ResponseWeekPictogramDTO V1PictogramByIdPut (long? id, PictogramDTO pictogram = null);
 
         /// <summary>
         /// Update info of a GirafRest.Models.Pictogram pictogram.
@@ -150,8 +150,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        ApiResponse<ResponsePictogramDTO> V1PictogramByIdPutWithHttpInfo (long? id, PictogramDTO pictogram = null);
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        ApiResponse<ResponseWeekPictogramDTO> V1PictogramByIdPutWithHttpInfo (long? id, PictogramDTO pictogram = null);
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
         /// </summary>
@@ -162,8 +162,8 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>ResponseListPictogramDTO</returns>
-        ResponseListPictogramDTO V1PictogramGet (int? page, int? pageSize, string query = null);
+        /// <returns>ResponseListWeekPictogramDTO</returns>
+        ResponseListWeekPictogramDTO V1PictogramGet (int? page, int? pageSize, string query = null);
 
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
@@ -175,8 +175,8 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>ApiResponse of ResponseListPictogramDTO</returns>
-        ApiResponse<ResponseListPictogramDTO> V1PictogramGetWithHttpInfo (int? page, int? pageSize, string query = null);
+        /// <returns>ApiResponse of ResponseListWeekPictogramDTO</returns>
+        ApiResponse<ResponseListWeekPictogramDTO> V1PictogramGetWithHttpInfo (int? page, int? pageSize, string query = null);
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
         /// </summary>
@@ -185,8 +185,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        ResponsePictogramDTO V1PictogramPost (PictogramDTO pictogram = null);
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        ResponseWeekPictogramDTO V1PictogramPost (PictogramDTO pictogram = null);
 
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
@@ -196,8 +196,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        ApiResponse<ResponsePictogramDTO> V1PictogramPostWithHttpInfo (PictogramDTO pictogram = null);
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        ApiResponse<ResponseWeekPictogramDTO> V1PictogramPostWithHttpInfo (PictogramDTO pictogram = null);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -229,8 +229,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdGetAsync (long? id);
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramByIdGetAsync (long? id);
 
         /// <summary>
         /// Read the GirafRest.Models.Pictogram pictogram with the specified id id and  check if the user is authorized to see it.
@@ -240,8 +240,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdGetAsyncWithHttpInfo (long? id);
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramByIdGetAsyncWithHttpInfo (long? id);
         /// <summary>
         /// Read the image of a given pictogram as raw.
         /// </summary>
@@ -271,8 +271,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdImagePutAsync (long? id);
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramByIdImagePutAsync (long? id);
 
         /// <summary>
         /// Update the image of a GirafRest.Models.Pictogram pictogram with the given Id.
@@ -282,8 +282,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdImagePutAsyncWithHttpInfo (long? id);
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramByIdImagePutAsyncWithHttpInfo (long? id);
         /// <summary>
         /// Reads the raw pictogram image.  You are allowed to read all public pictograms aswell as your own pictograms   or any pictograms shared within the department
         /// </summary>
@@ -314,8 +314,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdPutAsync (long? id, PictogramDTO pictogram = null);
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramByIdPutAsync (long? id, PictogramDTO pictogram = null);
 
         /// <summary>
         /// Update info of a GirafRest.Models.Pictogram pictogram.
@@ -326,8 +326,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdPutAsyncWithHttpInfo (long? id, PictogramDTO pictogram = null);
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramByIdPutAsyncWithHttpInfo (long? id, PictogramDTO pictogram = null);
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
         /// </summary>
@@ -338,8 +338,8 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>Task of ResponseListPictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? page, int? pageSize, string query = null);
+        /// <returns>Task of ResponseListWeekPictogramDTO</returns>
+        System.Threading.Tasks.Task<ResponseListWeekPictogramDTO> V1PictogramGetAsync (int? page, int? pageSize, string query = null);
 
         /// <summary>
         /// Get all public GirafRest.Models.Pictogram pictograms available to the user  (i.e the public pictograms and those owned by the user (PRIVATE) and his department (PROTECTED)).
@@ -351,8 +351,8 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseListPictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? page, int? pageSize, string query = null);
+        /// <returns>Task of ApiResponse (ResponseListWeekPictogramDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseListWeekPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? page, int? pageSize, string query = null);
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
         /// </summary>
@@ -361,8 +361,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramPostAsync (PictogramDTO pictogram = null);
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramPostAsync (PictogramDTO pictogram = null);
 
         /// <summary>
         /// Create a new GirafRest.Models.Pictogram pictogram.
@@ -372,8 +372,8 @@ namespace IO.Swagger.Api
         /// </remarks>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramPostAsyncWithHttpInfo (PictogramDTO pictogram = null);
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramPostAsyncWithHttpInfo (PictogramDTO pictogram = null);
         #endregion Asynchronous Operations
     }
 
@@ -626,10 +626,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        public ResponsePictogramDTO V1PictogramByIdGet (long? id)
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        public ResponseWeekPictogramDTO V1PictogramByIdGet (long? id)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = V1PictogramByIdGetWithHttpInfo(id);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = V1PictogramByIdGetWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -638,8 +638,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        public ApiResponse< ResponsePictogramDTO > V1PictogramByIdGetWithHttpInfo (long? id)
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        public ApiResponse< ResponseWeekPictogramDTO > V1PictogramByIdGetWithHttpInfo (long? id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -689,9 +689,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -699,10 +699,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdGetAsync (long? id)
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramByIdGetAsync (long? id)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = await V1PictogramByIdGetAsyncWithHttpInfo(id);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = await V1PictogramByIdGetAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -712,8 +712,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the pictogram to fetch.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdGetAsyncWithHttpInfo (long? id)
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramByIdGetAsyncWithHttpInfo (long? id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -763,9 +763,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -920,10 +920,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        public ResponsePictogramDTO V1PictogramByIdImagePut (long? id)
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        public ResponseWeekPictogramDTO V1PictogramByIdImagePut (long? id)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = V1PictogramByIdImagePutWithHttpInfo(id);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = V1PictogramByIdImagePutWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -932,8 +932,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        public ApiResponse< ResponsePictogramDTO > V1PictogramByIdImagePutWithHttpInfo (long? id)
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        public ApiResponse< ResponseWeekPictogramDTO > V1PictogramByIdImagePutWithHttpInfo (long? id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -983,9 +983,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -993,10 +993,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdImagePutAsync (long? id)
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramByIdImagePutAsync (long? id)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = await V1PictogramByIdImagePutAsyncWithHttpInfo(id);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = await V1PictogramByIdImagePutAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -1006,8 +1006,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Id of the pictogram to update the image for.</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdImagePutAsyncWithHttpInfo (long? id)
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramByIdImagePutAsyncWithHttpInfo (long? id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1057,9 +1057,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -1207,10 +1207,10 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        public ResponsePictogramDTO V1PictogramByIdPut (long? id, PictogramDTO pictogram = null)
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        public ResponseWeekPictogramDTO V1PictogramByIdPut (long? id, PictogramDTO pictogram = null)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = V1PictogramByIdPutWithHttpInfo(id, pictogram);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = V1PictogramByIdPutWithHttpInfo(id, pictogram);
              return localVarResponse.Data;
         }
 
@@ -1220,8 +1220,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        public ApiResponse< ResponsePictogramDTO > V1PictogramByIdPutWithHttpInfo (long? id, PictogramDTO pictogram = null)
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        public ApiResponse< ResponseWeekPictogramDTO > V1PictogramByIdPutWithHttpInfo (long? id, PictogramDTO pictogram = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1283,9 +1283,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -1294,10 +1294,10 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramByIdPutAsync (long? id, PictogramDTO pictogram = null)
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramByIdPutAsync (long? id, PictogramDTO pictogram = null)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = await V1PictogramByIdPutAsyncWithHttpInfo(id, pictogram);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = await V1PictogramByIdPutAsyncWithHttpInfo(id, pictogram);
              return localVarResponse.Data;
 
         }
@@ -1308,8 +1308,8 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id"></param>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all new information to update with.              The Id found in this DTO is the target pictogram. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramByIdPutAsyncWithHttpInfo (long? id, PictogramDTO pictogram = null)
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramByIdPutAsyncWithHttpInfo (long? id, PictogramDTO pictogram = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1371,9 +1371,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -1383,10 +1383,10 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>ResponseListPictogramDTO</returns>
-        public ResponseListPictogramDTO V1PictogramGet (int? page, int? pageSize, string query = null)
+        /// <returns>ResponseListWeekPictogramDTO</returns>
+        public ResponseListWeekPictogramDTO V1PictogramGet (int? page, int? pageSize, string query = null)
         {
-             ApiResponse<ResponseListPictogramDTO> localVarResponse = V1PictogramGetWithHttpInfo(page, pageSize, query);
+             ApiResponse<ResponseListWeekPictogramDTO> localVarResponse = V1PictogramGetWithHttpInfo(page, pageSize, query);
              return localVarResponse.Data;
         }
 
@@ -1397,8 +1397,8 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>ApiResponse of ResponseListPictogramDTO</returns>
-        public ApiResponse< ResponseListPictogramDTO > V1PictogramGetWithHttpInfo (int? page, int? pageSize, string query = null)
+        /// <returns>ApiResponse of ResponseListWeekPictogramDTO</returns>
+        public ApiResponse< ResponseListWeekPictogramDTO > V1PictogramGetWithHttpInfo (int? page, int? pageSize, string query = null)
         {
             // verify the required parameter 'page' is set
             if (page == null)
@@ -1453,9 +1453,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseListPictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseListWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseListPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListPictogramDTO)));
+                (ResponseListWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -1465,10 +1465,10 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>Task of ResponseListPictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponseListPictogramDTO> V1PictogramGetAsync (int? page, int? pageSize, string query = null)
+        /// <returns>Task of ResponseListWeekPictogramDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseListWeekPictogramDTO> V1PictogramGetAsync (int? page, int? pageSize, string query = null)
         {
-             ApiResponse<ResponseListPictogramDTO> localVarResponse = await V1PictogramGetAsyncWithHttpInfo(page, pageSize, query);
+             ApiResponse<ResponseListWeekPictogramDTO> localVarResponse = await V1PictogramGetAsyncWithHttpInfo(page, pageSize, query);
              return localVarResponse.Data;
 
         }
@@ -1480,8 +1480,8 @@ namespace IO.Swagger.Api
         /// <param name="page">Page number</param>
         /// <param name="pageSize">Number of pictograms per page</param>
         /// <param name="query">The query string. pictograms are filtered based on this string if passed (optional)</param>
-        /// <returns>Task of ApiResponse (ResponseListPictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponseListPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? page, int? pageSize, string query = null)
+        /// <returns>Task of ApiResponse (ResponseListWeekPictogramDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseListWeekPictogramDTO>> V1PictogramGetAsyncWithHttpInfo (int? page, int? pageSize, string query = null)
         {
             // verify the required parameter 'page' is set
             if (page == null)
@@ -1536,9 +1536,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponseListPictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseListWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponseListPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListPictogramDTO)));
+                (ResponseListWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseListWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -1546,10 +1546,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>ResponsePictogramDTO</returns>
-        public ResponsePictogramDTO V1PictogramPost (PictogramDTO pictogram = null)
+        /// <returns>ResponseWeekPictogramDTO</returns>
+        public ResponseWeekPictogramDTO V1PictogramPost (PictogramDTO pictogram = null)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = V1PictogramPostWithHttpInfo(pictogram);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = V1PictogramPostWithHttpInfo(pictogram);
              return localVarResponse.Data;
         }
 
@@ -1558,8 +1558,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>ApiResponse of ResponsePictogramDTO</returns>
-        public ApiResponse< ResponsePictogramDTO > V1PictogramPostWithHttpInfo (PictogramDTO pictogram = null)
+        /// <returns>ApiResponse of ResponseWeekPictogramDTO</returns>
+        public ApiResponse< ResponseWeekPictogramDTO > V1PictogramPostWithHttpInfo (PictogramDTO pictogram = null)
         {
 
             var localVarPath = "/v1/Pictogram";
@@ -1617,9 +1617,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
         /// <summary>
@@ -1627,10 +1627,10 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>Task of ResponsePictogramDTO</returns>
-        public async System.Threading.Tasks.Task<ResponsePictogramDTO> V1PictogramPostAsync (PictogramDTO pictogram = null)
+        /// <returns>Task of ResponseWeekPictogramDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseWeekPictogramDTO> V1PictogramPostAsync (PictogramDTO pictogram = null)
         {
-             ApiResponse<ResponsePictogramDTO> localVarResponse = await V1PictogramPostAsyncWithHttpInfo(pictogram);
+             ApiResponse<ResponseWeekPictogramDTO> localVarResponse = await V1PictogramPostAsyncWithHttpInfo(pictogram);
              return localVarResponse.Data;
 
         }
@@ -1640,8 +1640,8 @@ namespace IO.Swagger.Api
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="pictogram">A GirafRest.Models.DTOs.PictogramDTO with all relevant information about the new pictogram. (optional)</param>
-        /// <returns>Task of ApiResponse (ResponsePictogramDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ResponsePictogramDTO>> V1PictogramPostAsyncWithHttpInfo (PictogramDTO pictogram = null)
+        /// <returns>Task of ApiResponse (ResponseWeekPictogramDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekPictogramDTO>> V1PictogramPostAsyncWithHttpInfo (PictogramDTO pictogram = null)
         {
 
             var localVarPath = "/v1/Pictogram";
@@ -1699,9 +1699,9 @@ namespace IO.Swagger.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ResponsePictogramDTO>(localVarStatusCode,
+            return new ApiResponse<ResponseWeekPictogramDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ResponsePictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponsePictogramDTO)));
+                (ResponseWeekPictogramDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekPictogramDTO)));
         }
 
     }

@@ -84,10 +84,12 @@
             <converters:NegateBooleanConverter x:Key="NegateBooleanConverter" />
             <converters:IdToRawPictoUrlConverter x:Key="IdToRawPictoUrlConverter" />
             <converters:CitizenIdIsSetConverter x:Key="CitizenIdIsSetConverter" />
+            <converters:StateToOutlineConverter x:Key="StateToOutlineConverter" />
+            <converters:StateToImageConverter x:Key="StateToImageConverter" />
 
             <!-- CUSTOM NAVIGATION BAR - without toolbar button -->
             <ControlTemplate x:Key="NavBarTheme">
-                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -101,7 +103,7 @@
                         BackgroundColor="{DynamicResource NavBarColor}"
                         Spacing="0"
                         Padding="7, 0, 10, 0"
-                        Grid.Column="0" Grid.Row="0">
+                        Grid.Row="0">
                         <!-- Header Content -->
                         
                         <!-- Back Button -->
@@ -125,9 +127,7 @@
                     <!-- End Header -->
                      
                     <!-- Begin Content -->
-                    <ScrollView Grid.Column="0" Grid.Row="1">
-                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
-                    </ScrollView>
+                    <ContentPresenter Grid.Row="1" />
                     <!-- End Content -->
                 </Grid>
             </ControlTemplate>
@@ -135,7 +135,7 @@
             
             <!-- CUSTOM NAVIGATION BAR - with toolbar button -->
             <ControlTemplate x:Key="NavBarWithToolbarTemplate">
-                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -149,7 +149,7 @@
                         BackgroundColor="{DynamicResource NavBarColor}"
                         Spacing="0"
                         Padding="7, 0, 10, 0"
-                        Grid.Column="0" Grid.Row="0">
+                        Grid.Row="0">
                         <!-- Header Content -->
                         
                         <!-- Back Button -->
@@ -184,16 +184,14 @@
                     <!-- End Header -->
                      
                     <!-- Begin Content -->
-                    <ScrollView Grid.Column="0" Grid.Row="1">
-                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
-                    </ScrollView>
+                    <ContentPresenter Grid.Row="1" />
                     <!-- End Content -->
                 </Grid>
             </ControlTemplate>
             
             <!-- CUSTOM NAVIGATION BAR - with toolbar button and stacklayout-->
             <ControlTemplate x:Key="NavBarWithToolbarAndStackTemplate">
-                <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ColumnSpacing="0" RowSpacing="0" >
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -207,7 +205,7 @@
                         BackgroundColor="{DynamicResource NavBarColor}"
                         Spacing="0"
                         Padding="7, 0, 10, 0"
-                        Grid.Column="0" Grid.Row="0">
+                        Grid.Row="0">
                         <!-- Header Content -->
                         
                         <!-- Back Button -->
@@ -242,9 +240,7 @@
                     <!-- End Header -->
                      
                     <!-- Begin Content -->
-                    <StackLayout Grid.Column="0" Grid.Row="1">
-                        <ContentPresenter VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
-                    </StackLayout>
+                    <ContentPresenter Grid.Row="1" />
                     <!-- End Content -->
                 </Grid>
             </ControlTemplate>

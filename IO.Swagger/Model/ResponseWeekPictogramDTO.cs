@@ -25,10 +25,10 @@ using SwaggerDateConverter = IO.Swagger.Client.SwaggerDateConverter;
 namespace IO.Swagger.Model
 {
     /// <summary>
-    /// ResponsePictogramDTO
+    /// ResponseWeekPictogramDTO
     /// </summary>
     [DataContract]
-    public partial class ResponsePictogramDTO :  IEquatable<ResponsePictogramDTO>, IValidatableObject
+    public partial class ResponseWeekPictogramDTO :  IEquatable<ResponseWeekPictogramDTO>, IValidatableObject
     {
         /// <summary>
         /// Defines ErrorKey
@@ -401,7 +401,25 @@ namespace IO.Swagger.Model
             /// Enum InvalidHexValues for value: InvalidHexValues
             /// </summary>
             [EnumMember(Value = "InvalidHexValues")]
-            InvalidHexValues = 61
+            InvalidHexValues = 61,
+            
+            /// <summary>
+            /// Enum WeekTemplateNotFound for value: WeekTemplateNotFound
+            /// </summary>
+            [EnumMember(Value = "WeekTemplateNotFound")]
+            WeekTemplateNotFound = 62,
+            
+            /// <summary>
+            /// Enum NotImplemented for value: NotImplemented
+            /// </summary>
+            [EnumMember(Value = "NotImplemented")]
+            NotImplemented = 63,
+            
+            /// <summary>
+            /// Enum UserMustBeInDepartment for value: UserMustBeInDepartment
+            /// </summary>
+            [EnumMember(Value = "UserMustBeInDepartment")]
+            UserMustBeInDepartment = 64
         }
 
         /// <summary>
@@ -410,12 +428,12 @@ namespace IO.Swagger.Model
         [DataMember(Name="errorKey", EmitDefaultValue=false)]
         public ErrorKeyEnum? ErrorKey { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResponsePictogramDTO" /> class.
+        /// Initializes a new instance of the <see cref="ResponseWeekPictogramDTO" /> class.
         /// </summary>
         /// <param name="Data">Data.</param>
         /// <param name="Success">Success.</param>
         /// <param name="ErrorProperties">ErrorProperties.</param>
-        public ResponsePictogramDTO(PictogramDTO Data = default(PictogramDTO), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
+        public ResponseWeekPictogramDTO(WeekPictogramDTO Data = default(WeekPictogramDTO), bool? Success = default(bool?), List<string> ErrorProperties = default(List<string>))
         {
             this.Data = Data;
             this.Success = Success;
@@ -426,7 +444,7 @@ namespace IO.Swagger.Model
         /// Gets or Sets Data
         /// </summary>
         [DataMember(Name="data", EmitDefaultValue=false)]
-        public PictogramDTO Data { get; set; }
+        public WeekPictogramDTO Data { get; set; }
 
         /// <summary>
         /// Gets or Sets Success
@@ -448,7 +466,7 @@ namespace IO.Swagger.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class ResponsePictogramDTO {\n");
+            sb.Append("class ResponseWeekPictogramDTO {\n");
             sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Success: ").Append(Success).Append("\n");
             sb.Append("  ErrorProperties: ").Append(ErrorProperties).Append("\n");
@@ -473,15 +491,15 @@ namespace IO.Swagger.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as ResponsePictogramDTO);
+            return this.Equals(input as ResponseWeekPictogramDTO);
         }
 
         /// <summary>
-        /// Returns true if ResponsePictogramDTO instances are equal
+        /// Returns true if ResponseWeekPictogramDTO instances are equal
         /// </summary>
-        /// <param name="input">Instance of ResponsePictogramDTO to be compared</param>
+        /// <param name="input">Instance of ResponseWeekPictogramDTO to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(ResponsePictogramDTO input)
+        public bool Equals(ResponseWeekPictogramDTO input)
         {
             if (input == null)
                 return false;

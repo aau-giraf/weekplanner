@@ -25,7 +25,28 @@ namespace IO.Swagger.Api
     {
         #region Synchronous Operations
         /// <summary>
-        /// Gets the week template with the specified id.
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>Response</returns>
+        Response V1WeekTemplateByIdDelete (long? id);
+
+        /// <summary>
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>ApiResponse of Response</returns>
+        ApiResponse<Response> V1WeekTemplateByIdDeleteWithHttpInfo (long? id);
+        /// <summary>
+        /// Gets the week template with the specified id.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -36,7 +57,7 @@ namespace IO.Swagger.Api
         ResponseWeekTemplateDTO V1WeekTemplateByIdGet (long? id);
 
         /// <summary>
-        /// Gets the week template with the specified id.
+        /// Gets the week template with the specified id.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -46,7 +67,30 @@ namespace IO.Swagger.Api
         /// <returns>ApiResponse of ResponseWeekTemplateDTO</returns>
         ApiResponse<ResponseWeekTemplateDTO> V1WeekTemplateByIdGetWithHttpInfo (long? id);
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user.
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>ResponseWeekTemplateDTO</returns>
+        ResponseWeekTemplateDTO V1WeekTemplateByIdPut (long? id, WeekTemplateDTO newValuesDTO = null);
+
+        /// <summary>
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>ApiResponse of ResponseWeekTemplateDTO</returns>
+        ApiResponse<ResponseWeekTemplateDTO> V1WeekTemplateByIdPutWithHttpInfo (long? id, WeekTemplateDTO newValuesDTO = null);
+        /// <summary>
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -56,7 +100,7 @@ namespace IO.Swagger.Api
         ResponseIEnumerableWeekTemplateNameDTO V1WeekTemplateGet ();
 
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user.
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -64,10 +108,52 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseIEnumerableWeekTemplateNameDTO</returns>
         ApiResponse<ResponseIEnumerableWeekTemplateNameDTO> V1WeekTemplateGetWithHttpInfo ();
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>ResponseWeekTemplateDTO</returns>
+        ResponseWeekTemplateDTO V1WeekTemplatePost (WeekTemplateDTO templateDTO = null);
+
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>ApiResponse of ResponseWeekTemplateDTO</returns>
+        ApiResponse<ResponseWeekTemplateDTO> V1WeekTemplatePostWithHttpInfo (WeekTemplateDTO templateDTO = null);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
-        /// Gets the week template with the specified id.
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>Task of Response</returns>
+        System.Threading.Tasks.Task<Response> V1WeekTemplateByIdDeleteAsync (long? id);
+
+        /// <summary>
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Response>> V1WeekTemplateByIdDeleteAsyncWithHttpInfo (long? id);
+        /// <summary>
+        /// Gets the week template with the specified id.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -78,7 +164,7 @@ namespace IO.Swagger.Api
         System.Threading.Tasks.Task<ResponseWeekTemplateDTO> V1WeekTemplateByIdGetAsync (long? id);
 
         /// <summary>
-        /// Gets the week template with the specified id.
+        /// Gets the week template with the specified id.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -88,7 +174,30 @@ namespace IO.Swagger.Api
         /// <returns>Task of ApiResponse (ResponseWeekTemplateDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseWeekTemplateDTO>> V1WeekTemplateByIdGetAsyncWithHttpInfo (long? id);
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user.
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>Task of ResponseWeekTemplateDTO</returns>
+        System.Threading.Tasks.Task<ResponseWeekTemplateDTO> V1WeekTemplateByIdPutAsync (long? id, WeekTemplateDTO newValuesDTO = null);
+
+        /// <summary>
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseWeekTemplateDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekTemplateDTO>> V1WeekTemplateByIdPutAsyncWithHttpInfo (long? id, WeekTemplateDTO newValuesDTO = null);
+        /// <summary>
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -98,7 +207,7 @@ namespace IO.Swagger.Api
         System.Threading.Tasks.Task<ResponseIEnumerableWeekTemplateNameDTO> V1WeekTemplateGetAsync ();
 
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user.
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users.
         /// </summary>
         /// <remarks>
         /// 
@@ -106,6 +215,27 @@ namespace IO.Swagger.Api
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekTemplateNameDTO)</returns>
         System.Threading.Tasks.Task<ApiResponse<ResponseIEnumerableWeekTemplateNameDTO>> V1WeekTemplateGetAsyncWithHttpInfo ();
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>Task of ResponseWeekTemplateDTO</returns>
+        System.Threading.Tasks.Task<ResponseWeekTemplateDTO> V1WeekTemplatePostAsync (WeekTemplateDTO templateDTO = null);
+
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseWeekTemplateDTO)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ResponseWeekTemplateDTO>> V1WeekTemplatePostAsyncWithHttpInfo (WeekTemplateDTO templateDTO = null);
         #endregion Asynchronous Operations
     }
 
@@ -207,7 +337,154 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets the week template with the specified id. 
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>Response</returns>
+        public Response V1WeekTemplateByIdDelete (long? id)
+        {
+             ApiResponse<Response> localVarResponse = V1WeekTemplateByIdDeleteWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>ApiResponse of Response</returns>
+        public ApiResponse< Response > V1WeekTemplateByIdDeleteWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling WeekTemplateApi->V1WeekTemplateByIdDelete");
+
+            var localVarPath = "/v1/WeekTemplate/{id}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1WeekTemplateByIdDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>Task of Response</returns>
+        public async System.Threading.Tasks.Task<Response> V1WeekTemplateByIdDeleteAsync (long? id)
+        {
+             ApiResponse<Response> localVarResponse = await V1WeekTemplateByIdDeleteAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Deletes the template of the given ID.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template that will be deleted.</param>
+        /// <returns>Task of ApiResponse (Response)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Response>> V1WeekTemplateByIdDeleteAsyncWithHttpInfo (long? id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling WeekTemplateApi->V1WeekTemplateByIdDelete");
+
+            var localVarPath = "/v1/WeekTemplate/{id}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1WeekTemplateByIdDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Response>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (Response) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Response)));
+        }
+
+        /// <summary>
+        /// Gets the week template with the specified id.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
@@ -219,7 +496,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets the week template with the specified id. 
+        /// Gets the week template with the specified id.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
@@ -280,7 +557,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets the week template with the specified id. 
+        /// Gets the week template with the specified id.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
@@ -293,7 +570,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets the week template with the specified id. 
+        /// Gets the week template with the specified id.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">The id of the week template to fetch.</param>
@@ -354,7 +631,182 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user. 
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>ResponseWeekTemplateDTO</returns>
+        public ResponseWeekTemplateDTO V1WeekTemplateByIdPut (long? id, WeekTemplateDTO newValuesDTO = null)
+        {
+             ApiResponse<ResponseWeekTemplateDTO> localVarResponse = V1WeekTemplateByIdPutWithHttpInfo(id, newValuesDTO);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>ApiResponse of ResponseWeekTemplateDTO</returns>
+        public ApiResponse< ResponseWeekTemplateDTO > V1WeekTemplateByIdPutWithHttpInfo (long? id, WeekTemplateDTO newValuesDTO = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling WeekTemplateApi->V1WeekTemplateByIdPut");
+
+            var localVarPath = "/v1/WeekTemplate/{id}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (newValuesDTO != null && newValuesDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(newValuesDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = newValuesDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1WeekTemplateByIdPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseWeekTemplateDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseWeekTemplateDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekTemplateDTO)));
+        }
+
+        /// <summary>
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>Task of ResponseWeekTemplateDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseWeekTemplateDTO> V1WeekTemplateByIdPutAsync (long? id, WeekTemplateDTO newValuesDTO = null)
+        {
+             ApiResponse<ResponseWeekTemplateDTO> localVarResponse = await V1WeekTemplateByIdPutAsyncWithHttpInfo(id, newValuesDTO);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Overwrite the information of a week template.  Available to all Supers, and to Departments and Guardians of the same department as the template. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Id of the template to overwrite.</param>
+        /// <param name="newValuesDTO"> (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseWeekTemplateDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekTemplateDTO>> V1WeekTemplateByIdPutAsyncWithHttpInfo (long? id, WeekTemplateDTO newValuesDTO = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling WeekTemplateApi->V1WeekTemplateByIdPut");
+
+            var localVarPath = "/v1/WeekTemplate/{id}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (newValuesDTO != null && newValuesDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(newValuesDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = newValuesDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1WeekTemplateByIdPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseWeekTemplateDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseWeekTemplateDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekTemplateDTO)));
+        }
+
+        /// <summary>
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ResponseIEnumerableWeekTemplateNameDTO</returns>
@@ -365,7 +817,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user. 
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of ResponseIEnumerableWeekTemplateNameDTO</returns>
@@ -421,7 +873,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user. 
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ResponseIEnumerableWeekTemplateNameDTO</returns>
@@ -433,7 +885,7 @@ namespace IO.Swagger.Api
         }
 
         /// <summary>
-        /// Gets all week schedule for the currently authenticated user. 
+        /// Gets all schedule templates for the currently authenticated user.  Available to all users. 
         /// </summary>
         /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (ResponseIEnumerableWeekTemplateNameDTO)</returns>
@@ -486,6 +938,169 @@ namespace IO.Swagger.Api
             return new ApiResponse<ResponseIEnumerableWeekTemplateNameDTO>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (ResponseIEnumerableWeekTemplateNameDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseIEnumerableWeekTemplateNameDTO)));
+        }
+
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>ResponseWeekTemplateDTO</returns>
+        public ResponseWeekTemplateDTO V1WeekTemplatePost (WeekTemplateDTO templateDTO = null)
+        {
+             ApiResponse<ResponseWeekTemplateDTO> localVarResponse = V1WeekTemplatePostWithHttpInfo(templateDTO);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>ApiResponse of ResponseWeekTemplateDTO</returns>
+        public ApiResponse< ResponseWeekTemplateDTO > V1WeekTemplatePostWithHttpInfo (WeekTemplateDTO templateDTO = null)
+        {
+
+            var localVarPath = "/v1/WeekTemplate";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (templateDTO != null && templateDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(templateDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = templateDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1WeekTemplatePost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseWeekTemplateDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseWeekTemplateDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekTemplateDTO)));
+        }
+
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>Task of ResponseWeekTemplateDTO</returns>
+        public async System.Threading.Tasks.Task<ResponseWeekTemplateDTO> V1WeekTemplatePostAsync (WeekTemplateDTO templateDTO = null)
+        {
+             ApiResponse<ResponseWeekTemplateDTO> localVarResponse = await V1WeekTemplatePostAsyncWithHttpInfo(templateDTO);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Creates new week template in the department of the given user.   Available to Supers, Departments and Guardians. 
+        /// </summary>
+        /// <exception cref="IO.Swagger.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="templateDTO">After successful execution, a new week template will be created with the same values as this DTO. (optional)</param>
+        /// <returns>Task of ApiResponse (ResponseWeekTemplateDTO)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ResponseWeekTemplateDTO>> V1WeekTemplatePostAsyncWithHttpInfo (WeekTemplateDTO templateDTO = null)
+        {
+
+            var localVarPath = "/v1/WeekTemplate";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "text/plain",
+                "application/json",
+                "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (templateDTO != null && templateDTO.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(templateDTO); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = templateDTO; // byte array
+            }
+
+            // authentication (Bearer) required
+            if (!String.IsNullOrEmpty(Configuration.GetApiKeyWithPrefix("Authorization")))
+            {
+                localVarHeaderParams["Authorization"] = Configuration.GetApiKeyWithPrefix("Authorization");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("V1WeekTemplatePost", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<ResponseWeekTemplateDTO>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (ResponseWeekTemplateDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ResponseWeekTemplateDTO)));
         }
 
     }

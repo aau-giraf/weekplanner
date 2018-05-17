@@ -8,7 +8,7 @@
                   x:Name="Mdp"
                   MasterBehavior="Popover"
                   IsPresented="{Binding IsPresented}"
-                  IsGestureEnabled="{Binding SettingsService.IsInGuardianMode}">
+                  IsGestureEnabled="{Binding SettingsService.MasterPageShowable}">
     <MasterDetailPage.Master>
         <ContentPage Padding="10" Title="Master">
             <ContentPage.Content>
@@ -16,8 +16,7 @@
                     <StackLayout Margin="5,30,5,5">
                         <Button Text="Indstillinger"
                         Command="{Binding NavigateToSettingsCommand}"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
-                        IsVisible="{Binding SettingsService.CurrentCitizenId, Converter={StaticResource CitizenIdIsSetConverter}}">
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}">
                         </Button>
                     </StackLayout>
                 </ContentView>

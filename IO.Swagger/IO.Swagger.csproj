@@ -11,7 +11,7 @@ OpenAPI spec version: v1
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4AC971BD-FD70-4BCC-82A1-32F8CFB029FF}</ProjectGuid>
+    <ProjectGuid>{78E63F59-14F2-4FE8-824C-8AC91297353C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IO.Swagger</RootNamespace>
@@ -37,6 +37,12 @@ OpenAPI spec version: v1
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JsonSubTypes, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JsonSubTypes.1.4.0\lib\net45\JsonSubTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,82 +52,17 @@ OpenAPI spec version: v1
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath Condition="Exists('$(SolutionDir)\packages')">$(SolutionDir)\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition="Exists('..\packages')">..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition="Exists('..\..\packages')">..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition="Exists('..\..\vendor')">..\..\vendor\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="JsonSubTypes">
-      <HintPath Condition="Exists('$(SolutionDir)\packages')">$(SolutionDir)\packages\JsonSubTypes.1.2.0\lib\net45\JsonSubTypes.dll</HintPath>
-      <HintPath Condition="Exists('..\packages')">..\packages\JsonSubTypes.1.2.0\lib\net45\JsonSubTypes.dll</HintPath>
-      <HintPath Condition="Exists('..\..\packages')">..\..\packages\JsonSubTypes.1.2.0\lib\net45\JsonSubTypes.dll</HintPath>
-      <HintPath Condition="Exists('..\..\vendor')">..\..\vendor\JsonSubTypes.1.2.0\lib\net45\JsonSubTypes.dll</HintPath>
-    </Reference>
     <Reference Include="RestSharp">
-      <HintPath Condition="Exists('$(SolutionDir)\packages')">$(SolutionDir)\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
-      <HintPath Condition="Exists('..\packages')">..\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
-      <HintPath Condition="Exists('..\..\packages')">..\..\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
-      <HintPath Condition="Exists('..\..\vendor')">..\..\vendor\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
+      <HintPath>..\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\AccountApi.cs" />
-    <Compile Include="Api\DepartmentApi.cs" />
-    <Compile Include="Api\ErrorApi.cs" />
-    <Compile Include="Api\PictogramApi.cs" />
-    <Compile Include="Api\StatusApi.cs" />
-    <Compile Include="Api\UserApi.cs" />
-    <Compile Include="Api\WeekApi.cs" />
-    <Compile Include="Api\WeekTemplateApi.cs" />
-    <Compile Include="Client\ApiClient.cs" />
-    <Compile Include="Client\ApiException.cs" />
-    <Compile Include="Client\ApiResponse.cs" />
-    <Compile Include="Client\Configuration.cs" />
-    <Compile Include="Client\ExceptionFactory.cs" />
-    <Compile Include="Client\GlobalConfiguration.cs" />
-    <Compile Include="Client\IApiAccessor.cs" />
-    <Compile Include="Client\IReadableConfiguration.cs" />
-    <Compile Include="Client\SwaggerDateConverter.cs" />
-    <Compile Include="Model\ActivityDTO.cs" />
-    <Compile Include="Model\DepartmentDTO.cs" />
-    <Compile Include="Model\DepartmentNameDTO.cs" />
-    <Compile Include="Model\ForgotPasswordDTO.cs" />
-    <Compile Include="Model\GirafUserDTO.cs" />
-    <Compile Include="Model\ImageDTO.cs" />
-    <Compile Include="Model\LoginDTO.cs" />
-    <Compile Include="Model\PictogramDTO.cs" />
-    <Compile Include="Model\RegisterDTO.cs" />
-    <Compile Include="Model\ResourceIdDTO.cs" />
-    <Compile Include="Model\Response.cs" />
-    <Compile Include="Model\ResponseByte.cs" />
-    <Compile Include="Model\ResponseDepartmentDTO.cs" />
-    <Compile Include="Model\ResponseGirafUserDTO.cs" />
-    <Compile Include="Model\ResponseIEnumerableWeekDTO.cs" />
-    <Compile Include="Model\ResponseIEnumerableWeekNameDTO.cs" />
-    <Compile Include="Model\ResponseIEnumerableWeekTemplateNameDTO.cs" />
-    <Compile Include="Model\ResponseImageDTO.cs" />
-    <Compile Include="Model\ResponseListDepartmentNameDTO.cs" />
-    <Compile Include="Model\ResponseListPictogramDTO.cs" />
-    <Compile Include="Model\ResponseListUserNameDTO.cs" />
-    <Compile Include="Model\ResponsePictogramDTO.cs" />
-    <Compile Include="Model\ResponseSettingDTO.cs" />
-    <Compile Include="Model\ResponseString.cs" />
-    <Compile Include="Model\ResponseWeekDTO.cs" />
-    <Compile Include="Model\ResponseWeekTemplateDTO.cs" />
-    <Compile Include="Model\SettingDTO.cs" />
-    <Compile Include="Model\UserNameDTO.cs" />
-    <Compile Include="Model\WeekdayDTO.cs" />
-    <Compile Include="Model\WeekDTO.cs" />
-    <Compile Include="Model\WeekNameDTO.cs" />
-    <Compile Include="Model\WeekPictogramDTO.cs" />
-    <Compile Include="Model\WeekTemplateDTO.cs" />
-    <Compile Include="Model\WeekTemplateNameDTO.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\WeekDayColorDTO.cs" />
+    <Compile Include="**\*.cs" Exclude="obj\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MsBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
