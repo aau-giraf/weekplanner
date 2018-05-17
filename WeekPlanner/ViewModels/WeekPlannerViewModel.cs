@@ -213,7 +213,13 @@ namespace WeekPlanner.ViewModels
         
         public override async Task InitializeAsync(object navigationData)
         {
-            _standardChoiceBoardPictoDTO = _pictogramApi.V1PictogramByIdGet(2).Data;
+            await RequestService.SendRequestAndThenAsync(
+                requestAsync: () => _pictogramApi.V1PictogramByIdGetAsync(2),
+                onSuccess: result =>
+                {
+                    _standardChoiceBoardPictoDTO = result.Data;
+                }
+            );
             switch (navigationData)
             {
                 //When initialized from CitizenSchedulesViewModel
@@ -371,7 +377,11 @@ namespace WeekPlanner.ViewModels
             dayToReorder?.Activities.ForEach(a =>
             {
                 var activityFromCollection = dayCollection.FirstOrDefault(awn => awn.Id == a.Id);
-                a.Order = activityFromCollection?.Order;
+                if (activityFromCollection != null)
+                {
+                    a.Order = activityFromCollection?.Order;
+                }
+                
             });
             dayToReorder.Activities = dayToReorder.Activities.OrderBy(a => a.Order).ToList();
             
@@ -385,9 +395,19 @@ namespace WeekPlanner.ViewModels
                 throw new ArgumentException("One or both of provided arguments are invalid.");
             }
 
-            _choiceBoardActivities.TryGetValue(choiceBoard.ChoiceBoardID, out List<ActivityWithNotifyDTO> activitiesInThisChoiceBoard);
-            
-            activitiesInThisChoiceBoard?.ForEach(a => a.Order = newOrder);
+
+            if (_choiceBoardActivities.ContainsKey(choiceBoard.ChoiceBoardID))
+            {
+                DayEnum? day = FindDayEnumOfActivityById(choiceBoard.Id);
+                var dayToReorder = WeekDTO.Days.FirstOrDefault(d => d.Day == day);
+
+                foreach (var item in _choiceBoardActivities[choiceBoard.ChoiceBoardID])
+                {
+                    dayToReorder.Activities.FirstOrDefault(a => a.Id == item.Id).Order = newOrder;
+                }
+                _choiceBoardActivities[choiceBoard.ChoiceBoardID]?.ForEach(a => a.Order = newOrder);
+            }
+
             choiceBoard.Order = newOrder;
         }
 
@@ -484,9 +504,11 @@ namespace WeekPlanner.ViewModels
         
         private List<ActivityDTO> GetActivitiesForChoiceBoard(long? choiceBoardId)
         {
-            return _choiceBoardActivities.TryGetValue(choiceBoardId, out List<ActivityWithNotifyDTO> activities)
-                ? activities.ToActivityDTOs().ToList()
-                : null;
+            if (_choiceBoardActivities.ContainsKey(choiceBoardId))
+            {
+                return _choiceBoardActivities[choiceBoardId].ToActivityDTOs().ToList();
+            }
+            return null;
         }
         
         protected Dictionary<DayEnum?, ObservableCollection<ActivityWithNotifyDTO>> FoldDaysToChoiceBoards(WeekDTO weekDTO)
@@ -497,18 +519,21 @@ namespace WeekPlanner.ViewModels
             foreach (var dayActivities in activitiesForDays)
             {
                 List<int?> orderOfChoiceBoards = new List<int?>();
-                List<ActivityWithNotifyDTO> choiceBoardItems = new List<ActivityWithNotifyDTO>();
+                Queue<List<ActivityWithNotifyDTO>> choiceBoardItems = new Queue<List<ActivityWithNotifyDTO>>();
 
                 // Find activities with same order, and add them to the choiceboard
                 foreach (var activityGroup in dayActivities.Value.GroupBy(d => d.Order, d => d))
                 {
                     if (activityGroup.Count() <= 1) continue;
-                    
+
+                    List<ActivityWithNotifyDTO> aChoiceBoardItems = new List<ActivityWithNotifyDTO>();
+
                     foreach (var activity in activityGroup)
                     {
                         activity.State = StateEnum.Normal;
-                        choiceBoardItems.Add(activity);
+                        aChoiceBoardItems.Add(activity);
                     }
+                    choiceBoardItems.Enqueue(aChoiceBoardItems);
                     orderOfChoiceBoards.Add(activityGroup.Key);
                 }
 
@@ -526,7 +551,7 @@ namespace WeekPlanner.ViewModels
                     };
                     dayActivities.Value.Add(choiceBoard);
                     
-                    _choiceBoardActivities.Add(choiceId, choiceBoardItems);
+                    _choiceBoardActivities.Add(choiceId, choiceBoardItems.Dequeue());
                 }
             }
 
@@ -949,12 +974,10 @@ namespace WeekPlanner.ViewModels
 
             foreach (DayEnum day in Enum.GetValues(typeof(DayEnum)))
             {
-                activiesForDays.TryGetValue(day, out ObservableCollection<ActivityWithNotifyDTO> days);
-                if (days != null)
+                if (activiesForDays.ContainsKey(day))
                 {
-                    days = days.OrderBy(a => a.Order).ToObservableCollection();
+                    activiesForDays[day] = activiesForDays[day].OrderBy(a => a.Order).ToObservableCollection();
                 }
-                
             }
 
             AddReferenceToDays();
