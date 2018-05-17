@@ -116,7 +116,7 @@ namespace WeekPlanner.ViewModels
             {
                 InsertPicto(weekPictogramDTO);
             }
-            else
+            else if(navigationData != null)
             {
                 throw new ArgumentException("Should be of type WeekPictogramDTO", nameof(navigationData));
             }

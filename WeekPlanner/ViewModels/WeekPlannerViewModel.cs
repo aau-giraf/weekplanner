@@ -635,8 +635,17 @@ namespace WeekPlanner.ViewModels
 			}
 
 			_removedWeekdayDTOs.Clear();
+
+            ClearObservableAndInsert();
         }
-        
+
+        private void ClearObservableAndInsert()
+        {
+            _dayActivityCollections.ForEach(d => d.Value.Clear());
+
+            InsertActivityNotifyDTOsInWeekDays(WeekDTO);
+        }
+
         private async Task SwitchUserModeAsync()
         {
             if (IsBusy) return;
