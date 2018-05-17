@@ -366,7 +366,6 @@ namespace WeekPlanner.ViewModels
             //dayCollection.Sort((a,b) => a.CompareTo(b));
             dayCollection = dayCollection.OrderBy(a => a.Order).ToObservableCollection();
             _dayActivityCollections[dayChanged] = dayCollection;
-            RaisePropertyChanged(() => dayCollection);
             
             // Update order so indexes are correct on next use
             dayToReorder?.Activities.ForEach(a =>
@@ -678,8 +677,6 @@ namespace WeekPlanner.ViewModels
                 "Ugeplanen '{0}' blev oprettet og gemt." : // Save new week schedule
                 "Ugeplanen '{0}' blev gemt."; // Update existing week schedule
 
-            WeekDTO weekAfterSave = null;
-
 			if (SettingsService.IsInGuardianMode)
 			{
 				await RequestService.SendRequestAndThenAsync(
@@ -688,7 +685,6 @@ namespace WeekPlanner.ViewModels
 				{
 					DialogService.ShowAlertAsync(message: string.Format(onSuccesMessage, result.Data.Name));
 					WeekDTO = result.Data;
-                    weekAfterSave = result.Data;
                     _isDirty = false;
 				});
 			}
@@ -699,25 +695,45 @@ namespace WeekPlanner.ViewModels
 				result =>
 				{
 					WeekDTO = result.Data;
-                    weekAfterSave = result.Data;
                     _isDirty = false;
 				});
 			}
 
 			_removedWeekdayDTOs.Clear();
 
-            ClearObservableAndInsert(weekAfterSave);
+            ClearObservableAndInsert();
         }
 
-        private void ClearObservableAndInsert(WeekDTO week)
+        private void ClearObservableAndInsert()
         {
-            if (week == null)
-            {
-                throw new ArgumentNullException(nameof(week));
-            }
             _dayActivityCollections.ForEach(d => d.Value.Clear());
+            ClearDays();
+            AddReferenceToDays();
+            
+            InsertActivityNotifyDTOsInWeekDays(WeekDTO);
+            
+        }
 
-            InsertActivityNotifyDTOsInWeekDays(week);
+        private void ClearDays()
+        {
+            MondayPictos.Clear();
+            TuesdayPictos.Clear();
+            WednesdayPictos.Clear();
+            ThursdayPictos.Clear();
+            FridayPictos.Clear();
+            SaturdayPictos.Clear();
+            SundayPictos.Clear();
+        }
+
+        private void AddReferenceToDays()
+        {
+            _dayActivityCollections[DayEnum.Monday] = MondayPictos;
+            _dayActivityCollections[DayEnum.Tuesday] = TuesdayPictos;
+            _dayActivityCollections[DayEnum.Wednesday] = WednesdayPictos;
+            _dayActivityCollections[DayEnum.Thursday] = ThursdayPictos;
+            _dayActivityCollections[DayEnum.Friday] = FridayPictos;
+            _dayActivityCollections[DayEnum.Saturday] = SaturdayPictos;
+            _dayActivityCollections[DayEnum.Sunday] = SundayPictos;
         }
 
         private async Task SwitchUserModeAsync()
@@ -936,6 +952,7 @@ namespace WeekPlanner.ViewModels
             {
                 _dayActivityCollections[kvp.Key].AddRange(kvp.Value);
             });
+            
             
             RaisePropertyChanged(() => Height);
         }
