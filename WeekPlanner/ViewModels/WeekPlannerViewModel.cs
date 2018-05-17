@@ -429,6 +429,7 @@ namespace WeekPlanner.ViewModels
 					if (removedDay == null) return;
 					_removedWeekdayDTOs.Add(removedDay);
 					WeekDTO.Days.Remove(removedDay);
+				    _isDirty = true;
 				}
 				else
 				{
@@ -451,6 +452,7 @@ namespace WeekPlanner.ViewModels
 
                 WeekDTO.Days.Add(removedDay);
                 WeekDTO.Days = WeekDTO.Days.OrderBy(dayObj => (int)dayObj.Day).ToList();
+                _isDirty = true;
 
                 dayToggleWrapper.IsToggled = dayToggleWrapper.SwitchToggled = true;
             }
