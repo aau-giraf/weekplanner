@@ -38,6 +38,7 @@
                     <Entry x:Name="UsernameEntry"
                            Text="{Binding Username.Value}"
                            Placeholder="Brugernavn"
+                           AutomationId="UsernameEntry"
                            WidthRequest="250"
                            Completed="Username_Completed">
                         <Entry.Behaviors>
@@ -46,12 +47,14 @@
                         </Entry.Behaviors>
                     </Entry>
                     <Label Text="{Binding Username.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                           Style="{StaticResource ValidationErrorLabelStyle}" />
+                           Style="{StaticResource ValidationErrorLabelStyle}"
+                           AutomationId="UsernameValidationErrors"/>
                     <!-- PASSWORD -->
                     <Entry x:Name="PasswordEntry"
                            Text="{Binding Password.Value}"
                            Placeholder="Adgangskode"
                            WidthRequest="250"
+                           AutomationId="PasswordEntry"
                            IsPassword="True"
                            Completed="Password_Completed">
                         <Entry.Behaviors>
@@ -60,11 +63,13 @@
                         </Entry.Behaviors>
                     </Entry>
                     <Label Text="{Binding Password.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                           Style="{StaticResource ValidationErrorLabelStyle}" />
+                           Style="{StaticResource ValidationErrorLabelStyle}"
+                           AutomationId="PasswordValidationErrors"/>
                     <Button Margin="80, 20, 80, 0"
                             WidthRequest="200"
                             x:Name="LoginButton"
                             Command="{Binding LoginCommand}"
+                            AutomationId="LoginButton"
                             Text="Log ind"
                             FontAttributes="Bold"
                             IsEnabled="{Binding IsBusy, Converter={StaticResource NegateBooleanConverter}}"
