@@ -6,14 +6,12 @@ using AutoFixture;
 using IO.Swagger.Model;
 using Moq;
 using Syncfusion.ListView.XForms;
-using TypeMock.ArrangeActAssert;
 using WeekPlanner.Services.Navigation;
 using WeekPlanner.Services;
 using WeekPlanner.ViewModels;
 using Xunit;
 using Assert = Xunit.Assert;
 using WeekPlanner.ViewModels.Base;
-using TMock = TypeMock;
 
 namespace WeekPlanner.Tests.UnitTests.ViewModels
 {
