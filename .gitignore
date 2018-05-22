@@ -43,3 +43,11 @@ Thumbs.db
 
 # Appsettings
 appsettings.Development.json
+
+# Visual Studio Code
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

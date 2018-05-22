@@ -32,7 +32,6 @@ We are using the GitFlow brancing pattern so all development must be done in eit
     - Use NavigationService.NavigateToAsync<xxxViewModel>() for navigation. All navigation logic should reside in the ViewModels.
     - Use Commands to execute actions eg. when clicking a button
 - Use DataBinding (MVVM) to synchronize between the View and ViewModel
-- Use MessagingCenter to communicate between pages
 - Use AutoFixture with Moq for testing when possible, to avoid brittle tests
 - [Xamarin Forms Documentation](https://developer.xamarin.com/guides/xamarin-forms/)
 - [Autofac Documentation](http://autofac.readthedocs.io/en/latest/getting-started/index.html)
