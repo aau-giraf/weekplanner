@@ -7,27 +7,27 @@ using WeekPlanner.Services.Settings;
 
 namespace WeekPlanner.ViewModels
 {
-    public class MasterViewModel : ViewModelBase
-    {
+	public class MasterViewModel : ViewModelBase
+	{
 		public ISettingsService SettingsService { get; }
 
 		public MasterViewModel(ISettingsService settingsService, INavigationService navigationService) : base(navigationService)
 		{
 			SettingsService = settingsService;
 		}
-        bool _isPresented;
+		bool _isPresented;
 
-        public bool IsPresented
-        {
-            get => _isPresented;
-            set
-            {
-                _isPresented = value;
-                RaisePropertyChanged(() => IsPresented);
-            }
-        }
+		public bool IsPresented
+		{
+			get => _isPresented;
+			set
+			{
+				_isPresented = value;
+				RaisePropertyChanged(() => IsPresented);
+			}
+		}
 
-        public ICommand NavigateToSettingsCommand => new Command(NavigateToSettingsAndHideMaster);
+		/*public ICommand NavigateToSettingsCommand => new Command(NavigateToSettingsAndHideMaster);
 
 	    private async void NavigateToSettingsAndHideMaster()
 	    {
@@ -44,6 +44,6 @@ namespace WeekPlanner.ViewModels
 		    await NavigationService.NavigateToAsync<SettingsViewModel>();
 		    
 		    IsBusy = false;
-	    }
-    }
+	    }*/
+	}
 }
