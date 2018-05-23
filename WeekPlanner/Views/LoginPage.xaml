@@ -5,6 +5,7 @@
              xmlns:converters="clr-namespace:WeekPlanner.Converters;assembly=WeekPlanner"
              xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner"
              x:Class="WeekPlanner.Views.LoginPage"
+             AutomationId="LoginPage"
              Title="Log ind">
     <ContentPage.Resources>
         <ResourceDictionary>

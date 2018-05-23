@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.iOS", "iOS\Week
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.Droid", "Droid\WeekPlanner.Droid.csproj", "{11497380-0CCF-43E6-B8AB-29A2691761ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner", "WeekPlanner\WeekPlanner.csproj", "{303B436C-5647-49F8-AB19-7F19A13F304A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeekPlanner", "WeekPlanner\WeekPlanner.csproj", "{303B436C-5647-49F8-AB19-7F19A13F304A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IO.Swagger", "IO.Swagger\IO.Swagger.csproj", "{78E63F59-14F2-4FE8-824C-8AC91297353C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.UWP", "WeekPlanner.UWP\WeekPlanner.UWP.csproj", "{888303E6-C47F-4456-94A3-89C879F79665}"
 EndProject
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "WeekPlanner.Tests", "WeekPlanner.Tests\WeekPlanner.Tests.csproj", "{11432245-1602-4CC2-9ADB-9C732203D5D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeekPlanner.Tests", "WeekPlanner.Tests\WeekPlanner.Tests.csproj", "{11432245-1602-4CC2-9ADB-9C732203D5D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeekPlanner.UITests", "WeekPlanner.UITests\WeekPlanner.UITests.csproj", "{02151520-EF19-4633-8682-8A5350822237}"
 EndProject

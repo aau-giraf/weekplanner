@@ -65,7 +65,7 @@ namespace WeekPlanner.UITests
             _app.WaitForElement(PasswordEntry);
             _app.EnterText("password");
             _app.DismissKeyboard();
-            _app.WaitForElement(LoginButton);
+            _app.WaitForElement(LoginButton, "Timed out", TimeSpan.FromSeconds(10));
             _app.Tap(LoginButton);
 
             var result = _app.WaitForElement(ChooseCitizenPage);
@@ -75,12 +75,19 @@ namespace WeekPlanner.UITests
         
         #region ValidationErrors
         [Test]
-        public void EntryErrorMessages_NothingDone_NotShown()
+        public void EntryErrorMessages_NothingDone_NotShown_Username()
         {
             var usernameResult = _app.Query(UsernameValidationErrorLabel);
+
+            Assert.AreEqual(string.Empty, usernameResult.First().Text);
+        }
+
+        [Test]
+        public void EntryErrorMessages_NothingDone_NotShown_Password()
+        {
             var passwordResult = _app.Query(PasswordValidationErrorLabel);
-            Assert.AreEqual(0, usernameResult.Length);
-            Assert.AreEqual(0, passwordResult.Length);
+
+            Assert.AreEqual(string.Empty, passwordResult.First().Text);
         }
 
         [Test]
@@ -89,7 +96,7 @@ namespace WeekPlanner.UITests
             _app.Tap(UsernameEntry);
             _app.PressEnter();
             var result = _app.Query(UsernameValidationErrorLabel);
-            Assert.AreEqual(0, result.Length);
+            Assert.AreEqual(1, result.Length);
         }
         
         [Test]
@@ -98,7 +105,7 @@ namespace WeekPlanner.UITests
             _app.Tap(PasswordEntry);
             _app.PressEnter();
             var result = _app.Query(PasswordValidationErrorLabel);
-            Assert.AreEqual(0, result.Length);
+            Assert.AreEqual(1, result.Length);
         }
         #endregion
     }

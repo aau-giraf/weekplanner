@@ -9,21 +9,22 @@
     AutomationId="ChooseCitizenPage"
              Title="Vælg Borger">
     <ContentPage.Content>
-        <ContentView ControlTemplate="{StaticResource NavBarTheme}">
+        <ContentView ControlTemplate="{StaticResource NavBarTheme}" AutomationId="Navbar">
             <StackLayout>
                 <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
-                <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50"/>
+                <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50" AutomationId="SearchBar"/>
                 <ListView 
                 x:Name="CitizensListView" 
                 ItemsSource="{Binding CitizenNames}" 
                 VerticalOptions="FillAndExpand" 
                 HasUnevenRows="true"
-                RowHeight="100">
+                RowHeight="100"
+                    AutomationId="The_ListView">
                     <ListView.Behaviors>
                         <behaviors1:EventToCommandBehavior           
                         EventName="ItemTapped"
                         Command="{Binding ChooseCitizenCommand}"
-                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}" />
+                        EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"/>
                         <behaviors1:ListViewDeselectSelectedItemBehavior />
                     </ListView.Behaviors>
                     <ListView.ItemTemplate>
