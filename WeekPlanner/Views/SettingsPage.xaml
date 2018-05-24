@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<base:PageBase xmlns="http://xamarin.com/schemas/2014/forms" xmlns:base="clr-namespace:WeekPlanner.Views.Base;assembly=WeekPlanner" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="WeekPlanner.SettingsPage">
+	<ContentPage.Content>
+		<ContentView>
+			<TableView Intent="Settings">
+				<TableSection Title="Vælg Dagenes Farver">
+					<ViewCell>
+						<StackLayout Orientation="Horizontal"> 
+							<Frame WidthRequest="200" BackgroundColor="{Binding MondayColour}"></Frame>
+							<Label Text="Farve for Mandag"></Label>
+							<Picker Title="Vælg Farve" ItemsSource="{Binding WeekdayColours}" SelectedItem="{Binding SelectedMondayColour}" ></Picker>
+						</StackLayout>
+					</ViewCell>
+				</TableSection>
+			</TableView>
+		</ContentView>
+	</ContentPage.Content>
+</base:PageBase>
