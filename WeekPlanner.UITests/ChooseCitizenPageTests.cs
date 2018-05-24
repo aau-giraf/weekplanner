@@ -25,7 +25,7 @@ namespace WeekPlanner.UITests
         private const string ChooseCitizenPage = "ChooseCitizenPage";
         private const string LoginPage = "LoginPage";
         private const string CitizenSchedulePage = "CitizenSchedulesPage";
-        private const string SearchBar = "SearchBar";
+        private const string SearchBar = "search_bar";
         private const string ListView = "The_ListView";
 
         public ChooseCitizenPageTests(Platform platform)
@@ -45,19 +45,13 @@ namespace WeekPlanner.UITests
             _app.PressEnter();
             _app.WaitForElement(ChooseCitizenPage);
         }
-
-        [Test]
-        public void AppLaunches()
-        {
-            _app.Screenshot("First screen.");
-        }
         
         [Test]
         public void BackButton_NavigatesToLoginPage()
         {
             _app.TapCoordinates(50, 50);
 
-            var result = _app.WaitForElement(LoginButton, "Timed out", TimeSpan.FromSeconds(10));
+            var result = _app.WaitForElement(LoginButton);
 
             Assert.AreEqual(1, result.Length);
         }
@@ -65,12 +59,23 @@ namespace WeekPlanner.UITests
         [Test]
         public void CitizenTap_NavigatesToCitizenSchedulesPage()
         {
-            _app.Repl();
             _app.Tap(x => x.Text("BirkenBorger1"));
 
-            var result = _app.WaitForElement(CitizenSchedulePage);
+            var result = _app.WaitForElement(x => x.Text("Vælg Skema"));
 
             Assert.AreEqual(1, result.Length);
+        }
+
+        [Test]
+        public void Search_CitizenFind()
+        {
+            _app.Tap(SearchBar);
+            _app.EnterText("BirkenBorger3");
+            _app.PressEnter();
+
+            var result = _app.Query(x => x.Text("BirkenBorger3"));
+
+            Assert.AreEqual(2, result.Length);
         }
     }
 }
