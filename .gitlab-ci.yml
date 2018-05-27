@@ -1,4 +1,4 @@
-image: "giraf/xamarin-android:latest"
+image: "Apps/xamarin-android:latest"
 
 stages:
     - "build"
@@ -8,26 +8,26 @@ stages:
 build_android:
     stage: "build"
     script:
-        - cp /Giraf/weekplanner/WeekPlanner/appsettings.template.json /Giraf/weekplanner/WeekPlanner/appsettings.Development.json
-        - mono /nuget.exe restore /Giraf/weekplanner
-        - msbuild /t:PackageForAndroid /p:Configuration=Release /p:AndroidLinkMode=None /Giraf/weekplanner/Droid/WeekPlanner.Droid.csproj
+        - cp /Apps/weekplanner/WeekPlanner/appsettings.template.json /Apps/weekplanner/WeekPlanner/appsettings.Development.json
+        - mono /nuget.exe restore /Apps/weekplanner
+        - msbuild /t:PackageForAndroid /p:Configuration=Release /p:AndroidLinkMode=None /Apps/weekplanner/Droid/WeekPlanner.Droid.csproj
         # Missing: iOS Version
         # Missing: Windows Version
 
-        - mv /Giraf/weekplanner/Droid/obj/Release/android/bin/dk.aau.cs.giraf.weekplanner.apk $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner.apk
+        - mv /Apps/weekplanner/Droid/obj/Release/android/bin/dk.aau.cs.Apps.weekplanner.apk $CI_PROJECT_DIR/dk.aau.cs.Apps.weekplanner.apk
 
     artifacts:
         paths:
-            - $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner.apk
+            - $CI_PROJECT_DIR/dk.aau.cs.Apps.weekplanner.apk
         expire_in: 20 min
 
 test:
     stage: "test"
     script:
-        - cp /Giraf/weekplanner/WeekPlanner/appsettings.template.json /Giraf/weekplanner/WeekPlanner/appsettings.Development.json
-        - mono /nuget.exe restore /Giraf/weekplanner
-        - msbuild /Giraf/weekplanner/WeekPlanner.Tests/WeekPlanner.Tests.csproj
-        - dotnet test /Giraf/weekplanner/WeekPlanner.Tests/WeekPlanner.Tests.csproj
+        - cp /Apps/weekplanner/WeekPlanner/appsettings.template.json /Apps/weekplanner/WeekPlanner/appsettings.Development.json
+        - mono /nuget.exe restore /Apps/weekplanner
+        - msbuild /Apps/weekplanner/WeekPlanner.Tests/WeekPlanner.Tests.csproj
+        - dotnet test /Apps/weekplanner/WeekPlanner.Tests/WeekPlanner.Tests.csproj
 
 deploy:
     stage: "deploy"
@@ -39,13 +39,13 @@ deploy:
         - build_android
     script:
         # Turns the secret keystore environment variable into its normal keystore form, now ready for signing
-        - echo $KEYSTORE | base64 -di > ./giraf.keystore
-        - /android/build-tools/27.0.3/zipalign -f -v 4 $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner.apk $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner-Signed.apk
-        - /android/build-tools/27.0.3/apksigner sign --ks ./giraf.keystore --ks-key-alias $KEYSTOREALIAS --ks-pass pass:$KEYSTOREPASSWORD ./dk.aau.cs.giraf.weekplanner-Signed.apk
+        - echo $KEYSTORE | base64 -di > ./Apps.keystore
+        - /android/build-tools/27.0.3/zipalign -f -v 4 $CI_PROJECT_DIR/dk.aau.cs.Apps.weekplanner.apk $CI_PROJECT_DIR/dk.aau.cs.Apps.weekplanner-Signed.apk
+        - /android/build-tools/27.0.3/apksigner sign --ks ./Apps.keystore --ks-key-alias $KEYSTOREALIAS --ks-pass pass:$KEYSTOREPASSWORD ./dk.aau.cs.Apps.weekplanner-Signed.apk
 
-        - /android/build-tools/27.0.3/apksigner verify -v $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner-Signed.apk
+        - /android/build-tools/27.0.3/apksigner verify -v $CI_PROJECT_DIR/dk.aau.cs.Apps.weekplanner-Signed.apk
         # Verifying is not necessary for deployment
     artifacts:
         paths:
-            - $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner-Signed.apk
+            - $CI_PROJECT_DIR/dk.aau.cs.Apps.weekplanner-Signed.apk
         expire_in: 1 week
