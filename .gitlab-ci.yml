@@ -8,13 +8,13 @@ stages:
 build_android:
     stage: "build"
     script:
-        - cp $CI_PROJECT_DIR/weekplanner/WeekPlanner/appsettings.template.json $CI_PROJECT_DIR/weekplanner/WeekPlanner/appsettings.Development.json
-        - mono /nuget.exe restore $CI_PROJECT_DIR/weekplanner
-        - msbuild /t:PackageForAndroid /p:Configuration=Release /p:AndroidLinkMode=None $CI_PROJECT_DIR/weekplanner/Droid/WeekPlanner.Droid.csproj
+        - cp $CI_PROJECT_DIR/WeekPlanner/appsettings.template.json $CI_PROJECT_DIR/WeekPlanner/appsettings.Development.json
+        - mono /nuget.exe restore $CI_PROJECT_DIR
+        - msbuild /t:PackageForAndroid /p:Configuration=Release /p:AndroidLinkMode=None $CI_PROJECT_DIR/Droid/WeekPlanner.Droid.csproj
         # Missing: iOS Version
         # Missing: Windows Version
 
-        - mv $CI_PROJECT_DIR/weekplanner/Droid/obj/Release/android/bin/dk.aau.cs.giraf.weekplanner.apk $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner.apk
+        - mv $CI_PROJECT_DIR/Droid/obj/Release/android/bin/dk.aau.cs.giraf.weekplanner.apk $CI_PROJECT_DIR/dk.aau.cs.giraf.weekplanner.apk
 
     artifacts:
         paths:
@@ -24,10 +24,10 @@ build_android:
 test:
     stage: "test"
     script:
-        - cp $CI_PROJECT_DIR/weekplanner/WeekPlanner/appsettings.template.json $CI_PROJECT_DIR/weekplanner/WeekPlanner/appsettings.Development.json
-        - mono /nuget.exe restore $CI_PROJECT_DIR/weekplanner
-        - msbuild $CI_PROJECT_DIR/weekplanner/WeekPlanner.Tests/WeekPlanner.Tests.csproj
-        - dotnet test $CI_PROJECT_DIR/weekplanner/WeekPlanner.Tests/WeekPlanner.Tests.csproj
+        - cp $CI_PROJECT_DIR/WeekPlanner/appsettings.template.json $CI_PROJECT_DIR/WeekPlanner/appsettings.Development.json
+        - mono /nuget.exe restore $CI_PROJECT_DIR
+        - msbuild $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
+        - dotnet test $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
 
 deploy:
     stage: "deploy"
