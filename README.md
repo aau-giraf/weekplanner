@@ -74,17 +74,21 @@ Simply remove/comment those lines. No need to fix it since we don't work with fi
 ## Testing with an iPhone / iPad
 Follow [this guide](https://docs.microsoft.com/en-us/xamarin/ios/get-started/installation/device-provisioning/free-provisioning) in order to test on your iPhone. Necessary until we get a developer license for App Store.
 
-
-
 ## API Reference
 
 For API reference start the API and navigate to http://localhost:5000/swagger
+
+## Continuous Integration and Deployment
+CI and CD is configured in the .gitlab-ci.yml file and the pipeline is executed every time a branch containing the file is pushed to GitLab. It currently only builds, tests and deploys for Android. 
+
+It is worth noting that the test stage current always fails, because unit tests have not worked in the weekplanner (even through Visual Studio) for a long while. The pipeline only executes the deploy stage (to create a signed APK file for the Play Store) if a master or release branch was pushed. To deploy it uses a keystore file that is saved as a GitLab secret (see on the GitLab web interface: Weekplanner -> Settings -> CICD -> Secret Variables). The signed .apk file is then saved on GitLab for 1 week where it can be downloaded (see on GitLab web interface: Weekplanner -> CICD -> Pipelines -> Download Artifacts). 
 
 ## Contributors
 
 - SW608F18
 - SW609F18
 - SW610F18 
+- (SW611F18: the .gitlab-ci.yml file for continuous integration + deployment)
 
 ## License
 
