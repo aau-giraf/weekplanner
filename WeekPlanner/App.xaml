@@ -110,6 +110,7 @@
                         <Image 
                             HorizontalOptions="Start" 
                             VerticalOptions="Center"
+                            AutomationId="BackButton"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
                             HeightRequest="30" Source="icon_left_arrow.png">
                             <Image.GestureRecognizers>
@@ -157,6 +158,7 @@
                                 HorizontalOptions="Start" 
                                 VerticalOptions="Center"
                                 IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                                AutomationId="BackButton"
                                 HeightRequest="30" Source="icon_left_arrow.png">
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
@@ -174,6 +176,7 @@
                         <Image 
                             HorizontalOptions="End" 
                             VerticalOptions="Center"
+                            AutomationId="ToolbarButton"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
                             HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
                             <Image.GestureRecognizers>
@@ -213,6 +216,7 @@
                                 HorizontalOptions="Start" 
                                 VerticalOptions="Center"
                                 IsVisible="{TemplateBinding Parent.BindingContext.ShowBackButton}"
+                                AutomationId="BackButton"
                                 HeightRequest="30" Source="icon_left_arrow.png">
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{TemplateBinding Parent.BindingContext.OnBackButtonPressedCommand}" />
@@ -230,6 +234,7 @@
                         <Image 
                             HorizontalOptions="End" 
                             VerticalOptions="Center"
+                            AutomationId="ToolbarButton"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
                             HeightRequest="30" Source="{TemplateBinding Parent.BindingContext.ToolbarButtonIcon}">
                             <Image.GestureRecognizers>
