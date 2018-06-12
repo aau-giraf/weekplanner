@@ -12,7 +12,7 @@
         <ContentView ControlTemplate="{StaticResource NavBarTheme}" AutomationId="Navbar">
             <StackLayout>
                 <!-- HeightRequest fixes bug on Android 7.0 where the search bar does not show up -->
-                <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50"/>
+                <SearchBar x:Name="Search" Placeholder="Søg" TextChanged="SearchBar_TextChanged" HeightRequest="50" AutomationId="SearchBar"/>
                 <ListView 
                 x:Name="CitizensListView" 
                 ItemsSource="{Binding CitizenNames}" 

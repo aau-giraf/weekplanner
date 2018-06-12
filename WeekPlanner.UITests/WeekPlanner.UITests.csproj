@@ -57,6 +57,7 @@
     <Compile Include="ChooseCitizenPageTests.cs" />
     <Compile Include="LoginPageTests.cs" />
     <Compile Include="AppInitializer.cs" />
+    <Compile Include="UITestStrings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

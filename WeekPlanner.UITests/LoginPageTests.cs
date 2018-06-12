@@ -4,26 +4,17 @@ using System.Linq;
 using NUnit.Framework;
 using Xamarin.UITest;
 using Xamarin.UITest.Queries;
+using static WeekPlanner.UITests.UITestStrings;
 
 namespace WeekPlanner.UITests
 {
     [TestFixture(Platform.Android)]
-    //[TestFixture(Platform.iOS)]
+    [TestFixture(Platform.iOS)]
     public class LoginPageTests
     {
-        IApp _app;
-        readonly Platform _platform;
-        
-        // Entries
-        private const string UsernameEntry = "UsernameEntry";
-        private const string PasswordEntry = "PasswordEntry";
-        
-        private const string UsernameValidationErrorLabel = "UsernameValidationErrors";
-        private const string PasswordValidationErrorLabel = "PasswordValidationErrors";
-        
-        private const string LoginButton = "LoginButton";
-        private const string ChooseCitizenPage = "ChooseCitizenPage";
-
+        private IApp _app;
+        private readonly Platform _platform;
+             
         public LoginPageTests(Platform platform)
         {
             _platform = platform;
@@ -45,11 +36,7 @@ namespace WeekPlanner.UITests
         [Test]
         public void Login_UsingGuardian_NavigatesToChooseCitizenPage()
         {
-            _app.Tap(UsernameEntry);
-            _app.EnterText("Graatand");
-            _app.PressEnter();
-            _app.WaitForElement(PasswordEntry);
-            _app.EnterText("password");
+            EnterUsernameAndPassword(_app);
             _app.PressEnter();
             
             var result = _app.WaitForElement(ChooseCitizenPage);
@@ -59,17 +46,22 @@ namespace WeekPlanner.UITests
         [Test]
         public void Login_UsingGuardianAndButtonPress_NavigatesToChooseCitizenPage()
         {
-            _app.Tap(UsernameEntry);
-            _app.EnterText("Graatand");
-            _app.PressEnter();
-            _app.WaitForElement(PasswordEntry);
-            _app.EnterText("password");
+            EnterUsernameAndPassword(_app);
             _app.DismissKeyboard();
             _app.WaitForElement(LoginButton, "Timed out", TimeSpan.FromSeconds(10));
             _app.Tap(LoginButton);
 
             var result = _app.WaitForElement(ChooseCitizenPage);
             Assert.AreEqual(1, result.Length);
+        }
+
+		public static void EnterUsernameAndPassword(IApp app)
+        {
+            app.Tap(UsernameEntry);
+            app.EnterText(Username);
+            app.PressEnter();
+            app.WaitForElement(PasswordEntry);
+            app.EnterText(Password);   
         }
         #endregion
         
@@ -96,17 +88,20 @@ namespace WeekPlanner.UITests
             _app.Tap(UsernameEntry);
             _app.PressEnter();
             var result = _app.Query(UsernameValidationErrorLabel);
-            Assert.AreEqual(1, result.Length);
+			Assert.AreNotEqual(string.Empty, result.FirstOrDefault()?.Text);
         }
         
-        [Test]
+        
+		[Test] // Failing
         public void PasswordErrorMessage_EmptyPassword_Shown()
         {
             _app.Tap(PasswordEntry);
             _app.PressEnter();
             var result = _app.Query(PasswordValidationErrorLabel);
-            Assert.AreEqual(1, result.Length);
+			Assert.AreNotEqual(string.Empty, result.FirstOrDefault()?.Text);
         }
         #endregion
+        
+        
     }
 }
