@@ -37,16 +37,16 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         public void ImageSource_OnSet_PropertyOnChanged()
         {
             // Arrange
-            var SystemUnderTesting = Fixture.Create<PictogramSearchViewModel>();
+            var sut = Fixture.Create<PictogramSearchViewModel>();
             bool PropertyOnChangedIsInvoked = false;
 
-            SystemUnderTesting.PropertyChanged += (sender, e) =>
+            sut.PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName.Equals(nameof(SystemUnderTesting.ImageSources)))
+                if (e.PropertyName.Equals(nameof(sut.ImageSources)))
                     PropertyOnChangedIsInvoked = true;
             };
             // Act
-            SystemUnderTesting.ImageSources = new ObservableCollection<PictogramDTO>();
+            sut.ImageSources = new ObservableCollection<WeekPictogramDTO>();
 
             // Assert
             Assert.True(PropertyOnChangedIsInvoked);
@@ -56,20 +56,20 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         public void ImageSource_OnSet_Size()
         {
             // Arrange
-            var pictograms = Fixture.Create<List<PictogramDTO>>();
-            var response = Fixture.Build<ResponseListPictogramDTO>()
+            /*var pictograms = Fixture.Create<List<PictogramDTO>>();
+            var response = Fixture.Build<ResponseListWeekPictogramDTO>()
                                   .With(r => r.Data, pictograms)
                                   .Create();
 
             var api = Fixture.Freeze<Mock<IPictogramApi>>()
                              .Setup(a => a.V1PictogramGet(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>()))
                              .Returns(response);
-            var SystemUnderTest = Fixture.Create<PictogramSearchViewModel>();             
+            var sut = Fixture.Create<PictogramSearchViewModel>();             
             //var PictogramDTO = Fixture.Create<PictogramDTO>();             
             // Act             
-            SystemUnderTest.OnSearchGetPictograms("kat");             
+            sut.OnSearchGetPictograms("kat");             
             // Assert             
-            Assert.Equal(pictograms.Count, SystemUnderTest.ImageSources.Count);
+            Assert.Equal(pictograms.Count, sut.ImageSources.Count);*/
         }
 
         [Fact] 
@@ -78,12 +78,12 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             var api = Fixture.Freeze<Mock<IPictogramApi>>()
                 .Setup(a => a.V1PictogramGet(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>()))
                 .Throws<ApiException>();
-            var SystemUnderTest = Fixture.Create<PictogramSearchViewModel>();             
+            var sut = Fixture.Create<PictogramSearchViewModel>();             
             //var PictogramDTO = Fixture.Create<PictogramDTO>();             
             // Act             
-            SystemUnderTest.OnSearchGetPictograms("kat");             
+            sut.OnSearchGetPictograms("kat");             
             // Assert             
-            Assert.True(SystemUnderTest.ImageSources.Count == 0);
+            Assert.True(sut.ImageSources.Count == 0);
         }
     }
 }

@@ -38,9 +38,9 @@ namespace WeekPlanner.ViewModels
         }
 
 	    public ICommand ChooseCitizenCommand => new Command<UserNameDTO>(async usernameDTO =>
-		    await NavigateToWeekPlan(usernameDTO));
+		    await NavigateToCitizenSchedules(usernameDTO));
 	    
-	    private async Task NavigateToWeekPlan(UserNameDTO usernameDTO)
+	    private async Task NavigateToCitizenSchedules(UserNameDTO usernameDTO)
 	    {
 		    if (IsBusy) return;
 		    IsBusy = true;

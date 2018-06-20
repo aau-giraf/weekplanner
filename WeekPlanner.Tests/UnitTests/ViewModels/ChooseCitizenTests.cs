@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using AutoFixture;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
@@ -96,33 +97,19 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
         }
 
         [Fact]
-        public void ChooseCitizenCommand_Executed_InvokesNavigateToWeekPlanner()
+        public async void ChooseCitizenCommand_Executed_InvokesNavigateToCitizenSchedules()
         {
             // Arrange
             var usernameDTO = Fixture.Create<UserNameDTO>();
             var navServiceMock = Fixture.Freeze<Mock<INavigationService>>();
+            navServiceMock.Setup(n => n.NavigateToAsync<CitizenSchedulesViewModel>(It.IsAny<UserNameDTO>()));
             var sut = Fixture.Create<ChooseCitizenViewModel>();
             
             // Act
             sut.ChooseCitizenCommand.Execute(usernameDTO);
             
             // Assert
-            navServiceMock.Verify(n => n.NavigateToAsync<WeekPlannerViewModel>(It.IsAny<UserNameDTO>()));
-        }
-
-        [Fact]
-        public void ChooseCitizenCommand_Executed_InvokesUseTokenForDepartment()
-        {
-            // Arrange
-            var usernameDTO = Fixture.Create<UserNameDTO>();
-            var settingsServiceMock = Fixture.Freeze<Mock<ISettingsService>>();
-            var sut = Fixture.Create<ChooseCitizenViewModel>();
-            
-            // Act
-            sut.ChooseCitizenCommand.Execute(usernameDTO);
-            
-            // Assert
-            settingsServiceMock.Verify(s => s.UseTokenFor(UserType.Guardian));
+            navServiceMock.Verify(n => n.NavigateToAsync<CitizenSchedulesViewModel>(It.IsAny<UserNameDTO>()));
         }
     }
 }
