@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
+using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Moq;
 using WeekPlanner.Services.Request;
@@ -17,25 +18,22 @@ namespace WeekPlanner.Tests.UnitTests.Base
         /// <summary>
         /// Freezes mock of IRequestService.
         /// </summary>
-        /// <typeparam name="TS">Type of the sender, typically viewmodel</typeparam>
         /// <typeparam name="TR">Type of the response, for example ResponseWeekDTO</typeparam>
-        public void FreezeMockOfIRequestService<TS,TR>() where TS : class where TR : class
+        public void FreezeMockOfIRequestService<TR>() where TR : class
         {
-            Func<TS, Func<Task<TR>>, Func<TR, Task>, Func<Task>, Func<Task>,
-                    string, string, Task>
-                sendRequestAndThenAsyncMock =
-                    async (sender, requestAsync, onSuccessAsync, onExceptionAsync, onRequestFailedAsync,
-                        exceptionMessage, requestFailedMessage) =>
-                    {
-                        var res = await requestAsync.Invoke();
-                        await onSuccessAsync(res);
-                    };
-            
-            var mockRequest = Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
+            async Task SendRequestAndThenAsyncMock(Func<Task<TR>> requestAsync, Func<TR, Task> onSuccessAsync, 
+                Func<Task> onExceptionAsync, Func<Task> onRequestFailedAsync, string exceptionMessage, string requestFailedMessage)
+            {
+                var res = await requestAsync.Invoke();
+                await onSuccessAsync(res);
+            }
+
+            Fixture.Freeze<Mock<IRequestService>>().Setup(r =>
                     r.SendRequestAndThenAsync(It.IsAny<Func<Task<TR>>>(),
                         It.IsAny<Func<TR, Task>>(), It.IsAny<Func<Task>>(), It.IsAny<Func<Task>>(),
                         It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(sendRequestAndThenAsyncMock);
+                .Returns((Func<Func<Task<TR>>, Func<TR, Task>, Func<Task>, Func<Task>,
+                    string, string, Task>) SendRequestAndThenAsyncMock);
         }
         protected TestsBase()
         {

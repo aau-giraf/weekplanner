@@ -109,7 +109,7 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             sut.Password.Value = password;
 
             // Act
-            await Task.Run(() => sut.LoginCommand.Execute(null));
+            sut.LoginCommand.Execute(null);
 
             // Assert
             loginServiceMock.Verify(ls => ls.LoginAndThenAsync(It.IsAny<UserType>(), 
@@ -132,35 +132,6 @@ namespace WeekPlanner.Tests.UnitTests.ViewModels
             // Assert
             loginServiceMock.Verify(ls => ls.LoginAndThenAsync(UserType.Guardian, 
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Func<Task>>()), Times.Never);
-        }
-
-        [Theory]
-        [InlineData("Not Empty", "Not Empty")]
-        public async void LoginCommand_ExecutedWithValidCredentials_EventuallyNavigatesToChooseCitizenViewModel(string username, string password)
-        {
-            // Arrange
-            async Task LoginAndThenMock(Func<Task> onSuccess, UserType userType, string innerUsername, string innerPassword) 
-                => await onSuccess.Invoke();
-
-            var navigationServiceMock = Fixture.Freeze<Mock<INavigationService>>();
-            
-            Fixture.Freeze<Mock<ILoginService>>()
-                .Setup(l => l.LoginAndThenAsync(UserType.Guardian, It.IsAny<string>(),
-                    It.IsAny<string>(), It.IsAny<Func<Task>>()))
-                .Returns((Func<Func<Task>, UserType, string, string, Task>) LoginAndThenMock);
-            
-            var sut = Fixture.Build<LoginViewModel>()
-                .OmitAutoProperties()
-                .Create();
-
-            sut.Username.Value = username;
-            sut.Password.Value = password;
-            
-            // Act
-            await Task.Run(() => sut.LoginCommand.Execute(null));
-            
-            // Assert
-            navigationServiceMock.Verify(n => n.NavigateToAsync<ChooseCitizenViewModel>(null));
         }
     }
 }
