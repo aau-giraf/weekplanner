@@ -50,12 +50,14 @@ namespace WeekPlanner.ViewModels
 	    
 	    private async Task GetAndSetCitizenNamesAsync()
 	    {
-
 		    await _requestService.SendRequestAndThenAsync(
                 requestAsync: () => _departmentApi.V1DepartmentByIdCitizensGetAsync(_settingsService.DepartmentId),
-			    onSuccess: result => {
-					CitizenNames = new ObservableCollection<UserNameDTO>(result.Data.OrderBy(x => x.UserName));
-				});
+			    onSuccess: r);
+	    }
+
+	    private void r(ResponseListUserNameDTO resp)
+	    {
+		    CitizenNames = new ObservableCollection<UserNameDTO>(resp.Data.OrderBy(x => x.UserName));
 	    }
 
 	    public override async Task OnReturnedToAsync(object navigationData)
