@@ -27,8 +27,7 @@ test:
         - cp $CI_PROJECT_DIR/WeekPlanner/appsettings.template.json $CI_PROJECT_DIR/WeekPlanner/appsettings.Development.json
         - mono /nuget.exe restore $CI_PROJECT_DIR
         - msbuild $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
-        - msbuild /p:AndroidLinkMode=None $CI_PROJECT_DIR/Droid/WeekPlanner.Droid.csproj
-        - dotnet test $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
+        - dotnet test $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj -c Release --no-build
 
 deploy:
     stage: "deploy"
