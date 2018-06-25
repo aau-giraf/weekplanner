@@ -25,8 +25,11 @@ test:
     stage: "test"
     script:
         - cp $CI_PROJECT_DIR/WeekPlanner/appsettings.template.json $CI_PROJECT_DIR/WeekPlanner/appsettings.Development.json
+        - find / mstest.exe
         - mono /nuget.exe restore $CI_PROJECT_DIR
+        - find / mstest.exe
         - msbuild $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
+        - find / mstest.exe
         - mstest $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
 
 deploy:
