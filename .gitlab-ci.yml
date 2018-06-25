@@ -26,10 +26,8 @@ test:
     script:
         - cp $CI_PROJECT_DIR/WeekPlanner/appsettings.template.json $CI_PROJECT_DIR/WeekPlanner/appsettings.Development.json
         - mono /nuget.exe restore $CI_PROJECT_DIR
-        - DOTNET_CLI_TELEMETRY_OPTOUT=1
-        - dotnet restore $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
-        - msbuild $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj /p:Configuration="Release"
-        - dotnet test $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj -c Release --no-build
+        - msbuild $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
+        - mstest $CI_PROJECT_DIR/WeekPlanner.Tests/WeekPlanner.Tests.csproj
 
 deploy:
     stage: "deploy"
