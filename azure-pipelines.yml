@@ -20,6 +20,10 @@ steps:
   inputs:
     restoreSolution: '**/*.sln'
 
+- script: |
+    cp WeekPlanner/appsettings.template.json WeekPlanner/appsettings.Development.json
+  displayName: Move appsettings.template.json to appsettings.Development.json
+
 - task: XamarinAndroid@1
   inputs:
     projectFile: '**/*Droid*.csproj'
