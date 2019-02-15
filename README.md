@@ -1,5 +1,7 @@
 ## Weekplanner
 
+[![Build Status](https://dev.azure.com/aau-giraf/giraf/_apis/build/status/aau-giraf.weekplanner?branchName=master)](https://dev.azure.com/aau-giraf/giraf/_build/latest?definitionId=2&branchName=master)
+
 This repository contains the rewritten Weekplanner built with Xamarin.
 
 ## Prerequisites
