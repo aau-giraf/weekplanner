@@ -228,7 +228,15 @@
                                HorizontalTextAlignment="Center"
                                FontSize="22"
                                TextColor="White"
-                               Text="{TemplateBinding Parent.Title}"></Label>
+                               Text="{TemplateBinding Parent.Title}"/>
+                        
+                        <!-- Change orientation Button -->
+                        <Image
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"
+                            AutomationId="OrientationButton"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowToolbarButton}"
+                            HeightRequest="30" Source="icon_orientation.png"></Image>
                         
                         <!-- Toolbar Button -->
                         <Image 
