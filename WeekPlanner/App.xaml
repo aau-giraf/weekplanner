@@ -230,6 +230,16 @@
                                TextColor="White"
                                Text="{TemplateBinding Parent.Title}"></Label>
 
+                        <!-- Orientation change Button -->
+                        <Image
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"
+                            AutomationId="OrientationButton"
+                            IsVisible="{TemplateBinding Parent.BindingContext.ShowOrientationButton}"
+                            HeightRequest="30" Source="icon_orientation.png">
+                            
+                        </Image>
+                        
                         <!-- Toolbar Button -->
                         <Image 
                             HorizontalOptions="End" 
