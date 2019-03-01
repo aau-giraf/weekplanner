@@ -144,6 +144,8 @@ namespace WeekPlanner.ViewModels
         public ObservableCollection<ActivityWithNotifyDTO> CurrentDayPictos 
             => _dayActivityCollections[DayHelpers.GetCurrentDay()];
 
+        public SettingDTO.OrientationEnum Orientation = SettingDTO.OrientationEnum.Landscape;
+
         #region Commands
         
         [UsedImplicitly] 
@@ -825,16 +827,34 @@ namespace WeekPlanner.ViewModels
 			}
 		}
 
+        private void ToggleOrientation()
+        {
+            if(Orientation == SettingDTO.OrientationEnum.Landscape)
+            {
+                MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Portrait);
+                Orientation = SettingDTO.OrientationEnum.Portrait;
+            }
+            else
+            {
+                MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Landscape);
+                Orientation = SettingDTO.OrientationEnum.Landscape;
+            }
+        }
+
 		private void PortraitOrientation()
 		{
 			MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Portrait);
 			MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Portrait);
-		}
+
+            Orientation = SettingDTO.OrientationEnum.Portrait;
+        }
 
 		private void LandscapeOrientation()
 		{
 			MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Landscape);
 			MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Landscape);
+
+            Orientation = SettingDTO.OrientationEnum.Landscape;
 		}
 
 		private bool WeekNameIsEmpty => string.IsNullOrEmpty(WeekName);
