@@ -803,9 +803,9 @@ namespace WeekPlanner.ViewModels
             else
             {
                 LandscapeOrientation();
+                LandscapeOrGuardian = true;
                 await NavigationService.NavigateToAsync<LoginViewModel>(this);
             }
-
             RaisePropertyChangedForDayLabels();
 
             IsBusy = false;
@@ -827,17 +827,50 @@ namespace WeekPlanner.ViewModels
 			}
 		}
 
+        private bool _showOrientationButton = false;
+        /// <summary>
+        /// Returns the opposite of SettingsService.IsInGuardinMode.
+        /// </summary>
+        public bool ShowOrientationButton
+        {
+            get { return _showOrientationButton; }
+            set
+            {
+                _showOrientationButton = value;
+                RaisePropertyChanged(() => ShowOrientationButton);
+            }
+        }
+
+        private bool _landscapeOrGuardian;
+
+        public bool LandscapeOrGuardian
+        {
+            get { return _landscapeOrGuardian; }
+            set
+            {
+                _landscapeOrGuardian = value;
+                RaisePropertyChanged(() => LandscapeOrGuardian);
+            }
+        }
+
+
+        public ICommand ToggleOrientationCommand => new Command(ToggleOrientation);
+
         private void ToggleOrientation()
         {
             if(Orientation == SettingDTO.OrientationEnum.Landscape)
             {
                 MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Portrait);
+                MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Portrait);
                 Orientation = SettingDTO.OrientationEnum.Portrait;
+                LandscapeOrGuardian = false;
             }
             else
             {
                 MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Landscape);
+                MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Landscape);
                 Orientation = SettingDTO.OrientationEnum.Landscape;
+                LandscapeOrGuardian = true;
             }
         }
 
@@ -888,6 +921,7 @@ namespace WeekPlanner.ViewModels
         private void SetToCitizenMode()
         {
 			ShowBackButton = false;
+            ShowOrientationButton = true;
             SettingsService.IsInGuardianMode = false;
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_citizen.png");
 
@@ -913,6 +947,7 @@ namespace WeekPlanner.ViewModels
         private void SetToGuardianMode()
         {
             ShowBackButton = true;
+            ShowOrientationButton = false;
             SettingsService.IsInGuardianMode = true;
             ToolbarButtonIcon = (FileImageSource)ImageSource.FromFile("icon_default_guardian.png");
 

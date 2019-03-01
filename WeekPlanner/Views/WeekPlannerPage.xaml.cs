@@ -26,11 +26,11 @@ namespace WeekPlanner.Views
 				case SettingDTO.OrientationEnum.Portrait:
 					MultiDayView.IsVisible = false;
 					OneDayView.IsVisible = true;
-					break;
+                    break;
 				case SettingDTO.OrientationEnum.Landscape:
-					OneDayView.IsVisible = false;
 					MultiDayView.IsVisible = true;
-					break;
+					OneDayView.IsVisible = false;
+                   break;
 				default:
 					throw new InvalidEnumArgumentException();
 			}

@@ -237,7 +237,9 @@
                             AutomationId="OrientationButton"
                             IsVisible="{TemplateBinding Parent.BindingContext.ShowOrientationButton}"
                             HeightRequest="30" Source="icon_orientation.png">
-                            
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer  Command="{TemplateBinding Parent.BindingContext.ToggleOrientationCommand}"/>
+                            </Image.GestureRecognizers>
                         </Image>
                         
                         <!-- Toolbar Button -->
