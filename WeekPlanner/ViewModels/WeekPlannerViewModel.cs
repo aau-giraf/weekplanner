@@ -860,16 +860,12 @@ namespace WeekPlanner.ViewModels
         {
             if(Orientation == SettingDTO.OrientationEnum.Landscape)
             {
-                MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Portrait);
-                MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Portrait);
-                Orientation = SettingDTO.OrientationEnum.Portrait;
+                PortraitOrientation();
                 LandscapeOrGuardian = false;
             }
             else
             {
-                MessagingCenter.Send(this, MessageKeys.SetOrientation, SettingDTO.OrientationEnum.Landscape);
-                MessagingCenter.Send(this, MessageKeys.ChangeView, SettingDTO.OrientationEnum.Landscape);
-                Orientation = SettingDTO.OrientationEnum.Landscape;
+                LandscapeOrientation();
                 LandscapeOrGuardian = true;
             }
         }
