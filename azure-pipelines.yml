@@ -18,7 +18,7 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    restoreSolution: '**/*.sln'
+    restoreSolution: 'WeekPlanner.sln'
 
 - script: |
     cp WeekPlanner/appsettings.template.json WeekPlanner/appsettings.Development.json
