@@ -1,6 +1,7 @@
+import 'package:weekplanner/models/model.dart';
 import 'package:weekplanner/models/role_enum.dart';
 
-class GirafUser{
+class GirafUser implements Model{
   String id;
   Role role;
   String roleName;
@@ -24,5 +25,17 @@ class GirafUser{
     this.username = json['username'];
     this.screenName = json['screenName'];
     this.department = json['department'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "id": this.id,
+      "role": this.role.index,
+      "roleName": this.roleName,
+      "username": this.username,
+      "screenName": this.screenName,
+      "department": this.department
+    };
   }
 }

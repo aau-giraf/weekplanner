@@ -59,4 +59,25 @@ void main() {
       expect(user2.department, 1);
     });
 
+    test('Should be able to serialize into json', (){
+
+      GirafUser user3 = GirafUser(
+        id: "VALID-ID",
+        role: Role.Department,
+        roleName: "Department",
+        username: "Graatand",
+        screenName: "Peter Hansen",
+        department: 1
+      );
+
+      Map<String, dynamic> json = user3.toJson();
+
+      expect(json["role"], Role.Department.index);
+      expect(json["roleName"], "Department");
+      expect(json["id"], "VALID-ID");
+      expect(json["username"], "Graatand");
+      expect(json["screenName"], "Peter Hansen");
+      expect(json["department"], 1);
+    });
+
 }
