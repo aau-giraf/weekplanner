@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:weekplanner/models/Theme_enum.dart';
+import 'package:weekplanner/models/theme_enum.dart';
 import 'package:weekplanner/models/cancel_mark_enum.dart';
 import 'package:weekplanner/models/complete_mark_enum.dart';
 import 'package:weekplanner/models/default_timer_enum.dart';
