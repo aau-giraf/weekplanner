@@ -34,7 +34,7 @@ class GirafUser implements Model{
   /// Constructor for instantiate a user from the backend response.
   GirafUser.fromJson(Map<String, dynamic> json){
     this.id = json['id'];
-    this.role = Role.values[json['role']];
+    this.role = Role.values[(json['role'] as int) -1];
     this.roleName = json['roleName'];
     this.username = json['username'];
     this.screenName = json['screenName'];

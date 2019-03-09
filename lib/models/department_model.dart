@@ -41,7 +41,7 @@ class DepartmentModel implements Model {
     return {
       'id': id,
       'name': name,
-      'members': members.map((member) => member.toJson()),
+      'members': members.map((member) => member.toJson()).toList(),
       'resources': resources
     };
   }
