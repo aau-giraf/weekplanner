@@ -3,7 +3,7 @@ import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/role_enum.dart';
 
 void main() {
-    GirafUser user = GirafUser();
+    GirafUserModel user = GirafUserModel();
 
     test('Should contain a Role', () {
       user.role = Role.Department;
@@ -46,7 +46,7 @@ void main() {
       };
 
 
-      GirafUser user2 = GirafUser.fromJson(response);
+      GirafUserModel user2 = GirafUserModel.fromJson(response);
 
       expect(user2.role, Role.Guardian);
       expect(user2.roleName, "Guardian");
@@ -58,7 +58,7 @@ void main() {
 
     test('Should be able to serialize into json', (){
 
-      GirafUser user3 = GirafUser(
+      GirafUserModel user3 = GirafUserModel(
         id: "VALID-ID",
         role: Role.Department,
         roleName: "Department",

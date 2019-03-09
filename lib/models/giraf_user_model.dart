@@ -1,7 +1,7 @@
 import 'package:weekplanner/models/model.dart';
 import 'package:weekplanner/models/role_enum.dart';
 
-class GirafUser implements Model {
+class GirafUserModel implements Model{
 
   /// The id of the user
   String id;
@@ -22,7 +22,7 @@ class GirafUser implements Model {
   int department; // This is actually a long from the .Net server, will that cause problems ? (try with mInt).
 
   /// Constructor for instantiate a user inside the app.
-  GirafUser({
+  GirafUserModel({
     this.id,
     this.role,
     this.roleName,
@@ -32,7 +32,12 @@ class GirafUser implements Model {
   });
 
   /// Constructor for instantiate a user from the backend response.
-  GirafUser.fromJson(Map<String, dynamic> json){
+  GirafUserModel.fromJson(Map<String, dynamic> json){
+
+    if (json == null) {
+      throw FormatException("[GirafUserModel]: Cannot initialize from null");
+    }
+
     this.id = json['id'];
     this.role = Role.values[json['role']];
     this.roleName = json['roleName'];
