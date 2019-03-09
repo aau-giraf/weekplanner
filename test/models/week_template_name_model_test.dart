@@ -11,7 +11,7 @@ void main(){
     WeekTemplateNameModel wtn = WeekTemplateNameModel.fromJson(response);
 
     expect(wtn.name, response['name']);
-    expect(wtn.templateId, response['templateId']);
+    expect(wtn.id, response['templateId']);
   });
 
   test("Should throw exception if JSON is null", (){

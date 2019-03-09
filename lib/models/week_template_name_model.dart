@@ -3,10 +3,10 @@ import 'package:weekplanner/models/model.dart';
 class WeekTemplateNameModel implements Model{
   String name;
 
-  int templateId;
+  int id;
 
 
-  WeekTemplateNameModel({this.name, this.templateId});
+  WeekTemplateNameModel({this.name, this.id});
 
   WeekTemplateNameModel.fromJson(Map<String, dynamic> json){
     if (json == null) {
@@ -14,14 +14,14 @@ class WeekTemplateNameModel implements Model{
     }
 
     this.name = json['name'];
-    this.templateId = json['templateId'];
+    this.id = json['templateId'];
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
       "name": this.name,
-      "templateId": this.templateId
+      "templateId": this.id
     };
   }
 
