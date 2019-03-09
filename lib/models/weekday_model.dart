@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/model.dart';
 import 'package:weekplanner/models/weekday_enum.dart';
 
