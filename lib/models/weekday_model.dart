@@ -23,6 +23,6 @@ class WeekdayModel implements Model {
   @override
   Map<String, dynamic> toJson() => {
         "day": day.index + 1,
-        "activities": activities.map((val) => val.toJson()),
+        "activities": activities.map((val) => val.toJson()).toList(),
       };
 }
