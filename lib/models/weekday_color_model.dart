@@ -1,10 +1,10 @@
 import 'package:weekplanner/models/model.dart';
-import 'package:weekplanner/models/weekdays_enum.dart';
+import 'package:weekplanner/models/weekday_enum.dart';
 
 class WeekdayColorModel implements Model{
   String hexColor;
 
-  Weekdays day;
+  Weekday day;
 
   WeekdayColorModel({this.hexColor, this.day});
 
@@ -14,7 +14,7 @@ class WeekdayColorModel implements Model{
     }
 
     this.hexColor = json['hexColor'];
-    this.day = Weekdays.values[(json['day'] as int) - 1];
+    this.day = Weekday.values[(json['day'] as int) - 1];
   }
 
   @override

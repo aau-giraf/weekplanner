@@ -5,8 +5,6 @@ import 'package:weekplanner/models/complete_mark_enum.dart';
 import 'package:weekplanner/models/default_timer_enum.dart';
 import 'package:weekplanner/models/orientation_enum.dart';
 import 'package:weekplanner/models/setting_model.dart';
-import 'package:weekplanner/models/weekday_color_model.dart';
-import 'package:weekplanner/models/weekdays_enum.dart';
 
 void main(){
   Map<String, dynamic> response = {

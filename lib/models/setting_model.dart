@@ -8,22 +8,31 @@ import 'package:weekplanner/models/orientation_enum.dart';
 import 'package:weekplanner/models/weekday_color_model.dart';
 
 class SettingModel implements Model{
+  /// Preferred orientation of device/screen
   Orientation orientation;
 
+  /// Preferred appearence of checked resources
   CompleteMark completeMark;
 
+  /// Preferred appearence of cancelled resources
   CancelMark cancelMark;
 
+  /// Preferred appearence of timer
   DefaultTimer defaultTimer;
 
+  /// Number of seconds for timer
   int timerSeconds;
 
+  /// Number of activities
   int activitiesCount;
 
+  /// The preferred theme
   Theme theme;
 
+  /// defines the number of days to display for a user in a weekschedule
   int nrOfDaysToDisplay;
 
+  /// Flag for indicating whether or not greyscale is enabled
   bool greyscale;
 
   List<WeekdayColorModel> weekDayColors;

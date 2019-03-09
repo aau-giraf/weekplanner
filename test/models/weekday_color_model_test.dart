@@ -1,6 +1,6 @@
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/models/weekday_color_model.dart';
-import 'package:weekplanner/models/weekdays_enum.dart';
+import 'package:weekplanner/models/weekday_enum.dart';
 
 void main(){
   Map<String, dynamic> response = {
@@ -13,7 +13,7 @@ void main(){
     WeekdayColorModel weekdaycolor = WeekdayColorModel.fromJson(response);
 
     expect(weekdaycolor.hexColor, response['hexColor']);
-    expect(weekdaycolor.day, Weekdays.values[(response['day'] as int) - 1]);
+    expect(weekdaycolor.day, Weekday.values[(response['day'] as int) - 1]);
   });
 
   test("Throws exception if JSON input is null", (){
