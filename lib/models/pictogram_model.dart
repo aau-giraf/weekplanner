@@ -1,7 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:weekplanner/models/access_level_enum.dart';
+import 'package:weekplanner/models/model.dart';
 
-class PictogramModel {
+class PictogramModel implements Model {
   int id;
 
   /// The last time the pictogram was edited.
@@ -40,6 +41,7 @@ class PictogramModel {
     imageHash = json['imageHash'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
