@@ -1,13 +1,13 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test_api/test_api.dart';
 import 'package:weekplanner/models/department_model.dart';
 
 void main() {
-  testWidgets("Throws on JSON is null", (WidgetTester tester) {
+  test("Throws on JSON is null", () {
     Map<String, dynamic> json = null; // ignore: avoid_init_to_null
     expect(() => DepartmentModel.fromJson(json), throwsFormatException);
   });
 
-  testWidgets("Can create from JSON map", (WidgetTester tester) {
+  test("Can create from JSON map", () {
     Map<String, dynamic> userJson = {
       "userName": "testUsername",
       "userRole": "testRole",
@@ -28,7 +28,7 @@ void main() {
     expect(model.resources, json["resources"]);
   });
 
-  testWidgets("Can convert to JSON map", (WidgetTester tester) {
+  test("Can convert to JSON map", () {
     Map<String, dynamic> userJson = {
       "userName": "testUsername",
       "userRole": "testRole",
