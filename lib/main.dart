@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './widgets/GirafAppBar.dart';
 
 void main() => runApp(MyApp());
 
@@ -66,10 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
+      appBar: GirafAppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: widget.title,
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
