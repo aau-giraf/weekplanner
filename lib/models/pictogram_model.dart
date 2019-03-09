@@ -1,15 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:weekplanner/models/access_level_enum.dart';
 
-/* {
-  "id": 1,
-  "lastEdit": "2017-05-26T14:53:00.660175",
-  "title": "Epik",
-  "accessLevel": 1,
-  "imageUrl": "/v1/pictogram/1/image/raw",
-  "imageHash": "tns4KGE8xw3BigQj67jSpQ=="
-},*/
-
 class PictogramModel {
   int id;
 
