@@ -1,7 +1,7 @@
 import 'package:weekplanner/models/model.dart';
 import 'package:weekplanner/models/role_enum.dart';
 
-class GirafUser implements Model{
+class GirafUser implements Model {
 
   /// The id of the user
   String id;
