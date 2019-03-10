@@ -8,9 +8,11 @@ class WeekApi {
 
   WeekApi(this._http);
 
-  Observable<WeekNameModel> getNames(String id) {
+  Observable<List<WeekNameModel>> getNames(String id) {
     return _http.get("/$id/week").map((Response res) {
-      return WeekNameModel.fromJson(res.json["data"]);
+      return (res.json["data"] as List)
+          .map((json) => WeekNameModel.fromJson(json))
+          .toList();
     });
   }
 
