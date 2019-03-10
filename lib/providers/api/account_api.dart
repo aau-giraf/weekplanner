@@ -46,8 +46,8 @@ class AccountApi {
   /// [departmentId] The users departmentId
   /// [role] The role of the user
   Observable<GirafUserModel> register(String username, String password,
-      {String displayName, @required departmentId, @required Role role}) {
-    Map<String, String> body = {
+      {String displayName, @required int departmentId, @required Role role}) {
+    Map<String, dynamic> body = {
       "username": username,
       "password": password,
       "departmentId": departmentId,
@@ -70,7 +70,7 @@ class AccountApi {
   /// [oldPassword] The users current password.
   /// [newPassword] The desired password.
   Observable<bool> changePasswordWithOld(
-      int id, String oldPassword, String newPassword) {
+      String id, String oldPassword, String newPassword) {
     return _http.put("/User/$id/Account/password", {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
@@ -83,7 +83,7 @@ class AccountApi {
   ///
   /// [password] The users password.
   /// [token] Reset password token. Used when a user request a password reset.
-  Observable<bool> changePassword(int id, String password, String token) {
+  Observable<bool> changePassword(String id, String password, String token) {
     return _http.post("/User/$id/Account/password", {
       password: password,
       token: token,
@@ -95,7 +95,7 @@ class AccountApi {
   /// Allows the user to get a password reset token for a given user
   ///
   /// [id] ID of the user
-  Observable<String> resetPasswordToken(int id) {
+  Observable<String> resetPasswordToken(String id) {
     return _http
         .get("/User/$id/Account/password-reset-token")
         .map((Response res) => res.json["data"] as String);
@@ -104,7 +104,7 @@ class AccountApi {
   /// Deletes the user with the given ID
   ///
   /// [id] ID of the user
-  Observable<bool> delete(int id) {
+  Observable<bool> delete(String id) {
     return _http.delete("/Account/user/$id").flatMap((Response res) {
       ResponseModel<String> response =
           ResponseModel.fromJson(res.json, res.json["data"]);
