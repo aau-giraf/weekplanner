@@ -3,20 +3,25 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/response_model.dart';
 import 'package:weekplanner/models/role_enum.dart';
-import 'package:weekplanner/providers/api/http.dart';
-import 'package:weekplanner/providers/persistence.dart';
+import 'package:weekplanner/providers/http/http.dart';
+import 'package:weekplanner/providers/peristence/persistence.dart';
 
 class AccountApi {
   Observable<bool> get loggedIn => _loggedIn.stream;
   final _loggedIn = new BehaviorSubject<bool>();
 
   final Http _http;
-  final Persistence persist;
+  final Persistence _persist;
 
-  AccountApi(this._http, this.persist);
+  AccountApi(this._http, this._persist);
 
+  /// This endpoint allows the user to sign in to his/her account by providing
+  /// valid username and password
+  ///
+  /// [username] The users username
+  /// [password] The users password
   Observable<bool> login(String username, String password) {
-    return _http.post("/login", {
+    return _http.post("/Account/login", {
       "username": username,
       "password": password,
     }).flatMap((Response res) {
@@ -24,7 +29,7 @@ class AccountApi {
           ResponseModel.fromJson(res.json, res.json["data"]);
 
       return Observable.fromFuture(Future(() async {
-        await persist.setToken(response.data);
+        await _persist.setToken(response.data);
         return response;
       }));
     }).flatMap((ResponseModel<String> res) {
@@ -33,6 +38,13 @@ class AccountApi {
     });
   }
 
+  /// Register a new user
+  ///
+  /// [username] The users username
+  /// [password] The users password
+  /// [displayName] The users DisplayName
+  /// [departmentId] The users departmentId
+  /// [role] The role of the user
   Observable<GirafUserModel> register(String username, String password,
       {String displayName, @required departmentId, @required Role role}) {
     Map<String, String> body = {
@@ -46,14 +58,20 @@ class AccountApi {
       body["displayName"] = displayName;
     }
 
-    return _http.post("/register", body).map((Response res) {
+    return _http.post("/Account/register", body).map((Response res) {
       GirafUserModel user = GirafUserModel.fromJson(res.json["data"]);
       return user;
     });
   }
 
-  Observable<bool> changePassword(String oldPassword, String newPassword) {
-    return _http.put("/password", {
+  /// Allows the user to change his password if they know their old password.
+  ///
+  /// []
+  /// [oldPassword] The users current password.
+  /// [newPassword] The desired password.
+  Observable<bool> changePasswordWithOld(
+      int id, String oldPassword, String newPassword) {
+    return _http.put("/User/$id/Account/password", {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
     }).map((Response res) {
@@ -61,10 +79,55 @@ class AccountApi {
     });
   }
 
-  void logout() {
-    _loggedIn.add(false);
+  /// Allows a user to set a new password if they forgot theirs.
+  ///
+  /// [password] The users password.
+  /// [token] Reset password token. Used when a user request a password reset.
+  Observable<bool> changePassword(int id, String password, String token) {
+    return _http.post("/User/$id/Account/password", {
+      password: password,
+      token: token,
+    }).map((Response res) {
+      return res.json["success"];
+    });
   }
 
+  /// Allows the user to get a password reset token for a given user
+  ///
+  /// [id] ID of the user
+  Observable<String> resetPasswordToken(int id) {
+    return _http
+        .get("/User/$id/Account/password-reset-token")
+        .map((Response res) => res.json["data"] as String);
+  }
+
+  /// Deletes the user with the given ID
+  ///
+  /// [id] ID of the user
+  Observable<bool> delete(int id) {
+    return _http.delete("/Account/user/$id").flatMap((Response res) {
+      ResponseModel<String> response =
+          ResponseModel.fromJson(res.json, res.json["data"]);
+
+      return Observable.fromFuture(Future(() async {
+        await _persist.removeToken();
+        return response;
+      }));
+    }).flatMap((ResponseModel<String> res) {
+      _loggedIn.add(res.success);
+      return _loggedIn;
+    });
+  }
+
+  /// Logout the currently logged in user
+  Observable<void> logout() {
+    return Observable.fromFuture(Future(() async {
+      await _persist.removeToken();
+      _loggedIn.add(false);
+    }));
+  }
+
+  /// Close open streams
   void dispose() {
     _loggedIn.close();
   }

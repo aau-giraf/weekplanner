@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/providers/persistence.dart';
+import 'package:weekplanner/providers/peristence/persistence.dart';
+import 'package:weekplanner/providers/peristence/persistence_client.dart';
 
 void main() {
   test("Should store token", () async {
@@ -19,7 +20,7 @@ void main() {
 
     const token = "Test Token";
 
-    Persistence persistence = Persistence();
+    Persistence persistence = PersistenceClient();
     await persistence.setToken(token);
   });
 
@@ -37,7 +38,7 @@ void main() {
       fail("Should call setString");
     });
 
-    Persistence persistence = Persistence();
+    Persistence persistence = PersistenceClient();
     await persistence.getToken();
   });
 }
