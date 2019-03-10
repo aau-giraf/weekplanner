@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/GirafAppBar.dart';
+import '../widgets/giraf_app_bar_widget.dart';
 
-class Weekplan extends StatelessWidget {
+class WeekplanScreen extends StatelessWidget {
   final String title;
   final List<String> pictograms = ['assets/read.jpg', 'assets/read.jpg'];
   
@@ -13,12 +13,12 @@ class Weekplan extends StatelessWidget {
   ];
 
 
-  Weekplan({Key key, this.title}) :super(key: key);
+  WeekplanScreen({Key key, this.title}) :super(key: key);
   
   @override
   Widget build(BuildContext context) {
         return Scaffold(
-          appBar: GirafAppBar(
+          appBar: GirafAppBarWidget(
             title: 'Ugeplan',
           ),
           body: 
