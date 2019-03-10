@@ -56,27 +56,30 @@ class HttpMock implements Http {
   }
 
   @override
-  Observable<Response> delete(String url) {
+  Observable<Response> delete(String url, {bool raw: false}) {
     return _reqToRes(Method.delete, url);
   }
 
   @override
-  Observable<Response> get(String url) {
+  Observable<Response> get(String url, {bool raw: false}) {
     return _reqToRes(Method.get, url);
   }
 
   @override
-  Observable<Response> patch(String url, Map<String, dynamic> body) {
+  Observable<Response> patch(String url, Map<String, dynamic> body,
+      {bool raw: false}) {
     return _reqToRes(Method.patch, url);
   }
 
   @override
-  Observable<Response> post(String url, Map<String, dynamic> body) {
+  Observable<Response> post(String url, Map<String, dynamic> body,
+      {bool raw: false}) {
     return _reqToRes(Method.post, url);
   }
 
   @override
-  Observable<Response> put(String url, Map<String, dynamic> body) {
+  Observable<Response> put(String url, Map<String, dynamic> body,
+      {bool raw: false}) {
     return _reqToRes(Method.put, url);
   }
 
