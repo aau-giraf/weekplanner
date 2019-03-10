@@ -52,11 +52,9 @@ class DepartmentApi {
   /// Add a user that does not have a department to the given department.
   /// Requires role Department, Guardian or SuperUser
   ///
-  /// [departmentId] Identifier for the GirafRest.Models.Departmentto add user
-  /// to
+  /// [departmentId] Identifier for the Departmentto add user to
   ///
-  /// [userId] The ID of a GirafRest.Models.GirafUser to be added to the
-  /// department
+  /// [userId] The ID of a GirafUser to be added to the department
   Observable<DepartmentModel> addUserToDepartment(
       int departmentId, String userId) {
     return _http.post("/$departmentId/user/$userId", {}).map((Response res) {
@@ -69,7 +67,7 @@ class DepartmentApi {
   /// [id] ID of the department which should change name
   /// [newName] New name for the department
   Observable<bool> updateName(int id, String newName) {
-    return _http.put("/$id/name", {}).map((Response res) {
+    return _http.put("/$id/name", {"name": newName}).map((Response res) {
       return res.json["success"];
     });
   }
