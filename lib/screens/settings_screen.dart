@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
-import '../widgets/GirafAppBar.dart';
+import '../widgets/giraf_app_bar_widget.dart';
 
-class SettingsPage extends StatelessWidget {
-
-  SettingsPage();
+class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: GirafAppBar(
-        title: 'Settings'
+      appBar: GirafAppBarWidget(
+          title: 'Settings'
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded (
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded (
               child: _buildThemeSection(),
-          ),
-          Expanded (
-            child: _buildOrientationSection(),
-          ),
-          Expanded (
-            child: _buildUgeplanSection(),
-          ),
-        ]
+            ),
+            Expanded (
+              child: _buildOrientationSection(),
+            ),
+            Expanded (
+              child: _buildUgeplanSection(),
+            ),
+          ]
       ),
     );
   }
