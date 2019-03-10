@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weekplanner/screens/Settings.dart';
+import 'package:weekplanner/screens/login_screen.dart';
 import './widgets/GirafAppBar.dart';
 
 void main() => runApp(MyApp());
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: "test"),
     );
   }
 }
