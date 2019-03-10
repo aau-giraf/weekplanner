@@ -1,6 +1,4 @@
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
-import 'package:weekplanner/models/role_enum.dart';
 import 'package:weekplanner/providers/api/status_api.dart';
 import 'package:weekplanner/providers/http/http_mock.dart';
 import 'package:weekplanner/providers/peristence/persistence_mock.dart';
@@ -30,6 +28,40 @@ void main() {
       "errorProperties": [],
       "errorKey": "NoError"
     });
+  });
 
+  test("Should call database status endpoint", () {
+    statusApi
+        .databaseStatus()
+        .listen(expectAsync1((bool test) {
+      expect(test, true);
+    }));
+
+    httpMock
+        .expectOne(url: "/database", method: Method.get)
+        .flush({
+      "success": true,
+      "errorProperties": [],
+      "errorKey": "NoError"
+    });
+  });
+
+  test("Should call version-info endpoint", () {
+    String version = "v1";
+
+    statusApi
+        .versionInfo()
+        .listen(expectAsync1((String test) {
+      expect(test, version);
+    }));
+
+    httpMock
+        .expectOne(url: "/database", method: Method.get)
+        .flush({
+      "data": version,
+      "success": true,
+      "errorProperties": [],
+      "errorKey": "NoError"
+    });
   });
 }

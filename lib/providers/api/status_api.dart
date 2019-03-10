@@ -1,8 +1,4 @@
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
-import 'package:weekplanner/models/response_model.dart';
-import 'package:weekplanner/models/role_enum.dart';
 import 'package:weekplanner/providers/http/http.dart';
 import 'package:weekplanner/providers/peristence/persistence.dart';
 
@@ -18,10 +14,8 @@ class StatusApi {
   }
 
   /// End-point for checking connection to the database.
-  Observable<String> databaseStatus() {
-    return _http.get("/database").map((Response res) {
-      return res.json['success'];
-    });
+  Observable<bool> databaseStatus() {
+    return _http.get("/database").map((Response res) => res.json["success"]);
   }
 
   /// End-point for getting git version info, i.e. branch and commit hash
