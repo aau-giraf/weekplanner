@@ -93,7 +93,7 @@ Column Day(String day, List<Widget> myList){
               child: IconButton(icon: Image.asset('assets/read.jpg')),
             );
         },
-        itemCount: myList.length + 1,
+        itemCount: myList.length,
         ),
       ),
     ],
