@@ -1,4 +1,4 @@
-import 'package:weekplanner/providers/api/http.dart';
+import 'package:weekplanner/providers/http/http.dart';
 
 class DepartmentApi {
   Http _http;

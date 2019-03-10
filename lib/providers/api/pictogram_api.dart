@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
-import 'package:weekplanner/providers/api/http.dart';
-import 'package:weekplanner/providers/persistence.dart';
+import 'package:weekplanner/providers/http/http.dart';
+import 'package:weekplanner/providers/peristence/persistence.dart';
 
 class PictogramApi {
     final Http _http;
-    final Persistence persist;
+    final Persistence _persist;
 
-  PictogramApi(this._http, this.persist);
+  PictogramApi(this._http, this._persist);
 
   Observable<List<PictogramModel>> getAllPictogram(){
      return _http.get('/pictogram').map((Response res) {
@@ -55,7 +55,7 @@ class PictogramApi {
 
     Observable<Image> getPictogramImageRaw (PictogramModel pictogram){
       return _http.get('/${pictogram.id}/image/raw').map((Response res) {
-          return  Image.memory(res.response.bodyBytes);
+          return Image.memory(res.response.bodyBytes);
       });
     }
 }
