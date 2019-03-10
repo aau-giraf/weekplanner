@@ -1,7 +1,7 @@
 import 'package:weekplanner/providers/api/http.dart';
 
-class Department {
+class DepartmentApi {
   Http _http;
 
-  Department(this._http);
+  DepartmentApi(this._http);
 }

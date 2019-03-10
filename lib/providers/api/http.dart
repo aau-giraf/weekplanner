@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/providers/persistence.dart';
 
 class Response {
   final http.Response response;
@@ -11,22 +12,25 @@ class Response {
 }
 
 class Http {
-  static String token;
-  static Map<String, String> get _headers {
+  Future<Map<String, String>> get _headers async {
     Map<String, String> headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };
 
+    String token = await persist.getToken();
+
     if (token != null) {
       headers["Authorization"] = "Bearer " + token;
     }
+
     return headers;
   }
 
-  String baseUrl;
+  final String baseUrl;
+  final Persistence persist;
 
-  Http(this.baseUrl);
+  Http(this.baseUrl, this.persist);
 
   Observable<Response> get(String url) {
     return _parseJson(http.get(baseUrl + url));
@@ -37,16 +41,21 @@ class Http {
   }
 
   Observable<Response> post(String url, Map<String, dynamic> body) {
-    return _parseJson(http.post(baseUrl + url, body: body, headers: _headers));
+    return Observable.fromFuture(_headers).flatMap(
+            (Map<String, String> headers) =>
+            _parseJson(http.post(baseUrl + url, body: body, headers: headers)));
   }
 
   Observable<Response> put(String url, Map<String, dynamic> body) {
-    return _parseJson(http.put(baseUrl + url, body: body, headers: _headers));
+    return Observable.fromFuture(_headers).flatMap(
+            (Map<String, String> headers) =>
+            _parseJson(http.put(baseUrl + url, body: body, headers: headers)));
   }
 
-  Observable<Response> patch(
-      String url, Map<String, dynamic> body) {
-    return _parseJson(http.patch(baseUrl + url, body: body, headers: _headers));
+  Observable<Response> patch(String url, Map<String, dynamic> body) {
+    return Observable.fromFuture(_headers).flatMap((Map<String, String>
+    headers) =>
+        _parseJson(http.patch(baseUrl + url, body: body, headers: headers)));
   }
 
   Observable<Response> _parseJson(Future<http.Response> res) {

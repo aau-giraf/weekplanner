@@ -4,13 +4,16 @@ import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/response_model.dart';
 import 'package:weekplanner/models/role_enum.dart';
 import 'package:weekplanner/providers/api/http.dart';
+import 'package:weekplanner/providers/persistence.dart';
 
-class Account {
+class AccountApi {
   Observable<bool> get loggedIn => _loggedIn.stream;
   final _loggedIn = new BehaviorSubject<bool>();
 
   final Http _http;
-  Account(this._http);
+  final Persistence persist;
+
+  AccountApi(this._http, this.persist);
 
   Observable<bool> login(String username, String password) {
     return _http.post("/login", {
@@ -20,8 +23,12 @@ class Account {
       ResponseModel<String> response =
           ResponseModel.fromJson(res.json, res.json["data"]);
 
-      Http.token = response.data;
-      _loggedIn.add(response.success);
+      return Observable.fromFuture(Future(() async {
+        await persist.setToken(response.data);
+        return response;
+      }));
+    }).flatMap((ResponseModel<String> res) {
+      _loggedIn.add(res.success);
       return _loggedIn;
     });
   }
