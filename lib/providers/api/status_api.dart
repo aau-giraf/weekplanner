@@ -13,13 +13,13 @@ class StatusApi {
   StatusApi(this._http, this._persist);
 
   /// End-point for checking if the API is running.
-  Observable<String> Status() {
-    return _http.get("/Status")
+  Observable<bool> status() {
+    return _http.get("/").map((Response res) => res.json["success"]);
   }
 
   /// End-point for checking connection to the database.
   Observable<String> databaseStatus() {
-    return _http.get("/Status/database").map((Response res) {
+    return _http.get("/database").map((Response res) {
       return res.json['success'];
     });
   }
@@ -27,7 +27,7 @@ class StatusApi {
   /// End-point for getting git version info, i.e. branch and commit hash
   Observable<String> versionInfo() {
     return _http
-        .get("/Status/database")
+        .get("/database")
         .map((Response res) => res.json["data"] as String);
   }
 }
