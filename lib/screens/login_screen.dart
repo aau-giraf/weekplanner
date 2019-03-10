@@ -54,7 +54,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () {
-                              
+                              Navigator.pushNamed(context, "/weekplan");
                             },
                             color: Colors.blue,
                           ),
