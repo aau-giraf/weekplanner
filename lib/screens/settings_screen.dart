@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
+import 'package:weekplanner/providers/bloc_provider.dart';
 import '../widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/models/giraf_theme_enum.dart';
 
 class SettingsScreen extends StatelessWidget {
 
+  SettingsBloc settingsBloc;
+
   @override
   Widget build(BuildContext context) {
+    settingsBloc = BlocProviderTree.of<SettingsBloc>(context);
     return new Scaffold(
-      appBar: GirafAppBarWidget(
+      appBar: GirafAppBar(
           title: 'Settings'
       ),
       body: Column(
@@ -30,14 +37,33 @@ class SettingsScreen extends StatelessWidget {
     return ListView(
         children:<Widget>[
           Text("Tema"),
-          new ExpansionTile(
-            key: PageStorageKey(3),
-            title: Text("Valg af Tema"),
-            children: <Widget>[
-              Text("Tema 1"),
-              Text("Tema 2")
-            ],
+          StreamBuilder<GirafTheme>(
+            stream: settingsBloc.theme,
+            initialData: GirafTheme.AndroidBlue,
+            builder: (BuildContext context, AsyncSnapshot<GirafTheme> snapshot){
+              return new Text("Selected: " + snapshot.data.toString());
+            }
           ),
+          StreamBuilder<List<GirafTheme>>(
+            stream: settingsBloc.themeList,
+            initialData: [],
+            builder: (BuildContext context, AsyncSnapshot<List<GirafTheme>> snapshot){
+              return new ExpansionTile(
+                key: PageStorageKey(3),
+                title: Text("Valg af Tema"),
+                children: snapshot.data.map((element) {
+                  return RaisedButton(
+                    child: Text(element.toString()),
+                    onPressed: (){
+                      settingsBloc.setTheme(element);
+                    },
+                  );
+                }
+                ).toList()
+              );
+            },
+          ),
+
           new ExpansionTile(
             key: PageStorageKey(3),
             title: Text("Farver på ugeplan"),

@@ -1,3 +1,1 @@
-enum Role{
-  Citizen, Department, Guardian, SuperUser
-}
+enum Role { Citizen, Department, Guardian, SuperUser }

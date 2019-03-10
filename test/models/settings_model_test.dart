@@ -1,5 +1,5 @@
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/models/theme_enum.dart';
+import 'package:weekplanner/models/giraf_theme_enum.dart';
 import 'package:weekplanner/models/cancel_mark_enum.dart';
 import 'package:weekplanner/models/complete_mark_enum.dart';
 import 'package:weekplanner/models/default_timer_enum.dart';
@@ -58,7 +58,7 @@ void main(){
     expect(settings.defaultTimer, DefaultTimer.values[(response['defaultTimer'] as int) - 1]);
     expect(settings.timerSeconds, response['timerSeconds']);
     expect(settings.activitiesCount, response['activitiesCount']);
-    expect(settings.theme, Theme.values[(response['theme'] as int) - 1]);
+    expect(settings.theme, GirafTheme.values[(response['theme'] as int) - 1]);
     expect(settings.greyscale, false);
     expect(settings.weekDayColors.length, 7);
     expect(settings.weekDayColors[0].toJson(), response['weekDayColors'][0]);

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
+  final TextEditingController usernameCtrl = TextEditingController();
+  final TextEditingController passwordCtrl = TextEditingController();
+
+  AuthBloc authBloc;
+
   @override
   Widget build(BuildContext context) {
+    authBloc = BlocProviderTree.of<AuthBloc>(context);
+
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -29,7 +38,8 @@ class LoginScreen extends StatelessWidget {
               key: this._formKey,
               child: ListView(
                 children: <Widget>[
-                  TextFormField(
+                  TextField(
+                    controller: usernameCtrl,
                     keyboardType: TextInputType.text,
                     // Use email input type for emails.
                     decoration: InputDecoration(
@@ -38,7 +48,8 @@ class LoginScreen extends StatelessWidget {
                       fillColor: Colors.white,
                     ),
                   ),
-                  TextFormField(
+                  TextField(
+                    controller: passwordCtrl,
                     obscureText: true,
                     // Use email input type for emails.
                     decoration: InputDecoration(
@@ -54,7 +65,15 @@ class LoginScreen extends StatelessWidget {
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, "/weekplan");
+                        authBloc.loggedIn.take(1).listen((status){
+                          if(status){
+                            Navigator.pushNamed(context, "/weekplan");
+                          }
+                        });
+                        authBloc.authenticate(
+                            usernameCtrl.value.text,
+                            passwordCtrl.value.text
+                        );
                       },
                       color: Colors.blue,
                     ),

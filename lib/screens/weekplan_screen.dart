@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import '../widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/models/giraf_theme_enum.dart';
 
 class WeekplanScreen extends StatelessWidget {
   final String title;
   final List<String> pictograms = ['assets/read.jpg', 'assets/read.jpg'];
-  
+
+  SettingsBloc settingsBloc;
+
+
   List<Widget> myList = <Widget>[
      new Card(
         child: 
@@ -17,13 +23,21 @@ class WeekplanScreen extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+        settingsBloc = BlocProviderTree.of<SettingsBloc>(context);
         return Scaffold(
-          appBar: GirafAppBarWidget(
+          appBar: GirafAppBar(
             title: 'Ugeplan',
           ),
           body: 
             new Row(
               children: <Widget>[
+                StreamBuilder<GirafTheme>(
+                  stream: this.settingsBloc.theme,
+                  initialData: GirafTheme.AndroidBlue,
+                  builder: (BuildContext context, AsyncSnapshot<GirafTheme> snapshot){
+                    return Text(snapshot.data.toString());
+                  },
+                ),
                 Expanded(
                   child: Card(
                     color: Color(0xFF007700),

@@ -1,3 +1,3 @@
-enum Theme{
+enum GirafTheme{
   GirafYellow, GirafGreen, GirafRed, AndroidBlue
 }
