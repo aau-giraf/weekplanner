@@ -15,7 +15,8 @@ class Api {
   Api(this.baseUrl) {
     Persistence persist = PersistenceClient();
     account = AccountApi(HttpClient(baseUrl + "/v1/", persist), persist);
-    department = DepartmentApi(HttpClient(baseUrl + "/v1/Department", persist));
+    department =
+        DepartmentApi(HttpClient(baseUrl + "/v1/Department", persist), persist);
     pictogram = PictogramApi(HttpClient(baseUrl + "/v1/Pictogram", persist), persist);
   }
 
