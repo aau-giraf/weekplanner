@@ -8,6 +8,9 @@ import 'package:weekplanner/providers/peristence/persistence.dart';
 
 class StatusApi {
   final Http _http;
+  final Persistence _persist;
+
+  StatusApi(this._http, this._persist);
 
   /// End-point for checking if the API is running.
   Observable<String> Status() {
