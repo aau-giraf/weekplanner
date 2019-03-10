@@ -1,7 +1,8 @@
 import 'package:weekplanner/providers/api/account_api.dart';
 import 'package:weekplanner/providers/api/department_api.dart';
-import 'package:weekplanner/providers/api/http.dart';
-import 'package:weekplanner/providers/persistence.dart';
+import 'package:weekplanner/providers/http/http_client.dart';
+import 'package:weekplanner/providers/peristence/persistence.dart';
+import 'package:weekplanner/providers/peristence/persistence_client.dart';
 
 class Api {
   AccountApi account;
@@ -10,9 +11,9 @@ class Api {
   String baseUrl;
 
   Api(this.baseUrl) {
-    Persistence persist = Persistence();
-    account = AccountApi(Http(baseUrl + "/v1/Account", persist), persist);
-    department = DepartmentApi(Http(baseUrl + "/v1/Department", persist));
+    Persistence persist = PersistenceClient();
+    account = AccountApi(HttpClient(baseUrl + "/v1/", persist), persist);
+    department = DepartmentApi(HttpClient(baseUrl + "/v1/Department", persist));
   }
 
   void dispose() {
