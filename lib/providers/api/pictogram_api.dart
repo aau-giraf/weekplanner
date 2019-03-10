@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
@@ -45,6 +47,12 @@ class PictogramApi {
             return res.json['success'];
     });
 }
+// TODO Im not sure what to do here 
+Observable<ByteData> getPictogramImage(PictogramModel pictogram){
+      return _http.get('/' + pictogram.id.toString() + '/image').map((Response res) {
+          return  ByteData.view(res.json['data']);
+      });
+  }
 
   Observable<PictogramModel> updatePictogramImage(PictogramModel pictogram){
       Map<String, String> body =pictogram.toJson();
@@ -54,7 +62,7 @@ class PictogramApi {
   }
 
     Observable<Image> getPictogramImageRaw (PictogramModel pictogram){
-      return _http.get('/${pictogram.id}/image/raw').map((Response res) {
+      return _http.get('/${pictogram.id}/image/raw', raw: true).map((Response res) {
           return Image.memory(res.response.bodyBytes);
       });
     }
