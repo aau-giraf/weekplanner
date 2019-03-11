@@ -1,18 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:weekplanner/providers/api/api.dart';
-import 'screens/login.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/globals.dart';
+import 'package:weekplanner/route_builder.dart';
+
+import 'package:weekplanner/screens/login_screen.dart';
+import 'package:weekplanner/screens/settings_screen.dart';
+import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
+import 'package:weekplanner/providers/bloc_provider.dart';
+
 
 class Routes {
-  static final api = new Api("http://web.giraf.cs.aau.dk:5050");
-  final routes = <String, WidgetBuilder> {
-    '/login': (BuildContext context) => new Login(api)
+  final routes = <String, WidgetBuilder>{
+    '/login': RouteBuilder.build(LoginScreen(), [
+      BlocProvider<AuthBloc>(bloc: Globals.authBloc)
+    ]),
+    '/weekplan': RouteBuilder.build(WeekplanScreen(), [
+      BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
+    ]),
+    '/settings': RouteBuilder.build(SettingsScreen(), [
+      BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
+    ]),
   };
 
   Routes() {
     runApp(new MaterialApp(
       title: 'Flutter App',
       routes: routes,
-      home: new Login(api),
+      home: BlocProviderTree(
+        blocProviders: [
+          BlocProvider<AuthBloc>(bloc: Globals.authBloc)
+        ],
+        child: new LoginScreen()
+      )
     ));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:weekplanner/models/theme_enum.dart';
+import 'package:weekplanner/models/giraf_theme_enum.dart';
 import 'package:weekplanner/models/cancel_mark_enum.dart';
 import 'package:weekplanner/models/complete_mark_enum.dart';
 import 'package:weekplanner/models/default_timer_enum.dart';
@@ -27,7 +27,7 @@ class SettingsModel implements Model {
   int activitiesCount;
 
   /// The preferred theme
-  Theme theme;
+  GirafTheme theme;
 
   /// defines the number of days to display for a user in a weekschedule
   int nrOfDaysToDisplay;
@@ -60,7 +60,7 @@ class SettingsModel implements Model {
     this.defaultTimer = DefaultTimer.values[(json['defaultTimer'] as int) - 1];
     this.timerSeconds = json['timerSeconds'];
     this.activitiesCount = json['activitiesCount'];
-    this.theme = Theme.values[(json['theme'] as int) - 1];
+    this.theme = GirafTheme.values[(json['theme'] as int) - 1];
     this.nrOfDaysToDisplay = json['nrOfDaysToDisplay'];
     this.greyscale = json['greyScale'];
     this.weekDayColors = (json['weekDayColors'] as List)
