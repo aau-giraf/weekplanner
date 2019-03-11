@@ -9,16 +9,13 @@ class Response {
 }
 
 abstract class Http {
-  Observable<Response> get(String url, {bool raw: false});
+  Observable<Response> get(String url);
 
-  Observable<Response> delete(String url, {bool raw: false});
+  Observable<Response> delete(String url);
 
-  Observable<Response> post(String url, Map<String, dynamic> body,
-      {bool raw: false});
+  Observable<Response> post(String url, Map<String, dynamic> body);
 
-  Observable<Response> put(String url, Map<String, dynamic> body,
-      {bool raw: false});
+  Observable<Response> put(String url, Map<String, dynamic> body);
 
-  Observable<Response> patch(String url, Map<String, dynamic> body,
-      {bool raw: false});
+  Observable<Response> patch(String url, Map<String, dynamic> body);
 }
