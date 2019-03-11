@@ -64,4 +64,8 @@ void main() {
       "errorKey": "NoError"
     });
   });
+
+  tearDown(() {
+    httpMock.verify();
+  });
 }
