@@ -37,11 +37,13 @@ class HttpMock implements Http {
   }
 
   Flusher expectOne({Method method, @required String url}) {
-    int index = calls.indexWhere((call) => call.url == url);
+    int index = calls.indexWhere(
+        (call) => call.url == url && (method == null || method == call.method));
 
     if (index == -1) {
       throw Exception("Expected [$method] $url, found none");
     }
+
     Call call = calls[index];
     calls.removeAt(index);
     return Flusher(call);
@@ -49,34 +51,37 @@ class HttpMock implements Http {
 
   void expectNone({Method method, @required String url}) {
     calls.forEach((call) {
-      if (call.url == url && method != null && call.method != method) {
+      if (call.url == url && (method != null && call.method != method)) {
         throw Exception("Found [$method] $url, expected none");
       }
     });
   }
 
   @override
-  Observable<Response> delete(String url) {
+  Observable<Response> delete(String url, {bool raw: false}) {
     return _reqToRes(Method.delete, url);
   }
 
   @override
-  Observable<Response> get(String url) {
+  Observable<Response> get(String url, {bool raw: false}) {
     return _reqToRes(Method.get, url);
   }
 
   @override
-  Observable<Response> patch(String url, Map<String, dynamic> body) {
+  Observable<Response> patch(String url, Map<String, dynamic> body,
+      {bool raw: false}) {
     return _reqToRes(Method.patch, url);
   }
 
   @override
-  Observable<Response> post(String url, Map<String, dynamic> body) {
+  Observable<Response> post(String url, Map<String, dynamic> body,
+      {bool raw: false}) {
     return _reqToRes(Method.post, url);
   }
 
   @override
-  Observable<Response> put(String url, Map<String, dynamic> body) {
+  Observable<Response> put(String url, Map<String, dynamic> body,
+      {bool raw: false}) {
     return _reqToRes(Method.put, url);
   }
 

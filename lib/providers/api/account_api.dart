@@ -7,9 +7,6 @@ import 'package:weekplanner/providers/http/http.dart';
 import 'package:weekplanner/providers/peristence/persistence.dart';
 
 class AccountApi {
-  Observable<bool> get loggedIn => _loggedIn.stream;
-  final _loggedIn = new BehaviorSubject<bool>();
-
   final Http _http;
   final Persistence _persist;
 
@@ -30,11 +27,8 @@ class AccountApi {
 
       return Observable.fromFuture(Future(() async {
         await _persist.setToken(response.data);
-        return response;
+        return response.success;
       }));
-    }).flatMap((ResponseModel<String> res) {
-      _loggedIn.add(res.success);
-      return _loggedIn;
     });
   }
 
@@ -111,11 +105,8 @@ class AccountApi {
 
       return Observable.fromFuture(Future(() async {
         await _persist.removeToken();
-        return response;
+        return response.success;
       }));
-    }).flatMap((ResponseModel<String> res) {
-      _loggedIn.add(res.success);
-      return _loggedIn;
     });
   }
 
@@ -123,12 +114,6 @@ class AccountApi {
   Observable<void> logout() {
     return Observable.fromFuture(Future(() async {
       await _persist.removeToken();
-      _loggedIn.add(false);
     }));
-  }
-
-  /// Close open streams
-  void dispose() {
-    _loggedIn.close();
   }
 }
