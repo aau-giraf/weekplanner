@@ -27,41 +27,54 @@ class HttpClient implements Http {
   HttpClient(this.baseUrl, this._persist);
 
   @override
-  Observable<Response> get(String url, {bool raw: false}) {
-    return _parseJson(http.get(baseUrl + url), raw);
+  Observable<Response> get(String url) {
+    return Observable.fromFuture(_headers).flatMap(
+        (Map<String, String> headers) =>
+            _parseJson(http.get(baseUrl + url, headers: headers)));
   }
 
   @override
-  Observable<Response> delete(String url, {bool raw: false}) {
-    return _parseJson(http.delete(baseUrl + url), raw);
+  Observable<Response> delete(String url) {
+    return Observable.fromFuture(_headers).flatMap(
+        (Map<String, String> headers) =>
+            _parseJson(http.delete(baseUrl + url, headers: headers)));
   }
 
   @override
-  Observable<Response> post(String url, Map<String, dynamic> body,
-      {bool raw: false}) {
+  Observable<Response> post(String url, Map<String, dynamic> body) {
+    return Observable.fromFuture(_headers).flatMap(
+        (Map<String, String> headers) => _parseJson(http.post(baseUrl + url,
+            body: jsonEncode(body), headers: headers)));
+  }
+
+  @override
+  Observable<Response> put(String url, Map<String, dynamic> body) {
     return Observable.fromFuture(_headers).flatMap(
         (Map<String, String> headers) => _parseJson(
-            http.post(baseUrl + url, body: body, headers: headers), raw));
+            http.put(baseUrl + url, body: jsonEncode(body), headers: headers)));
   }
 
   @override
-  Observable<Response> put(String url, Map<String, dynamic> body,
-      {bool raw: false}) {
+  Observable<Response> patch(String url, Map<String, dynamic> body) {
     return Observable.fromFuture(_headers).flatMap(
-        (Map<String, String> headers) => _parseJson(
-            http.put(baseUrl + url, body: body, headers: headers), raw));
+        (Map<String, String> headers) => _parseJson(http.patch(baseUrl + url,
+            body: jsonEncode(body), headers: headers)));
   }
 
-  @override
-  Observable<Response> patch(String url, Map<String, dynamic> body,
-      {bool raw: false}) {
-    return Observable.fromFuture(_headers).flatMap(
-        (Map<String, String> headers) => _parseJson(
-            http.patch(baseUrl + url, body: body, headers: headers), raw));
-  }
+  Observable<Response> _parseJson(Future<http.Response> res) {
+    return Observable.fromFuture(res).map((http.Response res) {
+      Map<String, dynamic> json;
+      // ensure all headers are in lowercase
+      Map<String, String> headers =
+          res.headers.map((h, v) => MapEntry(h.toLowerCase(), v));
 
-  Observable<Response> _parseJson(Future<http.Response> res, bool raw) {
-    return Observable.fromFuture(res).map((http.Response res) =>
-        Response(res, raw ? null : jsonDecode(res.body)));
+      // only decode json if response says it's json
+      if (headers.containsKey("content-type") &&
+          headers["content-type"].toLowerCase().contains("application/json")) {
+        json = jsonDecode(res.body);
+      }
+
+      return Response(res, json);
+    });
   }
 }
