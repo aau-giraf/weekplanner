@@ -27,6 +27,5 @@ class Api {
   }
 
   void dispose() {
-    account.dispose();
   }
 }
