@@ -13,7 +13,7 @@ void main() {
   DepartmentApi departmentApi;
 
   DepartmentModel sampleDepartment =
-  DepartmentModel(id: 1, name: "Dep. of Science", members: [
+      DepartmentModel(id: 1, name: "Dep. of Science", members: [
     UsernameModel(name: "Kurt", role: Role.SuperUser.toString(), id: "1"),
     UsernameModel(name: "Hüttel", role: Role.SuperUser.toString(), id: "2"),
   ], resources: [
@@ -68,7 +68,7 @@ void main() {
       expect(response.toJson(), sampleDepartment.toJson());
     }));
 
-    httpMock.expectOne(url: "/", method: Method.get).flush({
+    httpMock.expectOne(url: "/", method: Method.post).flush({
       "data": sampleDepartment.toJson(),
       "success": true,
       "errorProperties": [],
@@ -105,7 +105,7 @@ void main() {
         .expectOne(url: "/${sampleDepartment.id}/citizens", method: Method.get)
         .flush({
       "data":
-      sampleDepartment.members.map((member) => member.toJson()).toList(),
+          sampleDepartment.members.map((member) => member.toJson()).toList(),
       "success": true,
       "errorProperties": [],
       "errorKey": "NoError",
@@ -115,16 +115,16 @@ void main() {
   test("Should be able to add user to department", () {
     departmentApi
         .addUserToDepartment(
-        sampleDepartment.id, sampleDepartment.members[0].id)
+            sampleDepartment.id, sampleDepartment.members[0].id)
         .listen(expectAsync1((DepartmentModel response) {
       expect(response.toJson(), sampleDepartment.toJson());
     }));
 
     httpMock
         .expectOne(
-        url:
-        "/${sampleDepartment.id}/user/${sampleDepartment.members[0].id}",
-        method: Method.get)
+            url:
+                "/${sampleDepartment.id}/user/${sampleDepartment.members[0].id}",
+            method: Method.post)
         .flush({
       "data": sampleDepartment.toJson(),
       "success": true,
@@ -141,7 +141,7 @@ void main() {
     }));
 
     httpMock
-        .expectOne(url: "/${sampleDepartment.id}/name", method: Method.get)
+        .expectOne(url: "/${sampleDepartment.id}/name", method: Method.put)
         .flush({
       "success": true,
       "errorProperties": [],
@@ -150,10 +150,11 @@ void main() {
   });
 
   test("Should be able to delete department", () {
-    departmentApi.delete(sampleDepartment.id).listen(
-        expectAsync1((bool success) {
-          expect(success, isTrue);
-        }));
+    departmentApi
+        .delete(sampleDepartment.id)
+        .listen(expectAsync1((bool success) {
+      expect(success, isTrue);
+    }));
 
     httpMock
         .expectOne(url: "/${sampleDepartment.id}", method: Method.delete)
