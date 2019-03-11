@@ -4,7 +4,7 @@ import 'package:weekplanner/models/cancel_mark_enum.dart';
 import 'package:weekplanner/models/complete_mark_enum.dart';
 import 'package:weekplanner/models/default_timer_enum.dart';
 import 'package:weekplanner/models/orientation_enum.dart';
-import 'package:weekplanner/models/setting_model.dart';
+import 'package:weekplanner/models/settings_model.dart';
 
 void main(){
   Map<String, dynamic> response = {
@@ -50,7 +50,7 @@ void main(){
   };
 
   test('Can instantiate from JSON', (){
-    SettingModel settings = SettingModel.fromJson(response);
+    SettingsModel settings = SettingsModel.fromJson(response);
 
     expect(settings.orientation, Orientation.values[(response['orientation'] as int) -1]);
     expect(settings.completeMark, CompleteMark.values[(response['completeMark'] as int) - 1]);
@@ -71,11 +71,11 @@ void main(){
   });
 
   test('Will throw exception when JSON is null', (){
-    expect(() => SettingModel.fromJson(null), throwsFormatException);
+    expect(() => SettingsModel.fromJson(null), throwsFormatException);
   });
 
   test('Can serialize into JSON', (){
-    SettingModel settings = SettingModel.fromJson(response);
+    SettingsModel settings = SettingsModel.fromJson(response);
 
     expect(settings.toJson(), response);
   });

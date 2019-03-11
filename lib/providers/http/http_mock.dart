@@ -37,11 +37,13 @@ class HttpMock implements Http {
   }
 
   Flusher expectOne({Method method, @required String url}) {
-    int index = calls.indexWhere((call) => call.url == url);
+    int index = calls.indexWhere(
+        (call) => call.url == url && (method == null || method == call.method));
 
     if (index == -1) {
       throw Exception("Expected [$method] $url, found none");
     }
+
     Call call = calls[index];
     calls.removeAt(index);
     return Flusher(call);
@@ -49,7 +51,7 @@ class HttpMock implements Http {
 
   void expectNone({Method method, @required String url}) {
     calls.forEach((call) {
-      if (call.url == url && method != null && call.method != method) {
+      if (call.url == url && (method != null && call.method != method)) {
         throw Exception("Found [$method] $url, expected none");
       }
     });
