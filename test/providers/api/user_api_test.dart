@@ -4,7 +4,7 @@ import 'package:weekplanner/models/complete_mark_enum.dart';
 import 'package:weekplanner/models/default_timer_enum.dart';
 import 'package:weekplanner/models/orientation_enum.dart';
 import 'package:weekplanner/models/role_enum.dart';
-import 'package:weekplanner/models/theme_enum.dart';
+import 'package:weekplanner/models/giraf_theme_enum.dart';
 import 'package:weekplanner/models/weekday_color_model.dart';
 import 'package:weekplanner/models/weekday_enum.dart';
 import 'package:weekplanner/providers/api/user_api.dart';
@@ -35,7 +35,7 @@ void main() {
       completeMark: CompleteMark.Checkmark,
       cancelMark: CancelMark.Cross,
       defaultTimer: DefaultTimer.AnalogClock,
-      theme: Theme.AndroidBlue,
+      theme: GirafTheme.AndroidBlue,
       weekDayColors: [
         WeekdayColorModel(day: Weekday.Monday, hexColor: "#123456")
       ]);
