@@ -1,0 +1,57 @@
+import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/models/week_template_model.dart';
+import 'package:weekplanner/models/week_template_name_model.dart';
+import 'package:weekplanner/providers/http/http.dart';
+
+class WeekTemplateApi {
+  final Http _http;
+
+  WeekTemplateApi(this._http);
+
+  /// Gets all schedule templates for the currently authenticated user.
+  /// Available to all users.
+  Observable<List<WeekTemplateNameModel>> getNames() {
+    return _http.get("/").map((Response res) {
+      return (res.json["data"] as List)
+          .map((val) => WeekTemplateNameModel.fromJson(val)).toList();
+    });
+  }
+
+  /// Creates new week template in the department of the given user.
+  /// Available to Supers, Departments and Guardians.
+  ///
+  /// [template] After successful execution, a new week template will be created
+  /// with the same values as this DTO.
+  Observable<WeekTemplateModel> create(WeekTemplateModel template) {
+    return _http.post("/", template.toJson()).map((Response res) {
+      return WeekTemplateModel.fromJson(res.json["data"]);
+    });
+  }
+
+  /// Gets the week template with the specified id. Available to all users.
+  ///
+  /// [id] ID of the week to get
+  Observable<WeekTemplateModel> get(int id) {
+    return _http.get("/$id").map((Response res) {
+      return WeekTemplateModel.fromJson(res.json["data"]);
+    });
+  }
+
+  /// Overwrite the information of a week template. Available to all Supers, and
+  /// to Departments and Guardians of the same department as the template.
+  ///
+  /// [template] The new template value
+  Observable<WeekTemplateModel> update(WeekTemplateModel template) {
+    return _http.put("/${template.id}", template.toJson()).map((Response res) {
+      return WeekTemplateModel.fromJson(res.json["data"]);
+    });
+  }
+
+  /// Deletes the template of the given ID. Available to all Supers, and to
+  /// Departments and Guardians of the same department as the template.
+  ///
+  /// [id] ID of the template to delete
+  Observable<bool> delete(int id) {
+    return _http.delete("/$id").map((Response res) => res.json["success"]);
+  }
+}
