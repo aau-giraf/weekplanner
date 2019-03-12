@@ -1,6 +1,7 @@
 import 'package:weekplanner/providers/api/account_api.dart';
 import 'package:weekplanner/providers/api/department_api.dart';
 import 'package:weekplanner/providers/api/pictogram_api.dart';
+import 'package:weekplanner/providers/api/user_api.dart';
 import 'package:weekplanner/providers/api/week_api.dart';
 import 'package:weekplanner/providers/api/status_api.dart';
 import 'package:weekplanner/providers/api/week_template_api.dart';
@@ -15,6 +16,7 @@ class Api {
   WeekApi week;
   StatusApi status;
   WeekTemplateApi weekTemplate;
+  UserApi user;
 
   String baseUrl;
 
@@ -29,6 +31,8 @@ class Api {
         PictogramApi(HttpClient(baseUrl + "/v1/Pictogram", persist));
     weekTemplate =
         WeekTemplateApi(HttpClient(baseUrl + "/v1/WeekTemplate", persist));
+    user = UserApi(HttpClient(baseUrl + "/v1/User", persist));
+
   }
 
   void dispose() {

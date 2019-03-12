@@ -3,6 +3,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/route_builder.dart';
+import 'package:weekplanner/screens/choose_citizen_screen.dart';
 
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
@@ -21,6 +22,8 @@ class Routes {
     ]),
     '/settings': RouteBuilder.build(SettingsScreen(), [
       BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
+    ]),
+    '/choosecitizen': RouteBuilder.build(ChooseCitizenScreen(), [
     ]),
   };
 
