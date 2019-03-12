@@ -9,6 +9,7 @@ import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import 'package:weekplanner/providers/bloc_provider.dart';
+import 'package:weekplanner/screens/logout_screen.dart';
 
 
 class Routes {
@@ -21,6 +22,9 @@ class Routes {
     ]),
     '/settings': RouteBuilder.build(SettingsScreen(), [
       BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
+    ]),
+    '/logout': RouteBuilder.build(Logout(), [
+      BlocProvider<AuthBloc>(bloc: Globals.authBloc)
     ]),
   };
 
