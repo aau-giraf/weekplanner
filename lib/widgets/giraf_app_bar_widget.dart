@@ -21,18 +21,31 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             Navigator.pushNamed(context, '/settings');
           },
         ),
+
         IconButton(
-          icon: Icon(Icons.subdirectory_arrow_right),
+          icon: Icon(Icons.people),
+          tooltip: 'trains',
+
+          onPressed: () {
+
+          },
+        ),
+
+        IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {
+
+            },
+        ),
+
+
+        IconButton(
+          icon: Icon(Icons.edit),
           tooltip: 'trains',
           onPressed: () {
 
           },
         ),
-        IconButton(
-          icon: Icon(Icons.place),
-          tooltip: 'trains',
-          onPressed: () {},
-        )
       ]
     );
   }
