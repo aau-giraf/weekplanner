@@ -13,7 +13,6 @@ class ChooseCitizenScreen extends StatelessWidget {
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
-        padding: new EdgeInsets.all(50.0),
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/login_screen_background_image.png"),
@@ -48,29 +47,30 @@ class ChooseCitizenScreen extends StatelessWidget {
                     (UsernameModel user) {
                       return Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: Container(
-                            child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: AssetImage(
-                                        "assets/login_screen_background_image.png"),
+                        child: GestureDetector(
+                          onTap: _bloc.choose,
+                          child: Container(
+                              child: Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: AssetImage("assets/login_screen_background_image.png"),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-
-                            Text(
-                              user.name,
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )),
+                              Text(
+                                user.name,
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          )),
+                        ),
                       );
                     },
                   ).toList(),
