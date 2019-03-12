@@ -25,7 +25,7 @@ class PictogramApi {
       "pageSize": pageSize.toString(),
     });
 
-    return _http.get('/pictogram' + uri.toString()).map((Response res) {
+    return _http.get(uri.toString()).map((Response res) {
       return (res.json['data'] as List).map((map) {
         return PictogramModel.fromJson(map);
       }).toList();

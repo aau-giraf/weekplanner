@@ -5,6 +5,7 @@ import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/route_builder.dart';
 
 import 'package:weekplanner/screens/login_screen.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
@@ -22,11 +23,12 @@ class Routes {
     '/settings': RouteBuilder.build(SettingsScreen(), [
       BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
     ]),
+    '/pictogram/search': RouteBuilder.build(PictogramSearch(), []),
   };
 
   Routes() {
     runApp(new MaterialApp(
-      title: 'Flutter App',
+      title: 'Weekplanner',
       routes: routes,
       home: BlocProviderTree(
         blocProviders: [

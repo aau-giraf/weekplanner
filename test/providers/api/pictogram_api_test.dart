@@ -38,7 +38,7 @@ void main() {
           grams.map((gram) => gram.toJson()));
     }));
 
-    httpMock.expectOne(url: "/pictogram?query=Cat&page=0&pageSize=10", method: Method.get).flush({
+    httpMock.expectOne(url: "?query=Cat&page=0&pageSize=10", method: Method.get).flush({
       "data": grams.map((gram) => gram.toJson()).toList(),
       "success": true,
       "errorProperties": [],
