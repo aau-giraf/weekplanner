@@ -67,7 +67,7 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () {
                         authBloc.loggedIn.take(1).listen((status){
                           if(status){
-                            Navigator.pushNamed(context, "/weekplan");
+                            Navigator.pushNamed(context, "/user/weekplan/select");
                           }
                         });
                         authBloc.authenticate(
@@ -87,7 +87,7 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () {
                         authBloc.loggedIn.take(1).listen((status){
                           if(status){
-                            Navigator.pushNamed(context, "/weekplan");
+                            Navigator.pushNamed(context, "/user/weekplan/select");
                           }
                         });
                         authBloc.authenticate(
