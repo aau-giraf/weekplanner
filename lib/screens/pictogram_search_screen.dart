@@ -32,6 +32,10 @@ class PictogramSearch extends StatelessWidget {
                     initialData: [],
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
+                      if (snapshot.data == null) {
+                        return CircularProgressIndicator();
+                      }
+
                       return GridView.count(
                         crossAxisCount: 4,
                         children: snapshot.data.map((PictogramModel gram) {
