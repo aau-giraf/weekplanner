@@ -78,6 +78,26 @@ class LoginScreen extends StatelessWidget {
                       color: Colors.blue,
                     ),
                   ),
+                  Container(
+                    child: new RaisedButton(
+                      child: new Text(
+                        'Auto-Login',
+                        style: new TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        authBloc.loggedIn.take(1).listen((status){
+                          if(status){
+                            Navigator.pushNamed(context, "/weekplan");
+                          }
+                        });
+                        authBloc.authenticate(
+                            "graatand",
+                            "password"
+                        );
+                      },
+                      color: Colors.blue,
+                    ),
+                  ),
                 ],
               ),
             ))
