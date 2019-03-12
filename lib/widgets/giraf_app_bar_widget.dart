@@ -15,17 +15,8 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Color(0xAAFF6600),
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.settings),
-          tooltip: 'Indstillinger',
-          onPressed: () {
-            Navigator.pushNamed(context, '/settings');
-          },
-        ),
-
-        IconButton(
-          icon: Icon(Icons.people),
+          icon: Icon(Icons.edit),
           tooltip: 'trains',
-
           onPressed: () {
 
           },
@@ -38,14 +29,23 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             },
         ),
 
-
         IconButton(
-          icon: Icon(Icons.edit),
+          icon: Icon(Icons.people),
           tooltip: 'trains',
           onPressed: () {
 
           },
         ),
+
+
+        IconButton(
+          icon: Icon(Icons.settings),
+          tooltip: 'Indstillinger',
+          onPressed: () {
+            Navigator.pushNamed(context, '/settings');
+          },
+        ),
+
       ]
     );
   }
