@@ -1,4 +1,4 @@
-import 'package:weekplanner/providers/peristence/persistence.dart';
+import 'package:weekplanner/providers/persistence/persistence.dart';
 
 class PersistenceMock implements Persistence {
   String _token;

@@ -1,4 +1,4 @@
-import 'package:weekplanner/models/error_key.dart';
+import 'package:weekplanner/models/enums/error_key.dart';
 
 class ResponseModel<T> {
   T data;

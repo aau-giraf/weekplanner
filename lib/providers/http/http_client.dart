@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/providers/http/http.dart';
-import 'package:weekplanner/providers/peristence/persistence.dart';
+import 'package:weekplanner/providers/persistence/persistence.dart';
 import 'package:http/http.dart' as http;
 
 class HttpClient implements Http {
