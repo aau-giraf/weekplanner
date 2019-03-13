@@ -17,9 +17,9 @@ class UserApi {
         .map((Response res) => GirafUserModel.fromJson(res.json["data"]));
   }
 
-  // TODO: correct the below comment
-  /// Find information on the user with the username supplied as a url query
-  /// parameter or the current user.
+  /// Find information on the user with the given ID
+  ///
+  /// [id] ID of the user
   Observable<GirafUserModel> get(String id) {
     return _http
         .get("/$id")
