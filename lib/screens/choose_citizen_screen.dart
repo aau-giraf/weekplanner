@@ -30,13 +30,17 @@ class ChooseCitizenScreen extends StatelessWidget {
 
     return Dialog(
       insetAnimationCurve: ElasticInCurve(),
-
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Vælg Borger"),
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text(
+            "Vælg Borger",
+            style: TextStyle(color: Colors.black),
+          ),
+
           centerTitle: true,
           titleSpacing: 0,
-          backgroundColor: Colors.orange,
+          backgroundColor: Colors.white,
           //elevation: 0,
         ),
         body: Container(
@@ -46,7 +50,8 @@ class ChooseCitizenScreen extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<List<UsernameModel>> snapshot) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
                 child: GridView.count(
                   crossAxisCount: 2,
                   children: snapshot.data.map(
@@ -59,20 +64,29 @@ class ChooseCitizenScreen extends StatelessWidget {
                               child: Column(
                             children: <Widget>[
                               Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage("assets/login_screen_background_image.png"),
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: AssetImage(
+                                            "assets/login_screen_background_image.png"),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                              Text(
-                                TrimString(user.name),
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  user.name,
+                                  style: TextStyle(
+                                    //fontSize: 10, fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ],
                           )),
@@ -89,14 +103,12 @@ class ChooseCitizenScreen extends StatelessWidget {
     );
   }
 
-
   // Trims strings with >= 7 chars
   String TrimString(String Input) {
-    if (Input.length >= 7) {
-      return Input.substring(0,7)+"...";
+    const int length = 7;
+    if (Input.length >= length) {
+      return Input.substring(0, length) + "...";
     }
     return Input;
   }
-
 }
-
