@@ -8,6 +8,7 @@ import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import 'package:weekplanner/providers/bloc_provider.dart';
 
@@ -24,6 +25,7 @@ class Routes {
       BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
     ]),
     '/pictogram/search': RouteBuilder.build(PictogramSearch(), []),
+    '/select_weekplan/new_weekplan': RouteBuilder.build(NewWeekplanScreen(), []),
   };
 
   Routes() {
