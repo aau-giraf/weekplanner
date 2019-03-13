@@ -29,9 +29,15 @@ class ChooseCitizenScreen extends StatelessWidget {
     _bloc.load();
 
     return Dialog(
+      insetAnimationCurve: ElasticInCurve(),
+
       child: Scaffold(
         appBar: AppBar(
           title: Text("Vælg Borger"),
+          centerTitle: true,
+          titleSpacing: 0,
+          backgroundColor: Colors.orange,
+          //elevation: 0,
         ),
         body: Container(
           child: StreamBuilder<List<UsernameModel>>(
@@ -64,9 +70,9 @@ class ChooseCitizenScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                user.name,
+                                TrimString(user.name),
                                 style: TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.bold),
+                                    fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ],
                           )),
@@ -82,4 +88,15 @@ class ChooseCitizenScreen extends StatelessWidget {
       ),
     );
   }
+
+
+  // Trims strings with >= 7 chars
+  String TrimString(String Input) {
+    if (Input.length >= 7) {
+      return Input.substring(0,7)+"...";
+    }
+    return Input;
+  }
+
 }
+
