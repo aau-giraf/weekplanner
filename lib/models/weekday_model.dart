@@ -11,7 +11,7 @@ class WeekdayModel implements Model {
 
   WeekdayModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
-      throw new FormatException("[WeekdayModel]: Cannot instanciate from null");
+      throw new FormatException("[WeekdayModel]: Cannot instantiate from null");
     }
 
     day = Weekday.values[json["day"] - 1];

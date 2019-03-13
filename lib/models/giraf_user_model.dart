@@ -14,13 +14,13 @@ class GirafUserModel implements Model {
   /// The username
   String username;
 
-  /// The users desired "screen name", i.e. how th app should address the user.
+  /// The users desired "screen name", i.e. how the app should address the user.
   String screenName;
 
   /// The id of the users department
   int department; // This is actually a long from the .Net server, will that cause problems ? (try with mInt).
 
-  /// Constructor for instantiate a user inside the app.
+  /// Constructor for instantiating a user inside the app.
   GirafUserModel(
       {this.id,
       this.role,
@@ -29,7 +29,7 @@ class GirafUserModel implements Model {
       this.screenName,
       this.department});
 
-  /// Constructor for instantiate a user from the backend response.
+  /// Constructor for instantiating a user from the backend response.
   GirafUserModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
       throw FormatException("[GirafUserModel]: Cannot initialize from null");
