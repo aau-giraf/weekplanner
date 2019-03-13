@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/route_builder.dart';
 
@@ -17,7 +18,8 @@ class Routes {
       BlocProvider<AuthBloc>(bloc: Globals.authBloc)
     ]),
     '/weekplan': RouteBuilder.build(WeekplanScreen(), [
-      BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
+      BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc),
+      BlocProvider<ToolbarBloc>(bloc: Globals.toolbarBloc)
     ]),
     '/settings': RouteBuilder.build(SettingsScreen(), [
       BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)

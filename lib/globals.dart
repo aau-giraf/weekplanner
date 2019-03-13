@@ -1,6 +1,7 @@
 import 'package:weekplanner/blocs/application_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
 class Globals{
@@ -8,4 +9,5 @@ class Globals{
   static final ApplicationBloc appBloc = ApplicationBloc(authBloc);
   static final AuthBloc authBloc = AuthBloc(api);
   static final SettingsBloc settingsBloc = SettingsBloc();
+  static final ToolbarBloc toolbarBloc = ToolbarBloc();
 }

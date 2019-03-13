@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import '../widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/models/giraf_theme_enum.dart';
@@ -9,6 +10,7 @@ class WeekplanScreen extends StatelessWidget {
   final List<String> pictograms = ['assets/read.jpg', 'assets/read.jpg'];
 
   SettingsBloc settingsBloc;
+  ToolbarBloc toolbarBloc;
 
 
   List<Widget> myList = <Widget>[
@@ -24,8 +26,10 @@ class WeekplanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
         settingsBloc = BlocProviderTree.of<SettingsBloc>(context);
+        toolbarBloc = BlocProviderTree.of<ToolbarBloc>(context);
         return Scaffold(
           appBar: GirafAppBar(
+            toolbarBloc: this.toolbarBloc,
             title: 'Ugeplan',
           ),
           body: 
