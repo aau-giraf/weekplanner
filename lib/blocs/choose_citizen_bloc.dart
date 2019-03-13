@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
@@ -22,7 +23,9 @@ class ChooseCitizenBloc extends BlocBase {
     });
   }
 
-  void choose() {}
+  /*void choose(BuildContext context) {
+    Navigator.pushNamed(context, "/weekplan");
+  }*/
 
   @override
   void dispose() {
