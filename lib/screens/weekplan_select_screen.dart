@@ -16,9 +16,10 @@ class WeekplanSelectScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: StreamBuilder<List<WeekModel>>(
+              child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  /*child: StreamBuilder<List<WeekModel>>(
                 stream: bloc.weekmodels,
                 initialData: [],
                 builder: (BuildContext context,
@@ -34,22 +35,63 @@ class WeekplanSelectScreen extends StatelessWidget {
                     }).toList(),
                   );
               }),
-            ),
-          ),
+            ),*/
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    children: <Widget>[
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                      _buildCard(context),
+                    ],
+                  ))),
         ],
       ),
     );
   }
-  
+
   Widget _buildIcon(BuildContext context, WeekModel gram) {
-    return StreamBuilder<Image>(
-      builder: (context, snapshot) {
-        return Card(
-            child: FittedBox(
-                fit: BoxFit.contain, child: Icon(Icons.ac_unit)));
-      }
-    );
+    return StreamBuilder<Image>(builder: (context, snapshot) {
+      return Card(
+          child: FittedBox(fit: BoxFit.contain, child: Icon(Icons.ac_unit)));
+    });
+  }
+
+  Widget _buildCard(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
+    return Column(children: <Widget>[
+      Expanded(
+        flex: 5,
+        child: Card(
+          margin: EdgeInsets.symmetric(horizontal: 30),
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Icon(
+              Icons.monetization_on,
+              size: constraints.biggest.width,
+            );
+          }),
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: Text("Jonas Ugeplan")
+      ),
+    ]);
   }
 }
-
- 
