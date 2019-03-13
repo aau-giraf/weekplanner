@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/globals.dart';
+import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class NewWeekplanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    NewWeekPlanBloc bloc = NewWeekPlanBloc();
     return Scaffold(
         appBar: GirafAppBar(title: "Ny Ugeplan"),
         body: ListView(children: <Widget>[
@@ -31,11 +36,19 @@ class NewWeekplanScreen extends StatelessWidget {
                     labelText: "Ugenummer",
                     border: OutlineInputBorder(borderSide: BorderSide())),
               )),
-          /*Expanded(
-              child: Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            //child: StreamBuilder<PictogramModel>(
-          )),*/
+            child: _buildIcon(context, bloc.gram),
+            /*
+            child: StreamBuilder<PictogramModel>(
+    stream: bloc.pictograms,
+            builder: (BuildContext context,
+            AsyncSnapshot<PictogramModel> thumbnail){
+      return thumbnail.data.map((PictogramModel gram) {
+        return _buildIcon(context, gram);
+      })
+            },),
+          */),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: RaisedButton(
@@ -45,7 +58,7 @@ class NewWeekplanScreen extends StatelessWidget {
               ),
               color: Colors.blue,
               onPressed: () {
-                Navigator.pushNamed(context, "/select_weekplan/new_weekplan");
+                Navigator.pushNamed(context, "/pictogram/search");
               },
             ),
           ),
@@ -58,7 +71,7 @@ class NewWeekplanScreen extends StatelessWidget {
               ),
               color: Colors.blue,
               onPressed: () {
-                Navigator.pushNamed(context, "/select_weekplan/new_weekplan");
+                // TODO do something.
               },
             ),
           ),
@@ -71,10 +84,24 @@ class NewWeekplanScreen extends StatelessWidget {
               ),
               color: Colors.blue,
               onPressed: () {
-                Navigator.pushNamed(context, "/select_weekplan/new_weekplan");
+                // TODO do something
               },
             ),
           ),
         ]));
+  }
+  Widget _buildIcon(BuildContext context, PictogramModel gram) {
+    PictogramImageBloc bloc = PictogramImageBloc(Globals.api);
+
+    bloc.load(gram);
+
+    return StreamBuilder<Image>(
+        stream: bloc.image,
+        builder: (context, snapshot) {
+          return Card(
+              child: FittedBox(
+                  fit: BoxFit.contain, child: snapshot.data));
+        }
+    );
   }
 }

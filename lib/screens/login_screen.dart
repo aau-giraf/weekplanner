@@ -88,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () {
                         authBloc.loggedIn.take(1).listen((status){
                           if(status){
-                            Navigator.pushNamed(context, "/weekplan");
+                            Navigator.pushNamed(context, "/select_weekplan/new_weekplan");
                           }
                         });
                         authBloc.authenticate(
