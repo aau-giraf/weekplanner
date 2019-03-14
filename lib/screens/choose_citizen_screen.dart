@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/models/username_model.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class ChooseCitizenScreen extends StatelessWidget {
   final ChooseCitizenBloc _bloc = ChooseCitizenBloc(Globals.api);
@@ -25,9 +27,7 @@ class ChooseCitizenScreen extends StatelessWidget {
         ),
         child: Dialog(
           child: Scaffold(
-            appBar: PreferredSize(
-                preferredSize: Size.fromHeight(40),
-                child: CustomAppBar("Vælg Borger")),
+            appBar: GirafAppBarSimple(title: "Vælg Borger"),
             body: Container(
               child: StreamBuilder<List<UsernameModel>>(
                 stream: _bloc.citizen,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
+class GirafAppBarSimple extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  GirafAppBar({Key key, this.title}) : preferredSize = Size.fromHeight(56.0), super(key: key);
+  GirafAppBarSimple({Key key, this.title}) : preferredSize = Size.fromHeight(56.0), super(key: key);
 
   @override
   final Size preferredSize;
@@ -13,27 +13,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title),
       backgroundColor: Color(0xAAFF6600),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.settings),
-          tooltip: 'Indstillinger',
-          onPressed: () {
-            Navigator.pushNamed(context, '/settings');
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.subdirectory_arrow_right),
-          tooltip: 'trains',
-          onPressed: () {
-
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.place),
-          tooltip: 'trains',
-          onPressed: () {},
-        )
-      ]
     );
   }
 }
