@@ -66,13 +66,13 @@ class ChooseCitizenScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: AspectRatio(
-              aspectRatio: 1,
-              child: CircleAvatar(
-                radius: 20,
-                //TODO: Rigtige profil billeder
-                backgroundImage: AssetImage("assets/login_screen_background_image.png"),
-              )
-            ),
+                aspectRatio: 1,
+                child: CircleAvatar(
+                  radius: 20,
+                  //TODO: Rigtige profil billeder
+                  backgroundImage:
+                      AssetImage("assets/login_screen_background_image.png"),
+                )),
           ),
           Text(
             user.name,
@@ -103,6 +103,9 @@ class CustomAppBar extends StatelessWidget {
       child: Container(
         color: Color.fromRGBO(248, 248, 247, 1),
         child: Container(
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(color: Color.fromRGBO(228, 224, 224, 1)))),
           child: Column(children: <Widget>[
             Row(
               children: <Widget>[
@@ -138,12 +141,6 @@ class CustomAppBar extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom:
-                          BorderSide(color: Color.fromRGBO(236, 236, 236, 1)))),
             ),
           ]),
         ),
