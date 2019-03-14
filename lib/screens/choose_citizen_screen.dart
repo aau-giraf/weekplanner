@@ -9,9 +9,9 @@ class ChooseCitizenScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _bloc.load();
-    final Size screenSize = MediaQuery
-        .of(context)
-        .size;
+    final Size screenSize = MediaQuery.of(context).size;
+
+    bool Portrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       body: Container(
@@ -24,26 +24,10 @@ class ChooseCitizenScreen extends StatelessWidget {
           ),
         ),
         child: Dialog(
-          insetAnimationCurve: ElasticInCurve(),
           child: Scaffold(
             appBar: PreferredSize(
-              preferredSize: Size.fromHeight(40),
-              child: AppBar(
-                title: Text(
-                  "Vælg Borger",
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                centerTitle: true,
-                titleSpacing: 0,
-                backgroundColor: Colors.white,
-                iconTheme: IconThemeData(
-                  color: Colors.black,
-                ),
-                //elevation: 0,
-              ),
-            ),
+                preferredSize: Size.fromHeight(40),
+                child: CustomAppBar("Vælg Borger")),
             body: Container(
               child: StreamBuilder<List<UsernameModel>>(
                 stream: _bloc.citizen,
@@ -51,12 +35,13 @@ class ChooseCitizenScreen extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<List<UsernameModel>> snapshot) {
                   return Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    padding: EdgeInsets.symmetric(
+                        vertical: 20, horizontal: Portrait ? 20 : 60),
                     child: GridView.count(
-                      crossAxisCount: 2,
+                      crossAxisCount: Portrait ? 2 : 4,
                       children: snapshot.data
-                          .map((UsernameModel user) => citizenEntry(user, context))
+                          .map((UsernameModel user) =>
+                              citizenEntry(user, context))
                           .toList(),
                     ),
                   );
@@ -69,46 +54,100 @@ class ChooseCitizenScreen extends StatelessWidget {
     );
   }
 
-  Widget chooseCitizenDialog() {
-
-  }
+  Widget chooseCitizenDialog() {}
 
   Widget citizenEntry(UsernameModel user, BuildContext context) {
     return GestureDetector(
-      onTap: () {Navigator.pushNamed(context, "/weekplan");},
+      onTap: () {
+        Navigator.pushNamed(context, "/weekplan");
+      },
       child: Container(
           child: Column(
-            children: <Widget>[
-              Expanded(
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image:
-                        AssetImage("assets/login_screen_background_image.png"),
-                      ),
+        children: <Widget>[
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: CircleAvatar(
+                radius: 20,
+                //TODO: Rigtige profil billeder
+                backgroundImage: AssetImage("assets/login_screen_background_image.png"),
+              )
+            ),
+          ),
+          Text(
+            user.name,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ],
+      )),
+    );
+  }
+}
+
+class CustomAppBar extends StatelessWidget {
+  final String title;
+  final double barHeight = 50.0; // change this for different heights
+
+  CustomAppBar(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    final double statusbarHeight = MediaQuery.of(context).padding.top;
+
+    return new Container(
+      padding: new EdgeInsets.only(top: statusbarHeight),
+      height: statusbarHeight + barHeight,
+      child: Container(
+        color: Color.fromRGBO(248, 248, 247, 1),
+        child: Container(
+          child: Column(children: <Widget>[
+            Row(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    Globals.authBloc.logout();
+                    //Navigator.pushNamed(context, "/login");
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
+                    child: Text(
+                      "Log ud",
+                      style: TextStyle(color: Colors.blue, fontSize: 20),
                     ),
                   ),
                 ),
-              ),
-              FittedBox(
-                fit: BoxFit.contain,
-                child: Padding(
-                  padding: const EdgeInsets.all(100),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
                   child: Text(
-                    user.name,
+                    "Logud",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 300,
-                    ),
+                        color: Color.fromRGBO(248, 248, 247, 1), fontSize: 20),
                   ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom:
+                          BorderSide(color: Color.fromRGBO(236, 236, 236, 1)))),
+            ),
+          ]),
+        ),
+      ),
     );
   }
 }

@@ -23,9 +23,9 @@ class LoginScreen extends StatelessWidget {
         width: screenSize.width,
         height: screenSize.height,
         padding: Portrait
-            ? EdgeInsets.fromLTRB(50, 0, 50, 250)
+            ? EdgeInsets.fromLTRB(50, 0, 50, 0)
             : Keyboard
-                ? EdgeInsets.fromLTRB(200, 0, 200, 120)
+                ? EdgeInsets.fromLTRB(200, 0, 200, 20)
                 : EdgeInsets.fromLTRB(200, 20, 200, 10),
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -153,7 +153,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget GetLogo(bool Keyboard, bool Portrait) {
-    if (Keyboard && !Portrait) {
+    if (Keyboard) {
       return Container();
     }
 
@@ -164,6 +164,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }
