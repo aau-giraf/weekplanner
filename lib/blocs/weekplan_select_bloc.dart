@@ -14,12 +14,12 @@ class WeekplanSelectBloc extends BlocBase{
   final BehaviorSubject<List<WeekNameModel>> _weeknamemodelsList = BehaviorSubject();
 
   final Api _api;
-  final GirafUserModel _user;
+  //final GirafUserModel _user;
 
-  WeekplanSelectBloc(this._api, this._user);
+  WeekplanSelectBloc(this._api);
 
   void load(){
-    _api.week.getNames(_user.id).listen(_weeknamemodelsList.add);
+    _api.week.getNames("ID HER").listen(_weeknamemodelsList.add);
     weeknamemodels.listen(getAllWeekInfo);
   }
 
@@ -27,7 +27,7 @@ class WeekplanSelectBloc extends BlocBase{
 
     List<WeekModel> weekModels = []; 
     for (WeekNameModel weeknamemodel in weeknamemodels) {
-      _api.week.get(weeknamemodel.name, weeknamemodel.weekYear, weeknamemodel.weekNumber).listen(weekModels.add);
+      _api.week.get("ID HER", weeknamemodel.weekYear, weeknamemodel.weekNumber).listen(weekModels.add);
     }
     _weekmodel.add(weekModels);
   }
