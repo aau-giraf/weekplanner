@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/providers/peristence/persistence.dart';
-import 'package:weekplanner/providers/peristence/persistence_client.dart';
+import 'package:weekplanner/providers/persistence/persistence.dart';
+import 'package:weekplanner/providers/persistence/persistence_client.dart';
 
 void main() {
   test("Should store token", () async {

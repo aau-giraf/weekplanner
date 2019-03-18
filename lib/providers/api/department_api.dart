@@ -2,7 +2,7 @@ import 'package:weekplanner/models/department_model.dart';
 import 'package:weekplanner/models/department_name_model.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/providers/http/http.dart';
-import 'package:weekplanner/providers/peristence/persistence.dart';
+import 'package:weekplanner/providers/persistence/persistence.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DepartmentApi {
