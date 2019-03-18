@@ -3,7 +3,7 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import 'package:weekplanner/providers/bloc_provider.dart';
 import '../widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/models/giraf_theme_enum.dart';
+import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 
 class SettingsScreen extends StatelessWidget {
 

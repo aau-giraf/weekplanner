@@ -1,6 +1,6 @@
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/models/weekday_color_model.dart';
-import 'package:weekplanner/models/weekday_enum.dart';
+import 'package:weekplanner/models/enums/weekday_enum.dart';
 
 void main(){
   Map<String, dynamic> response = {

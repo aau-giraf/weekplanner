@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/globals.dart';
@@ -8,7 +10,46 @@ class LoginScreen extends StatelessWidget {
 
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
-  bool Loading = false;
+
+  final timeout = const Duration(seconds: 2);
+  final ms = const Duration(milliseconds: 1);
+
+  BuildContext loginContext = null;
+  bool LoggedInSuccessfull = false;
+
+  void handleTimeout() {
+    if (!LoggedInSuccessfull) {
+      Navigator.pop(loginContext);
+      wrongUsernameOrPassword(loginContext);
+    }
+  }
+
+  Future<bool> loginAction(BuildContext context, String nextScreen) async {
+    loginContext = context;
+    Globals.showLoadingScreen(context, true, handleTimeout, 1500);
+
+    authBloc.loggedIn.listen((status) {
+      if (status) {
+        LoggedInSuccessfull = true;
+        Navigator.pop(context);
+        Navigator.pushNamed(context, "/weekplan");
+      }
+    });
+    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
+    return true;
+  }
+
+  void wrongUsernameOrPassword(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          //TODO: Lav en pæn dialog
+          return Center(
+            child: Text("Forkert brugernavn eller adgangskode"),
+          );
+        });
+  }
+
   AuthBloc authBloc;
 
   @override
@@ -82,13 +123,7 @@ class LoginScreen extends StatelessWidget {
                         padding: new EdgeInsets.all(8.0),
                         child: TextField(
                           onSubmitted: (newValue) {
-                            authBloc.loggedIn.take(1).listen((status) {
-                              if (status) {
-                                Navigator.pushNamed(context, "/choosecitizen");
-                              }
-                            });
-                            authBloc.authenticate(
-                                usernameCtrl.value.text, newValue);
+                            loginAction(context, "/choosecitizen");
                           },
                           style: Portrait
                               ? TextStyle(fontSize: 30)
@@ -117,14 +152,7 @@ class LoginScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
-                              authBloc.loggedIn.take(1).listen((status) {
-                                if (status) {
-                                  Navigator.pushNamed(
-                                      context, "/choosecitizen");
-                                }
-                              });
-                              authBloc.authenticate(usernameCtrl.value.text,
-                                  passwordCtrl.value.text);
+                              loginAction(context, "/choosecitizen");
                             },
                             color: Color.fromRGBO(48, 81, 118, 1),
                           ),

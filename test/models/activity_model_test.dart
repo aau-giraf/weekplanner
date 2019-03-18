@@ -1,5 +1,5 @@
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/models/activity_state_enum.dart';
+import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 

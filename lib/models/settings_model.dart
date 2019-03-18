@@ -1,10 +1,10 @@
 import 'package:meta/meta.dart';
-import 'package:weekplanner/models/giraf_theme_enum.dart';
-import 'package:weekplanner/models/cancel_mark_enum.dart';
-import 'package:weekplanner/models/complete_mark_enum.dart';
-import 'package:weekplanner/models/default_timer_enum.dart';
+import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
+import 'package:weekplanner/models/enums/cancel_mark_enum.dart';
+import 'package:weekplanner/models/enums/complete_mark_enum.dart';
+import 'package:weekplanner/models/enums/default_timer_enum.dart';
 import 'package:weekplanner/models/model.dart';
-import 'package:weekplanner/models/orientation_enum.dart';
+import 'package:weekplanner/models/enums/orientation_enum.dart';
 import 'package:weekplanner/models/weekday_color_model.dart';
 
 class SettingsModel implements Model {

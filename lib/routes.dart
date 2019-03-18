@@ -11,7 +11,6 @@ import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import 'package:weekplanner/providers/bloc_provider.dart';
 
-
 class Routes {
   final routes = <String, WidgetBuilder>{
     '/login': RouteBuilder.build(LoginScreen(), [
@@ -29,14 +28,10 @@ class Routes {
 
   Routes() {
     runApp(new MaterialApp(
-      title: 'Flutter App',
-      routes: routes,
-      home: BlocProviderTree(
-        blocProviders: [
-          BlocProvider<AuthBloc>(bloc: Globals.authBloc)
-        ],
-        child: new LoginScreen()
-      )
-    ));
+        title: 'Flutter App',
+        routes: routes,
+        home: BlocProviderTree(
+            blocProviders: [BlocProvider<AuthBloc>(bloc: Globals.authBloc)],
+            child: new LoginScreen())));
   }
 }

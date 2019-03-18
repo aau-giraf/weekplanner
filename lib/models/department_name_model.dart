@@ -12,7 +12,7 @@ class DepartmentNameModel implements Model {
   DepartmentNameModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
       throw new FormatException(
-          "[DepartmentNameModel]: Cannot instanciate from null");
+          "[DepartmentNameModel]: Cannot instantiate from null");
     }
 
     id = json['id'];

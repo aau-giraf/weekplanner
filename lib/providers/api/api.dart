@@ -6,8 +6,8 @@ import 'package:weekplanner/providers/api/week_api.dart';
 import 'package:weekplanner/providers/api/status_api.dart';
 import 'package:weekplanner/providers/api/week_template_api.dart';
 import 'package:weekplanner/providers/http/http_client.dart';
-import 'package:weekplanner/providers/peristence/persistence.dart';
-import 'package:weekplanner/providers/peristence/persistence_client.dart';
+import 'package:weekplanner/providers/persistence/persistence.dart';
+import 'package:weekplanner/providers/persistence/persistence_client.dart';
 
 class Api {
   AccountApi account;
@@ -32,7 +32,6 @@ class Api {
     weekTemplate =
         WeekTemplateApi(HttpClient(baseUrl + "/v1/WeekTemplate", persist));
     user = UserApi(HttpClient(baseUrl + "/v1/User", persist));
-
   }
 
   void dispose() {
