@@ -1,30 +1,67 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
+
 void main() {
-  testWidgets('Edit should be invisible', (WidgetTester tester) async {
+
+  ///The key for the visibility widget, used to retrieve the widget during testing.
+  String keyOfVisibilityForEdit = "visibilityEditBtn";
+
+  ///Used to wrap a widget into a materialapp, otherwise the widget is not
+  ///testable
+  Widget makeTestableWidget ({Widget child})  {
+    return MaterialApp(
+      home: child,
+    );
+  }
+
+  testWidgets('Visibility widget should be in widget tree', (WidgetTester tester) async {
+
+    ///Instantiates the toolbarBloc, which the appbar uses.
+    ToolbarBloc toolbarBloc = ToolbarBloc();
+
+    ///Instantiates the appbar.
+    GirafAppBar girafAppBar = GirafAppBar(toolbarBloc: toolbarBloc, title: "AppBar");
+
+    ///Uses the pumpwidget function to build the widget, so it becomes active.
+    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
+
+    ///Searches for a widget with a specific key, and we only expect to find one.
+    expect(find.byKey(Key(keyOfVisibilityForEdit)), findsOneWidget);
+
+  });
+
+  testWidgets('Visibility widget should not be visible', (WidgetTester tester) async {
 
     ToolbarBloc toolbarBloc = ToolbarBloc();
-    await tester.pumpWidget(GirafAppBar());
+    GirafAppBar girafAppBar = GirafAppBar(toolbarBloc: toolbarBloc, title: "AppBar");
+    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
-    final visibilityFinder = find.byType(Visibility);
-    final visiblityElements = visibilityFinder.evaluate();
+    ///Retrieves the visiblity widget.
+    final Visibility visibility = tester.widget(find.byKey(Key(keyOfVisibilityForEdit)));
 
-    /*// Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    ///Should be false, since that is the initial value.
+    expect(visibility.visible, false);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);*/
   });
+
+  testWidgets('Visibility widget should be visible', (WidgetTester tester) async {
+
+    ToolbarBloc toolbarBloc = ToolbarBloc();
+    GirafAppBar girafAppBar = GirafAppBar(toolbarBloc: toolbarBloc, title: "AppBar");
+    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
+
+    final Visibility visibility = tester.widget(find.byKey(Key(keyOfVisibilityForEdit)));
+
+    ///Tries to change the value of visiblity.visible, by sending "true" though
+    ///the stream.
+    toolbarBloc.setEditVisible(true);
+
+    expect(visibility.visible, true);
+
+  });
+
 }
