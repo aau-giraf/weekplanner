@@ -6,7 +6,6 @@ import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
 class ChooseCitizenBloc extends BlocBase {
-
   Api _api;
 
   ChooseCitizenBloc(this._api);

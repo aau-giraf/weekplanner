@@ -4,6 +4,7 @@ import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class ChooseCitizenScreen extends StatelessWidget {
   final ChooseCitizenBloc _bloc = ChooseCitizenBloc(Globals.api);
@@ -25,27 +26,41 @@ class ChooseCitizenScreen extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
+        // Creates a new Dialog
         child: Dialog(
           child: Scaffold(
             appBar: GirafAppBarSimple(title: "Vælg Borger"),
-            body: Container(
-              child: StreamBuilder<List<UsernameModel>>(
-                stream: _bloc.citizen,
-                initialData: [],
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<UsernameModel>> snapshot) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: 20, horizontal: Portrait ? 20 : 60),
-                    child: GridView.count(
-                      crossAxisCount: Portrait ? 2 : 4,
-                      children: snapshot.data
-                          .map((UsernameModel user) =>
-                              citizenEntry(user, context))
-                          .toList(),
-                    ),
-                  );
-                },
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: StreamBuilder<List<UsernameModel>>(
+                  stream: _bloc.citizen,
+                  initialData: [],
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<UsernameModel>> snapshot) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 0, horizontal: Portrait ? 20 : 60),
+                      child: GridView.count(
+                        crossAxisCount: Portrait ? 2 : 4,
+                        children: [
+                          snapshot.data
+                              .map((UsernameModel user) =>
+                                  citizenEntry(user, context))
+                              .toList(),
+                          snapshot.data
+                              .map((UsernameModel user) =>
+                                  citizenEntry(user, context))
+                              .toList(),
+                          snapshot.data
+                              .map((UsernameModel user) =>
+                                  citizenEntry(user, context))
+                              .toList()
+                        ].expand((x) => x).toList(),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -57,93 +72,48 @@ class ChooseCitizenScreen extends StatelessWidget {
   Widget chooseCitizenDialog() {}
 
   Widget citizenEntry(UsernameModel user, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, "/weekplan");
-      },
-      child: Container(
-          child: Column(
-        children: <Widget>[
-          Expanded(
-            child: AspectRatio(
-                aspectRatio: 1,
-                child: CircleAvatar(
-                  radius: 20,
-                  //TODO: Rigtige profil billeder
-                  backgroundImage:
-                      AssetImage("assets/login_screen_background_image.png"),
-                )),
-          ),
-          Text(
-            user.name,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-        ],
-      )),
-    );
-  }
-}
-
-class CustomAppBar extends StatelessWidget {
-  final String title;
-  final double barHeight = 50.0; // change this for different heights
-
-  CustomAppBar(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    final double statusbarHeight = MediaQuery.of(context).padding.top;
-
-    return new Container(
-      padding: new EdgeInsets.only(top: statusbarHeight),
-      height: statusbarHeight + barHeight,
-      child: Container(
-        color: Color.fromRGBO(248, 248, 247, 1),
+    final Size screenSize = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, "/weekplan");
+        },
         child: Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(color: Color.fromRGBO(228, 224, 224, 1)))),
-          child: Column(children: <Widget>[
-            Row(
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    Globals.authBloc.logout();
-                    //Navigator.pushNamed(context, "/login");
-                    Navigator.pop(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
-                    child: Text(
-                      "Log ud",
-                      style: TextStyle(color: Colors.blue, fontSize: 20),
+            child: Column(
+          children: <Widget>[
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Color.fromRGBO(0, 0, 0, 1))),
+                          child: CircleAvatar(
+                            radius: 20,
+
+                            //TODO: Rigtige profil billeder
+                            backgroundImage: AssetImage(
+                                "assets/login_screen_background_image.png"),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    AutoSizeText(
+                      user.name,
+                      maxLines: 2,
                     ),
-                  ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
-                  child: Text(
-                    "Logud",
-                    style: TextStyle(
-                        color: Color.fromRGBO(248, 248, 247, 1), fontSize: 20),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ]),
-        ),
+          ],
+        )),
       ),
     );
   }

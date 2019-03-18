@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,28 +17,28 @@ class LoginScreen extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
     bool Portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     bool Keyboard = MediaQuery.of(context).viewInsets.bottom > 100;
-
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
+        // Padding here is dependend on Portrait/Landscape and if the keyboard is active
         padding: Portrait
             ? EdgeInsets.fromLTRB(50, 0, 50, 0)
             : Keyboard
                 ? EdgeInsets.fromLTRB(200, 0, 200, 20)
                 : EdgeInsets.fromLTRB(200, 20, 200, 10),
         decoration: BoxDecoration(
+          // The background of the login-screen
           image: DecorationImage(
             image: AssetImage("assets/login_screen_background_image.png"),
             fit: BoxFit.cover,
           ),
         ),
-        child: Container(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
               GetLogo(Keyboard, Portrait),
               Form(
                 key: this._formKey,
@@ -63,6 +64,8 @@ class LoginScreen extends StatelessWidget {
                           // Use email input type for emails.
                           decoration: InputDecoration.collapsed(
                             hintText: "Brugernavn",
+                            hintStyle: TextStyle(
+                                color: Color.fromRGBO(170, 170, 170, 1)),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -94,6 +97,8 @@ class LoginScreen extends StatelessWidget {
                           obscureText: true,
                           decoration: InputDecoration.collapsed(
                             hintText: 'Adgangskode',
+                            hintStyle: TextStyle(
+                                color: Color.fromRGBO(170, 170, 170, 1)),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -126,28 +131,31 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      child: Transform.scale(
-                        scale: 1.2,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Text(
-                            'Auto-Login',
-                            style: new TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () {
-                            usernameCtrl.text = "Graatand";
-                            passwordCtrl.text = "password";
-                          },
-                          color: Color.fromRGBO(48, 81, 118, 1),
-                        ),
-                      ),
-                    ),
+                    // Autologin button, only used for debugging
+                    Globals.isInDebugMode
+                        ? Container(
+                            child: Transform.scale(
+                              scale: 1.2,
+                              child: RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                child: Text(
+                                  'Auto-Login',
+                                  style: new TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  usernameCtrl.text = "Graatand";
+                                  passwordCtrl.text = "password";
+                                },
+                                color: Color.fromRGBO(48, 81, 118, 1),
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               )
-            ])),
+            ]),
       ),
     );
   }
