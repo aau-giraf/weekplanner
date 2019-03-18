@@ -43,6 +43,51 @@ class WeekplanSelectorScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildCreateWeekPlan(context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, "/login");
+              },
+              child: Card(
+                color: Color(0xFFf7f7f7),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: LayoutBuilder(builder: (context, constraint) {
+                        return Icon(
+                          Icons.add,
+                          size: constraint.biggest.height,
+                        );
+                      }),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AutoSizeText(
+                          "Tilføj ny ugeplan",
+                          style: TextStyle(fontSize: 30.0),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildWeekPlanSelector(context, weekplan) {
     return Container(
       child: Column(
@@ -50,33 +95,36 @@ class WeekplanSelectorScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Expanded(
-            child: Card(
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 4,
-                    child: LayoutBuilder(builder: (context, constraint) {
-                      return Icon(
-                        Icons.monetization_on,
-                        size: constraint.biggest.height,
-                      );
-                    }),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AutoSizeText(
-                        weekplan.name,
-                        style: TextStyle(fontSize: 20.0),
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                      ),
+            child: InkWell(
+              onTap: () { Navigator.pushNamed(context, "/routerLinkHere");},
+              child: Card(
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: LayoutBuilder(builder: (context, constraint) {
+                        return Icon(
+                          Icons.monetization_on,
+                          size: constraint.biggest.height,
+                        );
+                      }),
                     ),
-                  )
-                ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AutoSizeText(
+                          weekplan.name,
+                          style: TextStyle(fontSize: 30.0),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
