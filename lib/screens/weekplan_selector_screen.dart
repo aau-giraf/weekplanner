@@ -8,13 +8,10 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class WeekplanSelectorScreen extends StatelessWidget {
-  //final WeekplanSelectBloc weekplanSelectBloc(Globals.api);
   WeekplanSelectBloc testBloc = WeekplanSelectBloc(Globals.api);
 
   @override
   Widget build(BuildContext context) {
-    //weekplanSelectBloc = BlocProviderTree.of<WeekplanSelectBloc>(context);
-    testBloc.load();
 
     return Scaffold(
       appBar: GirafAppBar(
