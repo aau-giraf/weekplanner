@@ -16,7 +16,7 @@ class Routes {
     '/login': RouteBuilder.build(LoginScreen(), [
       BlocProvider<AuthBloc>(bloc: Globals.authBloc)
     ]),
-    '/weekplan': RouteBuilder.build(WeekplanScreen(), [
+    '/weekplan': RouteBuilder.build(WeekplanScreen(api: Globals.api), [
       BlocProvider<SettingsBloc>(bloc: Globals.settingsBloc)
     ]),
     '/settings': RouteBuilder.build(SettingsScreen(), [
