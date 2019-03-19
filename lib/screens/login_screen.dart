@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
       if (status) {
         LoggedInSuccessfull = true;
         Navigator.pop(context);
-        Navigator.pushNamed(context, "/weekplan");
+        Navigator.pushNamed(context, "/choosecitizen");
       }
     });
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
