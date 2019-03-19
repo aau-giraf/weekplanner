@@ -10,6 +10,7 @@ dependencies:
   rxdart: ^0.21.0
   http: ^0.12.0+1
   shared_preferences: ^0.5.1+1
+  injector: ^1.0.6
 
   flutter:
     sdk: flutter

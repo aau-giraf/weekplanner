@@ -9,6 +9,7 @@ class AuthBloc extends BlocBase {
 
   Stream<bool> get loggedIn => _loggedIn.stream;
 
+  // Start with providing false as the logged in status
   BehaviorSubject<bool> _loggedIn = BehaviorSubject.seeded(false);
 
   void authenticate(String username, String password) {

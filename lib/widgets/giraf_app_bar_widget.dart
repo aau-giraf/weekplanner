@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:weekplanner/globals.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/di.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final AuthBloc _authBloc;
 
   GirafAppBar({Key key, this.title})
-      : preferredSize = Size.fromHeight(56.0),
+      : _authBloc = di.getDependency<AuthBloc>(),
+        preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
   @override
   final Size preferredSize;
-
-  // Adding this.variablename to the constructor automatically assigns the value to the right variable.
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.subdirectory_arrow_right),
             tooltip: 'trains',
             onPressed: () {
-              Globals.authBloc.logout();
+              _authBloc.logout();
             },
           ),
           IconButton(

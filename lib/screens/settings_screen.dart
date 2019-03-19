@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/globals.dart';
+import 'package:weekplanner/di.dart';
 import '../widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 
 class SettingsScreen extends StatelessWidget {
 
-  final SettingsBloc settingsBloc = Globals.settingsBloc;
+  final SettingsBloc settingsBloc;
+
+  SettingsScreen() : settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
