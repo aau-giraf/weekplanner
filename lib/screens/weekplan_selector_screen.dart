@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/weekplan_select_bloc.dart';
 import 'package:weekplanner/globals.dart';
+import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -29,7 +30,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       return CircularProgressIndicator();
                     }
                     return GridView.count(
-                      crossAxisCount: 3,
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      crossAxisCount: MediaQuery.of(context).orientation == Orientation.landscape ? 4 : 3,
+                      crossAxisSpacing: MediaQuery.of(context).size.width/100*1.5,
+                      mainAxisSpacing: MediaQuery.of(context).size.width/100*1.5,
                       children: snapshot.data.map((WeekModel weekplan) {
                         return _buildWeekPlanSelector(context, weekplan);
                       }).toList(),
@@ -107,15 +111,14 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       }),
                     ),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: AutoSizeText(
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        return AutoSizeText(
                           weekplan.name,
-                          style: TextStyle(fontSize: 30.0),
+                          style: TextStyle(fontSize: 18),
                           maxLines: 2,
                           textAlign: TextAlign.center,
-                        ),
-                      ),
+                        );
+                      })
                     )
                   ],
                 ),
