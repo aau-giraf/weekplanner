@@ -17,10 +17,12 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Color(0xAAFF6600),
       actions: <Widget>[
         StreamBuilder<bool>(
+            key: Key('streambuilderVisibility'),
             stream: toolbarBloc.editVisible,
             initialData: false,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
               return Visibility(
+                key: Key("visibilityEditBtn"),
                 visible: snapshot.data,
                 child: IconButton(
                   icon: Icon(Icons.edit),
