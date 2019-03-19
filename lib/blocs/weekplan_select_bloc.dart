@@ -27,6 +27,8 @@ class WeekplanSelectBloc extends BlocBase{
   void getAllWeekInfo(List<WeekNameModel> weeknamemodels){
 
     List<WeekModel> weekModels = [];
+    weekModels.add(new WeekModel(name: "Tilføj Ugeplan"));
+
     for (WeekNameModel weeknamemodel in weeknamemodels) {
       _api.week
           .get("379d057b-85b1-41b6-a1bd-6448c132745b", weeknamemodel.weekYear, weeknamemodel.weekNumber)
