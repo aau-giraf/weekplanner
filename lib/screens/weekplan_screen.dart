@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/providers/api/user_api.dart';
@@ -9,11 +10,11 @@ import '../widgets/giraf_app_bar_widget.dart';
 
 class WeekplanScreen extends StatelessWidget {
   SettingsBloc settingsBloc;
-  final Api api;
+  final WeekplanBloc weekplanBloc;
 
   List<Widget> myList = <Widget>[];
 
-  WeekplanScreen({Key key, this.api}) : super(key: key);
+  WeekplanScreen(Key key, this.weekplanBloc) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
