@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class GirafAppBarSimple extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  GirafAppBarSimple({Key key, this.title}) : preferredSize = Size.fromHeight(56.0), super(key: key);
+  GirafAppBarSimple({Key key, this.title})
+      : preferredSize = Size.fromHeight(56.0),
+        super(key: key);
 
   @override
   final Size preferredSize;
