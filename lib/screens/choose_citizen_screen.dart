@@ -91,12 +91,8 @@ class ChooseCitizenScreen extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Color.fromRGBO(0, 0, 0, 1))),
                           child: CircleAvatar(
                             radius: 20,
-
                             //TODO: Rigtige profil billeder
                             backgroundImage: AssetImage(
                                 "assets/login_screen_background_image.png"),
@@ -104,9 +100,11 @@ class ChooseCitizenScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    AutoSizeText(
-                      user.name,
-                      maxLines: 2,
+                    Center(
+                      child: AutoSizeText(
+                        user.name,
+                        maxLines: 2,
+                      ),
                     ),
                   ],
                 ),
