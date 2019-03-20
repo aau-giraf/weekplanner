@@ -18,7 +18,7 @@ class UsernameModel implements Model {
   UsernameModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
       throw new FormatException(
-          "[UsernameModel]: Cannot instanciate from null");
+          "[UsernameModel]: Cannot instantiate from null");
     }
 
     id = json['userId'];

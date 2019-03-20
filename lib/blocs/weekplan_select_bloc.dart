@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/week_name_model.dart';
@@ -7,42 +8,41 @@ import 'package:weekplanner/providers/api/api.dart';
 
 class WeekplanSelectBloc extends BlocBase{
   
-  Stream<List<WeekNameModel>> get weeknamemodels => _weeknamemodelsList.stream;
-  Stream<List<WeekModel>> get weekmodels => _weekmodel.stream;
+  Stream<List<WeekNameModel>> get weekNameModels => _weekNameModelsList.stream;
+  Stream<List<WeekModel>> get weekModels => _weekModel.stream;
 
-  final BehaviorSubject<List<WeekModel>> _weekmodel = BehaviorSubject();
-  final BehaviorSubject<List<WeekNameModel>> _weeknamemodelsList = BehaviorSubject();
+  final BehaviorSubject<List<WeekModel>> _weekModel = BehaviorSubject();
+  final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList = BehaviorSubject();
 
   final Api _api;
+  GirafUserModel _user;
 
-  WeekplanSelectBloc(this._api){
-    load();
+  WeekplanSelectBloc() : _api = di.getDependency<Api>();
+
+  void load(GirafUserModel user){
+    this._user = user;
+    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
+    weekNameModels.listen(getAllWeekInfo);
   }
 
-  void load(){
-    _api.week.getNames("379d057b-85b1-41b6-a1bd-6448c132745b").listen(_weeknamemodelsList.add);
-    weeknamemodels.listen(getAllWeekInfo);
-  }
+  void getAllWeekInfo(List<WeekNameModel> weekNameModels){
 
-  void getAllWeekInfo(List<WeekNameModel> weeknamemodels){
+    List<WeekModel> weekModels = [new WeekModel(name: "Tilføj Ugeplan")];
 
-    List<WeekModel> weekModels = [];
-    weekModels.add(new WeekModel(name: "Tilføj Ugeplan"));
-
-    for (WeekNameModel weeknamemodel in weeknamemodels) {
+    for (WeekNameModel weekNameModel in weekNameModels) {
       _api.week
-          .get("379d057b-85b1-41b6-a1bd-6448c132745b", weeknamemodel.weekYear, weeknamemodel.weekNumber)
+          .get(_user.id, weekNameModel.weekYear, weekNameModel.weekNumber)
           .listen((WeekModel results) {
         weekModels.add(results);
       });
     }
 
-    _weekmodel.add(weekModels);
+    _weekModel.add(weekModels);
   }
   
   @override
   void dispose() {
-    _weekmodel.close();
-    _weeknamemodelsList.close();
+    _weekModel.close();
+    _weekNameModelsList.close();
   }
 }

@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
+import 'package:weekplanner/di.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
+  final AuthBloc authBloc;
 
-  AuthBloc authBloc;
+  LoginScreen() : authBloc = di.getDependency<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
-    authBloc = BlocProviderTree.of<AuthBloc>(context);
-
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -65,15 +63,8 @@ class LoginScreen extends StatelessWidget {
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        authBloc.loggedIn.take(1).listen((status){
-                          if(status){
-                            Navigator.pushNamed(context, "/user/weekplan/select");
-                          }
-                        });
-                        authBloc.authenticate(
-                            usernameCtrl.value.text,
-                            passwordCtrl.value.text
-                        );
+                        login(context, usernameCtrl.value.text,
+                            passwordCtrl.value.text);
                       },
                       color: Colors.blue,
                     ),
@@ -85,16 +76,7 @@ class LoginScreen extends StatelessWidget {
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        authBloc.loggedIn.take(1).listen((status){
-                          if(status){
-                            //Navigator.pushNamed(context, "/weekplan");
-                            Navigator.pushNamed(context, "/weekplan/select");
-                          }
-                        });
-                        authBloc.authenticate(
-                            "graatand",
-                            "password"
-                        );
+                        login(context, "graatand", "password");
                       },
                       color: Colors.blue,
                     ),
@@ -104,5 +86,9 @@ class LoginScreen extends StatelessWidget {
             ))
           ])),
     ));
+  }
+
+  void login(BuildContext context, String username, String password) {
+    authBloc.authenticate(username, password);
   }
 }

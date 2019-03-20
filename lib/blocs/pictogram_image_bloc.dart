@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -13,7 +14,7 @@ class PictogramImageBloc extends BlocBase {
 
   final Api _api;
 
-  PictogramImageBloc(this._api);
+  PictogramImageBloc() : _api = di.getDependency<Api>();
 
   void load(PictogramModel pictogram) {
     _api.pictogram.getImage(pictogram.id).listen(_image.add);

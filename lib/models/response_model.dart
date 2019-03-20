@@ -1,4 +1,4 @@
-import 'package:weekplanner/models/error_key.dart';
+import 'package:weekplanner/models/enums/error_key.dart';
 
 class ResponseModel<T> {
   T data;
@@ -11,7 +11,7 @@ class ResponseModel<T> {
   ResponseModel.fromJson(Map<String, dynamic> json, T data) {
     if (json == null) {
       throw new FormatException(
-          "[ResponseModel]: Cannot instanciate from null");
+          "[ResponseModel]: Cannot instantiate from null");
     }
 
     this.data = data;

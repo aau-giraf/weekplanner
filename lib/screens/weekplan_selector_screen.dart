@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_select_bloc.dart';
-import 'package:weekplanner/globals.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class WeekplanSelectorScreen extends StatelessWidget {
-  WeekplanSelectBloc weekbloc = WeekplanSelectBloc(Globals.api);
+  final WeekplanSelectBloc weekBloc;
+
+  WeekplanSelectorScreen() : weekBloc = di.getDependency<WeekplanSelectBloc>(){
+    this.weekBloc.load(GirafUserModel(id: "379d057b-85b1-41b6-a1bd-6448c132745b"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: StreamBuilder<List<WeekModel>>(
-                  stream: weekbloc.weekmodels,
+                  stream: weekBloc.weekModels,
                   initialData: [],
                   builder: (BuildContext context,
                       AsyncSnapshot<List<WeekModel>> snapshot) {
@@ -72,7 +75,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   Widget _buildWeekPlanSelector(context, weekplan) {
-    PictogramImageBloc bloc = PictogramImageBloc(Globals.api);
+    PictogramImageBloc bloc = PictogramImageBloc();
     print(weekplan.name);
 
     if (weekplan.thumbnail != null) bloc.loadID(weekplan.thumbnail.id);
