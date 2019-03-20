@@ -23,6 +23,8 @@ class WeekplanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     weekplanBloc.getCharlie();
+    weekplanBloc.getWeeks();
+    weekplanBloc.getWeek1();
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Ugeplan',
