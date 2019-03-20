@@ -36,9 +36,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       crossAxisCount: MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? 4
-                          : 3,
+                              Orientation.landscape ? 4 : 3,
                       crossAxisSpacing:
                           MediaQuery.of(context).size.width / 100 * 1.5,
                       mainAxisSpacing:
@@ -75,7 +73,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   Widget _buildWeekPlanSelector(context, weekplan) {
-    PictogramImageBloc bloc = PictogramImageBloc();
+    PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     print(weekplan.name);
 
     if (weekplan.thumbnail != null) bloc.loadID(weekplan.thumbnail.id);
@@ -86,29 +84,32 @@ class WeekplanSelectorScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Expanded(
-              child: Card(
-                  child: Column(
+              child: InkWell(
+                onTap: () {},
+                child: Card(
+                    child: Column(
             children: <Widget>[
-              Expanded(
-                flex: 4,
-                child: LayoutBuilder(builder: (context, constraint) {
-                  if (weekplan.thumbnail != null) {
-                    return _buildWeekPlanAdder(context, weekplan, bloc);
-                  } else {
-                    return _buildWeekPlan(context, weekplan, constraint);
-                  }
-                }),
-              ),
-              Expanded(child: LayoutBuilder(builder: (context, constraints) {
-                return AutoSizeText(
-                  weekplan.name,
-                  style: TextStyle(fontSize: 18),
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                );
-              }))
+                Expanded(
+                  flex: 4,
+                  child: LayoutBuilder(builder: (context, constraint) {
+                    if (weekplan.thumbnail != null) {
+                      return _buildWeekPlanAdder(context, weekplan, bloc);
+                    } else {
+                      return _buildWeekPlan(context, weekplan, constraint);
+                    }
+                  }),
+                ),
+                Expanded(child: LayoutBuilder(builder: (context, constraints) {
+                  return AutoSizeText(
+                    weekplan.name,
+                    style: TextStyle(fontSize: 18),
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  );
+                }))
             ],
-          )))
+          )),
+              ))
         ],
       ),
     );
