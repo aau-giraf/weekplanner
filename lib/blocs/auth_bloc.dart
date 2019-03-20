@@ -9,8 +9,8 @@ class AuthBloc extends BlocBase {
 
   Stream<bool> get loggedIn => _loggedIn.stream;
 
-  BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>();
-  BehaviorSubject<bool> isLoading = BehaviorSubject<bool>();
+  // Start with providing false as the logged in status
+  BehaviorSubject<bool> _loggedIn = BehaviorSubject.seeded(false);
 
   void authenticate(String username, String password) {
     api.account.login(username, password).take(1).listen((status) {

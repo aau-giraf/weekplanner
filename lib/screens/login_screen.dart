@@ -2,15 +2,15 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/globals.dart';
-import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
+import 'package:weekplanner/di.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
+  final AuthBloc authBloc;
 
+  LoginScreen() : authBloc = di.getDependency<AuthBloc>();
   final timeout = const Duration(seconds: 2);
   final ms = const Duration(milliseconds: 1);
 
@@ -138,6 +138,11 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      onPressed: () {
+                        login(context, usernameCtrl.value.text,
+                            passwordCtrl.value.text);
+                      },
+                      color: Colors.blue,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
@@ -158,6 +163,10 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      onPressed: () {
+                        login(context, "graatand", "password");
+                      },
+                      color: Colors.blue,
                     ),
                     // Autologin button, only used for debugging
                     Globals.isInDebugMode
@@ -199,5 +208,9 @@ class LoginScreen extends StatelessWidget {
         image: AssetImage("assets/giraf_splash_logo.png"),
       ),
     );
+  }
+
+  void login(BuildContext context, String username, String password) {
+    authBloc.authenticate(username, password);
   }
 }
