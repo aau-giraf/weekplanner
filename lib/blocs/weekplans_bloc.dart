@@ -6,28 +6,30 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/week_name_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
-class WeekplanSelectBloc extends BlocBase {
+class WeekplansBloc extends BlocBase {
   Stream<List<WeekNameModel>> get weekNameModels => _weekNameModelsList.stream;
 
   Stream<List<WeekModel>> get weekModels => _weekModel.stream;
 
   final BehaviorSubject<List<WeekModel>> _weekModel = BehaviorSubject();
-  final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-      BehaviorSubject();
-
+  final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList = BehaviorSubject();
   final Api _api;
   GirafUserModel _user;
+  bool _addWeekplan;
 
-  WeekplanSelectBloc() : _api = di.getDependency<Api>();
+  WeekplansBloc() : _api = di.getDependency<Api>();
 
-  void load(GirafUserModel user) {
-    this._user = user;
+
+  void load(GirafUserModel user, [bool addWeekplan = false]) {
+    this._user = user; this._addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
     _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
   }
 
   void getAllWeekInfo(List<WeekNameModel> weekNameModels) {
-    List<WeekModel> weekModels = [new WeekModel(name: "Tilføj Ugeplan")];
+    List<WeekModel> weekModels = [];
+    if (this._addWeekplan)
+      weekModels.add(new WeekModel(name: "Tilføj Ugeplan"));
 
     for (WeekNameModel weekNameModel in weekNameModels) {
       _api.week

@@ -3,7 +3,7 @@ import 'package:weekplanner/blocs/application_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_select_bloc.dart';
+import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -32,7 +32,7 @@ class Bootstrap {
     });
 
     di.registerDependency((Injector i) {
-      return WeekplanSelectBloc();
+      return WeekplansBloc();
     });
 
     di.registerDependency((Injector i) {

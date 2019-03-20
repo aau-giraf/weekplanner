@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_select_bloc.dart';
+import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+//import 'package:weekplanner/screens/new_weekplan_screen.dart';
 
 class WeekplanSelectorScreen extends StatelessWidget {
-  final WeekplanSelectBloc weekBloc;
+  final WeekplansBloc weekBloc;
 
-  WeekplanSelectorScreen(GirafUserModel user) : weekBloc = di.getDependency<WeekplanSelectBloc>(){
-    this.weekBloc.load(user);
+  WeekplanSelectorScreen(GirafUserModel user) : weekBloc = di.getDependency<WeekplansBloc>(){
+    this.weekBloc.load(user, true);
   }
 
   @override
@@ -53,8 +54,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekPlanAdder(context, weekplan, bloc) {
     return GestureDetector(
-      onTap: () => print("going to ${weekplan.name}"),
-      // TODO route to weekplan.name
+      onTap: () => print("going to ${weekplan.name}"), // TODO remove this line when doing todo underneath
+      // TODO uncomment line underneath to navigate to new screen, and uncomment import at top.
+      //onTap: () => Navigator.push(context, NewWeekplanScreen),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (context, snapshot) {
@@ -65,7 +67,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekPlan(context, weekplan, constraint) {
     return GestureDetector(
-        onTap: () => print("adding"), // TODO route to adding a new weekplan
+        onTap: () => print("adding"), // TODO remove this line when doing todo underneath
+        // TODO uncomment line underneath to navigate to new screen
+        //onTap: () => Navigator.push(context, //insert weekplan screen here with user in constructor ?),
         child: Icon(
           Icons.add,
           size: constraint.maxWidth,
