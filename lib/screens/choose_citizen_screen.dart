@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
-import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
-import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/weekplan_screen.dart';
 
 class ChooseCitizenScreen extends StatelessWidget {
-  final ChooseCitizenBloc _bloc = ChooseCitizenBloc(Globals.api);
-
+  final ChooseCitizenBloc _bloc;
+  ChooseCitizenScreen() : _bloc = di.getDependency<ChooseCitizenBloc>();
   @override
   Widget build(BuildContext context) {
     _bloc.load();
@@ -42,22 +43,11 @@ class ChooseCitizenScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           vertical: 0, horizontal: Portrait ? 20 : 60),
                       child: GridView.count(
-                        crossAxisCount: Portrait ? 2 : 4,
-                        children: [
-                          snapshot.data
+                          crossAxisCount: Portrait ? 2 : 4,
+                          children: snapshot.data
                               .map((UsernameModel user) =>
                                   citizenEntry(user, context))
-                              .toList(),
-                          snapshot.data
-                              .map((UsernameModel user) =>
-                                  citizenEntry(user, context))
-                              .toList(),
-                          snapshot.data
-                              .map((UsernameModel user) =>
-                                  citizenEntry(user, context))
-                              .toList()
-                        ].expand((x) => x).toList(),
-                      ),
+                              .toList()),
                     );
                   },
                 ),
@@ -77,7 +67,7 @@ class ChooseCitizenScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 30),
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, "/weekplan");
+          Routes.push(context, WeekplanScreen());
         },
         child: Container(
             child: Column(
@@ -103,7 +93,7 @@ class ChooseCitizenScreen extends StatelessWidget {
                     Center(
                       child: AutoSizeText(
                         user.name,
-                        maxLines: 2,
+                        maxLines: 1,
                       ),
                     ),
                   ],

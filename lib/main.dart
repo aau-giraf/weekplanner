@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/screens/choose_citizen_screen.dart';
 
-void main() {
+void main() async {
   // Register all dependencies for injector
-  Bootstrap.register();
+  await Bootstrap.register();
+
+  if (_isInDebugMode) {
+    // If in DEBUG mode
+    await DotEnv().load('assets/envoironments.env');
+  } else {
+    // Else Production
+    await DotEnv().load('assets/envoironments.prod.env');
+  }
 
   runApp(MaterialApp(
       title: "Weekplanner",
@@ -16,5 +26,11 @@ void main() {
           stream: di.getDependency<AuthBloc>().loggedIn,
           builder: (_, AsyncSnapshot<bool> snapshot) =>
               // In case we're logged in show WeekPlanner, otherwise, show login
-              snapshot.data ? WeekplanScreen() : LoginScreen())));
+              snapshot.data ? ChooseCitizenScreen() : LoginScreen())));
+}
+
+bool get _isInDebugMode {
+  bool inDebugMode = false;
+  assert(inDebugMode = true);
+  return inDebugMode;
 }

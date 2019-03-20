@@ -3,36 +3,37 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/blocs/environment_bloc.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/choose_citizen_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
   final AuthBloc authBloc;
+  final bool isDebugMode =
+      di.getDependency<EnvoironmentBloc>().getVar<bool>("DEBUG");
 
   LoginScreen() : authBloc = di.getDependency<AuthBloc>();
-  final timeout = const Duration(seconds: 2);
-  final ms = const Duration(milliseconds: 1);
 
   BuildContext loginContext = null;
-  bool LoggedInSuccessfull = false;
+  bool loggedInSuccessfull = false;
 
   void handleTimeout() {
-    if (!LoggedInSuccessfull) {
+    if (!loggedInSuccessfull) {
       Navigator.pop(loginContext);
       wrongUsernameOrPassword(loginContext);
     }
   }
 
-  Future<bool> loginAction(BuildContext context, String nextScreen) async {
+  Future<bool> loginAction(BuildContext context) async {
     loginContext = context;
-    Globals.showLoadingScreen(context, true, handleTimeout, 1500);
-
-    authBloc.loggedIn.listen((status) {
+    showLoadingScreen(context, true, handleTimeout, 1500);
+    authBloc.loggedIn.listen((status) async {
       if (status) {
-        LoggedInSuccessfull = true;
-        Navigator.pop(context);
-        Navigator.pushNamed(context, "/choosecitizen");
+        Routes.pop(context);
+        loggedInSuccessfull = true;
       }
     });
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
@@ -50,11 +51,8 @@ class LoginScreen extends StatelessWidget {
         });
   }
 
-  AuthBloc authBloc;
-
   @override
   Widget build(BuildContext context) {
-    authBloc = BlocProviderTree.of<AuthBloc>(context);
     final Size screenSize = MediaQuery.of(context).size;
     bool Portrait = MediaQuery.of(context).orientation == Orientation.portrait;
     bool Keyboard = MediaQuery.of(context).viewInsets.bottom > 100;
@@ -63,12 +61,9 @@ class LoginScreen extends StatelessWidget {
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
-        // Padding here is dependend on Portrait/Landscape and if the keyboard is active
         padding: Portrait
             ? EdgeInsets.fromLTRB(50, 0, 50, 0)
-            : Keyboard
-                ? EdgeInsets.fromLTRB(200, 0, 200, 20)
-                : EdgeInsets.fromLTRB(200, 20, 200, 10),
+            : EdgeInsets.fromLTRB(200, 0, 200, 8),
         decoration: BoxDecoration(
           // The background of the login-screen
           image: DecorationImage(
@@ -88,7 +83,7 @@ class LoginScreen extends StatelessWidget {
                     Padding(
                       padding: Portrait
                           ? EdgeInsets.fromLTRB(0, 20, 0, 10)
-                          : EdgeInsets.fromLTRB(0, 0, 0, 10),
+                          : EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: Container(
                         decoration: new BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
@@ -122,9 +117,6 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.white),
                         padding: new EdgeInsets.all(8.0),
                         child: TextField(
-                          onSubmitted: (newValue) {
-                            loginAction(context, "/choosecitizen");
-                          },
                           style: Portrait
                               ? TextStyle(fontSize: 30)
                               : TextStyle(fontSize: 20),
@@ -138,14 +130,9 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onPressed: () {
-                        login(context, usernameCtrl.value.text,
-                            passwordCtrl.value.text);
-                      },
-                      color: Colors.blue,
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                       child: Container(
                         child: Transform.scale(
                           scale: 1.5,
@@ -157,19 +144,15 @@ class LoginScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
-                              loginAction(context, "/choosecitizen");
+                              loginAction(context);
                             },
                             color: Color.fromRGBO(48, 81, 118, 1),
                           ),
                         ),
                       ),
-                      onPressed: () {
-                        login(context, "graatand", "password");
-                      },
-                      color: Colors.blue,
                     ),
                     // Autologin button, only used for debugging
-                    Globals.isInDebugMode
+                    isDebugMode
                         ? Container(
                             child: Transform.scale(
                               scale: 1.2,
@@ -181,8 +164,12 @@ class LoginScreen extends StatelessWidget {
                                   style: new TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () {
-                                  usernameCtrl.text = "Graatand";
-                                  passwordCtrl.text = "password";
+                                  usernameCtrl.text = di
+                                      .getDependency<EnvoironmentBloc>()
+                                      .getVar<String>("USERNAME");
+                                  passwordCtrl.text = di
+                                      .getDependency<EnvoironmentBloc>()
+                                      .getVar<String>("PASSWORD");
                                 },
                                 color: Color.fromRGBO(48, 81, 118, 1),
                               ),
@@ -210,7 +197,26 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  void login(BuildContext context, String username, String password) {
-    authBloc.authenticate(username, password);
+  static void showLoadingScreen(BuildContext context, bool Dismissible,
+      [void callback(), int timeoutMS]) {
+    if (callback != null) {
+      if (timeoutMS == null) {
+        timeoutMS = 2000;
+      }
+      Timer(Duration(milliseconds: timeoutMS), callback);
+    }
+    showDialog(
+        barrierDismissible: Dismissible,
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: Transform.scale(
+                scale: 2,
+                child: CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation(Color.fromRGBO(255, 157, 0, 0.8)),
+                )),
+          );
+        });
   }
 }

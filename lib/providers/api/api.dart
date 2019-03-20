@@ -8,6 +8,7 @@ import 'package:weekplanner/providers/api/week_template_api.dart';
 import 'package:weekplanner/providers/http/http_client.dart';
 import 'package:weekplanner/providers/persistence/persistence.dart';
 import 'package:weekplanner/providers/persistence/persistence_client.dart';
+import 'package:weekplanner/blocs/environment_bloc.dart';
 
 class Api {
   AccountApi account;
@@ -19,21 +20,24 @@ class Api {
   UserApi user;
 
   String baseUrl;
-
-  Api(this.baseUrl) {
+  String serverUrl;
+  String serverPort;
+  EnvoironmentBloc EnvVariables;
+  Api(this.EnvVariables) {
+    serverUrl = EnvVariables.getVar<String>("SERVER_URL");
+    serverPort = EnvVariables.getVar<String>("SERVER_PORT");
+    baseUrl = "http://" + serverUrl + ":" + serverPort;
     Persistence persist = PersistenceClient();
     account = AccountApi(HttpClient(baseUrl + "/v1", persist), persist);
     status = StatusApi(HttpClient(baseUrl + "/v1/Status", persist));
     department =
         DepartmentApi(HttpClient(baseUrl + "/v1/Department", persist), persist);
     week = WeekApi(HttpClient(baseUrl + "/v1/User", persist));
-    pictogram =
-        PictogramApi(HttpClient(baseUrl + "/v1/Pictogram", persist));
+    pictogram = PictogramApi(HttpClient(baseUrl + "/v1/Pictogram", persist));
     weekTemplate =
         WeekTemplateApi(HttpClient(baseUrl + "/v1/WeekTemplate", persist));
     user = UserApi(HttpClient(baseUrl + "/v1/User", persist));
   }
 
-  void dispose() {
-  }
+  void dispose() {}
 }
