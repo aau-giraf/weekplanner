@@ -6,6 +6,8 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/blocs/environment_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
+import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -45,8 +47,9 @@ class LoginScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           //TODO: Lav en pæn dialog
-          return Center(
-            child: Text("Forkert brugernavn eller adgangskode"),
+          return GirafNotifyDialog(
+            title: "Fejl",
+            description: "Forkert brugernavn eller adgangskode",
           );
         });
   }

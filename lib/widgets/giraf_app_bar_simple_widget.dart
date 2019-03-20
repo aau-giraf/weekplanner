@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 
 class GirafAppBarSimple extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  GirafAppBarSimple({Key key, this.title})
+  final Widget leading;
+
+  GirafAppBarSimple({Key key, this.title, this.leading})
       : preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
   @override
   final Size preferredSize;
+
   // Adding this.variablename to the constructor automatically assigns the value to the right variable.
 
   @override
@@ -15,6 +18,7 @@ class GirafAppBarSimple extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title),
       backgroundColor: Color(0xAAFF6600),
+      leading: leading,
     );
   }
 }
