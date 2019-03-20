@@ -2,23 +2,24 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
-class AuthBloc extends BlocBase{
+class AuthBloc extends BlocBase {
   Api api;
 
   AuthBloc(this.api);
 
   Stream<bool> get loggedIn => _loggedIn.stream;
 
-  BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>();
+  // Start with providing false as the logged in status
+  BehaviorSubject<bool> _loggedIn = BehaviorSubject.seeded(false);
 
-  void authenticate(String username, String password){
+  void authenticate(String username, String password) {
     api.account.login(username, password).take(1).listen((status) {
       _loggedIn.add(status);
     });
   }
 
-  void logout(){
-    api.account.logout().take(1).listen((status){
+  void logout() {
+    api.account.logout().take(1).listen((status) {
       _loggedIn.add(false);
     });
   }
@@ -27,5 +28,4 @@ class AuthBloc extends BlocBase{
   void dispose() {
     _loggedIn.close();
   }
-
 }

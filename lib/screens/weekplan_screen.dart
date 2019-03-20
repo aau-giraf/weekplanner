@@ -1,30 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_bloc.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
-import 'package:weekplanner/providers/api/user_api.dart';
-import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
-import '../widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/bootstrap.dart';
+import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class WeekplanScreen extends StatelessWidget {
-  SettingsBloc settingsBloc;
-  final WeekplanBloc weekplanBloc;
+  final String title;
+  final List<String> pictograms = ['assets/read.jpg', 'assets/read.jpg'];
 
-  List<Widget> myList = <Widget>[];
+  final SettingsBloc settingsBloc;
 
-  WeekplanScreen(Key key, this.weekplanBloc) : super(key: key);
+  final List<Widget> myList = <Widget>[
+    new Card(child: Image.asset('assets/read.jpg')),
+  ];
+
+  WeekplanScreen({Key key, this.title})
+      : settingsBloc = di.getDependency<SettingsBloc>(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    settingsBloc = BlocProviderTree.of<SettingsBloc>(context);
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Ugeplan',
         ),
         body: new Row(
           children: <Widget>[
+            StreamBuilder<GirafTheme>(
+              stream: this.settingsBloc.theme,
+              initialData: GirafTheme.AndroidBlue,
+              builder:
+                  (BuildContext context, AsyncSnapshot<GirafTheme> snapshot) {
+                return Text(snapshot.data.toString());
+              },
+            ),
             Expanded(
                 child: Card(
                     color: Color(0xFF007700), child: Day('Mandag', myList))),
@@ -59,6 +70,10 @@ Column Day(String day, List<Widget> myList) {
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return myList[index];
+            return Card(
+              color: Colors.white,
+              child: IconButton(icon: Image.asset('assets/read.jpg')),
+            );
           },
           itemCount: myList.length,
         ),
