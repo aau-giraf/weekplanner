@@ -2,6 +2,7 @@ import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/application_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -27,6 +28,10 @@ class Bootstrap {
 
     di.registerSingleton<SettingsBloc>((_) {
       return SettingsBloc();
+    });
+
+    di.registerSingleton<WeekplanBloc>((Injector i) {
+      return WeekplanBloc(i.getDependency<Api>());
     });
   }
 }
