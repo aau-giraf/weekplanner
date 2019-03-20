@@ -11,8 +11,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 class WeekplanSelectorScreen extends StatelessWidget {
   final WeekplanSelectBloc weekBloc;
 
-  WeekplanSelectorScreen() : weekBloc = di.getDependency<WeekplanSelectBloc>(){
-    this.weekBloc.load(GirafUserModel(id: "379d057b-85b1-41b6-a1bd-6448c132745b"));
+  WeekplanSelectorScreen(GirafUserModel user) : weekBloc = di.getDependency<WeekplanSelectBloc>(){
+    this.weekBloc.load(user);
   }
 
   @override
