@@ -22,10 +22,6 @@ class ChooseCitizenBloc extends BlocBase {
     });
   }
 
-  /*void choose(BuildContext context) {
-    Navigator.pushNamed(context, "/weekplan");
-  }*/
-
   @override
   void dispose() {
     _citizens.close();

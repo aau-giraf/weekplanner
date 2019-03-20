@@ -24,9 +24,7 @@ void main() async {
       home: StreamBuilder(
           initialData: false,
           stream: di.getDependency<AuthBloc>().loggedIn,
-          builder: (_, AsyncSnapshot<bool> snapshot) =>
-              // In case we're logged in show WeekPlanner, otherwise, show login
-              snapshot.data ? ChooseCitizenScreen() : LoginScreen())));
+          builder: (_, AsyncSnapshot<bool> snapshot) => LoginScreen())));
 }
 
 bool get _isInDebugMode {

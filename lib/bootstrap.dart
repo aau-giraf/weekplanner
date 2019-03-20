@@ -19,8 +19,10 @@ class Bootstrap {
     });
 
     di.registerSingleton((Injector i) {
-      // TODO: move the server URL into .env file
-      return Api(i.getDependency<EnvoironmentBloc>());
+      EnvoironmentBloc envBloc = i.getDependency<EnvoironmentBloc>();
+      String url = envBloc.getVar("SERVER_URL");
+      String port = envBloc.getVar("SERVER_PORT");
+      return Api(url, port);
     });
 
     di.registerSingleton((Injector i) {

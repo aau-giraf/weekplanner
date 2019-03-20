@@ -22,10 +22,7 @@ class Api {
   String baseUrl;
   String serverUrl;
   String serverPort;
-  EnvoironmentBloc EnvVariables;
-  Api(this.EnvVariables) {
-    serverUrl = EnvVariables.getVar<String>("SERVER_URL");
-    serverPort = EnvVariables.getVar<String>("SERVER_PORT");
+  Api(this.serverUrl, this.serverPort) {
     baseUrl = "http://" + serverUrl + ":" + serverPort;
     Persistence persist = PersistenceClient();
     account = AccountApi(HttpClient(baseUrl + "/v1", persist), persist);

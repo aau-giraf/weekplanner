@@ -35,6 +35,7 @@ class LoginScreen extends StatelessWidget {
       if (status) {
         Routes.pop(context);
         loggedInSuccessfull = true;
+        await Routes.push(context, ChooseCitizenScreen());
       }
     });
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
