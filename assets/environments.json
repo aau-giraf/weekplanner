@@ -1,0 +1,8 @@
+{
+  "SERVER_URL": "web.giraf.cs.aau.dk",
+  "PROTOCOL": "http",
+  "SERVER_PORT": 5000,
+  "DEBUG": true,
+  "USERNAME": "Graatand",
+  "PASSWORD": "password"
+}

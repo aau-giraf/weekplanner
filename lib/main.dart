@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/providers/environment_provider.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
@@ -13,10 +14,10 @@ void main() async {
 
   if (_isInDebugMode) {
     // If in DEBUG mode
-    await DotEnv().load('assets/envoironments.env');
+    await EnvironmentProvider.setFile("assets/environments.json");
   } else {
     // Else Production
-    await DotEnv().load('assets/envoironments.prod.env');
+    await EnvironmentProvider.setFile("assets/environments.prod.json");
   }
 
   runApp(MaterialApp(

@@ -8,7 +8,6 @@ import 'package:weekplanner/providers/api/week_template_api.dart';
 import 'package:weekplanner/providers/http/http_client.dart';
 import 'package:weekplanner/providers/persistence/persistence.dart';
 import 'package:weekplanner/providers/persistence/persistence_client.dart';
-import 'package:weekplanner/blocs/environment_bloc.dart';
 
 class Api {
   AccountApi account;
@@ -19,11 +18,12 @@ class Api {
   WeekTemplateApi weekTemplate;
   UserApi user;
 
-  String baseUrl;
   String serverUrl;
-  String serverPort;
-  Api(this.serverUrl, this.serverPort) {
-    baseUrl = "http://" + serverUrl + ":" + serverPort;
+  int serverPort;
+  String protocol;
+  Api(this.protocol, this.serverUrl, this.serverPort) {
+    String baseUrl =
+        this.protocol + "://" + serverUrl + ":" + serverPort.toString();
     Persistence persist = PersistenceClient();
     account = AccountApi(HttpClient(baseUrl + "/v1", persist), persist);
     status = StatusApi(HttpClient(baseUrl + "/v1/Status", persist));

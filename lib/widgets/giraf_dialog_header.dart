@@ -10,8 +10,6 @@ class GirafDialogHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  // Adding this.variablename to the constructor automatically assigns the value to the right variable.
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -31,8 +29,8 @@ class GirafDialogHeader extends StatelessWidget implements PreferredSizeWidget {
                   0.66
                 ],
                     colors: [
-                  Color.fromRGBO(254, 215, 108, 1),
-                  Color.fromRGBO(253, 187, 85, 1),
+                  const Color.fromRGBO(254, 215, 108, 1),
+                  const Color.fromRGBO(253, 187, 85, 1),
                 ])),
           ),
         ),

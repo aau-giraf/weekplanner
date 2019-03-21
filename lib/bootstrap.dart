@@ -3,7 +3,7 @@ import 'package:weekplanner/blocs/application_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/blocs/environment_bloc.dart';
+import 'package:weekplanner/providers/environment_provider.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -14,15 +14,11 @@ class Bootstrap {
   /// NB:
   /// Singleton restricts the instantiation of a class to one "single" instance
   static Future<void> register() async {
-    di.registerSingleton<EnvoironmentBloc>((_) {
-      return EnvoironmentBloc();
-    });
-
     di.registerSingleton((Injector i) {
-      EnvoironmentBloc envBloc = i.getDependency<EnvoironmentBloc>();
-      String url = envBloc.getVar("SERVER_URL");
-      String port = envBloc.getVar("SERVER_PORT");
-      return Api(url, port);
+      String url = EnvironmentProvider.getVar("SERVER_URL");
+      int port = EnvironmentProvider.getVar("SERVER_PORT");
+      String protocol = EnvironmentProvider.getVar("PROTOCOL");
+      return Api(protocol, url, port);
     });
 
     di.registerSingleton((Injector i) {

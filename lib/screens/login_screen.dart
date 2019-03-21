@@ -1,9 +1,8 @@
-import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/blocs/environment_bloc.dart';
+import 'package:weekplanner/providers/environment_provider.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
@@ -13,8 +12,7 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
   final AuthBloc authBloc;
-  final bool isDebugMode =
-      di.getDependency<EnvoironmentBloc>().getVar<bool>("DEBUG");
+  final bool isDebugMode = EnvironmentProvider.getVar<bool>("DEBUG");
 
   LoginScreen() : authBloc = di.getDependency<AuthBloc>();
 
@@ -30,7 +28,7 @@ class LoginScreen extends StatelessWidget {
 
   Future<bool> loginAction(BuildContext context) async {
     loginContext = context;
-    showLoadingScreen(context, true, handleTimeout, 1500);
+    showLoadingScreen(context, false, handleTimeout, 1500);
     authBloc.loggedIn.listen((status) async {
       if (status) {
         Routes.pop(context);
@@ -128,7 +126,7 @@ class LoginScreen extends StatelessWidget {
                           decoration: InputDecoration.collapsed(
                             hintText: 'Adgangskode',
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: const Color.fromRGBO(170, 170, 170, 1)),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -149,7 +147,7 @@ class LoginScreen extends StatelessWidget {
                             onPressed: () {
                               loginAction(context);
                             },
-                            color: Color.fromRGBO(48, 81, 118, 1),
+                            color: const Color.fromRGBO(48, 81, 118, 1),
                           ),
                         ),
                       ),
@@ -167,14 +165,14 @@ class LoginScreen extends StatelessWidget {
                                   style: new TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () {
-                                  usernameCtrl.text = di
-                                      .getDependency<EnvoironmentBloc>()
-                                      .getVar<String>("USERNAME");
-                                  passwordCtrl.text = di
-                                      .getDependency<EnvoironmentBloc>()
-                                      .getVar<String>("PASSWORD");
+                                  usernameCtrl.text =
+                                      EnvironmentProvider.getVar<String>(
+                                          "USERNAME");
+                                  passwordCtrl.text =
+                                      EnvironmentProvider.getVar<String>(
+                                          "PASSWORD");
                                 },
-                                color: Color.fromRGBO(48, 81, 118, 1),
+                                color: const Color.fromRGBO(48, 81, 118, 1),
                               ),
                             ),
                           )
@@ -195,7 +193,7 @@ class LoginScreen extends StatelessWidget {
     return Transform.scale(
       scale: Portrait ? 1.0 : 0.5,
       child: Image(
-        image: AssetImage("assets/giraf_splash_logo.png"),
+        image: const AssetImage("assets/giraf_splash_logo.png"),
       ),
     );
   }
@@ -216,8 +214,8 @@ class LoginScreen extends StatelessWidget {
             child: Transform.scale(
                 scale: 2,
                 child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation(Color.fromRGBO(255, 157, 0, 0.8)),
+                  valueColor: const AlwaysStoppedAnimation(
+                      Color.fromRGBO(255, 157, 0, 0.8)),
                 )),
           );
         });

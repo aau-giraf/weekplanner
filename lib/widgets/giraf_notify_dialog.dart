@@ -12,8 +12,6 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  // Adding this.variablename to the constructor automatically assigns the value to the right variable.
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -50,17 +48,18 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                 RaisedButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(10.0),
-                        side: BorderSide(color: Color.fromRGBO(0, 0, 0, 0.3))),
-                    color: Color.fromRGBO(255, 157, 0, 1),
+                        side: const BorderSide(
+                            color: Color.fromRGBO(0, 0, 0, 0.3))),
+                    color: const Color.fromRGBO(255, 157, 0, 1),
                     child: Row(
                       children: <Widget>[
                         Icon(
                           Icons.check,
-                          color: Color.fromRGBO(0, 0, 0, 1),
+                          color: const Color.fromRGBO(0, 0, 0, 1),
                         ),
                         Text(
                           'Okay',
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ],
                     ),
