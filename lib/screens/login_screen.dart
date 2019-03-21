@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
   final AuthBloc authBloc;
-  final bool isDebugMode = EnvironmentProvider.getVar<bool>("DEBUG");
+  final bool isDebugMode = Environment.getVar<bool>("DEBUG");
 
   LoginScreen() : authBloc = di.getDependency<AuthBloc>();
 
@@ -166,11 +166,9 @@ class LoginScreen extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   usernameCtrl.text =
-                                      EnvironmentProvider.getVar<String>(
-                                          "USERNAME");
+                                      Environment.getVar<String>("USERNAME");
                                   passwordCtrl.text =
-                                      EnvironmentProvider.getVar<String>(
-                                          "PASSWORD");
+                                      Environment.getVar<String>("PASSWORD");
                                 },
                                 color: const Color.fromRGBO(48, 81, 118, 1),
                               ),

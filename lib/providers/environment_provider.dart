@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'dart:convert' as JSON;
+import 'dart:convert';
 
-class EnvironmentProvider extends BlocBase {
+class Environment {
   static String _file = "";
   static String _content = "";
   static T getVar<T>(String variableName) {
-    return JSON.jsonDecode(_content)[variableName] as T;
+    return jsonDecode(_content)[variableName] as T;
   }
 
   static void setFile(String FileLocation) async {
@@ -19,7 +19,4 @@ class EnvironmentProvider extends BlocBase {
   static Future<String> _getFileData(String path) async {
     return await rootBundle.loadString(path);
   }
-
-  @override
-  void dispose() {}
 }

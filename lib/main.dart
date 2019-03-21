@@ -13,10 +13,10 @@ void main() async {
 
   if (_isInDebugMode) {
     // If in DEBUG mode
-    await EnvironmentProvider.setFile("assets/environments.json");
+    await Environment.setFile("assets/environments.json");
   } else {
     // Else Production
-    await EnvironmentProvider.setFile("assets/environments.prod.json");
+    await Environment.setFile("assets/environments.prod.json");
   }
 
   runApp(MaterialApp(
