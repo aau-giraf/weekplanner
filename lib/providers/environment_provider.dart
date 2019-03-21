@@ -11,12 +11,8 @@ class Environment {
     return jsonDecode(_content)[variableName] as T;
   }
 
-  static void setFile(String FileLocation) async {
-    _file = FileLocation;
-    _content = await _getFileData(_file);
-  }
-
-  static Future<String> _getFileData(String path) async {
-    return await rootBundle.loadString(path);
+  static Future setFile(String fileLocation) async {
+    _file = fileLocation;
+    _content = await rootBundle.loadString(_file);
   }
 }

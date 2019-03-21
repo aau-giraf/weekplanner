@@ -8,8 +8,8 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 
 class ChooseCitizenScreen extends StatelessWidget {
-  final ChooseCitizenBloc _bloc;
-  ChooseCitizenScreen() : _bloc = di.getDependency<ChooseCitizenBloc>();
+  final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -57,8 +57,6 @@ class ChooseCitizenScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget chooseCitizenDialog() {}
 
   Widget citizenEntry(UsernameModel user, BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
