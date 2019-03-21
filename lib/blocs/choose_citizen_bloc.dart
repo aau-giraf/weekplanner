@@ -8,7 +8,9 @@ import 'package:weekplanner/providers/api/api.dart';
 class ChooseCitizenBloc extends BlocBase {
   Api _api;
 
-  ChooseCitizenBloc(this._api);
+  ChooseCitizenBloc(this._api) {
+    load();
+  }
 
   Stream<List<UsernameModel>> get citizen => _citizens.stream;
 

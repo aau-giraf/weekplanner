@@ -12,10 +12,9 @@ class ChooseCitizenScreen extends StatelessWidget {
   ChooseCitizenScreen() : _bloc = di.getDependency<ChooseCitizenBloc>();
   @override
   Widget build(BuildContext context) {
-    _bloc.load();
     final Size screenSize = MediaQuery.of(context).size;
 
-    bool Portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    bool portrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       body: Container(
@@ -41,9 +40,9 @@ class ChooseCitizenScreen extends StatelessWidget {
                       AsyncSnapshot<List<UsernameModel>> snapshot) {
                     return Padding(
                       padding: EdgeInsets.symmetric(
-                          vertical: 0, horizontal: Portrait ? 20 : 60),
+                          vertical: 0, horizontal: portrait ? 20 : 60),
                       child: GridView.count(
-                          crossAxisCount: Portrait ? 2 : 4,
+                          crossAxisCount: portrait ? 2 : 4,
                           children: snapshot.data
                               .map((UsernameModel user) =>
                                   citizenEntry(user, context))

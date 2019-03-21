@@ -55,20 +55,20 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    bool Portrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    bool Keyboard = MediaQuery.of(context).viewInsets.bottom > 100;
+    bool portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    bool keyboard = MediaQuery.of(context).viewInsets.bottom > 100;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
-        padding: Portrait
+        padding: portrait
             ? EdgeInsets.fromLTRB(50, 0, 50, 0)
             : EdgeInsets.fromLTRB(200, 0, 200, 8),
         decoration: BoxDecoration(
           // The background of the login-screen
           image: DecorationImage(
-            image: AssetImage("assets/login_screen_background_image.png"),
+            image: const AssetImage("assets/login_screen_background_image.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -76,13 +76,13 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              GetLogo(Keyboard, Portrait),
+              GetLogo(keyboard, portrait),
               Form(
                 key: this._formKey,
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: Portrait
+                      padding: portrait
                           ? EdgeInsets.fromLTRB(0, 20, 0, 10)
                           : EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: Container(
@@ -93,7 +93,7 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.white),
                         padding: new EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
-                          style: Portrait
+                          style: portrait
                               ? TextStyle(fontSize: 30)
                               : TextStyle(fontSize: 20),
                           controller: usernameCtrl,
@@ -102,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                           decoration: InputDecoration.collapsed(
                             hintText: "Brugernavn",
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: const Color.fromRGBO(170, 170, 170, 1)),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -118,7 +118,7 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.white),
                         padding: new EdgeInsets.all(8.0),
                         child: TextField(
-                          style: Portrait
+                          style: portrait
                               ? TextStyle(fontSize: 30)
                               : TextStyle(fontSize: 20),
                           controller: passwordCtrl,
@@ -215,7 +215,7 @@ class LoginScreen extends StatelessWidget {
                 scale: 2,
                 child: CircularProgressIndicator(
                   valueColor: const AlwaysStoppedAnimation(
-                      Color.fromRGBO(255, 157, 0, 0.8)),
+                      const Color.fromRGBO(255, 157, 0, 0.8)),
                 )),
           );
         });
