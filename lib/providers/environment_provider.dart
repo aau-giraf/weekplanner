@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert' as JSON;
 
 class EnvironmentProvider extends BlocBase {
