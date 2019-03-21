@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
@@ -10,7 +9,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 class NewWeekplanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    NewWeekPlanBloc bloc = NewWeekPlanBloc();
+    final NewWeekplanBloc _newWeekplanBloc = NewWeekplanBloc();
     return Scaffold(
         appBar: GirafAppBar(title: "Ny Ugeplan"),
         body: ListView(children: <Widget>[
@@ -38,17 +37,8 @@ class NewWeekplanScreen extends StatelessWidget {
               )),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _buildIcon(context, bloc.gram),
-            /*
-            child: StreamBuilder<PictogramModel>(
-    stream: bloc.pictograms,
-            builder: (BuildContext context,
-            AsyncSnapshot<PictogramModel> thumbnail){
-      return thumbnail.data.map((PictogramModel gram) {
-        return _buildIcon(context, gram);
-      })
-            },),
-          */),
+            child: _buildIcon(context, _newWeekplanBloc.gram),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: RaisedButton(
