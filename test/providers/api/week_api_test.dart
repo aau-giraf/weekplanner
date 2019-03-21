@@ -1,5 +1,5 @@
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/models/access_level_enum.dart';
+import 'package:weekplanner/models/enums/access_level_enum.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/week_name_model.dart';

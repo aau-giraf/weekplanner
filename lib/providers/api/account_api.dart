@@ -2,9 +2,9 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/response_model.dart';
-import 'package:weekplanner/models/role_enum.dart';
+import 'package:weekplanner/models/enums/role_enum.dart';
 import 'package:weekplanner/providers/http/http.dart';
-import 'package:weekplanner/providers/peristence/persistence.dart';
+import 'package:weekplanner/providers/persistence/persistence.dart';
 
 class AccountApi {
   final Http _http;

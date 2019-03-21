@@ -1,5 +1,5 @@
 import 'package:weekplanner/models/model.dart';
-import 'package:weekplanner/models/weekday_enum.dart';
+import 'package:weekplanner/models/enums/weekday_enum.dart';
 
 class WeekdayColorModel implements Model{
   String hexColor;

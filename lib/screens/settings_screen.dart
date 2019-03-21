@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
-import 'package:weekplanner/providers/bloc_provider.dart';
+import 'package:weekplanner/di.dart';
 import '../widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/models/giraf_theme_enum.dart';
+import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 
 class SettingsScreen extends StatelessWidget {
 
-  SettingsBloc settingsBloc;
+  final SettingsBloc settingsBloc;
+
+  SettingsScreen() : settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
-    settingsBloc = BlocProviderTree.of<SettingsBloc>(context);
     return new Scaffold(
       appBar: GirafAppBar(
           title: 'Settings'

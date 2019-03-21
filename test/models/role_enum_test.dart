@@ -1,5 +1,5 @@
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/models/role_enum.dart';
+import 'package:weekplanner/models/enums/role_enum.dart';
 
 void main(){
   test('Should contain a specific list of values', (){

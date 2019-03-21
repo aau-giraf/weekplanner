@@ -1,9 +1,9 @@
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/models/access_level_enum.dart';
+import 'package:weekplanner/models/enums/access_level_enum.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/week_template_model.dart';
 import 'package:weekplanner/models/week_template_name_model.dart';
-import 'package:weekplanner/models/weekday_enum.dart';
+import 'package:weekplanner/models/enums/weekday_enum.dart';
 import 'package:weekplanner/models/weekday_model.dart';
 import 'package:weekplanner/providers/api/week_template_api.dart';
 import 'package:weekplanner/providers/http/http_mock.dart';

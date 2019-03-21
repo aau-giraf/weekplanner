@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:weekplanner/models/access_level_enum.dart';
+import 'package:weekplanner/models/enums/access_level_enum.dart';
 import 'package:weekplanner/models/model.dart';
 
 class PictogramModel implements Model {
