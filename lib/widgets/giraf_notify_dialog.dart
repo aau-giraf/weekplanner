@@ -17,7 +17,8 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
     return AlertDialog(
       contentPadding: EdgeInsets.all(0.0),
       titlePadding: EdgeInsets.all(0.0),
-      shape: Border.all(color: Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+      shape:
+          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
       title: Center(
           child: GirafDialogHeader(
         title: title,
@@ -49,7 +50,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(10.0),
                         side: const BorderSide(
-                            color: Color.fromRGBO(0, 0, 0, 0.3))),
+                            color: const Color.fromRGBO(0, 0, 0, 0.3))),
                     color: const Color.fromRGBO(255, 157, 0, 1),
                     child: Row(
                       children: <Widget>[
