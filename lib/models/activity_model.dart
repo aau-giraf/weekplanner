@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:weekplanner/models/model.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
-import 'activity_state_enum.dart';
+import 'package:weekplanner/models/enums/activity_state_enum.dart';
 
 class ActivityModel implements Model {
   int id;

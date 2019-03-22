@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/di.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final ToolbarBloc toolbarBloc;
-  GirafAppBar({Key key, this.toolbarBloc, this.title}) : preferredSize = Size.fromHeight(56.0), super(key: key);
+  final AuthBloc _authBloc;
+  final ToolbarBloc _toolbarBloc;
+
+  GirafAppBar({Key key, this.title})
+      : _authBloc = di.getDependency<AuthBloc>(),
+        _toolbarBloc = di.getDependency<ToolbarBloc>(),
+        preferredSize = Size.fromHeight(56.0),
+        super(key: key);
+
+
 
   @override
   final Size preferredSize;
-  // Adding this.variablename to the constructor automatically assigns the value to the right variable.
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +27,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[
         StreamBuilder<bool>(
             key: Key('streambuilderVisibility'),
-            stream: toolbarBloc.editVisible,
+            stream: _toolbarBloc.editVisible,
             initialData: false,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
               return Visibility(

@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weekplanner/providers/peristence/persistence.dart';
+import 'package:weekplanner/providers/persistence/persistence.dart';
 
 const tokenKey = "token";
 

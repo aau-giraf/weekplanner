@@ -19,16 +19,25 @@ class Flusher {
 
   Flusher(this._call);
 
+  /// Flush a body to our listener
+  ///
+  /// [response] The response to flush
   void flush(dynamic response) {
     _call.flush.add(response);
   }
 
-  void throws(Exception exception) {}
+  /// Send an exception to our listener
+  ///
+  /// [exception] The exception to send
+  void throwError(Exception exception) {
+    _call.flush.add(exception);
+  }
 }
 
 class HttpMock implements Http {
   List<Call> calls = List();
 
+  /// Ensure that there are no requests that are not already expected
   void verify() {
     if (calls.length > 0) {
       throw Exception("Expected no requests, found: \n" +
@@ -36,6 +45,10 @@ class HttpMock implements Http {
     }
   }
 
+  /// Expect a request with the given method and url.
+  ///
+  /// [method] One of delete, get, patch, post, or put.
+  /// [url] The url that is expected
   Flusher expectOne({Method method, @required String url}) {
     int index = calls.indexWhere(
         (call) => call.url == url && (method == null || method == call.method));
@@ -49,12 +62,16 @@ class HttpMock implements Http {
     return Flusher(call);
   }
 
+  /// Ensure that no request with the given method and url is send
+  ///
+  /// [method] One of delete, get, patch, post, or put.
+  /// [url] The url that not expected
   void expectNone({Method method, @required String url}) {
-    calls.forEach((call) {
-      if (call.url == url && (method != null && call.method != method)) {
+    for (Call call in calls) {
+      if (call.url == url && (method == null || method == call.method)) {
         throw Exception("Found [$method] $url, expected none");
       }
-    });
+    }
   }
 
   @override
@@ -90,6 +107,10 @@ class HttpMock implements Http {
     calls.add(call);
 
     return call.flush.map((dynamic response) {
+      if (response is Exception) {
+        throw response;
+      }
+
       return Response(null, response);
     });
   }

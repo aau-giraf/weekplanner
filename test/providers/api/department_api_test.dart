@@ -1,11 +1,11 @@
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/models/department_model.dart';
 import 'package:weekplanner/models/department_name_model.dart';
-import 'package:weekplanner/models/role_enum.dart';
+import 'package:weekplanner/models/enums/role_enum.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/providers/api/department_api.dart';
 import 'package:weekplanner/providers/http/http_mock.dart';
-import 'package:weekplanner/providers/peristence/persistence_mock.dart';
+import 'package:weekplanner/providers/persistence/persistence_mock.dart';
 
 void main() {
   HttpMock httpMock;

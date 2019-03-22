@@ -24,7 +24,7 @@ void main() {
     ToolbarBloc toolbarBloc = ToolbarBloc();
 
     ///Instantiates the appbar.
-    GirafAppBar girafAppBar = GirafAppBar(toolbarBloc: toolbarBloc, title: "AppBar");
+    GirafAppBar girafAppBar = GirafAppBar(title: "AppBar");
 
     ///Uses the pumpwidget function to build the widget, so it becomes active.
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
@@ -37,7 +37,7 @@ void main() {
   testWidgets('Visibility widget should not be visible', (WidgetTester tester) async {
 
     ToolbarBloc toolbarBloc = ToolbarBloc();
-    GirafAppBar girafAppBar = GirafAppBar(toolbarBloc: toolbarBloc, title: "AppBar");
+    GirafAppBar girafAppBar = GirafAppBar(title: "AppBar");
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     ///Retrieves the visiblity widget.
@@ -51,7 +51,7 @@ void main() {
   testWidgets('Visibility widget should be visible', (WidgetTester tester) async {
 
     ToolbarBloc toolbarBloc = ToolbarBloc();
-    GirafAppBar girafAppBar = GirafAppBar(toolbarBloc: toolbarBloc, title: "AppBar");
+    GirafAppBar girafAppBar = GirafAppBar(title: "AppBar");
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     final Visibility visibility = tester.widget(find.byKey(Key(keyOfVisibilityForEdit)));

@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/model.dart';
-import 'package:weekplanner/models/weekday_enum.dart';
+import 'package:weekplanner/models/enums/weekday_enum.dart';
 
 class WeekdayModel implements Model {
   Weekday day;
@@ -11,7 +11,7 @@ class WeekdayModel implements Model {
 
   WeekdayModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
-      throw new FormatException("[WeekdayModel]: Cannot instanciate from null");
+      throw new FormatException("[WeekdayModel]: Cannot instantiate from null");
     }
 
     day = Weekday.values[json["day"] - 1];

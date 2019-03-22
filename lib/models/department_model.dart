@@ -25,7 +25,7 @@ class DepartmentModel implements Model {
   DepartmentModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
       throw new FormatException(
-          "[DepartmentModel]: Cannot instanciate from null");
+          "[DepartmentModel]: Cannot instantiate from null");
     }
 
     id = json['id'];
