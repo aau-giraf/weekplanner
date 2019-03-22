@@ -5,12 +5,12 @@ import 'package:weekplanner/di.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final AuthBloc _authBloc;
-  final ToolbarBloc _toolbarBloc;
+  final AuthBloc authBloc;
+  final ToolbarBloc toolbarBloc;
 
   GirafAppBar({Key key, this.title})
-      : _authBloc = di.getDependency<AuthBloc>(),
-        _toolbarBloc = di.getDependency<ToolbarBloc>(),
+      : authBloc = di.getDependency<AuthBloc>(),
+        toolbarBloc = di.getDependency<ToolbarBloc>(),
         preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
@@ -27,7 +27,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[
         StreamBuilder<bool>(
             key: Key('streambuilderVisibility'),
-            stream: _toolbarBloc.editVisible,
+            stream: toolbarBloc.editVisible,
             initialData: false,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
               return Visibility(

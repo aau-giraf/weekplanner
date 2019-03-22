@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:mockito/mockito.dart';
 
+class MockAuth extends Mock implements AuthBloc {}
 
 void main() {
+
+  Api api;
+  MockAuth mockAuth;
+
+  setUp(() {
+    api = Api("any");
+    mockAuth = MockAuth();
+  });
+
 
   ///The key for the visibility widget, used to retrieve the widget during testing.
   String keyOfVisibilityForEdit = "visibilityEditBtn";
@@ -17,6 +30,14 @@ void main() {
       home: child,
     );
   }
+
+  testWidgets('Simple test', (WidgetTester tester) async {
+    GirafAppBar girafAppBar = GirafAppBar(title: "AppBar");
+
+    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
+
+    expect(find.text('Ugeplan'), findsOneWidget);
+  });
 
   testWidgets('Visibility widget should be in widget tree', (WidgetTester tester) async {
 
