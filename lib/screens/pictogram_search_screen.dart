@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/globals.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/pictogram_image.dart';
 
 class PictogramSearch extends StatelessWidget {
+  final PictogramBloc bloc = di.getDependency<PictogramBloc>();
+
   @override
   Widget build(BuildContext context) {
-    PictogramBloc bloc = PictogramBloc(Globals.api);
     return Scaffold(
         appBar: GirafAppBar(title: "Pictogram"),
         body: Column(
@@ -18,7 +20,7 @@ class PictogramSearch extends StatelessWidget {
               child: TextField(
                 onChanged: bloc.search,
                 decoration: InputDecoration(
-                    suffixIcon: Icon(Icons.search),
+                    suffixIcon: const Icon(Icons.search),
                     hintText: "Søg her...",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50))),
@@ -33,34 +35,23 @@ class PictogramSearch extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
                       if (snapshot.data == null) {
-                        return CircularProgressIndicator();
+                        return const Center(
+                            child: const CircularProgressIndicator());
                       }
 
                       return GridView.count(
                         crossAxisCount: 4,
-                        children: snapshot.data.map((PictogramModel gram) {
-                          return _buildIcon(context, gram);
-                        }).toList(),
+                        children: snapshot.data
+                            .map((PictogramModel pictogram) => PictogramImage(
+                                pictogram: pictogram,
+                                onPressed: () =>
+                                    Routes.pop(context, pictogram)))
+                            .toList(),
                       );
                     }),
               ),
             ),
           ],
         ));
-  }
-
-  Widget _buildIcon(BuildContext context, PictogramModel gram) {
-    PictogramImageBloc bloc = PictogramImageBloc(Globals.api);
-
-    bloc.load(gram);
-
-    return StreamBuilder<Image>(
-      stream: bloc.image,
-      builder: (context, snapshot) {
-        return Card(
-            child: FittedBox(
-                fit: BoxFit.contain, child: snapshot.data));
-      }
-    );
   }
 }
