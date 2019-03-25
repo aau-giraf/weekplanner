@@ -5,7 +5,6 @@ import 'package:weekplanner/providers/http/http.dart';
 
 /// Week endpoints
 class WeekApi {
-
   /// Default constructor
   WeekApi(this._http);
 
@@ -17,8 +16,8 @@ class WeekApi {
   Observable<List<WeekNameModel>> getNames(String id) {
     return _http.get('/$id/week').map((Response res) {
       if (res.json['data'] is List) {
-        return res.json['data']
-            .map((dynamic json) => WeekNameModel.fromJson(json))
+        return List<Map<String, dynamic>>.from(res.json['data'])
+            .map((Map<String, dynamic> json) => WeekNameModel.fromJson(json))
             .toList();
       } else {
         return null;
@@ -44,8 +43,8 @@ class WeekApi {
   /// [id] User ID
   /// [year] Year the week is in
   /// [weekNumber] The week-number of the week
-  Observable<WeekModel> update(String id, int year, int weekNumber,
-      WeekModel week) {
+  Observable<WeekModel> update(
+      String id, int year, int weekNumber, WeekModel week) {
     return _http
         .put('/$id/week/$year/$weekNumber', week.toJson())
         .map((Response res) {

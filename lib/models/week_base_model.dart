@@ -22,7 +22,7 @@ abstract class WeekBaseModel {
 
     // WeekModel sometimes dont have days
     if(json['days'] != null && json['days'] is List) {
-      days = (json['days']).map(
+      days = List<Map<String, dynamic>>.from(json['days']).map(
               (Map<String, dynamic> element) => WeekdayModel.fromJson(element)
       ).toList();
     }

@@ -10,19 +10,20 @@ import 'package:weekplanner/models/weekday_color_model.dart';
 class SettingsModel implements Model {
   SettingsModel(
       {@required this.orientation,
-        @required this.completeMark,
-        @required this.cancelMark,
-        @required this.defaultTimer,
-        this.timerSeconds,
-        this.activitiesCount,
-        @required this.theme,
-        this.nrOfDaysToDisplay,
-        this.greyscale,
-        this.weekDayColors});
+      @required this.completeMark,
+      @required this.cancelMark,
+      @required this.defaultTimer,
+      this.timerSeconds,
+      this.activitiesCount,
+      @required this.theme,
+      this.nrOfDaysToDisplay,
+      this.greyscale,
+      this.weekDayColors});
 
   SettingsModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
-      throw const FormatException('[SettingModel]: Cannot initialize from null');
+      throw const FormatException(
+          '[SettingModel]: Cannot initialize from null');
     }
 
     orientation = Orientation.values[(json['orientation']) - 1];
@@ -35,13 +36,13 @@ class SettingsModel implements Model {
     nrOfDaysToDisplay = json['nrOfDaysToDisplay'];
     greyscale = json['greyScale'];
     if (json['weekDayColors'] != null && json['weekDayColors'] is List) {
-      weekDayColors = (json['weekDayColors'])
-          .map((Map<String, dynamic> value) => WeekdayColorModel.fromJson(value))
+      weekDayColors = List<Map<String, dynamic>>.from(json['weekDayColors'])
+          .map(
+              (Map<String, dynamic> value) => WeekdayColorModel.fromJson(value))
           .toList();
     } else {
       // TODO(TobiasPalludan): Throw appropriate error.
     }
-
   }
 
   /// Preferred orientation of device/screen
@@ -85,7 +86,8 @@ class SettingsModel implements Model {
       'theme': theme.index + 1,
       'nrOfDaysToDisplay': nrOfDaysToDisplay,
       'greyScale': greyscale,
-      'weekDayColors': weekDayColors?.map((WeekdayColorModel e) => e.toJson())?.toList()
+      'weekDayColors':
+          weekDayColors?.map((WeekdayColorModel e) => e.toJson())?.toList()
     };
   }
 }

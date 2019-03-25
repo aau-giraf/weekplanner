@@ -28,7 +28,8 @@ class PictogramApi {
 
     return _http.get('/pictogram' + uri.toString()).map((Response res) {
       if (res.json['data'] is List) {
-        return res.json['data'].map((Map<String, dynamic> map) {
+        return List<Map<String, dynamic>>.from(res.json['data'])
+            .map((Map<String, dynamic> map) {
           return PictogramModel.fromJson(map);
         }).toList();
       } else {

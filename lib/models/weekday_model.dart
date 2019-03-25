@@ -17,7 +17,7 @@ class WeekdayModel implements Model {
 
     day = Weekday.values[json['day'] - 1];
     if (json['activities'] is List) {
-      activities = json['activities']
+      activities = List<Map<String, dynamic>>.from(json['activities'])
           .map((Map<String, dynamic> val) => ActivityModel.fromJson(val))
           .toList();
     } else {

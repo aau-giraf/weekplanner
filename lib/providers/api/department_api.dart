@@ -15,7 +15,7 @@ class DepartmentApi {
   Observable<List<DepartmentNameModel>> departmentNames() {
     return _http.get('/').map((Response res) {
       if (res.json['data'] is List) {
-        return res.json['data']
+        return List<Map<String, dynamic>>.from(res.json['data'])
             .map((Map<String, dynamic> name) =>
                 DepartmentNameModel.fromJson(name))
             .toList();
@@ -51,7 +51,7 @@ class DepartmentApi {
   Observable<List<UsernameModel>> getDepartmentUsers(int id) {
     return _http.get('/$id/citizens').map((Response res) {
       if (res.json['data'] is List) {
-        return res.json['data']
+        return List<Map<String, dynamic>>.from(res.json['data'])
             .map((Map<String, dynamic> name) => UsernameModel.fromJson(name))
             .toList();
       } else {

@@ -18,8 +18,7 @@ class ResponseModel<T> {
             (ErrorKey f) => f.toString() == json['errorKey'],
         orElse: () => null);
     if (json['errorProperties'] is List) {
-      errorProperties =
-          (json['errorProperties']).toList();
+      errorProperties = List<String>.from(json['errorProperties']).toList();
     } else {
       // TODO(TobiasPalludan): Throw appropriate error.
     }

@@ -84,7 +84,7 @@ class UserApi {
   Observable<List<UsernameModel>> getCitizens(String id) {
     return _http.get('/$id/citizens').map((Response res) {
       if (res.json['data'] is List) {
-        return res.json['data']
+        return List<Map<String, dynamic>>.from(res.json['data'])
             .map((Map<String, dynamic> val) => UsernameModel.fromJson(val))
             .toList();
       } else {
@@ -100,7 +100,7 @@ class UserApi {
   Observable<List<UsernameModel>> getGuardians(String id) {
     return _http.get('/$id/guardians').map((Response res) {
       if (res.json['data'] is List) {
-        return res.json['data']
+        return List<Map<String, dynamic>>.from(res.json['data'])
             .map((Map<String, dynamic> val) => UsernameModel.fromJson(val))
             .toList();
       } else {
@@ -115,7 +115,8 @@ class UserApi {
   /// [guardianId] The guardian
   /// [citizenId] The citizen to be added to the guardian
   Observable<bool> addCitizenToGuardian(String guardianId, String citizenId) {
-    return _http.post('/$guardianId/citizens/$citizenId').map(
-        (Response res) => res.json['success']);
+    return _http
+        .post('/$guardianId/citizens/$citizenId')
+        .map((Response res) => res.json['success']);
   }
 }
