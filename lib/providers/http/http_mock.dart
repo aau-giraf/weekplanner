@@ -2,22 +2,32 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/providers/http/http.dart';
 
+/// HTTP Method
 enum Method { get, post, put, delete, patch }
 
+/// A call to the Http
 class Call {
-  final Method method;
-  final String url;
-  PublishSubject<dynamic> flush; // ignore: close_sinks
-
+  /// Default constructor
   Call(this.method, this.url) {
     flush = PublishSubject<dynamic>();
   }
+
+  /// Which method was used
+  final Method method;
+
+  /// What url was the call made on
+  final String url;
+
+  /// Flush results
+  PublishSubject<dynamic> flush; // ignore: close_sinks
 }
 
+/// Flush results to test
 class Flusher {
-  Call _call;
-
+  /// Default constructor
   Flusher(this._call);
+
+  Call _call;
 
   /// Flush a body to our listener
   ///
@@ -34,14 +44,15 @@ class Flusher {
   }
 }
 
+/// Mocking class for HttpClient
 class HttpMock implements Http {
-  List<Call> calls = List();
+  final List<Call> _calls = <Call>[];
 
   /// Ensure that there are no requests that are not already expected
   void verify() {
-    if (calls.length > 0) {
-      throw Exception("Expected no requests, found: \n" +
-          calls.map((call) => "[${call.method}] ${call.url}").join("\n"));
+    if (_calls.isNotEmpty) {
+      throw Exception('Expected no requests, found: \n' +
+          _calls.map((Call call) => '[${call.method}] ${call.url}').join('\n'));
     }
   }
 
@@ -50,15 +61,15 @@ class HttpMock implements Http {
   /// [method] One of delete, get, patch, post, or put.
   /// [url] The url that is expected
   Flusher expectOne({Method method, @required String url}) {
-    int index = calls.indexWhere(
-        (call) => call.url == url && (method == null || method == call.method));
+    final int index = _calls.indexWhere((Call call) =>
+        call.url == url && (method == null || method == call.method));
 
     if (index == -1) {
-      throw Exception("Expected [$method] $url, found none");
+      throw Exception('Expected [$method] $url, found none');
     }
 
-    Call call = calls[index];
-    calls.removeAt(index);
+    final Call call = _calls[index];
+    _calls.removeAt(index);
     return Flusher(call);
   }
 
@@ -67,44 +78,41 @@ class HttpMock implements Http {
   /// [method] One of delete, get, patch, post, or put.
   /// [url] The url that not expected
   void expectNone({Method method, @required String url}) {
-    for (Call call in calls) {
+    for (Call call in _calls) {
       if (call.url == url && (method == null || method == call.method)) {
-        throw Exception("Found [$method] $url, expected none");
+        throw Exception('Found [$method] $url, expected none');
       }
     }
   }
 
   @override
-  Observable<Response> delete(String url, {bool raw: false}) {
+  Observable<Response> delete(String url, {bool raw = false}) {
     return _reqToRes(Method.delete, url);
   }
 
   @override
-  Observable<Response> get(String url, {bool raw: false}) {
+  Observable<Response> get(String url, {bool raw = false}) {
     return _reqToRes(Method.get, url);
   }
 
   @override
-  Observable<Response> patch(String url, Map<String, dynamic> body,
-      {bool raw: false}) {
+  Observable<Response> patch(String url, [Map<String, dynamic> body]) {
     return _reqToRes(Method.patch, url);
   }
 
   @override
-  Observable<Response> post(String url, Map<String, dynamic> body,
-      {bool raw: false}) {
+  Observable<Response> post(String url, [Map<String, dynamic> body]) {
     return _reqToRes(Method.post, url);
   }
 
   @override
-  Observable<Response> put(String url, Map<String, dynamic> body,
-      {bool raw: false}) {
+  Observable<Response> put(String url, [Map<String, dynamic> body]) {
     return _reqToRes(Method.put, url);
   }
 
   Observable<Response> _reqToRes(Method method, String url) {
-    Call call = Call(method, url);
-    calls.add(call);
+    final Call call = Call(method, url);
+    _calls.add(call);
 
     return call.flush.map((dynamic response) {
       if (response is Exception) {

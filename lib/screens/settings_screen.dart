@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
-import '../widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
+/// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
 
-  final SettingsBloc settingsBloc;
-
-  SettingsScreen() : settingsBloc = di.getDependency<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: GirafAppBar(
           title: 'Settings'
       ),
@@ -36,26 +35,26 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildThemeSection(){
     return ListView(
         children:<Widget>[
-          Text("Tema"),
+          const Text('Tema'),
           StreamBuilder<GirafTheme>(
-            stream: settingsBloc.theme,
+            stream: _settingsBloc.theme,
             initialData: GirafTheme.AndroidBlue,
             builder: (BuildContext context, AsyncSnapshot<GirafTheme> snapshot){
-              return new Text("Selected: " + snapshot.data.toString());
+              return Text('Selected: ' + snapshot.data.toString());
             }
           ),
           StreamBuilder<List<GirafTheme>>(
-            stream: settingsBloc.themeList,
-            initialData: [],
+            stream: _settingsBloc.themeList,
+            initialData: const <GirafTheme>[],
             builder: (BuildContext context, AsyncSnapshot<List<GirafTheme>> snapshot){
-              return new ExpansionTile(
-                key: PageStorageKey(3),
-                title: Text("Valg af Tema"),
-                children: snapshot.data.map((element) {
+              return ExpansionTile(
+                key: const PageStorageKey<int>(3),
+                title: const Text('Valg af Tema'),
+                children: snapshot.data.map((GirafTheme element) {
                   return RaisedButton(
                     child: Text(element.toString()),
                     onPressed: (){
-                      settingsBloc.setTheme(element);
+                      _settingsBloc.setTheme(element);
                     },
                   );
                 }
@@ -64,28 +63,28 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
 
-          new ExpansionTile(
-            key: PageStorageKey(3),
-            title: Text("Farver på ugeplan"),
-            children: <Widget>[
-              Text("Tema 1"),
-              Text("Tema 2")
+          ExpansionTile(
+            key: const PageStorageKey<int>(3),
+            title: const Text('Farver på ugeplan'),
+            children: const <Widget>[
+              Text('Tema 1'),
+              Text('Tema 2')
             ],
           ),
-          new ExpansionTile(
-            key: PageStorageKey(3),
-            title: Text("Tegn for udførelse"),
-            children: <Widget>[
-              Text("Tema 1"),
-              Text("Tema 2")
+          ExpansionTile(
+            key: const PageStorageKey<int>(3),
+            title: const Text('Tegn for udførelse'),
+            children: const <Widget>[
+              Text('Tema 1'),
+              Text('Tema 2')
             ],
           ),
-          new ExpansionTile(
-            key: PageStorageKey(3),
-            title: Text("Grå skala"),
-            children: <Widget>[
-              Text("Tema 1"),
-              Text("Tema 2")
+          ExpansionTile(
+            key: const PageStorageKey<int>(3),
+            title: const Text('Grå skala'),
+            children: const <Widget>[
+              Text('Tema 1'),
+              Text('Tema 2')
             ],
           ),
         ]
@@ -94,13 +93,13 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildOrientationSection(){
     return ListView(
         children:<Widget>[
-          Text("Orientering"),
-          new ExpansionTile(
-            key: PageStorageKey(3),
-            title: Text("Antal aktiviteter"),
-            children: <Widget>[
-              Text("Tema 1"),
-              Text("Tema 2")
+          const Text('Orientering'),
+          ExpansionTile(
+            key: const PageStorageKey<int>(3),
+            title: const Text('Antal aktiviteter'),
+            children: const <Widget>[
+              Text('Tema 1'),
+              Text('Tema 2')
             ],
           ),
         ]
@@ -109,10 +108,10 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildUgeplanSection(){
     return ListView(
         children:<Widget>[
-          Text("Ugeplan"),
-          new ExpansionTile(
-            key: PageStorageKey(3),
-            title: Text("Antal aktiviteter"),
+          const Text('Ugeplan'),
+          ExpansionTile(
+            key: const PageStorageKey<int>(3),
+            title: const Text('Antal aktiviteter'),
             children: <Widget>[
               RaisedButton(
                 child: const Text('Tema 1'),
