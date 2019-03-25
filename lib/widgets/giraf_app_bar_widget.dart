@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/blocs/user_info_bloc.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final AuthBloc _authBloc;
+  final UserInfoBloc _userInfoBloc;
 
   GirafAppBar({Key key, this.title})
       : _authBloc = di.getDependency<AuthBloc>(),
+        _userInfoBloc = di.getDependency<UserInfoBloc>(),
         preferredSize = Size.fromHeight(56.0),
         super(key: key);
+
 
   @override
   final Size preferredSize;
@@ -38,7 +42,14 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.place),
             tooltip: 'trains',
             onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.group),
+            onPressed: () {
+
+            },
           )
+
         ]);
   }
 }
