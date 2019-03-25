@@ -32,7 +32,7 @@ class Bootstrap {
     });
 
     di.registerDependency((Injector i) {
-      return WeekplansBloc();
+      return WeekplansBloc(i.getDependency<Api>());
     });
 
     di.registerDependency((Injector i) {

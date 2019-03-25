@@ -17,7 +17,7 @@ class WeekplansBloc extends BlocBase {
   GirafUserModel _user;
   bool _addWeekplan;
 
-  WeekplansBloc() : _api = di.getDependency<Api>();
+  WeekplansBloc(this._api);
 
 
   void load(GirafUserModel user, [bool addWeekplan = false]) {

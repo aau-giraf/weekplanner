@@ -12,12 +12,16 @@ dependencies:
   shared_preferences: ^0.5.1+1
   auto_size_text: ^1.1.0
   injector: ^1.0.6
+  mockito: ^4.0.0
 
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
+  async_test:
+    git:
+      url: https://github.com/ptope/async_test
   flutter_test:
     sdk: flutter
 

@@ -72,7 +72,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         //onTap: () => Navigator.push(context, //insert weekplan screen here with user in constructor ?),
         child: Icon(
           Icons.add,
-          size: constraint.maxWidth,
+          size: constraint.maxHeight,
         ));
   }
 
@@ -80,7 +80,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
     PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     print(weekplan.name);
 
-    if (weekplan.thumbnail != null) bloc.loadID(weekplan.thumbnail.id);
+    if (weekplan.thumbnail != null) bloc.loadPictogramById(weekplan.thumbnail.id);
 
     return Container(
       child: Column(

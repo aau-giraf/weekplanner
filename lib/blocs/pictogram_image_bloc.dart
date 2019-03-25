@@ -20,7 +20,7 @@ class PictogramImageBloc extends BlocBase {
     _api.pictogram.getImage(pictogram.id).listen(_image.add);
   }
 
-  void loadID(int id) {
+  void loadPictogramById(int id) {
     _api.pictogram.getImage(id).listen(_image.add);
   }
 

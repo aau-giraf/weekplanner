@@ -18,5 +18,5 @@ void main() {
           stream: di.getDependency<AuthBloc>().loggedIn,
           builder: (_, AsyncSnapshot<bool> snapshot) =>
               // In case we're logged in show WeekPlanner, otherwise, show login
-              snapshot.data ? WeekplanScreen() : LoginScreen())));
+              snapshot.data ? WeekplanScreen() : WeekplanSelectorScreen(GirafUserModel(id: "379d057b-85b1-41b6-a1bd-6448c132745b")))));
 }
