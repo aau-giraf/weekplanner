@@ -18,22 +18,18 @@ class Api {
   WeekTemplateApi weekTemplate;
   UserApi user;
 
-  String serverUrl;
-  int serverPort;
-  String protocol;
-  Api(this.protocol, this.serverUrl, this.serverPort) {
-    String baseUrl =
-        this.protocol + "://" + serverUrl + ":" + serverPort.toString();
+  String host;
+  Api(this.host) {
     Persistence persist = PersistenceClient();
-    account = AccountApi(HttpClient(baseUrl + "/v1", persist), persist);
-    status = StatusApi(HttpClient(baseUrl + "/v1/Status", persist));
+    account = AccountApi(HttpClient(host + "/v1", persist), persist);
+    status = StatusApi(HttpClient(host + "/v1/Status", persist));
     department =
-        DepartmentApi(HttpClient(baseUrl + "/v1/Department", persist), persist);
-    week = WeekApi(HttpClient(baseUrl + "/v1/User", persist));
-    pictogram = PictogramApi(HttpClient(baseUrl + "/v1/Pictogram", persist));
+        DepartmentApi(HttpClient(host + "/v1/Department", persist), persist);
+    week = WeekApi(HttpClient(host + "/v1/User", persist));
+    pictogram = PictogramApi(HttpClient(host + "/v1/Pictogram", persist));
     weekTemplate =
-        WeekTemplateApi(HttpClient(baseUrl + "/v1/WeekTemplate", persist));
-    user = UserApi(HttpClient(baseUrl + "/v1/User", persist));
+        WeekTemplateApi(HttpClient(host + "/v1/WeekTemplate", persist));
+    user = UserApi(HttpClient(host + "/v1/User", persist));
   }
 
   void dispose() {}

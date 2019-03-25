@@ -67,7 +67,7 @@ class LoginScreen extends StatelessWidget {
             : EdgeInsets.fromLTRB(200, 0, 200, 8),
         decoration: BoxDecoration(
           // The background of the login-screen
-          image: DecorationImage(
+          image: const DecorationImage(
             image: const AssetImage("assets/login_screen_background_image.png"),
             fit: BoxFit.cover,
           ),
@@ -101,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                           // Use email input type for emails.
                           decoration: InputDecoration.collapsed(
                             hintText: "Brugernavn",
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                                 color: const Color.fromRGBO(170, 170, 170, 1)),
                             fillColor: Colors.white,
                           ),
@@ -116,16 +116,16 @@ class LoginScreen extends StatelessWidget {
                             borderRadius:
                                 new BorderRadius.all(new Radius.circular(20.0)),
                             color: Colors.white),
-                        padding: new EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           style: portrait
                               ? TextStyle(fontSize: 30)
                               : TextStyle(fontSize: 20),
                           controller: passwordCtrl,
                           obscureText: true,
-                          decoration: InputDecoration.collapsed(
+                          decoration: const InputDecoration.collapsed(
                             hintText: 'Adgangskode',
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                                 color: const Color.fromRGBO(170, 170, 170, 1)),
                             fillColor: Colors.white,
                           ),
@@ -142,7 +142,7 @@ class LoginScreen extends StatelessWidget {
                                 borderRadius: new BorderRadius.circular(10.0)),
                             child: Text(
                               'Login',
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
                               loginAction(context);
@@ -153,7 +153,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     // Autologin button, only used for debugging
-                    isDebugMode
+                    Environment.getVar<bool>("DEBUG")
                         ? Container(
                             child: Transform.scale(
                               scale: 1.2,
@@ -162,7 +162,7 @@ class LoginScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10.0)),
                                 child: Text(
                                   'Auto-Login',
-                                  style: new TextStyle(color: Colors.white),
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () {
                                   usernameCtrl.text =
@@ -190,7 +190,7 @@ class LoginScreen extends StatelessWidget {
 
     return Transform.scale(
       scale: Portrait ? 1.0 : 0.5,
-      child: Image(
+      child: const Image(
         image: const AssetImage("assets/giraf_splash_logo.png"),
       ),
     );
