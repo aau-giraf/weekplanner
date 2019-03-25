@@ -3,21 +3,6 @@ import 'package:weekplanner/models/enums/access_level_enum.dart';
 import 'package:weekplanner/models/model.dart';
 
 class PictogramModel implements Model {
-  int id;
-
-  /// The last time the pictogram was edited.
-  DateTime lastEdit;
-
-  /// The title of the pictogram.
-  String title;
-
-  /// The accesslevel of the pictogram.
-  AccessLevel accessLevel;
-
-  String imageUrl;
-
-  String imageHash;
-
   PictogramModel({
     @required this.id,
     @required this.lastEdit,
@@ -29,21 +14,36 @@ class PictogramModel implements Model {
 
   PictogramModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
-      throw FormatException("[PictogramModel]: Cannot initialize from null");
+      throw const FormatException('[PictogramModel]: Cannot initialize from null');
     }
 
     id = json['id'];
     lastEdit =
-        json['lastEdit'] == null ? null : DateTime.parse(json['lastEdit']);
+    json['lastEdit'] == null ? null : DateTime.parse(json['lastEdit']);
     title = json['title'];
-    accessLevel = AccessLevel.values[(json['accessLevel'] as int) -1];
+    accessLevel = AccessLevel.values[(json['accessLevel']) -1];
     imageUrl = json['imageUrl'];
     imageHash = json['imageHash'];
   }
 
+  int id;
+
+  /// The last time the pictogram was edited.
+  DateTime lastEdit;
+
+  /// The title of the pictogram.
+  String title;
+
+  /// The access level of the pictogram.
+  AccessLevel accessLevel;
+
+  String imageUrl;
+
+  String imageHash;
+
   @override
   Map<String, dynamic> toJson() {
-    return {
+    return <String, dynamic>{
       'id': id,
       'lastEdit': lastEdit == null ? '' : lastEdit.toIso8601String(),
       'title': title,
