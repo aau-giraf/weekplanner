@@ -48,7 +48,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: 'Skift mode',
 
           onPressed: () {
-            toolbarBloc.setEditVisible(true);
+            // Implemented in another user story
           },
         ),
 
@@ -56,8 +56,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(Icons.settings),
           tooltip: 'Indstillinger',
           onPressed: () {
-            toolbarBloc.setEditVisible(false);
-            //Navigator.pushNamed(context, '/settings');
+            Navigator.pushNamed(context, '/settings');
           },
         ),
       ]
