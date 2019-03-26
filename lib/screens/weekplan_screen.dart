@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import '../widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
@@ -11,6 +13,7 @@ class WeekplanScreen extends StatelessWidget {
   final String title;
   final List<String> pictograms = ['assets/read.jpg', 'assets/read.jpg'];
 
+  final ToolbarBloc toolbarBloc;
   final SettingsBloc settingsBloc;
   final UserInfoBloc userInfoBloc;
 
@@ -21,6 +24,7 @@ class WeekplanScreen extends StatelessWidget {
   WeekplanScreen({Key key, this.title})
       : settingsBloc = di.getDependency<SettingsBloc>(),
         userInfoBloc = di.getDependency<UserInfoBloc>(),
+        toolbarBloc = di.getDependency<ToolbarBloc>(),
         super(key: key);
 
   @override
