@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
@@ -38,12 +39,12 @@ class WeekplanScreen extends StatelessWidget {
                 return Text(snapshot.data.toString());
               },
             ),
-            StreamBuilder<bool>(
-              stream: this.userInfoBloc.changeUserMode,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamBuilder<Tuple2<String, int>>(
+              stream: this.userInfoBloc.dayOfWeekAndUsermode,
+              initialData: Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  visible: snapshot.data,
+                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 1,
                   child: Expanded(
                       child: Card(
                           color: Color(0xFF007700),
@@ -51,12 +52,12 @@ class WeekplanScreen extends StatelessWidget {
                 );
               },
             ),
-            StreamBuilder<bool>(
-              stream: this.userInfoBloc.changeUserMode,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamBuilder<Tuple2<String, int>>(
+              stream: this.userInfoBloc.dayOfWeekAndUsermode,
+              initialData: Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  visible: snapshot.data,
+                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 2,
                   child: Expanded(
                       child: Card(
                           color: Color(0xFF800080),
@@ -64,12 +65,12 @@ class WeekplanScreen extends StatelessWidget {
                 );
               },
             ),
-            StreamBuilder<bool>(
-              stream: this.userInfoBloc.changeUserMode,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamBuilder<Tuple2<String, int>>(
+              stream: this.userInfoBloc.dayOfWeekAndUsermode,
+              initialData: Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  visible: snapshot.data,
+                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 3,
                   child: Expanded(
                       child: Card(
                           color: Color(0xFFFF8500),
@@ -77,12 +78,12 @@ class WeekplanScreen extends StatelessWidget {
                 );
               },
             ),
-            StreamBuilder<bool>(
-              stream: this.userInfoBloc.changeUserMode,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamBuilder<Tuple2<String, int>>(
+              stream: this.userInfoBloc.dayOfWeekAndUsermode,
+              initialData: Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  visible: snapshot.data,
+                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 4,
                   child: Expanded(
                       child: Card(
                           color: Color(0xFF0000FF),
@@ -91,12 +92,12 @@ class WeekplanScreen extends StatelessWidget {
               },
             ),
 
-            StreamBuilder<bool>(
-              stream: this.userInfoBloc.changeUserMode,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamBuilder<Tuple2<String, int>>(
+              stream: this.userInfoBloc.dayOfWeekAndUsermode,
+              initialData: Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  visible: snapshot.data,
+                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 5,
                   child: Expanded(
                       child: Card(
                           color: Color(0xFFFFDD00),
@@ -105,12 +106,12 @@ class WeekplanScreen extends StatelessWidget {
               },
             ),
 
-            StreamBuilder<bool>(
-              stream: this.userInfoBloc.changeUserMode,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamBuilder<Tuple2<String, int>>(
+              stream: this.userInfoBloc.dayOfWeekAndUsermode,
+              initialData: Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  visible: snapshot.data,
+                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 6,
                   child: Expanded(
                       child: Card(
                           color: Color(0xFFFF0000),
@@ -119,12 +120,12 @@ class WeekplanScreen extends StatelessWidget {
               },
             ),
 
-            StreamBuilder<bool>(
-              stream: this.userInfoBloc.changeUserMode,
-              initialData: true,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            StreamBuilder<Tuple2<String, int>>(
+              stream: this.userInfoBloc.dayOfWeekAndUsermode,
+              initialData: Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  visible: snapshot.data,
+                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 7,
                   child: Expanded(
                       child: Card(
                           color: Color(0xFFFFFFFF),
