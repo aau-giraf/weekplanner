@@ -13,51 +13,71 @@ class LogoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    bool portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    bool keyboard = MediaQuery.of(context).viewInsets.bottom > 100;
     return Scaffold(
-      appBar: GirafAppBar(
-        title: 'Ugeplan',
-      ),
+      resizeToAvoidBottomPadding: false,
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
-        padding: new EdgeInsets.all(20.0),
+        padding: portrait
+            ? EdgeInsets.fromLTRB(50, 0, 50, 0)
+            : EdgeInsets.fromLTRB(200, 0, 200, 8),
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/login_screen_background_image.png"),
+          // The background of the login-screen
+          image: const DecorationImage(
+            image: const AssetImage("assets/login_screen_background_image.png"),
             fit: BoxFit.cover,
           ),
         ),
-        child: Container(
-          child: Column(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image(image: AssetImage("assets/giraf_splash_logo.png")),
-              Expanded(
-                child: Form(
-                  child: ListView(
-                    children: <Widget>[
-                      Container(
-                        child: new RaisedButton(
-                          child: new Text(
-                            'Log ud',
-                            style: new TextStyle(color: Colors.white),
+              GetLogo(keyboard, portrait),
+              Form(
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      child: Container(
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(10.0)),
+                            child: Text(
+                              'Log ud',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              // Once the logout method is called the auth controller will redirect to the login screen.
+                              this._authBloc.logout();
+                            },
+                            color: const Color.fromRGBO(48, 81, 118, 1),
                           ),
-                          onPressed: () {
-                            // Once the logout function has been called the user will be redirected to the login screen.
-                            this._authBloc.logout();
-                          },
-                          color: Colors.blue,
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               )
-            ],
-          ),
-        ),
+            ]),
       ),
     );
   }
+
+  Widget GetLogo(bool Keyboard, bool Portrait) {
+    if (Keyboard) {
+      return Container();
+    }
+
+    return Transform.scale(
+      scale: Portrait ? 1.0 : 0.5,
+      child: const Image(
+        image: const AssetImage("assets/giraf_splash_logo.png"),
+      ),
+    );
+  }
+
 }
