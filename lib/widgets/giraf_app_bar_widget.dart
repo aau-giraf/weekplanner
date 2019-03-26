@@ -49,11 +49,11 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: 'Skift mode',
 
           onPressed: () {
-            if (_userInfoBloc.isGuardian) {
-              _userInfoBloc.setUserMode('Citizen');
+            if (userInfoBloc.isGuardian) {
+              userInfoBloc.setUserMode('Citizen');
             }
             else{
-              _userInfoBloc.setUserMode('Guardian');
+              userInfoBloc.setUserMode('Guardian');
             }
           },
         ),
