@@ -3,12 +3,13 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/di.dart';
 
+// Screen used to confirm the users logout.
 class LogoutScreen extends StatelessWidget {
-  final AuthBloc authBloc;
 
-  LogoutScreen() : authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc _authBloc;
 
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  // The logout screen uses the AuthBloc to determine if the user has logged in or not and will use its function to logout.
+  LogoutScreen() : _authBloc = di.getDependency<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,6 @@ class LogoutScreen extends StatelessWidget {
                 Image(image: AssetImage("assets/giraf_splash_logo.png")),
                 Expanded(
                     child: Form(
-                      key: this._formKey,
                       child: ListView(
                         children: <Widget>[
                           Container(
@@ -45,7 +45,8 @@ class LogoutScreen extends StatelessWidget {
                                 style: new TextStyle(color: Colors.white),
                               ),
                               onPressed: () {
-                                this.authBloc.logout();
+                                // Once the logout function has been called the user will be redirected to the login screen.
+                                this._authBloc.logout();
                               },
                               color: Colors.blue,
                             ),
