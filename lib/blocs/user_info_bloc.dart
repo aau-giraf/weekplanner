@@ -12,8 +12,13 @@ class UserInfoBloc extends BlocBase{
   BehaviorSubject<bool> _changeUserMode = new BehaviorSubject();
 
 
+
   void setUserMode(bool isGuardian){
     _changeUserMode.add(isGuardian);
+  }
+
+  void getDate(){
+    print(DateTime.now().weekday);
   }
 
 
