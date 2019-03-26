@@ -148,6 +148,31 @@ void main() {
 
   });
 
+  testWidgets('All days should be visible after toggle of usermode', (WidgetTester tester) async {
+    WeekplanScreen weekplanScreen = WeekplanScreen(title:'WeekplanScreen');
+    await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
+    userInfoBloc.setUserMode('Citizen');
+    await tester.pumpAndSettle();
+    userInfoBloc.setUserMode('Guardian');
+    await tester.pumpAndSettle();
+    Visibility visibilityMon = tester.widget(find.byKey(Key('visibilityMon')));
+    Visibility visibilityTue = tester.widget(find.byKey(Key('visibilityTue')));
+    Visibility visibilityWed = tester.widget(find.byKey(Key('visibilityWed')));
+    Visibility visibilityThu = tester.widget(find.byKey(Key('visibilityThu')));
+    Visibility visibilityFri = tester.widget(find.byKey(Key('visibilityFri')));
+    Visibility visibilitySat = tester.widget(find.byKey(Key('visibilitySat')));
+    Visibility visibilitySun = tester.widget(find.byKey(Key('visibilitySun')));
+
+    expect(visibilityMon.visible, true);
+    expect(visibilityTue.visible, true);
+    expect(visibilityWed.visible, true);
+    expect(visibilityThu.visible, true);
+    expect(visibilityFri.visible, true);
+    expect(visibilitySat.visible, true);
+    expect(visibilitySun.visible, true);
+
+  });
+
   testWidgets('Monday should be visible in citizenmode', (WidgetTester tester) async {
     WeekplanScreen weekplanScreen = WeekplanScreen(title: 'WeekplanScreen');
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,18));
