@@ -43,8 +43,12 @@ void main() {
 
     List<WeekNameModel> weekNameModelList = [];
     WeekNameModel weekNameModel =
-        WeekNameModel(name: "name", weekNumber: 1, weekYear: 1);
+      WeekNameModel(name: "name", weekNumber: 1, weekYear: 1);
+    WeekNameModel weekNameModel2 =
+      WeekNameModel(name: "name2", weekNumber: 2, weekYear: 2);
+
     weekNameModelList.add(weekNameModel);
+    weekNameModelList.add(weekNameModel2);
 
     WeekModel weekModel = WeekModel(name: "weekModel");
 
@@ -54,14 +58,18 @@ void main() {
     when(weekApi.get("test", weekNameModel.weekYear, weekNameModel.weekNumber))
         .thenAnswer((_) => BehaviorSubject.seeded(weekModel));
 
+    when(weekApi.get("test", weekNameModel2.weekYear, weekNameModel2.weekNumber))
+        .thenAnswer((_) => BehaviorSubject.seeded(weekModel));
+
     di.clearAll();
     di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
   });
 
-  // testWidgets('renders', (WidgetTester tester) async {
-  //   await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
-  // });
+  testWidgets('renders', (WidgetTester tester) async {
+     await tester.pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+  });
 
   testWidgets("Has Giraf App Bar", (WidgetTester tester) async {
     await tester
@@ -70,6 +78,19 @@ void main() {
     expect(find.byWidgetPredicate((widget) => widget is GirafAppBar),
         findsOneWidget);
   });
+
+  testWidgets("Test that GridView is rendered", (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+
+    expect(find.byWidgetPredicate((widget) => widget is GridView), findsNWidgets(1));
+  });
+
+  testWidgets("Test that add icon is rendered", (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pump();
+    //expect(find.byIcon(Icons.add), findsOneWidget);
+  });
+
 
   // testWidgets("Display spinner on loading", (WidgetTester tester) async {
   //   final Completer<bool> done = Completer<bool>();

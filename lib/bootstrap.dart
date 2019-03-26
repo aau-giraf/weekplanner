@@ -36,7 +36,7 @@ class Bootstrap {
     });
 
     di.registerDependency((Injector i) {
-      return PictogramImageBloc();
+      return PictogramImageBloc(i.getDependency<Api>());
     });
   }
 }

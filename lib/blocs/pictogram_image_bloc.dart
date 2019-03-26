@@ -14,7 +14,7 @@ class PictogramImageBloc extends BlocBase {
 
   final Api _api;
 
-  PictogramImageBloc() : _api = di.getDependency<Api>();
+  PictogramImageBloc(this._api);
 
   void load(PictogramModel pictogram) {
     _api.pictogram.getImage(pictogram.id).listen(_image.add);
