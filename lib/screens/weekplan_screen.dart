@@ -21,6 +21,7 @@ class WeekplanScreen extends StatelessWidget {
 
   WeekplanScreen({Key key})
       : settingsBloc = di.getDependency<SettingsBloc>(),
+        //TODO: Find out if weekplanBloc is unnecessary and if we should subscribe to another bloc instead
         weekplanBloc = di.getDependency<WeekplanBloc>(),
         super(key: key);
 
@@ -47,78 +48,75 @@ class WeekplanScreen extends StatelessWidget {
 }
 
 Row buildWeeks(WeekModel weekModel) {
-  List<List<int>> weekColors = [
-    [8, 160, 69],
-    [84, 13, 110],
-    [247, 127, 0],
-    [0, 71, 119],
-    [249, 200, 14],
-    [219, 43, 57],
-    [255, 255, 255]
+  List<int> weekColors = [
+    0xFF08A045,
+    0xFF540D6E,
+    0xFFF77F00,
+    0xFF004777,
+    0xFFF9C80E,
+    0xFFDB2B39,
+    0xFFFFFFFF
   ];
   List<Widget> weekDays = List<Widget>();
   for (var i = 0; i < weekModel.days.length; i++) {
     weekDays.add(new Expanded(
         child: Card(
-            color: Color.fromARGB(
-                255, weekColors[i][0], weekColors[i][1], weekColors[i][2]),
-            child: Day(weekModel.days[i].day,
-                weekModel.days[i].activities))));
+            color: Color(weekColors[i]),
+            child: Day(weekModel.days[i].day, weekModel.days[i].activities))));
   }
   return new Row(children: weekDays);
 }
 
-Column Day(Weekday day, List<ActivityModel> myList) {
+Column Day(Weekday day, List<ActivityModel> activities) {
   return Column(
     children: <Widget>[
       translateWeekDay(day),
       Expanded(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            if (myList.isEmpty || myList == null) {
-              return Text("No Pictograms");
-            }
-
             return PictogramImage(
-                pictogram: myList[index].pictogram,
-                onPressed: () =>
-                    //TODO : redirect to ShowActivity when it is implemented
-                    Routes.push(context, WeekplanScreen()));
+                //TODO: Redirect to show activity when it is implemented
+                pictogram: activities[index].pictogram, onPressed: () => {});
           },
-          itemCount: myList.length,
+          itemCount: activities.length,
         ),
       ),
     ],
   );
 }
 
-Text translateWeekDay(Weekday day) {
+Card translateWeekDay(Weekday day) {
   String translation;
   switch (day) {
-        case Weekday.Monday:
-          translation = 'Mandag';
-          break;
-        case Weekday.Tuesday:
-          translation = 'Tirsdag';
-          break;
-        case Weekday.Wednesday:
-          translation = 'Onsdag';
-          break;
-        case Weekday.Thursday:
-          translation = 'Torsdag';
-          break;
-        case Weekday.Friday:
-          translation = 'Fredag';
-          break;
-        case Weekday.Saturday:
-          translation = 'Lørdag';
-          break;
-        case Weekday.Sunday:
-          translation = 'Søndag';
-          break;
-        default:
-          translation = '';
-          break;
-      }
-  return Text(translation, style: TextStyle(fontWeight: FontWeight.bold));
+    case Weekday.Monday:
+      translation = 'Mandag';
+      break;
+    case Weekday.Tuesday:
+      translation = 'Tirsdag';
+      break;
+    case Weekday.Wednesday:
+      translation = 'Onsdag';
+      break;
+    case Weekday.Thursday:
+      translation = 'Torsdag';
+      break;
+    case Weekday.Friday:
+      translation = 'Fredag';
+      break;
+    case Weekday.Saturday:
+      translation = 'Lørdag';
+      break;
+    case Weekday.Sunday:
+      translation = 'Søndag';
+      break;
+    default:
+      translation = '';
+      break;
+  }
+  return Card(
+    color: Color(0xA0FFFFFF),
+    child: ListTile(
+      title: Text(translation, style: TextStyle(fontWeight: FontWeight.bold,), textAlign: TextAlign.center,)
+    ) 
+  );
 }
