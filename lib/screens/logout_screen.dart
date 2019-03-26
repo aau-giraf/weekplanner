@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/globals.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/di.dart';
 
-class Logout extends StatelessWidget {
-  AuthBloc authBloc = Globals.authBloc;
+class LogoutScreen extends StatelessWidget {
+  final AuthBloc authBloc;
+
+  LogoutScreen() : authBloc = di.getDependency<AuthBloc>();
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
@@ -39,12 +41,11 @@ class Logout extends StatelessWidget {
                           Container(
                             child: new RaisedButton(
                               child: new Text(
-                                'Log out',
+                                'Log ud',
                                 style: new TextStyle(color: Colors.white),
                               ),
                               onPressed: () {
                                 this.authBloc.logout();
-                                Navigator.pushNamed(context, "/login");
                               },
                               color: Colors.blue,
                             ),
