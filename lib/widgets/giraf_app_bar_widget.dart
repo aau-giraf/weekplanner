@@ -46,7 +46,13 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: Icon(Icons.group),
             onPressed: () {
-              _userInfoBloc.getDate();
+              if (_userInfoBloc.isGuardian) {
+                _userInfoBloc.setUserMode("Citizen");
+              }
+              else{
+                _userInfoBloc.setUserMode("Guardian");
+              }
+
             },
           )
 

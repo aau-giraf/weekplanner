@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/user_info_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
@@ -10,6 +11,7 @@ class WeekplanScreen extends StatelessWidget {
   final List<String> pictograms = ['assets/read.jpg', 'assets/read.jpg'];
 
   final SettingsBloc settingsBloc;
+  final UserInfoBloc userInfoBloc;
 
   final List<Widget> myList = <Widget>[
     new Card(child: Image.asset('assets/read.jpg')),
@@ -17,6 +19,7 @@ class WeekplanScreen extends StatelessWidget {
 
   WeekplanScreen({Key key, this.title})
       : settingsBloc = di.getDependency<SettingsBloc>(),
+        userInfoBloc = di.getDependency<UserInfoBloc>(),
         super(key: key);
 
   @override
@@ -35,27 +38,100 @@ class WeekplanScreen extends StatelessWidget {
                 return Text(snapshot.data.toString());
               },
             ),
-            Expanded(
-                child: Card(
-                    color: Color(0xFF007700), child: Day('Mandag', myList))),
-            Expanded(
-                child: Card(
-                    color: Color(0xFF800080), child: Day('Tirsdag', myList))),
-            Expanded(
-                child: Card(
-                    color: Color(0xFFFF8500), child: Day('Onsdag', myList))),
-            Expanded(
-                child: Card(
-                    color: Color(0xFF0000FF), child: Day('Torsdag', myList))),
-            Expanded(
-                child: Card(
-                    color: Color(0xFFFFDD00), child: Day('Fredag', myList))),
-            Expanded(
-                child: Card(
-                    color: Color(0xFFFF0000), child: Day('Lørdag', myList))),
-            Expanded(
-                child: Card(
-                    color: Color(0xFFFFFFFF), child: Day('Søndag', myList))),
+            StreamBuilder<bool>(
+              stream: this.userInfoBloc.changeUserMode,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  visible: snapshot.data,
+                  child: Expanded(
+                      child: Card(
+                          color: Color(0xFF007700),
+                          child: Day('Mandag', myList))),
+                );
+              },
+            ),
+            StreamBuilder<bool>(
+              stream: this.userInfoBloc.changeUserMode,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  visible: snapshot.data,
+                  child: Expanded(
+                      child: Card(
+                          color: Color(0xFF800080),
+                          child: Day('Tirsdag', myList))),
+                );
+              },
+            ),
+            StreamBuilder<bool>(
+              stream: this.userInfoBloc.changeUserMode,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  visible: snapshot.data,
+                  child: Expanded(
+                      child: Card(
+                          color: Color(0xFFFF8500),
+                          child: Day('Onsdag', myList))),
+                );
+              },
+            ),
+            StreamBuilder<bool>(
+              stream: this.userInfoBloc.changeUserMode,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  visible: snapshot.data,
+                  child: Expanded(
+                      child: Card(
+                          color: Color(0xFF0000FF),
+                          child: Day('Torsdag', myList))),
+                );
+              },
+            ),
+
+            StreamBuilder<bool>(
+              stream: this.userInfoBloc.changeUserMode,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  visible: snapshot.data,
+                  child: Expanded(
+                      child: Card(
+                          color: Color(0xFFFFDD00),
+                          child: Day('Fredag', myList))),
+                );
+              },
+            ),
+
+            StreamBuilder<bool>(
+              stream: this.userInfoBloc.changeUserMode,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  visible: snapshot.data,
+                  child: Expanded(
+                      child: Card(
+                          color: Color(0xFFFF0000),
+                          child: Day('Lørdag', myList))),
+                );
+              },
+            ),
+
+            StreamBuilder<bool>(
+              stream: this.userInfoBloc.changeUserMode,
+              initialData: true,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  visible: snapshot.data,
+                  child: Expanded(
+                      child: Card(
+                          color: Color(0xFFFFFFFF),
+                          child: Day('Søndag', myList))),
+                );
+              },
+            ),
           ],
         ));
   }
