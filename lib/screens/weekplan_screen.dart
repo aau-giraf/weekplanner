@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
-import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
@@ -13,21 +11,18 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 class WeekplanScreen extends StatelessWidget {
-  final SettingsBloc settingsBloc;
-  final WeekplanBloc weekplanBloc;
-  final List<Widget> myList = <Widget>[
-    new Card(child: Image.asset('assets/read.jpg')),
-  ];
+  final SettingsBloc settingsBloc = di.getDependency<SettingsBloc>();
+  //TODO: Find out if weekplanBloc is unnecessary and if we should subscribe to another bloc instead
+  final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
 
-  WeekplanScreen({Key key})
-      : settingsBloc = di.getDependency<SettingsBloc>(),
-        //TODO: Find out if weekplanBloc is unnecessary and if we should subscribe to another bloc instead
-        weekplanBloc = di.getDependency<WeekplanBloc>(),
-        super(key: key);
+  WeekplanScreen(
+      {Key key, WeekModel week})
+      : super(key: key) {
+    weekplanBloc.setWeek(week);
+  }
 
   @override
   Widget build(BuildContext context) {
-    weekplanBloc.getWeek1();
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ugeplan',
@@ -48,7 +43,7 @@ class WeekplanScreen extends StatelessWidget {
 }
 
 Row buildWeeks(WeekModel weekModel) {
-  List<int> weekColors = [
+  const List<int> weekColors = [
     0xFF08A045,
     0xFF540D6E,
     0xFFF77F00,
@@ -76,7 +71,8 @@ Column Day(Weekday day, List<ActivityModel> activities) {
           itemBuilder: (BuildContext context, int index) {
             return PictogramImage(
                 //TODO: Redirect to show activity when it is implemented
-                pictogram: activities[index].pictogram, onPressed: () => {});
+                pictogram: activities[index].pictogram,
+                onPressed: () => {});
           },
           itemCount: activities.length,
         ),
@@ -114,9 +110,13 @@ Card translateWeekDay(Weekday day) {
       break;
   }
   return Card(
-    color: Color(0xA0FFFFFF),
-    child: ListTile(
-      title: Text(translation, style: TextStyle(fontWeight: FontWeight.bold,), textAlign: TextAlign.center,)
-    ) 
-  );
+      color: Color(0xA0FFFFFF),
+      child: ListTile(
+          title: Text(
+        translation,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      )));
 }

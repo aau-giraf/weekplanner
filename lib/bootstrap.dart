@@ -31,7 +31,7 @@ class Bootstrap {
       return SettingsBloc();
     });
 
-    di.registerSingleton<WeekplanBloc>((Injector i) {
+    di.registerDependency<WeekplanBloc>((Injector i) {
       return WeekplanBloc(i.getDependency<Api>());
     });
 
