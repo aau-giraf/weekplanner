@@ -48,6 +48,7 @@ class WeekplanScreen extends StatelessWidget {
               initialData: Tuple2<String, int>('Guardian', 0),
               builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
+                  key: Key('visibilityMon'),
                   visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 1,
                   child: Expanded(
                       child: Card(
@@ -61,6 +62,7 @@ class WeekplanScreen extends StatelessWidget {
               initialData: Tuple2<String, int>('Guardian', 0),
               builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
+                  key: Key('visibilityTue'),
                   visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 2,
                   child: Expanded(
                       child: Card(
@@ -74,6 +76,7 @@ class WeekplanScreen extends StatelessWidget {
               initialData: Tuple2<String, int>('Guardian', 0),
               builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
+                  key: Key('visibilityWed'),
                   visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 3,
                   child: Expanded(
                       child: Card(
@@ -87,6 +90,7 @@ class WeekplanScreen extends StatelessWidget {
               initialData: Tuple2<String, int>('Guardian', 0),
               builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
+                  key: Key('visibilityThu'),
                   visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 4,
                   child: Expanded(
                       child: Card(
@@ -101,6 +105,7 @@ class WeekplanScreen extends StatelessWidget {
               initialData: Tuple2<String, int>('Guardian', 0),
               builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
+                  key: Key('visibilityFri'),
                   visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 5,
                   child: Expanded(
                       child: Card(
@@ -115,6 +120,7 @@ class WeekplanScreen extends StatelessWidget {
               initialData: Tuple2<String, int>('Guardian', 0),
               builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
+                  key: Key('visibilitySat'),
                   visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 6,
                   child: Expanded(
                       child: Card(
@@ -129,6 +135,7 @@ class WeekplanScreen extends StatelessWidget {
               initialData: Tuple2<String, int>('Guardian', 0),
               builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
+                  key: Key('visibilitySun'),
                   visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 7,
                   child: Expanded(
                       child: Card(

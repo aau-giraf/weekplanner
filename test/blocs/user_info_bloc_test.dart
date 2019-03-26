@@ -7,7 +7,7 @@ import 'package:weekplanner/blocs/user_info_bloc.dart';
 
 
 void main() {
-  final Clock mockClock = Clock.fixed(DateTime(2019, 03, 19));
+  Clock mockClock;
 
   test('initial value should be \'Guardian\'', () {
     final UserInfoBloc userInfoBloc = new UserInfoBloc();
@@ -25,7 +25,7 @@ void main() {
   });
 
   test('changeUserMode stream should emit Tuple2<String, int>(\'Citizen\',2', () {
-    final Clock mockClock = Clock.fixed(DateTime(2019, 03, 19));
+    mockClock = Clock.fixed(DateTime(2019, 03, 19));
     final UserInfoBloc userInfoBloc = new UserInfoBloc(mockClock);
     userInfoBloc.setUserMode('Citizen');
 

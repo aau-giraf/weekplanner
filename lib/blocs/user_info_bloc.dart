@@ -7,14 +7,15 @@ import 'package:tuple/tuple.dart';
 ///The UserInfoBloc is used to switch between Guardian and citizen mode
 class UserInfoBloc extends BlocBase{
 
-  Clock _clock;
+  /// Mainly used for testing, in order to simulate that it is different days.
+  Clock clock;
 
   UserInfoBloc([Clock clock]) {
     if (clock != null){
-      this._clock = clock;
+      this.clock = clock;
     }
     else{
-      this._clock = new Clock();
+      this.clock = new Clock();
     }
   }
 
@@ -46,7 +47,7 @@ class UserInfoBloc extends BlocBase{
 
   /// Gets the current day as an integer
   int getDate(){
-    return _clock.now().weekday;
+    return clock.now().weekday;
   }
 
 
