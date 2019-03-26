@@ -78,7 +78,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekPlanSelector(context, weekplan) {
     PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
-    print(weekplan.name);
 
     if (weekplan.thumbnail != null) bloc.loadPictogramById(weekplan.thumbnail.id);
 

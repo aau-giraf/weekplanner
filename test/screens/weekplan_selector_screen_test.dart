@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -9,7 +9,6 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/week_name_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
@@ -24,28 +23,15 @@ void main() {
   WeekplansBloc bloc;
   Api api;
   MockWeekApi weekApi;
-
-  // PictogramModel pictogramModel = PictogramModel(
-  //     id: 1,
-  //     lastEdit: null,
-  //     title: null,
-  //     accessLevel: null,
-  //     imageUrl: "http://any.tld",
-  //     imageHash: null);
-
   GirafUserModel mockUser = GirafUserModel(id: "test");
 
-  setUp(() {
-    api = Api("any");
-    weekApi = MockWeekApi();
-    api.week = weekApi;
-    bloc = WeekplansBloc(api);
-
+  setupApiCalls()
+  {
     List<WeekNameModel> weekNameModelList = [];
     WeekNameModel weekNameModel =
-      WeekNameModel(name: "name", weekNumber: 1, weekYear: 1);
+    WeekNameModel(name: "name", weekNumber: 1, weekYear: 1);
     WeekNameModel weekNameModel2 =
-      WeekNameModel(name: "name2", weekNumber: 2, weekYear: 2);
+    WeekNameModel(name: "name2", weekNumber: 2, weekYear: 2);
 
     weekNameModelList.add(weekNameModel);
     weekNameModelList.add(weekNameModel2);
@@ -60,6 +46,15 @@ void main() {
 
     when(weekApi.get("test", weekNameModel2.weekYear, weekNameModel2.weekNumber))
         .thenAnswer((_) => BehaviorSubject.seeded(weekModel));
+  }
+
+  setUp(() {
+    api = Api("any");
+    weekApi = MockWeekApi();
+    api.week = weekApi;
+    bloc = WeekplansBloc(api);
+
+    setupApiCalls();
 
     di.clearAll();
     di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
@@ -79,98 +74,17 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets("Test that GridView is rendered", (WidgetTester tester) async {
+  testWidgets("GridView is rendered", (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
     expect(find.byWidgetPredicate((widget) => widget is GridView), findsNWidgets(1));
   });
 
-  testWidgets("Test that add icon is rendered", (WidgetTester tester) async {
+  testWidgets("Weekmodels exist with the expected names", (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pump();
-    //expect(find.byIcon(Icons.add), findsOneWidget);
+    await tester.pump(Duration.zero);
+
+    expect(find.text("Tilføj Ugeplan"), findsNWidgets(1));
+    expect(find.text("weekModel"), findsNWidgets(2));
   });
-
-
-  // testWidgets("Display spinner on loading", (WidgetTester tester) async {
-  //   final Completer<bool> done = Completer<bool>();
-  //   const String query = "Kat";
-
-  //   when(pictogramApi.getAll(page: 1, pageSize: 10, query: query))
-  //       .thenAnswer((_) => BehaviorSubject.seeded([pictogramModel]));
-
-  //   await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
-  //   await tester.enterText(find.byType(TextField), query);
-
-  //   await tester.pump(Duration(milliseconds: 300));
-
-  //   expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-  //   bloc.pictograms.listen((List<PictogramModel> images) async {
-  //     await tester.pump();
-  //     expect(find.byType(CircularProgressIndicator), findsNothing);
-
-  //     if (images != null) {
-  //       done.complete(true);
-  //     }
-  //   });
-
-  //   await done.future;
-  // });
-
-  // testWidgets("Displays PictogramImage on result", (WidgetTester tester) async {
-  //   final Completer<bool> done = Completer<bool>();
-  //   const String query = "Kat";
-
-  //   when(pictogramApi.getAll(page: 1, pageSize: 10, query: query))
-  //       .thenAnswer((_) => BehaviorSubject.seeded([pictogramModel]));
-
-  //   await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
-  //   await tester.enterText(find.byType(TextField), query);
-
-  //   await tester.pump(Duration(milliseconds: 300));
-
-  //   bloc.pictograms.listen((List<PictogramModel> images) async {
-  //     await tester.pump();
-  //     expect(find.byType(PictogramImage), findsOneWidget);
-  //     done.complete(true);
-  //   });
-
-  //   await done.future;
-  // });
-
-  // testWidgets("Pops on selection", (WidgetTester tester) async {
-  //   final mockObserver = MockNavigatorObserver();
-  //   final Completer<bool> done = Completer<bool>();
-  //   const String query = "Kat";
-
-  //   when(pictogramApi.getAll(page: 1, pageSize: 10, query: query))
-  //       .thenAnswer((_) => BehaviorSubject.seeded([pictogramModel]));
-
-  //   await tester.pumpWidget(
-  //     MaterialApp(
-  //       home: PictogramSearch(),
-  //       navigatorObservers: [mockObserver],
-  //     ),
-  //   );
-  //   await tester.enterText(find.byType(TextField), query);
-  //   await tester.pump(Duration(milliseconds: 300));
-
-  //   bloc.pictograms.listen((List<PictogramModel> images) async {
-  //     await tester.pump();
-
-  //     await tester.tap(find.byType(PictogramImage));
-
-  //     final Route pushedRoute =
-  //         verify(mockObserver.didPush(captureAny, any))
-  //             .captured
-  //             .single;
-
-  //     PictogramModel popResult = await pushedRoute.popped;
-  //     expect(await pushedRoute.popped, pictogramModel);
-  //     done.complete(true);
-  //   });
-
-  //   await done.future;
-  // });
 }
