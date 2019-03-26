@@ -5,7 +5,7 @@ class ToolbarBloc extends BlocBase{
 
   Stream<bool> get editVisible => _editVisible.stream;
 
-  BehaviorSubject<bool> _editVisible = new BehaviorSubject();
+  BehaviorSubject<bool> _editVisible = new BehaviorSubject<bool>.seeded(false);
 
 
   void setEditVisible(bool visibility){
