@@ -13,7 +13,7 @@ class UserInfoBloc extends BlocBase{
   Stream<String> get changeUserMode => _changeUserMode.stream;
   BehaviorSubject<String> _changeUserMode = new BehaviorSubject();
 
-  /// Stream to signal both with day and mode we are in. Used for signaling which
+  /// Stream to signal both which day and mode we are in. Used for signaling which
   /// days to show and not to show.
   Stream<Tuple2<String, int>> get dayOfWeekAndUsermode => _dayOfWeekAndUsermode.stream;
   BehaviorSubject<Tuple2<String,int>> _dayOfWeekAndUsermode = new BehaviorSubject();
