@@ -56,7 +56,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekPlanAdder(context, weekplan, bloc) {
     return GestureDetector(
-      onTap: () {}, //  onTap for going to a existing weekplan
+      onTap: () {}, //  onTap for going to an existing weekplan
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (context, snapshot) {
