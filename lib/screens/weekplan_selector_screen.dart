@@ -7,12 +7,12 @@ import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-//import 'package:weekplanner/screens/new_weekplan_screen.dart';
 
 class WeekplanSelectorScreen extends StatelessWidget {
   final WeekplansBloc weekBloc;
 
-  WeekplanSelectorScreen(GirafUserModel user) : weekBloc = di.getDependency<WeekplansBloc>(){
+  WeekplanSelectorScreen(GirafUserModel user)
+      : weekBloc = di.getDependency<WeekplansBloc>() {
     this.weekBloc.load(user, true);
   }
 
@@ -37,7 +37,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       crossAxisCount: MediaQuery.of(context).orientation ==
-                              Orientation.landscape ? 4 : 3,
+                              Orientation.landscape
+                          ? 4
+                          : 3,
                       crossAxisSpacing:
                           MediaQuery.of(context).size.width / 100 * 1.5,
                       mainAxisSpacing:
@@ -54,9 +56,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekPlanAdder(context, weekplan, bloc) {
     return GestureDetector(
-      onTap: () => print("going to ${weekplan.name}"), // TODO remove this line when doing todo underneath
-      // TODO uncomment line underneath to navigate to new screen, and uncomment import at top.
-      //onTap: () => Navigator.push(context, NewWeekplanScreen),
+      onTap: () {}, //  onTap for going to a existing weekplan
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (context, snapshot) {
@@ -67,9 +67,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekPlan(context, weekplan, constraint) {
     return GestureDetector(
-        onTap: () => print("adding"), // TODO remove this line when doing todo underneath
-        // TODO uncomment line underneath to navigate to new screen
-        //onTap: () => Navigator.push(context, //insert weekplan screen here with user in constructor ?),
+        onTap: () => () {}, // onTap for adding a new weekplan
         child: Icon(
           Icons.add,
           size: constraint.maxHeight,
@@ -79,7 +77,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlanSelector(context, weekplan) {
     PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
 
-    if (weekplan.thumbnail != null) bloc.loadPictogramById(weekplan.thumbnail.id);
+    if (weekplan.thumbnail != null)
+      bloc.loadPictogramById(weekplan.thumbnail.id);
 
     return Container(
       child: Column(
@@ -88,10 +87,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: InkWell(
-                onTap: () {},
-                child: Card(
-                    child: Column(
-            children: <Widget>[
+            onTap: () {},
+            child: Card(
+                child: Column(
+              children: <Widget>[
                 Expanded(
                   flex: 4,
                   child: LayoutBuilder(builder: (context, constraint) {
@@ -110,9 +109,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   );
                 }))
-            ],
-          )),
-              ))
+              ],
+            )),
+          ))
         ],
       ),
     );
