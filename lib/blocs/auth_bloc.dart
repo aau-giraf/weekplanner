@@ -7,7 +7,7 @@ class AuthBloc extends BlocBase {
   /// Default Constructor
   AuthBloc(this._api);
 
-  Api _api;
+  final Api _api;
 
   /// Whether or not the user is logged in
   Stream<bool> get loggedIn => _loggedIn.stream;

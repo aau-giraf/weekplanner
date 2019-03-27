@@ -14,14 +14,15 @@ class PictogramModel implements Model {
 
   PictogramModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
-      throw const FormatException('[PictogramModel]: Cannot initialize from null');
+      throw const FormatException(
+          '[PictogramModel]: Cannot initialize from null');
     }
 
     id = json['id'];
     lastEdit =
-    json['lastEdit'] == null ? null : DateTime.parse(json['lastEdit']);
+        json['lastEdit'] == null ? null : DateTime.parse(json['lastEdit']);
     title = json['title'];
-    accessLevel = AccessLevel.values[(json['accessLevel']) -1];
+    accessLevel = AccessLevel.values[(json['accessLevel']) - 1];
     imageUrl = json['imageUrl'];
     imageHash = json['imageHash'];
   }

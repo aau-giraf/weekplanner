@@ -5,16 +5,17 @@ class GirafUserModel implements Model {
   /// Constructor for instantiating a user inside the app.
   GirafUserModel(
       {this.id,
-        this.role,
-        this.roleName,
-        this.username,
-        this.screenName,
-        this.department});
+      this.role,
+      this.roleName,
+      this.username,
+      this.screenName,
+      this.department});
 
   /// Constructor for instantiating a user from the backend response.
   GirafUserModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
-      throw const FormatException('[GirafUserModel]: Cannot initialize from null');
+      throw const FormatException(
+          '[GirafUserModel]: Cannot initialize from null');
     }
 
     id = json['id'];
@@ -40,8 +41,10 @@ class GirafUserModel implements Model {
   /// The users desired "screen name", i.e. how the app should address the user.
   String screenName;
 
+  // This is actually a long from the .Net server, will that cause problems?
+  // (try with mInt).
   /// The id of the users department
-  int department; // This is actually a long from the .Net server, will that cause problems ? (try with mInt).
+  int department;
 
   /// Converts the user object to json, inorder to send it to the backend.
   @override

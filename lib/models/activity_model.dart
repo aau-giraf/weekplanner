@@ -4,9 +4,11 @@ import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 
 class ActivityModel implements Model {
-  /// The order that the activity will appear on in a weekschedule. If two has same order it is a choice
+  /// The order that the activity will appear on in a weekschedule. If two has
+  /// same order it is a choice
   /// The current ActivityState
-  /// This is used in the WeekPlanner app by the frontend groups and should never be set from our side
+  /// This is used in the WeekPlanner app by the frontend groups and should
+  /// never be set from our side
   ActivityModel({
     @required this.id,
     @required this.pictogram,
@@ -17,7 +19,8 @@ class ActivityModel implements Model {
 
   ActivityModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
-      throw const FormatException('[ActivityModel]: Cannot initialize from null');
+      throw const FormatException(
+          '[ActivityModel]: Cannot initialize from null');
     }
 
     id = json['id'];
@@ -36,7 +39,6 @@ class ActivityModel implements Model {
   ActivityState state;
 
   bool isChoiceBoard;
-
 
   @override
   Map<String, dynamic> toJson() {
