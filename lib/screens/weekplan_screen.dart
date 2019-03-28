@@ -3,10 +3,8 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
 import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
@@ -53,7 +51,7 @@ Row _buildWeeks(WeekModel weekModel) {
     0xFFFFFFFF
   ];
   List<Widget> weekDays = List<Widget>();
-  for (var i = 0; i < weekModel.days.length; i++) {
+  for (int i = 0; i < weekModel.days.length; i++) {
     weekDays.add( Expanded(
         child: Card(
             color: Color(weekColors[i]),
@@ -72,7 +70,7 @@ Column _day(Weekday day, List<ActivityModel> activities) {
             return PictogramImage(
                 //TODO: Redirect to show activity when it is implemented
                 pictogram: activities[index].pictogram,
-                onPressed: () => {});
+                onPressed: () => null);
           },
           itemCount: activities.length,
         ),

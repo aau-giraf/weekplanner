@@ -14,7 +14,7 @@ class WeekplanBloc extends BlocBase {
 
   Stream<WeekModel> get week => _week.stream;
 
-  setWeek(WeekModel week) {
+  void setWeek(WeekModel week) {
     if (week == null) {
       _week.add(WeekModel(days: [
         WeekdayModel(day: Weekday.Monday, activities: List<ActivityModel>()),
