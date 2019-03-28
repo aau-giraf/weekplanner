@@ -28,13 +28,13 @@ class WeekplanScreen extends StatelessWidget {
         title: 'Ugeplan',
       ),
       body: StreamBuilder<WeekModel>(
-        stream: this.weekplanBloc.week,
+        stream: weekplanBloc.week,
         initialData: null,
         builder: (BuildContext context, AsyncSnapshot<WeekModel> snapshot) {
           if (snapshot.hasData) {
-            return buildWeeks(snapshot.data);
+            return _buildWeeks(snapshot.data);
           } else {
-            return Text("Data not ready");
+            return const Text('Data not ready');
           }
         },
       ),
@@ -42,7 +42,7 @@ class WeekplanScreen extends StatelessWidget {
   }
 }
 
-Row buildWeeks(WeekModel weekModel) {
+Row _buildWeeks(WeekModel weekModel) {
   const List<int> weekColors = [
     0xFF08A045,
     0xFF540D6E,
@@ -54,18 +54,18 @@ Row buildWeeks(WeekModel weekModel) {
   ];
   List<Widget> weekDays = List<Widget>();
   for (var i = 0; i < weekModel.days.length; i++) {
-    weekDays.add(new Expanded(
+    weekDays.add( Expanded(
         child: Card(
             color: Color(weekColors[i]),
-            child: Day(weekModel.days[i].day, weekModel.days[i].activities))));
+            child: _day(weekModel.days[i].day, weekModel.days[i].activities))));
   }
-  return new Row(children: weekDays);
+  return Row(children: weekDays);
 }
 
-Column Day(Weekday day, List<ActivityModel> activities) {
+Column _day(Weekday day, List<ActivityModel> activities) {
   return Column(
     children: <Widget>[
-      translateWeekDay(day),
+      _translateWeekDay(day),
       Expanded(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
@@ -81,7 +81,7 @@ Column Day(Weekday day, List<ActivityModel> activities) {
   );
 }
 
-Card translateWeekDay(Weekday day) {
+Card _translateWeekDay(Weekday day) {
   String translation;
   switch (day) {
     case Weekday.Monday:
@@ -109,8 +109,9 @@ Card translateWeekDay(Weekday day) {
       translation = '';
       break;
   }
+  const Color color = Color(0xA0FFFFFF);
   return Card(
-      color: Color(0xA0FFFFFF),
+      color: color,
       child: ListTile(
           title: Text(
         translation,
