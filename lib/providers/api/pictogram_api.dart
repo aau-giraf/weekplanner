@@ -26,7 +26,7 @@ class PictogramApi {
       'pageSize': pageSize.toString(),
     });
 
-    return _http.get('/pictogram' + uri.toString()).map((Response res) {
+    return _http.get(uri.toString()).map((Response res) {
       if (res.json['data'] is List) {
         return List<Map<String, dynamic>>.from(res.json['data'])
             .map((Map<String, dynamic> map) {
