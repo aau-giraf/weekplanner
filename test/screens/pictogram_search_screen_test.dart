@@ -130,7 +130,7 @@ void main() {
 
       await tester.tap(find.byType(PictogramImage));
 
-      final Route<PictogramModel> pushedRoute =
+      final Route<dynamic> pushedRoute =
           verify(mockObserver.didPush(captureAny, any)).captured.single;
 
       expect(await pushedRoute.popped, pictogramModel);
