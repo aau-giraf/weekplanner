@@ -34,37 +34,37 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             },
           ),
           IconButton(
-            icon: Icon(Icons.lock),
+            icon: const Icon(Icons.lock),
             tooltip: 'Log ud',
             onPressed: () {
               Alert(
                 context: context,
                 type: AlertType.none,
                 style: logoutStyle,
-                title: "Log ud",
-                desc: "Vil du at logge ud?",
+                title: 'Log ud',
+                desc: 'Vil du at logge ud?',
                 buttons: [
                   DialogButton(
                     child: Text(
-                      "Log ud",
+                      'Log ud',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onPressed: () {
-                      this._authBloc.logout();
+                      _authBloc.logout();
                       Navigator.pop(context);
                     },
-                    color: Color.fromRGBO(255, 157, 0, 100),
+                    color: const Color.fromRGBO(255, 157, 0, 100),
                     width: 120,
                   ),
                   DialogButton(
                     child: Text(
-                      "Fortryd",
+                      'Fortryd',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    color: Color.fromRGBO(255, 157, 0, 100),
+                    color: const Color.fromRGBO(255, 157, 0, 100),
                     width: 120,
                   )
                 ],
