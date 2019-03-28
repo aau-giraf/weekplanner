@@ -40,7 +40,7 @@ void main() {
 
     httpMock
         .expectOne(
-            url: '/pictogram?query=Cat&page=0&pageSize=10', method: Method.get)
+            url: '?query=Cat&page=0&pageSize=10', method: Method.get)
         .flush(<String, dynamic>{
       'data': grams.map((PictogramModel gram) => gram.toJson()).toList(),
       'success': true,
