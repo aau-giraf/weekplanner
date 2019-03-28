@@ -14,13 +14,16 @@ import 'package:mockito/mockito.dart';
 
 class MockAuth extends Mock implements AuthBloc {}
 
+/// Used to retrieve the visibility widget wrapping the editbutton
+const String keyOfVisibilityForEdit = 'visibilityEditBtn';
+
 void main() {
   ToolbarBloc toolbarBloc;
   UserInfoBloc userInfoBloc;
   SettingsBloc settingsBloc;
   Api api;
   // The key for the visibility widget, used to retrieve the widget during testing.
-  String keyOfVisibilityForEdit = 'visibilityEditBtn';
+  String keyOfVisibilityForEdit = "visibilityEditBtn";
 
   setUp(() {
     api = Api('any');
@@ -44,39 +47,43 @@ void main() {
   }
 
   testWidgets('Has toolbar with title', (WidgetTester tester) async {
-    GirafAppBar girafAppBar = GirafAppBar(title: 'Ugeplan');
+    final GirafAppBar girafAppBar = GirafAppBar(title: 'Ugeplan');
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     expect(find.text('Ugeplan'), findsOneWidget);
   });
 
-  testWidgets('Visibility widget should be in widget tree', (WidgetTester tester) async {
+  testWidgets('Visibility widget should be in widget tree',
+             (WidgetTester tester) async {
     // Instantiates the appbar.
-    GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
+    final GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
 
     // Uses the pumpwidget function to build the widget, so it becomes active.
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
-    // Searches for a widget with a specific key, and we only expect to find one.
-    expect(find.byKey(Key(keyOfVisibilityForEdit)), findsOneWidget);
+    // Searches for a widget with a specific key, and we only expect to find one
+    expect(find.byKey(const Key(keyOfVisibilityForEdit)), findsOneWidget);
 
   });
 
-  testWidgets('Visibility widget should not be visible', (WidgetTester tester) async {
-    GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
+  testWidgets('Visibility widget should not be visible',
+             (WidgetTester tester) async {
+    final GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     // Retrieves the visiblity widget.
-    final Visibility visibility = tester.widget(find.byKey(Key(keyOfVisibilityForEdit)));
+    final Visibility visibility =
+        tester.widget(find.byKey(const Key(keyOfVisibilityForEdit)));
 
     // Should be false, since that is the initial value.
     expect(visibility.visible, false);
 
   });
 
-  testWidgets('Visibility widget should be visible', (WidgetTester tester) async {
-    GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
+  testWidgets('Visibility widget should be visible',
+             (WidgetTester tester) async {
+    final GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     // Tries to change the value of visiblity.visible, by sending "true" though
@@ -84,23 +91,25 @@ void main() {
     toolbarBloc.setEditVisible(true);
 
     await tester.pumpAndSettle();
-    Visibility visibility = tester.widget(find.byKey(Key(keyOfVisibilityForEdit)));
+    final Visibility visibility =
+        tester.widget(find.byKey(const Key(keyOfVisibilityForEdit)));
 
     expect(visibility.visible, true);
   });
 
   testWidgets('Visibility widget toggled', (WidgetTester tester) async {
-    GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
+    final GirafAppBar girafAppBar = GirafAppBar(title: 'AppBar');
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     toolbarBloc.setEditVisible(true);
     await tester.pumpAndSettle();
-    Visibility visibility = tester.widget(find.byKey(Key(keyOfVisibilityForEdit)));
+    Visibility visibility =
+        tester.widget(find.byKey(const Key(keyOfVisibilityForEdit)));
     expect(visibility.visible, true);
 
     toolbarBloc.setEditVisible(false);
     await tester.pumpAndSettle();
-    visibility = tester.widget(find.byKey(Key(keyOfVisibilityForEdit)));
+    visibility = tester.widget(find.byKey(const Key(keyOfVisibilityForEdit)));
     expect(visibility.visible, false);
   });
 

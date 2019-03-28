@@ -3,14 +3,17 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/settings_screen.dart';
 
-/// The Default AppBar for every screen
+/// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final AuthBloc authBloc;
   final ToolbarBloc toolbarBloc;
   final UserInfoBloc userInfoBloc;
 
+  /// Toolbar of the application.
   /// Default constructor.
   ///
   /// Takes a [title] which will be displayed at the left hand side of the bar
@@ -21,6 +24,18 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
+        preferredSize = const Size.fromHeight(56.0),
+        super(key: key);
+
+  /// Used to store the title of the toolbar.
+  final String title;
+
+  /// Contains the functionality regarding login, logout etc.
+  final AuthBloc authBloc;
+
+  /// Contains the functionality of the toolbar.
+  final ToolbarBloc toolbarBloc;
+
   @override
   final Size preferredSize;
 
@@ -28,18 +43,18 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
-      backgroundColor: Color(0xAAFF6600),
+      backgroundColor: const Color(0xAAFF6600),
       actions: <Widget>[
         StreamBuilder<bool>(
-            key: Key('streambuilderVisibility'),
+            key: const Key('streambuilderVisibility'),
             stream: toolbarBloc.editVisible,
             initialData: false,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
               return Visibility(
-                key: Key("visibilityEditBtn"),
+                key: const Key('visibilityEditBtn'),
                 visible: snapshot.data,
                 child: IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   tooltip: 'Rediger',
                   onPressed: () {
                   },
@@ -49,7 +64,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         IconButton(
-          icon: Icon(Icons.people),
+          icon: const Icon(Icons.people),
           tooltip: 'Skift mode',
 
           onPressed: () {
@@ -63,10 +78,10 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         IconButton(
-          icon: Icon(Icons.settings),
+          icon: const Icon(Icons.settings),
           tooltip: 'Indstillinger',
           onPressed: () {
-            Navigator.pushNamed(context, '/settings');
+            Routes.push(context, SettingsScreen());
           },
         ),
       ]

@@ -8,28 +8,106 @@ import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import '../widgets/giraf_app_bar_widget.dart';
 
+
+
+/// Screen containing all days with tasks.
 class WeekplanScreen extends StatelessWidget {
-  final String title;
 
-  final ToolbarBloc toolbarBloc;
-  final SettingsBloc settingsBloc;
-  final UserInfoBloc userInfoBloc;
-
-  final List<Widget> myList = <Widget>[
-    Card(child: Image.asset('assets/read.jpg')),
-  ];
-
-  WeekplanScreen({Key key, this.title})
+  /// Screen showing all days, title being title of the screen.
+  WeekplanScreen({Key key})
       : settingsBloc = di.getDependency<SettingsBloc>(),
         userInfoBloc = di.getDependency<UserInfoBloc>(),
         toolbarBloc = di.getDependency<ToolbarBloc>(),
         super(key: key);
 
+  /// Contains the functionality of the toolbar.
+  final ToolbarBloc toolbarBloc;
+
+  /// Contains the functionality of the SettingsScreen.
+  final SettingsBloc settingsBloc;
+  final UserInfoBloc userInfoBloc;
+
+
+  /// Contains the tasks.
+  final List<Widget> tasksList = <Widget>[
+    Card(child: Image.asset('assets/read.jpg')),
+  ];
+
+
+  /// Contains the pictograms.
   final List<String> pictograms = <String>[
     'assets/read.jpg',
     'assets/read.jpg'
   ];
+
+
+  @override
+  Widget build(BuildContext context) {
+        return Scaffold(
+          appBar: GirafAppBar(
+            title: 'Ugeplan',
+          ),
+          body:
+            new Row(
+              children: <Widget>[
+                StreamBuilder<GirafTheme>(
+                  stream: this.settingsBloc.theme,
+                  initialData: GirafTheme.AndroidBlue,
+                  builder: (BuildContext context, AsyncSnapshot<GirafTheme> snapshot){
+                    return Text(snapshot.data.toString());
+                  },
+                ),
+                Expanded(
+                  child: Card(
+                    color: Color(0xFF007700),
+                    child: Day('Mandag', myList)
+                  )
+                ),
+                Expanded(
+                  child: Card(
+                    color: Color(0xFF800080),
+                    child: Day('Tirsdag', myList)
+                  )
+                ),
+                Expanded(
+                  child: Card(
+                    color: Color(0xFFFF8500),
+                    child: Day('Onsdag', myList)
+                  )
+                ),
+                Expanded(
+                  child: Card(
+                    color: Color(0xFF0000FF),
+                    child: Day('Torsdag', myList)
+                  )
+                ),
+                Expanded(
+                  child: Card(
+                    color: Color(0xFFFFDD00),
+
+                    child: Day('Fredag', myList)
+                  )
+                ),
+                Expanded(
+                  child: Card(
+                    color: Color(0xFFFF0000),
+
+                    child: Day('Lørdag', myList)
+                  )
+                ),
+                Expanded(
+                  child: Card(
+                    color: Color(0xFFFFFFFF),
+
+                    child: Day('Søndag', myList)
+                  )
+                ),
+              ],
+            )
+
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -167,16 +245,16 @@ class WeekplanScreen extends StatelessWidget {
   }
 }
 
-Column _day(String day, List<Widget> myList) {
+Column _day(String day, List<Widget> tasksList) {
   return Column(
     children: <Widget>[
       Text(day, style: TextStyle(fontWeight: FontWeight.bold)),
       Expanded(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            return myList[index];
+            return tasksList[index];
           },
-          itemCount: myList.length,
+          itemCount: tasksList.length,
         ),
       ),
     ],
