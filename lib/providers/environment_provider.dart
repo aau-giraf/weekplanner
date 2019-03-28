@@ -16,7 +16,7 @@ class Environment {
     _content = await rootBundle.loadString(_file);
   }
 
-  static setContent(String content) {
+  static void setContent(String content) {
     _content = content;
   }
 }

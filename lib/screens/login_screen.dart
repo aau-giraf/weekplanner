@@ -7,6 +7,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
+/// Logs the user in
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final TextEditingController usernameCtrl = TextEditingController();
@@ -41,15 +42,15 @@ class LoginScreen extends StatelessWidget {
   }
 
   void wrongUsernameOrPassword(BuildContext context) {
-    showDialog(
-        context: context,
+    showDialog<GirafNotifyDialog>(
         builder: (BuildContext context) {
           //TODO: Lav en pæn dialog
           return GirafNotifyDialog(
             title: "Fejl",
             description: "Forkert brugernavn eller adgangskode",
           );
-        });
+        },
+        context: context);
   }
 
   @override
@@ -209,7 +210,7 @@ class LoginScreen extends StatelessWidget {
       }
       Timer(Duration(milliseconds: timeoutMS), callback);
     }
-    showDialog(
+    showDialog<Center>(
         barrierDismissible: Dismissible,
         context: context,
         builder: (BuildContext context) {

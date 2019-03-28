@@ -26,36 +26,45 @@ void main() {
   test("Should get SERVER_HOST from environment file (DEBUG)",
       async((DoneFn done) {
     Environment.setContent(debugEnvironments);
-    expect(
-        Environment.getVar("SERVER_HOST"), "http://web.giraf.cs.aau.dk:5000");
+    if (Environment.getVar<String>("SERVER_HOST") ==
+        "http://web.giraf.cs.aau.dk:5000") {
+      done();
+    }
   }));
 
   test("Should get SERVER_HOST from environment file (PRODUCTION)",
       async((DoneFn done) {
     Environment.setContent(prodEnvironments);
-
-    expect(
-        Environment.getVar("SERVER_HOST"), "http://web.giraf.cs.aau.dk:5000");
+    if (Environment.getVar<String>("SERVER_HOST") ==
+        "http://web.giraf.cs.aau.dk:5000") {
+      done();
+    }
   }));
 
   test(
       "Should get DEBUG from environment file and it should be FALSE (PRODUCTION)",
       async((DoneFn done) {
-    Environment.setContent(debugEnvironments);
-    expect(Environment.getVar("DEBUG"), false);
+    Environment.setContent(prodEnvironments);
+    if (Environment.getVar<bool>("DEBUG") == false) {
+      done();
+    }
   }));
 
   test(
       "Should get USERNAME from environment file and it should be 'Graatand' (PRODUCTION)",
       async((DoneFn done) {
     Environment.setContent(debugEnvironments);
-    expect(Environment.getVar("USERNAME"), "Graatand");
+    if (Environment.getVar<String>("USERNAME") == "Graatand") {
+      done();
+    }
   }));
 
   test(
       "Should get PASSWORD from environment file and it should be 'password' (PRODUCTION)",
       async((DoneFn done) {
     Environment.setContent(debugEnvironments);
-    expect(Environment.getVar("PASSWORD"), "password");
+    if (Environment.getVar<String>("PASSWORD") == "password") {
+      done();
+    }
   }));
 }

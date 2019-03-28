@@ -20,8 +20,8 @@ void main() async {
   }
 
   runApp(MaterialApp(
-      title: "Weekplanner",
-      home: StreamBuilder(
+      title: 'Weekplanner',
+      home: StreamBuilder<bool>(
           initialData: false,
           stream: di.getDependency<AuthBloc>().loggedIn,
           builder: (_, AsyncSnapshot<bool> snapshot) => LoginScreen())));

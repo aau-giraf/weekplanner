@@ -9,13 +9,27 @@ import 'package:weekplanner/providers/http/http_client.dart';
 import 'package:weekplanner/providers/persistence/persistence.dart';
 import 'package:weekplanner/providers/persistence/persistence_client.dart';
 
+/// Weekplanner API
 class Api {
+  /// To access account endpoints
   AccountApi account;
+
+  /// To access department endpoints
   DepartmentApi department;
+
+  /// To access pictogram endpoints
   PictogramApi pictogram;
+
+  /// To access week endpoints
   WeekApi week;
+
+  /// To access status endpoints
   StatusApi status;
+
+  /// To access weekTemplate endpoints
   WeekTemplateApi weekTemplate;
+
+  /// To access user endpoints
   UserApi user;
 
   String host;
@@ -23,8 +37,7 @@ class Api {
     Persistence persist = PersistenceClient();
     account = AccountApi(HttpClient(host + "/v1", persist), persist);
     status = StatusApi(HttpClient(host + "/v1/Status", persist));
-    department =
-        DepartmentApi(HttpClient(host + "/v1/Department", persist), persist);
+    department = DepartmentApi(HttpClient(host + "/v1/Department", persist));
     week = WeekApi(HttpClient(host + "/v1/User", persist));
     pictogram = PictogramApi(HttpClient(host + "/v1/Pictogram", persist));
     weekTemplate =
@@ -32,5 +45,6 @@ class Api {
     user = UserApi(HttpClient(host + "/v1/User", persist));
   }
 
+  /// Destroy the API
   void dispose() {}
 }
