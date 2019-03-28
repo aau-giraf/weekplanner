@@ -1,25 +1,39 @@
 import 'package:weekplanner/models/enums/error_key.dart';
 
+/// Response from Http
 class ResponseModel<T> {
-  T data;
-  bool success;
-  ErrorKey errorKey;
-  List<String> errorProperties;
-
+  /// Default constructor
   ResponseModel({this.data, this.success, this.errorKey, this.errorProperties});
 
+  /// Construct from JSON
   ResponseModel.fromJson(Map<String, dynamic> json, T data) {
     if (json == null) {
-      throw new FormatException(
-          "[ResponseModel]: Cannot instantiate from null");
+      throw const FormatException(
+          '[ResponseModel]: Cannot instantiate from null');
     }
 
-    this.data = data;
-    success = json["success"];
+    data = data;
+    success = json['success'];
     errorKey = ErrorKey.values.firstWhere(
-        (f) => f.toString() == json["errorKey"],
+            (ErrorKey f) => f.toString() == json['errorKey'],
         orElse: () => null);
-    errorProperties =
-        (json["errorProperties"] as List).map((val) => val as String).toList();
+    if (json['errorProperties'] is List) {
+      errorProperties = List<String>.from(json['errorProperties']).toList();
+    } else {
+      // TODO(TobiasPalludan): Throw appropriate error.
+    }
+
   }
+
+  /// The data in the response
+  T data;
+
+  /// Whether or not the call was successful
+  bool success;
+
+  /// Which error occurred
+  ErrorKey errorKey;
+
+  /// List of the errors involved in the call
+  List<String> errorProperties;
 }
