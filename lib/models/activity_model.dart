@@ -4,11 +4,6 @@ import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 
 class ActivityModel implements Model {
-  /// The order that the activity will appear on in a weekschedule. If two has
-  /// same order it is a choice
-  /// The current ActivityState
-  /// This is used in the WeekPlanner app by the frontend groups and should
-  /// never be set from our side
   ActivityModel({
     @required this.id,
     @required this.pictogram,
@@ -34,10 +29,15 @@ class ActivityModel implements Model {
 
   PictogramModel pictogram;
 
+  /// The order that the activity will appear on in a weekschedule. If two has
+  /// same order it is a choice
   int order;
 
+  /// The current ActivityState
   ActivityState state;
 
+  /// This is used in the WeekPlanner app by the frontend groups and should
+  /// never be set from our side
   bool isChoiceBoard;
 
   @override
