@@ -1,6 +1,26 @@
 import 'package:weekplanner/models/model.dart';
 
+/// Represents the week name
 class WeekNameModel implements Model {
+  /// Default constructor
+  WeekNameModel({
+    this.name,
+    this.weekYear,
+    this.weekNumber,
+  });
+
+  /// Construct from JSON
+  WeekNameModel.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      throw const FormatException(
+          '[WeekNameModel]: Cannot initialize from null');
+    }
+
+    name = json['name'];
+    weekYear = json['weekYear'];
+    weekNumber = json['weekNumber'];
+  }
+
   /// A Name describing the week.
   String name;
 
@@ -10,26 +30,10 @@ class WeekNameModel implements Model {
   /// The number of the week, 0 - 52 (53).
   int weekNumber;
 
-  WeekNameModel({
-    this.name,
-    this.weekYear,
-    this.weekNumber,
-  });
-
-  WeekNameModel.fromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      throw FormatException("[WeekNameModel]: Cannot initialize from null");
-    }
-
-    name = json["name"];
-    weekYear = json["weekYear"] as int;
-    weekNumber = json["weekNumber"] as int;
-  }
-
   @override
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "weekYear": weekYear,
-        "weekNumber": weekNumber,
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'name': name,
+        'weekYear': weekYear,
+        'weekNumber': weekNumber,
       };
 }
