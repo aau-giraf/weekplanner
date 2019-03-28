@@ -12,7 +12,7 @@ class PictogramSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Pictogram'),
+        appBar: GirafAppBar(title: 'Piktogram'),
         body: Column(
           children: <Widget>[
             Padding(
