@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_dialog_header.dart';
 
 class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
@@ -47,6 +50,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
               alignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
+                    key: Key("NotifyDialogOkayButton"),
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(10.0),
                         side: const BorderSide(
@@ -65,7 +69,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Routes.pop(context);
                     }),
               ],
             ),
