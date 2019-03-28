@@ -6,8 +6,12 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
+/// Screen for searching for pictograms
+///
+/// This screen will return `null` back is pressed, otherwise it will return the
+/// chosen pictogram.
 class PictogramSearch extends StatelessWidget {
-  final PictogramBloc bloc = di.getDependency<PictogramBloc>();
+  final PictogramBloc _bloc = di.getDependency<PictogramBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class PictogramSearch extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: TextField(
-                onChanged: bloc.search,
+                onChanged: _bloc.search,
                 decoration: InputDecoration(
                     suffixIcon: const Icon(Icons.search),
                     hintText: 'Søg her...',
@@ -30,7 +34,7 @@ class PictogramSearch extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: StreamBuilder<List<PictogramModel>>(
-                    stream: bloc.pictograms,
+                    stream: _bloc.pictograms,
                     initialData: const <PictogramModel>[],
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
