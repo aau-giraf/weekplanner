@@ -70,4 +70,4 @@ Uint8List _transparentImage = Uint8List.fromList(<int>[
   0xAE,
 ]);
 
-final sampleImage = Image.memory(_transparentImage);
+final Image sampleImage = Image.memory(_transparentImage);

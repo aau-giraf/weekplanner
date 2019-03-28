@@ -8,7 +8,13 @@ import 'package:weekplanner/providers/api/api.dart';
 /// For how long the debouncer should wait
 const int _milliseconds = 250;
 
+/// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
+  /// Pictogram Business Logic Component
+  ///
+  /// Gives the ability to search for pictograms and await the results.
+  PictogramBloc(this._api);
+
   /// This stream is where all results from searching for pictograms are put in.
   ///
   /// The null value is used as a way to communicate loading. That is, if you
@@ -16,15 +22,11 @@ class PictogramBloc extends BlocBase {
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
 
-  final BehaviorSubject<List<PictogramModel>> _pictograms = BehaviorSubject();
+  final BehaviorSubject<List<PictogramModel>> _pictograms =
+      BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
   Timer _timer;
-
-  /// Pictogram Business Logic Component
-  ///
-  /// Gives the ability to search for pictograms and await the results.
-  PictogramBloc(this._api);
 
   /// Initializes a search for [query].
   ///
@@ -36,7 +38,7 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-    if (query.length < 1) {
+    if (query.isEmpty) {
       return;
     }
 

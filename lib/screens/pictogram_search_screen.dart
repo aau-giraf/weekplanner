@@ -12,7 +12,7 @@ class PictogramSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: "Pictogram"),
+        appBar: GirafAppBar(title: 'Pictogram'),
         body: Column(
           children: <Widget>[
             Padding(
@@ -21,7 +21,7 @@ class PictogramSearch extends StatelessWidget {
                 onChanged: bloc.search,
                 decoration: InputDecoration(
                     suffixIcon: const Icon(Icons.search),
-                    hintText: "Søg her...",
+                    hintText: 'Søg her...',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50))),
               ),
@@ -31,12 +31,11 @@ class PictogramSearch extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: StreamBuilder<List<PictogramModel>>(
                     stream: bloc.pictograms,
-                    initialData: [],
+                    initialData: const <PictogramModel>[],
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
                       if (snapshot.data == null) {
-                        return const Center(
-                            child: const CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       return GridView.count(

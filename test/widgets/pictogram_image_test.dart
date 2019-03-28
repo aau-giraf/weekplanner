@@ -19,22 +19,22 @@ void main() {
   Api api;
   MockPictogramApi pictogramApi;
 
-  PictogramModel pictogramModel = PictogramModel(
+  final PictogramModel pictogramModel = PictogramModel(
       id: 1,
       lastEdit: null,
       title: null,
       accessLevel: null,
-      imageUrl: "http://any.tld",
+      imageUrl: 'http://any.tld',
       imageHash: null);
 
   setUp(() {
-    api = Api("any");
+    api = Api('any');
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = PictogramImageBloc(api);
 
     when(pictogramApi.getImage(pictogramModel.id))
-        .thenAnswer((_) => BehaviorSubject.seeded(sampleImage));
+        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
     di.registerDependency<PictogramImageBloc>((_) => bloc);
@@ -48,13 +48,13 @@ void main() {
     ));
   });
 
-  testWidgets("loads renders given image", (WidgetTester tester) async {
+  testWidgets('loads renders given image', (WidgetTester tester) async {
     await tester.pumpWidget(PictogramImage(
       pictogram: pictogramModel,
       onPressed: () {},
     ));
 
-    Finder f = find.byWidgetPredicate((Widget widget) {
+    final Finder f = find.byWidgetPredicate((Widget widget) {
       return widget is Image;
     });
 
@@ -66,7 +66,7 @@ void main() {
     }));
   });
 
-  testWidgets("triggers callback on tap", (WidgetTester tester) async {
+  testWidgets('triggers callback on tap', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
 
     await tester.pumpWidget(PictogramImage(
@@ -76,7 +76,7 @@ void main() {
       },
     ));
 
-    Finder f = find.byWidgetPredicate((Widget widget) {
+    final Finder f = find.byWidgetPredicate((Widget widget) {
       return widget is Card;
     });
 
@@ -88,13 +88,13 @@ void main() {
     await done.future;
   });
 
-  testWidgets("shows spinner on loading", (WidgetTester tester) async {
+  testWidgets('shows spinner on loading', (WidgetTester tester) async {
     await tester.pumpWidget(PictogramImage(
       pictogram: pictogramModel,
       onPressed: () {},
     ));
 
-    Finder f = find.byWidgetPredicate((Widget widget) {
+    final Finder f = find.byWidgetPredicate((Widget widget) {
       return widget is CircularProgressIndicator;
     });
 

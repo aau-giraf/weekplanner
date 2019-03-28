@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test_api/test_api.dart';
@@ -20,13 +18,13 @@ void main() {
   MockPictogramApi pictogramApi;
 
   setUp(() {
-    api = Api("any");
+    api = Api('any');
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = PictogramImageBloc(api);
   });
 
-  test("Should be able load pictogram", async((DoneFn done) {
+  test('Should be able load pictogram', async((DoneFn done) {
     final PictogramModel model = PictogramModel(
         id: 1,
         lastEdit: null,
@@ -36,7 +34,7 @@ void main() {
         imageHash: null);
 
     when(pictogramApi.getImage(model.id))
-        .thenAnswer((_) => BehaviorSubject.seeded(sampleImage));
+        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
     bloc.image.listen((Image response) {
       expect(response, isNotNull);
@@ -47,7 +45,7 @@ void main() {
     bloc.load(model);
   }));
 
-  test("Should dispose stream", async((DoneFn done) {
+  test('Should dispose stream', async((DoneFn done) {
     bloc.image.listen((_) {}, onDone: done);
     bloc.dispose();
   }));
