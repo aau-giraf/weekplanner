@@ -11,14 +11,13 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class WeekplanScreen extends StatelessWidget {
   final String title;
-  final List<String> pictograms = ['assets/read.jpg', 'assets/read.jpg'];
 
   final ToolbarBloc toolbarBloc;
   final SettingsBloc settingsBloc;
   final UserInfoBloc userInfoBloc;
 
   final List<Widget> myList = <Widget>[
-    new Card(child: Image.asset('assets/read.jpg')),
+    Card(child: Image.asset('assets/read.jpg')),
   ];
 
   WeekplanScreen({Key key, this.title})
@@ -27,16 +26,9 @@ class WeekplanScreen extends StatelessWidget {
         toolbarBloc = di.getDependency<ToolbarBloc>(),
         super(key: key);
 
-  final String title;
   final List<String> pictograms = <String>[
     'assets/read.jpg',
     'assets/read.jpg'
-  ];
-
-  final SettingsBloc settingsBloc;
-
-  final List<Widget> myList = <Widget>[
-    Card(child: Image.asset('assets/read.jpg')),
   ];
 
   @override
@@ -50,109 +42,123 @@ class WeekplanScreen extends StatelessWidget {
             StreamBuilder<GirafTheme>(
               stream: settingsBloc.theme,
               initialData: GirafTheme.AndroidBlue,
-              builder:
-                  (BuildContext context, AsyncSnapshot<GirafTheme> snapshot) {
+              builder: (BuildContext context,
+                        AsyncSnapshot<GirafTheme> snapshot) {
                 return Text(snapshot.data.toString());
               },
             ),
             StreamBuilder<Tuple2<String, int>>(
-              stream: this.userInfoBloc.dayOfWeekAndUsermode,
-              initialData: Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
+              stream: userInfoBloc.dayOfWeekAndUsermode,
+              initialData: const Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context,
+                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  key: Key('visibilityMon'),
-                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 1,
+                  key: const Key('visibilityMon'),
+                  visible: snapshot.data.item1 == 'Guardian' ||
+                           snapshot.data.item2 == 1,
                   child: Expanded(
                       child: Card(
-                          color: Color(0xFF007700),
-                          child: Day('Mandag', myList))),
+                          color: const Color(0xFF007700),
+                          child: _day('Mandag', myList))),
                 );
               },
             ),
             StreamBuilder<Tuple2<String, int>>(
-              stream: this.userInfoBloc.dayOfWeekAndUsermode,
-              initialData: Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
+              stream: userInfoBloc.dayOfWeekAndUsermode,
+              initialData: const Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context,
+                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  key: Key('visibilityTue'),
-                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 2,
+                  key: const Key('visibilityTue'),
+                  visible: snapshot.data.item1 == 'Guardian' ||
+                           snapshot.data.item2 == 2,
                   child: Expanded(
                       child: Card(
-                          color: Color(0xFF800080),
-                          child: Day('Tirsdag', myList))),
+                          color: const Color(0xFF800080),
+                          child: _day('Tirsdag', myList))),
                 );
               },
             ),
             StreamBuilder<Tuple2<String, int>>(
-              stream: this.userInfoBloc.dayOfWeekAndUsermode,
-              initialData: Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
+              stream: userInfoBloc.dayOfWeekAndUsermode,
+              initialData: const Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context,
+                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  key: Key('visibilityWed'),
-                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 3,
+                  key: const Key('visibilityWed'),
+                  visible: snapshot.data.item1 == 'Guardian' ||
+                           snapshot.data.item2 == 3,
                   child: Expanded(
                       child: Card(
-                          color: Color(0xFFFF8500),
-                          child: Day('Onsdag', myList))),
+                          color: const Color(0xFFFF8500),
+                          child: _day('Onsdag', myList))),
                 );
               },
             ),
             StreamBuilder<Tuple2<String, int>>(
-              stream: this.userInfoBloc.dayOfWeekAndUsermode,
-              initialData: Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
+              stream: userInfoBloc.dayOfWeekAndUsermode,
+              initialData: const Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context,
+                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  key: Key('visibilityThu'),
-                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 4,
+                  key: const Key('visibilityThu'),
+                  visible: snapshot.data.item1 == 'Guardian' ||
+                           snapshot.data.item2 == 4,
                   child: Expanded(
                       child: Card(
-                          color: Color(0xFF0000FF),
-                          child: Day('Torsdag', myList))),
-                );
-              },
-            ),
-
-            StreamBuilder<Tuple2<String, int>>(
-              stream: this.userInfoBloc.dayOfWeekAndUsermode,
-              initialData: Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: Key('visibilityFri'),
-                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 5,
-                  child: Expanded(
-                      child: Card(
-                          color: Color(0xFFFFDD00),
-                          child: Day('Fredag', myList))),
+                          color: const Color(0xFF0000FF),
+                          child: _day('Torsdag', myList))),
                 );
               },
             ),
 
             StreamBuilder<Tuple2<String, int>>(
-              stream: this.userInfoBloc.dayOfWeekAndUsermode,
-              initialData: Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
+              stream: userInfoBloc.dayOfWeekAndUsermode,
+              initialData: const Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context,
+                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  key: Key('visibilitySat'),
-                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 6,
+                  key: const Key('visibilityFri'),
+                  visible: snapshot.data.item1 == 'Guardian' ||
+                           snapshot.data.item2 == 5,
                   child: Expanded(
                       child: Card(
-                          color: Color(0xFFFF0000),
-                          child: Day('Lørdag', myList))),
+                          color: const Color(0xFFFFDD00),
+                          child: _day('Fredag', myList))),
                 );
               },
             ),
 
             StreamBuilder<Tuple2<String, int>>(
-              stream: this.userInfoBloc.dayOfWeekAndUsermode,
-              initialData: Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context, AsyncSnapshot<Tuple2<String, int>> snapshot) {
+              stream: userInfoBloc.dayOfWeekAndUsermode,
+              initialData: const Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context,
+                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
                 return Visibility(
-                  key: Key('visibilitySun'),
-                  visible: snapshot.data.item1 == 'Guardian' || snapshot.data.item2 == 7,
+                  key: const Key('visibilitySat'),
+                  visible: snapshot.data.item1 == 'Guardian' ||
+                           snapshot.data.item2 == 6,
                   child: Expanded(
                       child: Card(
-                          color: Color(0xFFFFFFFF),
-                          child: Day('Søndag', myList))),
+                          color: const Color(0xFFFF0000),
+                          child: _day('Lørdag', myList))),
+                );
+              },
+            ),
+
+            StreamBuilder<Tuple2<String, int>>(
+              stream: userInfoBloc.dayOfWeekAndUsermode,
+              initialData: const Tuple2<String, int>('Guardian', 0),
+              builder: (BuildContext context,
+                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
+                return Visibility(
+                  key: const Key('visibilitySun'),
+                  visible: snapshot.data.item1 == 'Guardian' ||
+                           snapshot.data.item2 == 7,
+                  child: Expanded(
+                      child: Card(
+                          color: const Color(0xFFFFFFFF),
+                          child: _day('Søndag', myList))),
                 );
               },
             ),
