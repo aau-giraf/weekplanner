@@ -10,11 +10,12 @@ import 'package:mockito/mockito.dart';
 
 class MockAuth extends Mock implements AuthBloc {}
 
+// The key for the visibility widget, used to retrieve the widget during testing.
+const String keyOfVisibilityForEdit = "visibilityEditBtn";
+
 void main() {
   ToolbarBloc bloc;
   Api api;
-  // The key for the visibility widget, used to retrieve the widget during testing.
-  String keyOfVisibilityForEdit = "visibilityEditBtn";
 
   setUp(() {
     api = Api("any");

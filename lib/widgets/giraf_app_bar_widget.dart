@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/settings_screen.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -56,7 +58,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(Icons.settings),
           tooltip: 'Indstillinger',
           onPressed: () {
-            Navigator.pushNamed(context, '/settings');
+            Routes.push(context, SettingsScreen());
           },
         ),
       ]
