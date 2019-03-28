@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -28,10 +29,41 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             },
           ),
           IconButton(
-            icon: Icon(Icons.subdirectory_arrow_right),
+            icon: Icon(Icons.lock),
             tooltip: 'trains',
             onPressed: () {
-              _authBloc.logout();
+              Alert(
+                context: context,
+                type: AlertType.none,
+                style: logoutStyle,
+                title: "Log ud",
+                desc: "Vil du at logge ud?",
+                buttons: [
+                  DialogButton(
+                    child: Text(
+                      "Log ud",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                    onPressed: () {
+                      this._authBloc.logout();
+                      Navigator.pop(context);
+                    },
+                    color: Color.fromRGBO(255, 157, 0, 100),
+                    width: 120,
+                  ),
+                  DialogButton(
+                    child: Text(
+                      "Fortryd",
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    color: Color.fromRGBO(255, 157, 0, 100),
+                    width: 120,
+                  )
+                ],
+              ).show();
             },
           ),
           IconButton(
@@ -41,4 +73,22 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           )
         ]);
   }
+
+  var logoutStyle = AlertStyle(
+    animationType: AnimationType.fromTop,
+    isCloseButton: false,
+    isOverlayTapDismiss: true,
+    descStyle: TextStyle(fontWeight: FontWeight.normal),
+    animationDuration: Duration(milliseconds: 400),
+    alertBorder: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0.0),
+      side: BorderSide(
+        color: Colors.white,
+      ),
+    ),
+    titleStyle: TextStyle(
+      color: Colors.black,
+    ),
+  );
 }
+
