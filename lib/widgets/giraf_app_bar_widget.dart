@@ -40,10 +40,10 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
               Alert(
                 context: context,
                 type: AlertType.none,
-                style: logoutStyle,
+                style: _logoutStyle,
                 title: 'Log ud',
                 desc: 'Vil du at logge ud?',
-                buttons: [
+                buttons: <DialogButton> [
                   DialogButton(
                     child: Text(
                       'Log ud',
@@ -79,7 +79,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ]);
   }
 
-  var logoutStyle = AlertStyle(
+  final AlertStyle _logoutStyle = AlertStyle(
     animationType: AnimationType.fromTop,
     isCloseButton: false,
     isOverlayTapDismiss: true,
