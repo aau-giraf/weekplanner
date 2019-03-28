@@ -1,4 +1,4 @@
 {
-  "SERVER_HOST": "http://web.giraf.cs.aau.dk:5000",
+  "SERVER_HOST": "http://srv.giraf.cs.aau.dk/API/",
   "DEBUG": false
 }

@@ -93,6 +93,8 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.white),
                         padding: new EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
+                          key: Key("UsernameKey"),
+
                           style: portrait
                               ? TextStyle(fontSize: 30)
                               : TextStyle(fontSize: 20),
@@ -118,6 +120,7 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          key: Key("PasswordKey"),
                           style: portrait
                               ? TextStyle(fontSize: 30)
                               : TextStyle(fontSize: 20),
@@ -138,6 +141,7 @@ class LoginScreen extends StatelessWidget {
                         child: Transform.scale(
                           scale: 1.5,
                           child: RaisedButton(
+                            key: Key("LoginBtnKey"),
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(10.0)),
                             child: Text(
@@ -162,6 +166,7 @@ class LoginScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10.0)),
                                 child: Text(
                                   'Auto-Login',
+                                  key: Key("AutoLoginKey"),
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () {

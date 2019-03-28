@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/models/username_model.dart';
+import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:weekplanner/di.dart';
@@ -45,7 +46,7 @@ class ChooseCitizenScreen extends StatelessWidget {
                           crossAxisCount: portrait ? 2 : 4,
                           children: snapshot.data
                               .map((UsernameModel user) =>
-                                  citizenEntry(user, context))
+                                  CitizenAvatar(user, context))
                               .toList()),
                     );
                   },
@@ -54,51 +55,6 @@ class ChooseCitizenScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget citizenEntry(UsernameModel user, BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
-      child: GestureDetector(
-        onTap: () {
-          Routes.push(context, WeekplanScreen());
-        },
-        child: Container(
-            child: Column(
-          children: <Widget>[
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: Container(
-                          child: CircleAvatar(
-                            radius: 20,
-                            //TODO: Rigtige profil billeder
-                            backgroundImage: AssetImage(
-                                "assets/login_screen_background_image.png"),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: AutoSizeText(
-                        user.name,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        )),
       ),
     );
   }
