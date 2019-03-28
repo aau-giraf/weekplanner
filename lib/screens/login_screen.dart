@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -65,6 +66,9 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () {
                         login(context, usernameCtrl.value.text,
                             passwordCtrl.value.text);
+                        if (Navigator.canPop(context) == true){
+                          Routes.pop(context);
+                        }
                       },
                       color: Colors.blue,
                     ),
@@ -77,6 +81,9 @@ class LoginScreen extends StatelessWidget {
                       ),
                       onPressed: () {
                         login(context, "graatand", "password");
+                        if (Navigator.canPop(context) == true){
+                          Routes.pop(context);
+                        }
                       },
                       color: Colors.blue,
                     ),

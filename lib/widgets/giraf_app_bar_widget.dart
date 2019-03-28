@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/login_screen.dart';
 
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -38,6 +40,13 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.place),
             tooltip: 'trains',
             onPressed: () {},
+          ),
+          IconButton(
+            icon: new Image.asset('assets/changeToGuardian.png'),
+            tooltip: 'Skift til værge tilstand',
+            onPressed: () {
+              Routes.push(context, LoginScreen());
+            },
           )
         ]);
   }
