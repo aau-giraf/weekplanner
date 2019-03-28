@@ -4,12 +4,16 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
 
+/// The Default AppBar for every screen
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final AuthBloc authBloc;
   final ToolbarBloc toolbarBloc;
   final UserInfoBloc userInfoBloc;
 
+  /// Default constructor.
+  ///
+  /// Takes a [title] which will be displayed at the left hand side of the bar
   GirafAppBar({Key key, this.title})
       : authBloc = di.getDependency<AuthBloc>(),
         toolbarBloc = di.getDependency<ToolbarBloc>(),

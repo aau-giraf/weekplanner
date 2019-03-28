@@ -27,16 +27,28 @@ class WeekplanScreen extends StatelessWidget {
         toolbarBloc = di.getDependency<ToolbarBloc>(),
         super(key: key);
 
+  final String title;
+  final List<String> pictograms = <String>[
+    'assets/read.jpg',
+    'assets/read.jpg'
+  ];
+
+  final SettingsBloc settingsBloc;
+
+  final List<Widget> myList = <Widget>[
+    Card(child: Image.asset('assets/read.jpg')),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Ugeplan',
         ),
-        body: new Row(
+        body: Row(
           children: <Widget>[
             StreamBuilder<GirafTheme>(
-              stream: this.settingsBloc.theme,
+              stream: settingsBloc.theme,
               initialData: GirafTheme.AndroidBlue,
               builder:
                   (BuildContext context, AsyncSnapshot<GirafTheme> snapshot) {
@@ -149,7 +161,7 @@ class WeekplanScreen extends StatelessWidget {
   }
 }
 
-Column Day(String day, List<Widget> myList) {
+Column _day(String day, List<Widget> myList) {
   return Column(
     children: <Widget>[
       Text(day, style: TextStyle(fontWeight: FontWeight.bold)),
@@ -157,10 +169,6 @@ Column Day(String day, List<Widget> myList) {
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return myList[index];
-            return Card(
-              color: Colors.white,
-              child: IconButton(icon: Image.asset('assets/read.jpg')),
-            );
           },
           itemCount: myList.length,
         ),

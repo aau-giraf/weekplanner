@@ -11,7 +11,7 @@ void main() {
     statusApi = StatusApi(httpMock);
   });
 
-  test("Should call status endpoint", () {
+  test('Should call status endpoint', () {
     statusApi
         .status()
         .listen(expectAsync1((bool test) {
@@ -19,15 +19,15 @@ void main() {
     }));
 
     httpMock
-    .expectOne(url: "/", method: Method.get)
-    .flush({
-      "success": true,
-      "errorProperties": [],
-      "errorKey": "NoError"
+    .expectOne(url: '/', method: Method.get)
+    .flush(<String, dynamic>{
+      'success': true,
+      'errorProperties': <dynamic>[],
+      'errorKey': 'NoError'
     });
   });
 
-  test("Should call database status endpoint", () {
+  test('Should call database status endpoint', () {
     statusApi
         .databaseStatus()
         .listen(expectAsync1((bool test) {
@@ -35,16 +35,16 @@ void main() {
     }));
 
     httpMock
-        .expectOne(url: "/database", method: Method.get)
-        .flush({
-      "success": true,
-      "errorProperties": [],
-      "errorKey": "NoError"
+        .expectOne(url: '/database', method: Method.get)
+        .flush(<String, dynamic>{
+      'success': true,
+      'errorProperties': <dynamic>[],
+      'errorKey': 'NoError'
     });
   });
 
-  test("Should call version-info endpoint", () {
-    String version = "v1";
+  test('Should call version-info endpoint', () {
+    const String version = 'v1';
 
     statusApi
         .versionInfo()
@@ -53,12 +53,12 @@ void main() {
     }));
 
     httpMock
-        .expectOne(url: "/database", method: Method.get)
-        .flush({
-      "data": version,
-      "success": true,
-      "errorProperties": [],
-      "errorKey": "NoError"
+        .expectOne(url: '/database', method: Method.get)
+        .flush(<String, dynamic>{
+      'data': version,
+      'success': true,
+      'errorProperties': <dynamic>[],
+      'errorKey': 'NoError'
     });
   });
 
