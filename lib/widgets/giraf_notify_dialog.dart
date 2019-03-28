@@ -18,6 +18,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      key: Key("NotifyDialogKey"),
       contentPadding: EdgeInsets.all(0.0),
       titlePadding: EdgeInsets.all(0.0),
       shape:
