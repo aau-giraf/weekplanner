@@ -11,7 +11,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Toolbar of the application.
   GirafAppBar({Key key, this.title})
-      : authBloc = di.getDependency<AuthBloc>(),
+      : _authBloc = di.getDependency<AuthBloc>(),
         toolbarBloc = di.getDependency<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
@@ -20,7 +20,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
   /// Contains the functionality regarding login, logout etc.
-  final AuthBloc authBloc;
+  final AuthBloc _authBloc;
 
   /// Contains the functionality of the toolbar.
   final ToolbarBloc toolbarBloc;
