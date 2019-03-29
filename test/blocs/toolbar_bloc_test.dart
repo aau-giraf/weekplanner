@@ -10,9 +10,10 @@ void main() {
     expect(toolbarBloc.editVisible, emits(true));
   });
 
-  test('tream should emit false', () {
+  test('Stream should emit false', () {
     final ToolbarBloc toolbarBloc = ToolbarBloc();
     toolbarBloc.setEditVisible(false);
     expect(toolbarBloc.editVisible, emits(false));
   });
 }
+

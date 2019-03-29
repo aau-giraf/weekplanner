@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 
-/// Toolbar of the application.
+/// The Default AppBar for every screen
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
   /// Default constructor.

@@ -3,10 +3,14 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../widgets/giraf_app_bar_widget.dart';
+import '../widgets/giraf_app_bar_widget.dart';
+
+
 
 /// Screen containing all days with tasks.
 class WeekplanScreen extends StatelessWidget {
@@ -39,6 +43,7 @@ class WeekplanScreen extends StatelessWidget {
     'assets/read.jpg',
     'assets/read.jpg'
   ];
+
 
   @override
   Widget build(BuildContext context) {
