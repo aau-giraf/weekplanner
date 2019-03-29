@@ -25,12 +25,10 @@ class Bootstrap {
       return AuthBloc(i.getDependency<Api>());
     });
 
-    di.registerSingleton<SettingsBloc>((_) {
-      return SettingsBloc();
-    });
-    });
-      return WeekplanBloc(i.getDependency<Api>());
     di.registerDependency<WeekplanBloc>((Injector i) {
+      return WeekplanBloc(i.getDependency<Api>());
+    });
+
     di.registerSingleton<ToolbarBloc>((_) {
       return ToolbarBloc();
     });
@@ -42,6 +40,5 @@ class Bootstrap {
     di.registerDependency<PictogramImageBloc>((Injector i) {
       return PictogramImageBloc(i.getDependency<Api>());
     });
-    di.registerDependency<WeekplanBloc>((Injector i) {
   }
 }

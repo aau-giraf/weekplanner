@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
@@ -8,17 +7,12 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
-
-
-/// Screen containing all days with tasks.
+// Screen containing all days with tasks.
 class WeekplanScreen extends StatelessWidget {
-  final SettingsBloc settingsBloc = di.getDependency<SettingsBloc>();
   //TODO: Find out if weekplanBloc is unnecessary and if we should subscribe to another bloc instead
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
 
-  WeekplanScreen(
-      {Key key, WeekModel week})
-      : super(key: key) {
+  WeekplanScreen({Key key, WeekModel week}) : super(key: key) {
     weekplanBloc.setWeek(week);
   }
 
@@ -44,7 +38,7 @@ class WeekplanScreen extends StatelessWidget {
 }
 
 Row _buildWeeks(WeekModel weekModel) {
-  const List<int> weekColors = [
+  const List<int> weekColors = <int>[
     0xFF08A045,
     0xFF540D6E,
     0xFFF77F00,
@@ -53,9 +47,9 @@ Row _buildWeeks(WeekModel weekModel) {
     0xFFDB2B39,
     0xFFFFFFFF
   ];
-  List<Widget> weekDays = List<Widget>();
+  final List<Widget> weekDays = <Widget>[];
   for (int i = 0; i < weekModel.days.length; i++) {
-    weekDays.add( Expanded(
+    weekDays.add(Expanded(
         child: Card(
             color: Color(weekColors[i]),
             child: _day(weekModel.days[i].day, weekModel.days[i].activities))));
@@ -112,6 +106,7 @@ Card _translateWeekDay(Weekday day) {
   }
   const Color color = Color(0xA0FFFFFF);
   return Card(
+      key: Key(translation),
       color: color,
       child: ListTile(
           title: Text(
