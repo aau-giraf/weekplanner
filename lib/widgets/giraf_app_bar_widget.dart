@@ -54,7 +54,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         IconButton(
-          icon: Image.asset('assets/changeToGuardian.png'),
+          icon: Image.asset('assets/changeToCitizen.png'),
           tooltip: 'Skift mode',
 
           onPressed: () {
