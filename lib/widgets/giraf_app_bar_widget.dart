@@ -5,8 +5,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screen.dart';
 
 /// The Default AppBar for every screen
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {

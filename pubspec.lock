@@ -8,6 +8,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  async_test:
+    dependency: "direct dev"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "94e216dfc42aa6fca1261d2c7fa4e8b8d054ba3b"
+      url: "https://github.com/ptope/async_test"
+    source: git
+    version: "0.0.1"
   boolean_selector:
     dependency: transitive
     description:
