@@ -8,6 +8,9 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
+
+
+/// Screen containing all days with tasks.
 class WeekplanScreen extends StatelessWidget {
   final SettingsBloc settingsBloc = di.getDependency<SettingsBloc>();
   //TODO: Find out if weekplanBloc is unnecessary and if we should subscribe to another bloc instead

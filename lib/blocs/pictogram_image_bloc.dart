@@ -6,18 +6,19 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
+/// Pictogram-Image Business Logic Component
 class PictogramImageBloc extends BlocBase {
-  /// Provides loaded pictogram-images
-  Stream<Image> get image => _image.stream;
-
-  final BehaviorSubject<Image> _image = BehaviorSubject();
-
-  final Api _api;
-
   /// Pictogram-Image Business Logic Component
   ///
   /// Provides ability to load an pictogram-image and display it
   PictogramImageBloc(this._api);
+
+  /// Provides loaded pictogram-images
+  Stream<Image> get image => _image.stream;
+
+  final BehaviorSubject<Image> _image = BehaviorSubject<Image>();
+
+  final Api _api;
 
   /// Initializes loading of a specific pictogram image
   ///
