@@ -3,14 +3,10 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
-import '../widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../widgets/giraf_app_bar_widget.dart';
-
-
 
 /// Screen containing all days with tasks.
 class WeekplanScreen extends StatelessWidget {
@@ -27,6 +23,8 @@ class WeekplanScreen extends StatelessWidget {
 
   /// Contains the functionality of the SettingsScreen.
   final SettingsBloc settingsBloc;
+
+  /// Contains the functionality of changing the weekplan.
   final UserInfoBloc userInfoBloc;
 
 
@@ -41,73 +39,6 @@ class WeekplanScreen extends StatelessWidget {
     'assets/read.jpg',
     'assets/read.jpg'
   ];
-
-
-  @override
-  Widget build(BuildContext context) {
-        return Scaffold(
-          appBar: GirafAppBar(
-            title: 'Ugeplan',
-          ),
-          body:
-            new Row(
-              children: <Widget>[
-                StreamBuilder<GirafTheme>(
-                  stream: this.settingsBloc.theme,
-                  initialData: GirafTheme.AndroidBlue,
-                  builder: (BuildContext context, AsyncSnapshot<GirafTheme> snapshot){
-                    return Text(snapshot.data.toString());
-                  },
-                ),
-                Expanded(
-                  child: Card(
-                    color: Color(0xFF007700),
-                    child: Day('Mandag', myList)
-                  )
-                ),
-                Expanded(
-                  child: Card(
-                    color: Color(0xFF800080),
-                    child: Day('Tirsdag', myList)
-                  )
-                ),
-                Expanded(
-                  child: Card(
-                    color: Color(0xFFFF8500),
-                    child: Day('Onsdag', myList)
-                  )
-                ),
-                Expanded(
-                  child: Card(
-                    color: Color(0xFF0000FF),
-                    child: Day('Torsdag', myList)
-                  )
-                ),
-                Expanded(
-                  child: Card(
-                    color: Color(0xFFFFDD00),
-
-                    child: Day('Fredag', myList)
-                  )
-                ),
-                Expanded(
-                  child: Card(
-                    color: Color(0xFFFF0000),
-
-                    child: Day('Lørdag', myList)
-                  )
-                ),
-                Expanded(
-                  child: Card(
-                    color: Color(0xFFFFFFFF),
-
-                    child: Day('Søndag', myList)
-                  )
-                ),
-              ],
-            )
-
-        );
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +68,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Expanded(
                       child: Card(
                           color: const Color(0xFF007700),
-                          child: _day('Mandag', myList))),
+                          child: _day('Mandag', tasksList))),
                 );
               },
             ),
@@ -153,7 +84,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Expanded(
                       child: Card(
                           color: const Color(0xFF800080),
-                          child: _day('Tirsdag', myList))),
+                          child: _day('Tirsdag', tasksList))),
                 );
               },
             ),
@@ -169,7 +100,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Expanded(
                       child: Card(
                           color: const Color(0xFFFF8500),
-                          child: _day('Onsdag', myList))),
+                          child: _day('Onsdag', tasksList))),
                 );
               },
             ),
@@ -185,7 +116,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Expanded(
                       child: Card(
                           color: const Color(0xFF0000FF),
-                          child: _day('Torsdag', myList))),
+                          child: _day('Torsdag', tasksList))),
                 );
               },
             ),
@@ -202,7 +133,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Expanded(
                       child: Card(
                           color: const Color(0xFFFFDD00),
-                          child: _day('Fredag', myList))),
+                          child: _day('Fredag', tasksList))),
                 );
               },
             ),
@@ -219,7 +150,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Expanded(
                       child: Card(
                           color: const Color(0xFFFF0000),
-                          child: _day('Lørdag', myList))),
+                          child: _day('Lørdag', tasksList))),
                 );
               },
             ),
@@ -236,7 +167,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Expanded(
                       child: Card(
                           color: const Color(0xFFFFFFFF),
-                          child: _day('Søndag', myList))),
+                          child: _day('Søndag', tasksList))),
                 );
               },
             ),

@@ -16,14 +16,19 @@ class MockAuth extends Mock implements AuthBloc {}
 
 /// Used to retrieve the visibility widget wrapping the editbutton
 const String keyOfVisibilityForEdit = 'visibilityEditBtn';
+const String keyOfVisibilityForMon = 'visibilityMon';
+const String keyOfVisibilityForTue = 'visibilityTue';
+const String keyOfVisibilityForWed = 'visibilityWed';
+const String keyOfVisibilityForThu = 'visibilityThu';
+const String keyOfVisibilityForFri = 'visibilityFri';
+const String keyOfVisibilityForSat = 'visibilitySat';
+const String keyOfVisibilityForSun = 'visibilitySun';
 
 void main() {
   ToolbarBloc toolbarBloc;
   UserInfoBloc userInfoBloc;
   SettingsBloc settingsBloc;
   Api api;
-  // The key for the visibility widget, used to retrieve the widget during testing.
-  String keyOfVisibilityForEdit = "visibilityEditBtn";
 
   setUp(() {
     api = Api('any');
@@ -115,22 +120,22 @@ void main() {
 
   testWidgets('All days should initially be visible',
              (WidgetTester tester) async {
-    WeekplanScreen weekplanScreen = WeekplanScreen(title:'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     final Visibility visibilityMon =
-        tester.widget(find.byKey(const Key('visibilityMon')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForMon)));
     final Visibility visibilityTue =
-        tester.widget(find.byKey(const Key('visibilityTue')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForTue)));
     final Visibility visibilityWed =
-        tester.widget(find.byKey(const Key('visibilityWed')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForWed)));
     final Visibility visibilityThu =
-        tester.widget(find.byKey(const Key('visibilityThu')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForThu)));
     final Visibility visibilityFri =
-        tester.widget(find.byKey(const Key('visibilityFri')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForFri)));
     final Visibility visibilitySat =
-        tester.widget(find.byKey(const Key('visibilitySat')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSat)));
     final Visibility visibilitySun =
-        tester.widget(find.byKey(const Key('visibilitySun')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSun)));
 
     expect(visibilityMon.visible, true);
     expect(visibilityTue.visible, true);
@@ -144,25 +149,24 @@ void main() {
 
   testWidgets('All days should be visible in Guardianmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title:'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Guardian');
     await tester.pumpAndSettle();
     final Visibility visibilityMon =
-    tester.widget(find.byKey(const Key('visibilityMon')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForMon)));
     final Visibility visibilityTue =
-    tester.widget(find.byKey(const Key('visibilityTue')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForTue)));
     final Visibility visibilityWed =
-    tester.widget(find.byKey(const Key('visibilityWed')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForWed)));
     final Visibility visibilityThu =
-    tester.widget(find.byKey(const Key('visibilityThu')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForThu)));
     final Visibility visibilityFri =
-    tester.widget(find.byKey(const Key('visibilityFri')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForFri)));
     final Visibility visibilitySat =
-    tester.widget(find.byKey(const Key('visibilitySat')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSat)));
     final Visibility visibilitySun =
-    tester.widget(find.byKey(const Key('visibilitySun')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSun)));
 
     expect(visibilityMon.visible, true);
     expect(visibilityTue.visible, true);
@@ -176,27 +180,26 @@ void main() {
 
   testWidgets('All days should be visible after toggle of usermode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title:'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     userInfoBloc.setUserMode('Guardian');
     await tester.pumpAndSettle();
     final Visibility visibilityMon =
-    tester.widget(find.byKey(const Key('visibilityMon')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForMon)));
     final Visibility visibilityTue =
-    tester.widget(find.byKey(const Key('visibilityTue')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForTue)));
     final Visibility visibilityWed =
-    tester.widget(find.byKey(const Key('visibilityWed')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForWed)));
     final Visibility visibilityThu =
-    tester.widget(find.byKey(const Key('visibilityThu')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForThu)));
     final Visibility visibilityFri =
-    tester.widget(find.byKey(const Key('visibilityFri')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForFri)));
     final Visibility visibilitySat =
-    tester.widget(find.byKey(const Key('visibilitySat')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSat)));
     final Visibility visibilitySun =
-    tester.widget(find.byKey(const Key('visibilitySun')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSun)));
 
     expect(visibilityMon.visible, true);
     expect(visibilityTue.visible, true);
@@ -210,92 +213,87 @@ void main() {
 
   testWidgets('Monday should be visible in citizenmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title: 'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
+
+    //Makes a mocked clocked, so the test will work on all days.
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,18));
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     final Visibility visibility =
-        tester.widget(find.byKey(const Key('visibilityMon')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForMon)));
     expect(visibility.visible, true);
   });
 
   testWidgets('Tuesday should be visible in citizenmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title: 'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,19));
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     final Visibility visibility =
-        tester.widget(find.byKey(const Key('visibilityTue')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForTue)));
     expect(visibility.visible, true);
   });
 
   testWidgets('Wednesday should be visible in citizenmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title: 'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,20));
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     final Visibility visibility =
-        tester.widget(find.byKey(const Key('visibilityWed')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForWed)));
     expect(visibility.visible, true);
   });
 
   testWidgets('Thursday should be visible in citizenmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title: 'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,21));
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     final Visibility visibility =
-        tester.widget(find.byKey(const Key('visibilityThu')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForThu)));
     expect(visibility.visible, true);
   });
 
   testWidgets('Friday should be visible in citizenmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title: 'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,22));
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     final Visibility visibility =
-        tester.widget(find.byKey(const Key('visibilityFri')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForFri)));
     expect(visibility.visible, true);
   });
 
   testWidgets('Saturday should be visible in citizenmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title: 'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,23));
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     final Visibility visibility =
-        tester.widget(find.byKey(Key('visibilitySat')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSat)));
     expect(visibility.visible, true);
   });
 
   testWidgets('Sunday should be visible in citizenmode',
              (WidgetTester tester) async {
-    final WeekplanScreen weekplanScreen =
-        WeekplanScreen(title: 'WeekplanScreen');
+    final WeekplanScreen weekplanScreen = WeekplanScreen();
     userInfoBloc.clock = Clock.fixed(DateTime(2019, 03,24));
     await tester.pumpWidget(makeTestableWidget(child: weekplanScreen));
     userInfoBloc.setUserMode('Citizen');
     await tester.pumpAndSettle();
     final Visibility visibility =
-        tester.widget(find.byKey(Key('visibilitySun')));
+        tester.widget(find.byKey(const Key(keyOfVisibilityForSun)));
     expect(visibility.visible, true);
   });
 }

@@ -10,27 +10,32 @@ void main() {
   Clock mockClock;
 
   test('initial value should be \'Guardian\'', () {
-    final UserInfoBloc userInfoBloc = new UserInfoBloc();
+    final UserInfoBloc userInfoBloc = UserInfoBloc();
 
-    final initialData = userInfoBloc.changeUserMode.first.then((val) => val);
+    final Future<String> initialData =
+        userInfoBloc.changeUserMode.first.then((String val) => val);
     expect(initialData, 'Guardian');
   });
 
-  test('changeUserMode stream should emit Tuple2<String, int>(\'Guardian\',2', () {
-    final UserInfoBloc userInfoBloc = new UserInfoBloc(mockClock);
+  test('changeUserMode stream should emit Tuple2<String, int>(\'Guardian\',2',
+          () {
+    final UserInfoBloc userInfoBloc = UserInfoBloc(mockClock);
     userInfoBloc.setUserMode('Guardian');
 
     expect(userInfoBloc.changeUserMode, emits('Guardian'));
-    expect(userInfoBloc.dayOfWeekAndUsermode, emits(Tuple2('Guardian', 2)));
+    expect(userInfoBloc.dayOfWeekAndUsermode,
+           emits(const Tuple2<String, int>('Guardian', 2)));
   });
 
-  test('changeUserMode stream should emit Tuple2<String, int>(\'Citizen\',2', () {
+  test('changeUserMode stream should emit Tuple2<String, int>(\'Citizen\',2',
+          () {
     mockClock = Clock.fixed(DateTime(2019, 03, 19));
-    final UserInfoBloc userInfoBloc = new UserInfoBloc(mockClock);
+    final UserInfoBloc userInfoBloc = UserInfoBloc(mockClock);
     userInfoBloc.setUserMode('Citizen');
 
     expect(userInfoBloc.changeUserMode, emits('Citizen'));
-    expect(userInfoBloc.dayOfWeekAndUsermode, emits(Tuple2('Citizen', 2)));
+    expect(userInfoBloc.dayOfWeekAndUsermode,
+           emits(const Tuple2<String, int>('Citizen', 2)));
   });
 
 

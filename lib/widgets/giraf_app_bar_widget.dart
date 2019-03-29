@@ -8,11 +8,6 @@ import 'package:weekplanner/screens/settings_screen.dart';
 
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final AuthBloc authBloc;
-  final ToolbarBloc toolbarBloc;
-  final UserInfoBloc userInfoBloc;
-
   /// Toolbar of the application.
   /// Default constructor.
   ///
@@ -21,9 +16,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       : authBloc = di.getDependency<AuthBloc>(),
         toolbarBloc = di.getDependency<ToolbarBloc>(),
         userInfoBloc = di.getDependency<UserInfoBloc>(),
-        preferredSize = Size.fromHeight(56.0),
-        super(key: key);
-
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 
@@ -36,6 +28,10 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Contains the functionality of the toolbar.
   final ToolbarBloc toolbarBloc;
 
+  /// Contains the functionality of changing the weekplan.
+  final UserInfoBloc userInfoBloc;
+
+  //
   @override
   final Size preferredSize;
 
