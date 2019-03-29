@@ -4,8 +4,10 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/add_activity_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/api/api.dart';
+
 
 /// Bootstrap the project
 class Bootstrap {
@@ -37,6 +39,10 @@ class Bootstrap {
 
     di.registerDependency<PictogramImageBloc>((Injector i) {
       return PictogramImageBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency<AddActivityBloc>((_){
+      return AddActivityBloc();
     });
   }
 }

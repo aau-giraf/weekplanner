@@ -71,7 +71,7 @@ class UserApi {
       return Image.memory(res.response.bodyBytes);
     });
   }
-
+  
   Observable<bool> updateIcon() {
     // TODO(boginw): implement this
     return null;
