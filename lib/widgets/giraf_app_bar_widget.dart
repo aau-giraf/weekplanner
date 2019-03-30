@@ -75,6 +75,17 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                 buttons: <DialogButton> [
                   DialogButton(
                     child: Text(
+                      'Fortryd',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    color: const Color.fromRGBO(255, 157, 0, 100),
+                    width: 120,
+                  ),
+                  DialogButton(
+                    child: Text(
                       'Log ud',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
@@ -85,17 +96,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: const Color.fromRGBO(255, 157, 0, 100),
                     width: 120,
                   ),
-                  DialogButton(
-                    child: Text(
-                      'Fortryd',
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    color: const Color.fromRGBO(255, 157, 0, 100),
-                    width: 120,
-                  )
                 ],
               ).show();
             },
