@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/providers/http/http.dart';
-import 'dart:convert';
 
+/// Pictogram endpoints
 class PictogramApi {
-  final Http _http;
-
+  /// Default constructor
   PictogramApi(this._http);
+
+  final Http _http;
 
   /// Get all public pictograms available to the user (i.e the public pictograms
   /// and those owned by the user (PRIVATE) and his department (PROTECTED)).
@@ -18,17 +19,23 @@ class PictogramApi {
   /// [page] Page number
   Observable<List<PictogramModel>> getAll(
       {String query, @required int page, @required int pageSize}) {
-    // TODO: move the support for queryParams to Http
-    Uri uri = Uri(queryParameters: {
-      "query": query,
-      "page": page.toString(),
-      "pageSize": pageSize.toString(),
+    // TODO(boginw): move the support for queryParams to Http
+    final Uri uri = Uri(queryParameters: <String, String>{
+      'query': query,
+      'page': page.toString(),
+      'pageSize': pageSize.toString(),
     });
 
     return _http.get(uri.toString()).map((Response res) {
-      return (res.json['data'] as List).map((map) {
-        return PictogramModel.fromJson(map);
-      }).toList();
+      if (res.json['data'] is List) {
+        return List<Map<String, dynamic>>.from(res.json['data'])
+            .map((Map<String, dynamic> map) {
+          return PictogramModel.fromJson(map);
+        }).toList();
+      } else {
+        // TODO(boginw): throw appropriate error
+        return null;
+      }
     });
   }
 
@@ -37,7 +44,7 @@ class PictogramApi {
   ///
   /// [id] Id of pictogram to get
   Observable<PictogramModel> get(int id) {
-    return _http.get("/$id").map((Response res) {
+    return _http.get('/$id').map((Response res) {
       return PictogramModel.fromJson(res.json['data']);
     });
   }
@@ -73,7 +80,7 @@ class PictogramApi {
   }
 
   Observable<PictogramModel> updateImage() {
-    // TODO: implement me
+    // TODO(boginw): implement me
     return null;
   }
 
@@ -83,7 +90,7 @@ class PictogramApi {
   ///
   /// [id] ID of the pictogram for which the image should be fetched
   Observable<Image> getImage(int id) {
-    // TODO test this method
+    // TODO(boginw): test this method
     return _http.get('/$id/image/raw').map((Response res) {
       return Image.memory(res.response.bodyBytes);
     });

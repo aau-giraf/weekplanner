@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/widgets/bloc_provider_tree_widget.dart';
+import 'package:weekplanner/di.dart';
 
+/// Logs the user in
 class LoginScreen extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
-  final TextEditingController usernameCtrl = TextEditingController();
-  final TextEditingController passwordCtrl = TextEditingController();
-
-  AuthBloc authBloc;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameCtrl = TextEditingController();
+  final TextEditingController _passwordCtrl = TextEditingController();
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
-    authBloc = BlocProviderTree.of<AuthBloc>(context);
-
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
         body: Container(
       width: screenSize.width,
       height: screenSize.height,
-      padding: new EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/login_screen_background_image.png"),
+          image: const AssetImage('assets/login_screen_background_image.png'),
           fit: BoxFit.cover,
         ),
       ),
@@ -32,14 +29,14 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-            Image(image: AssetImage("assets/giraf_splash_logo.png")),
+            Image(image: const AssetImage('assets/giraf_splash_logo.png')),
             Expanded(
                 child: Form(
-              key: this._formKey,
+              key: _formKey,
               child: ListView(
                 children: <Widget>[
                   TextField(
-                    controller: usernameCtrl,
+                    controller: _usernameCtrl,
                     keyboardType: TextInputType.text,
                     // Use email input type for emails.
                     decoration: InputDecoration(
@@ -49,7 +46,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   TextField(
-                    controller: passwordCtrl,
+                    controller: _passwordCtrl,
                     obscureText: true,
                     // Use email input type for emails.
                     decoration: InputDecoration(
@@ -59,42 +56,26 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    child: new RaisedButton(
-                      child: new Text(
+                    child: RaisedButton(
+                      child: Text(
                         'Login',
-                        style: new TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        authBloc.loggedIn.take(1).listen((status){
-                          if(status){
-                            //Navigator.pushNamed(context, "/weekplan");
-                            Navigator.pushNamed(context, "/pictogram/search");
-                          }
-                        });
-                        authBloc.authenticate(
-                            usernameCtrl.value.text,
-                            passwordCtrl.value.text
-                        );
+                        _login(context, _usernameCtrl.value.text,
+                            _passwordCtrl.value.text);
                       },
                       color: Colors.blue,
                     ),
                   ),
                   Container(
-                    child: new RaisedButton(
-                      child: new Text(
+                    child: RaisedButton(
+                      child: Text(
                         'Auto-Login',
-                        style: new TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        authBloc.loggedIn.take(1).listen((status){
-                          if(status){
-                            Navigator.pushNamed(context, "/select_weekplan/new_weekplan");
-                          }
-                        });
-                        authBloc.authenticate(
-                            "graatand",
-                            "password"
-                        );
+                        _login(context, 'graatand', 'password');
                       },
                       color: Colors.blue,
                     ),
@@ -104,5 +85,9 @@ class LoginScreen extends StatelessWidget {
             ))
           ])),
     ));
+  }
+
+  void _login(BuildContext context, String username, String password) {
+    _authBloc.authenticate(username, password);
   }
 }

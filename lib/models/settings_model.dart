@@ -1,23 +1,60 @@
 import 'package:meta/meta.dart';
-import 'package:weekplanner/models/giraf_theme_enum.dart';
-import 'package:weekplanner/models/cancel_mark_enum.dart';
-import 'package:weekplanner/models/complete_mark_enum.dart';
-import 'package:weekplanner/models/default_timer_enum.dart';
+import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
+import 'package:weekplanner/models/enums/cancel_mark_enum.dart';
+import 'package:weekplanner/models/enums/complete_mark_enum.dart';
+import 'package:weekplanner/models/enums/default_timer_enum.dart';
 import 'package:weekplanner/models/model.dart';
-import 'package:weekplanner/models/orientation_enum.dart';
+import 'package:weekplanner/models/enums/orientation_enum.dart';
 import 'package:weekplanner/models/weekday_color_model.dart';
 
 class SettingsModel implements Model {
+  SettingsModel(
+      {@required this.orientation,
+      @required this.completeMark,
+      @required this.cancelMark,
+      @required this.defaultTimer,
+      this.timerSeconds,
+      this.activitiesCount,
+      @required this.theme,
+      this.nrOfDaysToDisplay,
+      this.greyscale,
+      this.weekDayColors});
+
+  SettingsModel.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      throw const FormatException(
+          '[SettingModel]: Cannot initialize from null');
+    }
+
+    orientation = Orientation.values[(json['orientation']) - 1];
+    completeMark = CompleteMark.values[(json['completeMark']) - 1];
+    cancelMark = CancelMark.values[(json['cancelMark']) - 1];
+    defaultTimer = DefaultTimer.values[(json['defaultTimer']) - 1];
+    timerSeconds = json['timerSeconds'];
+    activitiesCount = json['activitiesCount'];
+    theme = GirafTheme.values[(json['theme']) - 1];
+    nrOfDaysToDisplay = json['nrOfDaysToDisplay'];
+    greyscale = json['greyScale'];
+    if (json['weekDayColors'] != null && json['weekDayColors'] is List) {
+      weekDayColors = List<Map<String, dynamic>>.from(json['weekDayColors'])
+          .map(
+              (Map<String, dynamic> value) => WeekdayColorModel.fromJson(value))
+          .toList();
+    } else {
+      // TODO(TobiasPalludan): Throw appropriate error.
+    }
+  }
+
   /// Preferred orientation of device/screen
   Orientation orientation;
 
-  /// Preferred appearence of checked resources
+  /// Preferred appearance of checked resources
   CompleteMark completeMark;
 
-  /// Preferred appearence of cancelled resources
+  /// Preferred appearance of cancelled resources
   CancelMark cancelMark;
 
-  /// Preferred appearence of timer
+  /// Preferred appearance of timer
   DefaultTimer defaultTimer;
 
   /// Number of seconds for timer
@@ -37,50 +74,20 @@ class SettingsModel implements Model {
 
   List<WeekdayColorModel> weekDayColors;
 
-  SettingsModel(
-      {@required this.orientation,
-      @required this.completeMark,
-      @required this.cancelMark,
-      @required this.defaultTimer,
-      this.timerSeconds,
-      this.activitiesCount,
-      @required this.theme,
-      this.nrOfDaysToDisplay,
-      this.greyscale,
-      this.weekDayColors});
-
-  SettingsModel.fromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      throw FormatException("[SettingModel]: Cannot initialize from null");
-    }
-
-    this.orientation = Orientation.values[(json['orientation'] as int) - 1];
-    this.completeMark = CompleteMark.values[(json['completeMark'] as int) - 1];
-    this.cancelMark = CancelMark.values[(json['cancelMark'] as int) - 1];
-    this.defaultTimer = DefaultTimer.values[(json['defaultTimer'] as int) - 1];
-    this.timerSeconds = json['timerSeconds'];
-    this.activitiesCount = json['activitiesCount'];
-    this.theme = GirafTheme.values[(json['theme'] as int) - 1];
-    this.nrOfDaysToDisplay = json['nrOfDaysToDisplay'];
-    this.greyscale = json['greyScale'];
-    this.weekDayColors = (json['weekDayColors'] as List)
-        ?.map((value) => WeekdayColorModel.fromJson(value))
-        ?.toList();
-  }
-
   @override
   Map<String, dynamic> toJson() {
-    return {
-      "orientation": this.orientation.index + 1,
-      "completeMark": this.completeMark.index + 1,
-      "cancelMark": this.cancelMark.index + 1,
-      "defaultTimer": this.defaultTimer.index + 1,
-      "timerSeconds": this.timerSeconds,
-      "activitiesCount": this.activitiesCount,
-      "theme": this.theme.index + 1,
-      "nrOfDaysToDisplay": this.nrOfDaysToDisplay,
-      "greyScale": this.greyscale,
-      "weekDayColors": this.weekDayColors?.map((e) => e.toJson())?.toList()
+    return <String, dynamic>{
+      'orientation': orientation.index + 1,
+      'completeMark': completeMark.index + 1,
+      'cancelMark': cancelMark.index + 1,
+      'defaultTimer': defaultTimer.index + 1,
+      'timerSeconds': timerSeconds,
+      'activitiesCount': activitiesCount,
+      'theme': theme.index + 1,
+      'nrOfDaysToDisplay': nrOfDaysToDisplay,
+      'greyScale': greyscale,
+      'weekDayColors':
+          weekDayColors?.map((WeekdayColorModel e) => e.toJson())?.toList()
     };
   }
 }

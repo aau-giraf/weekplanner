@@ -2,30 +2,37 @@ import 'package:weekplanner/models/department_model.dart';
 import 'package:weekplanner/models/department_name_model.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/providers/http/http.dart';
-import 'package:weekplanner/providers/peristence/persistence.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// Department endpoints
 class DepartmentApi {
-  final Http _http;
-  final Persistence _persist;
+  /// Default constructor
+  DepartmentApi(this._http);
 
-  DepartmentApi(this._http, this._persist);
+  final Http _http;
 
   /// Get request for getting all the department names.
   Observable<List<DepartmentNameModel>> departmentNames() {
-    return _http.get("/").map((Response res) {
-      return (res.json["data"] as List)
-          .map((name) => DepartmentNameModel.fromJson(name))
-          .toList();
+    return _http.get('/').map((Response res) {
+      if (res.json['data'] is List) {
+        return List<Map<String, dynamic>>.from(res.json['data'])
+            .map((Map<String, dynamic> name) =>
+                DepartmentNameModel.fromJson(name))
+            .toList();
+      } else {
+        // TODO(boginw): Throw appropriate error
+        return null;
+      }
     });
   }
 
-  /// Create a new department. it's only necessary to supply the departments name
+  /// Create a new department. it's only necessary to supply the
+  /// departments name
   ///
   /// [model] The department to create
   Observable<DepartmentModel> createDepartment(DepartmentModel model) {
-    return _http.post("/", model.toJson()).map((Response res) {
-      return DepartmentModel.fromJson(res.json["data"]);
+    return _http.post('/', model.toJson()).map((Response res) {
+      return DepartmentModel.fromJson(res.json['data']);
     });
   }
 
@@ -33,8 +40,8 @@ class DepartmentApi {
   ///
   /// [id] The id of the department to retrieve.
   Observable<DepartmentModel> getDepartment(int id) {
-    return _http.get("/$id").map((Response res) {
-      return DepartmentModel.fromJson(res.json["data"]);
+    return _http.get('/$id').map((Response res) {
+      return DepartmentModel.fromJson(res.json['data']);
     });
   }
 
@@ -42,10 +49,15 @@ class DepartmentApi {
   ///
   /// [id] Id of Department to get citizens for
   Observable<List<UsernameModel>> getDepartmentUsers(int id) {
-    return _http.get("/$id/citizens").map((Response res) {
-      return (res.json["data"] as List)
-          .map((name) => UsernameModel.fromJson(name))
-          .toList();
+    return _http.get('/$id/citizens').map((Response res) {
+      if (res.json['data'] is List) {
+        return List<Map<String, dynamic>>.from(res.json['data'])
+            .map((Map<String, dynamic> name) => UsernameModel.fromJson(name))
+            .toList();
+      } else {
+        // TODO(boginw): Throw appropriate error
+        return null;
+      }
     });
   }
 
@@ -57,8 +69,8 @@ class DepartmentApi {
   /// [userId] The ID of a GirafUser to be added to the department
   Observable<DepartmentModel> addUserToDepartment(
       int departmentId, String userId) {
-    return _http.post("/$departmentId/user/$userId", {}).map((Response res) {
-      return DepartmentModel.fromJson(res.json["data"]);
+    return _http.post('/$departmentId/user/$userId').map((Response res) {
+      return DepartmentModel.fromJson(res.json['data']);
     });
   }
 
@@ -67,8 +79,9 @@ class DepartmentApi {
   /// [id] ID of the department which should change name
   /// [newName] New name for the department
   Observable<bool> updateName(int id, String newName) {
-    return _http.put("/$id/name", {"name": newName}).map((Response res) {
-      return res.json["success"];
+    return _http.put('/$id/name', <String, String>{'name': newName}).map(
+        (Response res) {
+      return res.json['success'];
     });
   }
 
@@ -76,8 +89,8 @@ class DepartmentApi {
   ///
   /// [id] Identifier of Department to delete
   Observable<bool> delete(int id) {
-    return _http.delete("/$id").map((Response res) {
-      return res.json["success"];
+    return _http.delete('/$id').map((Response res) {
+      return res.json['success'];
     });
   }
 }
