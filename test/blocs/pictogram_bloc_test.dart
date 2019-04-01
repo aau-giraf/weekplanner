@@ -1,10 +1,10 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:mockito/mockito.dart';
-import 'package:weekplanner/providers/api/api.dart';
-import 'package:weekplanner/providers/api/pictogram_api.dart';
+import 'package:api_client/api/api.dart';
+import 'package:api_client/api/pictogram_api.dart';
 import 'package:async_test/async_test.dart';
 
 class MockPictogramApi extends Mock implements PictogramApi {}

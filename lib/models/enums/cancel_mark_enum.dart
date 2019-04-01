@@ -1,3 +1,0 @@
-enum CancelMark{
-  Removed, Cross
-}
