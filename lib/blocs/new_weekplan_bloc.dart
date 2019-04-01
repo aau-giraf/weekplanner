@@ -4,9 +4,6 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
 class NewWeekplanBloc extends BlocBase {
-  // StreamController<String> _saveEventController = StreamController<String>();
-  // Sink<String> get saveEventSink => _saveEventController.sink;
-
   final Api _api;
   String _title;
   int _year;
@@ -15,19 +12,17 @@ class NewWeekplanBloc extends BlocBase {
   /// The thumbnail pictogram of the new weekplan
   PictogramModel gram;
 
-  NewWeekplanBloc(this._api) {
-    // _saveEventController.stream.listen((title) => _onSaveEvent(title));
-  }
+  NewWeekplanBloc(this._api) { }
 
-  void onTitleChanged(String title) {
+  void onTitleSubmitted(String title) {
     _isValidTitle(title);
   }
 
-  void onYearChanged(String year) {
+  void onYearSubmitted(String year) {
     _isValidYear(year);
   }
 
-  void onWeekNumberChanged(String weekNumber) {
+  void onWeekNumberSubmitted(String weekNumber) {
     _isValidWeekNumber(weekNumber);
   }
 

@@ -10,18 +10,17 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 /// Screen for creating a new weekplan
 class NewWeekplanScreen extends StatelessWidget {
   final NewWeekplanBloc _bloc = di.getDependency<NewWeekplanBloc>();
-  Future<PictogramImage> _image;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(title: 'Ny Ugeplan'),
-        body: ListView(children: <Widget>[
+        body: Form(
+            child: ListView(children: <Widget>[
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: TextFormField(
-                onFieldSubmitted: (String text) =>
-                    _bloc.onTitleChanged(text),
+                onFieldSubmitted: (String text) => _bloc.onTitleSubmitted(text),
                 decoration: InputDecoration(
                     labelText: 'Titel',
                     border: OutlineInputBorder(borderSide: BorderSide())),
@@ -29,8 +28,8 @@ class NewWeekplanScreen extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: TextFormField(
-                onFieldSubmitted: (String text) =>
-                    _bloc.onYearChanged(text),
+                keyboardType: TextInputType.number,
+                onFieldSubmitted: (String text) => _bloc.onYearSubmitted(text),
                 initialValue: DateTime.now().year.toString(),
                 decoration: InputDecoration(
                     labelText: 'År',
@@ -39,15 +38,16 @@ class NewWeekplanScreen extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: TextFormField(
+                keyboardType: TextInputType.number,
                 onFieldSubmitted: (String text) =>
-                    _bloc.onWeekNumberChanged(text),
+                    _bloc.onWeekNumberSubmitted(text),
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
                     border: OutlineInputBorder(borderSide: BorderSide())),
               )),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            // child: ,
+            child: _buildThumbnail(context, _bloc.gram),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -57,9 +57,10 @@ class NewWeekplanScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () {
-                _image = Routes.push<PictogramImage>(context, PictogramSearch());
-              },
+              onPressed: () => {
+                    Routes.push<PictogramModel>(context, PictogramSearch())
+                        .then((PictogramModel val) => {_bloc.gram = val}),
+                  },
             ),
           ),
           Padding(
@@ -88,19 +89,18 @@ class NewWeekplanScreen extends StatelessWidget {
               },
             ),
           ),
-        ]));
+        ])));
   }
 
-  // Widget _buildIcon(BuildContext context, PictogramModel gram) {
-  //   final PictogramImageBloc _bloc = PictogramImageBloc(Globals.api);
-
-  //   _bloc.load(gram);
-
-  //   return StreamBuilder<Image>(
-  //       stream: _bloc.image,
-  //       builder: (context, snapshot) {
-  //         return Card(
-  //             child: FittedBox(fit: BoxFit.contain, child: snapshot.data));
-  //       });
-  // }
+  Widget _buildThumbnail(BuildContext context, PictogramModel gram) {
+    if (gram == null) {
+      return Card(
+        child: ConstrainedBox(
+            constraints: const BoxConstraints.expand(height: 200.0),
+            child: const Icon(Icons.image)),
+      );
+    } else {
+      return PictogramImage(pictogram: gram, onPressed: null);
+    }
+  }
 }
