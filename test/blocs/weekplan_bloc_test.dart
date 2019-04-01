@@ -20,7 +20,7 @@ void main() {
   });
 
   test('Loads a weekplan for the weekplan view', () {
-    WeekModel week = WeekModel(name: 'test week');
+    final WeekModel week = WeekModel(name: 'test week');
     weekplanBloc.setWeek(week);
 
     weekplanBloc.week.listen((WeekModel response) {

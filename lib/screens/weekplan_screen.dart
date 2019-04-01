@@ -36,8 +36,8 @@ class WeekplanScreen extends StatelessWidget {
           if (snapshot.hasData) {
             return _buildWeeks(snapshot.data);
           } else {
-            return Center(
-              child: const CircularProgressIndicator(),
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
         },
