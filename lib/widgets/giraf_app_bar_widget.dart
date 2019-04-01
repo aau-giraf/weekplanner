@@ -54,7 +54,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         IconButton(
-          icon: Image.asset('assets/changeToCitizen.png'),
+          icon: Image.asset('assets/icons/changeToCitizen.png'),
           tooltip: 'Skift mode',
 
           onPressed: () {
@@ -63,7 +63,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         
         IconButton(
-            icon: Image.asset('assets/logout.png'),
+            icon: Image.asset('assets/icons/logout.png'),
             tooltip: 'Log ud',
             onPressed: () {
               Alert(
@@ -102,7 +102,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
 
         IconButton(
-          icon: Image.asset('assets/settings.png'),
+          icon: Image.asset('assets/icons/settings.png'),
           tooltip: 'Indstillinger',
           onPressed: () {
             Routes.push(context, SettingsScreen());
