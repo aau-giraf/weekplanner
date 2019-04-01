@@ -1,17 +1,16 @@
-import 'dart:io';
-
-import 'package:flutter/services.dart';
-import 'package:weekplanner/blocs/bloc_base.dart';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
+// ignore: avoid_classes_with_only_static_members
 class Environment {
-  static String _file = "";
-  static String _content = "";
+  static String _file = '';
+  static String _content = '';
+
   static T getVar<T>(String variableName) {
-    return jsonDecode(_content)[variableName] as T;
+    return jsonDecode(_content)[variableName];
   }
 
-  static Future setFile(String fileLocation) async {
+  static Future<void> setFile(String fileLocation) async {
     _file = fileLocation;
     _content = await rootBundle.loadString(_file);
   }

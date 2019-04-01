@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/giraf_dialog_header.dart';
 
 class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final String description;
-
-  GirafNotifyDialog({Key key, @required this.title, this.description})
-      : preferredSize = Size.fromHeight(56.0),
-        super(key: key);
+  const GirafNotifyDialog({Key key, @required this.title, this.description})
+      : super(key: key);
 
   @override
-  final Size preferredSize;
+  Size get preferredSize => const Size.fromHeight(56.0);
+  final String title;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.all(0.0),
-      titlePadding: EdgeInsets.all(0.0),
+      contentPadding: const EdgeInsets.all(0.0),
+      titlePadding: const EdgeInsets.all(0.0),
       shape:
           Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
       title: Center(
@@ -48,19 +46,19 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
               children: <Widget>[
                 RaisedButton(
                     shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(10.0),
                         side: const BorderSide(
-                            color: const Color.fromRGBO(0, 0, 0, 0.3))),
+                            color: Color.fromRGBO(0, 0, 0, 0.3))),
                     color: const Color.fromRGBO(255, 157, 0, 1),
                     child: Row(
                       children: <Widget>[
-                        Icon(
+                        const Icon(
                           Icons.check,
-                          color: const Color.fromRGBO(0, 0, 0, 1),
+                          color: Color.fromRGBO(0, 0, 0, 1),
                         ),
                         Text(
                           'Okay',
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                         ),
                       ],
                     ),

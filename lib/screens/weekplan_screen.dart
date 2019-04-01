@@ -6,11 +6,8 @@ import 'package:weekplanner/models/enums/giraf_theme_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../widgets/giraf_app_bar_widget.dart';
 
-
-
 /// Screen containing all days with tasks.
 class WeekplanScreen extends StatelessWidget {
-
   /// Screen showing all days, title being title of the screen.
   WeekplanScreen({Key key})
       : settingsBloc = di.getDependency<SettingsBloc>(),
@@ -23,19 +20,16 @@ class WeekplanScreen extends StatelessWidget {
   /// Contains the functionality of the SettingsScreen.
   final SettingsBloc settingsBloc;
 
-
   /// Contains the tasks.
   final List<Widget> tasksList = <Widget>[
     Card(child: Image.asset('assets/read.jpg')),
   ];
-
 
   /// Contains the pictograms.
   final List<String> pictograms = <String>[
     'assets/read.jpg',
     'assets/read.jpg'
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +83,7 @@ class WeekplanScreen extends StatelessWidget {
 Column _day(String day, List<Widget> tasksList) {
   return Column(
     children: <Widget>[
-      Text(day, style: TextStyle(fontWeight: FontWeight.bold)),
+      Text(day, style: const TextStyle(fontWeight: FontWeight.bold)),
       Expanded(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
