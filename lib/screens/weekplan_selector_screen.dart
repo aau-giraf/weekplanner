@@ -17,7 +17,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
     _weekBloc.load(user, true);
   }
 
-  WeekplansBloc _weekBloc;
+  final WeekplansBloc _weekBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +29,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: StreamBuilder<List<WeekModel>>(
-                initialData: [],
+                initialData:const <WeekModel> [],
                   stream: _weekBloc.weekModels,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<WeekModel>> snapshot) {
                     if (snapshot.data == null) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
                     return GridView.count(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 10),
                       crossAxisCount: MediaQuery.of(context).orientation ==
                               Orientation.landscape
@@ -80,7 +80,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   Widget _buildWeekPlanSelector(BuildContext context, WeekModel weekplan) {
-    PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
 
     if (weekplan.thumbnail != null) {
       bloc.loadPictogramById(weekplan.thumbnail.id);
