@@ -24,6 +24,7 @@ dev_dependencies:
       url: https://github.com/ptope/async_test
   flutter_test:
     sdk: flutter
+  mockito: ^4.0.0
 
 
 flutter:

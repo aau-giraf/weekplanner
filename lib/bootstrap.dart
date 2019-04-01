@@ -1,6 +1,8 @@
 import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/providers/environment_provider.dart';
 import 'package:weekplanner/di.dart';
@@ -27,6 +29,14 @@ class Bootstrap {
     });
     di.registerSingleton<ChooseCitizenBloc>((Injector i) {
       return ChooseCitizenBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency<PictogramBloc>((Injector i) {
+      return PictogramBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency<PictogramImageBloc>((Injector i) {
+      return PictogramImageBloc(i.getDependency<Api>());
     });
   }
 }
