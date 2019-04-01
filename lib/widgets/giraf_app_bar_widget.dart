@@ -113,7 +113,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   final AlertStyle _logoutStyle = AlertStyle(
-    animationType: AnimationType.fromTop,
+    animationType: AnimationType.grow,
     isCloseButton: false,
     isOverlayTapDismiss: true,
     descStyle: TextStyle(fontWeight: FontWeight.normal),
