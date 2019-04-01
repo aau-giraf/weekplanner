@@ -14,10 +14,9 @@ class UserApi {
 
   /// Find information about the currently authenticated user.
   Observable<GirafUserModel> me() {
-    var test = _http
+    return _http
         .get('/')
         .map((Response res) => GirafUserModel.fromJson(res.json['data']));
-    return test;
   }
 
   /// Find information on the user with the given ID

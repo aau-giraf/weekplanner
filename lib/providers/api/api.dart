@@ -11,16 +11,17 @@ import 'package:weekplanner/providers/persistence/persistence_client.dart';
 
 /// Weekplanner API
 class Api {
-  Api(this.host) {
+  /// Default constructor
+  Api(this.baseUrl) {
     final Persistence persist = PersistenceClient();
-    account = AccountApi(HttpClient(host + '/v1', persist), persist);
-    status = StatusApi(HttpClient(host + '/v1/Status', persist));
-    department = DepartmentApi(HttpClient(host + '/v1/Department', persist));
-    week = WeekApi(HttpClient(host + '/v1/User', persist));
-    pictogram = PictogramApi(HttpClient(host + '/v1/Pictogram', persist));
+    account = AccountApi(HttpClient(baseUrl + '/v1', persist), persist);
+    status = StatusApi(HttpClient(baseUrl + '/v1/Status', persist));
+    department = DepartmentApi(HttpClient(baseUrl + '/v1/Department', persist));
+    week = WeekApi(HttpClient(baseUrl + '/v1/User', persist));
+    pictogram = PictogramApi(HttpClient(baseUrl + '/v1/Pictogram', persist));
     weekTemplate =
-        WeekTemplateApi(HttpClient(host + '/v1/WeekTemplate', persist));
-    user = UserApi(HttpClient(host + '/v1/User', persist));
+        WeekTemplateApi(HttpClient(baseUrl + '/v1/WeekTemplate', persist));
+    user = UserApi(HttpClient(baseUrl + '/v1/User', persist));
   }
 
   /// To access account endpoints
@@ -44,7 +45,11 @@ class Api {
   /// To access user endpoints
   UserApi user;
 
-  String host;
+  /// The base of all requests.
+  ///
+  /// Example: if set to `http://google.com`, then a get request with url
+  /// `/search` will resolve to `http://google.com/search`
+  String baseUrl;
 
   /// Destroy the API
   void dispose() {}

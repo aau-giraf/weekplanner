@@ -1,10 +1,9 @@
 import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/providers/environment_provider.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -15,9 +14,10 @@ class Bootstrap {
   ///
   /// NB:
   /// Singleton restricts the instantiation of a class to one "single" instance
-  static Future<void> register() async {
-    di.registerSingleton((Injector i) {
-      return Api(Environment.getVar('SERVER_HOST'));
+  static void register() {
+    di.registerSingleton((_) {
+      // TODO(boginw): move the server URL into .env file
+      return Api('http://web.giraf.cs.aau.dk:5000');
     });
 
     di.registerSingleton((Injector i) {
@@ -27,8 +27,8 @@ class Bootstrap {
     di.registerSingleton<SettingsBloc>((_) {
       return SettingsBloc();
     });
-    di.registerSingleton<ChooseCitizenBloc>((Injector i) {
-      return ChooseCitizenBloc(i.getDependency<Api>());
+    di.registerSingleton<ToolbarBloc>((_) {
+      return ToolbarBloc();
     });
 
     di.registerDependency<PictogramBloc>((Injector i) {
