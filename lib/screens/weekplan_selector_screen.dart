@@ -8,34 +8,37 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+/// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
-  final WeekplansBloc weekBloc;
-
+  /// Constructor for weekplan selector screen.
+  /// Requies a GirafUserModel user to load weekplans
   WeekplanSelectorScreen(GirafUserModel user)
-      : weekBloc = di.getDependency<WeekplansBloc>() {
-    this.weekBloc.load(user, true);
+      : _weekBloc = di.getDependency<WeekplansBloc>() {
+    _weekBloc.load(user, true);
   }
+
+  WeekplansBloc _weekBloc;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GirafAppBar(
-        title: "Vælg ugeplan",
+        title: 'Vælg ugeplan',
       ),
       body: Column(
         children: <Widget>[
           Expanded(
               child: StreamBuilder<List<WeekModel>>(
-                  stream: weekBloc.weekModels,
-                  initialData: [],
+                initialData: [],
+                  stream: _weekBloc.weekModels,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<WeekModel>> snapshot) {
                     if (snapshot.data == null) {
                       return CircularProgressIndicator();
                     }
                     return GridView.count(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
                       crossAxisCount: MediaQuery.of(context).orientation ==
                               Orientation.landscape
                           ? 4
@@ -54,18 +57,20 @@ class WeekplanSelectorScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekPlanAdder(context, weekplan, bloc) {
+  Widget _buildWeekPlanAdder(
+      BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
       onTap: () {}, //  onTap for going to an existing weekplan
       child: StreamBuilder<Image>(
           stream: bloc.image,
-          builder: (context, snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
             return Container(child: snapshot.data);
           }),
     );
   }
 
-  Widget _buildWeekPlan(context, weekplan, constraint) {
+  Widget _buildWeekPlan(
+      BuildContext context, WeekModel weekplan, BoxConstraints constraint) {
     return GestureDetector(
         onTap: () => () {}, // onTap for adding a new weekplan
         child: Icon(
@@ -74,11 +79,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
         ));
   }
 
-  Widget _buildWeekPlanSelector(context, weekplan) {
+  Widget _buildWeekPlanSelector(BuildContext context, WeekModel weekplan) {
     PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
 
-    if (weekplan.thumbnail != null)
+    if (weekplan.thumbnail != null) {
       bloc.loadPictogramById(weekplan.thumbnail.id);
+    }
 
     return Container(
       child: Column(
@@ -93,7 +99,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   flex: 4,
-                  child: LayoutBuilder(builder: (context, constraint) {
+                  child: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraint) {
                     if (weekplan.thumbnail != null) {
                       return _buildWeekPlanAdder(context, weekplan, bloc);
                     } else {
@@ -101,7 +108,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     }
                   }),
                 ),
-                Expanded(child: LayoutBuilder(builder: (context, constraints) {
+                Expanded(child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
                   return AutoSizeText(
                     weekplan.name,
                     style: TextStyle(fontSize: 18),

@@ -6,11 +6,13 @@ import 'package:weekplanner/models/enums/role_enum.dart';
 import 'package:weekplanner/providers/http/http.dart';
 import 'package:weekplanner/providers/persistence/persistence.dart';
 
+/// All Account Endpoints
 class AccountApi {
+  /// Default constructor
+  AccountApi(this._http, this._persist);
+
   final Http _http;
   final Persistence _persist;
-
-  AccountApi(this._http, this._persist);
 
   /// This endpoint allows the user to sign in to his/her account by providing
   /// valid username and password
@@ -18,14 +20,14 @@ class AccountApi {
   /// [username] The users username
   /// [password] The users password
   Observable<bool> login(String username, String password) {
-    return _http.post("/Account/login", {
-      "username": username,
-      "password": password,
+    return _http.post('/Account/login', <String, String>{
+      'username': username,
+      'password': password,
     }).flatMap((Response res) {
-      ResponseModel<String> response =
-          ResponseModel.fromJson(res.json, res.json["data"]);
+      final ResponseModel<String> response =
+          ResponseModel<String>.fromJson(res.json, res.json['data']);
 
-      return Observable.fromFuture(Future(() async {
+      return Observable<bool>.fromFuture(Future<bool>(() async {
         await _persist.setToken(response.data);
         return response.success;
       }));
@@ -41,21 +43,20 @@ class AccountApi {
   /// [role] The role of the user
   Observable<GirafUserModel> register(String username, String password,
       {String displayName, @required int departmentId, @required Role role}) {
-    Map<String, dynamic> body = {
-      "username": username,
-      "password": password,
-      "departmentId": departmentId,
-      "role": role.toString(),
+    final Map<String, dynamic> body = <String, dynamic>{
+      'username': username,
+      'password': password,
+      'departmentId': departmentId,
+      'role': role.toString(),
     };
 
     if (displayName != null) {
-      body["displayName"] = displayName;
+      body['displayName'] = displayName;
     }
 
-    return _http.post("/Account/register", body).map((Response res) {
-      GirafUserModel user = GirafUserModel.fromJson(res.json["data"]);
-      return user;
-    });
+    return _http
+        .post('/Account/register', body)
+        .map((Response res) => GirafUserModel.fromJson(res.json['data']));
   }
 
   /// Allows the user to change his password if they know their old password.
@@ -65,11 +66,11 @@ class AccountApi {
   /// [newPassword] The desired password.
   Observable<bool> changePasswordWithOld(
       String id, String oldPassword, String newPassword) {
-    return _http.put("/User/$id/Account/password", {
-      "oldPassword": oldPassword,
-      "newPassword": newPassword,
+    return _http.put('/User/$id/Account/password', <String, String>{
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
     }).map((Response res) {
-      return res.json["success"];
+      return res.json['success'];
     });
   }
 
@@ -78,11 +79,11 @@ class AccountApi {
   /// [password] The users password.
   /// [token] Reset password token. Used when a user request a password reset.
   Observable<bool> changePassword(String id, String password, String token) {
-    return _http.post("/User/$id/Account/password", {
+    return _http.post('/User/$id/Account/password', <String, String>{
       password: password,
       token: token,
     }).map((Response res) {
-      return res.json["success"];
+      return res.json['success'];
     });
   }
 
@@ -91,19 +92,19 @@ class AccountApi {
   /// [id] ID of the user
   Observable<String> resetPasswordToken(String id) {
     return _http
-        .get("/User/$id/Account/password-reset-token")
-        .map((Response res) => res.json["data"] as String);
+        .get('/User/$id/Account/password-reset-token')
+        .map((Response res) => res.json['data']);
   }
 
   /// Deletes the user with the given ID
   ///
   /// [id] ID of the user
   Observable<bool> delete(String id) {
-    return _http.delete("/Account/user/$id").flatMap((Response res) {
-      ResponseModel<String> response =
-          ResponseModel.fromJson(res.json, res.json["data"]);
+    return _http.delete('/Account/user/$id').flatMap((Response res) {
+      final ResponseModel<String> response =
+          ResponseModel<String>.fromJson(res.json, res.json['data']);
 
-      return Observable.fromFuture(Future(() async {
+      return Observable<bool>.fromFuture(Future<bool>(() async {
         await _persist.removeToken();
         return response.success;
       }));
@@ -112,7 +113,7 @@ class AccountApi {
 
   /// Logout the currently logged in user
   Observable<void> logout() {
-    return Observable.fromFuture(Future(() async {
+    return Observable<void>.fromFuture(Future<void>(() async {
       await _persist.removeToken();
     }));
   }

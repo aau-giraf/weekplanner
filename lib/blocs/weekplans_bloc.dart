@@ -5,43 +5,61 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/week_name_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
+  /// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
-  /// This is a stream where all the [WeekNameModel] are put in, to be used when getting the [WeekModel].
+  /// This bloc obtains a list of all [WeekModel]'s
+  /// for a given [GirafUserModel].
+  WeekplansBloc(this._api);
+
+  /// This is a stream where all the [WeekNameModel] are put in,
+  ///to be used when getting the [WeekModel].
   Stream<List<WeekNameModel>> get weekNameModels => _weekNameModelsList.stream;
-  /// This is a stream where all the [WeekModel] are put in, and this is the stream to listen to, 
-  /// when wanting information about weekplans. 
+
+  /// This is a stream where all the [WeekModel] are put in,
+  /// and this is the stream to listen to,
+  /// when wanting information about weekplans.
   Stream<List<WeekModel>> get weekModels => _weekModel.stream;
 
-  final BehaviorSubject<List<WeekModel>> _weekModel = BehaviorSubject();
-  final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList = BehaviorSubject();
+  final BehaviorSubject<List<WeekModel>> _weekModel =
+      BehaviorSubject<List<WeekModel>>();
+      
+  final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
+      BehaviorSubject<List<WeekNameModel>>();
 
   final Api _api;
   GirafUserModel _user;
-  /// To control adding an extra result for creating a new [WeekModel] for the weekplan_selector_screen.
+
+  /// To control adding an extra result for creating a new [WeekModel]
+  /// for the weekplan_selector_screen.
   bool _addWeekplan;
 
-  /// This bloc obtains a list of all [WeekModel]'s for a given [GirafUserModel].
-  WeekplansBloc(this._api);
+  /// Loads all the [WeekNameModel] for a given [user].
+  /// [addWeekplan] parameter controls if there should be a result
+  ///  for adding a new [WeekModel].
 
-  /// Loads all the [WeekNameModel] for a given [user]. 
-  /// [addWeekplan] parameter controls if there should be a result for adding a new [WeekModel].
-  /// 
-  /// The result are published in [_weekNameModelsList]. 
+  /// The result are published in [_weekNameModelsList].
   void load(GirafUserModel user, [bool addWeekplan = false]) {
-    this._user = user; this._addWeekplan = addWeekplan;
+    _user = user;
+    _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
     _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
   }
 
-  /// Gets all the information for a [Weekmodel]. 
-  /// [weekNameModels] parameter contains all the information needed for getting all [WeekModel]'s.
-  /// 
-  /// The result are published in [_weekModel]. 
+  /// Gets all the information for a [Weekmodel].
+  /// [weekNameModels] parameter contains all the information
+  /// needed for getting all [WeekModel]'s.
+  /// The result are published in [_weekModel].
   void getAllWeekInfo(List<WeekNameModel> weekNameModels) {
-    List<WeekModel> weekModels = [];
-    /// This is used by weekplan_selector_screen for adding a new weekplan. 
-    if (this._addWeekplan)
-      weekModels.add(new WeekModel(name: "Tilføj Ugeplan"));
+    if (weekNameModels == null) {
+      print(weekNameModels);
+      return;
+    }
+    final List<WeekModel> weekModels = <WeekModel>[];
+    
+    /// This is used by weekplan_selector_screen for adding a new weekplan.
+    if (_addWeekplan) {
+      weekModels.add(WeekModel(name: 'Tilføj Ugeplan'));
+    }
 
     for (WeekNameModel weekNameModel in weekNameModels) {
       _api.week
