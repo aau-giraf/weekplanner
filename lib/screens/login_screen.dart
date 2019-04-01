@@ -1,10 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart';
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 // ignore: must_be_immutable
