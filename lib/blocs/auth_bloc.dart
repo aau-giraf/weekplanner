@@ -17,7 +17,7 @@ class AuthBloc extends BlocBase {
 
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password) {
-    _api.account.login(username, password).take(1).listen((bool status) {
+    _api.account.login(username, password).listen((bool status) {
       _loggedIn.add(status);
     });
   }

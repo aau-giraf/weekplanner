@@ -3,10 +3,7 @@ import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
 
 class ChooseCitizenScreen extends StatelessWidget {
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
@@ -14,8 +11,8 @@ class ChooseCitizenScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
-    bool portrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       body: Container(

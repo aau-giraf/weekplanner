@@ -6,7 +6,10 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
+import 'package:weekplanner/providers/api/user_api.dart';
 import 'package:weekplanner/providers/environment_provider.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
@@ -14,6 +17,9 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 class MockAuthBloc extends Mock implements AuthBloc {
+  MockAuthBloc(this._api);
+
+  final Api _api;
   Stream<bool> get loggedIn => _loggedIn.stream;
   BehaviorSubject<bool> _loggedIn = BehaviorSubject.seeded(false);
 
@@ -24,6 +30,13 @@ class MockAuthBloc extends Mock implements AuthBloc {
     } else {
       _loggedIn.add(false);
     }
+  }
+}
+
+class MockUserApi extends Mock implements UserApi {
+  @override
+  Observable<GirafUserModel> me() {
+    return Observable.just(GirafUserModel(id: "1", username: "test"));
   }
 }
 
@@ -43,12 +56,15 @@ void main() {
     }
     ''';
   MockAuthBloc bloc;
+  Api api;
   setUp(() {
-    bloc = MockAuthBloc();
     di.clearAll();
+    api = Api("any");
+    api.user = MockUserApi();
+    bloc = MockAuthBloc(api);
     di.registerDependency<AuthBloc>((_) => bloc);
-    di.registerDependency<ChooseCitizenBloc>(
-        (_) => ChooseCitizenBloc(Api("Any")));
+    di.registerDependency<SettingsBloc>((_) => SettingsBloc());
+    di.registerDependency<ChooseCitizenBloc>((_) => ChooseCitizenBloc(api));
   });
 
   testWidgets("Has Auto-Login button in DEBUG mode",
@@ -102,6 +118,7 @@ void main() {
       "Logging in with correct information works, and should show a ChooseCitizenScreen",
       (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
+    Environment.setContent(debugEnvironments);
 
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
     await tester.enterText(find.byKey(Key("UsernameKey")), "test");
@@ -124,6 +141,7 @@ void main() {
       "Logging in with wrong information should show a GirafNotifyDialog",
       (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
+    Environment.setContent(debugEnvironments);
 
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
     await tester.enterText(find.byKey(Key("UsernameKey")), "SomwWrongLogin");
