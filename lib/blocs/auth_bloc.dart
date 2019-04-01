@@ -4,6 +4,7 @@ import 'package:weekplanner/providers/api/api.dart';
 
 class AuthBloc extends BlocBase {
   Api api;
+  String loggedInUsername;
 
   AuthBloc(this.api);
 
@@ -15,6 +16,7 @@ class AuthBloc extends BlocBase {
   void authenticate(String username, String password) {
     api.account.login(username, password).take(1).listen((status) {
       _loggedIn.add(status);
+      loggedInUsername =username;
     });
   }
 

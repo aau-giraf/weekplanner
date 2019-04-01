@@ -71,7 +71,10 @@ Column Day(String day, List<Widget> myList) {
             return myList[index];
             return Card(
               color: Colors.white,
-              child: IconButton(icon: Image.asset('assets/read.jpg')),
+              child: IconButton(
+                icon: Image.asset('assets/read.jpg'),
+                onPressed: () {}
+                ),
             );
           },
           itemCount: myList.length,

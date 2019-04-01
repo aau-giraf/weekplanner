@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
 
-class LoginScreen extends StatelessWidget {
+class ConfirmPassword extends StatelessWidget {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
   final AuthBloc authBloc;
 
-  LoginScreen() : authBloc = di.getDependency<AuthBloc>();
+  ConfirmPassword() : authBloc = di.getDependency<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,35 +36,29 @@ class LoginScreen extends StatelessWidget {
               key: this._formKey,
               child: ListView(
                 children: <Widget>[
-                  TextField(
-                    controller: usernameCtrl,
-                    keyboardType: TextInputType.text,
-                    // Use email input type for emails.
-                    decoration: InputDecoration(
-                      hintText: '',
-                      labelText: 'Brugernavn',
-                      fillColor: Colors.white,
-                    ),
-                  ),
+                  
                   TextField(
                     controller: passwordCtrl,
                     obscureText: true,
                     // Use email input type for emails.
                     decoration: InputDecoration(
                       hintText: '',
-                      labelText: 'Adgangskode',
+                      labelText: 'Bekræft dit kodeord',
                       fillColor: Colors.white,
                     ),
                   ),
                   Container(
                     child: new RaisedButton(
                       child: new Text(
-                        'Login',
+                        'Bekræft',
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        login(context, usernameCtrl.value.text,
+                        login(context, authBloc.loggedInUsername,
                             passwordCtrl.value.text);
+                            if (Navigator.canPop(context)) {
+                              Routes.pop(context);
+                            }
                       },
                       color: Colors.blue,
                     ),
@@ -72,11 +66,14 @@ class LoginScreen extends StatelessWidget {
                   Container(
                     child: new RaisedButton(
                       child: new Text(
-                        'Auto-Login',
+                        'Auto-Bekræft',
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
                         login(context, "graatand", "password");
+                        if (Navigator.canPop(context)) {
+                          Routes.pop(context);
+                        }
                       },
                       color: Colors.blue,
                     ),
