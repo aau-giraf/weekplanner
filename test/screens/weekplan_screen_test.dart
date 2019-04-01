@@ -17,6 +17,7 @@ import 'package:weekplanner/models/weekday_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
@@ -59,7 +60,7 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     api.week = weekApi;
-    bloc = WeekplanBloc(api);
+    bloc = WeekplanBloc();
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
@@ -72,11 +73,11 @@ void main() {
     di.registerDependency<WeekplanBloc>((_) => bloc);
   });
 
-  testWidgets('renders', (WidgetTester tester) async {
+  testWidgets('The screen renders', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
   });
 
-  testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
+  testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
@@ -84,9 +85,23 @@ void main() {
   });
 
   testWidgets('Has all days of the week', (WidgetTester tester) async {
-    bloc.setWeek(weekModel);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
+    await tester.pump();
 
-    expect(find.text('Mandag'), findsOneWidget);
+    const List<String> days = <String>[
+      'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag',
+      'Fredag', 'Lørdag', 'Søndag'
+    ];
+
+    for (String day in days) {
+      expect(find.text(day), findsOneWidget);
+    }
+  });
+
+  testWidgets('pictograms are rendered', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home:WeekplanScreen(week:weekModel)));
+    await tester.pump();
+
+    expect(find.byType(PictogramImage), findsNWidgets(7));
   });
 }

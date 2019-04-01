@@ -7,14 +7,21 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
-// Screen containing all days with tasks.
+/// <summary>
+/// The WeekplandScreen is used to display a week 
+/// and all the activities that occur in it.
+/// </summary>
 class WeekplanScreen extends StatelessWidget {
-  //TODO: Find out if weekplanBloc is unnecessary and if we should subscribe to another bloc instead
-  final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
-
+  /// <summary>
+  /// WeekplanScreen constructor
+  /// </summary>
+  /// <param name="key">Key of the widget</param>
+  /// <param name="week">Week that should be shown on the weekplan</param>
   WeekplanScreen({Key key, WeekModel week}) : super(key: key) {
     weekplanBloc.setWeek(week);
   }
+  /// The WeekplanBloc that contains the currently chosen week
+  final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,9 @@ class WeekplanScreen extends StatelessWidget {
           if (snapshot.hasData) {
             return _buildWeeks(snapshot.data);
           } else {
-            return const Text('Data not ready');
+            return Center(
+              child: const CircularProgressIndicator(),
+            );
           }
         },
       ),
@@ -65,9 +74,7 @@ Column _day(Weekday day, List<ActivityModel> activities) {
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return PictogramImage(
-                //TODO: Redirect to show activity when it is implemented
-                pictogram: activities[index].pictogram,
-                onPressed: () => null);
+                pictogram: activities[index].pictogram, onPressed: () => null);
           },
           itemCount: activities.length,
         ),

@@ -16,7 +16,7 @@ void main() {
     api = Api('any');
     weekApi = MockWeekApi();
     api.week = weekApi;
-    weekplanBloc = WeekplanBloc(api);
+    weekplanBloc = WeekplanBloc();
   });
 
   test('Loads a weekplan for the weekplan view', () {
