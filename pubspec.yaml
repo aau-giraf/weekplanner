@@ -12,6 +12,7 @@ dependencies:
   api_client:
     git:
       url: https://github.com/aau-giraf/api_client.git
+  rflutter_alert: ^1.0.2
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
@@ -28,6 +29,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/icons/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
