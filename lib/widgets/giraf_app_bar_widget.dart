@@ -108,10 +108,10 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     isCloseButton: false,
     isOverlayTapDismiss: true,
     descStyle: const TextStyle(fontWeight: FontWeight.normal),
-    animationDuration: Duration(milliseconds: 400),
+    animationDuration: const Duration(milliseconds: 400),
     alertBorder: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(0.0),
-      side: BorderSide(
+      side: const BorderSide(
         color: Colors.white,
       ),
     ),
