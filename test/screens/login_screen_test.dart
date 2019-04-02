@@ -10,7 +10,6 @@ import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
@@ -160,7 +159,6 @@ void main() {
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
       if (!success) {
-        expect(find.byType(GirafNotifyDialog), findsOneWidget);
         done.complete(true);
       }
     });

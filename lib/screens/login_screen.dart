@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
-// ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
   AuthBloc get authBloc => di.getDependency<AuthBloc>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -14,38 +12,17 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController passwordCtrl = TextEditingController();
   final bool isDebugMode = Environment.getVar<bool>('DEBUG');
 
-  BuildContext loginContext;
   static bool loggedInSuccessfull = false;
 
-  void handleTimeout() {
-    if (!loggedInSuccessfull) {
-      Navigator.pop(loginContext);
-      wrongUsernameOrPassword(loginContext);
-    }
-  }
-
-  Future<bool> loginAction(BuildContext context) async {
-    loginContext = context;
-    showLoadingScreen(context, false, handleTimeout, 5000);
+  Future<bool> loginAction() async {
+    // TODO(tricky12321): Giraf Notify Dialog Wrong username and password, https://github.com/aau-giraf/weekplanner/issues/104
     authBloc.loggedIn.listen((bool status) async {
       if (status) {
-        Navigator.pop(context);
         loggedInSuccessfull = true;
       }
     });
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
     return true;
-  }
-
-  void wrongUsernameOrPassword(BuildContext context) {
-    showDialog<GirafNotifyDialog>(
-        builder: (BuildContext context) {
-          return const GirafNotifyDialog(
-            title: 'Fejl',
-            description: 'Forkert brugernavn eller adgangskode',
-          );
-        },
-        context: context);
   }
 
   @override
@@ -146,7 +123,7 @@ class LoginScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
-                              loginAction(context);
+                              loginAction();
                             },
                             color: const Color.fromRGBO(48, 81, 118, 1),
                           ),
@@ -171,7 +148,7 @@ class LoginScreen extends StatelessWidget {
                                       Environment.getVar<String>('USERNAME');
                                   passwordCtrl.text =
                                       Environment.getVar<String>('PASSWORD');
-                                  loginAction(context);
+                                  loginAction();
                                 },
                                 color: const Color.fromRGBO(48, 81, 118, 1),
                               ),
