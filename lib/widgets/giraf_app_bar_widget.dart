@@ -67,7 +67,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                 desc: 'Vil du logge ud?',
                 buttons: <DialogButton>[
                   DialogButton(
-                    child: Text(
+                    child: const Text(
                       'Fortryd',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
@@ -78,7 +78,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                     width: 120,
                   ),
                   DialogButton(
-                    child: Text(
+                    child: const Text(
                       'Log ud',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
@@ -107,7 +107,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     animationType: AnimationType.grow,
     isCloseButton: false,
     isOverlayTapDismiss: true,
-    descStyle: TextStyle(fontWeight: FontWeight.normal),
+    descStyle: const TextStyle(fontWeight: FontWeight.normal),
     animationDuration: Duration(milliseconds: 400),
     alertBorder: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(0.0),
@@ -115,7 +115,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         color: Colors.white,
       ),
     ),
-    titleStyle: TextStyle(
+    titleStyle: const TextStyle(
       color: Colors.black,
     ),
   );
