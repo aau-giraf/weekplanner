@@ -6,13 +6,12 @@ class ResponseModel<T> {
   ResponseModel({this.data, this.success, this.errorKey, this.errorProperties});
 
   /// Construct from JSON
-  ResponseModel.fromJson(Map<String, dynamic> json, T data) {
+  ResponseModel.fromJson(Map<String, dynamic> json, this.data) {
     if (json == null) {
       throw const FormatException(
           '[ResponseModel]: Cannot instantiate from null');
     }
 
-    data = data;
     success = json['success'];
     errorKey = ErrorKey.values.firstWhere(
             (ErrorKey f) => f.toString() == json['errorKey'],
