@@ -8,7 +8,6 @@ import 'package:weekplanner/screens/settings_screen.dart';
 
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
-
   /// Toolbar of the application.
   GirafAppBar({Key key, this.title})
       : _authBloc = di.getDependency<AuthBloc>(),
@@ -31,38 +30,32 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      
-      title: Text(title),
-      backgroundColor: const Color(0xAAFF6600),
-      actions: <Widget>[
-        StreamBuilder<bool>(
-            key: const Key('streambuilderVisibility'),
-            stream: toolbarBloc.editVisible,
-            initialData: false,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
-              return Visibility(
-                key: const Key('visibilityEditBtn'),
-                visible: snapshot.data,
-                child: IconButton(
-                  icon: const Icon(Icons.edit),
-                  tooltip: 'Rediger',
-                  onPressed: () {
-                  },
-                ),
-              );
-            }
-        ),
-
-        IconButton(
-          icon: Image.asset('assets/icons/changeToCitizen.png'),
-          tooltip: 'Skift mode',
-
-          onPressed: () {
-            // Implemented in another user story
-          },
-        ),
-        
-        IconButton(
+        title: Text(title),
+        backgroundColor: const Color(0xAAFF6600),
+        actions: <Widget>[
+          StreamBuilder<bool>(
+              key: const Key('streambuilderVisibility'),
+              stream: toolbarBloc.editVisible,
+              initialData: false,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Visibility(
+                  key: const Key('visibilityEditBtn'),
+                  visible: snapshot.data,
+                  child: IconButton(
+                    icon: const Icon(Icons.edit),
+                    tooltip: 'Rediger',
+                    onPressed: () {},
+                  ),
+                );
+              }),
+          IconButton(
+            icon: Image.asset('assets/icons/changeToCitizen.png'),
+            tooltip: 'Skift mode',
+            onPressed: () {
+              // Implemented in another user story
+            },
+          ),
+          IconButton(
             icon: Image.asset('assets/icons/logout.png'),
             tooltip: 'Log ud',
             onPressed: () {
@@ -72,7 +65,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                 style: _logoutStyle,
                 title: 'Log ud',
                 desc: 'Vil du logge ud?',
-                buttons: <DialogButton> [
+                buttons: <DialogButton>[
                   DialogButton(
                     child: Text(
                       'Fortryd',
@@ -100,16 +93,14 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
               ).show();
             },
           ),
-
-        IconButton(
-          icon: Image.asset('assets/icons/settings.png'),
-          tooltip: 'Indstillinger',
-          onPressed: () {
-            Routes.push(context, SettingsScreen());
-          },
-        ),
-      ]
-    );
+          IconButton(
+            icon: Image.asset('assets/icons/settings.png'),
+            tooltip: 'Indstillinger',
+            onPressed: () {
+              Routes.push(context, SettingsScreen());
+            },
+          ),
+        ]);
   }
 
   final AlertStyle _logoutStyle = AlertStyle(
@@ -129,4 +120,3 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     ),
   );
 }
-
