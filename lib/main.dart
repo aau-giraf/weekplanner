@@ -3,20 +3,19 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart';
-import 'package:weekplanner/screens/login_screen.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
+import 'package:weekplanner/screens/login_screen.dart';
 
-void main() async {
+Future<void> main() async {
   // Register all dependencies for injector
   await Bootstrap.register();
 
   if (_isInDebugMode) {
     // If in DEBUG mode
-    await Environment.setFile("assets/environments.json");
+    await Environment.setFile('assets/environments.json');
   } else {
     // Else Production
-    await Environment.setFile("assets/environments.prod.json");
+    await Environment.setFile('assets/environments.prod.json');
   }
 
   runApp(MaterialApp(
@@ -24,7 +23,8 @@ void main() async {
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di.getDependency<AuthBloc>().loggedIn,
-          builder: (_, AsyncSnapshot<bool> snapshot) => LoginScreen())));
+          builder: (_, AsyncSnapshot<bool> snapshot) =>
+              snapshot.data ? ChooseCitizenScreen() : LoginScreen())));
 }
 
 bool get _isInDebugMode {

@@ -5,14 +5,13 @@ import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 
 class CitizenAvatar extends StatelessWidget {
-  BuildContext parentContext;
-  UsernameModel usernameModel;
+  const CitizenAvatar(this.usernameModel, this.parentContext);
 
-  CitizenAvatar(this.usernameModel, this.parentContext);
+  final BuildContext parentContext;
+  final UsernameModel usernameModel;
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(bottom: 30),
       child: GestureDetector(
@@ -31,11 +30,10 @@ class CitizenAvatar extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 1,
                         child: Container(
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             radius: 20,
-                            //TODO: Rigtige profil billeder
                             backgroundImage: AssetImage(
-                                "assets/login_screen_background_image.png"),
+                                'assets/login_screen_background_image.png'),
                           ),
                         ),
                       ),

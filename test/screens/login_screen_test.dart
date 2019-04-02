@@ -8,7 +8,6 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart';
-import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
@@ -67,8 +66,16 @@ void main() {
     expect(find.byKey(const Key('AutoLoginKey')), findsNothing);
   });
 
-  testWidgets('Renders LoginScreen', (WidgetTester tester) async {
+  testWidgets('Renders LoginScreen (DEBUG)', (WidgetTester tester) async {
+    Environment.setContent(debugEnvironments);
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    expect(find.byType(LoginScreen), findsOneWidget);
+  });
+
+  testWidgets('Renders LoginScreen (PROD)', (WidgetTester tester) async {
+    Environment.setContent(prodEnvironments);
+    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    expect(find.byType(LoginScreen), findsOneWidget);
   });
 
   testWidgets('Auto-Login fills Username', (WidgetTester tester) async {
@@ -99,20 +106,38 @@ void main() {
     expect(find.text('password'), findsNothing);
   });
 
-  testWidgets('Logging in works, and show a ChooseCitizenScreen',
-      (WidgetTester tester) async {
+  testWidgets('Logging in works (PROD)', (WidgetTester tester) async {
+    Environment.setContent(prodEnvironments);
     final Completer<bool> done = Completer<bool>();
 
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
     await tester.enterText(find.byKey(const Key('PasswordKey')), 'test');
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump(Duration(seconds: 2));
+    await tester.pump(const Duration(seconds: 5));
 
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
       if (success) {
-        expect(find.byType(ChooseCitizenScreen), findsOneWidget);
+        done.complete(true);
+      }
+    });
+    await done.future;
+  });
+
+  testWidgets('Logging in works (DEBUG)', (WidgetTester tester) async {
+    Environment.setContent(debugEnvironments);
+    final Completer<bool> done = Completer<bool>();
+
+    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
+    await tester.enterText(find.byKey(const Key('PasswordKey')), 'test');
+    await tester.tap(find.byKey(const Key('LoginBtnKey')));
+    await tester.pump(const Duration(seconds: 5));
+
+    bloc.loggedIn.listen((bool success) async {
+      await tester.pump();
+      if (success) {
         done.complete(true);
       }
     });
@@ -131,15 +156,12 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('PasswordKey')), 'SomeWrongPassword');
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump(Duration(seconds: 2));
+    await tester.pump(const Duration(seconds: 5));
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
       if (!success) {
         expect(find.byType(GirafNotifyDialog), findsOneWidget);
         done.complete(true);
-      } else if (success) {
-        expect(find.byType(ChooseCitizenScreen), findsNothing);
-        done.complete(false);
       }
     });
     await done.future;

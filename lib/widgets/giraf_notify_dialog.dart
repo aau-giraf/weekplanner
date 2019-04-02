@@ -6,10 +6,13 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_dialog_header.dart';
 
 class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
-  ///title of the dialogBox, displayed in the header of the dialogBox
+  // ignore: public_member_api_docs
+  const GirafNotifyDialog({Key key, @required this.title, this.description})
+      : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(56.0);
   final String title;
-  ///description of the dialogBox, displayed under the header, describing the
-  ///encountered problem
   final String description;
 
 
@@ -25,25 +28,17 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
     _btnVisible.close();
   }
 
-  GirafNotifyDialog({Key key, @required this.title, this.description})
-      : preferredSize = Size.fromHeight(56.0),
-        super(key: key);
-
-  @override
-  final Size preferredSize;
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      key: const Key('NotifyDialogKey'),
       contentPadding: const EdgeInsets.all(0.0),
       titlePadding: const EdgeInsets.all(0.0),
       shape:
-      Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
       title: Center(
           child: GirafDialogHeader(
-            title: title,
-          )),
+        title: title,
+      )),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -54,12 +49,12 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
             children: <Widget>[
               Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Text(
-                      description,
-                      textAlign: TextAlign.center,
-                    ),
-                  ))
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: Text(
+                  description,
+                  textAlign: TextAlign.center,
+                ),
+              ))
             ],
           ),
           Padding(
