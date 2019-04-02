@@ -114,7 +114,7 @@ void main() {
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
     await tester.enterText(find.byKey(const Key('PasswordKey')), 'test');
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump(Duration(seconds: 5));
+    await tester.pump(const Duration(seconds: 5));
 
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
@@ -133,7 +133,7 @@ void main() {
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
     await tester.enterText(find.byKey(const Key('PasswordKey')), 'test');
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump(Duration(seconds: 5));
+    await tester.pump(const Duration(seconds: 5));
 
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
@@ -156,7 +156,7 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('PasswordKey')), 'SomeWrongPassword');
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump(Duration(seconds: 5));
+    await tester.pump(const Duration(seconds: 5));
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
       if (!success) {
