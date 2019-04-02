@@ -21,11 +21,11 @@ void main() {
           builder: (_, AsyncSnapshot<bool> snapshot) =>
               // In case we're logged in show WeekPlanner, otherwise, show login
               //snapshot.data ? WeekplanScreen() : LoginScreen())));
-              true
+              snapshot.data
                   ? ShowActivityScreen(
                     null,
                     ActivityModel(
-                      id: 1,
+                      id: 461,
                       pictogram: PictogramModel(
                           id: 3975,
                           lastEdit: null,

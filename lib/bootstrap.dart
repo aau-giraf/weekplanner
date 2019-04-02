@@ -1,4 +1,5 @@
 import 'package:injector/injector.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -17,7 +18,7 @@ class Bootstrap {
   static void register() {
     di.registerSingleton((_) {
       // TODO(boginw): move the server URL into .env file
-      return Api('srv.giraf.cs.aau.dk/API/');
+      return Api('http://srv.giraf.cs.aau.dk/API/');
     });
 
     di.registerSingleton((Injector i) {
@@ -37,6 +38,10 @@ class Bootstrap {
 
     di.registerDependency<PictogramImageBloc>((Injector i) {
       return PictogramImageBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency<ActivityBloc>((Injector i) {
+      return ActivityBloc(i.getDependency<Api>());
     });
   }
 }
