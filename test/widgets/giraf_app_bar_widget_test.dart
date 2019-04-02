@@ -7,7 +7,7 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/user_info_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/providers/api/api.dart';
+import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
