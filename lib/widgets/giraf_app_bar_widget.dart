@@ -55,11 +55,10 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         IconButton(
-          icon: Image.asset('assets/icons/changeToCitizen.png'),
-          tooltip: 'Skift mode',
-
+          icon: Image.asset('assets/icons/changeToGuardian.png'),
+          tooltip: 'Skift til værge tilstand',
           onPressed: () {
-            // Implemented in another user story
+            Routes.push(context, ConfirmPassword());
           },
         ),
         
@@ -99,18 +98,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               ).show();
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.place),
-            tooltip: 'trains',
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: new Image.asset('assets/changeToGuardian.png'),
-            tooltip: 'Skift til værge tilstand',
-            onPressed: () {
-              Routes.push(context, ConfirmPassword());
             },
           ),
         IconButton(

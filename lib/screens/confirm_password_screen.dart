@@ -4,11 +4,9 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 
 class ConfirmPassword extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController passwordCtrl = TextEditingController();
-  final AuthBloc authBloc;
-
-  ConfirmPassword() : authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc authBloc = di.getDependency<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +16,10 @@ class ConfirmPassword extends StatelessWidget {
         body: Container(
       width: screenSize.width,
       height: screenSize.height,
-      padding: new EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/login_screen_background_image.png"),
+          image: const AssetImage('assets/login_screen_background_image.png'),
           fit: BoxFit.cover,
         ),
       ),
@@ -30,10 +28,10 @@ class ConfirmPassword extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-            Image(image: AssetImage("assets/giraf_splash_logo.png")),
+            Image(image: const AssetImage('assets/giraf_splash_logo.png')),
             Expanded(
                 child: Form(
-              key: this._formKey,
+              key: _formKey,
               child: ListView(
                 children: <Widget>[
                   
@@ -48,10 +46,10 @@ class ConfirmPassword extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    child: new RaisedButton(
-                      child: new Text(
+                    child: RaisedButton(
+                      child: Text(
                         'Bekræft',
-                        style: new TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
                         login(context, authBloc.loggedInUsername,
@@ -59,21 +57,6 @@ class ConfirmPassword extends StatelessWidget {
                             if (Navigator.canPop(context)) {
                               Routes.pop(context);
                             }
-                      },
-                      color: Colors.blue,
-                    ),
-                  ),
-                  Container(
-                    child: new RaisedButton(
-                      child: new Text(
-                        'Auto-Bekræft',
-                        style: new TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        login(context, "graatand", "password");
-                        if (Navigator.canPop(context)) {
-                          Routes.pop(context);
-                        }
                       },
                       color: Colors.blue,
                     ),
