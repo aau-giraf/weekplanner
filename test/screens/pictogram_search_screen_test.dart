@@ -8,6 +8,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/user_info_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
@@ -47,6 +48,7 @@ void main() {
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<UserInfoBloc>((_) => UserInfoBloc());
   });
 
   testWidgets('renders', (WidgetTester tester) async {
