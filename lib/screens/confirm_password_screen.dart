@@ -51,8 +51,8 @@ class ConfirmPassword extends StatelessWidget {
                     obscureText: true,
                     // Use email input type for emails.
                     decoration: InputDecoration(
-                      hintText: 'Bekræft dit kodeord',
-                      labelText: '',
+                      hintText: '',
+                      labelText: 'Bekræft dit kodeord',
                       fillColor: Colors.white,
                       alignLabelWithHint: true
                     ),
