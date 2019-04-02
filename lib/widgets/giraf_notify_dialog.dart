@@ -6,6 +6,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
   const GirafNotifyDialog({Key key, @required this.title, this.description})
       : super(key: key);
 
+  @override
   Size get preferredSize => const Size.fromHeight(56.0);
   final String title;
   final String description;
