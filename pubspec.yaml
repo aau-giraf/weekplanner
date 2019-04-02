@@ -11,6 +11,7 @@ dependencies:
   http: ^0.12.0+1
   shared_preferences: ^0.5.1+1
   injector: ^1.0.6
+  rflutter_alert: ^1.0.2
   mockito: ^4.0.0
 
   flutter:
@@ -28,6 +29,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/icons/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
