@@ -58,124 +58,38 @@ class WeekplanScreen extends StatelessWidget {
                 return Text(snapshot.data.toString());
               },
             ),
-            StreamBuilder<Tuple2<String, int>>(
-              stream: userInfoBloc.dayOfWeekAndUsermode,
-              initialData: const Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context,
-                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: const Key('visibilityMon'),
-                  visible: snapshot.data.item1 == 'Guardian' ||
-                           snapshot.data.item2 == 1,
-                  child: Expanded(
-                      child: Card(
-                          color: const Color(0xFF007700),
-                          child: _day('Mandag', tasksList))),
-                );
-              },
-            ),
-            StreamBuilder<Tuple2<String, int>>(
-              stream: userInfoBloc.dayOfWeekAndUsermode,
-              initialData: const Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context,
-                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: const Key('visibilityTue'),
-                  visible: snapshot.data.item1 == 'Guardian' ||
-                           snapshot.data.item2 == 2,
-                  child: Expanded(
-                      child: Card(
-                          color: const Color(0xFF800080),
-                          child: _day('Tirsdag', tasksList))),
-                );
-              },
-            ),
-            StreamBuilder<Tuple2<String, int>>(
-              stream: userInfoBloc.dayOfWeekAndUsermode,
-              initialData: const Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context,
-                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: const Key('visibilityWed'),
-                  visible: snapshot.data.item1 == 'Guardian' ||
-                           snapshot.data.item2 == 3,
-                  child: Expanded(
-                      child: Card(
-                          color: const Color(0xFFFF8500),
-                          child: _day('Onsdag', tasksList))),
-                );
-              },
-            ),
-            StreamBuilder<Tuple2<String, int>>(
-              stream: userInfoBloc.dayOfWeekAndUsermode,
-              initialData: const Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context,
-                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: const Key('visibilityThu'),
-                  visible: snapshot.data.item1 == 'Guardian' ||
-                           snapshot.data.item2 == 4,
-                  child: Expanded(
-                      child: Card(
-                          color: const Color(0xFF0000FF),
-                          child: _day('Torsdag', tasksList))),
-                );
-              },
-            ),
-
-            StreamBuilder<Tuple2<String, int>>(
-              stream: userInfoBloc.dayOfWeekAndUsermode,
-              initialData: const Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context,
-                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: const Key('visibilityFri'),
-                  visible: snapshot.data.item1 == 'Guardian' ||
-                           snapshot.data.item2 == 5,
-                  child: Expanded(
-                      child: Card(
-                          color: const Color(0xFFFFDD00),
-                          child: _day('Fredag', tasksList))),
-                );
-              },
-            ),
-
-            StreamBuilder<Tuple2<String, int>>(
-              stream: userInfoBloc.dayOfWeekAndUsermode,
-              initialData: const Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context,
-                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: const Key('visibilitySat'),
-                  visible: snapshot.data.item1 == 'Guardian' ||
-                           snapshot.data.item2 == 6,
-                  child: Expanded(
-                      child: Card(
-                          color: const Color(0xFFFF0000),
-                          child: _day('Lørdag', tasksList))),
-                );
-              },
-            ),
-
-            StreamBuilder<Tuple2<String, int>>(
-              stream: userInfoBloc.dayOfWeekAndUsermode,
-              initialData: const Tuple2<String, int>('Guardian', 0),
-              builder: (BuildContext context,
-                        AsyncSnapshot<Tuple2<String, int>> snapshot) {
-                return Visibility(
-                  key: const Key('visibilitySun'),
-                  visible: snapshot.data.item1 == 'Guardian' ||
-                           snapshot.data.item2 == 7,
-                  child: Expanded(
-                      child: Card(
-                          color: const Color(0xFFFFFFFF),
-                          child: _day('Søndag', tasksList))),
-                );
-              },
-            ),
+            _dayWidget('visibilityMon', 1, 0xFF007700, 'Mandag'),
+            _dayWidget('visibilityTue', 2, 0xFF800080, 'Tirsdag'),
+            _dayWidget('visibilityWed', 3, 0xFFFF8500, 'Onsdag'),
+            _dayWidget('visibilityThu', 4, 0xFF0000FF, 'Torsdag'),
+            _dayWidget('visibilityFri', 5, 0xFFFFDD00, 'Fredag'),
+            _dayWidget('visibilitySat', 6, 0xFFFF0000, 'Lørdag'),
+            _dayWidget('visibilitySun', 7, 0xFFFFFFFF, 'Søndag'),
           ],
         ));
   }
+
+  /// Returns the widget representing a day in the weekplanner
+  StreamBuilder<Tuple2<String, int>> _dayWidget
+        (String key, int dayNumber, int color, String day){
+    return StreamBuilder<Tuple2<String, int>>(
+      stream: userInfoBloc.dayOfWeekAndUsermode,
+      initialData: const Tuple2<String, int>('Guardian', 0),
+      builder: (BuildContext context,
+                AsyncSnapshot<Tuple2<String, int>> snapshot) {
+      return Visibility(
+        key: Key(key),
+        visible: snapshot.data.item1 == 'Guardian' ||
+                 snapshot.data.item2 == dayNumber,
+        child: Expanded(
+          child: Card(
+            color: Color(color),
+            child: _day(day, tasksList))),
+      );
+      }
+    );
+  }
+
 }
 
 Column _day(String day, List<Widget> tasksList) {
@@ -193,3 +107,4 @@ Column _day(String day, List<Widget> tasksList) {
     ],
   );
 }
+

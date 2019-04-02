@@ -31,7 +31,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Contains the functionality of changing the weekplan.
   final UserInfoBloc userInfoBloc;
 
-  //
   @override
   final Size preferredSize;
 

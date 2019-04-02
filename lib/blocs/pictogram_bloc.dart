@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
