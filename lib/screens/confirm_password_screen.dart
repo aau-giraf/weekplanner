@@ -6,14 +6,14 @@ import 'package:weekplanner/routes.dart';
 class ConfirmPassword extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController passwordCtrl = TextEditingController();
-  final AuthBloc authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-        body: Container(
+      body: Container(
       width: screenSize.width,
       height: screenSize.height,
       padding: const EdgeInsets.all(20.0),
@@ -34,15 +34,27 @@ class ConfirmPassword extends StatelessWidget {
               key: _formKey,
               child: ListView(
                 children: <Widget>[
-                  
+                  RichText(
+                    text: TextSpan(
+                      text: 'Du er logget ind som ' + 
+                      _authBloc.loggedInUsername,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black
+                        
+                        )
+                    ),
+                    textAlign: TextAlign.center, 
+                  ),
                   TextField(
                     controller: passwordCtrl,
                     obscureText: true,
                     // Use email input type for emails.
                     decoration: InputDecoration(
-                      hintText: '',
-                      labelText: 'Bekræft dit kodeord',
+                      hintText: 'Bekræft dit kodeord',
+                      labelText: '',
                       fillColor: Colors.white,
+                      alignLabelWithHint: true
                     ),
                   ),
                   Container(
@@ -52,11 +64,25 @@ class ConfirmPassword extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        login(context, authBloc.loggedInUsername,
+                        login(context, _authBloc.loggedInUsername,
                             passwordCtrl.value.text);
                             if (Navigator.canPop(context)) {
                               Routes.pop(context);
                             }
+                      },
+                      color: Colors.blue,
+                    ),
+                  ),
+                  Container(
+                    child: RaisedButton(
+                      child: Text(
+                        'Fortryd',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        if (Navigator.canPop(context)) {
+                          Routes.pop(context);
+                        }
                       },
                       color: Colors.blue,
                     ),
@@ -69,6 +95,6 @@ class ConfirmPassword extends StatelessWidget {
   }
 
   void login(BuildContext context, String username, String password) {
-    authBloc.authenticate(username, password);
+    _authBloc.authenticate(username, password);
   }
 }
