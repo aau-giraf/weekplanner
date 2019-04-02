@@ -5,7 +5,7 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/api/api.dart';
+import 'package:weekplanner/providers/api/api.dart';
 
 /// Bootstrap the project
 class Bootstrap {

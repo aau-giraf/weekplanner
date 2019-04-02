@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/api/api.dart';
+import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/providers/api/api.dart';
 
 /// For how long the debouncer should wait
 const int _milliseconds = 250;
