@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/giraf_dialog_header.dart';
 
 class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
+  // ignore: public_member_api_docs
   const GirafNotifyDialog({Key key, @required this.title, this.description})
       : super(key: key);
 
-  @override
   Size get preferredSize => const Size.fromHeight(56.0);
   final String title;
   final String description;
@@ -51,8 +51,8 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                             color: Color.fromRGBO(0, 0, 0, 0.3))),
                     color: const Color.fromRGBO(255, 157, 0, 1),
                     child: Row(
-                      children: <Widget>[
-                        const Icon(
+                      children: const <Widget>[
+                        Icon(
                           Icons.check,
                           color: Color.fromRGBO(0, 0, 0, 1),
                         ),
