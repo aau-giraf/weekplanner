@@ -20,13 +20,22 @@ void main() {
           stream: di.getDependency<AuthBloc>().loggedIn,
           builder: (_, AsyncSnapshot<bool> snapshot) =>
               // In case we're logged in show WeekPlanner, otherwise, show login
-          //snapshot.data ? WeekplanScreen() : LoginScreen())));
-          snapshot.data ? ShowActivityScreen(ActivityModel(id: 1, pictogram: 
-          PictogramModel(id: 3975, lastEdit: null, title: 'test', accessLevel:
-          null, imageUrl: null, imageHash: null), isChoiceBoard: false,
-                                                               order: 1,
-                                                               state:
-                                                               ActivityState
-                                                                   .Normal))
-              : LoginScreen())));
+              //snapshot.data ? WeekplanScreen() : LoginScreen())));
+              true
+                  ? ShowActivityScreen(
+                    null,
+                    ActivityModel(
+                      id: 1,
+                      pictogram: PictogramModel(
+                          id: 3975,
+                          lastEdit: null,
+                          title: 'test',
+                          accessLevel: null,
+                          imageUrl: null,
+                          imageHash: null),
+                      isChoiceBoard: false,
+                      order: 1,
+                      state: ActivityState.Normal),
+                      null)
+                  : LoginScreen())));
 }

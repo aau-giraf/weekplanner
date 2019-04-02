@@ -7,7 +7,7 @@ import 'package:weekplanner/models/enums/activity_state_enum.dart';
 
 /// Document all public members.
 class ActivityBloc extends BlocBase {
-  /// Default Constructor. 
+  /// Default Constructor.
   ActivityBloc(this._api);
 
   final Api _api;
@@ -16,7 +16,8 @@ class ActivityBloc extends BlocBase {
   GirafUserModel _user;
 
   /// Loads the WeekModel, ActivityModel and the GirafUser.
-  void load(WeekModel weekModel, ActivityModel activityModel, GirafUserModel user) {
+  void load(
+      WeekModel weekModel, ActivityModel activityModel, GirafUserModel user) {
     _activityModel = activityModel;
     _weekModel = weekModel;
     _user = user;
@@ -42,17 +43,15 @@ class ActivityBloc extends BlocBase {
 
   /// Update the weekmodel with the new state.
   bool update() {
-    var result = _api.week.update(_user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    var result = _api.week.update(
+        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
     if (result is WeekModel) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   @override
-  void dispose() {
-    
-  }
+  void dispose() {}
 }
