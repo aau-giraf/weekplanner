@@ -8,12 +8,14 @@ import 'package:weekplanner/blocs/user_info_bloc.dart';
 void main() {
   Clock mockClock;
 
-  test('initial value should be \'Guardian\'', () {
+  test('initial value should be \'Guardian\'', () async {
     final UserInfoBloc userInfoBloc = UserInfoBloc();
 
     final Future<String> initialData =
-        userInfoBloc.changeUserMode.first.then((String val) => val);
-    expect(initialData, 'Guardian');
+        userInfoBloc.changeUserMode.first;
+
+    final String valueOfFuture = await initialData;
+    expect(valueOfFuture, 'Guardian');
   });
 
   test('changeUserMode stream should emit Tuple2<String, int>(\'Guardian\',2',

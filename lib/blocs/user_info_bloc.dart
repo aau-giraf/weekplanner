@@ -16,9 +16,9 @@ class UserInfoBloc extends BlocBase{
       this.clock = const Clock();
     }
   }
+
   /// Mainly used for testing, in order to simulate that it is different days.
   Clock clock;
-
 
   /// Indicates which mode we are in.
   bool isGuardian = true;
