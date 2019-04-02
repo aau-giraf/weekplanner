@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/api/api.dart';
 
 /// Pictogram-Image Business Logic Component
 class PictogramImageBloc extends BlocBase {
