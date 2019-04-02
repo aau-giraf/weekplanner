@@ -1,3 +1,4 @@
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
@@ -45,7 +46,7 @@ class ActivityBloc extends BlocBase {
   bool update() {
     var result = _api.week.update(
         _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
-    if (result is WeekModel) {
+    if (result.runtimeType != null) {
       return true;
     } else {
       return false;
