@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/routes.dart';
@@ -7,10 +8,22 @@ import 'package:weekplanner/widgets/giraf_dialog_header.dart';
 class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
   ///title of the dialogBox, displayed in the header of the dialogBox
   final String title;
-
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
   final String description;
+
+
+
+  /// The current visibility of the okay-button.
+  Stream<bool> get btnVisible => _btnVisible.stream;
+
+  final BehaviorSubject<bool> _btnVisible =
+  BehaviorSubject<bool>.seeded(false);
+
+  @override
+  void dispose(){
+    _btnVisible.close();
+  }
 
   GirafNotifyDialog({Key key, @required this.title, this.description})
       : preferredSize = Size.fromHeight(56.0),
@@ -54,28 +67,37 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
             child: ButtonBar(
               alignment: MainAxisAlignment.center,
               children: <Widget>[
-                RaisedButton(
-                    key: const Key('NotifyDialogOkayButton'),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color.fromRGBO(0, 0, 0, 0.3))),
-                    color: const Color.fromRGBO(255, 157, 0, 1),
-                    child: Row(
-                      children: const <Widget>[
-                        Icon(
-                          Icons.check,
-                          color: Color.fromRGBO(0, 0, 0, 1),
-                        ),
-                        Text(
-                          'Okay',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      Routes.pop(context);
-                    }),
+                StreamBuilder<bool>(
+                  initialData: true,
+                  stream: _btnVisible,
+                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+                    return Visibility(
+                      key: const Key('NotifyDialogOkayButton'),
+                      visible: snapshot.data,
+                      child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: const BorderSide(
+                                  color: Color.fromRGBO(0, 0, 0, 0.3))),
+                          color: const Color.fromRGBO(255, 157, 0, 1),
+                          child: Row(
+                            children: const <Widget>[
+                              Icon(
+                                Icons.check,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ),
+                              Text(
+                                'Okay',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                          onPressed: () {
+                            Routes.pop(context);
+                          }),
+                    );
+                  }
+                ),
               ],
             ),
           )
