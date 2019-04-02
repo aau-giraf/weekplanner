@@ -36,25 +36,21 @@ class ChooseCitizenScreen extends StatelessWidget {
                   stream: _bloc.citizen,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<UsernameModel>> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 0, horizontal: portrait ? 20 : 60),
-                          child: GridView.count(
-                              crossAxisCount: portrait ? 2 : 4,
-                              children: snapshot.data
-                                  .map<Widget>((UsernameModel user) =>
-                                      CitizenAvatar(user, context))
-                                  .toList()),
-                        );
-                      case ConnectionState.waiting:
-                        return new Text('Awaiting result...');
-                      default:
-                        if (snapshot.hasError)
-                          return new Text('Error: ${snapshot.error}');
-                        else
-                          return new Text('Result: ${snapshot.data}');
+                    if (snapshot.connectionState != ConnectionState.waiting) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 0, horizontal: portrait ? 20 : 60),
+                        child: GridView.count(
+                            crossAxisCount: portrait ? 2 : 4,
+                            children: snapshot.data
+                                .map<Widget>((UsernameModel user) =>
+                                    CitizenAvatar(user, context))
+                                .toList()),
+                      );
+                    } else {
+                      return Container(
+                        child: const Text('Loading...'),
+                      );
                     }
                   },
                 ),

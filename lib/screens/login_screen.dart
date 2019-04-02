@@ -171,6 +171,7 @@ class LoginScreen extends StatelessWidget {
                                       Environment.getVar<String>('USERNAME');
                                   passwordCtrl.text =
                                       Environment.getVar<String>('PASSWORD');
+                                  loginAction(context);
                                 },
                                 color: const Color.fromRGBO(48, 81, 118, 1),
                               ),

@@ -61,9 +61,8 @@ void main() {
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
-
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
-    await tester.pump(Duration(seconds: 3));
+    await tester.pumpAndSettle();
     bloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
       done.complete(true);
@@ -74,11 +73,22 @@ void main() {
   testWidgets('Has Citizens Text [Name] (4)', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
-    await tester.pump(Duration(seconds: 3));
+    await tester.pumpAndSettle();
     bloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(AutoSizeText), findsNWidgets(response.length));
       done.complete(true);
     });
     await done.future;
   });
+
+  /*
+  testWidgets('Click Citizen (Avatar)', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
+    await tester.pump(Duration(seconds: 3));
+    await tester.ensureVisible(find.byType(CitizenAvatar).first);
+    await tester.tap(find.byType(GestureDetector).first);
+    await tester.pump(Duration(seconds: 3));
+    expect(find.byType(WeekplanScreen), findsOneWidget);
+  });
+  */
 }

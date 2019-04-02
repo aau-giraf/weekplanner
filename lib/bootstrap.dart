@@ -17,7 +17,7 @@ class Bootstrap {
   /// NB:
   /// Singleton restricts the instantiation of a class to one 'single' instance
   static Future<void> register() async {
-    di.registerSingleton((Injector i) {
+    di.registerSingleton((_) {
       return Api(Environment.getVar('SERVER_HOST'));
     });
 

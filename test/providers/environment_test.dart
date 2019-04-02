@@ -17,7 +17,6 @@ void main() {
       "DEBUG": false
     }
     ''';
-  setUp(() {});
 
   test('Should get SERVER_HOST from environment file (DEBUG)',
       async((DoneFn done) {

@@ -33,7 +33,6 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   ChooseCitizenBloc bloc;
   Api api;
-
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -49,11 +48,5 @@ void main() {
         }
       }
     });
-  }));
-
-  test('Should dispose stream', async((DoneFn done) {
-    bloc.citizen.listen((_) {}, onDone: done);
-
-    bloc.dispose();
   }));
 }
