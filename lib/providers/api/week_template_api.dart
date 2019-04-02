@@ -3,17 +3,25 @@ import 'package:weekplanner/models/week_template_model.dart';
 import 'package:weekplanner/models/week_template_name_model.dart';
 import 'package:weekplanner/providers/http/http.dart';
 
+/// Week template endpoints
 class WeekTemplateApi {
-  final Http _http;
-
+  /// Default constructor
   WeekTemplateApi(this._http);
+
+  final Http _http;
 
   /// Gets all schedule templates for the currently authenticated user.
   /// Available to all users.
   Observable<List<WeekTemplateNameModel>> getNames() {
-    return _http.get("/").map((Response res) {
-      return (res.json["data"] as List)
-          .map((val) => WeekTemplateNameModel.fromJson(val)).toList();
+    return _http.get('/').map((Response res) {
+      if (res.json['data'] is List) {
+        return List<Map<String,dynamic>>.from(res.json['data'])
+            .map((Map<String, dynamic> val) =>
+                WeekTemplateNameModel.fromJson(val))
+            .toList();
+      } else {
+        return null;
+      }
     });
   }
 
@@ -23,8 +31,8 @@ class WeekTemplateApi {
   /// [template] After successful execution, a new week template will be created
   /// with the same values as this DTO.
   Observable<WeekTemplateModel> create(WeekTemplateModel template) {
-    return _http.post("/", template.toJson()).map((Response res) {
-      return WeekTemplateModel.fromJson(res.json["data"]);
+    return _http.post('/', template.toJson()).map((Response res) {
+      return WeekTemplateModel.fromJson(res.json['data']);
     });
   }
 
@@ -32,8 +40,8 @@ class WeekTemplateApi {
   ///
   /// [id] ID of the week to get
   Observable<WeekTemplateModel> get(int id) {
-    return _http.get("/$id").map((Response res) {
-      return WeekTemplateModel.fromJson(res.json["data"]);
+    return _http.get('/$id').map((Response res) {
+      return WeekTemplateModel.fromJson(res.json['data']);
     });
   }
 
@@ -42,8 +50,8 @@ class WeekTemplateApi {
   ///
   /// [template] The new template value
   Observable<WeekTemplateModel> update(WeekTemplateModel template) {
-    return _http.put("/${template.id}", template.toJson()).map((Response res) {
-      return WeekTemplateModel.fromJson(res.json["data"]);
+    return _http.put('/${template.id}', template.toJson()).map((Response res) {
+      return WeekTemplateModel.fromJson(res.json['data']);
     });
   }
 
@@ -52,6 +60,6 @@ class WeekTemplateApi {
   ///
   /// [id] ID of the template to delete
   Observable<bool> delete(int id) {
-    return _http.delete("/$id").map((Response res) => res.json["success"]);
+    return _http.delete('/$id').map((Response res) => res.json['success']);
   }
 }
