@@ -80,15 +80,4 @@ void main() {
     });
     await done.future;
   });
-
-  /*
-  testWidgets('Click Citizen (Avatar)', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
-    await tester.pump(Duration(seconds: 3));
-    await tester.ensureVisible(find.byType(CitizenAvatar).first);
-    await tester.tap(find.byType(GestureDetector).first);
-    await tester.pump(Duration(seconds: 3));
-    expect(find.byType(WeekplanScreen), findsOneWidget);
-  });
-  */
 }

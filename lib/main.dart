@@ -24,6 +24,7 @@ Future<void> main() async {
           initialData: false,
           stream: di.getDependency<AuthBloc>().loggedIn,
           builder: (_, AsyncSnapshot<bool> snapshot) =>
+              // In case logged in show ChooseCitizenScreen, otherwise login
               snapshot.data ? ChooseCitizenScreen() : LoginScreen())));
 }
 

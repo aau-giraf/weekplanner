@@ -107,7 +107,6 @@ void main() {
 
   testWidgets('Logging in works (PROD)', (WidgetTester tester) async {
     Environment.setContent(prodEnvironments);
-    final Completer<bool> done = Completer<bool>();
 
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
@@ -117,11 +116,8 @@ void main() {
 
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
-      if (success) {
-        done.complete(true);
-      }
+      expect(success, equals(true));
     });
-    await done.future;
   });
 
   testWidgets('Logging in works (DEBUG)', (WidgetTester tester) async {
@@ -136,9 +132,7 @@ void main() {
 
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
-      if (success) {
-        done.complete(true);
-      }
+      expect(success, equals(true));
     });
     await done.future;
   });
@@ -158,9 +152,7 @@ void main() {
     await tester.pump(const Duration(seconds: 5));
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
-      if (!success) {
-        done.complete(true);
-      }
+      expect(success, equals(false));
     });
     await done.future;
   });

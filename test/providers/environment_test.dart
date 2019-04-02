@@ -18,45 +18,30 @@ void main() {
     }
     ''';
 
-  test('Should get SERVER_HOST from environment file (DEBUG)',
-      async((DoneFn done) {
+  test('Should get SERVER_HOST from environment file (DEBUG)', () {
     Environment.setContent(debugEnvironments);
-    if (Environment.getVar<String>('SERVER_HOST') ==
-        'http://web.giraf.cs.aau.dk:5000') {
-      done();
-    }
-  }));
+    expect(Environment.getVar<String>('SERVER_HOST'),
+        equals('http://web.giraf.cs.aau.dk:5000'));
+  });
 
-  test('Should get SERVER_HOST from environment file (PRODUCTION)',
-      async((DoneFn done) {
+  test('Should get SERVER_HOST from environment file (PRODUCTION)', () {
     Environment.setContent(prodEnvironments);
-    if (Environment.getVar<String>('SERVER_HOST') ==
-        'http://web.giraf.cs.aau.dk:5000') {
-      done();
-    }
-  }));
+    expect(Environment.getVar<String>('SERVER_HOST'),
+        equals('http://web.giraf.cs.aau.dk:5000'));
+  });
 
-  test('Should get DEBUG from environment file (PRODUCTION)',
-      async((DoneFn done) {
+  test('Should get DEBUG from environment file (PRODUCTION)', () {
     Environment.setContent(prodEnvironments);
-    if (Environment.getVar<bool>('DEBUG') == false) {
-      done();
-    }
-  }));
+    expect(Environment.getVar<bool>('DEBUG'), equals(false));
+  });
 
-  test('Should get USERNAME from environment file (PRODUCTION)',
-      async((DoneFn done) {
+  test('Should get USERNAME from environment file (PRODUCTION)', () {
     Environment.setContent(debugEnvironments);
-    if (Environment.getVar<String>('USERNAME') == 'Graatand') {
-      done();
-    }
-  }));
+    expect(Environment.getVar<String>('USERNAME'), equals('Graatand'));
+  });
 
-  test('Should get PASSWORD from environment file (PRODUCTION)',
-      async((DoneFn done) {
+  test('Should get PASSWORD from environment file (PRODUCTION)', () {
     Environment.setContent(debugEnvironments);
-    if (Environment.getVar<String>('PASSWORD') == 'password') {
-      done();
-    }
-  }));
+    expect(Environment.getVar<String>('PASSWORD'), equals('password'));
+  });
 }
