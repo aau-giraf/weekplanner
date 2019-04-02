@@ -888,3 +888,6 @@ DerivedData/
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
+# Ignore environment json files
+assets/environments.json
+assets/environments.prod.json
