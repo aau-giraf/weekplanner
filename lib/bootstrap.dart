@@ -1,10 +1,11 @@
 import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/weekplans_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -25,9 +26,14 @@ class Bootstrap {
       return AuthBloc(i.getDependency<Api>());
     });
 
-    di.registerSingleton<SettingsBloc>((_) {
-      return SettingsBloc();
+    di.registerDependency<WeekplanBloc>((Injector i) {
+      return WeekplanBloc();
     });
+
+    di.registerDependency((Injector i) {
+      return WeekplansBloc(i.getDependency<Api>());
+    });
+    
     di.registerSingleton<ToolbarBloc>((_) {
       return ToolbarBloc();
     });
