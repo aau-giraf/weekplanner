@@ -1,7 +1,6 @@
 import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
