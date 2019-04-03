@@ -878,7 +878,6 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 
-
 ### Flutter Generated Exceptions
 
 # Exceptions to above rules.
@@ -891,3 +890,6 @@ DerivedData/
 # Ignore environment json files
 assets/environments.json
 assets/environments.prod.json
+
+ios/Runner/GeneratedPluginRegistrant.m
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
