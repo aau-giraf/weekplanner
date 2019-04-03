@@ -13,7 +13,7 @@ void main() {
   });
 
   test('Should validate title', async((DoneFn done) {
-    bloc.onTitleChanged('Ugeplan');
+    bloc.onTitleChanged.add('Ugeplan');
     bloc.validTitleStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -22,7 +22,7 @@ void main() {
   }));
 
   test('Should not validate title', async((DoneFn done) {
-    bloc.onTitleChanged('');
+    bloc.onTitleChanged.add('');
     bloc.validTitleStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -31,8 +31,8 @@ void main() {
   }));
 
   test('Should validate year', async((DoneFn done) {
-    bloc.onTitleChanged('Ugeplan');
-    bloc.onYearChanged('2004');
+    bloc.onTitleChanged.add('Ugeplan');
+    bloc.onYearChanged.add('2004');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -41,7 +41,7 @@ void main() {
   }));
 
   test('Should not validate year', async((DoneFn done) {
-    bloc.onYearChanged('218');
+    bloc.onYearChanged.add('218');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -50,7 +50,7 @@ void main() {
   }));
 
   test('Should not validate year', async((DoneFn done) {
-    bloc.onYearChanged('20019');
+    bloc.onYearChanged.add('20019');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -59,7 +59,7 @@ void main() {
   }));
 
   test('Should not validate year', async((DoneFn done) {
-    bloc.onYearChanged('2O19');
+    bloc.onYearChanged.add('2O19');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -68,7 +68,7 @@ void main() {
   }));
 
   test('Should not validate year', async((DoneFn done) {
-    bloc.onYearChanged('');
+    bloc.onYearChanged.add('');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -77,7 +77,7 @@ void main() {
   }));
 
   test('Should validate weekNumber', async((DoneFn done) {
-    bloc.onWeekNumberChanged('42');
+    bloc.onWeekNumberChanged.add('42');
     bloc.validWeekNumberStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -86,7 +86,7 @@ void main() {
   }));
 
   test('Should not validate weekNumber', async((DoneFn done) {
-    bloc.onWeekNumberChanged('0');
+    bloc.onWeekNumberChanged.add('0');
     bloc.validWeekNumberStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -95,7 +95,7 @@ void main() {
   }));
 
   test('Should not validate weekNumber', async((DoneFn done) {
-    bloc.onWeekNumberChanged('54');
+    bloc.onWeekNumberChanged.add('54');
     bloc.validWeekNumberStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -104,7 +104,7 @@ void main() {
   }));
 
   test('Should not validate weekNumber', async((DoneFn done) {
-    bloc.onWeekNumberChanged('-42');
+    bloc.onWeekNumberChanged.add('-42');
     bloc.validWeekNumberStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -113,9 +113,9 @@ void main() {
   }));
 
   test('Should validate all input fields', async((DoneFn done) {
-    bloc.onTitleChanged('Ugeplan');
-    bloc.onYearChanged('2019');
-    bloc.onWeekNumberChanged('42');
+    bloc.onTitleChanged.add('Ugeplan');
+    bloc.onYearChanged.add('2019');
+    bloc.onWeekNumberChanged.add('42');
     bloc.validInputStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -124,9 +124,9 @@ void main() {
   }));
 
   test('Should not validate all input fields', async((DoneFn done) {
-    bloc.onTitleChanged('Ugeplan');
-    bloc.onYearChanged('2019');
-    bloc.onWeekNumberChanged('-42');
+    bloc.onTitleChanged.add('Ugeplan');
+    bloc.onYearChanged.add('2019');
+    bloc.onWeekNumberChanged.add('-42');
     bloc.validInputStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -135,9 +135,9 @@ void main() {
   }));
 
   test('Should not validate all input fields', async((DoneFn done) {
-    bloc.onTitleChanged('');
-    bloc.onYearChanged('2019');
-    bloc.onWeekNumberChanged('42');
+    bloc.onTitleChanged.add('');
+    bloc.onYearChanged.add('2019');
+    bloc.onWeekNumberChanged.add('42');
     bloc.validInputStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -146,9 +146,9 @@ void main() {
   }));
 
   test('Should not validate all input fields', async((DoneFn done) {
-    bloc.onTitleChanged('Ugeplan');
-    bloc.onYearChanged('218');
-    bloc.onWeekNumberChanged('42');
+    bloc.onTitleChanged.add('Ugeplan');
+    bloc.onYearChanged.add('218');
+    bloc.onWeekNumberChanged.add('42');
     bloc.validInputStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -157,9 +157,9 @@ void main() {
   }));
 
   test('Should reset input streams to default values', async((DoneFn done) {
-    bloc.onTitleChanged('Ugeplan');
-    bloc.onYearChanged('2019');
-    bloc.onWeekNumberChanged('42');
+    bloc.onTitleChanged.add('Ugeplan');
+    bloc.onYearChanged.add('2019');
+    bloc.onWeekNumberChanged.add('42');
     bloc.resetBloc();
     bloc.validInputStream.listen((bool isValid) {
       expect(isValid, isNotNull);

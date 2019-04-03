@@ -26,50 +26,74 @@ class NewWeekplanScreen extends StatelessWidget {
         body: ListView(children: <Widget>[
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: TextField(
-                onChanged: (String text) => {
-                      _bloc.onTitleChanged(text),
-                    },
-                decoration: InputDecoration(
-                    labelText: 'Titel',
-                    border: OutlineInputBorder(borderSide: BorderSide())),
-              )),
+              child: StreamBuilder<bool>(
+                  stream: _bloc.validTitleStream,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    return TextField(
+                      onChanged: _bloc.onTitleChanged.add,
+                      decoration: InputDecoration(
+                          labelText: 'Titel',
+                          errorText: (snapshot?.data != false)
+                              ? null
+                              : 'Titel skal være mellem 1 og 32 tegn',
+                          border: OutlineInputBorder(borderSide: BorderSide())),
+                    );
+                  })),
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: TextField(
-                keyboardType: TextInputType.number,
-                onChanged: (String text) => {
-                      _bloc.onYearChanged(text),
-                    },
-                decoration: InputDecoration(
-                    labelText: 'År',
-                    border: OutlineInputBorder(borderSide: BorderSide())),
-              )),
+              child: StreamBuilder<bool>(
+                  stream: _bloc.validYearStream,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    return TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: _bloc.onYearChanged.add,
+                      decoration: InputDecoration(
+                          labelText: 'År',
+                          errorText: (snapshot?.data != false)
+                              ? null
+                              : 'År skal angives som fire cifre',
+                          border: OutlineInputBorder(borderSide: BorderSide())),
+                    );
+                  })),
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: TextField(
-                keyboardType: TextInputType.number,
-                onChanged: (String text) => {_bloc.onWeekNumberChanged(text)},
-                decoration: InputDecoration(
-                    labelText: 'Ugenummer',
-                    border: OutlineInputBorder(borderSide: BorderSide())),
-              )),
+              child: StreamBuilder<bool>(
+                  stream: _bloc.validWeekNumberStream,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    return TextField(
+                      keyboardType: TextInputType.number,
+                      onChanged: _bloc.onWeekNumberChanged.add,
+                      decoration: InputDecoration(
+                          labelText: 'Ugenummer',
+                          errorText: (snapshot?.data != false)
+                              ? null
+                              : 'Ugenummer skal være mellem 1 og 53',
+                          border: OutlineInputBorder(borderSide: BorderSide())),
+                    );
+                  })),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _buildThumbnail(context, _bloc.pictogram),
+            child: Container(
+              width: 200,
+              height: 200,
+              child: StreamBuilder<PictogramModel>(
+                stream: _bloc.thumbnailStream,
+                builder: _buildThumbnail,
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: RaisedButton(
               child: Text(
-                'Vælg Pictogram',
+                'Vælg Piktogram',
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
-              onPressed: () => {
-                    Routes.push<PictogramModel>(context, PictogramSearch())
-                        .then((PictogramModel val) => {_bloc.pictogram = val}),
-                  },
+              onPressed: () => _openPictogramSearch(context),
             ),
           ),
           Padding(
@@ -86,31 +110,54 @@ class NewWeekplanScreen extends StatelessWidget {
             ),
           ),
           Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: RaisedButton(
-                child: Text(
-                  'Gem Ugeplan',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.blue,
-                onPressed: () {
-                  _bloc.save();
-                  Routes.pop(context);
-                },
-              ),
-              ),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: StreamBuilder<bool>(
+              stream: _bloc.validInputStream,
+              builder: _buildSaveButton,
+            ),
+          ),
         ]));
   }
 
-  Widget _buildThumbnail(BuildContext context, PictogramModel gram) {
-    if (gram == null) {
-      return Card(
-        child: ConstrainedBox(
-            constraints: const BoxConstraints.expand(height: 200.0),
-            child: const Icon(Icons.image)),
+  Widget _buildThumbnail(
+      BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
+    if (snapshot?.data == null) {
+      return GestureDetector(
+        onTap: () => _openPictogramSearch(context),
+        child: Card(
+          child: FittedBox(fit: BoxFit.contain, child: const Icon(Icons.image)),
+        ),
       );
     } else {
-      return PictogramImage(pictogram: gram, onPressed: null);
+      return PictogramImage(
+          pictogram: snapshot.data,
+          onPressed: () => _openPictogramSearch(context));
     }
+  }
+
+  Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
+    if (snapshot?.data == true) {
+      return RaisedButton(
+        child: Text(
+          'Gem Ugeplan',
+          style: TextStyle(color: Colors.white),
+        ),
+        color: Colors.blue,
+        onPressed: () {
+          _bloc.save();
+          Routes.pop(context);
+        },
+      );
+    } else {
+      return RaisedButton(
+        child: const Text('Not Enabled'),
+        onPressed: () => {print('Disabled Button')},
+      );
+    }
+  }
+
+  void _openPictogramSearch(BuildContext context) {
+    Routes.push<PictogramModel>(context, PictogramSearch())
+        .then(_bloc.onThumbnailChanged.add);
   }
 }

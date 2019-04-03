@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
@@ -10,59 +12,54 @@ class NewWeekplanBloc extends BlocBase {
   /// New-Weekplan Business Logic Component
   ///
   /// Gives the ability to create a new empty weekplan
-  NewWeekplanBloc(this._api);
+  NewWeekplanBloc(this._api) {
+    validInputStream.listen(print);
+  }
 
   final Api _api;
   GirafUserModel _user;
-  String _title;
-  int _year;
-  int _weekNumber;
 
-  /// The thumbnail pictogram of the new weekplan
-  PictogramModel pictogram;
+  final BehaviorSubject<String> _titleController = BehaviorSubject<String>();
+  final BehaviorSubject<String> _yearController = BehaviorSubject<String>();
+  final BehaviorSubject<String> _weekNumberController =
+      BehaviorSubject<String>();
+  final BehaviorSubject<PictogramModel> _thumbnailController =
+      BehaviorSubject<PictogramModel>();
+
+  /// Handles when the entered title is changed
+  Sink<String> get onTitleChanged => _titleController.sink;
+
+  /// Handles when the entered year is changed
+  Sink<String> get onYearChanged => _yearController.sink;
+
+  /// Handles when the entered week number is changed
+  Sink<String> get onWeekNumberChanged => _weekNumberController.sink;
+
+  /// Handles when the thumbnail is changed
+  Sink<PictogramModel> get onThumbnailChanged => _thumbnailController.sink;
 
   /// Gives information about whether the entered title is valid
-  Observable<bool> get validTitleStream => _validTitleController.stream;
-  final BehaviorSubject<bool> _validTitleController =
-      BehaviorSubject<bool>.seeded(false);
+  Observable<bool> get validTitleStream =>
+      _titleController.stream.transform(_titleValidation);
 
   /// Gives information about whether the entered year is valid
-  Observable<bool> get validYearStream => _validYearController.stream;
-  final BehaviorSubject<bool> _validYearController =
-      BehaviorSubject<bool>.seeded(false);
+  Observable<bool> get validYearStream =>
+      _yearController.stream.transform(_yearValidation);
 
   /// Gives information about whether the entered week number is valid
   Observable<bool> get validWeekNumberStream =>
-      _validWeekNumberController.stream;
-  final BehaviorSubject<bool> _validWeekNumberController =
-      BehaviorSubject<bool>.seeded(false);
+      _weekNumberController.stream.transform(_weekNumberValidation);
+
+  /// Streams the chosen thumbnail
+  Observable<PictogramModel> get thumbnailStream => _thumbnailController.stream;
 
   /// Gives information about whether all input fields are valid
   Observable<bool> get validInputStream =>
       Observable.combineLatest3<bool, bool, bool, bool>(
-          validTitleStream, validYearStream, validWeekNumberStream,
-          (bool s1, bool s2, bool s3) {
-        return s1 && s2 && s3;
-      }).asBroadcastStream();
-
-  /// Should be called when the text in the title input field is changed
-  /// Validates the title and adds whether it is valid to _validTitleController
-  void onTitleChanged(String title) {
-    _validTitleController.sink.add(_isValidTitle(title));
-  }
-
-  /// Should be called when the text in the year input field is changed
-  /// Validates the year and adds whether it is valid to _validYearController
-  void onYearChanged(String year) {
-    _validYearController.sink.add(_isValidYear(year));
-  }
-
-  /// Should be called when the text in the weekNumber input field is changed
-  /// Validates the week number and adds whether it is valid to
-  /// _validWeekNumberController
-  void onWeekNumberChanged(String weekNumber) {
-    _validWeekNumberController.sink.add(_isValidWeekNumber(weekNumber));
-  }
+          validTitleStream,
+          validYearStream,
+          validWeekNumberStream,
+          (bool s1, bool s2, bool s3) => s1 && s2 && s3).asBroadcastStream();
 
   /// We need an id for the current citizen
   void load(GirafUserModel user) {
@@ -71,8 +68,13 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Saves the entered information to the database
   void save() {
+    final String _title = _titleController.value;
+    final int _year = int.parse(_yearController.value);
+    final int _weekNumber = int.parse(_weekNumberController.value);
+    final PictogramModel _thumbnail = _thumbnailController.value;
+
     final WeekModel _weekModel = WeekModel(
-        thumbnail: pictogram,
+        thumbnail: _thumbnail,
         name: _title,
         weekYear: _year,
         weekNumber: _weekNumber);
@@ -82,48 +84,48 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   /// Resets the bloc to its default values
-  /// The bloc should be reset after the creation of a new weekplan
+  /// The bloc should be reset after leaving the NewWeekplanScreen
   void resetBloc() {
     _user = null;
-    _title = null;
-    _year = null;
-    _weekNumber = null;
-    pictogram = null;
-    _validTitleController.sink.add(false);
-    _validYearController.sink.add(false);
-    _validWeekNumberController.sink.add(false);
+    _titleController.sink.add(null);
+    _yearController.sink.add(null);
+    _weekNumberController.sink.add(null);
+    _thumbnailController.sink.add(null);
   }
 
-  bool _isValidTitle(String input) {
-    if (input != null && input.isNotEmpty && input.length <= 32) {
-      _title = input;
-      return true;
-    }
-    return false;
-  }
+  final StreamTransformer<String, bool> _titleValidation =
+      StreamTransformer<String, bool>.fromHandlers(
+          handleData: (String input, EventSink<bool> sink) {
+    sink.add(input != null && input.isNotEmpty && input.length <= 32);
+  });
 
-  bool _isValidYear(String input) {
-    final int year = int.tryParse(input);
-    if (year != null && input.length == 4) {
-      _year = year;
-      return true;
+  final StreamTransformer<String, bool> _yearValidation =
+      StreamTransformer<String, bool>.fromHandlers(
+          handleData: (String input, EventSink<bool> sink) {
+    if (input != null) {
+      final int year = int.tryParse(input);
+      sink.add(year != null && input.length == 4);
+    } else {
+      sink.add(false);
     }
-    return false;
-  }
+  });
 
-  bool _isValidWeekNumber(String input) {
-    final int weekNumber = int.tryParse(input);
-    if (weekNumber != null && weekNumber >= 1 && weekNumber <= 53) {
-      _weekNumber = weekNumber;
-      return true;
+  final StreamTransformer<String, bool> _weekNumberValidation =
+      StreamTransformer<String, bool>.fromHandlers(
+          handleData: (String input, EventSink<bool> sink) {
+    if (input != null) {
+      final int weekNumber = int.tryParse(input);
+      sink.add(weekNumber != null && weekNumber >= 1 && weekNumber <= 53);
+    } else {
+      sink.add(false);
     }
-    return false;
-  }
+  });
 
   @override
   void dispose() {
-    _validTitleController.close();
-    _validYearController.close();
-    _validWeekNumberController.close();
+    _titleController.close();
+    _yearController.close();
+    _weekNumberController.close();
+    _thumbnailController.close();
   }
 }

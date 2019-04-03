@@ -19,7 +19,7 @@ class Bootstrap {
   static void register() {
     di.registerSingleton((_) {
       // TODO(boginw): move the server URL into .env file
-      return Api('srv.giraf.cs.aau.dk/API/');
+      return Api('http://srv.giraf.cs.aau.dk/API/');
     });
 
     di.registerSingleton((Injector i) {
