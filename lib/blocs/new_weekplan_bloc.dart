@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
@@ -13,12 +11,7 @@ class NewWeekplanBloc extends BlocBase {
   ///
   /// Gives the ability to create a new empty weekplan
   NewWeekplanBloc(this._api) {
-    _validInputController = _validTitleController
-        .withLatestFrom(_validYearController, (bool s1, bool s2) {
-      return s1 && s2;
-    }).withLatestFrom(_validWeekNumberController, (bool s1, bool s2) {
-      return s1 && s2;
-    });
+    validInputStream.listen(print);
   }
 
   final Api _api;
@@ -41,10 +34,13 @@ class NewWeekplanBloc extends BlocBase {
   final BehaviorSubject<bool> _validWeekNumberController =
       BehaviorSubject<bool>();
 
-
   /// Gives information about whether all input fields are valid
-  Observable<bool> get validInputStream => _validInputController.stream;
-  BehaviorSubject<bool> _validInputController;
+  Observable<bool> get validInputStream =>
+      Observable.combineLatest3<bool, bool, bool, bool>(
+          validTitleStream, validYearStream, validWeekNumberStream,
+          (bool s1, bool s2, bool s3) {
+        return s1 && s2 && s3;
+      }).asBroadcastStream();
 
   /// The thumbnail pictogram of the new weekplan
   PictogramModel pictogram;
