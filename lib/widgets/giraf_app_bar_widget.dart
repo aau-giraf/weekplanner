@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 
 /// Toolbar of the application.
@@ -19,6 +19,9 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Used to store the title of the toolbar.
   final String title;
 
+  /// Used to pass the password from the text field to the authBloc.
+  final TextEditingController passwordCtrl = TextEditingController();
+
   /// Contains the functionality regarding login, logout etc.
   final AuthBloc _authBloc;
 
@@ -31,7 +34,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      
+
       title: Text(title),
       backgroundColor: const Color(0xAAFF6600),
       actions: <Widget>[
@@ -54,14 +57,52 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         IconButton(
-          icon: Image.asset('assets/icons/changeToCitizen.png'),
-          tooltip: 'Skift mode',
-
+          icon: Image.asset('assets/icons/changeToGuardian.png'),
+          tooltip: 'Skift til værge tilstand',
           onPressed: () {
-            // Implemented in another user story
+            Alert(
+                context: context,
+                style: _alertStyle,
+                title: 'Skift til værge',
+                content: Column(
+                  children: <Widget>[
+                    RichText(
+                      text: TextSpan(
+                        text: 'Logget ind som ',
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          TextSpan(text: _authBloc.loggedInUsername,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    TextField(
+                      controller: passwordCtrl,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        icon: const Icon(Icons.lock),
+                        labelText: 'Adgangskode',
+                      ),
+                    ),
+                  ],
+                ),
+                buttons: <DialogButton> [
+                  DialogButton(
+                    onPressed: () {
+                      login(context, _authBloc.loggedInUsername,
+                      passwordCtrl.value.text);
+                      Routes.pop(context);
+                    },
+                    child: Text(
+                      'Bekræft',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    color: const Color.fromRGBO(255, 157, 0, 100),
+                  )
+                ]).show();
           },
         ),
-        
+
         IconButton(
             icon: Image.asset('assets/icons/logout.png'),
             tooltip: 'Log ud',
@@ -69,7 +110,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
               Alert(
                 context: context,
                 type: AlertType.none,
-                style: _logoutStyle,
+                style: _alertStyle,
                 title: 'Log ud',
                 desc: 'Vil du logge ud?',
                 buttons: <DialogButton> [
@@ -100,7 +141,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
               ).show();
             },
           ),
-
         IconButton(
           icon: Image.asset('assets/icons/settings.png'),
           tooltip: 'Indstillinger',
@@ -112,9 +152,9 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  final AlertStyle _logoutStyle = AlertStyle(
+  final AlertStyle _alertStyle = AlertStyle(
     animationType: AnimationType.grow,
-    isCloseButton: false,
+    isCloseButton: true,
     isOverlayTapDismiss: true,
     descStyle: TextStyle(fontWeight: FontWeight.normal),
     animationDuration: Duration(milliseconds: 400),
@@ -128,5 +168,9 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
       color: Colors.black,
     ),
   );
+
+  void login(BuildContext context, String username, String password) {
+    _authBloc.authenticate(username, password);
+  }
 }
 
