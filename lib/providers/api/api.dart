@@ -11,6 +11,7 @@ import 'package:weekplanner/providers/persistence/persistence_client.dart';
 
 /// Weekplanner API
 class Api {
+  /// Default constructor
   Api(this.baseUrl) {
     final Persistence persist = PersistenceClient();
     account = AccountApi(HttpClient(baseUrl + '/v1', persist), persist);
@@ -44,6 +45,10 @@ class Api {
   /// To access user endpoints
   UserApi user;
 
+  /// The base of all requests.
+  ///
+  /// Example: if set to `http://google.com`, then a get request with url
+  /// `/search` will resolve to `http://google.com/search`
   String baseUrl;
 
   /// Destroy the API

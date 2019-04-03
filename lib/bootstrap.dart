@@ -7,7 +7,8 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/api/api.dart';
-import 'package:weekplanner/providers/environment_provider.dart';
+import 'package:weekplanner/providers/environment_provider.dart' as environment;
+
 
 /// Bootstrap the project
 class Bootstrap {
@@ -16,9 +17,9 @@ class Bootstrap {
   ///
   /// NB:
   /// Singleton restricts the instantiation of a class to one 'single' instance
-  static Future<void> register() async {
+  static void register() {
     di.registerSingleton((_) {
-      return Api(Environment.getVar('SERVER_HOST'));
+      return Api(environment.getVar('SERVER_HOST'));
     });
 
     di.registerSingleton((Injector i) {

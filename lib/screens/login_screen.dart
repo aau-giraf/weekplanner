@@ -3,26 +3,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/providers/environment_provider.dart';
+import 'package:weekplanner/providers/environment_provider.dart' as environment;
 
 class LoginScreen extends StatelessWidget {
-  AuthBloc get authBloc => di.getDependency<AuthBloc>();
+  final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
-  final bool isDebugMode = Environment.getVar<bool>('DEBUG');
+  final bool isDebugMode = environment.getVar<bool>('DEBUG');
 
   static bool loggedInSuccessfull = false;
 
-  Future<bool> loginAction() async {
+  Future<void> loginAction() async {
     // TODO(tricky12321): Giraf Notify Dialog Wrong username and password, https://github.com/aau-giraf/weekplanner/issues/104
     authBloc.loggedIn.listen((bool status) async {
-      if (status) {
-        loggedInSuccessfull = true;
-      }
+      loggedInSuccessfull = status;
     });
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
-    return true;
   }
 
   @override
@@ -131,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     // Autologin button, only used for debugging
-                    Environment.getVar<bool>('DEBUG')
+                    environment.getVar<bool>('DEBUG')
                         ? Container(
                             child: Transform.scale(
                               scale: 1.2,
@@ -145,9 +142,9 @@ class LoginScreen extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   usernameCtrl.text =
-                                      Environment.getVar<String>('USERNAME');
+                                      environment.getVar<String>('USERNAME');
                                   passwordCtrl.text =
-                                      Environment.getVar<String>('PASSWORD');
+                                      environment.getVar<String>('PASSWORD');
                                   loginAction();
                                 },
                                 color: const Color.fromRGBO(48, 81, 118, 1),
@@ -174,26 +171,5 @@ class LoginScreen extends StatelessWidget {
         image: AssetImage('assets/giraf_splash_logo.png'),
       ),
     );
-  }
-
-  static void showLoadingScreen(BuildContext context, bool dismissible,
-      [void callback(), int timeoutMS]) {
-    if (callback != null) {
-      timeoutMS ??= 2000;
-      Timer(Duration(milliseconds: timeoutMS), callback);
-    }
-    showDialog<Center>(
-        barrierDismissible: dismissible,
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: Transform.scale(
-                scale: 2,
-                child: const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Color.fromRGBO(255, 157, 0, 0.8)),
-                )),
-          );
-        });
   }
 }

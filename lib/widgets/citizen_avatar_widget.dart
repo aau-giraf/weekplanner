@@ -5,19 +5,17 @@ import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 
 class CitizenAvatar extends StatelessWidget {
-  const CitizenAvatar(this.usernameModel, this.parentContext);
+  const CitizenAvatar({this.usernameModel, this.onPressed});
 
-  final BuildContext parentContext;
   final UsernameModel usernameModel;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30),
       child: GestureDetector(
-        onTap: () {
-          Routes.push(context, WeekplanScreen());
-        },
+        onTap: onPressed,
         child: Container(
             child: Column(
           children: <Widget>[
@@ -40,7 +38,10 @@ class CitizenAvatar extends StatelessWidget {
                     ),
                     Center(
                       child: AutoSizeText(
-                        usernameModel.name,
+                        usernameModel.name.length <= 15
+                            ? usernameModel.name
+                            : usernameModel.name.substring(0, 14) + '..',
+                        style: TextStyle(fontSize: 40.0),
                         maxLines: 1,
                       ),
                     ),

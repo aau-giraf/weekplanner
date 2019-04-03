@@ -42,7 +42,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                   key: const Key('visibilityEditBtn'),
                   visible: snapshot.data,
                   child: IconButton(
-                    icon: const Icon(Icons.edit),
+                    icon: Image.asset('assets/icons/edit.png'),
                     tooltip: 'Rediger',
                     onPressed: () {},
                   ),
@@ -52,7 +52,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Image.asset('assets/icons/changeToCitizen.png'),
             tooltip: 'Skift mode',
             onPressed: () {
-              // Implemented in another user story
+              // TODO() Implemented in another user story
             },
           ),
           IconButton(

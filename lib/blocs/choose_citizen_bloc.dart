@@ -17,7 +17,7 @@ class ChooseCitizenBloc extends BlocBase {
   final Api _api;
   AuthBloc authBloc;
   final BehaviorSubject<List<UsernameModel>> _citizens =
-      BehaviorSubject<List<UsernameModel>>();
+      BehaviorSubject<List<UsernameModel>>.seeded(<UsernameModel>[]);
 
   Stream<List<UsernameModel>> get citizen => _citizens.stream;
 

@@ -1,6 +1,5 @@
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/providers/environment_provider.dart';
-import 'package:async_test/async_test.dart';
+import 'package:weekplanner/providers/environment_provider.dart' as environment;
 
 void main() {
   const String debugEnvironments = '''
@@ -19,29 +18,29 @@ void main() {
     ''';
 
   test('Should get SERVER_HOST from environment file (DEBUG)', () {
-    Environment.setContent(debugEnvironments);
-    expect(Environment.getVar<String>('SERVER_HOST'),
+    environment.setContent(debugEnvironments);
+    expect(environment.getVar<String>('SERVER_HOST'),
         equals('http://web.giraf.cs.aau.dk:5000'));
   });
 
   test('Should get SERVER_HOST from environment file (PRODUCTION)', () {
-    Environment.setContent(prodEnvironments);
-    expect(Environment.getVar<String>('SERVER_HOST'),
+    environment.setContent(prodEnvironments);
+    expect(environment.getVar<String>('SERVER_HOST'),
         equals('http://web.giraf.cs.aau.dk:5000'));
   });
 
   test('Should get DEBUG from environment file (PRODUCTION)', () {
-    Environment.setContent(prodEnvironments);
-    expect(Environment.getVar<bool>('DEBUG'), equals(false));
+    environment.setContent(prodEnvironments);
+    expect(environment.getVar<bool>('DEBUG'), equals(false));
   });
 
   test('Should get USERNAME from environment file (PRODUCTION)', () {
-    Environment.setContent(debugEnvironments);
-    expect(Environment.getVar<String>('USERNAME'), equals('Graatand'));
+    environment.setContent(debugEnvironments);
+    expect(environment.getVar<String>('USERNAME'), equals('Graatand'));
   });
 
   test('Should get PASSWORD from environment file (PRODUCTION)', () {
-    Environment.setContent(debugEnvironments);
-    expect(Environment.getVar<String>('PASSWORD'), equals('password'));
+    environment.setContent(debugEnvironments);
+    expect(environment.getVar<String>('PASSWORD'), equals('password'));
   });
 }

@@ -40,13 +40,19 @@ void main() {
   });
 
   test('Should be able to get UsernameModel from API', async((DoneFn done) {
+    int _count = 0;
     bloc.citizen.listen((List<UsernameModel> response) {
-      if (response.length == 1) {
+      if (_count == 0) {
+        expect(response.length, 0);
+        _count++;
+      } else if (_count == 1) {
+        expect(response.length, 1);
         final UsernameModel rsp = response[0];
-        if (rsp.name == 'test1' && rsp.role == 'test1' && rsp.id == '1') {
-          done();
-        }
+        expect(rsp.name, 'test1');
+        expect(rsp.role, 'test1');
+        expect(rsp.id, '1');
       }
     });
+    done();
   }));
 }

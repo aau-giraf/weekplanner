@@ -13,7 +13,7 @@ class ResponseModel<T> {
     }
     success = json['success'];
     errorKey = ErrorKey.values.firstWhere(
-        (ErrorKey f) => f.toString() == json['errorKey'],
+        (ErrorKey f) => f.toString() == 'ErrorKey.' + json['errorKey'],
         orElse: () => null);
     if (json['errorProperties'] is List) {
       errorProperties = List<String>.from(json['errorProperties']).toList();
