@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
 
 class CitizenAvatar extends StatelessWidget {
   const CitizenAvatar({this.usernameModel, this.onPressed});

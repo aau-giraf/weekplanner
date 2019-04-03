@@ -40,8 +40,10 @@ class ChooseCitizenScreen extends StatelessWidget {
                       AsyncSnapshot<List<UsernameModel>> snapshot) {
                     if (snapshot.connectionState != ConnectionState.waiting) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 0, horizontal: portrait ? 20 : 60),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 20,
+                        ),
                         child: GridView.count(
                             crossAxisCount: portrait ? 2 : 4,
                             children: snapshot.data

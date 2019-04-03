@@ -9,7 +9,6 @@ class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
-  final bool isDebugMode = environment.getVar<bool>('DEBUG');
 
   void loginAction() {
     // TODO(tricky12321): Giraf Notify Dialog Wrong username and password, https://github.com/aau-giraf/weekplanner/issues/104
@@ -21,7 +20,10 @@ class LoginScreen extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
     final bool portrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+
+    ///Used to check if the keyboard is visible
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 100;
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Container(
@@ -59,10 +61,7 @@ class LoginScreen extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
                           key: const Key('UsernameKey'),
-
-                          style: portrait
-                              ? const TextStyle(fontSize: 30)
-                              : const TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 30),
                           controller: usernameCtrl,
                           keyboardType: TextInputType.text,
                           // Use email input type for emails.
@@ -86,9 +85,7 @@ class LoginScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           key: const Key('PasswordKey'),
-                          style: portrait
-                              ? const TextStyle(fontSize: 30)
-                              : const TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 30),
                           controller: passwordCtrl,
                           obscureText: true,
                           decoration: const InputDecoration.collapsed(
@@ -155,15 +152,15 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget getLogo(bool keyboard, bool portrait) {
-    if (keyboard) {
+    if (keyboard && !portrait) {
       return Container();
     }
 
-    return Transform.scale(
-      scale: portrait ? 1.0 : 0.5,
+    return Container(
       child: const Image(
         image: AssetImage('assets/giraf_splash_logo.png'),
       ),
+      padding: const EdgeInsets.only(bottom: 10),
     );
   }
 }
