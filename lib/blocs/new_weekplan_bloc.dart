@@ -104,7 +104,7 @@ class NewWeekplanBloc extends BlocBase {
 
   bool _isValidYear(String input) {
     final int year = int.tryParse(input);
-    if (year != null && year >= 2000 && year < 3000) {
+    if (year != null && input.length == 4) {
       _year = year;
       return true;
     }
