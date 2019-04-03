@@ -10,9 +10,7 @@ class NewWeekplanBloc extends BlocBase {
   /// New-Weekplan Business Logic Component
   ///
   /// Gives the ability to create a new empty weekplan
-  NewWeekplanBloc(this._api) {
-    validInputStream.listen(print);
-  }
+  NewWeekplanBloc(this._api);
 
   final Api _api;
   GirafUserModel _user;
@@ -20,19 +18,24 @@ class NewWeekplanBloc extends BlocBase {
   int _year;
   int _weekNumber;
 
+  /// The thumbnail pictogram of the new weekplan
+  PictogramModel pictogram;
+
   /// Gives information about whether the entered title is valid
   Observable<bool> get validTitleStream => _validTitleController.stream;
-  final BehaviorSubject<bool> _validTitleController = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _validTitleController =
+      BehaviorSubject<bool>.seeded(false);
 
   /// Gives information about whether the entered year is valid
   Observable<bool> get validYearStream => _validYearController.stream;
-  final BehaviorSubject<bool> _validYearController = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _validYearController =
+      BehaviorSubject<bool>.seeded(false);
 
   /// Gives information about whether the entered week number is valid
   Observable<bool> get validWeekNumberStream =>
       _validWeekNumberController.stream;
   final BehaviorSubject<bool> _validWeekNumberController =
-      BehaviorSubject<bool>();
+      BehaviorSubject<bool>.seeded(false);
 
   /// Gives information about whether all input fields are valid
   Observable<bool> get validInputStream =>
@@ -41,9 +44,6 @@ class NewWeekplanBloc extends BlocBase {
           (bool s1, bool s2, bool s3) {
         return s1 && s2 && s3;
       }).asBroadcastStream();
-
-  /// The thumbnail pictogram of the new weekplan
-  PictogramModel pictogram;
 
   /// Should be called when the text in the title input field is changed
   /// Validates the title and adds whether it is valid to _validTitleController
@@ -76,7 +76,22 @@ class NewWeekplanBloc extends BlocBase {
         name: _title,
         weekYear: _year,
         weekNumber: _weekNumber);
-    _saveToDatabase(_user.id, _year, _weekNumber, _weekModel);
+    _api.week.update(
+        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    resetBloc();
+  }
+
+  /// Resets the bloc to its default values
+  /// The bloc should be reset after the creation of a new weekplan
+  void resetBloc() {
+    _user = null;
+    _title = null;
+    _year = null;
+    _weekNumber = null;
+    pictogram = null;
+    _validTitleController.sink.add(false);
+    _validYearController.sink.add(false);
+    _validWeekNumberController.sink.add(false);
   }
 
   bool _isValidTitle(String input) {
@@ -103,11 +118,6 @@ class NewWeekplanBloc extends BlocBase {
       return true;
     }
     return false;
-  }
-
-  void _saveToDatabase(
-      String id, int year, int weekNumber, WeekModel weekModel) {
-    _api.week.update(id, year, weekNumber, weekModel);
   }
 
   @override

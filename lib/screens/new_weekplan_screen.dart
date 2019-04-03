@@ -76,7 +76,7 @@ class NewWeekplanScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: RaisedButton(
               child: Text(
-                'Vælg Skabelon',
+                'Vælg Skabelon (TODO)',
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.blue,
@@ -87,22 +87,17 @@ class NewWeekplanScreen extends StatelessWidget {
           ),
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: StreamBuilder<bool>(
-                stream: _bloc.validInputStream,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) =>
-                    _buildButton(context, snapshot),
-              )
-
-              // RaisedButton(
-              //   child: Text(
-              //     'Gem Ugeplan',
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              //   color: Colors.blue,
-              //   onPressed: () {
-              //     _bloc.save();
-              //   },
-              // ),
+              child: RaisedButton(
+                child: Text(
+                  'Gem Ugeplan',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.blue,
+                onPressed: () {
+                  _bloc.save();
+                  Routes.pop(context);
+                },
+              ),
               ),
         ]));
   }
@@ -116,14 +111,6 @@ class NewWeekplanScreen extends StatelessWidget {
       );
     } else {
       return PictogramImage(pictogram: gram, onPressed: null);
-    }
-  }
-
-  Widget _buildButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
-    if (snapshot.data == true) {
-      return const Text('True');
-    } else {
-      return const Text('False');
     }
   }
 }

@@ -46,7 +46,7 @@ class Bootstrap {
       return PictogramImageBloc(i.getDependency<Api>());
     });
 
-    di.registerDependency<NewWeekplanBloc>((Injector i) {
+    di.registerSingleton<NewWeekplanBloc>((Injector i) {
       return NewWeekplanBloc(i.getDependency<Api>());
     });
   }
