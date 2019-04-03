@@ -52,7 +52,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Image.asset('assets/icons/changeToCitizen.png'),
             tooltip: 'Skift mode',
             onPressed: () {
-              // TODO() Implemented in another user story
+              // TODO(unknown): Implemented in another user story, http://
             },
           ),
           IconButton(
