@@ -112,7 +112,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     (BuildContext context, BoxConstraints constraints) {
                   return AutoSizeText(
                     weekplan.name,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                     maxLines: 2,
                     textAlign: TextAlign.center,
                   );
