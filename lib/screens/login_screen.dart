@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -12,13 +11,8 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController passwordCtrl = TextEditingController();
   final bool isDebugMode = environment.getVar<bool>('DEBUG');
 
-  static bool loggedInSuccessfull = false;
-
-  Future<void> loginAction() async {
+  void loginAction() {
     // TODO(tricky12321): Giraf Notify Dialog Wrong username and password, https://github.com/aau-giraf/weekplanner/issues/104
-    authBloc.loggedIn.listen((bool status) async {
-      loggedInSuccessfull = status;
-    });
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
   }
 

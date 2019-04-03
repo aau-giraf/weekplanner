@@ -45,7 +45,7 @@ void main() {
       if (_count == 0) {
         expect(response.length, 0);
         _count++;
-      } else if (_count == 1) {
+      } else {
         expect(response.length, 1);
         final UsernameModel rsp = response[0];
         expect(rsp.name, 'test1');

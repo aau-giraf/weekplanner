@@ -132,9 +132,9 @@ void main() {
 
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
-      expect(success, equals(true));
+      expect(success, true);
+      await done.future;
     });
-    await done.future;
   });
 
   testWidgets(
@@ -153,7 +153,7 @@ void main() {
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
       expect(success, equals(false));
+      await done.future;
     });
-    await done.future;
   });
 }
