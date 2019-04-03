@@ -39,7 +39,7 @@ class CitizenAvatar extends StatelessWidget {
                         usernameModel.name.length <= 15
                             ? usernameModel.name
                             : usernameModel.name.substring(0, 14) + '..',
-                        style: TextStyle(fontSize: 40.0),
+                        style: const TextStyle(fontSize: 40.0),
                         maxLines: 1,
                       ),
                     ),
