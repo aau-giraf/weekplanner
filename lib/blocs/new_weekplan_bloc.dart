@@ -96,7 +96,7 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   bool _isAllInputValid(bool title, bool year, bool weekNumber) {
-    return title && year && weekNumber;
+    return title == true && year == true && weekNumber == true;
   }
 
   final StreamTransformer<String, bool> _titleValidation =
