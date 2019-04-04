@@ -26,7 +26,7 @@ class ShowActivityScreen extends StatelessWidget {
 
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
-  /// Text style used for title
+  /// Text style used for title.
   final TextStyle titleTextStyle = TextStyle(fontSize: 24);
 
   @override
@@ -34,11 +34,13 @@ class ShowActivityScreen extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    return buildPortratActivityScreen(screenSize, orientation);
+    return buildScreenFromOrientation(screenSize, orientation);
   }
 
-  Scaffold buildPortratActivityScreen(
-      Size screenSize, Orientation orientation) {
+  /// Build the activity and timer screens in a row or column
+  /// depending on the orientation of the device.
+  Scaffold buildScreenFromOrientation(
+    Size screenSize, Orientation orientation) {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
@@ -47,6 +49,7 @@ class ShowActivityScreen extends StatelessWidget {
       );
     } else if (orientation == Orientation.landscape) {
       childContainer = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: buildScreen(screenSize, orientation),
       );
     }
@@ -58,6 +61,7 @@ class ShowActivityScreen extends StatelessWidget {
         body: childContainer);
   }
 
+  /// Builds the activity and timer cards.
   List<Widget> buildScreen(Size screenSize, Orientation orientation) {
     return <Widget>[
       Expanded(
@@ -95,83 +99,90 @@ class ShowActivityScreen extends StatelessWidget {
     ];
   }
 
+  /// Builds the timer widget.
   List<Widget> buildTimer(Size screenSize, Orientation orientation) {
-    if (orientation == Orientation.portrait) {
-    } else if (orientation == Orientation.landscape) {}
-
     return <Widget>[
-      //topSpace,
       Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
             Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
-      )),
+        )
+      ),
       Expanded(
         child: FittedBox(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Color.fromRGBO(35, 35, 35, 1.0), width: 0.25)),
-                child: const Icon(Icons.timer))),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color.fromRGBO(35, 35, 35, 1.0), width: 0.25)),
+              child: const Icon(Icons.timer)
+          )
+        ),
       ),
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           child: OutlineButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              onPressed: null,
-              color: Colors.green,
-              child: Text(
-                "Start",
-                style: TextStyle(fontSize: 16, color: Colors.black),
-              )),
-        ),
-      ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30)),
+            onPressed: null,
+            color: Colors.green,
+            child: Text(
+              'Start',
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            )
+          ),
+        )
+      )
     ];
   }
 
+  /// Builds the activity widget.
   List<Widget> buildActivity(Size screenSize, Orientation orientation) {
-    if (orientation == Orientation.portrait) {
-    } else if (orientation == Orientation.landscape) {}
-
     return <Widget>[
       Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text('Aktivitet',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Aktivitet',
             style: titleTextStyle, textAlign: TextAlign.center),
-      )),
+        )
+      ),
       Expanded(
         child: FittedBox(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Color.fromRGBO(35, 35, 35, 1.0), width: 0.25)),
-                child: buildLoadPictogramImage())),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color.fromRGBO(35, 35, 35, 1.0),
+                width: 0.25)
+            ),
+            child: buildLoadPictogramImage()
+          )
+        ),
       ),
-      buildButtonBar(),
+      buildButtonBar()
     ];
   }
 
+  /// Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
     return ButtonBar(
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         OutlineButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            onPressed: () => _activityBloc.completeActivity(),
-            child: const Icon(Icons.check, color: Colors.green)),
+          shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          onPressed: () => _activityBloc.completeActivity(),
+          child: const Icon(Icons.check, color: Colors.green)
+        ),
         OutlineButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            onPressed: () => _activityBloc.cancelActivity(),
-            child: const Icon(
-              Icons.cancel,
-              color: Colors.red,
-            ))
+          shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          onPressed: () => _activityBloc.cancelActivity(),
+          child: const Icon(
+            Icons.cancel,
+            color: Colors.red,
+          )
+        )
       ],
     );
   }
@@ -179,9 +190,10 @@ class ShowActivityScreen extends StatelessWidget {
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
-        stream: _pictoImageBloc.image,
-        builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-          return Container(child: snapshot.data);
-        });
+      stream: _pictoImageBloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        return Container(child: snapshot.data);
+      }
+    );
   }
 }
