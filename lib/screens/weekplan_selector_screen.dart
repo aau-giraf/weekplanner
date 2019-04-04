@@ -5,6 +5,8 @@ import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/week_model.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -13,11 +15,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
   /// Requies a GirafUserModel user to load weekplans
   WeekplanSelectorScreen(GirafUserModel user)
-      : _weekBloc = di.getDependency<WeekplansBloc>() {
+      : _weekBloc = di.getDependency<WeekplansBloc>(), _user = user {
     _weekBloc.load(user, true);
   }
 
   final WeekplansBloc _weekBloc;
+  final GirafUserModel _user;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: StreamBuilder<List<WeekModel>>(
-                initialData:const <WeekModel> [],
+                  initialData: const <WeekModel>[],
                   stream: _weekBloc.weekModels,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<WeekModel>> snapshot) {
@@ -69,10 +72,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekPlan(
-      BuildContext context, WeekModel weekplan, BoxConstraints constraint) {
+  Widget _buildWeekPlan(BuildContext context, WeekModel weekplan,
+      BoxConstraints constraint, GirafUserModel user) {
     return GestureDetector(
-        onTap: () => () {}, // onTap for adding a new weekplan
+        onTap: () => Routes.push<NewWeekplanScreen>(context,
+            NewWeekplanScreen(user)), // onTap for adding a new weekplan
         child: Icon(
           Icons.add,
           size: constraint.maxHeight,
@@ -104,7 +108,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     if (weekplan.thumbnail != null) {
                       return _buildWeekPlanAdder(context, weekplan, bloc);
                     } else {
-                      return _buildWeekPlan(context, weekplan, constraint);
+                      return _buildWeekPlan(
+                          context, weekplan, constraint, _user);
                     }
                   }),
                 ),
