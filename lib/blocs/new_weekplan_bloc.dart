@@ -57,7 +57,7 @@ class NewWeekplanBloc extends BlocBase {
           validTitleStream,
           validYearStream,
           validWeekNumberStream,
-          (bool s1, bool s2, bool s3) => s1 && s2 && s3);
+          (bool s1, bool s2, bool s3) => s1 && s2 && s3).asBroadcastStream();
 
   /// We need an id for the current citizen
   void load(GirafUserModel user) {
