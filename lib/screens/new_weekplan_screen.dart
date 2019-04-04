@@ -158,6 +158,12 @@ class NewWeekplanScreen extends StatelessWidget {
 
   void _openPictogramSearch(BuildContext context) {
     Routes.push<PictogramModel>(context, PictogramSearch())
-        .then(_bloc.onThumbnailChanged.add);
+        .then(_checkPictogramForNull);
+  }
+
+  void _checkPictogramForNull(PictogramModel pictogram) {
+    if (pictogram != null) {
+      _bloc.onThumbnailChanged.add(pictogram);
+    }
   }
 }

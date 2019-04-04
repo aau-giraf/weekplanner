@@ -12,9 +12,7 @@ class NewWeekplanBloc extends BlocBase {
   /// New-Weekplan Business Logic Component
   ///
   /// Gives the ability to create a new empty weekplan
-  NewWeekplanBloc(this._api) {
-    validInputStream.listen(print);
-  }
+  NewWeekplanBloc(this._api);
 
   final Api _api;
   GirafUserModel _user;
@@ -59,7 +57,7 @@ class NewWeekplanBloc extends BlocBase {
           validTitleStream,
           validYearStream,
           validWeekNumberStream,
-          (bool s1, bool s2, bool s3) => s1 && s2 && s3).asBroadcastStream();
+          (bool s1, bool s2, bool s3) => s1 && s2 && s3);
 
   /// We need an id for the current citizen
   void load(GirafUserModel user) {
