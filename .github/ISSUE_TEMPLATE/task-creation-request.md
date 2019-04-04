@@ -3,7 +3,7 @@ name: Task Creation Request
 about: If there is functionality that you would like added
 title: ''
 labels: ''
-assignees: Moesgaarda, andpaacoke, MathiasLybech, Eduardsen, jenspetur94, Fatdet
+assignees: andpaacoke, Eduardsen, Fatdet, jenspetur94, MathiasLybech, Moesgaarda
 
 ---
 
