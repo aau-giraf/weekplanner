@@ -34,9 +34,9 @@ class NewWeekplanScreen extends StatelessWidget {
                       onChanged: _bloc.onTitleChanged.add,
                       decoration: InputDecoration(
                           labelText: 'Titel',
-                          errorText: (snapshot?.data != false)
-                              ? null
-                              : 'Titel skal være mellem 1 og 32 tegn',
+                          errorText: (snapshot?.data == false)
+                              ? 'Titel skal være mellem 1 og 32 tegn'
+                              : null,
                           border: OutlineInputBorder(borderSide: BorderSide())),
                     );
                   })),
@@ -51,9 +51,9 @@ class NewWeekplanScreen extends StatelessWidget {
                       onChanged: _bloc.onYearChanged.add,
                       decoration: InputDecoration(
                           labelText: 'År',
-                          errorText: (snapshot?.data != false)
-                              ? null
-                              : 'År skal angives som fire cifre',
+                          errorText: (snapshot?.data == false)
+                              ? 'År skal angives som fire cifre'
+                              : null,
                           border: OutlineInputBorder(borderSide: BorderSide())),
                     );
                   })),
@@ -68,14 +68,14 @@ class NewWeekplanScreen extends StatelessWidget {
                       onChanged: _bloc.onWeekNumberChanged.add,
                       decoration: InputDecoration(
                           labelText: 'Ugenummer',
-                          errorText: (snapshot?.data != false)
-                              ? null
-                              : 'Ugenummer skal være mellem 1 og 53',
+                          errorText: (snapshot?.data == false)
+                              ? 'Ugenummer skal være mellem 1 og 53'
+                              : null,
                           border: OutlineInputBorder(borderSide: BorderSide())),
                     );
                   })),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Container(
               width: 200,
               height: 200,
@@ -85,28 +85,35 @@ class NewWeekplanScreen extends StatelessWidget {
               ),
             ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              child: RaisedButton(
-                child: Text(
-                  'Vælg Skabelon',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.blue,
-                onPressed: () {
-                  // TODO(anon): Handle when a weekplan is made from a template
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              child: StreamBuilder<bool>(
-                stream: _bloc.validInputStream,
-                builder: _buildSaveButton,
-              ),
-            ),
-          ]),
+          ButtonTheme(
+            minWidth: 130,
+            height: 50,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 24),
+                    child: RaisedButton(
+                      child: Text(
+                        'Vælg Skabelon',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.blue,
+                      onPressed: null,
+                      // Handle when a weekplan is made from a template
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 24),
+                    child: StreamBuilder<bool>(
+                      stream: _bloc.validInputStream,
+                      builder: _buildSaveButton,
+                    ),
+                  ),
+                ]),
+          ),
         ]));
   }
 

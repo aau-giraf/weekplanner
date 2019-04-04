@@ -81,8 +81,8 @@ class NewWeekplanBloc extends BlocBase {
         name: _title,
         weekYear: _year,
         weekNumber: _weekNumber);
-    // _api.week.update(
-    //     _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    _api.week.update(
+        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
   }
 
   /// Resets the bloc to its default values
@@ -102,28 +102,32 @@ class NewWeekplanBloc extends BlocBase {
   final StreamTransformer<String, bool> _titleValidation =
       StreamTransformer<String, bool>.fromHandlers(
           handleData: (String input, EventSink<bool> sink) {
-    sink.add(input != null && input.isNotEmpty && input.length <= 32);
+    if (input == null) {
+      sink.add(null);
+    } else {
+      sink.add(input.isNotEmpty && input.length <= 32);
+    }
   });
 
   final StreamTransformer<String, bool> _yearValidation =
       StreamTransformer<String, bool>.fromHandlers(
           handleData: (String input, EventSink<bool> sink) {
-    if (input != null) {
+    if (input == null) {
+      sink.add(null);
+    } else {
       final int year = int.tryParse(input);
       sink.add(year != null && input.length == 4);
-    } else {
-      sink.add(false);
     }
   });
 
   final StreamTransformer<String, bool> _weekNumberValidation =
       StreamTransformer<String, bool>.fromHandlers(
           handleData: (String input, EventSink<bool> sink) {
-    if (input != null) {
+    if (input == null) {
+      sink.add(null);
+    } else {
       final int weekNumber = int.tryParse(input);
       sink.add(weekNumber != null && weekNumber >= 1 && weekNumber <= 53);
-    } else {
-      sink.add(false);
     }
   });
 
