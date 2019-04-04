@@ -15,7 +15,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
   /// Requies a GirafUserModel user to load weekplans
   WeekplanSelectorScreen(GirafUserModel user)
-      : _weekBloc = di.getDependency<WeekplansBloc>(), _user = user {
+      : _weekBloc = di.getDependency<WeekplansBloc>(),
+        _user = user {
     _weekBloc.load(user, true);
   }
 
@@ -72,11 +73,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekPlan(BuildContext context, WeekModel weekplan,
-      BoxConstraints constraint, GirafUserModel user) {
+  Widget _buildWeekPlan(
+      BuildContext context, WeekModel weekplan, BoxConstraints constraint) {
     return GestureDetector(
         onTap: () => Routes.push<NewWeekplanScreen>(context,
-            NewWeekplanScreen(user)), // onTap for adding a new weekplan
+            NewWeekplanScreen(_user)), // onTap for adding a new weekplan
         child: Icon(
           Icons.add,
           size: constraint.maxHeight,
@@ -108,8 +109,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     if (weekplan.thumbnail != null) {
                       return _buildWeekPlanAdder(context, weekplan, bloc);
                     } else {
-                      return _buildWeekPlan(
-                          context, weekplan, constraint, _user);
+                      return _buildWeekPlan(context, weekplan, constraint);
                     }
                   }),
                 ),

@@ -53,11 +53,9 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Gives information about whether all input fields are valid
   Observable<bool> get validInputStream =>
-      Observable.combineLatest3<bool, bool, bool, bool>(
-          validTitleStream,
-          validYearStream,
-          validWeekNumberStream,
-          (bool s1, bool s2, bool s3) => s1 && s2 && s3).asBroadcastStream();
+      Observable.combineLatest3<bool, bool, bool, bool>(validTitleStream,
+              validYearStream, validWeekNumberStream, _isAllInputValid)
+          .asBroadcastStream();
 
   /// We need an id for the current citizen
   void load(GirafUserModel user) {
@@ -65,7 +63,14 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   /// Saves the entered information to the database
-  void save() {
+  void onSaveButtonPressed() {
+    if (_user != null) {
+      _saveToDatabase();
+      resetBloc();
+    }
+  }
+
+  void _saveToDatabase() {
     final String _title = _titleController.value;
     final int _year = int.parse(_yearController.value);
     final int _weekNumber = int.parse(_weekNumberController.value);
@@ -76,9 +81,8 @@ class NewWeekplanBloc extends BlocBase {
         name: _title,
         weekYear: _year,
         weekNumber: _weekNumber);
-    _api.week.update(
-        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
-    resetBloc();
+    // _api.week.update(
+    //     _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
   }
 
   /// Resets the bloc to its default values
@@ -89,6 +93,10 @@ class NewWeekplanBloc extends BlocBase {
     _yearController.sink.add(null);
     _weekNumberController.sink.add(null);
     _thumbnailController.sink.add(null);
+  }
+
+  bool _isAllInputValid(bool title, bool year, bool weekNumber) {
+    return title && year && weekNumber;
   }
 
   final StreamTransformer<String, bool> _titleValidation =

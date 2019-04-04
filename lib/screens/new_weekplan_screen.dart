@@ -85,37 +85,28 @@ class NewWeekplanScreen extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: RaisedButton(
-              child: Text(
-                'Vælg Piktogram',
-                style: TextStyle(color: Colors.white),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              child: RaisedButton(
+                child: Text(
+                  'Vælg Skabelon',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.blue,
+                onPressed: () {
+                  // TODO(anon): Handle when a weekplan is made from a template
+                },
               ),
-              color: Colors.blue,
-              onPressed: () => _openPictogramSearch(context),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: RaisedButton(
-              child: Text(
-                'Vælg Skabelon (TODO)',
-                style: TextStyle(color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              child: StreamBuilder<bool>(
+                stream: _bloc.validInputStream,
+                builder: _buildSaveButton,
               ),
-              color: Colors.blue,
-              onPressed: () {
-                // TODO(anon): Handle when a weekplan is made from a template
-              },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: StreamBuilder<bool>(
-              stream: _bloc.validInputStream,
-              builder: _buildSaveButton,
-            ),
-          ),
+          ]),
         ]));
   }
 
@@ -136,34 +127,27 @@ class NewWeekplanScreen extends StatelessWidget {
   }
 
   Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
-    if (snapshot?.data == true) {
-      return RaisedButton(
-        child: Text(
-          'Gem Ugeplan',
-          style: TextStyle(color: Colors.white),
-        ),
-        color: Colors.blue,
-        onPressed: () {
-          _bloc.save();
-          Routes.pop(context);
-        },
-      );
-    } else {
-      return RaisedButton(
-        child: const Text('Not Enabled'),
-        onPressed: () => {print('Disabled Button')},
-      );
-    }
+    return RaisedButton(
+      child: Text(
+        'Gem Ugeplan',
+        style: TextStyle(color: Colors.white),
+      ),
+      color: Colors.blue,
+      onPressed: (snapshot?.data == true)
+          ? () {
+              _bloc.onSaveButtonPressed();
+              Routes.pop(context);
+            }
+          : null,
+    );
   }
 
   void _openPictogramSearch(BuildContext context) {
     Routes.push<PictogramModel>(context, PictogramSearch())
-        .then(_addPictogramIfNotNull);
-  }
-
-  void _addPictogramIfNotNull(PictogramModel pictogram) {
-    if (pictogram != null) {
-      _bloc.onThumbnailChanged.add(pictogram);
-    }
+        .then((PictogramModel pictogram) {
+      if (pictogram != null) {
+        _bloc.onThumbnailChanged.add(pictogram);
+      }
+    });
   }
 }
