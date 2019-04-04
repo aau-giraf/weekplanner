@@ -37,7 +37,8 @@ class NewWeekplanScreen extends StatelessWidget {
                           errorText: (snapshot?.data == false)
                               ? 'Titel skal være mellem 1 og 32 tegn'
                               : null,
-                          border: OutlineInputBorder(borderSide: BorderSide())),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide())),
                     );
                   })),
           Padding(
@@ -54,7 +55,8 @@ class NewWeekplanScreen extends StatelessWidget {
                           errorText: (snapshot?.data == false)
                               ? 'År skal angives som fire cifre'
                               : null,
-                          border: OutlineInputBorder(borderSide: BorderSide())),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide())),
                     );
                   })),
           Padding(
@@ -71,7 +73,8 @@ class NewWeekplanScreen extends StatelessWidget {
                           errorText: (snapshot?.data == false)
                               ? 'Ugenummer skal være mellem 1 og 53'
                               : null,
-                          border: OutlineInputBorder(borderSide: BorderSide())),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide())),
                     );
                   })),
           Padding(
@@ -91,9 +94,8 @@ class NewWeekplanScreen extends StatelessWidget {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 24),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                     child: RaisedButton(
                       child: Text(
                         'Vælg Skabelon',
@@ -135,7 +137,7 @@ class NewWeekplanScreen extends StatelessWidget {
 
   Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
     return RaisedButton(
-      child: Text(
+      child: const Text(
         'Gem Ugeplan',
         style: TextStyle(color: Colors.white),
       ),

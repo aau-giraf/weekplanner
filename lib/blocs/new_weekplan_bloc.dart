@@ -11,7 +11,7 @@ import 'package:weekplanner/providers/api/api.dart';
 class NewWeekplanBloc extends BlocBase {
   /// New-Weekplan Business Logic Component
   ///
-  /// Gives the ability to create a new empty weekplan
+  /// Gives the ability to create a new weekplan
   NewWeekplanBloc(this._api);
 
   final Api _api;
