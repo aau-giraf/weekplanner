@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
+import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/week_model.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// <summary>
@@ -34,7 +38,7 @@ class WeekplanScreen extends StatelessWidget {
         initialData: null,
         builder: (BuildContext context, AsyncSnapshot<WeekModel> snapshot) {
           if (snapshot.hasData) {
-            return _buildWeeks(snapshot.data);
+            return _buildWeeks(snapshot.data, context);
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -46,7 +50,7 @@ class WeekplanScreen extends StatelessWidget {
   }
 }
 
-Row _buildWeeks(WeekModel weekModel) {
+Row _buildWeeks(WeekModel weekModel, BuildContext context) {
   const List<int> weekColors = <int>[
     0xFF08A045,
     0xFF540D6E,
@@ -61,12 +65,12 @@ Row _buildWeeks(WeekModel weekModel) {
     weekDays.add(Expanded(
         child: Card(
             color: Color(weekColors[i]),
-            child: _day(weekModel.days[i].day, weekModel.days[i].activities))));
+            child: _day(weekModel.days[i].day, weekModel.days[i].activities, context))));
   }
   return Row(children: weekDays);
 }
 
-Column _day(Weekday day, List<ActivityModel> activities) {
+Column _day(Weekday day, List<ActivityModel> activities, BuildContext context) {
   return Column(
     children: <Widget>[
       _translateWeekDay(day),
@@ -79,6 +83,21 @@ Column _day(Weekday day, List<ActivityModel> activities) {
           itemCount: activities.length,
         ),
       ),
+       Container(
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+        child: Card(
+          child: IconButton(
+            icon: Icon(Icons.add),
+              onPressed: () async {
+                PictogramModel newActivity =  await  Routes.push(context, PictogramSearch());
+
+                if(newActivity != null) {
+                  activities.add(new ActivityModel(id: null, pictogram: newActivity, order: null, state: null, isChoiceBoard: null));
+                }
+              }
+            )
+        )
+      )
     ],
   );
 }
