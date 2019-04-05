@@ -3,6 +3,7 @@ import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
+import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -40,7 +41,7 @@ class ShowActivityScreen extends StatelessWidget {
   /// Build the activity and timer screens in a row or column
   /// depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(
-    Size screenSize, Orientation orientation) {
+      Size screenSize, Orientation orientation) {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
@@ -103,37 +104,33 @@ class ShowActivityScreen extends StatelessWidget {
   List<Widget> buildTimer(Size screenSize, Orientation orientation) {
     return <Widget>[
       Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child:
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
             Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
-        )
-      ),
+      )),
       Expanded(
         child: FittedBox(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromRGBO(35, 35, 35, 1.0), width: 0.25)),
-              child: const Icon(Icons.timer)
-          )
-        ),
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: const Color.fromRGBO(35, 35, 35, 1.0),
+                        width: 0.25)),
+                child: const Icon(Icons.timer))),
       ),
       Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          child: OutlineButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)),
-            onPressed: null,
-            color: Colors.green,
-            child: Text(
-              'Start',
-              style: TextStyle(fontSize: 16, color: Colors.black),
-            )
-          ),
-        )
-      )
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            child: OutlineButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                onPressed: null,
+                color: Colors.green,
+                child: Text(
+                  'Start',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                )),
+          ))
     ];
   }
 
@@ -141,27 +138,35 @@ class ShowActivityScreen extends StatelessWidget {
   List<Widget> buildActivity(Size screenSize, Orientation orientation) {
     return <Widget>[
       Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Aktivitet',
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text('Aktivitet',
             style: titleTextStyle, textAlign: TextAlign.center),
-        )
-      ),
+      )),
       Expanded(
         child: FittedBox(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromRGBO(35, 35, 35, 1.0),
-                width: 0.25)
-            ),
-            child: buildLoadPictogramImage()
-          )
-        ),
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: const Color.fromRGBO(35, 35, 35, 1.0),
+                        width: 0.25)),
+                child: Stack(
+                  children: <Widget>[
+                    buildLoadPictogramImage(),
+                    _activity.state == ActivityState.Completed ?
+                    const Icon(
+                      Icons.check,
+                      color: Colors.green,
+                      size: 280,
+                    ) : Container()
+                  ],
+                ))),
       ),
       buildButtonBar()
     ];
   }
+
+  void _markActivity(Icon icon) {}
 
   /// Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
@@ -169,12 +174,11 @@ class ShowActivityScreen extends StatelessWidget {
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         OutlineButton(
-          shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          onPressed: () => _activityBloc.completeActivity(),
-          child: const Icon(Icons.check, color: Colors.green)
-        ),
-        OutlineButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            onPressed: () => _activityBloc.completeActivity(),
+            child: const Icon(Icons.check, color: Colors.green)),
+        /*OutlineButton( // The cancel button is prepared under, a check should just be made to check if the user is a guardian
           shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           onPressed: () => _activityBloc.cancelActivity(),
@@ -182,7 +186,7 @@ class ShowActivityScreen extends StatelessWidget {
             Icons.cancel,
             color: Colors.red,
           )
-        )
+        )*/
       ],
     );
   }
@@ -190,10 +194,9 @@ class ShowActivityScreen extends StatelessWidget {
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
-      stream: _pictoImageBloc.image,
-      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-        return Container(child: snapshot.data);
-      }
-    );
+        stream: _pictoImageBloc.image,
+        builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+          return Container(child: snapshot.data);
+        });
   }
 }
