@@ -888,3 +888,5 @@ DerivedData/
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
+ios/Runner/GeneratedPluginRegistrant.m
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java

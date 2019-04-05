@@ -6,13 +6,12 @@ import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/enums/access_level_enum.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/weekday_model.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
 
 void main() {
   // Register all dependencies for injector
@@ -69,7 +68,7 @@ void main() {
                       isChoiceBoard: false,
                       order: 1,
                       state: ActivityState.Normal),
-                      GirafUserModel(
+                      UsernameModel(
                         id: '57e7f7ce-6db0-4d0e-9519-ea927dd09760'
                       ))
                   : LoginScreen())));

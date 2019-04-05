@@ -3,23 +3,23 @@ import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Screen to show activity, mark done/canceled and see timer.
 class ShowActivityScreen extends StatelessWidget {
   ///
-  ShowActivityScreen(this._weekModel, this._activity, this._girafUserModel,
+  ShowActivityScreen(this._weekModel, this._activity, this._userModel,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
-    _activityBloc.load(_weekModel, _activity, _girafUserModel);
+    _activityBloc.load(_weekModel, _activity, _userModel);
   }
 
   final WeekModel _weekModel;
   final ActivityModel _activity;
-  final GirafUserModel _girafUserModel;
+  final UsernameModel _userModel;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
@@ -143,7 +143,7 @@ class ShowActivityScreen extends StatelessWidget {
       Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text('Aktivitet',
+          child: Text('Aktivitet', 
             style: titleTextStyle, textAlign: TextAlign.center),
         )
       ),
@@ -166,6 +166,8 @@ class ShowActivityScreen extends StatelessWidget {
   /// Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
     return ButtonBar(
+      // Key used for testing widget.
+      key: const Key('ButtonBarRender'),
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         OutlineButton(
@@ -192,7 +194,9 @@ class ShowActivityScreen extends StatelessWidget {
     return StreamBuilder<Image>(
       stream: _pictoImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-        return Container(child: snapshot.data);
+        return Container(child: snapshot.data,
+        // Key is used for testing the widget.
+        key: Key(_activity.id.toString()));
       }
     );
   }
