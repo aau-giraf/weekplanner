@@ -13,26 +13,46 @@ import 'package:weekplanner/models/weekday_model.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/providers/environment_provider.dart' as environment;
+import 'package:weekplanner/screens/choose_citizen_screen.dart';
+import 'package:weekplanner/screens/login_screen.dart';
+
+final List<ActivityModel> dayActivities = [
+  ActivityModel(
+      id: 477,
+      order: 0,
+      pictogram: PictogramModel(
+          id: 7972,
+          lastEdit: null,
+          title: 'test',
+          accessLevel: AccessLevel.PUBLIC,
+          imageUrl: null,
+          imageHash: null),
+      state: ActivityState.Normal,
+      isChoiceBoard: false)
+];
+final List<WeekdayModel> weekModelDays = [
+  WeekdayModel(day: Weekday.Tuesday, activities: dayActivities)
+];
 
 void main() {
   // Register all dependencies for injector
   Bootstrap.register();
-  final List<ActivityModel> dayActivities = [ActivityModel(
-    id: 477, 
-    order: 0, 
-    pictogram: PictogramModel(
-      id: 7972,
-      lastEdit: null,
-      title: 'test',
-      accessLevel: AccessLevel.PUBLIC,
-      imageUrl: null,
-      imageHash: null), 
-    state: ActivityState.Normal,
-    isChoiceBoard: false)];
-  final List<WeekdayModel> weekModelDays = [WeekdayModel(
-    day: Weekday.Tuesday, 
-    activities: dayActivities)];
 
+  if (_isInDebugMode) {
+    // If in DEBUG mode
+    environment.setFile('assets/environments.json').whenComplete(() {
+      _runApp();
+    });
+  } else {
+    // Else Production
+    environment.setFile('assets/environments.prod.json').whenComplete(() {
+      _runApp();
+    });
+  }
+}
+
+void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
       home: StreamBuilder<bool>(
@@ -40,37 +60,11 @@ void main() {
           stream: di.getDependency<AuthBloc>().loggedIn,
           builder: (_, AsyncSnapshot<bool> snapshot) =>
               // In case we're logged in show WeekPlanner, otherwise, show login
-              //snapshot.data ? WeekplanScreen() : LoginScreen())));
-              snapshot.data
-                  ? ShowActivityScreen(
-                    WeekModel(
-                      name: 'Uge 22 - Lise',
-                      weekNumber: 22,
-                      weekYear: 2018,
-                      thumbnail: PictogramModel(
-                        id: 1737,
-                        lastEdit: null,
-                        title: 'test',
-                        accessLevel: AccessLevel.PUBLIC,
-                        imageUrl: null,
-                        imageHash: null
-                      ),
-                      days: weekModelDays
-                    ),
-                    ActivityModel(
-                      id: 461,
-                      pictogram: PictogramModel(
-                          id: 3975,
-                          lastEdit: null,
-                          title: 'test',
-                          accessLevel: AccessLevel.PUBLIC,
-                          imageUrl: null,
-                          imageHash: null),
-                      isChoiceBoard: false,
-                      order: 1,
-                      state: ActivityState.Normal),
-                      GirafUserModel(
-                        id: '57e7f7ce-6db0-4d0e-9519-ea927dd09760'
-                      ))
-                  : LoginScreen())));
+              snapshot.data ? ChooseCitizenScreen() : LoginScreen())));
+}
+
+bool get _isInDebugMode {
+  bool inDebugMode = false;
+  assert(inDebugMode = true);
+  return inDebugMode;
 }

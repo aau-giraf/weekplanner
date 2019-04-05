@@ -5,11 +5,12 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
-/// Screen to show activity, mark done/canceled and see timer.
-class ShowActivityScreen extends StatelessWidget {
+///
+class ShowActivityScreen extends StatefulWidget {
   ///
   ShowActivityScreen(this._weekModel, this._activity, this._girafUserModel,
       {Key key})
@@ -20,13 +21,20 @@ class ShowActivityScreen extends StatelessWidget {
 
   final WeekModel _weekModel;
   final ActivityModel _activity;
-  final GirafUserModel _girafUserModel;
+  final UsernameModel _girafUserModel;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
 
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
+  @override
+  State<StatefulWidget> createState() {
+    return _ShowActivityScreen();
+  }
+}
+
+class _ShowActivityScreen extends State<ShowActivityScreen> {
   /// Text style used for title.
   final TextStyle titleTextStyle = TextStyle(fontSize: 24);
 
@@ -153,12 +161,10 @@ class ShowActivityScreen extends StatelessWidget {
                 child: Stack(
                   children: <Widget>[
                     buildLoadPictogramImage(),
-                    _activity.state == ActivityState.Completed ?
-                    const Icon(
-                      Icons.check,
-                      color: Colors.green,
-                      size: 280,
-                    ) : Container()
+                    widget._activity.state == ActivityState.Completed
+                        ? const Icon(Icons.check,
+                            color: Colors.green, size: 280)
+                        : Container()
                   ],
                 ))),
       ),
@@ -166,18 +172,26 @@ class ShowActivityScreen extends StatelessWidget {
     ];
   }
 
-  void _markActivity(Icon icon) {}
-
   /// Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
     return ButtonBar(
       alignment: MainAxisAlignment.center,
       children: <Widget>[
-        OutlineButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            onPressed: () => _activityBloc.completeActivity(),
-            child: const Icon(Icons.check, color: Colors.green)),
+        widget._activity.state == ActivityState.Completed
+            ? OutlineButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                onPressed: null,
+                child: const Icon(Icons.check, color: Colors.grey),
+              )
+            : OutlineButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                onPressed: () {
+                  widget._activityBloc.completeActivity();
+                  setState(() {});
+                },
+                child: const Icon(Icons.check, color: Colors.green)),
         /*OutlineButton( // The cancel button is prepared under, a check should just be made to check if the user is a guardian
           shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -194,7 +208,7 @@ class ShowActivityScreen extends StatelessWidget {
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
-        stream: _pictoImageBloc.image,
+        stream: widget._pictoImageBloc.image,
         builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
           return Container(child: snapshot.data);
         });

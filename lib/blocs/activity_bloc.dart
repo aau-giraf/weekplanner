@@ -2,6 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
@@ -14,7 +15,7 @@ class ActivityBloc extends BlocBase {
   final Api _api;
   ActivityModel _activityModel;
   WeekModel _weekModel;
-  GirafUserModel _user;
+  UsernameModel _user;
 
   Stream<WeekModel> get weekModelStream => _weekModelStream.stream;
 
@@ -23,7 +24,7 @@ class ActivityBloc extends BlocBase {
 
   /// Loads the WeekModel, ActivityModel and the GirafUser.
   void load(
-      WeekModel weekModel, ActivityModel activityModel, GirafUserModel user) {
+      WeekModel weekModel, ActivityModel activityModel, UsernameModel user) {
     _activityModel = activityModel;
     _weekModel = weekModel;
     
