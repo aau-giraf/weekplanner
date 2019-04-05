@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/week_name_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
@@ -8,7 +8,7 @@ import 'package:weekplanner/providers/api/api.dart';
   /// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
   /// This bloc obtains a list of all [WeekModel]'s
-  /// for a given [GirafUserModel].
+  /// for a given [UsernameModel].
   WeekplansBloc(this._api);
 
   /// This is a stream where all the [WeekNameModel] are put in,
@@ -27,7 +27,7 @@ class WeekplansBloc extends BlocBase {
       BehaviorSubject<List<WeekNameModel>>();
 
   final Api _api;
-  GirafUserModel _user;
+  UsernameModel _user;
 
   /// To control adding an extra result for creating a new [WeekModel]
   /// for the weekplan_selector_screen.
@@ -38,7 +38,7 @@ class WeekplansBloc extends BlocBase {
   ///  for adding a new [WeekModel].
 
   /// The result are published in [_weekNameModelsList].
-  void load(GirafUserModel user, [bool addWeekplan = false]) {
+  void load(UsernameModel user, [bool addWeekplan = false]) {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
