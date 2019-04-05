@@ -5,6 +5,8 @@ import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -60,7 +62,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlanAdder(
       BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
-      onTap: () {}, //  onTap for going to an existing weekplan
+      onTap: () => Routes.push(context, WeekplanScreen(week: weekplan)),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
