@@ -128,7 +128,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     onPressed: () {
                       _authBloc.logout();
-                      Navigator.pop(context);
                     },
                     color: const Color.fromRGBO(255, 157, 0, 100),
                     width: 120,
