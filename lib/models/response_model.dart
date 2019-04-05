@@ -11,17 +11,15 @@ class ResponseModel<T> {
       throw const FormatException(
           '[ResponseModel]: Cannot instantiate from null');
     }
-
     success = json['success'];
     errorKey = ErrorKey.values.firstWhere(
-            (ErrorKey f) => f.toString() == json['errorKey'],
+        (ErrorKey f) => f.toString() == 'ErrorKey.' + json['errorKey'],
         orElse: () => null);
     if (json['errorProperties'] is List) {
       errorProperties = List<String>.from(json['errorProperties']).toList();
     } else {
       // TODO(TobiasPalludan): Throw appropriate error.
     }
-
   }
 
   /// The data in the response

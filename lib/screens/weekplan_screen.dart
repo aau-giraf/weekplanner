@@ -118,7 +118,7 @@ Card _translateWeekDay(Weekday day) {
       child: ListTile(
           title: Text(
         translation,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
         textAlign: TextAlign.center,
