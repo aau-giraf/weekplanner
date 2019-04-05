@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -8,7 +9,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// <summary>
-/// The WeekplandScreen is used to display a week 
+/// The WeekplandScreen is used to display a week
 /// and all the activities that occur in it.
 /// </summary>
 class WeekplanScreen extends StatelessWidget {
@@ -20,6 +21,7 @@ class WeekplanScreen extends StatelessWidget {
   WeekplanScreen({Key key, WeekModel week}) : super(key: key) {
     weekplanBloc.setWeek(week);
   }
+
   /// The WeekplanBloc that contains the currently chosen week
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
 
@@ -83,7 +85,7 @@ Column _day(Weekday day, List<ActivityModel> activities) {
   );
 }
 
-Card _translateWeekDay(Weekday day) {
+Widget _translateWeekDay(Weekday day) {
   String translation;
   switch (day) {
     case Weekday.Monday:
@@ -113,14 +115,16 @@ Card _translateWeekDay(Weekday day) {
   }
   const Color color = Color(0xA0FFFFFF);
   return Card(
-      key: Key(translation),
-      color: color,
-      child: ListTile(
-          title: Text(
+    key: Key(translation),
+    color: color,
+    child: ListTile(
+      title: AutoSizeText(
         translation,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
         textAlign: TextAlign.center,
-      )));
+        maxLines: 1,
+      ),
+    ));
 }
