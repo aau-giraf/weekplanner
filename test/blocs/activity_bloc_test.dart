@@ -4,11 +4,11 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:test_api/test_api.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/providers/api/week_api.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/weekday_model.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
 
@@ -19,7 +19,7 @@ void main(){
   Api api;
   MockWeekApi weekApi;
 
-  final GirafUserModel user = GirafUserModel(id: '50');
+  final UsernameModel user = UsernameModel(id: '50');
 
   final ActivityModel activity = ActivityModel(id: 1, pictogram: null, order: 1,
       state: ActivityState.Normal, isChoiceBoard: false);

@@ -1,7 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
@@ -27,7 +26,6 @@ class ActivityBloc extends BlocBase {
       WeekModel weekModel, ActivityModel activityModel, UsernameModel user) {
     _activityModel = activityModel;
     _weekModel = weekModel;
-    
     _user = user;
   }
 

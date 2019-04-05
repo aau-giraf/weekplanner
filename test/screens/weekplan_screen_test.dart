@@ -11,6 +11,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/weekday_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
@@ -53,6 +54,11 @@ void main() {
     WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[activity]),
   ]);
 
+  final UsernameModel user = UsernameModel(
+      name: 'test',
+      id: 'test',
+      role: 'test');
+
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
@@ -73,23 +79,28 @@ void main() {
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
   });
 
   testWidgets('Has all days of the week', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     const List<String> days = <String>[
-      'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag',
-      'Fredag', 'Lørdag', 'Søndag'
+      'Mandag',
+      'Tirsdag',
+      'Onsdag',
+      'Torsdag',
+      'Fredag',
+      'Lørdag',
+      'Søndag'
     ];
 
     for (String day in days) {
@@ -98,7 +109,7 @@ void main() {
   });
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home:WeekplanScreen(week:weekModel)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsNWidgets(7));

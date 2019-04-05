@@ -4,7 +4,6 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -12,16 +11,16 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 ///
 class ShowActivityScreen extends StatefulWidget {
   ///
-  ShowActivityScreen(this._weekModel, this._activity, this._girafUserModel,
+  ShowActivityScreen(this._weekModel, this._activity, this._girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
-    _activityBloc.load(_weekModel, _activity, _girafUserModel);
+    _activityBloc.load(_weekModel, _activity, _girafUser);
   }
 
   final WeekModel _weekModel;
   final ActivityModel _activity;
-  final UsernameModel _girafUserModel;
+  final UsernameModel _girafUser;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
@@ -175,6 +174,8 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   /// Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
     return ButtonBar(
+      // Key used for testing widget.
+      key: const Key('ButtonBarRender'),
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         widget._activity.state == ActivityState.Completed
@@ -208,9 +209,12 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
-        stream: widget._pictoImageBloc.image,
-        builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-          return Container(child: snapshot.data);
-        });
+      stream: widget._pictoImageBloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        return Container(child: snapshot.data,
+        // Key is used for testing the widget.
+        key: Key(widget._activity.id.toString()));
+      }
+    );
   }
 }
