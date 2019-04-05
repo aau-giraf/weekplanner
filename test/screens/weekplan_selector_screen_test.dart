@@ -22,7 +22,8 @@ void main() {
   WeekplansBloc bloc;
   Api api;
   MockWeekApi weekApi;
-  final UsernameModel mockUser = UsernameModel(id: 'test');
+  final UsernameModel mockUser =
+      UsernameModel(name: 'test', role: 'test', id: 'test');
 
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
