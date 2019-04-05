@@ -87,7 +87,7 @@ Column _day(Weekday day, List<ActivityModel> activities, BuildContext context) {
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: Card(
           child: IconButton(
-            icon: Icon(Icons.add),
+            icon: Image.asset('assets/icons/add.png'),
               onPressed: () async {
                 PictogramModel newActivity =  await  Routes.push(context, PictogramSearch());
 
