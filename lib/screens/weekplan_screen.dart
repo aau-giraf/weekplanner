@@ -12,7 +12,7 @@ import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// <summary>
-/// The WeekplandScreen is used to display a week 
+/// The WeekplandScreen is used to display a week
 /// and all the activities that occur in it.
 /// </summary>
 class WeekplanScreen extends StatelessWidget {
@@ -24,6 +24,7 @@ class WeekplanScreen extends StatelessWidget {
   WeekplanScreen({Key key, WeekModel week}) : super(key: key) {
     weekplanBloc.setWeek(week);
   }
+
   /// The WeekplanBloc that contains the currently chosen week
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
 
@@ -50,6 +51,8 @@ class WeekplanScreen extends StatelessWidget {
   }
 }
 
+const Color buttonColor = Color(0xA0FFFFFF);
+
 Row _buildWeeks(WeekModel weekModel, BuildContext context) {
   const List<int> weekColors = <int>[
     0xFF08A045,
@@ -65,7 +68,8 @@ Row _buildWeeks(WeekModel weekModel, BuildContext context) {
     weekDays.add(Expanded(
         child: Card(
             color: Color(weekColors[i]),
-            child: _day(weekModel.days[i].day, weekModel.days[i].activities, context))));
+            child: _day(weekModel.days[i].day, weekModel.days[i].activities,
+                context))));
   }
   return Row(children: weekDays);
 }
@@ -83,20 +87,29 @@ Column _day(Weekday day, List<ActivityModel> activities, BuildContext context) {
           itemCount: activities.length,
         ),
       ),
-       Container(
-        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-        child: Card(
-          child: IconButton(
-            icon: Icon(Icons.add),
-              onPressed: () async {
-                PictogramModel newActivity =  await  Routes.push(context, PictogramSearch());
+      Container(
+        padding: const EdgeInsets.only(left: 5, right: 5),
+        child: ButtonTheme(
+          child: SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+                child: Image.asset('assets/icons/add.png'),
+                color: buttonColor,
+                onPressed: () async {
+                  PictogramModel newActivity =
+                      await Routes.push(context, PictogramSearch());
 
-                if(newActivity != null) {
-                  activities.add(new ActivityModel(id: null, pictogram: newActivity, order: null, state: null, isChoiceBoard: null));
-                }
-              }
-            )
-        )
+                  if (newActivity != null) {
+                    activities.add(ActivityModel(
+                        id: null,
+                        pictogram: newActivity,
+                        order: null,
+                        state: null,
+                        isChoiceBoard: null));
+                  }
+                }),
+          ),
+        ),
       )
     ],
   );
@@ -130,10 +143,9 @@ Card _translateWeekDay(Weekday day) {
       translation = '';
       break;
   }
-  const Color color = Color(0xA0FFFFFF);
   return Card(
       key: Key(translation),
-      color: color,
+      color: buttonColor,
       child: ListTile(
           title: Text(
         translation,
