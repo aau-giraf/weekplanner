@@ -7,11 +7,11 @@ import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
-/// New-Weekplan Business Logic Component
+/// New-Weekplan Business Logic Component.
 class NewWeekplanBloc extends BlocBase {
-  /// New-Weekplan Business Logic Component
+  /// New-Weekplan Business Logic Component.
   ///
-  /// Gives the ability to create a new weekplan
+  /// Gives the ability to create a new weekplan.
   NewWeekplanBloc(this._api);
 
   final Api _api;
@@ -24,69 +24,71 @@ class NewWeekplanBloc extends BlocBase {
   final BehaviorSubject<PictogramModel> _thumbnailController =
       BehaviorSubject<PictogramModel>();
 
-  /// Handles when the entered title is changed
+  /// Handles when the entered title is changed.
   Sink<String> get onTitleChanged => _titleController.sink;
 
-  /// Handles when the entered year is changed
+  /// Handles when the entered year is changed.
   Sink<String> get onYearChanged => _yearController.sink;
 
-  /// Handles when the entered week number is changed
+  /// Handles when the entered week number is changed.
   Sink<String> get onWeekNumberChanged => _weekNumberController.sink;
 
-  /// Handles when the thumbnail is changed
+  /// Handles when the thumbnail is changed.
   Sink<PictogramModel> get onThumbnailChanged => _thumbnailController.sink;
 
-  /// Gives information about whether the entered title is valid
+  /// Gives information about whether the entered title is valid.
+  /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validTitleStream =>
       _titleController.stream.transform(_titleValidation);
 
-  /// Gives information about whether the entered year is valid
+  /// Gives information about whether the entered year is valid.
+  /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validYearStream =>
       _yearController.stream.transform(_yearValidation);
 
-  /// Gives information about whether the entered week number is valid
+  /// Gives information about whether the entered week number is valid.
+  /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validWeekNumberStream =>
       _weekNumberController.stream.transform(_weekNumberValidation);
 
-  /// Streams the chosen thumbnail
+  /// Streams the chosen thumbnail.
   Observable<PictogramModel> get thumbnailStream => _thumbnailController.stream;
 
-  /// Gives information about whether all input fields are valid
+  /// Gives information about whether all input fields are valid.
   Observable<bool> get validInputStream =>
       Observable.combineLatest3<bool, bool, bool, bool>(validTitleStream,
               validYearStream, validWeekNumberStream, _isAllInputValid)
           .asBroadcastStream();
 
-  /// We need an id for the current citizen
-  void load(GirafUserModel user) {
+  /// Resets the bloc if it already contains information from the last time it 
+  /// was used. Should always be called before using the bloc.
+  void initialize(GirafUserModel user) {
+    if (_user != null) {
+      resetBloc();
+    }
     _user = user;
   }
 
-  /// Saves the entered information to the database
-  void onSaveButtonPressed() {
+  /// Saves the entered information to the database.
+  void saveWeekplan() {
     if (_user != null) {
-      _saveToDatabase();
-      resetBloc();
+      final String _title = _titleController.value;
+      final int _year = int.parse(_yearController.value);
+      final int _weekNumber = int.parse(_weekNumberController.value);
+      final PictogramModel _thumbnail = _thumbnailController.value;
+
+      final WeekModel _weekModel = WeekModel(
+          thumbnail: _thumbnail,
+          name: _title,
+          weekYear: _year,
+          weekNumber: _weekNumber);
+      _api.week.update(
+          _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
     }
   }
 
-  void _saveToDatabase() {
-    final String _title = _titleController.value;
-    final int _year = int.parse(_yearController.value);
-    final int _weekNumber = int.parse(_weekNumberController.value);
-    final PictogramModel _thumbnail = _thumbnailController.value;
-
-    final WeekModel _weekModel = WeekModel(
-        thumbnail: _thumbnail,
-        name: _title,
-        weekYear: _year,
-        weekNumber: _weekNumber);
-    _api.week.update(
-        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
-  }
-
-  /// Resets the bloc to its default values
-  /// The bloc should be reset after leaving the NewWeekplanScreen
+  /// Resets the bloc to its default values.
+  /// The bloc should be reset after each use.
   void resetBloc() {
     _user = null;
     _titleController.sink.add(null);

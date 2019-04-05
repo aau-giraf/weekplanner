@@ -8,13 +8,13 @@ import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
-/// Screen for creating a new weekplan
+/// Screen for creating a new weekplan.
 class NewWeekplanScreen extends StatelessWidget {
-  /// Screen for creating a new weekplan
-  /// Requires a GirafUserModel to save the new weekplan
+  /// Screen for creating a new weekplan.
+  /// Requires a GirafUserModel to save the new weekplan.
   NewWeekplanScreen(GirafUserModel user)
       : _bloc = di.getDependency<NewWeekplanBloc>() {
-    _bloc.load(user);
+    _bloc.initialize(user);
   }
 
   final NewWeekplanBloc _bloc;
@@ -144,7 +144,7 @@ class NewWeekplanScreen extends StatelessWidget {
       color: Colors.blue,
       onPressed: (snapshot?.data == true)
           ? () {
-              _bloc.onSaveButtonPressed();
+              _bloc.saveWeekplan();
               Routes.pop(context);
             }
           : null,
