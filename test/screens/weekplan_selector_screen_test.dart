@@ -90,7 +90,7 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pump(Duration.zero);
 
-    expect(find.text('Tilføj Ugeplan'), findsNWidgets(1));
+    expect(find.text('Tilføj ugeplan'), findsNWidgets(1));
     expect(find.text('weekModel'), findsNWidgets(2));
   });
 }
