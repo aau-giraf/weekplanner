@@ -45,7 +45,8 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                     child: Text(
-                      description,
+                      //if description is null, its replaced with empty.
+                      description ?? '',
                       textAlign: TextAlign.center,
                     ),
                   ))
