@@ -52,7 +52,7 @@ class WeekplansBloc extends BlocBase {
   void getAllWeekInfo(List<WeekNameModel> weekNameModels) {
     final List<WeekModel> weekModels = <WeekModel>[];
 
-    /// This is used by weekplan_selector_screen for adding a new weekplan.
+    // This is used by weekplan_selector_screen for adding a new weekplan.
     if (_addWeekplan) {
       weekModels.add(WeekModel(name: 'Tilføj ugeplan'));
       _weekModel.add(weekModels);

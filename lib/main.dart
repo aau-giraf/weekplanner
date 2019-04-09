@@ -8,16 +8,16 @@ import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 
 void main() {
-  /// Register all dependencies for injector
+  // Register all dependencies for injector
   Bootstrap.register();
 
   if (_isInDebugMode) {
-    /// If in DEBUG mode
+    // If in DEBUG mode
     environment.setFile('assets/environments.json').whenComplete(() {
       _runApp();
     });
   } else {
-    /// Else Production
+    // Else Production
     environment.setFile('assets/environments.prod.json').whenComplete(() {
       _runApp();
     });
@@ -32,10 +32,10 @@ void _runApp() {
           stream: di.getDependency<AuthBloc>().loggedIn,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             if (snapshot.data) {
-              /// In case logged in show ChooseCitizenScreen
+              // In case logged in show ChooseCitizenScreen
               return ChooseCitizenScreen();
             } else {
-              /// Not loggedIn pop context to login screen.
+              // Not loggedIn pop context to login screen.
               Routes.goHome(context);
               return LoginScreen();
             }
