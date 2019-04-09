@@ -58,6 +58,15 @@ void main() {
     });
   }));
 
+    test('Should not validate year', async((DoneFn done) {
+    bloc.onYearChanged.add(' 218');
+    bloc.validYearStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
   test('Should not validate year', async((DoneFn done) {
     bloc.onYearChanged.add('20019');
     bloc.validYearStream.listen((bool isValid) {
