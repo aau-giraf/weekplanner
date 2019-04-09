@@ -101,7 +101,6 @@ class WeekplanScreen extends StatelessWidget {
                   onPressed: () async {
                     PictogramModel newActivity =
                         await Routes.push(context, PictogramSearch());
-
                     if (newActivity != null) {
                       weekplanBloc.addActivity(ActivityModel(
                           id: newActivity.id,
