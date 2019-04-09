@@ -24,7 +24,7 @@ class AuthBloc extends BlocBase {
 
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password, BuildContext context) {
-    show_loading_spinner(context, false);
+    showLoadingSpinner(context, false);
     _api.account.login(username, password).take(1).listen((bool status) {
       Routes.pop(context); // Removes the loading spinner
       _loggedIn.add(status);

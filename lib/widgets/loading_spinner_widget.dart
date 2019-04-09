@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-void show_loading_spinner(BuildContext context, bool dismissible,
+void showLoadingSpinner(BuildContext context, bool dismissible,
     [void callback(), int timeoutMS]) {
   if (callback != null) {
     timeoutMS ??= 2000;

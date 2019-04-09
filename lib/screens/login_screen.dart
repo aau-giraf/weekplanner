@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Logs the user in
 class LoginScreen extends StatelessWidget {
