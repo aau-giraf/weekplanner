@@ -38,7 +38,7 @@ class GirafUserModel implements Model {
   /// The username
   String username;
 
-  /// The users desired "screen name", i.e. how the app should address the user.
+  /// The users desired 'screen name', i.e. how the app should address the user.
   String screenName;
 
   // This is actually a long from the .Net server, will that cause problems?
