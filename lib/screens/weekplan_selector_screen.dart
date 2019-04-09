@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/routes.dart';

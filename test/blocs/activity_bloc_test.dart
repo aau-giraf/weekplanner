@@ -19,17 +19,17 @@ void main(){
   Api api;
   MockWeekApi weekApi;
 
-  final UsernameModel user = UsernameModel(id: '50');
+  final UsernameModel user = UsernameModel(id: '50', name: null, role: null);
 
   final ActivityModel activity = ActivityModel(id: 1, pictogram: null, order: 1,
       state: ActivityState.Normal, isChoiceBoard: false);
 
-  final List<ActivityModel> activityList = [activity];
+  final List<ActivityModel> activityList = <ActivityModel>[activity];
 
   final WeekdayModel weekdaymodel =
     WeekdayModel(day: Weekday.Monday, activities: activityList);
 
-  final List<WeekdayModel> weekdaymodelList = [weekdaymodel];
+  final List<WeekdayModel> weekdaymodelList = <WeekdayModel>[weekdaymodel];
 
   final WeekModel weekModel = WeekModel(thumbnail: null, name: 'testweek',
       days: weekdaymodelList, weekNumber: 1, weekYear: 2010);

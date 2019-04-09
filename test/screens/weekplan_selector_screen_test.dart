@@ -7,7 +7,6 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/models/week_name_model.dart';
@@ -23,7 +22,8 @@ void main() {
   WeekplansBloc bloc;
   Api api;
   MockWeekApi weekApi;
-  final UsernameModel mockUser = UsernameModel(id: 'test');
+  final UsernameModel mockUser = 
+  UsernameModel(id: 'test', name: null, role: null);
 
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];

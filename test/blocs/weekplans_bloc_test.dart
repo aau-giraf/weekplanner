@@ -1,7 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
@@ -56,7 +55,7 @@ void main() {
       done();
     });
 
-    bloc.load(UsernameModel(id: 'test'));
+    bloc.load(UsernameModel(id: 'test', name: null, role: null));
   }));
 
   test('Should dispose weekModels stream', async((DoneFn done) {

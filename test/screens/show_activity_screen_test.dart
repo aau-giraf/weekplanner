@@ -26,7 +26,7 @@ void main() {
   ActivityBloc bloc;
   Api api;
   MockWeekApi weekApi;
-  List<ActivityModel> activities = [ActivityModel(
+  final List<ActivityModel> activities = <ActivityModel>[ActivityModel(
     id: 1381, 
     state: ActivityState.Normal, 
     order: 0,
@@ -34,9 +34,10 @@ void main() {
     pictogram: PictogramModel(
       id: 25,
       title: 'grå',
-      accessLevel: AccessLevel.PUBLIC
+      accessLevel: AccessLevel.PUBLIC, 
+      imageHash: null, imageUrl: null, lastEdit: null
     ))];
-  List<WeekdayModel> weekdayModels = [WeekdayModel(
+  final List<WeekdayModel> weekdayModels = <WeekdayModel>[WeekdayModel(
     activities: activities,
     day: Weekday.Monday
   )];
@@ -47,11 +48,13 @@ void main() {
     thumbnail: PictogramModel(
       id: 25,
       title: 'grå',
-      accessLevel: AccessLevel.PUBLIC
+      accessLevel: AccessLevel.PUBLIC, 
+      imageHash: null, imageUrl: null, lastEdit: null
     ),
     days: weekdayModels);
   final ActivityModel mockActivity = mockWeek.days[0].activities[0];
-  final UsernameModel mockUser = UsernameModel(id: '42');
+  final UsernameModel mockUser = UsernameModel(id: '42', 
+  name: null, role: null);
 
   void setupApiCalls() {}
 

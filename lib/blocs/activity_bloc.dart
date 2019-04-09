@@ -1,4 +1,3 @@
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/username_model.dart';
@@ -16,11 +15,6 @@ class ActivityBloc extends BlocBase {
   WeekModel _weekModel;
   UsernameModel _user;
 
-  Stream<WeekModel> get weekModelStream => _weekModelStream.stream;
-
-  // Start with providing false as the logged in status
-  final BehaviorSubject<WeekModel> _weekModelStream = BehaviorSubject<WeekModel>();
-
   /// Loads the WeekModel, ActivityModel and the GirafUser.
   void load(
       WeekModel weekModel, ActivityModel activityModel, UsernameModel user) {
@@ -31,29 +25,23 @@ class ActivityBloc extends BlocBase {
 
   /// Mark the selected activity as complete.
   void completeActivity() {
-    final ActivityState tempState = _activityModel.state;
     _activityModel.state = ActivityState.Completed;
-    if (!update()) {
-      _activityModel.state = tempState;
-    }
+    update();
   }
 
   /// Mark the selected activity as cancelled.
   void cancelActivity() {
-    final ActivityState tempState = _activityModel.state;
     _activityModel.state = ActivityState.Canceled;
-    if (!update()) {
-      _activityModel.state = tempState;
-    }
+    update();
   }
 
   /// Update the weekmodel with the new state.
-  bool update() {
+  void update() {
     _api.week.update(
       _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
-        .listen(_weekModelStream.add);
-    // TODO: Do something with this.
-    return true;
+        .listen((WeekModel weekModel) {
+          _weekModel.days = weekModel.days;
+        });
   }
 
   @override
