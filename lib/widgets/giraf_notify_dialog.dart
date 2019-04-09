@@ -66,10 +66,9 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                     color: const Color.fromRGBO(255, 157, 0, 1),
                     child: Row(
                       children: const <Widget>[
-                        Icon(
-                          Icons.check,
-                          color: Color.fromRGBO(0, 0, 0, 1),
-                        ),
+                        ImageIcon(
+                          AssetImage('assets/icons/accept.png'),
+                          color: Color.fromRGBO(0, 0, 0, 1),),
                         Text(
                           'Okay',
                           style: TextStyle(color: Colors.white),
