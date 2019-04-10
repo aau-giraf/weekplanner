@@ -33,7 +33,7 @@ class ShowActivityScreen extends StatefulWidget {
 }
 
 class _ShowActivityScreen extends State<ShowActivityScreen> {
-  /// Text style used for title.
+  // Text style used for title.
   final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
 
   @override
@@ -44,8 +44,8 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     return buildScreenFromOrientation(screenSize, orientation);
   }
 
-  /// Build the activity and timer screens in a row or column
-  /// depending on the orientation of the device.
+  // Build the activity and timer screens in a row or column
+  // depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(
       Size screenSize, Orientation orientation) {
     Widget childContainer;
@@ -68,7 +68,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
         body: childContainer);
   }
 
-  /// Builds the activity and timer cards.
+  // Builds the activity and timer cards.
   List<Widget> buildScreen(Size screenSize, Orientation orientation) {
     return <Widget>[
       Expanded(
@@ -106,7 +106,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     ];
   }
 
-  /// Builds the timer widget.
+  // Builds the timer widget.
   List<Widget> buildTimer(Size screenSize, Orientation orientation) {
     return <Widget>[
       Center(
@@ -140,7 +140,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     ];
   }
 
-  /// Builds the activity widget.
+  // Builds the activity widget.
   List<Widget> buildActivity(Size screenSize, Orientation orientation) {
     return <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
@@ -165,7 +165,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     ];
   }
 
-  /// Builds the buttons below the activity widget.
+  // Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
     return ButtonBar(
       // Key used for testing widget.
@@ -200,7 +200,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     );
   }
 
-  /// Creates a pictogram image from the streambuilder
+  // Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
         stream: widget._pictoImageBloc.image,
