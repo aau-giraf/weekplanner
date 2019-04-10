@@ -4,9 +4,10 @@ import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
-import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
 
+/// The screen to choose a citizen
 class ChooseCitizenScreen extends StatelessWidget {
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
 
@@ -30,7 +31,7 @@ class ChooseCitizenScreen extends StatelessWidget {
         // Creates a new Dialog
         child: Dialog(
           child: Scaffold(
-            appBar: const GirafAppBarSimple(title: 'Vælg Borger'),
+            appBar: GirafAppBarSimple(title: 'Vælg borger'),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
