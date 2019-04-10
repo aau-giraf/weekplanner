@@ -7,15 +7,21 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  shared_preferences: ^0.5.1+1
   rxdart: ^0.21.0
   http: ^0.12.0+1
-  shared_preferences: ^0.5.1+1
-
+  injector: ^1.0.6
+  auto_size_text: ^1.1.1
+  rflutter_alert: ^1.0.2
+  mockito: ^4.0.0
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
+  async_test:
+    git:
+      url: https://github.com/ptope/async_test
   flutter_test:
     sdk: flutter
 
@@ -23,6 +29,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/icons/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -43,12 +50,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: 'Quicksand'
+      fonts:
+        - asset: assets/fonts/Quicksand-Bold.ttf
+        - asset: assets/fonts/Quicksand-Light.ttf
+        - asset: assets/fonts/Quicksand-Medium.ttf
+        - asset: assets/fonts/Quicksand-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
