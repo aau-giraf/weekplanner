@@ -10,9 +10,10 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController usernameCtrl = TextEditingController();
   final TextEditingController passwordCtrl = TextEditingController();
 
-  void loginAction() {
+  void loginAction(BuildContext context) {
     // TODO(tricky12321): Giraf Notify Dialog Wrong username and password, https://github.com/aau-giraf/weekplanner/issues/104
-    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
+    authBloc.authenticate(
+        usernameCtrl.value.text, passwordCtrl.value.text, context);
   }
 
   @override
@@ -111,7 +112,7 @@ class LoginScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
-                              loginAction();
+                              loginAction(context);
                             },
                             color: const Color.fromRGBO(48, 81, 118, 1),
                           ),
@@ -136,7 +137,7 @@ class LoginScreen extends StatelessWidget {
                                       environment.getVar<String>('USERNAME');
                                   passwordCtrl.text =
                                       environment.getVar<String>('PASSWORD');
-                                  loginAction();
+                                  loginAction(context);
                                 },
                                 color: const Color.fromRGBO(48, 81, 118, 1),
                               ),
