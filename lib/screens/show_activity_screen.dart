@@ -143,7 +143,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   /// Builds the activity widget.
   List<Widget> buildActivity(Size screenSize, Orientation orientation) {
     return <Widget>[
-      Center(child: const Padding(padding: EdgeInsets.all(8.0))),
+      const Center(child: Padding(padding: EdgeInsets.all(8.0))),
       Expanded(
         child: FittedBox(
             child: Container(
