@@ -172,21 +172,16 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
       key: const Key('ButtonBarRender'),
       alignment: MainAxisAlignment.center,
       children: <Widget>[
-        widget._activity.state == ActivityState.Completed
-            ? OutlineButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                onPressed: null,
-                child: const Icon(Icons.check, color: Colors.grey),
-              )
-            : OutlineButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                onPressed: () {
-                  widget._activityBloc.completeActivity();
-                  setState(() {});
-                },
-                child: const Icon(Icons.check, color: Colors.green)),
+        OutlineButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            onPressed: () {
+              widget._activityBloc.completeActivity();
+              setState(() {});
+            },
+            child: widget._activity.state != ActivityState.Completed
+                ? const Icon(Icons.check, color: Colors.green)
+                : const Icon(Icons.undo, color: Colors.blue,)),
         /*OutlineButton( // The cancel button is prepared under, a check should just be made to check if the user is a guardian
           shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

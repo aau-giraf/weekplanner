@@ -15,7 +15,7 @@ class ActivityBloc extends BlocBase {
   WeekModel _weekModel;
   UsernameModel _user;
 
-  // Loads the WeekModel, ActivityModel and the GirafUser.
+  /// Loads the WeekModel, ActivityModel and the GirafUser.
   void load(
       WeekModel weekModel, ActivityModel activityModel, UsernameModel user) {
     _activityModel = activityModel;
@@ -23,25 +23,32 @@ class ActivityBloc extends BlocBase {
     _user = user;
   }
 
-  // Mark the selected activity as complete.
+  /// Mark the selected activity as complete. Toggle function, if activity is
+  /// Completed, it will become Normal
   void completeActivity() {
-    _activityModel.state = ActivityState.Completed;
+    _activityModel.state = _activityModel.state == ActivityState.Completed
+        ? ActivityState.Normal
+        : ActivityState.Completed;
     update();
   }
 
-  // Mark the selected activity as cancelled.
+  /// Mark the selected activity as cancelled.Toggle function, if activity is
+  /// Canceled, it will become Normal
   void cancelActivity() {
-    _activityModel.state = ActivityState.Canceled;
+    _activityModel.state = _activityModel.state == ActivityState.Canceled
+        ? ActivityState.Normal
+        : ActivityState.Canceled;
     update();
   }
 
-  // Update the weekmodel with the new state.
+  /// Update the weekmodel with the new state.
   void update() {
-    _api.week.update(
-      _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
+    _api.week
+        .update(
+            _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
         .listen((WeekModel weekModel) {
-          _weekModel.days = weekModel.days;
-        });
+      _weekModel.days = weekModel.days;
+    });
   }
 
   @override
