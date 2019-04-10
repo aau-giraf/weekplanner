@@ -4,16 +4,12 @@ import 'package:weekplanner/providers/api/api.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
-
   /// Default Constructor
   AuthBloc(this._api);
-
-  Api api;
 
   /// String is used then changing from citizen to guardian mode
   /// the username is saved so only the password is needed.
   String loggedInUsername;
-
 
   final Api _api;
 

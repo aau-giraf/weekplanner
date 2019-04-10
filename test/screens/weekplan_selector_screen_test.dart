@@ -22,8 +22,8 @@ void main() {
   WeekplansBloc bloc;
   Api api;
   MockWeekApi weekApi;
-  final UsernameModel mockUser = 
-  UsernameModel(id: 'test', name: null, role: null);
+  final UsernameModel mockUser =
+      UsernameModel(name: 'test', role: 'test', id: 'test');
 
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
@@ -90,7 +90,7 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pump(Duration.zero);
 
-    expect(find.text('Tilføj Ugeplan'), findsNWidgets(1));
+    expect(find.text('Tilføj ugeplan'), findsNWidgets(1));
     expect(find.text('weekModel'), findsNWidgets(2));
   });
 }

@@ -4,6 +4,7 @@ import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 
 
@@ -30,9 +31,16 @@ void _runApp() {
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di.getDependency<AuthBloc>().loggedIn,
-          builder: (_, AsyncSnapshot<bool> snapshot) =>
-              // In case we're logged in show WeekPlanner, otherwise, show login
-              snapshot.data ? ChooseCitizenScreen() : LoginScreen())));
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.data) {
+              // In case logged in show ChooseCitizenScreen
+              return ChooseCitizenScreen();
+            } else {
+              // Not loggedIn pop context to login screen.
+              Routes.goHome(context);
+              return LoginScreen();
+            }
+          })));
 }
 
 bool get _isInDebugMode {
