@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
 import 'package:weekplanner/di.dart';
@@ -50,8 +50,8 @@ class ChooseCitizenScreen extends StatelessWidget {
                                 .map<Widget>((UsernameModel user) =>
                                     CitizenAvatar(
                                         usernameModel: user,
-                                        onPressed: () => Routes.push(
-                                            context, WeekplanScreen())))
+                                        onPressed: () => Routes.push(context,
+                                            WeekplanSelectorScreen(user))))
                                 .toList()),
                       );
                     } else {

@@ -14,4 +14,12 @@ class Routes {
   static bool pop<T extends Object>(BuildContext context, [T result]) {
     return Navigator.of(context).pop<T>(result);
   }
+
+  /// Go home is used to pop everything until the navigator is on the
+  /// initialRoute.
+  static void goHome(BuildContext context) {
+    Navigator.of(context).popUntil((Route<dynamic> route) {
+      return route.settings.isInitialRoute;
+    });
+  }
 }

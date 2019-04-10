@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -15,7 +15,7 @@ class NewWeekplanBloc extends BlocBase {
   NewWeekplanBloc(this._api);
 
   final Api _api;
-  GirafUserModel _user;
+  UsernameModel _user;
 
   final BehaviorSubject<String> _titleController = BehaviorSubject<String>();
   final BehaviorSubject<String> _yearController = BehaviorSubject<String>();
@@ -62,7 +62,7 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Resets the bloc if it already contains information from the last time it 
   /// was used. Should always be called before using the bloc.
-  void initialize(GirafUserModel user) {
+  void initialize(UsernameModel user) {
     if (_user != null) {
       resetBloc();
     }

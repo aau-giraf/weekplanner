@@ -17,7 +17,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
   @override
-  void authenticate(String username, String password) {
+  void authenticate(String username, String password, BuildContext context) {
     if (username == 'test' && password == 'test') {
       _loggedIn.add(true);
     } else {

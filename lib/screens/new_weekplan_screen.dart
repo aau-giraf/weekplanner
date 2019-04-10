@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -12,7 +12,7 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a GirafUserModel to save the new weekplan.
-  NewWeekplanScreen(GirafUserModel user)
+  NewWeekplanScreen(UsernameModel user)
       : _bloc = di.getDependency<NewWeekplanBloc>() {
     _bloc.initialize(user);
   }
