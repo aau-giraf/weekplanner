@@ -5,7 +5,7 @@ import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 
-/// Document all public members.
+/// Logic for activities
 class ActivityBloc extends BlocBase {
   /// Default Constructor.
   ActivityBloc(this._api);

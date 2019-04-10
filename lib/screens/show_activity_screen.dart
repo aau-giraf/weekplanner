@@ -8,9 +8,9 @@ import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
-///
+/// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatefulWidget {
-  ///
+  /// Constructor
   ShowActivityScreen(this._weekModel, this._activity, this._girafUser,
       {Key key})
       : super(key: key) {
@@ -24,7 +24,6 @@ class ShowActivityScreen extends StatefulWidget {
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
-
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
   @override
