@@ -889,6 +889,3 @@ DerivedData/
 
 # Ignore environment json file
 assets/environments.json
-
-ios/Runner/GeneratedPluginRegistrant.m
-
