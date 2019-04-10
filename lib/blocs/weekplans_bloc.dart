@@ -21,10 +21,10 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get weekModels => _weekModel.stream;
 
   final BehaviorSubject<List<WeekModel>> _weekModel =
-  BehaviorSubject<List<WeekModel>>();
+      BehaviorSubject<List<WeekModel>>();
 
   final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-  BehaviorSubject<List<WeekNameModel>>();
+      BehaviorSubject<List<WeekNameModel>>();
 
   final Api _api;
   UsernameModel _user;
@@ -42,7 +42,8 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
+    _api.week.getNames(_user.id).listen(_weekNameModelsList.add,
+        onError: (Object exception) => getAllWeekInfo(null));
   }
 
   /// Gets all the information for a [Weekmodel].
