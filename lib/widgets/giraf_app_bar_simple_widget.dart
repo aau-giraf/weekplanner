@@ -9,21 +9,14 @@ class GirafAppBarSimple extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
   GirafAppBarSimple({Key key, this.title})
       : _authBloc = di.getDependency<AuthBloc>(),
-        toolbarBloc = di.getDependency<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 
   /// Used to store the title of the toolbar.
   final String title;
 
-  /// Used to pass the password from the text field to the authBloc.
-  final TextEditingController passwordCtrl = TextEditingController();
-
   /// Contains the functionality regarding login, logout etc.
   final AuthBloc _authBloc;
-
-  /// Contains the functionality of the toolbar.
-  final ToolbarBloc toolbarBloc;
 
   @override
   final Size preferredSize;
@@ -90,8 +83,4 @@ class GirafAppBarSimple extends StatelessWidget implements PreferredSizeWidget {
       color: Colors.black,
     ),
   );
-
-  void login(BuildContext context, String username, String password) {
-    _authBloc.authenticate(username, password);
-  }
 }
