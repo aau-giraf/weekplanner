@@ -134,7 +134,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
                 color: Colors.green,
                 child: const Text(
                   'Start',
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 )),
           ))
     ];
