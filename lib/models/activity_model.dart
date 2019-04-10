@@ -3,9 +3,9 @@ import 'package:weekplanner/models/model.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 
-///
+/// Avtivity Model
 class ActivityModel implements Model {
-  ///
+  /// Constructor
   ActivityModel({
     @required this.id,
     @required this.pictogram,
