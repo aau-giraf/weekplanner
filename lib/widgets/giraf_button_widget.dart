@@ -125,7 +125,7 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _widgetsOnButton() {
-    final TextStyle textStyle = TextStyle(
+    const TextStyle textStyle = TextStyle(
       color: Colors.black,
     );
 
