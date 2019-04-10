@@ -143,12 +143,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   /// Builds the activity widget.
   List<Widget> buildActivity(Size screenSize, Orientation orientation) {
     return <Widget>[
-      Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text('Aktivitet',
-            style: titleTextStyle, textAlign: TextAlign.center),
-      )),
+      Center(child: const Padding(padding: EdgeInsets.all(8.0))),
       Expanded(
         child: FittedBox(
             child: Container(
@@ -208,12 +203,12 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
-      stream: widget._pictoImageBloc.image,
-      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-        return Container(child: snapshot.data,
-        // Key is used for testing the widget.
-        key: Key(widget._activity.id.toString()));
-      }
-    );
+        stream: widget._pictoImageBloc.image,
+        builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+          return Container(
+              child: snapshot.data,
+              // Key is used for testing the widget.
+              key: Key(widget._activity.id.toString()));
+        });
   }
 }
