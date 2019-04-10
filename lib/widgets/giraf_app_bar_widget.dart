@@ -164,6 +164,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   );
 
   void login(BuildContext context, String username, String password) {
-    _authBloc.authenticate(username, password);
+    _authBloc.authenticate(username, password, context);
   }
 }
