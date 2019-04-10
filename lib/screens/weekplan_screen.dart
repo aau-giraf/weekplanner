@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
+import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
@@ -80,11 +81,26 @@ class WeekplanScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
+              if (activities[index].state == ActivityState.Completed) {
+                return GestureDetector(
+                  onTap: () => Routes.push(context,
+                      ShowActivityScreen(_week, activities[index], _user)),
+                  child: Stack(
+                    children: <Widget>[
+                      PictogramImage(
+                        pictogram: activities[index].pictogram,
+                        onPressed: null,
+                      ),
+                      const Icon(Icons.check, color: Colors.green, size: 180)
+                    ],
+                  ),
+                );
+              }
+
               return PictogramImage(
                   pictogram: activities[index].pictogram,
-                  onPressed: () => Routes.push(
-                      context,
-                      ShowActivityScreen(_week, activities[index],_user)));
+                  onPressed: () => Routes.push(context,
+                      ShowActivityScreen(_week, activities[index], _user)));
             },
             itemCount: activities.length,
           ),

@@ -41,23 +41,23 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    return buildScreenFromOrientation(screenSize, orientation);
+    return buildScreenFromOrientation(context, screenSize, orientation);
   }
 
   // Build the activity and timer screens in a row or column
   // depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(
-      Size screenSize, Orientation orientation) {
+      BuildContext context, Size screenSize, Orientation orientation) {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
       childContainer = Column(
-        children: buildScreen(screenSize, orientation),
+        children: buildScreen(context, screenSize, orientation),
       );
     } else if (orientation == Orientation.landscape) {
       childContainer = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: buildScreen(screenSize, orientation),
+        children: buildScreen(context, screenSize, orientation),
       );
     }
 
@@ -69,7 +69,8 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   }
 
   // Builds the activity and timer cards.
-  List<Widget> buildScreen(Size screenSize, Orientation orientation) {
+  List<Widget> buildScreen(
+      BuildContext context, Size screenSize, Orientation orientation) {
     return <Widget>[
       Expanded(
         flex: 6,
@@ -80,7 +81,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
               padding: const EdgeInsets.all(20),
               child: Card(
                 child: Column(
-                  children: buildActivity(screenSize, orientation),
+                  children: buildActivity(context, screenSize, orientation),
                 ),
               ),
             ),
@@ -141,7 +142,8 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   }
 
   // Builds the activity widget.
-  List<Widget> buildActivity(Size screenSize, Orientation orientation) {
+  List<Widget> buildActivity(
+      BuildContext context, Size screenSize, Orientation orientation) {
     return <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
       Expanded(
@@ -155,8 +157,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
                   children: <Widget>[
                     buildLoadPictogramImage(),
                     widget._activity.state == ActivityState.Completed
-                        ? const Icon(Icons.check,
-                            color: Colors.green, size: 280)
+                        ? const Icon(Icons.check, color: Colors.green)
                         : Container()
                   ],
                 ))),
@@ -181,7 +182,10 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
             },
             child: widget._activity.state != ActivityState.Completed
                 ? const Icon(Icons.check, color: Colors.green)
-                : const Icon(Icons.undo, color: Colors.blue,)),
+                : const Icon(
+                    Icons.undo,
+                    color: Colors.blue,
+                  )),
         /*OutlineButton( // The cancel button is prepared under, a check should just be made to check if the user is a guardian
           shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

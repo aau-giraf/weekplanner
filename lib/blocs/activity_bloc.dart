@@ -47,7 +47,7 @@ class ActivityBloc extends BlocBase {
         .update(
             _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
         .listen((WeekModel weekModel) {
-      _weekModel.days = weekModel.days;
+      _weekModel = weekModel;
     });
   }
 
