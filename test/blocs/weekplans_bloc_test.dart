@@ -56,7 +56,6 @@ void main() {
     });
 
     bloc.load(UsernameModel(name: 'test', role:'test', id: 'test'));
-
   }));
 
   test('Should dispose weekModels stream', async((DoneFn done) {
