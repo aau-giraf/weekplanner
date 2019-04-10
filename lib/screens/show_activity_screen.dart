@@ -34,7 +34,7 @@ class ShowActivityScreen extends StatefulWidget {
 
 class _ShowActivityScreen extends State<ShowActivityScreen> {
   /// Text style used for title.
-  final TextStyle titleTextStyle = TextStyle(fontSize: 24);
+  final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +132,9 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
                     borderRadius: BorderRadius.circular(30)),
                 onPressed: null,
                 color: Colors.green,
-                child: Text(
+                child: const Text(
                   'Start',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                 )),
           ))
     ];
