@@ -1,9 +1,9 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/models/week_name_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
 
 /// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
@@ -21,10 +21,10 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get weekModels => _weekModel.stream;
 
   final BehaviorSubject<List<WeekModel>> _weekModel =
-      BehaviorSubject<List<WeekModel>>();
+  BehaviorSubject<List<WeekModel>>();
 
   final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-      BehaviorSubject<List<WeekNameModel>>();
+  BehaviorSubject<List<WeekNameModel>>();
 
   final Api _api;
   UsernameModel _user;
