@@ -27,6 +27,7 @@ void main() {
 void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
+      theme: ThemeData(fontFamily: 'Quicksand'),
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di.getDependency<AuthBloc>().loggedIn,
