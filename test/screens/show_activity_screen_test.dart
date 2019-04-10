@@ -83,8 +83,7 @@ void main() {
         .pumpWidget(MaterialApp(
           home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
 
-    expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
-        findsOneWidget);
+    expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
 
