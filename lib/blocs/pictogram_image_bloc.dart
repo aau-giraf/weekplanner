@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -25,6 +24,11 @@ class PictogramImageBloc extends BlocBase {
   /// The [pictogram] model should contain an ID which the API can then fetch.
   void load(PictogramModel pictogram) {
     _api.pictogram.getImage(pictogram.id).listen(_image.add);
+  }
+
+  /// Initialize loading of a specific [PictogramModel] from its [id].
+  void loadPictogramById(int id) {
+    _api.pictogram.getImage(id).listen(_image.add);
   }
 
   @override
