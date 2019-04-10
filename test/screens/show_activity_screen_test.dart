@@ -95,7 +95,7 @@ void main() {
         .pumpWidget(MaterialApp(
           home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
 
-    expect(find.text('Aktivitet'), findsNWidgets(2));
+    expect(find.text('Aktivitet'), findsOneWidget);
     expect(find.text('Timer'), findsOneWidget);
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
   });
