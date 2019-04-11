@@ -6,8 +6,8 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/api/api.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import '../blocs/pictogram_bloc_test.dart';

@@ -1,15 +1,15 @@
 import 'dart:async';
 
+import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
-import 'package:weekplanner/providers/api/api.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/screens/login_screen.dart';
-import 'package:weekplanner/di.dart';
 
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
