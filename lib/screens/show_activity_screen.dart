@@ -157,6 +157,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
                     widget._activity.state == ActivityState.Completed
                         ? Icon(
                             Icons.check,
+                            key: const Key('IconComplete'),
                             color: Colors.green,
                             size: MediaQuery.of(context).size.width,
                           )

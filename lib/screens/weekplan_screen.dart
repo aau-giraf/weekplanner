@@ -98,6 +98,7 @@ class WeekplanScreen extends StatelessWidget {
                           ),
                           Icon(
                             Icons.check,
+                            key: const Key('IconComplete'),
                             color: Colors.green,
                             size: MediaQuery.of(context).size.width,
                           )

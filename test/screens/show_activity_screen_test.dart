@@ -26,35 +26,38 @@ void main() {
   ActivityBloc bloc;
   Api api;
   MockWeekApi weekApi;
-  final List<ActivityModel> activities = <ActivityModel>[ActivityModel(
-    id: 1381, 
-    state: ActivityState.Normal, 
-    order: 0,
-    isChoiceBoard: false,
-    pictogram: PictogramModel(
-      id: 25,
-      title: 'grå',
-      accessLevel: AccessLevel.PUBLIC, 
-      imageHash: null, imageUrl: null, lastEdit: null
-    ))];
-  final List<WeekdayModel> weekdayModels = <WeekdayModel>[WeekdayModel(
-    activities: activities,
-    day: Weekday.Monday
-  )];
+  final List<ActivityModel> activities = <ActivityModel>[
+    ActivityModel(
+        id: 1381,
+        state: ActivityState.Normal,
+        order: 0,
+        isChoiceBoard: false,
+        pictogram: PictogramModel(
+            id: 25,
+            title: 'grå',
+            accessLevel: AccessLevel.PUBLIC,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null))
+  ];
+  final List<WeekdayModel> weekdayModels = <WeekdayModel>[
+    WeekdayModel(activities: activities, day: Weekday.Monday)
+  ];
   final WeekModel mockWeek = WeekModel(
-    weekYear: 2018, 
-    weekNumber: 21, 
-    name: 'Uge 1', 
-    thumbnail: PictogramModel(
-      id: 25,
-      title: 'grå',
-      accessLevel: AccessLevel.PUBLIC, 
-      imageHash: null, imageUrl: null, lastEdit: null
-    ),
-    days: weekdayModels);
+      weekYear: 2018,
+      weekNumber: 21,
+      name: 'Uge 1',
+      thumbnail: PictogramModel(
+          id: 25,
+          title: 'grå',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      days: weekdayModels);
   final ActivityModel mockActivity = mockWeek.days[0].activities[0];
-  final UsernameModel mockUser = UsernameModel(id: '42', 
-  name: null, role: null);
+  final UsernameModel mockUser =
+      UsernameModel(id: '42', name: null, role: null);
 
   void setupApiCalls() {}
 
@@ -79,32 +82,43 @@ void main() {
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(
-          home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
-
-
   testWidgets('Activity and timer card is rendered',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(
-          home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
 
     expect(find.text('Aktivitet'), findsOneWidget);
     expect(find.text('Timer'), findsOneWidget);
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
   });
 
-  testWidgets('ButtonBar is rendered',
-      (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(
-          home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+  testWidgets('ButtonBar is rendered', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
 
     expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
+  });
+
+  testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
+    mockActivity.state = ActivityState.Completed;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
+
+  testWidgets('Activity has no checkmark when Normal',
+      (WidgetTester tester) async {
+    mockActivity.state = ActivityState.Normal;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+
+    expect(find.byKey(const Key('IconComplete')), findsNothing);
   });
 }

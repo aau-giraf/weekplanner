@@ -9,6 +9,7 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/activity_model.dart';
+import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
 import 'package:weekplanner/models/username_model.dart';
@@ -54,10 +55,8 @@ void main() {
     WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[activity]),
   ]);
 
-  final UsernameModel user = UsernameModel(
-      name: 'test',
-      id: 'test',
-      role: 'test');
+  final UsernameModel user =
+      UsernameModel(name: 'test', id: 'test', role: 'test');
 
   setUp(() {
     api = Api('any');
@@ -113,5 +112,22 @@ void main() {
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsNWidgets(7));
+  });
+
+  testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
+    activity.state = ActivityState.Completed;
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('IconComplete')), findsNWidgets(7));
+  });
+
+  testWidgets('Activity has no checkmark when Normal',
+      (WidgetTester tester) async {
+    activity.state = ActivityState.Normal;
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('IconComplete')), findsNothing);
   });
 }
