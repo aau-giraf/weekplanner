@@ -85,14 +85,25 @@ class WeekplanScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () => Routes.push(context,
                       ShowActivityScreen(_week, activities[index], _user)),
-                  child: Stack(
-                    children: <Widget>[
-                      PictogramImage(
-                        pictogram: activities[index].pictogram,
-                        onPressed: null,
+                  child: Card(
+                    child: FittedBox(
+                      child: Stack(
+                        children: <Widget>[
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: PictogramImage(
+                              pictogram: activities[index].pictogram,
+                              onPressed: null,
+                            ),
+                          ),
+                          Icon(
+                            Icons.check,
+                            color: Colors.green,
+                            size: MediaQuery.of(context).size.width,
+                          )
+                        ],
                       ),
-                      const Icon(Icons.check, color: Colors.green, size: 180)
-                    ],
+                    ),
                   ),
                 );
               }

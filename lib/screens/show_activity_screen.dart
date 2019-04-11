@@ -41,23 +41,22 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    return buildScreenFromOrientation(context, screenSize, orientation);
+    return buildScreenFromOrientation(orientation);
   }
 
   // Build the activity and timer screens in a row or column
   // depending on the orientation of the device.
-  Scaffold buildScreenFromOrientation(
-      BuildContext context, Size screenSize, Orientation orientation) {
+  Scaffold buildScreenFromOrientation(Orientation orientation) {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
       childContainer = Column(
-        children: buildScreen(context, screenSize, orientation),
+        children: buildScreen(),
       );
     } else if (orientation == Orientation.landscape) {
       childContainer = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: buildScreen(context, screenSize, orientation),
+        children: buildScreen(),
       );
     }
 
@@ -69,8 +68,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   }
 
   // Builds the activity and timer cards.
-  List<Widget> buildScreen(
-      BuildContext context, Size screenSize, Orientation orientation) {
+  List<Widget> buildScreen() {
     return <Widget>[
       Expanded(
         flex: 6,
@@ -81,7 +79,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
               padding: const EdgeInsets.all(20),
               child: Card(
                 child: Column(
-                  children: buildActivity(context, screenSize, orientation),
+                  children: buildActivity(),
                 ),
               ),
             ),
@@ -97,7 +95,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
               padding: const EdgeInsets.all(20),
               child: Card(
                 child: Column(
-                  children: buildTimer(screenSize, orientation),
+                  children: buildTimer(),
                 ),
               ),
             ),
@@ -108,7 +106,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   }
 
   // Builds the timer widget.
-  List<Widget> buildTimer(Size screenSize, Orientation orientation) {
+  List<Widget> buildTimer() {
     return <Widget>[
       Center(
           child: Padding(
@@ -142,8 +140,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
   }
 
   // Builds the activity widget.
-  List<Widget> buildActivity(
-      BuildContext context, Size screenSize, Orientation orientation) {
+  List<Widget> buildActivity() {
     return <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
       Expanded(
@@ -155,9 +152,15 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
                         width: 0.25)),
                 child: Stack(
                   children: <Widget>[
-                    buildLoadPictogramImage(),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: buildLoadPictogramImage()),
                     widget._activity.state == ActivityState.Completed
-                        ? const Icon(Icons.check, color: Colors.green)
+                        ? Icon(
+                            Icons.check,
+                            color: Colors.green,
+                            size: MediaQuery.of(context).size.width,
+                          )
                         : Container()
                   ],
                 ))),
@@ -204,7 +207,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     return StreamBuilder<Image>(
         stream: widget._pictoImageBloc.image,
         builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-          return Container(
+          return FittedBox(
               child: snapshot.data,
               // Key is used for testing the widget.
               key: Key(widget._activity.id.toString()));
