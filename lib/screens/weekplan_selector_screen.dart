@@ -14,12 +14,14 @@ import 'package:auto_size_text/auto_size_text.dart';
 class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
   /// Requies a UsernameModel user to load weekplans
-  WeekplanSelectorScreen(UsernameModel user)
+  WeekplanSelectorScreen(this.user)
       : _weekBloc = di.getDependency<WeekplansBloc>() {
     _weekBloc.load(user, true);
   }
 
   final WeekplansBloc _weekBloc;
+
+  final UsernameModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: StreamBuilder<List<WeekModel>>(
-                initialData:const <WeekModel> [],
+                  initialData: const <WeekModel>[],
                   stream: _weekBloc.weekModels,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<WeekModel>> snapshot) {
@@ -62,7 +64,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlanAdder(
       BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
-      onTap: () => Routes.push(context, WeekplanScreen(week: weekplan)),
+      onTap: () => Routes.push(
+          context,
+          WeekplanScreen(
+            week: weekplan,
+            user: user,
+          )),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {

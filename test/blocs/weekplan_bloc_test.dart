@@ -23,7 +23,7 @@ void main() {
     final WeekModel week = WeekModel(name: 'test week');
     weekplanBloc.setWeek(week);
 
-    weekplanBloc.week.listen((WeekModel response) {
+    weekplanBloc.userWeek.listen((WeekModel response) {
       expect(response, isNotNull);
       expect(response, equals(week));
     });

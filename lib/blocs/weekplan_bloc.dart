@@ -2,6 +2,8 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/giraf_user_model.dart';
+import 'package:weekplanner/models/user_week_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/providers/api/api.dart';
 
@@ -13,21 +15,29 @@ class WeekplanBloc extends BlocBase {
   /// The API
   final Api _api;
 
-  final BehaviorSubject<WeekModel> _week = BehaviorSubject<WeekModel>();
+  final BehaviorSubject<UserWeekModel> _userWeek =
+      BehaviorSubject<UserWeekModel>();
 
   /// The stream that emits the currently chosen weekplan
-  Stream<WeekModel> get week => _week.stream;
+  Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// Sink to set the currently chosen week
-  void setWeek(WeekModel week) {
-    _week.add(week);
+  void setWeek(WeekModel week, UsernameModel user) {
+    _userWeek.add(UserWeekModel(week, user));
   }
 
   void addActivity(ActivityModel activity, int day) {
-    WeekModel week = _week.value;
+    WeekModel week = _userWeek.value.week;
+    UsernameModel user = _userWeek.value.user;
+
     week.days[day].activities.add(activity);
-    _api.user
-        .me()
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel newWeek) {
+      _userWeek.add(UserWeekModel(newWeek, user));
+    });
+
+    /*    .me()
         .take(1)
         .switchMap((GirafUserModel user) {
           return _api.week
@@ -35,11 +45,11 @@ class WeekplanBloc extends BlocBase {
         })
         .listen((WeekModel newWeek) {
           _week.add(newWeek);
-        });
+        });*/
   }
 
   @override
   void dispose() {
-    _week.close();
+    _userWeek.close();
   }
 }

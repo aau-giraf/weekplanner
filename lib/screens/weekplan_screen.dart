@@ -6,6 +6,8 @@ import 'package:weekplanner/models/activity_model.dart';
 import 'package:weekplanner/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/enums/weekday_enum.dart';
 import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:weekplanner/models/user_week_model.dart';
+import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -24,8 +26,10 @@ class WeekplanScreen extends StatelessWidget {
   /// </summary>
   /// <param name="key">Key of the widget</param>
   /// <param name="week">Week that should be shown on the weekplan</param>
-  WeekplanScreen({Key key, WeekModel week}) : super(key: key) {
-    weekplanBloc.setWeek(week);
+  WeekplanScreen(
+      {Key key, @required WeekModel week, @required UsernameModel user})
+      : super(key: key) {
+    weekplanBloc.setWeek(week, user);
   }
 
   /// The WeekplanBloc that contains the currently chosen week
@@ -37,12 +41,12 @@ class WeekplanScreen extends StatelessWidget {
       appBar: GirafAppBar(
         title: 'Ugeplan',
       ),
-      body: StreamBuilder<WeekModel>(
-        stream: weekplanBloc.week,
+      body: StreamBuilder<UserWeekModel>(
+        stream: weekplanBloc.userWeek,
         initialData: null,
-        builder: (BuildContext context, AsyncSnapshot<WeekModel> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<UserWeekModel> snapshot) {
           if (snapshot.hasData) {
-            return _buildWeeks(snapshot.data, context);
+            return _buildWeeks(snapshot.data.week, context);
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -52,7 +56,6 @@ class WeekplanScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Row _buildWeeks(WeekModel weekModel, BuildContext context) {
     const List<int> weekColors = <int>[
@@ -102,13 +105,14 @@ class WeekplanScreen extends StatelessWidget {
                     PictogramModel newActivity =
                         await Routes.push(context, PictogramSearch());
                     if (newActivity != null) {
-                      weekplanBloc.addActivity(ActivityModel(
-                          id: newActivity.id,
-                          pictogram: newActivity,
-                          order: activities.length,
-                          state: ActivityState.Active,
-                          isChoiceBoard: false),
-                      day.index);
+                      weekplanBloc.addActivity(
+                          ActivityModel(
+                              id: newActivity.id,
+                              pictogram: newActivity,
+                              order: activities.length,
+                              state: ActivityState.Active,
+                              isChoiceBoard: false),
+                          day.index);
                     }
                   }),
             ),
