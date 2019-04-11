@@ -5,11 +5,12 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
-  GirafAppBar({Key key, this.title})
+  GirafAppBar({Key key, this.title, this.appBarIcons})
       : _authBloc = di.getDependency<AuthBloc>(),
         toolbarBloc = di.getDependency<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
@@ -17,6 +18,9 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Used to store the title of the toolbar.
   final String title;
+
+  /// Used to store the icons that should be displayed in the appbar.
+  final List<AppBarIcon> appBarIcons;
 
   /// Used to pass the password from the text field to the authBloc.
   final TextEditingController passwordCtrl = TextEditingController();

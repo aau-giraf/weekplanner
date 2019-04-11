@@ -6,6 +6,7 @@ import 'package:weekplanner/models/enums/weekday_enum.dart';
 import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 /// <summary>
 /// The WeekplandScreen is used to display a week 
@@ -27,7 +28,7 @@ class WeekplanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GirafAppBar(
-        title: 'Ugeplan',
+        title: 'Ugeplan'
       ),
       body: StreamBuilder<WeekModel>(
         stream: weekplanBloc.week,
