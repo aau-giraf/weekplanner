@@ -8,7 +8,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// <summary>
-/// The WeekplandScreen is used to display a week
+/// The WeekplanScreen is used to display a week
 /// and all the activities that occur in it.
 /// </summary>
 class WeekplanScreen extends StatelessWidget {
