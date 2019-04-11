@@ -1,9 +1,9 @@
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
-import 'package:weekplanner/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 
 /// Logic for activities
 class ActivityBloc extends BlocBase {

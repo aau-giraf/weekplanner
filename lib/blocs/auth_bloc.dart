@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/providers/api/api.dart';
+import 'package:api_client/api/api.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -20,8 +23,10 @@ class AuthBloc extends BlocBase {
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
-  void authenticate(String username, String password) {
+  void authenticate(String username, String password, BuildContext context) {
+    showLoadingSpinner(context, false);
     _api.account.login(username, password).take(1).listen((bool status) {
+      Routes.pop(context);
       _loggedIn.add(status);
       loggedInUsername = username;
     });

@@ -2,15 +2,15 @@ import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
-import 'package:weekplanner/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:test_api/test_api.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
-import 'package:weekplanner/providers/api/week_api.dart';
-import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/weekday_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/models/enums/weekday_enum.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/api/api.dart';
+import 'package:api_client/api/week_api.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/weekday_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
