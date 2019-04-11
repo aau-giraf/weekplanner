@@ -11,7 +11,6 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController passwordCtrl = TextEditingController();
 
   void loginAction(BuildContext context) {
-    // TODO(tricky12321): Giraf Notify Dialog Wrong username and password, https://github.com/aau-giraf/weekplanner/issues/104
     authBloc.authenticate(
         usernameCtrl.value.text, passwordCtrl.value.text, context);
   }

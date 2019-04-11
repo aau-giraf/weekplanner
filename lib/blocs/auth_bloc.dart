@@ -3,6 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// All about Authentication. Login, logout, etc.
@@ -22,14 +23,47 @@ class AuthBloc extends BlocBase {
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
+  bool loginStatus = false;
+  BuildContext buildContext;
+
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password, BuildContext context) {
-    showLoadingSpinner(context, false);
+    // Show the Loading Spinner, with a callback of 2 seconds.
+    showLoadingSpinner(context, false, showNotifyDialog, 2000);
+    // Call the API login function
     _api.account.login(username, password).take(1).listen((bool status) {
-      Routes.pop(context);
-      _loggedIn.add(status);
-      loggedInUsername = username;
+      // Set the status
+      loginStatus = status;
+      buildContext = context;
+      // If there is a successful login, remove the loading spinner,
+      // and push the status to the stream
+      if (status) {
+        Routes.pop(buildContext);
+        _loggedIn.add(status);
+        loggedInUsername = username;
+      }
     });
+  }
+
+  void showNotifyDialog() {
+    if (!loginStatus) {
+      // Remove the loading spinner
+      Routes.pop(buildContext);
+      // Show the new NotifyDialog
+      showDialog<Center>(
+          barrierDismissible: false,
+          context: buildContext,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl!',
+                description: 'Forkert brugernavn og/eller adgangskode',
+                key: Key('WrongUsernameOrPassword'));
+          }).then((_) {
+        // When the user dismisses the NotifyDialog,
+        // add the status to the stream
+        _loggedIn.add(loginStatus);
+      });
+    }
   }
 
   /// Logs the currently logged in user out
