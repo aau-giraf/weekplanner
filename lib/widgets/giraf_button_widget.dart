@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// A button for the Giraf application.
+/// A button for the Giraf application. 
+/// The design of the button follows the design guide on the Giraf wiki: 
+/// https://aau-giraf.github.io/wiki/design_guide/buttons.html
 class GirafButton extends StatefulWidget {
   /// A button for the Giraf application.
   /// The button can contain some text and an icon both of which are optional.
@@ -16,7 +18,7 @@ class GirafButton extends StatefulWidget {
     this.icon,
     this.width = double.infinity,
     this.height = 50.0,
-    this.onPressed,
+    @required this.onPressed,
     this.isEnabled = true,
     this.isEnabledStream,
   }) : super(key: key);
@@ -58,32 +60,30 @@ class _GirafButtonState extends State<GirafButton> {
     _isEnabled = widget.isEnabled;
     _isPressed = false;
     if (widget.isEnabledStream != null) {
-      _isEnabledSubscription = widget.isEnabledStream.listen((bool value) =>
-          setState(() => {
-                _isEnabled = value ?? widget.isEnabled
-              })); // If a null value is emitted reset enabled state to default.
+      _isEnabledSubscription =
+          widget.isEnabledStream.listen(_handleIsEnabledStreamEvent);
     }
     super.initState();
   }
 
-  final Gradient _gradientDefault = const LinearGradient(colors: <Color>[
+  static const Gradient _gradientDefault = LinearGradient(colors: <Color>[
     Color.fromARGB(0xff, 0xff, 0xcd, 0x59),
     Color.fromARGB(0xff, 0xff, 0x9d, 0x00)
   ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
 
-  final Gradient _gradientPressed = const LinearGradient(colors: <Color>[
+  static const Gradient _gradientPressed = LinearGradient(colors: <Color>[
     Color.fromARGB(0xff, 0xd4, 0xad, 0x2f),
     Color.fromARGB(0xff, 0xff, 0x9d, 0x00)
   ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
 
-  final Gradient _gradientDisabled = const LinearGradient(colors: <Color>[
+  static const Gradient _gradientDisabled = LinearGradient(colors: <Color>[
     Color.fromARGB(0x46, 0xff, 0xcd, 0x59),
     Color.fromARGB(0x46, 0xff, 0x9d, 0x00)
   ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
 
-  final Color _borderDefault = const Color.fromARGB(0xff, 0x8a, 0x6e, 0x00);
-  final Color _borderPressed = const Color.fromARGB(0xff, 0x49, 0x37, 0x00);
-  final Color _borderDisabled = const Color.fromARGB(0xa6, 0x8a, 0x6e, 0x00);
+  static const Color _borderDefault = Color.fromARGB(0xff, 0x8a, 0x6e, 0x00);
+  static const Color _borderPressed = Color.fromARGB(0xff, 0x49, 0x37, 0x00);
+  static const Color _borderDisabled = Color.fromARGB(0xa6, 0x8a, 0x6e, 0x00);
 
   bool _isPressed;
   bool _isEnabled;
@@ -121,6 +121,18 @@ class _GirafButtonState extends State<GirafButton> {
     if (_isEnabled) {
       setState(() => {_isPressed = true});
       widgetOnPressed();
+    }
+  }
+
+  void _handleIsEnabledStreamEvent(bool value) {
+    // If a null value is emitted reset enabled state to default.
+    value ??= widget.isEnabled;
+
+    // Only update state if the new value is different from the previous.
+    if (value != _isEnabled) {
+      setState(() {
+        _isEnabled = value;
+      });
     }
   }
 
