@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,8 +9,11 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
@@ -18,10 +22,18 @@ class MockAuthBloc extends Mock implements AuthBloc {
 
   @override
   void authenticate(String username, String password, BuildContext context) {
-    if (username == 'test' && password == 'test') {
-      _loggedIn.add(true);
+    // Call the API login function
+    final bool status = username == 'test' && password == 'test';
+    // Set the status
+    loginStatus = status;
+    buildContext = context;
+    // If there is a successful login, remove the loading spinner,
+    // and push the status to the stream
+    if (status) {
+      _loggedIn.add(status);
+      loggedInUsername = username;
     } else {
-      _loggedIn.add(false);
+      showLoadingSpinner(buildContext, false, showNotifyDialog, 2000);
     }
   }
 }
@@ -141,19 +153,18 @@ void main() {
       'Logging in with wrong information should show a GirafNotifyDialog',
       (WidgetTester tester) async {
     environment.setContent(debugEnvironments);
-    final Completer<bool> done = Completer<bool>();
 
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
     await tester.enterText(
         find.byKey(const Key('UsernameKey')), 'SomeWrongUsername');
     await tester.enterText(
         find.byKey(const Key('PasswordKey')), 'SomeWrongPassword');
+    await tester.pump();
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump(const Duration(seconds: 5));
-    bloc.loggedIn.listen((bool success) async {
-      await tester.pump();
-      expect(success, equals(false));
-      await done.future;
-    });
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump();
+
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
 }

@@ -23,7 +23,11 @@ class AuthBloc extends BlocBase {
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
+  /// This is the current state of login, made available across methods
   bool loginStatus = false;
+
+  /// This is the BuildContext on which to show the
+  /// loadingSpinner and NotifyDialog
   BuildContext buildContext;
 
   /// Authenticates the user with the given [username] and [password]
@@ -45,6 +49,7 @@ class AuthBloc extends BlocBase {
     });
   }
 
+  /// This is the callback method of the loading spinner to show the dialog
   void showNotifyDialog() {
     if (!loginStatus) {
       // Remove the loading spinner
