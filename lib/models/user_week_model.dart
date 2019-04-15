@@ -11,6 +11,4 @@ class UserWeekModel {
 
   /// The citizen
   final UsernameModel user;
-
-
 }
