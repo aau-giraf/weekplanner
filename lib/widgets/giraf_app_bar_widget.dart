@@ -51,53 +51,63 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 );
               }),
-          IconButton(
-            icon: Image.asset('assets/icons/changeToCitizen.png'),
-            tooltip: 'Skift til borger tilstand',
-            onPressed: () {
-              Alert(
-                  context: context,
-                  style: _alertStyle,
-                  title: 'Skift til værge',
-                  content: Column(
-                    children: <Widget>[
-                      RichText(
-                        text: TextSpan(
-                          text: 'Logget ind som ',
-                          style: DefaultTextStyle.of(context).style,
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: _authBloc.loggedInUsername,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+          StreamBuilder<bool>(
+            stream: _authBloc.loginStatus,
+            initialData: false,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              return IconButton(
+                icon: Image.asset('assets/icons/changeToCitizen.png'),
+                tooltip: 'Skift til borger tilstand',
+                onPressed: () {
+                  Alert(
+                      context: context,
+                      style: _alertStyle,
+                      title: 'Skift til værge',
+                      content: Column(
+                        children: <Widget>[
+                          RichText(
+                            text: TextSpan(
+                              text: 'Logget ind som ',
+                              style: DefaultTextStyle.of(context).style,
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: _authBloc.loggedInUsername,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ),
+                          TextField(
+                            controller: passwordCtrl,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              icon: const Icon(Icons.lock),
+                              labelText: 'Adgangskode',
+                            ),
+                          ),
+                        ],
                       ),
-                      TextField(
-                        controller: passwordCtrl,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          icon: const Icon(Icons.lock),
-                          labelText: 'Adgangskode',
-                        ),
-                      ),
-                    ],
-                  ),
-                  buttons: <DialogButton>[
-                    DialogButton(
-                      onPressed: () {
-                        login(context, _authBloc.loggedInUsername,
-                            passwordCtrl.value.text);
-                        Routes.pop(context);
-                      },
-                      child: const Text(
-                        'Bekræft',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      color: const Color.fromRGBO(255, 157, 0, 100),
-                    )
-                  ]).show();
-            },
+                      buttons: <DialogButton>[
+                        DialogButton(
+                          onPressed: () {
+                            loginFromPopUp(context, _authBloc.loggedInUsername,
+                                passwordCtrl.value.text);
+
+                            if (snapshot.data){
+                              Routes.pop(context);
+                            }
+
+                          },
+                          child: const Text(
+                            'Bekræft',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          color: const Color.fromRGBO(255, 157, 0, 100),
+                        )
+                      ]).show();
+                },
+              );
+            }
           ),
           IconButton(
             icon: Image.asset('assets/icons/logout.png'),
@@ -163,7 +173,11 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     ),
   );
 
-  void login(BuildContext context, String username, String password) {
-    _authBloc.authenticate(username, password, context);
+  void loginFromPopUp(BuildContext context, String username, String password) {
+     _authBloc.authenticateFromPopUp(username, password, context);
   }
+
+
+
+
 }
