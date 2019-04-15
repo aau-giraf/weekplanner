@@ -26,7 +26,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    toolbarBloc.updateIcons(appBarIcons);
+    toolbarBloc.updateIcons(appBarIcons, context);
     return AppBar(
         title: Text(title),
         backgroundColor: const Color(0xAAFF6600),

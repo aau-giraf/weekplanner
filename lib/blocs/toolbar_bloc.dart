@@ -15,18 +15,19 @@ class ToolbarBloc extends BlocBase {
       BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
-  void updateIcons(List<AppBarIcon> icons) {
+  void updateIcons(List<AppBarIcon> icons, BuildContext context) {
   List<IconButton> _iconsToAdd = <IconButton>[];
     for (AppBarIcon icon in icons) {
-      _iconsToAdd.add(_addIconButton(icon));
+      _iconsToAdd.add(_addIconButton(icon, context));
         //IconButton(
           // icon: Image.asset('assets/icons/settings.png'), onPressed: () {}));
     }
     _visibleButtons.add(_iconsToAdd);
   }
   /// Find the icon picture based on the input string
-  IconButton _addIconButton(AppBarIcon icon) {
+  IconButton _addIconButton(AppBarIcon icon, BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         
