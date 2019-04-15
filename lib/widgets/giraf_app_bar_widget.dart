@@ -51,11 +51,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 );
               }),
-          StreamBuilder<bool>(
-            stream: _authBloc.loginStatus,
-            initialData: false,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return IconButton(
+          IconButton(
                 icon: Image.asset('assets/icons/changeToCitizen.png'),
                 tooltip: 'Skift til borger tilstand',
                 onPressed: () {
@@ -93,10 +89,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                             loginFromPopUp(context, _authBloc.loggedInUsername,
                                 passwordCtrl.value.text);
 
-                            if (snapshot.data){
-                              Routes.pop(context);
-                            }
-
                           },
                           child: const Text(
                             'Bekræft',
@@ -106,9 +98,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                         )
                       ]).show();
                 },
-              );
-            }
-          ),
+              ),
           IconButton(
             icon: Image.asset('assets/icons/logout.png'),
             tooltip: 'Log ud',
@@ -173,11 +163,8 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     ),
   );
 
+
   void loginFromPopUp(BuildContext context, String username, String password) {
      _authBloc.authenticateFromPopUp(username, password, context);
   }
-
-
-
-
 }

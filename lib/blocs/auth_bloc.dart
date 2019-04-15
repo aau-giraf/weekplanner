@@ -22,13 +22,6 @@ class AuthBloc extends BlocBase {
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
-
-  Stream<bool> get loginStatus => _loginStatus.stream;
-
-  /// Start with providing false as the logged in status
-  final BehaviorSubject<bool> _loginStatus = BehaviorSubject<bool>.seeded(false);
-
-
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password, BuildContext context) {
     showLoadingSpinner(context, false);
@@ -43,15 +36,14 @@ class AuthBloc extends BlocBase {
   void authenticateFromPopUp(String username, String password,
                              BuildContext context) {
     showLoadingSpinner(context, false);
-    // bool loginStatus = false; Why doesn't this work
     _api.account.login(username, password).take(1).listen((bool status) {
+      //Pop loading screen
       Routes.pop(context);
-      if (status) {
-        _loggedIn.add(status);
-      }
 
-      _loginStatus.add(status);
-      loggedInUsername = username;
+      if (status){
+        //Pop the popup
+        Routes.pop(context);
+      }
     });
   }
 
