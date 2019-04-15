@@ -98,6 +98,7 @@ class WeekplanScreen extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: RaisedButton(
+                  key: Key('AddActivityButton'),
                   child: Image.asset('assets/icons/add.png'),
                   color: buttonColor,
                   onPressed: () async {

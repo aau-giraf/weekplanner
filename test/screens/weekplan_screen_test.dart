@@ -14,6 +14,7 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
@@ -101,5 +102,12 @@ void main() {
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsNWidgets(7));
+  });
+
+  testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home:WeekplanScreen(week: weekModel)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
   });
 }
