@@ -21,6 +21,14 @@ class ToolbarBloc extends BlocBase {
     _visibleButtons.add(_iconsToAdd);
   }
 
+  void _addSettings() {
+
+  }
+
+  void _addSwitchToGuardian() {
+    
+  }
+
   @override
   void dispose() {
     _visibleButtons.close();

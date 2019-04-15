@@ -31,15 +31,13 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: const Color(0xAAFF6600),
         actions: <Widget>[
           StreamBuilder<List<IconButton>>(
+              initialData: <IconButton>[],
               key: const Key('streambuilderVisibility'),
               stream: toolbarBloc.visibleButtons,
               builder: (BuildContext context, 
                 AsyncSnapshot<List<IconButton>> snapshot) {
-                  // TODO vi skal iterere igennem snapshottet eller vise de IconButtons vi får retur
-                return IconButton(
-                  key: const Key('visibilityBtns'),
-                  icon: snapshot.data[0].icon,
-                  onPressed: snapshot.data[0].onPressed,
+                return Row(
+                  children: snapshot.data
                 );
               }),
         ]);
