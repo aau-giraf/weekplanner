@@ -72,23 +72,31 @@ void main() {
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
+    await tester.pumpWidget(
+        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
+    await tester.pumpWidget(
+        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
   });
 
   testWidgets('Has all days of the week', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week: weekModel)));
+    await tester.pumpWidget(
+        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
     await tester.pump();
 
     const List<String> days = <String>[
-      'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag',
-      'Fredag', 'Lørdag', 'Søndag'
+      'Mandag',
+      'Tirsdag',
+      'Onsdag',
+      'Torsdag',
+      'Fredag',
+      'Lørdag',
+      'Søndag'
     ];
 
     for (String day in days) {
@@ -97,14 +105,16 @@ void main() {
   });
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home:WeekplanScreen(week:weekModel)));
+    await tester.pumpWidget(
+        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsNWidgets(7));
   });
 
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home:WeekplanScreen(week: weekModel)));
+    await tester.pumpWidget(
+        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
     await tester.pump();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
