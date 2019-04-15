@@ -98,11 +98,11 @@ class WeekplanScreen extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: RaisedButton(
-                  key: Key('AddActivityButton'),
+                  key: const Key('AddActivityButton'),
                   child: Image.asset('assets/icons/add.png'),
                   color: buttonColor,
                   onPressed: () async {
-                    PictogramModel newActivity =
+                    final PictogramModel newActivity =
                         await Routes.push(context, PictogramSearch());
                     if (newActivity != null) {
                       weekplanBloc.addActivity(

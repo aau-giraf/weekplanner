@@ -27,8 +27,8 @@ class WeekplanBloc extends BlocBase {
 
   /// Adds an activity to the given day.
   void addActivity(ActivityModel activity, int day) {
-    WeekModel week = _userWeek.value.week;
-    UsernameModel user = _userWeek.value.user;
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
 
     week.days[day].activities.add(activity);
     _api.week
