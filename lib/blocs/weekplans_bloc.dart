@@ -1,11 +1,11 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/models/week_name_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
 
-  /// WeekplansBloc to get weekplans for a user
+/// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
   /// This bloc obtains a list of all [WeekModel]'s
   /// for a given [UsernameModel].
@@ -22,7 +22,7 @@ class WeekplansBloc extends BlocBase {
 
   final BehaviorSubject<List<WeekModel>> _weekModel =
       BehaviorSubject<List<WeekModel>>();
-      
+
   final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
       BehaviorSubject<List<WeekNameModel>>();
 
@@ -42,7 +42,8 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
+    _api.week.getNames(_user.id).listen(_weekNameModelsList.add,
+        onError: (Object exception) => getAllWeekInfo(null));
   }
 
   /// Gets all the information for a [Weekmodel].
@@ -50,15 +51,15 @@ class WeekplansBloc extends BlocBase {
   /// needed for getting all [WeekModel]'s.
   /// The result are published in [_weekModel].
   void getAllWeekInfo(List<WeekNameModel> weekNameModels) {
-    if (weekNameModels == null) {
-      print(weekNameModels);
-      return;
-    }
     final List<WeekModel> weekModels = <WeekModel>[];
-    
-    /// This is used by weekplan_selector_screen for adding a new weekplan.
+
+    // This is used by weekplan_selector_screen for adding a new weekplan.
     if (_addWeekplan) {
-      weekModels.add(WeekModel(name: 'Tilføj Ugeplan'));
+      weekModels.add(WeekModel(name: 'Tilføj ugeplan'));
+      _weekModel.add(weekModels);
+    }
+    if (weekNameModels == null) {
+      return;
     }
 
     for (WeekNameModel weekNameModel in weekNameModels) {

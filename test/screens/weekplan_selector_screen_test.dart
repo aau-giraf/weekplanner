@@ -1,3 +1,7 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -7,13 +11,8 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/models/week_name_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-
 import '../blocs/weekplans_bloc_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
@@ -90,7 +89,7 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pump(Duration.zero);
 
-    expect(find.text('Tilføj Ugeplan'), findsNWidgets(1));
+    expect(find.text('Tilføj ugeplan'), findsNWidgets(1));
     expect(find.text('weekModel'), findsNWidgets(2));
   });
 }

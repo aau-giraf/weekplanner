@@ -52,8 +52,8 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                 );
               }),
           IconButton(
-            icon: Image.asset('assets/icons/changeToGuardian.png'),
-            tooltip: 'Skift til værge tilstand',
+            icon: Image.asset('assets/icons/changeToCitizen.png'),
+            tooltip: 'Skift til borger tilstand',
             onPressed: () {
               Alert(
                   context: context,
@@ -128,7 +128,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     onPressed: () {
                       _authBloc.logout();
-                      Navigator.pop(context);
                     },
                     color: const Color.fromRGBO(255, 157, 0, 100),
                     width: 120,
@@ -165,6 +164,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   );
 
   void login(BuildContext context, String username, String password) {
-    _authBloc.authenticate(username, password);
+    _authBloc.authenticate(username, password, context);
   }
 }

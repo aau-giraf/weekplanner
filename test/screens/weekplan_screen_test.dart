@@ -1,3 +1,9 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -8,16 +14,9 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/enums/weekday_enum.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/models/weekday_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
-
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
@@ -59,7 +58,7 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     api.week = weekApi;
-    bloc = WeekplanBloc();
+    bloc = WeekplanBloc(api);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));

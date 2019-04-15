@@ -1,11 +1,10 @@
-import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
+import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/user_week_model.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
 
 /// Bloc that streams the currently chosen weekplan
 class WeekplanBloc extends BlocBase {
@@ -36,16 +35,6 @@ class WeekplanBloc extends BlocBase {
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
-
-    /*    .me()
-        .take(1)
-        .switchMap((GirafUserModel user) {
-          return _api.week
-              .update(user.id, week.weekYear, week.weekNumber, week);
-        })
-        .listen((WeekModel newWeek) {
-          _week.add(newWeek);
-        });*/
   }
 
   @override
