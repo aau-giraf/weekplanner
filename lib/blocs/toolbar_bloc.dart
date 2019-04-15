@@ -5,6 +5,8 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/settings_screen.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
@@ -45,9 +47,56 @@ class ToolbarBloc extends BlocBase {
       case AppBarIcon.cancel:
         break;
       case AppBarIcon.changeToCitizen:
-        break;
+        
       case AppBarIcon.changeToGuardian:
-        break;
+        return IconButton(
+            icon: Image.asset('assets/icons/changeToGuardian.png'),
+            tooltip: 'Skift til værge tilstand',
+            onPressed: () {
+              Alert(
+                  context: context,
+                  style: _alertStyle,
+                  title: 'Skift til værge',
+                  content: Column(
+                    children: <Widget>[
+                      RichText(
+                        text: TextSpan(
+                          text: 'Logget ind som ',
+                          style: DefaultTextStyle.of(context).style,
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: _authBloc.loggedInUsername,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                      TextField(
+                        controller: passwordCtrl,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.lock),
+                          labelText: 'Adgangskode',
+                        ),
+                      ),
+                    ],
+                  ),
+                  buttons: <DialogButton>[
+                    DialogButton(
+                      onPressed: () {
+                        login(context, _authBloc.loggedInUsername,
+                            passwordCtrl.value.text);
+                        Routes.pop(context);
+                      },
+                      child: const Text(
+                        'Bekræft',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      color: const Color.fromRGBO(255, 157, 0, 100),
+                    )
+                  ]).show();
+            },
+          );
       case AppBarIcon.copy:
         break;
       case AppBarIcon.delete:
@@ -105,7 +154,13 @@ class ToolbarBloc extends BlocBase {
       case AppBarIcon.search:
         break;
       case AppBarIcon.settings:
-        break;
+        return IconButton(
+            icon: Image.asset('assets/icons/settings.png'),
+            tooltip: 'Indstillinger',
+            onPressed: () {
+              Routes.push(context, SettingsScreen());
+            },
+          );
       case AppBarIcon.undo:
         break;
       default:
@@ -115,9 +170,8 @@ class ToolbarBloc extends BlocBase {
     
   }
 
-  void _addSwitchToGuardian() {
-    
-  }
+  final TextEditingController passwordCtrl = TextEditingController();
+
   final AlertStyle _alertStyle = AlertStyle(
     animationType: AnimationType.grow,
     isCloseButton: true,
@@ -134,6 +188,10 @@ class ToolbarBloc extends BlocBase {
       color: Colors.black,
     ),
   );
+
+  void login(BuildContext context, String username, String password) {
+    _authBloc.authenticate(username, password);
+  }
 
   @override
   void dispose() {
