@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,17 +8,25 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
-import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
   Stream<bool> get loggedIn => _loggedIn.stream;
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
+  /// This is the BuildContext on which to show the
+  /// loadingSpinner and NotifyDialog
+  /// This is the current state of login, made available across methods
+  @override
+  bool loginStatus = false;
+
+  /// This is the BuildContext on which to show the
+  /// loadingSpinner and NotifyDialog
+  @override
+  BuildContext buildContext;
   @override
   void authenticate(String username, String password, BuildContext context) {
     // Call the API login function
@@ -33,7 +40,27 @@ class MockAuthBloc extends Mock implements AuthBloc {
       _loggedIn.add(status);
       loggedInUsername = username;
     } else {
-      showLoadingSpinner(buildContext, false, showNotifyDialog, 2000);
+      showNotifyDialog();
+    }
+  }
+
+  @override
+  void showNotifyDialog() {
+    if (!loginStatus) {
+      // Show the new NotifyDialog
+      showDialog<Center>(
+          barrierDismissible: false,
+          context: buildContext,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl!',
+                description: 'Forkert brugernavn og/eller adgangskode',
+                key: Key('WrongUsernameOrPassword'));
+          }).then((_) {
+        // When the user dismisses the NotifyDialog,
+        // add the status to the stream
+        _loggedIn.add(loginStatus);
+      });
     }
   }
 }
@@ -89,20 +116,6 @@ void main() {
     expect(find.byType(LoginScreen), findsOneWidget);
   });
 
-  testWidgets('Auto-Login fills Username', (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
-    await tester.tap(find.byKey(const Key('AutoLoginKey')));
-    expect(find.text('Graatand'), findsOneWidget);
-  });
-
-  testWidgets('Auto-Login fills Password', (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
-    await tester.tap(find.byKey(const Key('AutoLoginKey')));
-    expect(find.text('password'), findsOneWidget);
-  });
-
   testWidgets('Auto-Login does not fill username if not pressed',
       (WidgetTester tester) async {
     environment.setContent(debugEnvironments);
@@ -115,6 +128,22 @@ void main() {
     environment.setContent(debugEnvironments);
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
     expect(find.text('password'), findsNothing);
+  });
+
+  testWidgets('Auto-Login fills Username', (WidgetTester tester) async {
+    environment.setContent(debugEnvironments);
+    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.tap(find.byKey(const Key('AutoLoginKey')));
+    await tester.pump();
+    expect(find.text('Graatand'), findsOneWidget);
+  });
+
+  testWidgets('Auto-Login fills Password', (WidgetTester tester) async {
+    environment.setContent(debugEnvironments);
+    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.tap(find.byKey(const Key('AutoLoginKey')));
+    await tester.pump();
+    expect(find.text('password'), findsOneWidget);
   });
 
   testWidgets('Logging in works (PROD)', (WidgetTester tester) async {
@@ -152,19 +181,18 @@ void main() {
   testWidgets(
       'Logging in with wrong information should show a GirafNotifyDialog',
       (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
+    environment.setContent(prodEnvironments);
 
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.pump();
     await tester.enterText(
         find.byKey(const Key('UsernameKey')), 'SomeWrongUsername');
     await tester.enterText(
         find.byKey(const Key('PasswordKey')), 'SomeWrongPassword');
     await tester.pump();
+
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
     await tester.pump();
-    await tester.pump(const Duration(seconds: 3));
-    await tester.pump();
-
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
 }
