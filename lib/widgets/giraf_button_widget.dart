@@ -127,7 +127,7 @@ class _GirafButtonState extends State<GirafButton> {
       widget.onPressed();
       // On a quick tap the pressed state is not shown, because the state
       // changes too fast, hence we introduce a delay.
-      Future<void>.delayed(Duration(milliseconds: 100),
+      Future<void>.delayed(const Duration(milliseconds: 100),
           () => setState(() => _isPressed = false));
     }
   }
