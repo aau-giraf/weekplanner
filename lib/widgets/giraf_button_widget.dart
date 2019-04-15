@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// A button for the Giraf application. 
-/// The design of the button follows the design guide on the Giraf wiki: 
+/// A button for the Giraf application.
+/// The design of the button follows the design guide on the Giraf wiki:
 /// https://aau-giraf.github.io/wiki/design_guide/buttons.html
 class GirafButton extends StatefulWidget {
   /// A button for the Giraf application.
@@ -16,8 +16,8 @@ class GirafButton extends StatefulWidget {
     Key key,
     this.text,
     this.icon,
-    this.width = double.infinity,
-    this.height = 50.0,
+    this.width,
+    this.height = 40,
     @required this.onPressed,
     this.isEnabled = true,
     this.isEnabledStream,
@@ -27,7 +27,7 @@ class GirafButton extends StatefulWidget {
   final String text;
 
   /// The icon placed next to the text on the button.
-  final IconData icon;
+  final Widget icon;
 
   /// The width of the button.
   final double width;
@@ -66,24 +66,24 @@ class _GirafButtonState extends State<GirafButton> {
     super.initState();
   }
 
-  static const Gradient _gradientDefault = LinearGradient(colors: <Color>[
-    Color.fromARGB(0xff, 0xff, 0xcd, 0x59),
-    Color.fromARGB(0xff, 0xff, 0x9d, 0x00)
-  ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
+  static const Gradient _gradientDefault = LinearGradient(
+      colors: <Color>[Color(0xFFFFCD59), Color(0xFFFF9D00)],
+      begin: Alignment(0.0, -1.0),
+      end: Alignment(0.0, 1.0));
 
-  static const Gradient _gradientPressed = LinearGradient(colors: <Color>[
-    Color.fromARGB(0xff, 0xd4, 0xad, 0x2f),
-    Color.fromARGB(0xff, 0xff, 0x9d, 0x00)
-  ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
+  static const Gradient _gradientPressed = LinearGradient(
+      colors: <Color>[Color(0xFFD4AD2F), Color(0xFFFF9D00)],
+      begin: Alignment(0.0, -1.0),
+      end: Alignment(0.0, 1.0));
 
-  static const Gradient _gradientDisabled = LinearGradient(colors: <Color>[
-    Color.fromARGB(0x46, 0xff, 0xcd, 0x59),
-    Color.fromARGB(0x46, 0xff, 0x9d, 0x00)
-  ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
+  static const Gradient _gradientDisabled = LinearGradient(
+      colors: <Color>[Color(0x46FFCD59), Color(0xA6FF9D00)],
+      begin: Alignment(0.0, -1.0),
+      end: Alignment(0.0, 1.0));
 
-  static const Color _borderDefault = Color.fromARGB(0xff, 0x8a, 0x6e, 0x00);
-  static const Color _borderPressed = Color.fromARGB(0xff, 0x49, 0x37, 0x00);
-  static const Color _borderDisabled = Color.fromARGB(0xa6, 0x8a, 0x6e, 0x00);
+  static const Color _borderDefault = Color(0xFF8A6E00);
+  static const Color _borderPressed = Color(0xFF493700);
+  static const Color _borderDisabled = Color(0xA68A6E00);
 
   bool _isPressed;
   bool _isEnabled;
@@ -91,36 +91,50 @@ class _GirafButtonState extends State<GirafButton> {
 
   @override
   Widget build(BuildContext context) {
-    final Widget result = Container(
-      width: widget.width,
-      height: widget.height,
-      decoration: BoxDecoration(
-        gradient: _isEnabled
-            ? (_isPressed ? _gradientPressed : _gradientDefault)
-            : _gradientDisabled,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-            color: _isEnabled
-                ? (_isPressed ? _borderPressed : _borderDefault)
-                : _borderDisabled,
-            width: 2),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: _isEnabled
-            ? InkWell(
-                onTap: () => _onTapped(widget.onPressed),
-                child: _widgetsOnButton())
-            : _widgetsOnButton(),
+    return GestureDetector(
+      onTapDown: _onTapDown,
+      onTapUp: _onTapUp,
+      onTapCancel: _onTapCancel,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          gradient: _isEnabled
+              ? (_isPressed ? _gradientPressed : _gradientDefault)
+              : _gradientDisabled,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: _isEnabled
+                  ? (_isPressed ? _borderPressed : _borderDefault)
+                  : _borderDisabled,
+              width: 1.2),
+        ),
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: _buildWidgetsOnButton()),
       ),
     );
-    return result;
   }
 
-  void _onTapped(VoidCallback widgetOnPressed) {
+  void _onTapDown(TapDownDetails details) {
     if (_isEnabled) {
-      setState(() => {_isPressed = true});
-      widgetOnPressed();
+      setState(() => _isPressed = true);
+    }
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    if (_isEnabled) {
+      widget.onPressed();
+      // On a quick tap the pressed state is not shown, because the state
+      // changes too fast, hence we introduce a delay.
+      Future<void>.delayed(Duration(milliseconds: 100),
+          () => setState(() => _isPressed = false));
+    }
+  }
+
+  void _onTapCancel() {
+    if (_isEnabled) {
+      setState(() => _isPressed = false);
     }
   }
 
@@ -136,18 +150,16 @@ class _GirafButtonState extends State<GirafButton> {
     }
   }
 
-  Widget _widgetsOnButton() {
-    const TextStyle textStyle = TextStyle(
-      color: Colors.black,
-    );
+  Widget _buildWidgetsOnButton() {
+    const TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 20);
 
     if (widget.text != null && widget.icon != null)
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(widget.icon),
+          widget.icon,
           const SizedBox(
-            width: 10,
+            width: 5,
           ),
           Text(
             widget.text,
@@ -163,7 +175,7 @@ class _GirafButtonState extends State<GirafButton> {
       ));
     else if (widget.icon != null) {
       return Center(
-        child: Icon(widget.icon),
+        child: widget.icon,
       );
     }
 
