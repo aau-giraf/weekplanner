@@ -1,3 +1,4 @@
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/username_model.dart';
@@ -8,7 +9,15 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 /// Logic for activities
 class ActivityBloc extends BlocBase {
   /// Default Constructor.
+  /// Initilizes values
   ActivityBloc(this._api);
+
+  /// Stream for updated weekmodel.
+  Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
+
+  /// BehaivorSubject for the updated weekmodel.
+  final BehaviorSubject<ActivityModel> _activityModelStream =
+      BehaviorSubject<ActivityModel>();
 
   final Api _api;
   ActivityModel _activityModel;
@@ -21,6 +30,7 @@ class ActivityBloc extends BlocBase {
     _activityModel = activityModel;
     _weekModel = weekModel;
     _user = user;
+    _activityModelStream.add(activityModel);
   }
 
   /// Mark the selected activity as complete. Toggle function, if activity is
@@ -47,10 +57,14 @@ class ActivityBloc extends BlocBase {
         .update(
             _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
         .listen((WeekModel weekModel) {
+          // A better endpoint would be needed to add the result from the API.
+      _activityModelStream.add(_activityModel);
       _weekModel = weekModel;
     });
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    _activityModelStream.close();
+  }
 }

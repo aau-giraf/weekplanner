@@ -9,7 +9,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Screen to show information about an activity, and change the state of it.
-class ShowActivityScreen extends StatefulWidget {
+class ShowActivityScreen extends StatelessWidget {
   /// Constructor
   ShowActivityScreen(this._weekModel, this._activity, this._girafUser,
       {Key key})
@@ -26,14 +26,7 @@ class ShowActivityScreen extends StatefulWidget {
       di.getDependency<PictogramImageBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
-  @override
-  State<StatefulWidget> createState() {
-    return _ShowActivityScreen();
-  }
-}
-
-class _ShowActivityScreen extends State<ShowActivityScreen> {
-  // Text style used for title.
+  /// Text style used for title.
   final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
 
   @override
@@ -43,8 +36,8 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     return buildScreenFromOrientation(orientation);
   }
 
-  // Build the activity and timer screens in a row or column
-  // depending on the orientation of the device.
+  /// Build the activity and timer screens in a row or column
+  /// depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(Orientation orientation) {
     Widget childContainer;
 
@@ -66,14 +59,14 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
         body: childContainer);
   }
 
-  // Builds the activity and timer cards.
+  /// Builds the activity and timer cards.
   List<Widget> buildScreen() {
     return <Widget>[
       Expanded(
         flex: 6,
         child: Center(
           child: AspectRatio(
-            aspectRatio: 10.0 / 10.0,
+            aspectRatio: 1,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Card(
@@ -89,7 +82,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
         flex: 4,
         child: Center(
           child: AspectRatio(
-            aspectRatio: 10.0 / 10.0,
+            aspectRatio: 1,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Card(
@@ -104,7 +97,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     ];
   }
 
-  // Builds the timer widget.
+  /// Builds the timer widget.
   List<Widget> buildTimer() {
     return <Widget>[
       Center(
@@ -138,7 +131,7 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
     ];
   }
 
-  // Builds the activity widget.
+  /// Builds the activity widget.
   List<Widget> buildActivity() {
     return <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
@@ -149,68 +142,75 @@ class _ShowActivityScreen extends State<ShowActivityScreen> {
                     border: Border.all(
                         color: const Color.fromRGBO(35, 35, 35, 1.0),
                         width: 0.25)),
-                child: Stack(
-                  children: <Widget>[
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: buildLoadPictogramImage()),
-                    widget._activity.state == ActivityState.Completed
-                        ? Icon(
-                            Icons.check,
-                            key: const Key('IconComplete'),
-                            color: Colors.green,
-                            size: MediaQuery.of(context).size.width,
-                          )
-                        : Container()
-                  ],
-                ))),
+                child: StreamBuilder<ActivityModel>(
+                    stream: _activityBloc.activityModelStream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<ActivityModel> snapshot) {
+                      if (snapshot.data == null) {
+                        return const CircularProgressIndicator();
+                      }
+                      return Stack(
+                        children: <Widget>[
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: buildLoadPictogramImage()),
+                          snapshot.data.state == ActivityState.Completed
+                              ? Icon(
+                                  Icons.check,
+                                  key: const Key('IconComplete'),
+                                  color: Colors.green,
+                                  size: MediaQuery.of(context).size.width,
+                                )
+                              : Container()
+                        ],
+                      );
+                    }))),
       ),
       buildButtonBar()
     ];
   }
 
-  // Builds the buttons below the activity widget.
+  /// Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
     return ButtonBar(
       // Key used for testing widget.
       key: const Key('ButtonBarRender'),
       alignment: MainAxisAlignment.center,
       children: <Widget>[
-        OutlineButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            onPressed: () {
-              widget._activityBloc.completeActivity();
-              setState(() {});
-            },
-            child: widget._activity.state != ActivityState.Completed
-                ? const Icon(Icons.check, color: Colors.green)
-                : const Icon(
-                    Icons.undo,
-                    color: Colors.blue,
-                  )),
-        /*OutlineButton( // The cancel button is prepared under, a check should just be made to check if the user is a guardian
-          shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          onPressed: () => _activityBloc.cancelActivity(),
-          child: const Icon(
-            Icons.cancel,
-            color: Colors.red,
-          )
-        )*/
+        StreamBuilder<ActivityModel>(
+            stream: _activityBloc.activityModelStream,
+            builder:
+                (BuildContext context, AsyncSnapshot<ActivityModel> snapshot) {
+              if (snapshot.data == null) {
+                return const CircularProgressIndicator();
+              }
+              return OutlineButton(
+                  key: const Key('CompleteStateToggleButton'),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  onPressed: () {
+                    _activityBloc.completeActivity();
+                  },
+                  child: snapshot.data.state != ActivityState.Completed
+                      ? const Icon(Icons.check, color: Colors.green)
+                      : const Icon(
+                          Icons.undo,
+                          color: Colors.blue,
+                        ));
+            }),
       ],
     );
   }
 
-  // Creates a pictogram image from the streambuilder
+  /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
-        stream: widget._pictoImageBloc.image,
+        stream: _pictoImageBloc.image,
         builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
           return FittedBox(
               child: snapshot.data,
               // Key is used for testing the widget.
-              key: Key(widget._activity.id.toString()));
+              key: Key(_activity.id.toString()));
         });
   }
 }

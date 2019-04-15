@@ -14,29 +14,41 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
-void main(){
+void main() {
   ActivityBloc bloc;
   Api api;
   MockWeekApi weekApi;
 
-  final UsernameModel user = UsernameModel(id: '50', name: null, role: null);
+  final UsernameModel mockUser =
+      UsernameModel(id: '50', name: null, role: null);
 
-  final ActivityModel activity = ActivityModel(id: 1, pictogram: null, order: 1,
-      state: ActivityState.Normal, isChoiceBoard: false);
+  final ActivityModel mockActivity = ActivityModel(
+      id: 1,
+      pictogram: null,
+      order: 1,
+      state: ActivityState.Normal,
+      isChoiceBoard: false);
 
-  final List<ActivityModel> activityList = <ActivityModel>[activity];
+  final List<ActivityModel> mockActivityList = <ActivityModel>[mockActivity];
 
-  final WeekdayModel weekdaymodel =
-    WeekdayModel(day: Weekday.Monday, activities: activityList);
+  final WeekdayModel mockWeekdaymodel =
+      WeekdayModel(day: Weekday.Monday, activities: mockActivityList);
 
-  final List<WeekdayModel> weekdaymodelList = <WeekdayModel>[weekdaymodel];
+  final List<WeekdayModel> mockWeekdaymodelList = <WeekdayModel>[
+    mockWeekdaymodel
+  ];
 
-  final WeekModel weekModel = WeekModel(thumbnail: null, name: 'testweek',
-      days: weekdaymodelList, weekNumber: 1, weekYear: 2010);
+  final WeekModel mockWeekModel = WeekModel(
+      thumbnail: null,
+      name: 'testweek',
+      days: mockWeekdaymodelList,
+      weekNumber: 1,
+      weekYear: 2010);
 
   void setupApiCalls() {
-    when(weekApi.update(user.id, 2010, 1, weekModel)).thenAnswer(
-            (_) => BehaviorSubject<WeekModel>.seeded(weekModel));
+    when(weekApi.update(mockUser.id, mockWeekModel.weekYear,
+            mockWeekModel.weekNumber, mockWeekModel))
+        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeekModel));
   }
 
   setUp(() {
@@ -48,24 +60,23 @@ void main(){
     setupApiCalls();
   });
 
-  test('Should set activity to completed', async((DoneFn done){
-    final ActivityModel localActivity = activity;
+  test('Should set activity to completed', async((DoneFn done) {
+    final ActivityModel localActivity = mockActivity;
 
-    bloc.load(weekModel, localActivity, user);
+    bloc.load(mockWeekModel, localActivity, mockUser);
     bloc.completeActivity();
 
     expect(localActivity.state, equals(ActivityState.Completed));
     done();
   }));
 
-  test('Should set activity to cancelled', async((DoneFn done){
-    final ActivityModel localActivity = activity;
+  test('Should set activity to cancelled', async((DoneFn done) {
+    final ActivityModel localActivity = mockActivity;
 
-    bloc.load(weekModel, localActivity, user);
+    bloc.load(mockWeekModel, localActivity, mockUser);
     bloc.cancelActivity();
 
     expect(localActivity.state, equals(ActivityState.Canceled));
     done();
   }));
 }
-

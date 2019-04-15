@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -20,13 +21,11 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 import '../blocs/activity_bloc_test.dart';
 
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
 void main() {
   ActivityBloc bloc;
   Api api;
   MockWeekApi weekApi;
-  final List<ActivityModel> activities = <ActivityModel>[
+  final List<ActivityModel> mockActivities = <ActivityModel>[
     ActivityModel(
         id: 1381,
         state: ActivityState.Normal,
@@ -40,8 +39,8 @@ void main() {
             imageUrl: null,
             lastEdit: null))
   ];
-  final List<WeekdayModel> weekdayModels = <WeekdayModel>[
-    WeekdayModel(activities: activities, day: Weekday.Monday)
+  final List<WeekdayModel> mockWeekdayModels = <WeekdayModel>[
+    WeekdayModel(activities: mockActivities, day: Weekday.Monday)
   ];
   final WeekModel mockWeek = WeekModel(
       weekYear: 2018,
@@ -54,12 +53,16 @@ void main() {
           imageHash: null,
           imageUrl: null,
           lastEdit: null),
-      days: weekdayModels);
+      days: mockWeekdayModels);
   final ActivityModel mockActivity = mockWeek.days[0].activities[0];
   final UsernameModel mockUser =
       UsernameModel(id: '42', name: null, role: null);
 
-  void setupApiCalls() {}
+  void setupApiCalls() {
+    when(weekApi.update(
+            mockUser.id, mockWeek.weekYear, mockWeek.weekNumber, mockWeek))
+        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
+  }
 
   setUp(() {
     api = Api('any');
@@ -88,12 +91,12 @@ void main() {
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
-  testWidgets('Activity and timer card is rendered',
+  testWidgets('Activity pictogram and timer card is rendered',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pump(Duration.zero);
 
-    expect(find.text('Aktivitet'), findsOneWidget);
     expect(find.text('Timer'), findsOneWidget);
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
   });
@@ -109,6 +112,7 @@ void main() {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pump(Duration.zero);
 
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
@@ -118,7 +122,34 @@ void main() {
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pump(Duration.zero);
 
+    expect(find.byKey(const Key('IconComplete')), findsNothing);
+  });
+
+  testWidgets('Activity is set to completed and an acitivty mark is shown',
+      (WidgetTester tester) async {
+    mockActivity.state = ActivityState.Normal;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+
+    await tester.pump(Duration.zero);
+    await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
+
+    await tester.pump(Duration.zero);
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
+
+  testWidgets('Activity is set to normal and an acitivty mark is not shown',
+      (WidgetTester tester) async {
+    mockActivity.state = ActivityState.Completed;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+
+    await tester.pump(Duration.zero);
+    await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
+
+    await tester.pump(Duration.zero);
     expect(find.byKey(const Key('IconComplete')), findsNothing);
   });
 }
