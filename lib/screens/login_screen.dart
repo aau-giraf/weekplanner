@@ -201,6 +201,7 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  /// Returns the giraf logo
   Widget getLogo(bool keyboard, bool portrait) {
     if (keyboard && !portrait) {
       return Container();
