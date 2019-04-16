@@ -1,6 +1,6 @@
-import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:weekplanner/models/week_model.dart';
+import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// Bloc that streams the currently chosen weekplan
 class WeekplanBloc extends BlocBase {

@@ -1,6 +1,6 @@
+import 'package:api_client/api/api.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/providers/api/api.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
