@@ -23,7 +23,6 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameCtrl = TextEditingController();
 
   /// This is the password control, that allows for password extraction
-
   final TextEditingController passwordCtrl = TextEditingController();
 
   /// Stores the context
