@@ -57,7 +57,7 @@ class LoginScreenState extends State<LoginScreen> {
           context: currentContext,
           builder: (BuildContext context) {
             return const GirafNotifyDialog(
-                title: 'Fejl!',
+                title: 'Fejl',
                 description: 'Forkert brugernavn og/eller adgangskode',
                 key: Key('WrongUsernameOrPassword'));
           });
