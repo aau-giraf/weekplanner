@@ -24,6 +24,8 @@ import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
 
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
 void main() {
   WeekplanBloc bloc;
   Api api;

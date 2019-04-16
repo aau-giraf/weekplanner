@@ -1,3 +1,4 @@
+import 'package:api_client/api/week_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -19,7 +20,7 @@ import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
-import '../blocs/activity_bloc_test.dart';
+class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
   ActivityBloc bloc;
