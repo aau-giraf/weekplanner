@@ -69,10 +69,9 @@ class MockAuthBloc extends Mock implements AuthBloc {
 
   @override
   void authenticate(String username, String password) {
-    // Call the API login function
+    // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');
-    // Set the status
     // If there is a successful login, remove the loading spinner,
     // and push the status to the stream
     if (status) {
