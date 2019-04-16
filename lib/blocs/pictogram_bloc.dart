@@ -21,9 +21,12 @@ class PictogramBloc extends BlocBase {
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
-
+  Stream<TimeoutException> get timeout => _timeoutxception.stream;
   final BehaviorSubject<List<PictogramModel>> _pictograms =
       BehaviorSubject<List<PictogramModel>>();
+
+  final BehaviorSubject<TimeoutException> _timeoutxception =
+      BehaviorSubject<TimeoutException>();
 
   final Api _api;
   Timer _timer;
@@ -38,24 +41,30 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-    if (query.isEmpty) {
-      return;
-    }
+    try {
+      if (query.isEmpty) {
+        return;
+      }
 
-    if (_timer != null) {
-      _timer.cancel();
-    }
+      if (_timer != null) {
+        _timer.cancel();
+      }
 
-    _pictograms.add(null);
+      _pictograms.add(null);
 
-    _timer = Timer(Duration(milliseconds: _milliseconds), () {
-      _api.pictogram
-          .getAll(page: 1, pageSize: 10, query: query)
-          .listen((List<PictogramModel> results) {
-        _pictograms.add(results);
+      _timer = Timer(Duration(milliseconds: _milliseconds), () {
+        _api.pictogram
+            .getAll(page: 1, pageSize: 10, query: query)
+            .listen((List<PictogramModel> results) {
+          _pictograms.add(results);
+        });
       });
-    });
+    }
+    on TimeoutException catch (e){
+      _timeoutxception.add(e);
+    }
   }
+
 
   @override
   void dispose() {
