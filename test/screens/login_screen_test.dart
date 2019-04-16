@@ -77,10 +77,8 @@ class MockAuthBloc extends Mock implements AuthBloc {
     // and push the status to the stream
     if (status) {
       loggedInUsername = username;
-      _loggedIn.add(status);
-    } else {
-      _loggedIn.add(status);
     }
+    _loggedIn.add(status);
   }
 }
 
