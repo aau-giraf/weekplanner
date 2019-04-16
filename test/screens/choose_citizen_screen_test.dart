@@ -14,7 +14,7 @@ import 'package:weekplanner/models/giraf_user_model.dart';
 import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/providers/api/user_api.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
-import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -56,7 +56,7 @@ void main() {
 
   testWidgets('Has GirafAppBarSimple', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
-    expect(find.byType(GirafAppBarSimple), findsOneWidget);
+    expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
