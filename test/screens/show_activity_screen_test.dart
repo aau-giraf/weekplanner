@@ -112,7 +112,7 @@ void main() {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
-    await tester.pump(Duration.zero);
+    await tester.pump();
 
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
@@ -122,7 +122,7 @@ void main() {
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
-    await tester.pump(Duration.zero);
+    await tester.pump();
 
     expect(find.byKey(const Key('IconComplete')), findsNothing);
   });
@@ -133,10 +133,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
 
-    await tester.pump(Duration.zero);
+    await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
 
-    await tester.pump(Duration.zero);
+    await tester.pump();
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
@@ -146,10 +146,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
 
-    await tester.pump(Duration.zero);
+    await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
 
-    await tester.pump(Duration.zero);
+    await tester.pump();
     expect(find.byKey(const Key('IconComplete')), findsNothing);
   });
 }
