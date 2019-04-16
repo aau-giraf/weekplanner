@@ -13,43 +13,166 @@ class ToolbarBloc extends BlocBase {
   /// The current visibility of the edit-button.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
-  final BehaviorSubject<List<IconButton>> _visibleButtons =
+  BehaviorSubject<List<IconButton>> _visibleButtons =
       BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
   void updateIcons(List<AppBarIcon> icons, BuildContext context) {
-  List<IconButton> _iconsToAdd = <IconButton>[];
-    for (AppBarIcon icon in icons) {
-      _iconsToAdd.add(_addIconButton(icon, context));
-        //IconButton(
-          // icon: Image.asset('assets/icons/settings.png'), onPressed: () {}));
+    List<IconButton> _iconsToAdd = <IconButton>[];
+    if(icons == null){
+      icons = List<AppBarIcon>();
+      icons.add(AppBarIcon.logout);
+      icons.add(AppBarIcon.settings);
     }
-    _visibleButtons.add(_iconsToAdd);
+    for (AppBarIcon icon in icons) {
+      _addIconButton(_iconsToAdd, icon, context);
+    }
+    final BehaviorSubject<List<IconButton>> test =
+      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+    test.add(_iconsToAdd);
+    _visibleButtons = test;
   }
-  /// Find the icon picture based on the input string
-  IconButton _addIconButton(AppBarIcon icon, BuildContext context) {
+
+  /// Find the icon picture based on the input enum
+  void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon, BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
-        
+        _iconsToAdd.add(_createIconAccept());
         break;
       case AppBarIcon.add:
+        _iconsToAdd.add(_createIconAdd());
         break;
       case AppBarIcon.addTimer:
+        _iconsToAdd.add(_createIconAddTimer());
         break;
       case AppBarIcon.back:
+        _iconsToAdd.add(_createIconBack());
         break;
       case AppBarIcon.burgerMenu:
+        _iconsToAdd.add(_createIconBurgermenu());
         break;
       case AppBarIcon.camera:
+        _iconsToAdd.add(_createIconCamera());
         break;
       case AppBarIcon.cancel:
+        _iconsToAdd.add(_createIconCancel());
         break;
       case AppBarIcon.changeToCitizen:
-        
+        _iconsToAdd.add(_createIconChangeToCitizen(context));
+        break;
       case AppBarIcon.changeToGuardian:
-        return IconButton(
+        _iconsToAdd.add(_createIconChangeToGuardian(context));
+        break;
+      case AppBarIcon.copy:
+        _iconsToAdd.add(_createIconCopy());
+        break;
+      case AppBarIcon.delete:
+        _iconsToAdd.add(_createIconDelete());
+        break;
+      case AppBarIcon.edit:
+        _iconsToAdd.add(_createIconEdit());
+        break;
+      case AppBarIcon.help:
+        _iconsToAdd.add(_createIconHelp());
+        break;
+      case AppBarIcon.home:
+        _iconsToAdd.add(_createIconHome());
+        break;
+      case AppBarIcon.logout:
+        _iconsToAdd.add(_createIconLogout(context));
+        break;
+      case AppBarIcon.profile:
+        _iconsToAdd.add(_createIconProfile());
+        break;
+      case AppBarIcon.redo:
+        _iconsToAdd.add(_createIconRedo());
+        break;
+      case AppBarIcon.save:
+        _iconsToAdd.add(_createIconSave());
+        break;
+      case AppBarIcon.search:
+        _iconsToAdd.add(_createIconSearch());
+        break;
+      case AppBarIcon.settings:
+        _iconsToAdd.add(_createIconSettings(context));
+        break;
+      case AppBarIcon.undo:
+        _iconsToAdd.add(_createIconUndo());
+        break;
+      default:
+        throw Exception("IconButton not implemented");
+        break;
+    }
+  }
+
+  IconButton _createIconAccept(){
+    return IconButton(
+            icon: Image.asset('assets/icons/accept.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconAdd(){
+    return IconButton(
+            icon: Image.asset('assets/icons/add.png'),
+            tooltip: 'Tilføj',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconAddTimer(){
+    return IconButton(
+            icon: Image.asset('assets/icons/addTimer.png'),
+            tooltip: 'Tilføj timer',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconBack(){
+    return IconButton(
+            icon: Image.asset('assets/icons/back.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconBurgermenu(){
+    return IconButton(
+            icon: Image.asset('assets/icons/burgermenu.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconCamera(){
+    return IconButton(
+            icon: Image.asset('assets/icons/camera.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconCancel(){
+    return IconButton(
+            icon: Image.asset('assets/icons/cancel.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconChangeToCitizen(BuildContext context){
+    return IconButton(
+            icon: Image.asset('assets/icons/changeToCitizen.png'),
+            tooltip: 'Skift til borger tilstand',
+            onPressed: () {},
+          );
+  }
+
+  IconButton _createIconChangeToGuardian(BuildContext context){
+    return IconButton(
             icon: Image.asset('assets/icons/changeToGuardian.png'),
             tooltip: 'Skift til værge tilstand',
             onPressed: () {
@@ -97,18 +220,50 @@ class ToolbarBloc extends BlocBase {
                   ]).show();
             },
           );
-      case AppBarIcon.copy:
-        break;
-      case AppBarIcon.delete:
-        break;
-      case AppBarIcon.edit:
-        break;
-      case AppBarIcon.help:
-        break;
-      case AppBarIcon.home:
-        break;
-      case AppBarIcon.logout:
-        return IconButton(
+  }
+
+  IconButton _createIconCopy(){
+    return IconButton(
+            icon: Image.asset('assets/icons/copy.png'),
+            tooltip: 'Kopier',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconDelete(){
+    return IconButton(
+            icon: Image.asset('assets/icons/delete.png'),
+            tooltip: 'Slet',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconEdit(){
+    return IconButton(
+            icon: Image.asset('assets/icons/edit.png'),
+            tooltip: 'Rediger',
+            onPressed: () {},
+    );
+  }
+  
+  IconButton _createIconHelp(){
+    return IconButton(
+            icon: Image.asset('assets/icons/help.png'),
+            tooltip: 'Hjælp',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconHome(){
+    return IconButton(
+            icon: Image.asset('assets/icons/home.png'),
+            tooltip: 'Gå til startside',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconLogout(BuildContext context){
+    return IconButton(
             icon: Image.asset('assets/icons/logout.png'),
             tooltip: 'Log ud',
             onPressed: () {
@@ -145,31 +300,59 @@ class ToolbarBloc extends BlocBase {
               ).show();
             },
           );
-      case AppBarIcon.profile:
-        break;
-      case AppBarIcon.redo:
-        break;
-      case AppBarIcon.save:
-        break;
-      case AppBarIcon.search:
-        break;
-      case AppBarIcon.settings:
-        return IconButton(
+  }
+
+    IconButton _createIconProfile(){
+    return IconButton(
+            icon: Image.asset('assets/icons/profile.png'),
+            tooltip: 'Vis profil',
+            onPressed: () {},
+    );
+  }
+  
+  IconButton _createIconRedo(){
+    return IconButton(
+            icon: Image.asset('assets/icons/redo.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconSave(){
+    return IconButton(
+            icon: Image.asset('assets/icons/save.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconSearch(){
+    return IconButton(
+            icon: Image.asset('assets/icons/search.png'),
+            tooltip: 'Accepter',
+            onPressed: () {},
+    );
+  }
+
+  IconButton _createIconSettings(BuildContext context){
+    return IconButton(
             icon: Image.asset('assets/icons/settings.png'),
             tooltip: 'Indstillinger',
             onPressed: () {
               Routes.push(context, SettingsScreen());
             },
           );
-      case AppBarIcon.undo:
-        break;
-      default:
-        throw Exception("IconButton not implemented");
-        return null;
-    }
-    
   }
 
+  IconButton _createIconUndo(){
+    return IconButton(
+            icon: Image.asset('assets/icons/undo.png'),
+            tooltip: 'Fortryd',
+            onPressed: () {},
+    );
+  }
+  
+  /// Password controller for passing information from a text field to the authenticator.
   final TextEditingController passwordCtrl = TextEditingController();
 
   final AlertStyle _alertStyle = AlertStyle(
@@ -189,6 +372,7 @@ class ToolbarBloc extends BlocBase {
     ),
   );
 
+  /// Used to authenticate a user.
   void login(BuildContext context, String username, String password) {
     _authBloc.authenticate(username, password);
   }
