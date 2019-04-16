@@ -88,6 +88,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Card(
                     child: FittedBox(
                       child: Stack(
+                        alignment: AlignmentDirectional.center,
                         children: <Widget>[
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
