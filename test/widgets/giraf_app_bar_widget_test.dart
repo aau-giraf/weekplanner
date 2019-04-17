@@ -19,11 +19,11 @@ void main() {
 
   setUp(() {
     api = Api('any');
-    bloc = ToolbarBloc();
 
     di.clearAll();
-    di.registerDependency<ToolbarBloc>((_) => bloc);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    bloc = ToolbarBloc();
+    di.registerDependency<ToolbarBloc>((_) => bloc);
   });
 
   // Used to wrap a widget into a materialapp, otherwise the widget is not

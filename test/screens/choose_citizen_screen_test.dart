@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/models/enums/role_enum.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/di.dart';
@@ -38,15 +39,19 @@ class MockCitizens extends Mock implements UserApi {}
 
 void main() {
   ChooseCitizenBloc bloc;
+  ToolbarBloc toolbarBloc;
+  AuthBloc authBloc;
   Api api;
   setUp(() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    toolbarBloc = ToolbarBloc();
     di.registerDependency<ChooseCitizenBloc>((_) => bloc);
     di.registerDependency<SettingsBloc>((_) => SettingsBloc());
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
   });
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
@@ -80,7 +85,4 @@ void main() {
     });
     await done.future;
   });
-}
-
-class ToolbarBloc {
 }
