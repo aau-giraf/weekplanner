@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:mockito/mockito.dart';
-import 'package:weekplanner/providers/api/api.dart';
-import 'package:weekplanner/providers/api/pictogram_api.dart';
+import 'package:api_client/api/api.dart';
+import 'package:api_client/api/pictogram_api.dart';
 import 'package:async_test/async_test.dart';
 
 import '../test_image.dart';
