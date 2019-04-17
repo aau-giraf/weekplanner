@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -23,8 +24,6 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   WeekplanBloc bloc;
@@ -77,6 +76,7 @@ void main() {
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
+    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {

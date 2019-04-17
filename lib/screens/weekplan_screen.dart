@@ -112,6 +112,8 @@ class WeekplanScreen extends StatelessWidget {
 
               return PictogramImage(
                   pictogram: activities[index].pictogram,
+                  key: Key(
+                      day.index.toString() + activities[index].id.toString()),
                   onPressed: () => Routes.push(context,
                       ShowActivityScreen(_week, activities[index], _user)));
             },

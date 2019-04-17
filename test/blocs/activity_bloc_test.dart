@@ -17,7 +17,7 @@ class MockWeekApi extends Mock implements WeekApi {}
 void main() {
   ActivityBloc bloc;
   Api api;
-  WeekApi weekApi;
+  MockWeekApi weekApi;
 
   final UsernameModel mockUser =
       UsernameModel(id: '50', name: null, role: null);
