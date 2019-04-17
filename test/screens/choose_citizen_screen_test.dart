@@ -40,10 +40,7 @@ class MockCitizens extends Mock implements UserApi {}
 void main() {
   ChooseCitizenBloc bloc;
   ToolbarBloc toolbarBloc;
-  AuthBloc authBloc;
   Api api;
-  ToolbarBloc toolbarBloc;
-  AuthBloc authBloc;
   setUp(() {
     di.clearAll();
     api = Api('any');
@@ -70,7 +67,7 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-    chooseCitizenBloc.citizen.listen((List<UsernameModel> response) {
+    bloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
       done.complete(true);
     });
@@ -81,7 +78,7 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-    chooseCitizenBloc.citizen.listen((List<UsernameModel> response) {
+    bloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(AutoSizeText), findsNWidgets(response.length));
       done.complete(true);
     });
