@@ -34,7 +34,9 @@ class ChooseCitizenScreen extends StatelessWidget {
           child: Scaffold(
             appBar: GirafAppBar(
               title: 'Vælg borger', 
-              appBarIcons: [AppBarIcon.logout,AppBarIcon.changeToGuardian, AppBarIcon.settings], 
+              appBarIcons: [
+                AppBarIcon.logout
+              ], 
             ),
             body: Padding(
               padding: const EdgeInsets.all(8.0),

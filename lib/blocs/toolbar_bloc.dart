@@ -23,8 +23,8 @@ class ToolbarBloc extends BlocBase {
     List<IconButton> _iconsToAdd = <IconButton>[];
     if(icons == null){
       icons = List<AppBarIcon>();
-      icons.add(AppBarIcon.logout);
       icons.add(AppBarIcon.settings);
+      icons.add(AppBarIcon.logout);
     }
     for (AppBarIcon icon in icons) {
       _addIconButton(_iconsToAdd, icon, context);

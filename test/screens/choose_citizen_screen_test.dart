@@ -54,7 +54,7 @@ void main() {
     expect(find.byType(ChooseCitizenScreen), findsOneWidget);
   });
 
-  testWidgets('Has GirafAppBarSimple', (WidgetTester tester) async {
+  testWidgets('Has GirafAppBar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
@@ -80,4 +80,7 @@ void main() {
     });
     await done.future;
   });
+}
+
+class ToolbarBloc {
 }
