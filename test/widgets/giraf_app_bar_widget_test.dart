@@ -12,8 +12,8 @@ import 'package:mockito/mockito.dart';
 class MockAuth extends Mock implements AuthBloc {}
 
 /// Used to retrieve the visibility widget wrapping the editbutton
-const Key VisibilityForEditKey = Key('VisibilityEditBtn');
-const Key ChangeUserBtnKey = Key('changeUsrMode');
+const Key VisibilityForEditKey = Key('visibilityEditBtn');
+const Key ChangeUserBtnKey = Key('changeUserMode');
 const Key PasswordFieldKey = Key('passwordField');
 const Key DialogBtnKey = Key('dialogBtn');
 
