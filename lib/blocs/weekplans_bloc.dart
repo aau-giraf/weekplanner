@@ -1,9 +1,9 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/models/week_name_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
 
 /// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
@@ -42,7 +42,8 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
+    _api.week.getNames(_user.id).listen(_weekNameModelsList.add,
+        onError: (Object exception) => getAllWeekInfo(null));
   }
 
   /// Gets all the information for a [Weekmodel].

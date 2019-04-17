@@ -24,14 +24,25 @@ void main() {
   }
 }
 
+/// Stores the last state of being logged in
+bool lastState = false;
+
+/// Stores if this is first time,
+/// since this fixes a bug with logging in first time
+bool first = true;
 void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
       theme: ThemeData(fontFamily: 'Quicksand'),
       home: StreamBuilder<bool>(
           initialData: false,
-          stream: di.getDependency<AuthBloc>().loggedIn,
+          stream: di
+              .getDependency<AuthBloc>()
+              .loggedIn
+              .where((bool currentState) => lastState != currentState || first),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            lastState = snapshot.data;
+            first = false;
             if (snapshot.data) {
               // In case logged in show ChooseCitizenScreen
               return ChooseCitizenScreen();
