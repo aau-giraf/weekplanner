@@ -6,6 +6,7 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 void main() {
   // Register all dependencies for injector
@@ -49,7 +50,13 @@ void _runApp() {
             } else {
               // Not loggedIn pop context to login screen.
               Routes.goHome(context);
-              return LoginScreen();
+              return GirafConfirmDialog(
+                title: 'Log ud@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
+                description: 'Vil du logge ud?@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
+                confirmButtonText: 'Log ud psijf pisdjfpisjpisfj pisdjpisjdpifjspid asjdp apisjd pai djapis djpiadj piasjdpiajdpias ijapsijd apsijd paijd pa',
+                confirmButtonIcon: ImageIcon(AssetImage('assets/icons/logout.png')),
+                confirmOnPressed: () => Routes.pop(context),
+              );
             }
           })));
 }
