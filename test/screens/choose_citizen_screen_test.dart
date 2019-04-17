@@ -1,4 +1,10 @@
 import 'dart:async';
+
+import 'package:api_client/api/api.dart';
+import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,12 +14,8 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
-import 'package:weekplanner/models/enums/role_enum.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/giraf_user_model.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/providers/api/user_api.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 

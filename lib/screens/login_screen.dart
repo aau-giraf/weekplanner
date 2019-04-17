@@ -2,17 +2,66 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Logs the user in
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  LoginScreenState createState() => LoginScreenState();
+}
+
+/// This is the login state
+class LoginScreenState extends State<LoginScreen> {
+  /// AuthBloC used to communicate with API
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  /// This is the username control, that allows for username extraction
   final TextEditingController usernameCtrl = TextEditingController();
+
+  /// This is the password control, that allows for password extraction
   final TextEditingController passwordCtrl = TextEditingController();
 
-  void loginAction() {
-    // TODO(tricky12321): Giraf Notify Dialog Wrong username and password, https://github.com/aau-giraf/weekplanner/issues/104
+  /// Stores the context
+  BuildContext currentContext;
+
+  /// Stores the login status, used for dismissing the LoadingSpinner
+  bool loginStatus = false;
+
+  /// This is called when login should be triggered
+  void loginAction(BuildContext context) {
+    showLoadingSpinner(context, false, showNotifyDialog, 2000);
+    currentContext = context;
+    loginStatus = false;
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
+    authBloc.loggedIn.listen((bool snapshot) {
+      loginStatus = snapshot;
+      if (snapshot) {
+        // This is used instead of pop, because it fixes a login bug
+        Routes.goHome(currentContext);
+      }
+    });
+  }
+
+  /// This is the callback method of the loading spinner to show the dialog
+  void showNotifyDialog() {
+    if (!loginStatus) {
+      // Remove the loading spinner
+      Routes.pop(currentContext);
+      // Show the new NotifyDialog
+      showDialog<Center>(
+          barrierDismissible: false,
+          context: currentContext,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl',
+                description: 'Forkert brugernavn og/eller adgangskode',
+                key: Key('WrongUsernameOrPassword'));
+          });
+    }
   }
 
   @override
@@ -111,7 +160,7 @@ class LoginScreen extends StatelessWidget {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
-                              loginAction();
+                              loginAction(context);
                             },
                             color: const Color.fromRGBO(48, 81, 118, 1),
                           ),
@@ -136,7 +185,7 @@ class LoginScreen extends StatelessWidget {
                                       environment.getVar<String>('USERNAME');
                                   passwordCtrl.text =
                                       environment.getVar<String>('PASSWORD');
-                                  loginAction();
+                                  loginAction(context);
                                 },
                                 color: const Color.fromRGBO(48, 81, 118, 1),
                               ),
@@ -151,6 +200,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// Returns the giraf logo
   Widget getLogo(bool keyboard, bool portrait) {
     if (keyboard && !portrait) {
       return Container();

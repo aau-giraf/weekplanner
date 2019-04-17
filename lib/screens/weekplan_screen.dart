@@ -1,15 +1,15 @@
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/activity_model.dart';
-import 'package:weekplanner/models/enums/weekday_enum.dart';
-import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 /// <summary>
-/// The WeekplandScreen is used to display a week 
+/// The WeekplanScreen is used to display a week
 /// and all the activities that occur in it.
 /// </summary>
 class WeekplanScreen extends StatelessWidget {
@@ -21,6 +21,7 @@ class WeekplanScreen extends StatelessWidget {
   WeekplanScreen({Key key, WeekModel week}) : super(key: key) {
     weekplanBloc.setWeek(week);
   }
+
   /// The WeekplanBloc that contains the currently chosen week
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
 
@@ -118,10 +119,10 @@ Card _translateWeekDay(Weekday day) {
       color: color,
       child: ListTile(
           title: Text(
-        translation,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-        textAlign: TextAlign.center,
-      )));
+            translation,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          )));
 }
