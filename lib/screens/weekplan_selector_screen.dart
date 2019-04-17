@@ -65,7 +65,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
       onTap: () =>
-          Routes.push(context, WeekplanScreen(week: weekplan, user: null)),
+          Routes.push(context, WeekplanScreen(week: weekplan, user: user)),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
