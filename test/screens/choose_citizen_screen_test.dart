@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/models/enums/role_enum.dart';
 import 'package:weekplanner/providers/api/api.dart';
 import 'package:weekplanner/di.dart';
@@ -37,16 +38,21 @@ class MockUserApi extends Mock implements UserApi {
 class MockCitizens extends Mock implements UserApi {}
 
 void main() {
-  ChooseCitizenBloc bloc;
+  ChooseCitizenBloc chooseCitizenBloc;
   Api api;
+  ToolbarBloc toolbarBloc;
+  AuthBloc authBloc;
   setUp(() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
-    bloc = ChooseCitizenBloc(api);
-    di.registerDependency<ChooseCitizenBloc>((_) => bloc);
+    authBloc = AuthBloc(api);
+    toolbarBloc = ToolbarBloc();
+    chooseCitizenBloc = ChooseCitizenBloc(api);
+    di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
+    di.registerDependency<ChooseCitizenBloc>((_) => chooseCitizenBloc);
     di.registerDependency<SettingsBloc>((_) => SettingsBloc());
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>((_) => authBloc);
   });
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
@@ -63,7 +69,7 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-    bloc.citizen.listen((List<UsernameModel> response) {
+    chooseCitizenBloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
       done.complete(true);
     });
@@ -74,13 +80,10 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-    bloc.citizen.listen((List<UsernameModel> response) {
+    chooseCitizenBloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(AutoSizeText), findsNWidgets(response.length));
       done.complete(true);
     });
     await done.future;
   });
-}
-
-class ToolbarBloc {
 }

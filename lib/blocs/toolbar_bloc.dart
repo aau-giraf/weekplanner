@@ -20,9 +20,11 @@ class ToolbarBloc extends BlocBase {
 
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
   void updateIcons(List<AppBarIcon> icons, BuildContext context) {
-    List<IconButton> _iconsToAdd = <IconButton>[];
-    if(icons == null){
-      icons = List<AppBarIcon>();
+    List<IconButton> _iconsToAdd;
+    _iconsToAdd = <IconButton>[];
+
+    if (icons == null) {
+      icons = <AppBarIcon>[];
       icons.add(AppBarIcon.settings);
       icons.add(AppBarIcon.logout);
     }
@@ -30,13 +32,14 @@ class ToolbarBloc extends BlocBase {
       _addIconButton(_iconsToAdd, icon, context);
     }
     final BehaviorSubject<List<IconButton>> test =
-      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+        BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
     test.add(_iconsToAdd);
     _visibleButtons = test;
   }
 
   /// Find the icon picture based on the input enum
-  void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon, BuildContext context) {
+  void _addIconButton(
+      List<IconButton> _iconsToAdd, AppBarIcon icon, BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept());
@@ -102,257 +105,257 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconUndo());
         break;
       default:
-        throw Exception("IconButton not implemented");
+        throw Exception('IconButton not implemented');
         break;
     }
   }
 
-  IconButton _createIconAccept(){
+  IconButton _createIconAccept() {
     return IconButton(
-            icon: Image.asset('assets/icons/accept.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/accept.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconAdd(){
+  IconButton _createIconAdd() {
     return IconButton(
-            icon: Image.asset('assets/icons/add.png'),
-            tooltip: 'Tilføj',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/add.png'),
+      tooltip: 'Tilføj',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconAddTimer(){
+  IconButton _createIconAddTimer() {
     return IconButton(
-            icon: Image.asset('assets/icons/addTimer.png'),
-            tooltip: 'Tilføj timer',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/addTimer.png'),
+      tooltip: 'Tilføj timer',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconBack(){
+  IconButton _createIconBack() {
     return IconButton(
-            icon: Image.asset('assets/icons/back.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/back.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconBurgermenu(){
+  IconButton _createIconBurgermenu() {
     return IconButton(
-            icon: Image.asset('assets/icons/burgermenu.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/burgermenu.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconCamera(){
+  IconButton _createIconCamera() {
     return IconButton(
-            icon: Image.asset('assets/icons/camera.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/camera.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconCancel(){
+  IconButton _createIconCancel() {
     return IconButton(
-            icon: Image.asset('assets/icons/cancel.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/cancel.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconChangeToCitizen(BuildContext context){
+  IconButton _createIconChangeToCitizen(BuildContext context) {
     return IconButton(
-            icon: Image.asset('assets/icons/changeToCitizen.png'),
-            tooltip: 'Skift til borger tilstand',
-            onPressed: () {},
-          );
+      icon: Image.asset('assets/icons/changeToCitizen.png'),
+      tooltip: 'Skift til borger tilstand',
+      onPressed: () {},
+    );
   }
 
-  IconButton _createIconChangeToGuardian(BuildContext context){
+  IconButton _createIconChangeToGuardian(BuildContext context) {
     return IconButton(
-            icon: Image.asset('assets/icons/changeToGuardian.png'),
-            tooltip: 'Skift til værge tilstand',
-            onPressed: () {
-              Alert(
-                  context: context,
-                  style: _alertStyle,
-                  title: 'Skift til værge',
-                  content: Column(
-                    children: <Widget>[
-                      RichText(
-                        text: TextSpan(
-                          text: 'Logget ind som ',
-                          style: DefaultTextStyle.of(context).style,
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: _authBloc.loggedInUsername,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                      TextField(
-                        controller: passwordCtrl,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          icon: const Icon(Icons.lock),
-                          labelText: 'Adgangskode',
-                        ),
-                      ),
+      icon: Image.asset('assets/icons/changeToGuardian.png'),
+      tooltip: 'Skift til værge tilstand',
+      onPressed: () {
+        Alert(
+            context: context,
+            style: _alertStyle,
+            title: 'Skift til værge',
+            content: Column(
+              children: <Widget>[
+                RichText(
+                  text: TextSpan(
+                    text: 'Logget ind som ',
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: _authBloc.loggedInUsername,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
-                  buttons: <DialogButton>[
-                    DialogButton(
-                      onPressed: () {
-                        login(context, _authBloc.loggedInUsername,
-                            passwordCtrl.value.text);
-                        Routes.pop(context);
-                      },
-                      child: const Text(
-                        'Bekræft',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      color: const Color.fromRGBO(255, 157, 0, 100),
-                    )
-                  ]).show();
-            },
-          );
-  }
-
-  IconButton _createIconCopy(){
-    return IconButton(
-            icon: Image.asset('assets/icons/copy.png'),
-            tooltip: 'Kopier',
-            onPressed: () {},
-    );
-  }
-
-  IconButton _createIconDelete(){
-    return IconButton(
-            icon: Image.asset('assets/icons/delete.png'),
-            tooltip: 'Slet',
-            onPressed: () {},
-    );
-  }
-
-  IconButton _createIconEdit(){
-    return IconButton(
-            icon: Image.asset('assets/icons/edit.png'),
-            tooltip: 'Rediger',
-            onPressed: () {},
-    );
-  }
-  
-  IconButton _createIconHelp(){
-    return IconButton(
-            icon: Image.asset('assets/icons/help.png'),
-            tooltip: 'Hjælp',
-            onPressed: () {},
-    );
-  }
-
-  IconButton _createIconHome(){
-    return IconButton(
-            icon: Image.asset('assets/icons/home.png'),
-            tooltip: 'Gå til startside',
-            onPressed: () {},
-    );
-  }
-
-  IconButton _createIconLogout(BuildContext context){
-    return IconButton(
-            icon: Image.asset('assets/icons/logout.png'),
-            tooltip: 'Log ud',
-            onPressed: () {
-              Alert(
-                context: context,
-                type: AlertType.none,
-                style: _alertStyle,
-                title: 'Log ud',
-                desc: 'Vil du logge ud?',
-                buttons: <DialogButton>[
-                  DialogButton(
-                    child: const Text(
-                      'Fortryd',
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    color: const Color.fromRGBO(255, 157, 0, 100),
-                    width: 120,
+                ),
+                TextField(
+                  controller: passwordCtrl,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    icon: const Icon(Icons.lock),
+                    labelText: 'Adgangskode',
                   ),
-                  DialogButton(
-                    child: const Text(
-                      'Log ud',
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    onPressed: () {
-                      _authBloc.logout();
-                    },
-                    color: const Color.fromRGBO(255, 157, 0, 100),
-                    width: 120,
-                  ),
-                ],
-              ).show();
-            },
-          );
-  }
-
-    IconButton _createIconProfile(){
-    return IconButton(
-            icon: Image.asset('assets/icons/profile.png'),
-            tooltip: 'Vis profil',
-            onPressed: () {},
-    );
-  }
-  
-  IconButton _createIconRedo(){
-    return IconButton(
-            icon: Image.asset('assets/icons/redo.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+                ),
+              ],
+            ),
+            buttons: <DialogButton>[
+              DialogButton(
+                onPressed: () {
+                  login(context, _authBloc.loggedInUsername,
+                      passwordCtrl.value.text);
+                  Routes.pop(context);
+                },
+                child: const Text(
+                  'Bekræft',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                color: const Color.fromRGBO(255, 157, 0, 100),
+              )
+            ]).show();
+      },
     );
   }
 
-  IconButton _createIconSave(){
+  IconButton _createIconCopy() {
     return IconButton(
-            icon: Image.asset('assets/icons/save.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/copy.png'),
+      tooltip: 'Kopier',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconSearch(){
+  IconButton _createIconDelete() {
     return IconButton(
-            icon: Image.asset('assets/icons/search.png'),
-            tooltip: 'Accepter',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/delete.png'),
+      tooltip: 'Slet',
+      onPressed: () {},
     );
   }
 
-  IconButton _createIconSettings(BuildContext context){
+  IconButton _createIconEdit() {
     return IconButton(
-            icon: Image.asset('assets/icons/settings.png'),
-            tooltip: 'Indstillinger',
-            onPressed: () {
-              Routes.push(context, SettingsScreen());
-            },
-          );
-  }
-
-  IconButton _createIconUndo(){
-    return IconButton(
-            icon: Image.asset('assets/icons/undo.png'),
-            tooltip: 'Fortryd',
-            onPressed: () {},
+      icon: Image.asset('assets/icons/edit.png'),
+      tooltip: 'Rediger',
+      onPressed: () {},
     );
   }
-  
-  /// Password controller for passing information from a text field to the authenticator.
+
+  IconButton _createIconHelp() {
+    return IconButton(
+      icon: Image.asset('assets/icons/help.png'),
+      tooltip: 'Hjælp',
+      onPressed: () {},
+    );
+  }
+
+  IconButton _createIconHome() {
+    return IconButton(
+      icon: Image.asset('assets/icons/home.png'),
+      tooltip: 'Gå til startside',
+      onPressed: () {},
+    );
+  }
+
+  IconButton _createIconLogout(BuildContext context) {
+    return IconButton(
+      icon: Image.asset('assets/icons/logout.png'),
+      tooltip: 'Log ud',
+      onPressed: () {
+        Alert(
+          context: context,
+          type: AlertType.none,
+          style: _alertStyle,
+          title: 'Log ud',
+          desc: 'Vil du logge ud?',
+          buttons: <DialogButton>[
+            DialogButton(
+              child: const Text(
+                'Fortryd',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              color: const Color.fromRGBO(255, 157, 0, 100),
+              width: 120,
+            ),
+            DialogButton(
+              child: const Text(
+                'Log ud',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+              onPressed: () {
+                _authBloc.logout();
+              },
+              color: const Color.fromRGBO(255, 157, 0, 100),
+              width: 120,
+            ),
+          ],
+        ).show();
+      },
+    );
+  }
+
+  IconButton _createIconProfile() {
+    return IconButton(
+      icon: Image.asset('assets/icons/profile.png'),
+      tooltip: 'Vis profil',
+      onPressed: () {},
+    );
+  }
+
+  IconButton _createIconRedo() {
+    return IconButton(
+      icon: Image.asset('assets/icons/redo.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
+    );
+  }
+
+  IconButton _createIconSave() {
+    return IconButton(
+      icon: Image.asset('assets/icons/save.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
+    );
+  }
+
+  IconButton _createIconSearch() {
+    return IconButton(
+      icon: Image.asset('assets/icons/search.png'),
+      tooltip: 'Accepter',
+      onPressed: () {},
+    );
+  }
+
+  IconButton _createIconSettings(BuildContext context) {
+    return IconButton(
+      icon: Image.asset('assets/icons/settings.png'),
+      tooltip: 'Indstillinger',
+      onPressed: () {
+        Routes.push(context, SettingsScreen());
+      },
+    );
+  }
+
+  IconButton _createIconUndo() {
+    return IconButton(
+      icon: Image.asset('assets/icons/undo.png'),
+      tooltip: 'Fortryd',
+      onPressed: () {},
+    );
+  }
+
+  /// Password controller for passing information from a text field 
+  /// to the authenticator.
   final TextEditingController passwordCtrl = TextEditingController();
 
   final AlertStyle _alertStyle = AlertStyle(
