@@ -1,7 +1,6 @@
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
-
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
@@ -36,7 +35,7 @@ class ChooseCitizenScreen extends StatelessWidget {
           child: Scaffold(
             appBar: GirafAppBar(
               title: 'Vælg borger', 
-              appBarIcons: [
+              appBarIcons: const <AppBarIcon>[
                 AppBarIcon.logout
               ], 
             ),

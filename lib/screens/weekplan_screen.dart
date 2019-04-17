@@ -6,7 +6,6 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
-import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 
 /// <summary>
 /// The WeekplanScreen is used to display a week
