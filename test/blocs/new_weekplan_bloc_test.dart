@@ -1,6 +1,6 @@
+import 'package:api_client/api/api.dart';
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
-import 'package:weekplanner/providers/api/api.dart';
 import 'package:async_test/async_test.dart';
 
 void main() {
@@ -134,7 +134,7 @@ void main() {
     bloc.onTitleChanged.add('Ugeplan');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
-    bloc.validInputStream.listen((bool isValid) {
+    bloc.areAllInputsValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
       done();
@@ -145,7 +145,7 @@ void main() {
     bloc.onTitleChanged.add('Ugeplan');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('-42');
-    bloc.validInputStream.listen((bool isValid) {
+    bloc.areAllInputsValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
       done();
@@ -156,7 +156,7 @@ void main() {
     bloc.onTitleChanged.add('');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
-    bloc.validInputStream.listen((bool isValid) {
+    bloc.areAllInputsValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
       done();
@@ -167,7 +167,7 @@ void main() {
     bloc.onTitleChanged.add('Ugeplan');
     bloc.onYearChanged.add('218');
     bloc.onWeekNumberChanged.add('42');
-    bloc.validInputStream.listen((bool isValid) {
+    bloc.areAllInputsValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
       done();
@@ -179,7 +179,7 @@ void main() {
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
     bloc.resetBloc();
-    bloc.validInputStream.listen((bool isValid) {
+    bloc.areAllInputsValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
       done();
@@ -187,7 +187,7 @@ void main() {
   }));
 
   test('Should dispose stream', async((DoneFn done) {
-    bloc.validInputStream.listen((_) {}, onDone: done);
+    bloc.areAllInputsValidStream.listen((_) {}, onDone: done);
     bloc.dispose();
   }));
 }

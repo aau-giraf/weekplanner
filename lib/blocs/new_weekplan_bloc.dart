@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
-import 'package:weekplanner/providers/api/api.dart';
 
 /// New-Weekplan Business Logic Component.
 class NewWeekplanBloc extends BlocBase {
@@ -55,12 +55,12 @@ class NewWeekplanBloc extends BlocBase {
   Observable<PictogramModel> get thumbnailStream => _thumbnailController.stream;
 
   /// Gives information about whether all input fields are valid.
-  Observable<bool> get validInputStream =>
+  Observable<bool> get areAllInputsValidStream =>
       Observable.combineLatest3<bool, bool, bool, bool>(validTitleStream,
               validYearStream, validWeekNumberStream, _isAllInputValid)
           .asBroadcastStream();
 
-  /// Resets the bloc if it already contains information from the last time it 
+  /// Resets the bloc if it already contains information from the last time it
   /// was used. Should always be called before using the bloc.
   void initialize(UsernameModel user) {
     if (_user != null) {

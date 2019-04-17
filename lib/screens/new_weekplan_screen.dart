@@ -1,8 +1,8 @@
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/pictogram_model.dart';
-import 'package:weekplanner/models/username_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -110,7 +110,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 24),
                     child: StreamBuilder<bool>(
-                      stream: _bloc.validInputStream,
+                      stream: _bloc.areAllInputsValidStream,
                       builder: _buildSaveButton,
                     ),
                   ),
