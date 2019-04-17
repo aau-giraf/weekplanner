@@ -138,7 +138,7 @@ class ToolbarBloc extends BlocBase {
   IconButton _createIconBack() {
     return IconButton(
       icon: Image.asset('assets/icons/back.png'),
-      tooltip: 'Accepter',
+      tooltip: 'Tilbage',
       onPressed: () {},
     );
   }
@@ -146,7 +146,7 @@ class ToolbarBloc extends BlocBase {
   IconButton _createIconBurgermenu() {
     return IconButton(
       icon: Image.asset('assets/icons/burgermenu.png'),
-      tooltip: 'Accepter',
+      tooltip: 'Åbn menu',
       onPressed: () {},
     );
   }
@@ -154,7 +154,7 @@ class ToolbarBloc extends BlocBase {
   IconButton _createIconCamera() {
     return IconButton(
       icon: Image.asset('assets/icons/camera.png'),
-      tooltip: 'Accepter',
+      tooltip: 'Åbn kamera',
       onPressed: () {},
     );
   }
@@ -162,7 +162,7 @@ class ToolbarBloc extends BlocBase {
   IconButton _createIconCancel() {
     return IconButton(
       icon: Image.asset('assets/icons/cancel.png'),
-      tooltip: 'Accepter',
+      tooltip: 'Fortryd',
       onPressed: () {},
     );
   }
@@ -316,7 +316,7 @@ class ToolbarBloc extends BlocBase {
   IconButton _createIconRedo() {
     return IconButton(
       icon: Image.asset('assets/icons/redo.png'),
-      tooltip: 'Accepter',
+      tooltip: 'Gendan',
       onPressed: () {},
     );
   }
@@ -324,7 +324,7 @@ class ToolbarBloc extends BlocBase {
   IconButton _createIconSave() {
     return IconButton(
       icon: Image.asset('assets/icons/save.png'),
-      tooltip: 'Accepter',
+      tooltip: 'Gem',
       onPressed: () {},
     );
   }
@@ -332,7 +332,7 @@ class ToolbarBloc extends BlocBase {
   IconButton _createIconSearch() {
     return IconButton(
       icon: Image.asset('assets/icons/search.png'),
-      tooltip: 'Accepter',
+      tooltip: 'Søg',
       onPressed: () {},
     );
   }
