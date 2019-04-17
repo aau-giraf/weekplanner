@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -33,24 +36,33 @@ class PictogramSearch extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: StreamBuilder<List<PictogramModel>>(
+                child: StreamBuilder<Tuple2<List<PictogramModel>, TimeoutException>>(
                     stream: _bloc.pictograms,
-                    initialData: const <PictogramModel>[],
+                    initialData: Tuple2<List<PictogramModel>, TimeoutException>(null, null),
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<PictogramModel>> snapshot) {
+                        AsyncSnapshot<Tuple2<List<PictogramModel>, TimeoutException>> snapshot) {
+
+                      if(snapshot.data != null && snapshot.data.item2 != null){
+                        print("hej");
+                        return Center(child: Text(snapshot.data.item2.message));
+                      }
                       if (snapshot.data == null) {
                         return const Center(child: CircularProgressIndicator());
                       }
-
-                      return GridView.count(
-                        crossAxisCount: 4,
-                        children: snapshot.data
-                            .map((PictogramModel pictogram) => PictogramImage(
-                                pictogram: pictogram,
-                                onPressed: () =>
-                                    Routes.pop(context, pictogram)))
-                            .toList(),
-                      );
+                      else if( snapshot.data != null && snapshot.data.item1 != null) {
+                        return GridView.count(
+                          crossAxisCount: 4,
+                          children: snapshot.data.item1
+                              .map((PictogramModel pictogram) =>
+                              PictogramImage(
+                                  pictogram: pictogram,
+                                  onPressed: () =>
+                                      Routes.pop(context, pictogram)))
+                              .toList(),
+                        );
+                      }
+                      else
+                        return new Container();
                     }),
               ),
             ),

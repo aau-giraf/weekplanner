@@ -4,6 +4,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
+import 'package:tuple/tuple.dart';
 
 /// For how long the debouncer should wait
 const int _milliseconds = 250;
@@ -20,10 +21,11 @@ class PictogramBloc extends BlocBase {
   /// The null value is used as a way to communicate loading. That is, if you
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
-  Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
+  Stream<Tuple2<List<PictogramModel>, TimeoutException>> get pictograms =>
+      _pictograms.stream;
   Stream<TimeoutException> get timeout => _timeoutxception.stream;
-  final BehaviorSubject<List<PictogramModel>> _pictograms =
-      BehaviorSubject<List<PictogramModel>>();
+  final BehaviorSubject<Tuple2<List<PictogramModel>, TimeoutException>> _pictograms =
+      BehaviorSubject<Tuple2<List<PictogramModel>, TimeoutException>>();
 
   final BehaviorSubject<TimeoutException> _timeoutxception =
       BehaviorSubject<TimeoutException>();
@@ -41,7 +43,7 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-    try {
+
       if (query.isEmpty) {
         return;
       }
@@ -53,17 +55,15 @@ class PictogramBloc extends BlocBase {
       _pictograms.add(null);
 
       _timer = Timer(Duration(milliseconds: _milliseconds), () {
-        _api.pictogram
+         _api.pictogram
             .getAll(page: 1, pageSize: 10, query: query)
             .listen((List<PictogramModel> results) {
-          _pictograms.add(results);
+              _pictograms.add(Tuple2(results, null));
+              onError: (Object exception) => _pictograms.add(Tuple2(null, exception));
         });
       });
-    }
-    on TimeoutException catch (e){
-      _timeoutxception.add(e);
-    }
   }
+
 
 
   @override
