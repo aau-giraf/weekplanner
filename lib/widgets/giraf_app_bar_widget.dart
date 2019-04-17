@@ -52,6 +52,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                 );
               }),
           IconButton(
+                key: const Key('changeUserMode'),
                 icon: Image.asset('assets/icons/changeToCitizen.png'),
                 tooltip: 'Skift til borger tilstand',
                 onPressed: () {
@@ -74,6 +75,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ),
                           ),
                           TextField(
+                            key: const Key('passwordField'),
                             controller: passwordCtrl,
                             obscureText: true,
                             decoration: InputDecoration(
@@ -85,6 +87,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       buttons: <DialogButton>[
                         DialogButton(
+                          key: const Key('dialogBtn'),
                           onPressed: () {
                             loginFromPopUp(context, _authBloc.loggedInUsername,
                                 passwordCtrl.value.text);
