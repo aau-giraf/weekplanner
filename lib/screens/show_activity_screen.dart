@@ -148,6 +148,7 @@ class ShowActivityScreen extends StatelessWidget {
                         return const CircularProgressIndicator();
                       }
                       return Stack(
+                        alignment: AlignmentDirectional.center,
                         children: <Widget>[
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
