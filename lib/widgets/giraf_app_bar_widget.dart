@@ -88,7 +88,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                           onPressed: () {
                             loginFromPopUp(context, _authBloc.loggedInUsername,
                                 passwordCtrl.value.text);
-
                           },
                           child: const Text(
                             'Bekræft',
@@ -163,7 +162,8 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     ),
   );
 
-
+  /// This functions calls the correct authenticate functions to authenticate
+  /// a login done from the popup window.
   void loginFromPopUp(BuildContext context, String username, String password) {
      _authBloc.authenticateFromPopUp(username, password, context);
   }
