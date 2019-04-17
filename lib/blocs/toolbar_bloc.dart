@@ -31,10 +31,11 @@ class ToolbarBloc extends BlocBase {
     for (AppBarIcon icon in icons) {
       _addIconButton(_iconsToAdd, icon, context);
     }
-    final BehaviorSubject<List<IconButton>> test =
+
+    final BehaviorSubject<List<IconButton>> iconList =
         BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
-    test.add(_iconsToAdd);
-    _visibleButtons = test;
+    iconList.add(_iconsToAdd);
+    _visibleButtons = iconList;
   }
 
   /// Find the icon picture based on the input enum
