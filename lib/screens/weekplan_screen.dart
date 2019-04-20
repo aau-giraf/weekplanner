@@ -28,7 +28,7 @@ class WeekplanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GirafAppBar(
-        title: 'Ugeplan',
+        title: 'Ugeplan'
       ),
       body: StreamBuilder<WeekModel>(
         stream: weekplanBloc.week,
