@@ -2,6 +2,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -74,8 +75,7 @@ Column _day(Weekday day, List<ActivityModel> activities) {
       Expanded(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            return PictogramImage(
-                pictogram: activities[index].pictogram, onPressed: () => null);
+            return _activity(context, activities[index]);
           },
           itemCount: activities.length,
         ),
@@ -118,10 +118,24 @@ Card _translateWeekDay(Weekday day) {
       color: color,
       child: ListTile(
           title: Text(
-            translation,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          )));
+        translation,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      )));
+}
+
+Widget _activity(BuildContext context, ActivityModel activity) {
+  final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+  bloc.loadPictogramById(activity.pictogram.id);
+  return GestureDetector(
+    onTap: () => null,
+    child: StreamBuilder<Image>(
+      stream: bloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        return Container(child: snapshot.data);
+      },
+    ),
+  );
 }
