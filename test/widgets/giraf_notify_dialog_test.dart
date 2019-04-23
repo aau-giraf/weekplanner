@@ -44,6 +44,7 @@ void main() {
         await tester.pumpWidget(MaterialApp(home: MockScreen()));
         await tester.tap(find.byKey(const Key('FirstButton')));
         await tester.pump();
+        expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
         await tester.tap(find.byKey(const Key('NotifyDialogOkayButton')));
         await tester.pump();
         expect(find.byType(GirafNotifyDialog), findsNothing);
