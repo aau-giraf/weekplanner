@@ -1,25 +1,26 @@
+import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/username_model.dart';
-import 'package:weekplanner/models/week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 /// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
-  /// Requies a UsernameModel user to load weekplans
-  WeekplanSelectorScreen(UsernameModel user)
+  /// Requies a GirafUserModel user to load weekplans
+  WeekplanSelectorScreen(this._user)
       : _weekBloc = di.getDependency<WeekplansBloc>() {
-    _weekBloc.load(user, true);
+    _weekBloc.load(_user, true);
   }
 
   final WeekplansBloc _weekBloc;
+  final UsernameModel _user;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: StreamBuilder<List<WeekModel>>(
-                initialData:const <WeekModel> [],
+                  initialData: const <WeekModel>[],
                   stream: _weekBloc.weekModels,
                   builder: (BuildContext context,
                       AsyncSnapshot<List<WeekModel>> snapshot) {
@@ -62,7 +63,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlanAdder(
       BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
-      onTap: () => Routes.push(context, WeekplanScreen(week: weekplan)),
+      onTap: () => Routes.push(context, WeekplanScreen(weekplan, _user)),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
