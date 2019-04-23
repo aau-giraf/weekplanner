@@ -25,6 +25,7 @@ class ToolbarBloc extends BlocBase {
 
     if (icons == null) {
       icons = <AppBarIcon>[];
+      icons.add(AppBarIcon.changeToGuardian);
       icons.add(AppBarIcon.settings);
       icons.add(AppBarIcon.logout);
     }
