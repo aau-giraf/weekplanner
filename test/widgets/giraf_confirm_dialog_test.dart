@@ -29,8 +29,7 @@ class MockScreen extends StatelessWidget {
               title: 'test',
               description: 'test',
               confirmButtonText: 'test',
-              confirmButtonIcon:
-                  const ImageIcon(AssetImage('assets/icons/logout.png')),
+              confirmButtonIcon: const ImageIcon(null),
               confirmOnPressed: () {
                 Routes.pop(context);
               });
