@@ -6,7 +6,6 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
-import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 void main() {
   // Register all dependencies for injector
