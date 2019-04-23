@@ -51,10 +51,10 @@ class GirafButton extends StatefulWidget {
   final Observable<bool> isEnabledStream;
 
   @override
-  _GirafButtonState createState() => _GirafButtonState();
+  GirafButtonState createState() => GirafButtonState();
 }
 
-class _GirafButtonState extends State<GirafButton> {
+class GirafButtonState extends State<GirafButton> {
   @override
   void initState() {
     _isEnabled = widget.isEnabled;
