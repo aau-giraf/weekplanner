@@ -36,9 +36,7 @@ class WeekplanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(
-        title: 'Ugeplan'
-      ),
+      appBar: GirafAppBar(title: 'Ugeplan'),
       body: StreamBuilder<WeekModel>(
         stream: weekplanBloc.week,
         initialData: null,
@@ -92,37 +90,52 @@ class WeekplanScreen extends StatelessWidget {
                       child: Stack(
                         alignment: AlignmentDirectional.center,
                         children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: PictogramImage(
-                              pictogram: activities[index].pictogram,
-                              onPressed: null,
-                            ),
+                          Column(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 0,
+                                child: _getPictogram(
+                                    context, activities[index]),
+                              ),
+                            ],
                           ),
                           Icon(
                             Icons.check,
                             key: const Key('IconComplete'),
-                            color: Colors.green,
                             size: MediaQuery.of(context).size.width,
-                          )
+                            color: Colors.green,
+                          ),
                         ],
                       ),
                     ),
                   ),
                 );
               }
-
-              return PictogramImage(
-                  pictogram: activities[index].pictogram,
+              return GestureDetector(
                   key: Key(
                       day.index.toString() + activities[index].id.toString()),
-                  onPressed: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)));
+                  onTap: () => Routes.push(context,
+                      ShowActivityScreen(_week, activities[index], _user)),
+                  child: _getPictogram(context, activities[index]));
             },
             itemCount: activities.length,
           ),
         ),
       ],
+    );
+  }
+
+  Widget _getPictogram(BuildContext context, ActivityModel activity) {
+    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    bloc.loadPictogramById(activity.pictogram.id);
+    return StreamBuilder<Image>(
+      stream: bloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        if (snapshot.data == null) {
+          return const CircularProgressIndicator();
+        }
+        return snapshot.data;
+      },
     );
   }
 
@@ -167,18 +180,4 @@ class WeekplanScreen extends StatelessWidget {
           textAlign: TextAlign.center,
         )));
   }
-}
-
-Widget _activity(BuildContext context, ActivityModel activity) {
-  final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
-  bloc.loadPictogramById(activity.pictogram.id);
-  return GestureDetector(
-    onTap: () => null,
-    child: StreamBuilder<Image>(
-      stream: bloc.image,
-      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-        return Container(child: snapshot.data);
-      },
-    ),
-  );
 }
