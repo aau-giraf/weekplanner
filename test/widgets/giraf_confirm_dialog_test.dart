@@ -40,17 +40,30 @@ class MockScreen extends StatelessWidget {
 void main() {
   testWidgets('Test if Confirm Dialog is shown', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
-    await tester.pump();
     await tester.tap(find.byKey(const Key('FirstButton')));
-    await tester.pumpAndSettle();
+    await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
 
-  /*testWidgets('Test if Confirm Dialog is closed again', (WidgetTester tester) {
-    tester.pumpWidget(MaterialApp(home: MockScreen()));
-    tester.tap(find.byKey(const Key('FirstButton')));
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    tester.tap(find.byKey(const Key('SecondButton')));
-    expect(find.byType(CircularProgressIndicator), findsNothing);
-  });*/
+  testWidgets('Test if Confirm Dialog is closed when tapping Cancel button',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('FirstButton')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
+    await tester.pump();
+    expect(find.byType(GirafConfirmDialog), findsNothing);
+  });
+
+  //In this case, the confirmed action is closing the widget
+  testWidgets(
+      'Test if confirmed action is performed when tapping Confirm button',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('FirstButton')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pump();
+    expect(find.byType(GirafConfirmDialog), findsNothing);
+  });
 }
