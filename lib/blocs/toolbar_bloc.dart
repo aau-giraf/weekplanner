@@ -379,7 +379,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Used to authenticate a user.
   void login(BuildContext context, String username, String password) {
-    _authBloc.authenticate(username, password);
+    _authBloc.authenticateFromPopUp(username, password, context);
   }
 
   @override
