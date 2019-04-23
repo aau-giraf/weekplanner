@@ -38,19 +38,36 @@ class PictogramSearch extends StatelessWidget {
                     initialData: const <PictogramModel>[],
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
-                      if (snapshot.data == null) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
 
-                      return GridView.count(
-                        crossAxisCount: 4,
-                        children: snapshot.data
-                            .map((PictogramModel pictogram) => PictogramImage(
-                                pictogram: pictogram,
-                                onPressed: () =>
-                                    Routes.pop(context, pictogram)))
-                            .toList(),
-                      );
+                      if(snapshot.hasData) {
+                        return  snapshot.hasData
+                            ? GridView.count(
+                          crossAxisCount: 4,
+                          children: snapshot.data
+                              .map((PictogramModel pictogram) =>
+                              PictogramImage(
+                                  pictogram: pictogram,
+                                  onPressed: () =>
+                                      Routes.pop(context, pictogram)))
+                              .toList(),
+                        )
+                            : const Center(
+                            child: CircularProgressIndicator());
+
+                      }
+                      else if(snapshot.hasError){
+                        return InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text("Søgningen gav ingen resultater. Tjek internetforbindelsen."),
+                          ),
+                          onTap: () => _bloc.search,
+                        );
+                      }
+                      else
+                        return const Center(
+                            child: CircularProgressIndicator());
+
                     }),
               ),
             ),

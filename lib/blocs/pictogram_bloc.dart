@@ -30,7 +30,7 @@ class PictogramBloc extends BlocBase {
 
   final Api _api;
   Timer _timer;
-
+  Timer temptime;
   /// Initializes a search for [query].
   ///
   /// This does not accept empty strings.
@@ -41,7 +41,7 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-    try {
+
       if (query.isEmpty) {
         return;
       }
@@ -49,20 +49,24 @@ class PictogramBloc extends BlocBase {
       if (_timer != null) {
         _timer.cancel();
       }
-
       _pictograms.add(null);
+      List<PictogramModel> temp;
 
-      _timer = Timer(Duration(milliseconds: _milliseconds), () {
-        _api.pictogram
+      _timer = Timer(Duration(milliseconds: _milliseconds), ()  {
+        temptime = Timer(Duration(milliseconds: 10000), (){
+          if(temp == null) {
+            _pictograms.addError(null);
+          }
+        });
+         _api.pictogram
             .getAll(page: 1, pageSize: 10, query: query)
             .listen((List<PictogramModel> results) {
-          _pictograms.add(results);
+              temp = results;
+              _pictograms.add(temp);
         });
+
       });
-    }
-    on TimeoutException catch (e){
-      _timeoutxception.add(e);
-    }
+
   }
 
 
@@ -70,4 +74,3 @@ class PictogramBloc extends BlocBase {
   void dispose() {
     _pictograms.close();
   }
-}
