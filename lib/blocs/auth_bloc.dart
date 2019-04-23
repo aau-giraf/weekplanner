@@ -38,11 +38,15 @@ class AuthBloc extends BlocBase {
     });
   }
 
-  bool loginSuccessfull = false;
+  /// Contains the current login status
+  bool loginStatus = false;
 
-  void A (BuildContext context) {
+  /// Shows a dialog when incorrect login in popup.
+  void showFailureDialog (BuildContext context) {
+    //pops the loading spinner
     Routes.pop(context);
-    if (loginSuccessfull == false) {
+
+    if (!loginStatus) {
       showDialog<Center>(
           barrierDismissible: false,
           context: context,
@@ -50,22 +54,22 @@ class AuthBloc extends BlocBase {
             return const GirafNotifyDialog(
                 title: 'Fejl',
                 description: 'Forkert brugernavn og/eller adgangskode',
-                key: Key('WrongUsernameOrPassword'));
+                key: Key('WrongUsernameOrPasswordDialog'));
           });
     }
   }
+
   /// Authenticates the user only by password when signing-in from PopUp.
   void authenticateFromPopUp(String username, String password,
                              BuildContext context) {
-    showLoadingSpinner(context, false, () => A(context), 2000);
+    showLoadingSpinner(context, false, () => showFailureDialog(context), 2000);
 
     _api.account.login(username, password).take(1).listen((bool status) {
 
       if (status){
-        loginSuccessfull = true;
+        loginStatus = true;
         //Pop the popup
         Routes.pop(context);
-
         }
     });
 

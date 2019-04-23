@@ -178,6 +178,7 @@ class ToolbarBloc extends BlocBase {
 
   IconButton _createIconChangeToGuardian(BuildContext context) {
     return IconButton(
+      key: const Key('ChangeToGuardian'),
       icon: Image.asset('assets/icons/changeToGuardian.png'),
       tooltip: 'Skift til værge tilstand',
       onPressed: () {
@@ -199,6 +200,7 @@ class ToolbarBloc extends BlocBase {
                   ),
                 ),
                 TextField(
+                  key: const Key("PasswordField"),
                   controller: passwordCtrl,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -210,6 +212,7 @@ class ToolbarBloc extends BlocBase {
             ),
             buttons: <DialogButton>[
               DialogButton(
+                key: const Key('ConfirmButton'),
                 onPressed: () {
                   loginFromPopUp(context, _authBloc.loggedInUsername,
                       passwordCtrl.value.text);

@@ -268,4 +268,59 @@ void main() {
 
     expect(find.byTooltip('Fortryd'), findsOneWidget);
   });
+
+  testWidgets('Dialog should not be visible', (WidgetTester tester) async {
+    final GirafAppBar girafAppBar = GirafAppBar(
+        title: 'Ugeplan',
+        appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
+
+    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    await tester.tap(find.byKey(Key('ChangeToGuardian')));
+
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    await tester.enterText(find.byKey(Key("PasswordField")), "password");
+
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    await tester.tap(find.byKey(Key('ConfirmButton')));
+
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    expect(find.byKey(Key('NotifyDialogOkayButton')), findsNothing);
+  });
+
+
+  testWidgets('Dialog should be visible', (WidgetTester tester) async {
+    final GirafAppBar girafAppBar = GirafAppBar(
+        title: 'Ugeplan',
+        appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
+
+    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    await tester.tap(find.byKey(Key('ChangeToGuardian')));
+
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    await tester.enterText(find.byKey(Key("PasswordField")), "test");
+
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    await tester.tap(find.byKey(Key('ConfirmButton')));
+
+    await tester.pump();
+    await tester.pump(const Duration(seconds:3));
+
+    expect(find.byKey(Key('NotifyDialogOkayButton')), findsOneWidget);
+  });
 }
