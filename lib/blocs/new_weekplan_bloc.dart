@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -55,9 +58,13 @@ class NewWeekplanBloc extends BlocBase {
   Observable<PictogramModel> get thumbnailStream => _thumbnailController.stream;
 
   /// Gives information about whether all input fields are valid.
-  Observable<bool> get areAllInputsValidStream =>
-      Observable.combineLatest3<bool, bool, bool, bool>(validTitleStream,
-              validYearStream, validWeekNumberStream, _isAllInputValid)
+  Observable<bool> get validInputFieldsStream =>
+      Observable.combineLatest4<bool, bool, bool, PictogramModel, bool>(
+              validTitleStream,
+              validYearStream,
+              validWeekNumberStream,
+              thumbnailStream,
+              _isAllInputValid)
           .asBroadcastStream();
 
   /// Resets the bloc if it already contains information from the last time it
@@ -71,20 +78,34 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Saves the entered information to the database.
   void saveWeekplan() {
-    if (_user != null) {
-      final String _title = _titleController.value;
-      final int _year = int.parse(_yearController.value);
-      final int _weekNumber = int.parse(_weekNumberController.value);
-      final PictogramModel _thumbnail = _thumbnailController.value;
-
-      final WeekModel _weekModel = WeekModel(
-          thumbnail: _thumbnail,
-          name: _title,
-          weekYear: _year,
-          weekNumber: _weekNumber);
-      _api.week.update(
-          _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    if (_user == null) {
+      return;
     }
+
+    final String _title = _titleController.value;
+    final int _year = int.parse(_yearController.value);
+    final int _weekNumber = int.parse(_weekNumberController.value);
+    final PictogramModel _thumbnail = _thumbnailController.value;
+
+    final WeekModel _weekModel = WeekModel(
+        thumbnail: _thumbnail,
+        name: _title,
+        weekYear: _year,
+        weekNumber: _weekNumber,
+        days: <WeekdayModel>[
+          WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
+          WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[]),
+          WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[]),
+          WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[]),
+          WeekdayModel(day: Weekday.Friday, activities: <ActivityModel>[]),
+          WeekdayModel(day: Weekday.Saturday, activities: <ActivityModel>[]),
+          WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
+        ]);
+
+    _api.week
+        .update(
+            _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
+        .listen((WeekModel response) {});
   }
 
   /// Resets the bloc to its default values.
@@ -97,8 +118,12 @@ class NewWeekplanBloc extends BlocBase {
     _thumbnailController.sink.add(null);
   }
 
-  bool _isAllInputValid(bool title, bool year, bool weekNumber) {
-    return title == true && year == true && weekNumber == true;
+  bool _isAllInputValid(
+      bool title, bool year, bool weekNumber, PictogramModel thumbnail) {
+    return title == true &&
+        year == true &&
+        weekNumber == true &&
+        thumbnail != null;
   }
 
   final StreamTransformer<String, bool> _titleValidation =

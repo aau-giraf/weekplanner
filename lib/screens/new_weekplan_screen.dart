@@ -110,7 +110,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 24),
                     child: StreamBuilder<bool>(
-                      stream: _bloc.areAllInputsValidStream,
+                      stream: _bloc.validInputFieldsStream,
                       builder: _buildSaveButton,
                     ),
                   ),
