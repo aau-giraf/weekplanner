@@ -50,6 +50,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
     await tester.pump();
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
     await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
     await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsNothing);
@@ -62,6 +63,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
     await tester.pump();
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
     await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsNothing);
