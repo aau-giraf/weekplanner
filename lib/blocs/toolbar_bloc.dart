@@ -211,10 +211,9 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 onPressed: () {
-                  login(context, _authBloc.loggedInUsername,
+                  loginFromPopUp(context, _authBloc.loggedInUsername,
                       passwordCtrl.value.text);
-                  Routes.pop(context);
-                },
+                  },
                 child: const Text(
                   'Bekræft',
                   style: TextStyle(color: Colors.white, fontSize: 20),
@@ -378,8 +377,9 @@ class ToolbarBloc extends BlocBase {
   );
 
   /// Used to authenticate a user.
-  void login(BuildContext context, String username, String password) {
-    _authBloc.authenticate(username, password);
+  void loginFromPopUp(BuildContext context, String username, String password) {
+    _authBloc.authenticateFromPopUp(username, password, context);
+    passwordCtrl.value = TextEditingValue();
   }
 
   @override
