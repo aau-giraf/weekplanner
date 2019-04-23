@@ -10,19 +10,74 @@ import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/screens/login_screen.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+
+class MockLoginScreenStateAutoLogin extends LoginScreenState {
+  @override
+  void loginAction(BuildContext context) {}
+}
+
+class MockLoginScreenState extends LoginScreenState {
+  @override
+  void loginAction(BuildContext context) {
+    currentContext = context;
+    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
+
+    authBloc.loggedIn.listen((bool snapshot) {
+      loginStatus = snapshot;
+      if (snapshot == false) {
+        showNotifyDialog();
+      }
+    });
+  }
+
+  /// This is the callback method of the loading spinner to show the dialog
+  @override
+  void showNotifyDialog() {
+    if (!loginStatus) {
+      // Show the new NotifyDialog
+      showDialog<Center>(
+          barrierDismissible: false,
+          context: currentContext,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl!',
+                description: 'Forkert brugernavn og/eller adgangskode',
+                key: Key('WrongUsernameOrPassword'));
+          });
+    }
+  }
+}
+
+class MockLoginScreen extends LoginScreen {
+  @override
+  LoginScreenState createState() => MockLoginScreenState();
+}
+
+class MockLoginScreenAutoLogin extends LoginScreen {
+  @override
+  LoginScreenState createState() => MockLoginScreenStateAutoLogin();
+}
 
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
-  Stream<bool> get loggedIn => _loggedIn.stream;
+  Observable<bool> get loggedIn => _loggedIn.stream;
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
   @override
-  void authenticate(String username, String password, BuildContext context) {
-    if (username == 'test' && password == 'test') {
-      _loggedIn.add(true);
-    } else {
-      _loggedIn.add(false);
+  String loggedInUsername;
+
+  @override
+  void authenticate(String username, String password) {
+    // Mock the API and allow these 2 users to ?login?
+    final bool status = (username == 'test' && password == 'test') ||
+        (username == 'Graatand' && password == 'password');
+    // If there is a successful login, remove the loading spinner,
+    // and push the status to the stream
+    if (status) {
+      loggedInUsername = username;
     }
+    _loggedIn.add(status);
   }
 }
 
@@ -77,17 +132,28 @@ void main() {
     expect(find.byType(LoginScreen), findsOneWidget);
   });
 
-  testWidgets('Auto-Login fills Username', (WidgetTester tester) async {
+  testWidgets('Auto-Login fills username if pressed',
+      (WidgetTester tester) async {
     environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
     await tester.tap(find.byKey(const Key('AutoLoginKey')));
     expect(find.text('Graatand'), findsOneWidget);
   });
 
-  testWidgets('Auto-Login fills Password', (WidgetTester tester) async {
+  testWidgets('Auto-Login fills password if pressed',
+      (WidgetTester tester) async {
     environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
     await tester.tap(find.byKey(const Key('AutoLoginKey')));
+    expect(find.text('password'), findsOneWidget);
+  });
+
+  testWidgets('Auto-Login fills username and password if pressed',
+      (WidgetTester tester) async {
+    environment.setContent(debugEnvironments);
+    await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
+    await tester.tap(find.byKey(const Key('AutoLoginKey')));
+    expect(find.text('Graatand'), findsOneWidget);
     expect(find.text('password'), findsOneWidget);
   });
 
@@ -140,20 +206,17 @@ void main() {
   testWidgets(
       'Logging in with wrong information should show a GirafNotifyDialog',
       (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    final Completer<bool> done = Completer<bool>();
+    environment.setContent(prodEnvironments);
 
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+    await tester.pumpWidget(MaterialApp(home: MockLoginScreen()));
+    await tester.pump();
     await tester.enterText(
         find.byKey(const Key('UsernameKey')), 'SomeWrongUsername');
     await tester.enterText(
         find.byKey(const Key('PasswordKey')), 'SomeWrongPassword');
+    await tester.pump();
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump(const Duration(seconds: 5));
-    bloc.loggedIn.listen((bool success) async {
-      await tester.pump();
-      expect(success, equals(false));
-      await done.future;
-    });
+    await tester.pump();
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
 }

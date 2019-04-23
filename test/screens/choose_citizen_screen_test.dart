@@ -13,9 +13,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
-import 'package:weekplanner/widgets/giraf_app_bar_simple_widget.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -39,15 +40,18 @@ class MockCitizens extends Mock implements UserApi {}
 
 void main() {
   ChooseCitizenBloc bloc;
+  ToolbarBloc toolbarBloc;
   Api api;
   setUp(() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    toolbarBloc = ToolbarBloc();
     di.registerDependency<ChooseCitizenBloc>((_) => bloc);
     di.registerDependency<SettingsBloc>((_) => SettingsBloc());
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
   });
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
@@ -55,9 +59,9 @@ void main() {
     expect(find.byType(ChooseCitizenScreen), findsOneWidget);
   });
 
-  testWidgets('Has GirafAppBarSimple', (WidgetTester tester) async {
+  testWidgets('Has GirafAppBar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
-    expect(find.byType(GirafAppBarSimple), findsOneWidget);
+    expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {

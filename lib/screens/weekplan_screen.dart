@@ -1,18 +1,20 @@
+import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
-import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
+import 'package:api_client/models/pictogram_model.dart';
 
+/// Color of the add buttons
 const Color buttonColor = Color(0xA0FFFFFF);
 
 /// <summary>
@@ -25,21 +27,20 @@ class WeekplanScreen extends StatelessWidget {
   /// </summary>
   /// <param name="key">Key of the widget</param>
   /// <param name="week">Week that should be shown on the weekplan</param>
-  WeekplanScreen(
-      {Key key, @required WeekModel week, @required UsernameModel user})
-      : super(key: key) {
-    weekplanBloc.setWeek(week, user);
+  /// <param name="user">owner of the weekplan</param>
+  WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
+    weekplanBloc.setWeek(_week, _user);
   }
 
   /// The WeekplanBloc that contains the currently chosen week
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
+  final UsernameModel _user;
+  final WeekModel _week;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(
-        title: 'Ugeplan',
-      ),
+      appBar: GirafAppBar(title: 'Ugeplan'),
       body: StreamBuilder<UserWeekModel>(
         stream: weekplanBloc.userWeek,
         initialData: null,
@@ -85,9 +86,41 @@ class WeekplanScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
+              if (activities[index].state == ActivityState.Completed) {
+                return GestureDetector(
+                  onTap: () => Routes.push(context,
+                      ShowActivityScreen(_week, activities[index], _user)),
+                  child: Card(
+                    child: FittedBox(
+                      child: Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: PictogramImage(
+                              pictogram: activities[index].pictogram,
+                              onPressed: () => null,
+                            ),
+                          ),
+                          Icon(
+                            Icons.check,
+                            key: const Key('IconComplete'),
+                            color: Colors.green,
+                            size: MediaQuery.of(context).size.width,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
               return PictogramImage(
                   pictogram: activities[index].pictogram,
-                  onPressed: () => null);
+                  key: Key(
+                      day.index.toString() + activities[index].id.toString()),
+                  onPressed: () => Routes.push(context,
+                      ShowActivityScreen(_week, activities[index], _user)));
             },
             itemCount: activities.length,
           ),
@@ -150,6 +183,7 @@ class WeekplanScreen extends StatelessWidget {
         translation = '';
         break;
     }
+
     return Card(
         key: Key(translation),
         color: buttonColor,
