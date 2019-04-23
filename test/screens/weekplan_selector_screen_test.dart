@@ -13,7 +13,6 @@ import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-
 import '../blocs/weekplans_bloc_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
