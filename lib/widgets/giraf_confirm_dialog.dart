@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-class GirafConfirmDialog extends StatelessWidget
-    implements PreferredSizeWidget {
+///A dialog widget presented to the user to confirm an action, such as
+///logging out or deleting a weekplan. The dialog consists of a title,
+///a description, and two buttons. One button to cancel the action and
+///one button to accept and perform the action.
+class GirafConfirmDialog extends StatelessWidget {
   ///The dialog displays the title and description, with two buttons
   ///to either confirm the action, or cancel, which simply closes the dialog.
   const GirafConfirmDialog(
@@ -15,9 +18,6 @@ class GirafConfirmDialog extends StatelessWidget
       @required this.confirmButtonIcon,
       @required this.confirmOnPressed})
       : super(key: key);
-
-  @override
-  Size get preferredSize => const Size.fromHeight(56.0);
 
   ///title of the dialogBox, displayed in the header of the dialogBox
   final String title;
@@ -115,7 +115,7 @@ class GirafConfirmDialog extends StatelessWidget
                       ),
                     ),
                     onPressed: () {
-
+                      confirmOnPressed();
                     })
               ],
             ),
