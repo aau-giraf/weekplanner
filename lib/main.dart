@@ -50,13 +50,7 @@ void _runApp() {
             } else {
               // Not loggedIn pop context to login screen.
               Routes.goHome(context);
-              return GirafConfirmDialog(
-                title: 'Log ud@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-                description: 'Vil du logge ud?@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',
-                confirmButtonText: 'Log ud psijf pisdjfpisjpisfj pisdjpisjdpifjspid asjdp apisjd pai djapis djpiadj piasjdpiajdpias ijapsijd apsijd paijd pa',
-                confirmButtonIcon: ImageIcon(AssetImage('assets/icons/logout.png')),
-                confirmOnPressed: () => Routes.pop(context),
-              );
+              return LoginScreen();
             }
           })));
 }
