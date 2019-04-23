@@ -213,7 +213,8 @@ class ToolbarBloc extends BlocBase {
                 onPressed: () {
                   loginFromPopUp(context, _authBloc.loggedInUsername,
                       passwordCtrl.value.text);
-                  },
+                  Routes.pop(context);
+                },
                 child: const Text(
                   'Bekræft',
                   style: TextStyle(color: Colors.white, fontSize: 20),
