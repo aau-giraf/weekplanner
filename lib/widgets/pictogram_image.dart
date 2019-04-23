@@ -11,7 +11,11 @@ class PictogramImage extends StatelessWidget {
   /// authenticated request is then made to the back-end to load the image.
   ///
   /// The [onPressed] function will be called every time the image is pressed
-  PictogramImage({Key key, @required this.pictogram, @required this.onPressed})
+  PictogramImage(
+      {Key key,
+      @required this.pictogram,
+      @required this.onPressed,
+      this.onLongPressed})
       : super(key: key) {
     _bloc.load(pictogram);
   }
@@ -22,6 +26,9 @@ class PictogramImage extends StatelessWidget {
   /// The provided callback function which will be called on
   /// every press of the image
   final VoidCallback onPressed;
+  /// The provided callback function which will be called on
+  /// every long press of the activity
+  final VoidCallback onLongPressed;
 
   final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
   final Widget _loading = Center(
@@ -31,6 +38,7 @@ class PictogramImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: onLongPressed,
       onTap: onPressed,
       child: Card(
         child: FittedBox(

@@ -50,7 +50,36 @@ class WeekplanScreen extends StatelessWidget {
           }
         },
       ),
+      bottomNavigationBar: StreamBuilder<bool>(
+        stream: weekplanBloc.editMode,
+        initialData: null,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.data) {
+            return buildBottomAppBar();
+          } else {
+            return Container(width: 0.0, height: 0.0);
+          }
+        },
+      ),
     );
+  }
+
+  BottomAppBar buildBottomAppBar() {
+    return BottomAppBar(
+              color: const Color(0xAAFF6600),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                    iconSize: 50,
+                    icon: const Icon(Icons.delete_forever),
+                    onPressed: () {
+                      //.deleteMarkedActivities(_markedActivities);
+                    },
+                  ),
+                ],
+              ));
   }
 
   Row _buildWeeks(WeekModel weekModel) {
@@ -83,6 +112,7 @@ class WeekplanScreen extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               if (activities[index].state == ActivityState.Completed) {
                 return GestureDetector(
+                  onLongPress: () => weekplanBloc.toggleEditMode(),
                   onTap: () => Routes.push(context,
                       ShowActivityScreen(_week, activities[index], _user)),
                   child: Card(
@@ -114,6 +144,7 @@ class WeekplanScreen extends StatelessWidget {
                   pictogram: activities[index].pictogram,
                   key: Key(
                       day.index.toString() + activities[index].id.toString()),
+                  onLongPressed: () => weekplanBloc.toggleEditMode(),
                   onPressed: () => Routes.push(context,
                       ShowActivityScreen(_week, activities[index], _user)));
             },
