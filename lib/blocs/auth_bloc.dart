@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// All about Authentication. Login, logout, etc.
@@ -37,18 +38,39 @@ class AuthBloc extends BlocBase {
     });
   }
 
+  bool loginSuccessfull = false;
+
+  void A (BuildContext context) {
+    Routes.pop(context);
+    if (loginSuccessfull == false) {
+      showDialog<Center>(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl',
+                description: 'Forkert brugernavn og/eller adgangskode',
+                key: Key('WrongUsernameOrPassword'));
+          });
+    }
+  }
   /// Authenticates the user only by password when signing-in from PopUp.
   void authenticateFromPopUp(String username, String password,
                              BuildContext context) {
-    showLoadingSpinner(context, false, () => Routes.pop(context), 2000);
+    showLoadingSpinner(context, false, () => A(context), 2000);
+
     _api.account.login(username, password).take(1).listen((bool status) {
 
       if (status){
+        loginSuccessfull = true;
         //Pop the popup
         Routes.pop(context);
-      }
+
+        }
     });
-  }
+
+    }
+
 
   /// Logs the currently logged in user out
   void logout() {
