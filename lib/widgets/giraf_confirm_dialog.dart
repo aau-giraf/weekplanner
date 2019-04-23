@@ -1,10 +1,8 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-class GirafConfirmDialog extends StatelessWidget
-    implements PreferredSizeWidget {
+class GirafConfirmDialog extends StatelessWidget {
   ///The dialog displays the title and description, with two buttons
   ///to either confirm the action, or cancel, which simply closes the dialog.
   const GirafConfirmDialog(
@@ -15,9 +13,6 @@ class GirafConfirmDialog extends StatelessWidget
       @required this.confirmButtonIcon,
       @required this.confirmOnPressed})
       : super(key: key);
-
-  @override
-  Size get preferredSize => const Size.fromHeight(56.0);
 
   ///title of the dialogBox, displayed in the header of the dialogBox
   final String title;
@@ -66,57 +61,68 @@ class GirafConfirmDialog extends StatelessWidget
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 0),
-            child: ButtonBar(
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+            child: Row(
               mainAxisSize: MainAxisSize.min,
-              alignment: MainAxisAlignment.center,
               children: <Widget>[
-                RaisedButton(
-                    key: const Key('ConfirmDialogCancelButton'),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color.fromRGBO(0, 0, 0, 0.3))),
-                    color: const Color.fromRGBO(255, 157, 0, 1),
-                    child: Row(
-                      children: const <Widget>[
-                        ImageIcon(
-                          AssetImage('assets/icons/cancel.png'),
-                          color: Color.fromRGBO(0, 0, 0, 1),
-                        ),
-                        Text(
-                          'Fortryd',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      Routes.pop(context);
-                    }),
-                RaisedButton(
-                    key: const Key('ConfirmDialogConfirmButton'),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color.fromRGBO(0, 0, 0, 0.3))),
-                    color: const Color.fromRGBO(255, 157, 0, 1),
-                    child: Center(
-                      child: Row(
-                        children: <Widget>[
-                          confirmButtonIcon,
-                          Container(
-                            child: AutoSizeText(
-                              confirmButtonText,
-                              style: const TextStyle(color: Colors.white),
-                              maxLines: 10,
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: RaisedButton(
+                        key: const Key('ConfirmDialogCancelButton'),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            side: const BorderSide(
+                                color: Color.fromRGBO(0, 0, 0, 0.3))),
+                        color: const Color.fromRGBO(255, 157, 0, 1),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            ImageIcon(
+                              AssetImage('assets/icons/cancel.png'),
+                              color: Color.fromRGBO(0, 0, 0, 1),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    onPressed: () {
-
-                    })
+                            Text(
+                              'Fortryd',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          Routes.pop(context);
+                        }),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: RaisedButton(
+                        key: const Key('ConfirmDialogConfirmButton'),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            side: const BorderSide(
+                                color: Color.fromRGBO(0, 0, 0, 0.3))),
+                        color: const Color.fromRGBO(255, 157, 0, 1),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            confirmButtonIcon,
+                            Flexible(
+                              fit: FlexFit.tight,
+                              child: Text(
+                                confirmButtonText,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          confirmOnPressed();
+                        }),
+                  ),
+                ),
               ],
             ),
           )
