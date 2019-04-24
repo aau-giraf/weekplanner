@@ -39,7 +39,7 @@ class NewWeekplanScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           labelText: 'Titel',
                           errorText: (snapshot?.data == false)
-                              ? 'Titel skal være mellem 1 og 32 tegn'
+                              ? 'Titel skal bestå af mindst et tegn'
                               : null,
                           border: const OutlineInputBorder(
                               borderSide: BorderSide())),
@@ -108,8 +108,8 @@ class NewWeekplanScreen extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.blue,
-                      onPressed: null,
                       // Handle when a weekplan is made from a template
+                      onPressed: null,
                     ),
                   ),
                   Padding(
