@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +13,7 @@ class MockScreen extends StatelessWidget {
           GirafButton(
               key: const Key('Button'),
               text: 'PressButton',
-              onPressed: () {
-                Routes.pop(context);
-              },
+              onPressed: () {},
               icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
               isEnabledStream: Observable<bool>.just(false)),
         ],
