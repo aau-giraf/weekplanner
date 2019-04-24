@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/models/enums/weekday_enum.dart';
-import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
+import 'package:api_client/models/pictogram_model.dart';
+
+/// Color of the add buttons
+const Color buttonColor = Color(0xA0FFFFFF);
 
 /// <summary>
 /// The WeekplanScreen is used to display a week
@@ -23,8 +29,7 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="week">Week that should be shown on the weekplan</param>
   /// <param name="user">owner of the weekplan</param>
   WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
-    weekplanBloc.setWeek(_week);
-    weekplanBloc.load(_user);
+    weekplanBloc.setWeek(_week, _user);
   }
 
   /// The WeekplanBloc that contains the currently chosen week
@@ -36,12 +41,12 @@ class WeekplanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GirafAppBar(title: 'Ugeplan'),
-      body: StreamBuilder<WeekModel>(
-        stream: weekplanBloc.week,
+      body: StreamBuilder<UserWeekModel>(
+        stream: weekplanBloc.userWeek,
         initialData: null,
-        builder: (BuildContext context, AsyncSnapshot<WeekModel> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<UserWeekModel> snapshot) {
           if (snapshot.hasData) {
-            return _buildWeeks(snapshot.data);
+            return _buildWeeks(snapshot.data.week, context);
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -82,7 +87,7 @@ class WeekplanScreen extends StatelessWidget {
         ));
   }
 
-  Row _buildWeeks(WeekModel weekModel) {
+  Row _buildWeeks(WeekModel weekModel, BuildContext context) {
     const List<int> weekColors = <int>[
       0xFF08A045,
       0xFF540D6E,
@@ -97,13 +102,14 @@ class WeekplanScreen extends StatelessWidget {
       weekDays.add(Expanded(
           child: Card(
               color: Color(weekColors[i]),
-              child:
-                  _day(weekModel.days[i].day, weekModel.days[i].activities))));
+              child: _day(weekModel.days[i].day, weekModel.days[i].activities,
+                  context))));
     }
     return Row(children: weekDays);
   }
 
-  Column _day(Weekday day, List<ActivityModel> activities) {
+  Column _day(
+      Weekday day, List<ActivityModel> activities, BuildContext context) {
     return Column(
       children: <Widget>[
         _translateWeekDay(day),
@@ -169,7 +175,33 @@ class WeekplanScreen extends StatelessWidget {
                       ),
                     );
                   });
-            })
+            }),
+        Container(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: ButtonTheme(
+            child: SizedBox(
+              width: double.infinity,
+              child: RaisedButton(
+                  key: const Key('AddActivityButton'),
+                  child: Image.asset('assets/icons/add.png'),
+                  color: buttonColor,
+                  onPressed: () async {
+                    final PictogramModel newActivity =
+                        await Routes.push(context, PictogramSearch());
+                    if (newActivity != null) {
+                      weekplanBloc.addActivity(
+                          ActivityModel(
+                              id: newActivity.id,
+                              pictogram: newActivity,
+                              order: activities.length,
+                              state: ActivityState.Active,
+                              isChoiceBoard: false),
+                          day.index);
+                    }
+                  }),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -191,21 +223,20 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
-      child: FittedBox(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: <Widget>[
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: PictogramImage(
-                pictogram: activities[index].pictogram,
-              ),
+        child: FittedBox(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: PictogramImage(
+              pictogram: activities[index].pictogram,
             ),
-            icon
-          ],
-        ),
+          ),
+          icon
+        ],
       ),
-    );
+    ));
   }
 
   Card _translateWeekDay(Weekday day) {
@@ -236,10 +267,10 @@ class WeekplanScreen extends StatelessWidget {
         translation = '';
         break;
     }
-    const Color color = Color(0xA0FFFFFF);
+
     return Card(
         key: Key(translation),
-        color: color,
+        color: buttonColor,
         child: ListTile(
             title: Text(
           translation,

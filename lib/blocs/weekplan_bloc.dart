@@ -5,6 +5,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/models/user_week_model.dart';
 
 /// Bloc that streams the currently chosen weekplan
 class WeekplanBloc extends BlocBase {
@@ -12,13 +13,17 @@ class WeekplanBloc extends BlocBase {
   /// Initilizes values
   WeekplanBloc(this._api);
 
-  final BehaviorSubject<WeekModel> _week = BehaviorSubject<WeekModel>();
   final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<List<ActivityModel>> _markedActivities =
       BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+  final BehaviorSubject<UserWeekModel> _userWeek =
+      BehaviorSubject<UserWeekModel>();
+
+  /// The API
+  final Api _api;
 
   /// The stream that emits the currently chosen weekplan
-  Stream<WeekModel> get week => _week.stream;
+  Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in edit mode or citizen
   Stream<bool> get editMode => _editMode.stream;
@@ -26,22 +31,15 @@ class WeekplanBloc extends BlocBase {
   /// The stream that emits the marked activities
   Stream<List<ActivityModel>> get markedActivities => _markedActivities.stream;
 
-  final Api _api;
-  UsernameModel _user;
-
-  /// Loads a user to the weekplan
-  void load(UsernameModel user) {
-    _user = user;
-  }
-
   /// Sink to set the currently chosen week
-  void setWeek(WeekModel week) {
-    _week.add(week);
+  void setWeek(WeekModel week, UsernameModel user) {
+    _userWeek.add(UserWeekModel(week, user));
   }
 
   /// Adds a new marked activity
   void addMarkedActivity(ActivityModel activityModel) {
     final List<ActivityModel> localMarkedActivities = _markedActivities.value;
+
     localMarkedActivities.add(activityModel);
     _markedActivities.add(localMarkedActivities);
   }
@@ -49,6 +47,7 @@ class WeekplanBloc extends BlocBase {
   /// Removes a marked activity
   void removeMarkedActivity(ActivityModel activityModel) {
     final List<ActivityModel> localMarkedActivities = _markedActivities.value;
+
     localMarkedActivities.remove(activityModel);
     _markedActivities.add(localMarkedActivities);
   }
@@ -65,25 +64,38 @@ class WeekplanBloc extends BlocBase {
 
   /// Delete the marked activities when the trash button is clicked
   void deleteMarkedActivities() {
-    final WeekModel localWeek = _week.value;
-    int counter = 0;
-    for (WeekdayModel weekday in localWeek.days) {
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+
+    for (WeekdayModel weekday in week.days) {
       weekday.activities.removeWhere(
           (ActivityModel item) => _markedActivities.value.contains(item));
     }
 
-    _api.week
-        .update(_user.id, localWeek.weekYear, localWeek.weekNumber, localWeek);
+    _api.week.update(user.id, week.weekYear,
+        week.weekNumber, week);
   }
 
   /// Toggles edit mode
   void toggleEditMode() {
     _editMode.add(!_editMode.value);
-    print(_editMode.value);
+  }
+
+  /// Adds an activity to the given day.
+  void addActivity(ActivityModel activity, int day) {
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+
+    week.days[day].activities.add(activity);
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel newWeek) {
+      _userWeek.add(UserWeekModel(newWeek, user));
+    });
   }
 
   @override
   void dispose() {
-    _week.close();
+    _userWeek.close();
   }
 }
