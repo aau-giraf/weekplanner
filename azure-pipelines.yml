@@ -20,7 +20,7 @@ jobs:
         inputs:
           projectDirectory: $(projectDirectory)
       - task: CopyFiles@2
-          inputs:
-            contents: '**/?(*.apk|*.app)'
-            targetFolder: '$(build.artifactStagingDirectory)'
+        inputs:
+          contents: '**/?(*.apk|*.app)'
+          targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
