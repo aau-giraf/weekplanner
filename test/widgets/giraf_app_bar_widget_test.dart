@@ -1,3 +1,4 @@
+import 'package:api_client/api/account_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +12,9 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 
 class MockAuth extends Mock implements AuthBloc {}
-class MockApi extends Mock implements Api {}
+class MockAccApi extends Mock implements AccountApi {
+  
+}
 /// Used to retrieve the visibility widget wrapping the editbutton
 const String keyOfVisibilityForEdit = 'visibilityEditBtn';
 
@@ -21,7 +24,6 @@ void main() {
 
   setUp(() {
     api = Api('any');
-
     di.clearAll();
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     bloc = ToolbarBloc();
@@ -275,27 +277,18 @@ void main() {
         title: 'Ugeplan',
         appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
 
-    girafAppBar.toolbarBloc.authBloc.loggedInUsername = 'Graatand';
-    api = MockApi();
-    when(api.account.login('Graatand', 'password'))
-        .thenReturn(Observable<bool>.just(true));
-    di.clearAll();
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    bloc = ToolbarBloc();
-    di.registerDependency<ToolbarBloc>((_) => bloc);
+    girafAppBar.toolbarBloc.authBloc.loggedInUsername = "Graatand";
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     await tester.pumpAndSettle();
 
-    IconButton change = tester.widget(find.byKey(const Key('ChangeToGuardian')));
+    await tester.tap(find.byKey(const Key('ChangeToGuardian')));
 
-    await tester.tap(find.byWidget(change));
     await tester.pumpAndSettle();
-    
-    TextField passwordField = tester.widget(find.byKey(const Key('PasswordField')));
-    
-    await tester.enterText(find.byWidget(passwordField), 'password');
+
+    await tester.enterText(find.byKey(const Key('PasswordField')),
+        'password');
 
     await tester.pumpAndSettle();
 
@@ -303,8 +296,8 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key('WrongUsernameOrPasswordDialog')),
-          findsNothing);
+    expect(find.byType(AlertDialog),
+        findsOneWidget);
   });
 
 

@@ -38,25 +38,30 @@ class AuthBloc extends BlocBase {
     });
   }
 
-  /// Contains the current login status
+  /// Indicates whether the last login attempt was succesfull.
   bool loginStatus = false;
 
   /// Shows a dialog when incorrect login in popup.
-  void showFailureDialog (BuildContext context) {
-    //pops the loading spinner
+  void reactToLoginAttempt (BuildContext context) {
+    // pops the loading spinner
     Routes.pop(context);
 
+    // shows the dialog if the last login attempt was insuccessfull
     if (!loginStatus) {
-      showDialog<Center>(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return const GirafNotifyDialog(
-                title: 'Fejl',
-                description: 'Forkert brugernavn og/eller adgangskode',
-                key: Key('WrongUsernameOrPasswordDialog'));
-          });
+      showFailureDialog(context);
     }
+  }
+
+  void showFailureDialog(BuildContext context){
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+              title: 'Fejl',
+              description: 'Forkert brugernavn og/eller adgangskode',
+              key: Key('WrongUsernameOrPasswordDialog'));
+        });
   }
 
   /// Authenticates the user only by password when signing-in from PopUp.
@@ -65,7 +70,8 @@ class AuthBloc extends BlocBase {
     // Make sure the status for the upcoming
     // login is false until proven otherwise
     loginStatus = false;
-    showLoadingSpinner(context, false, () => showFailureDialog(context), 2000);
+    showLoadingSpinner(context, false,
+                       () => reactToLoginAttempt(context), 2000);
 
     _api.account.login(username, password).take(1).listen((bool status) {
       if (status){
