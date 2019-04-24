@@ -4,6 +4,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/user_week_model.dart';
@@ -11,7 +12,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
-import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
 
@@ -155,7 +155,6 @@ class WeekplanScreen extends StatelessWidget {
                                 } else {
                                   weekplanBloc
                                       .addMarkedActivity(activities[index]);
-                                  print(index);
                                 }
                               } else {
                                 Routes.push(
@@ -175,6 +174,7 @@ class WeekplanScreen extends StatelessWidget {
                             },
                             child: isMarked
                                 ? Container(
+                                  key: Key('isSelectedKey'),
                                     margin: const EdgeInsets.all(1),
                                     decoration: BoxDecoration(
                                         border: Border.all(
@@ -225,6 +225,20 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
+  Widget _getPictogram(ActivityModel activity) {
+    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    bloc.loadPictogramById(activity.pictogram.id);
+    return StreamBuilder<Image>(
+      stream: bloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        if (snapshot.data == null) {
+          return const CircularProgressIndicator();
+        }
+        return snapshot.data;
+      },
+    );
+  }
+
   Card buildPictogramCard(
     BuildContext context,
     List<ActivityModel> activities,
@@ -248,11 +262,17 @@ class WeekplanScreen extends StatelessWidget {
         children: <Widget>[
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: PictogramImage(
-              pictogram: activities[index].pictogram,
+            height: MediaQuery.of(context).size.width,
+            child: FittedBox(
+              child: _getPictogram(activities[index]),
             ),
           ),
-          icon
+          Icon(
+            Icons.check,
+            key: const Key('IconComplete'),
+            size: MediaQuery.of(context).size.width,
+            color: Colors.green,
+          ),
         ],
       ),
     ));
