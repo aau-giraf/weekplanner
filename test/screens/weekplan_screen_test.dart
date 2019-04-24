@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -83,8 +85,7 @@ void main() {
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
@@ -110,8 +111,7 @@ void main() {
   });
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsNWidgets(7));
@@ -135,10 +135,29 @@ void main() {
   });
 
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
+  });
+
+  testWidgets('Long click on an activity activates edit mode',
+      (WidgetTester tester) async {
+    // final Completer<bool> done = Completer<bool>();
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+    bool resultValue = false;
+
+    bloc.editMode.listen((bool editMode) {
+      resultValue = editMode;
+      print(editMode);
+    });
+    
+    expect(resultValue, false);
+    var button = find
+        .byKey(Key(Weekday.Monday.index.toString() + activity.id.toString()));
+    await tester.longPress(button);
+    await tester.pump(Duration.zero);
+    expect(resultValue, true);
   });
 }

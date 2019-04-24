@@ -135,7 +135,7 @@ class WeekplanScreen extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<List<ActivityModel>> markedActivities) {
               return StreamBuilder<bool>(
-                  initialData: null,
+                  initialData: false,
                   stream: weekplanBloc.editMode,
                   builder:
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -145,6 +145,8 @@ class WeekplanScreen extends StatelessWidget {
                           bool isMarked =
                               weekplanBloc.isActivityMarked(activities[index]);
                           return GestureDetector(
+                            key: Key(day.index.toString() +
+                                activities[index].id.toString()),
                             onTap: () {
                               if (snapshot.data) {
                                 if (isMarked) {
