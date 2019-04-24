@@ -40,8 +40,7 @@ class PictogramSearch extends StatelessWidget {
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
 
                       if(snapshot.hasData) {
-                        return  snapshot.hasData
-                            ? GridView.count(
+                        return  GridView.count(
                           crossAxisCount: 4,
                           children: snapshot.data
                               .map((PictogramModel pictogram) =>
@@ -50,9 +49,7 @@ class PictogramSearch extends StatelessWidget {
                                   onPressed: () =>
                                       Routes.pop(context, pictogram)))
                               .toList(),
-                        )
-                            : const Center(
-                            child: CircularProgressIndicator());
+                        );
 
                       }
                       else if(snapshot.hasError){
@@ -64,10 +61,10 @@ class PictogramSearch extends StatelessWidget {
                           onTap: () => _bloc.search,
                         );
                       }
-                      else
+                      else {
                         return const Center(
                             child: CircularProgressIndicator());
-
+                      }
                     }),
               ),
             ),

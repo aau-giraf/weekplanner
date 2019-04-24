@@ -6,7 +6,8 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
 
 /// For how long the debouncer should wait
-const int _milliseconds = 250;
+const int _debounceTime = 250;
+const int _timeoutTime = 10000;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
@@ -21,16 +22,13 @@ class PictogramBloc extends BlocBase {
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
-  Stream<TimeoutException> get timeout => _timeoutxception.stream;
   final BehaviorSubject<List<PictogramModel>> _pictograms =
-      BehaviorSubject<List<PictogramModel>>();
-
-  final BehaviorSubject<TimeoutException> _timeoutxception =
-      BehaviorSubject<TimeoutException>();
+  BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
-  Timer _timer;
-  Timer temptime;
+  Timer _debounceTimer;
+  Timer _timeoutTimer;
+
   /// Initializes a search for [query].
   ///
   /// This does not accept empty strings.
@@ -41,32 +39,29 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
+    if (query.isEmpty) {
+      return;
+    }
 
-      if (query.isEmpty) {
-        return;
-      }
+    if (_debounceTimer != null) {
+      _debounceTimer.cancel();
+    }
+    _pictograms.add(null);
+    List<PictogramModel> temp;
 
-      if (_timer != null) {
-        _timer.cancel();
-      }
-      _pictograms.add(null);
-      List<PictogramModel> temp;
-
-      _timer = Timer(Duration(milliseconds: _milliseconds), ()  {
-        temptime = Timer(Duration(milliseconds: 10000), (){
-          if(temp == null) {
-            _pictograms.addError(null);
-          }
-        });
-         _api.pictogram
-            .getAll(page: 1, pageSize: 10, query: query)
-            .listen((List<PictogramModel> results) {
-              temp = results;
-              _pictograms.add(temp);
-        });
-
+    _debounceTimer = Timer(Duration(milliseconds: _debounceTime), () {
+      _timeoutTimer = Timer(Duration(milliseconds: _timeoutTime), () {
+        if (temp == null) {
+          _pictograms.addError(null);
+        }
       });
-
+      _api.pictogram
+          .getAll(page: 1, pageSize: 10, query: query)
+          .listen((List<PictogramModel> results) {
+        temp = results;
+        _pictograms.add(temp);
+      });
+    });
   }
 
 
@@ -74,3 +69,4 @@ class PictogramBloc extends BlocBase {
   void dispose() {
     _pictograms.close();
   }
+}
