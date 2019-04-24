@@ -141,7 +141,7 @@ void main() {
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
   });
 
-  testWidgets('Long click on an activity activates edit mode',
+  testWidgets('Long click on an activity toggles edit mode',
       (WidgetTester tester) async {
     // final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
@@ -150,14 +150,32 @@ void main() {
 
     bloc.editMode.listen((bool editMode) {
       resultValue = editMode;
-      print(editMode);
     });
-    
+
     expect(resultValue, false);
-    var button = find
-        .byKey(Key(Weekday.Monday.index.toString() + activity.id.toString()));
-    await tester.longPress(button);
-    await tester.pump(Duration.zero);
+
+    await tester.longPress(find
+        .byKey(Key(Weekday.Monday.index.toString() + activity.id.toString())));
+    await tester.pump();
+
     expect(resultValue, true);
+
+    await tester.longPress(find
+        .byKey(Key(Weekday.Monday.index.toString() + activity.id.toString())));
+    await tester.pump();
+
+    expect(resultValue, false);
+  });
+
+  testWidgets('Long press selects activity', (WidgetTester tester) async {
+    // final Completer<bool> done = Completer<bool>();
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    await tester.longPress(find.byKey(
+        Key(Weekday.Wednesday.index.toString() + activity.id.toString())));
+    await tester.pump();
+
+    expect(find.byKey(Key('isSelectedKey')), findsOneWidget);
   });
 }
