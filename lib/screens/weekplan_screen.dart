@@ -56,7 +56,7 @@ class WeekplanScreen extends StatelessWidget {
       ),
       bottomNavigationBar: StreamBuilder<bool>(
         stream: weekplanBloc.editMode,
-        initialData: null,
+        initialData: false,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data) {
             return buildBottomAppBar();
