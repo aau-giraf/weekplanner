@@ -1,3 +1,4 @@
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -13,6 +14,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:tuple/tuple.dart';
 
 /// Color of the add buttons
 const Color buttonColor = Color(0xA0FFFFFF);
@@ -72,58 +74,59 @@ class WeekplanScreen extends StatelessWidget {
       weekDays.add(Expanded(
           child: Card(
               color: Color(weekColors[i]),
-              child: _day(weekModel.days[i].day, weekModel.days[i].activities,
-                  context))));
+              child: _day(weekModel.days[i], context))));
     }
     return Row(children: weekDays);
   }
 
-  Column _day(
-      Weekday day, List<ActivityModel> activities, BuildContext context) {
+  Column _day(WeekdayModel weekday, BuildContext context) {
     return Column(
       children: <Widget>[
-        _translateWeekDay(day),
+        _translateWeekDay(weekday.day),
         Expanded(
           child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              if (activities[index].state == ActivityState.Completed) {
-                return GestureDetector(
-                  onTap: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)),
-                  child: Card(
+              itemBuilder: (BuildContext context, int index) {
+                if (index == weekday.activities.length) {
+                  return StreamBuilder<bool>(
+                      stream: weekplanBloc.activityPlaceholderVisible,
+                      initialData: false,
+                      builder:
+                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                        return Visibility(
+                          key: const Key('GreyDragVisibleKey'),
+                          visible: snapshot.data,
+                          child: _dragTargetPlaceholder(index, weekday),
+                        );
+                      });
+                }
+                if (weekday.activities[index].state ==
+                    ActivityState.Completed) {
+                  return Card(
                     child: FittedBox(
                       child: Stack(
                         alignment: AlignmentDirectional.center,
                         children: <Widget>[
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: PictogramImage(
-                              pictogram: activities[index].pictogram,
-                              onPressed: () => null,
-                            ),
+                            child: _dragTargetPictogram(index, weekday),
                           ),
-                          Icon(
-                            Icons.check,
-                            key: const Key('IconComplete'),
-                            color: Colors.green,
-                            size: MediaQuery.of(context).size.width,
+                          IgnorePointer(
+                            child: Icon(
+                              Icons.check,
+                              key: const Key('IconComplete'),
+                              color: Colors.green,
+                              size: MediaQuery.of(context).size.width,
+                            ),
                           )
                         ],
                       ),
                     ),
-                  ),
-                );
-              }
-
-              return PictogramImage(
-                  pictogram: activities[index].pictogram,
-                  key: Key(
-                      day.index.toString() + activities[index].id.toString()),
-                  onPressed: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)));
-            },
-            itemCount: activities.length,
-          ),
+                  );
+                }
+                return _dragTargetPictogram(index, weekday);
+              },
+              itemCount: weekday.activities.length + 1 //+1 for gray box,
+              ),
         ),
         Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
@@ -142,16 +145,103 @@ class WeekplanScreen extends StatelessWidget {
                           ActivityModel(
                               id: newActivity.id,
                               pictogram: newActivity,
-                              order: activities.length,
+                              order: weekday.activities.length,
                               state: ActivityState.Active,
                               isChoiceBoard: false),
-                          day.index);
+                          weekday.day.index);
                     }
                   }),
             ),
           ),
         )
       ],
+    );
+  }
+
+  DragTarget<dynamic> _dragTargetPlaceholder(
+      int dropTargetIndex, WeekdayModel weekday) {
+    return DragTarget<dynamic>(
+      builder: (BuildContext context, List<dynamic> candidateData,
+          List<dynamic> rejectedData) {
+        return AspectRatio(
+          aspectRatio: 1,
+          child: Card(
+            color: const Color.fromRGBO(200, 200, 200, 0.5),
+            child: ListTile(),
+          ),
+        );
+      },
+      onWillAccept: (dynamic data) {
+        return true;
+      },
+      onAccept: (dynamic data) {
+        weekplanBloc.reorderActivities(
+            data.item1, data.item2, weekday.day, dropTargetIndex);
+      },
+    );
+  }
+
+  DragTarget<dynamic> _dragTargetPictogram(int index, WeekdayModel weekday) {
+    return DragTarget<dynamic>(
+      builder: (BuildContext context, List<dynamic> candidateData,
+          List<dynamic> rejectedData) {
+        return LongPressDraggable<dynamic>(
+          data: Tuple2<ActivityModel, Weekday>(
+              weekday.activities[index], weekday.day),
+          dragAnchor: DragAnchor.pointer,
+          child: PictogramImage(
+            pictogram: weekday.activities[index].pictogram,
+            key: Key(weekday.day.index.toString() +
+                weekday.activities[index].id.toString()),
+            onPressed: () => Routes.push(context,
+                ShowActivityScreen(_week, weekday.activities[index], _user)),
+          ),
+          childWhenDragging: Opacity(
+            opacity: 0.5,
+            child: PictogramImage(
+              pictogram: weekday.activities[index].pictogram,
+              onPressed: () => null,
+            ),
+          ),
+          onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
+          onDragCompleted: () {
+            weekplanBloc.setActivityPlaceholderVisible(false);
+          },
+          onDragEnd: (DraggableDetails details) =>
+              weekplanBloc.setActivityPlaceholderVisible(false),
+          feedback: Container(
+            height: 150,
+            width: 150,
+            child: FittedBox(
+              child: Stack(
+                alignment: AlignmentDirectional.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: _dragTargetPictogram(index, weekday),
+                  ),
+                  weekday.activities[index].state == ActivityState.Completed
+                      ? IgnorePointer(
+                          child: Icon(
+                          Icons.check,
+                          key: const Key('IconComplete'),
+                          color: Colors.green,
+                          size: MediaQuery.of(context).size.width,
+                        ))
+                      : Container(),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      onWillAccept: (dynamic data) {
+        return true;
+      },
+      onAccept: (dynamic data) {
+        weekplanBloc.reorderActivities(
+            data.item1, data.item2, weekday.day, index);
+      },
     );
   }
 
