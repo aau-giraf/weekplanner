@@ -81,8 +81,7 @@ class AuthBloc extends BlocBase {
         Routes.pop(context);
         }
     });
-    }
-
+  }
 
   /// Logs the currently logged in user out
   void logout() {

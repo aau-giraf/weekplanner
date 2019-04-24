@@ -24,8 +24,13 @@ class MockAccApi extends Mock implements AccountApi {
     }
   }
 }
+
 /// Used to retrieve the visibility widget wrapping the editbutton
 const String keyOfVisibilityForEdit = 'visibilityEditBtn';
+const String keyOfWrongUsernameOrPassword = 'WrongUsernameOrPasswordDialog';
+const String keyOfChangeToGuardian = 'ChangeToGuardian';
+const String keyOfPasswordField = 'PasswordField';
+const String keyOfConfirmButton = 'ConfirmButton';
 
 void main() {
   ToolbarBloc bloc;
@@ -293,21 +298,21 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('ChangeToGuardian')));
+    await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
 
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('PasswordField')),
+    await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
         'password');
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('ConfirmButton')));
+    await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
 
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    expect(find.byType(AlertDialog),
-        findsOneWidget);
+    expect(find.byKey(Key(keyOfWrongUsernameOrPassword)),
+        findsNothing);
   });
 
 
@@ -322,20 +327,20 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('ChangeToGuardian')));
+    await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
 
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('PasswordField')),
+    await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
                                       'wrongpassword');
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('ConfirmButton')));
+    await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
 
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    expect(find.byType(AlertDialog),
+    expect(find.byKey(Key(keyOfWrongUsernameOrPassword)),
                       findsOneWidget);
   });
 }
