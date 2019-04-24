@@ -73,7 +73,7 @@ class WeekplanBloc extends BlocBase {
     }
 
     _api.week.update(user.id, week.weekYear,
-        week.weekNumber, week);
+        week.weekNumber, week).listen((WeekModel onData) => null);
   }
 
   /// Toggles edit mode
