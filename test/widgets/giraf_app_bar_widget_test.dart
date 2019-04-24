@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -10,7 +11,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 
 class MockAuth extends Mock implements AuthBloc {}
-
+class MockApi extends Mock implements Api {}
 /// Used to retrieve the visibility widget wrapping the editbutton
 const String keyOfVisibilityForEdit = 'visibilityEditBtn';
 
@@ -274,15 +275,27 @@ void main() {
         title: 'Ugeplan',
         appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
 
+    girafAppBar.toolbarBloc.authBloc.loggedInUsername = 'Graatand';
+    api = MockApi();
+    when(api.account.login('Graatand', 'password'))
+        .thenReturn(Observable<bool>.just(true));
+    di.clearAll();
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    bloc = ToolbarBloc();
+    di.registerDependency<ToolbarBloc>((_) => bloc);
+
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('ChangeToGuardian')));
+    IconButton change = tester.widget(find.byKey(const Key('ChangeToGuardian')));
 
+    await tester.tap(find.byWidget(change));
     await tester.pumpAndSettle();
-
-    await tester.enterText(find.byKey(const Key('PasswordField')), 'password');
+    
+    TextField passwordField = tester.widget(find.byKey(const Key('PasswordField')));
+    
+    await tester.enterText(find.byWidget(passwordField), 'password');
 
     await tester.pumpAndSettle();
 
@@ -290,8 +303,8 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('WrongUsernameOrPasswordDialog')),
-                      findsNothing);
+    expect(find.byKey(Key('WrongUsernameOrPasswordDialog')),
+          findsNothing);
   });
 
 
@@ -299,6 +312,8 @@ void main() {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
         appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
+
+    girafAppBar.toolbarBloc.authBloc.loggedInUsername = "Graatand";
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
