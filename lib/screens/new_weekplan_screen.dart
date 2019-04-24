@@ -25,7 +25,7 @@ class NewWeekplanScreen extends StatelessWidget {
     const TextStyle _style = TextStyle(fontSize: 20);
 
     return Scaffold(
-        appBar: GirafAppBar(title: 'Ny Ugeplan'),
+        appBar: GirafAppBar(title: 'Ny ugeplan'),
         body: ListView(children: <Widget>[
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -104,7 +104,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                     child: RaisedButton(
                       child: Text(
-                        'Vælg Skabelon',
+                        'Vælg skabelon',
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.blue,
@@ -144,7 +144,7 @@ class NewWeekplanScreen extends StatelessWidget {
   Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
     return RaisedButton(
       child: const Text(
-        'Gem Ugeplan',
+        'Gem ugeplan',
         style: TextStyle(color: Colors.white),
       ),
       color: Colors.blue,
