@@ -7,17 +7,19 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(WeekModel weekModel, this._activity, UsernameModel
-  girafUser,
+  ShowActivityScreen(
+      WeekModel weekModel, this._activity, UsernameModel girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(weekModel, _activity, girafUser);
   }
+
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
@@ -114,18 +116,13 @@ class ShowActivityScreen extends StatelessWidget {
                 child: const Icon(Icons.timer))),
       ),
       Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            child: OutlineButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                onPressed: null,
-                color: Colors.green,
-                child: const Text(
-                  'Start',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                )),
-          ))
+        padding: const EdgeInsets.all(8.0),
+        child: GirafButton(
+          width: 80,
+          onPressed: null,
+          text: 'Start',
+        ),
+      )
     ];
   }
 
@@ -183,19 +180,17 @@ class ShowActivityScreen extends StatelessWidget {
               if (snapshot.data == null) {
                 return const CircularProgressIndicator();
               }
-              return OutlineButton(
+              return GirafButton(
                   key: const Key('CompleteStateToggleButton'),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
                   onPressed: () {
                     _activityBloc.completeActivity();
                   },
-                  child: snapshot.data.state != ActivityState.Completed
-                      ? const Icon(Icons.check, color: Colors.green)
-                      : const Icon(
-                          Icons.undo,
-                          color: Colors.blue,
-                        ));
+                  width: 100,
+                  icon: snapshot.data.state != ActivityState.Completed
+                      ? const ImageIcon(AssetImage('assets/icons/accept.png'),
+                          color: Colors.green)
+                      : const ImageIcon(AssetImage('assets/icons/undo.png'),
+                          color: Colors.blue));
             }),
       ],
     );

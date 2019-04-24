@@ -36,7 +36,7 @@ class GirafButton extends StatefulWidget {
   final double height;
 
   /// The function to be called when the button is pressed.
-  /// The function must be a void funtion with no input parameters.
+  /// The function must be a void function with no input parameters.
   final VoidCallback onPressed;
 
   /// Determines whether the button is enabled or disabled by default. If
