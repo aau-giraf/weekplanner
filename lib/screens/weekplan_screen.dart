@@ -166,7 +166,9 @@ class WeekplanScreen extends StatelessWidget {
         if (snapshot.data == null) {
           return const CircularProgressIndicator();
         }
-        return snapshot.data;
+        return Container(
+          child: snapshot.data, 
+          key: const Key('PictogramImage'));
       },
     );
   }
