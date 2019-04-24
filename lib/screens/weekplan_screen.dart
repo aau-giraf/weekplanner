@@ -4,8 +4,10 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
@@ -35,17 +37,28 @@ class WeekplanScreen extends StatelessWidget {
 
   /// The WeekplanBloc that contains the currently chosen week
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
+  final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekplanMode>(
-        stream: weekplanBloc.mode,
+        stream: authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
           return Scaffold(
-            appBar: GirafAppBar(title: 'Ugeplan'),
+            appBar: GirafAppBar(
+              title: 'Ugeplan',
+              appBarIcons:
+                (weekModeSnapshot.data == WeekplanMode.guardian)
+                    ? <AppBarIcon>[
+                        AppBarIcon.changeToCitizen,
+                        AppBarIcon.settings,
+                        AppBarIcon.logout,
+                      ]
+                    : <AppBarIcon>[AppBarIcon.changeToGuardian]
+            ),
             body: StreamBuilder<UserWeekModel>(
               stream: weekplanBloc.userWeek,
               initialData: null,
@@ -122,12 +135,23 @@ class WeekplanScreen extends StatelessWidget {
                 );
               }
 
-              return PictogramImage(
-                  pictogram: activities[index].pictogram,
-                  key: Key(
-                      day.index.toString() + activities[index].id.toString()),
-                  onPressed: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)));
+              return StreamBuilder<WeekplanMode>(
+                  stream: authBloc.mode,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<WeekplanMode> snapshot) {
+                    return PictogramImage(
+                        pictogram: activities[index].pictogram,
+                        key: Key(day.index.toString() +
+                            activities[index].id.toString()),
+                        onPressed: () {
+                          if (snapshot.data == WeekplanMode.citizen) {
+                            Routes.push(
+                                context,
+                                ShowActivityScreen(
+                                    _week, activities[index], _user));
+                          }
+                        });
+                  });
             },
             itemCount: activities.length,
           ),
@@ -137,23 +161,31 @@ class WeekplanScreen extends StatelessWidget {
           child: ButtonTheme(
             child: SizedBox(
               width: double.infinity,
-              child: RaisedButton(
-                  key: const Key('AddActivityButton'),
-                  child: Image.asset('assets/icons/add.png'),
-                  color: buttonColor,
-                  onPressed: () async {
-                    final PictogramModel newActivity =
-                        await Routes.push(context, PictogramSearch());
-                    if (newActivity != null) {
-                      weekplanBloc.addActivity(
-                          ActivityModel(
-                              id: newActivity.id,
-                              pictogram: newActivity,
-                              order: activities.length,
-                              state: ActivityState.Active,
-                              isChoiceBoard: false),
-                          day.index);
-                    }
+              child: StreamBuilder<WeekplanMode>(
+                  stream: authBloc.mode,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<WeekplanMode> snapshot) {
+                    return Visibility(
+                      visible: snapshot.data == WeekplanMode.guardian,
+                      child: RaisedButton(
+                          key: const Key('AddActivityButton'),
+                          child: Image.asset('assets/icons/add.png'),
+                          color: buttonColor,
+                          onPressed: () async {
+                            final PictogramModel newActivity =
+                                await Routes.push(context, PictogramSearch());
+                            if (newActivity != null) {
+                              weekplanBloc.addActivity(
+                                  ActivityModel(
+                                      id: newActivity.id,
+                                      pictogram: newActivity,
+                                      order: activities.length,
+                                      state: ActivityState.Active,
+                                      isChoiceBoard: false),
+                                  day.index);
+                            }
+                          }),
+                    );
                   }),
             ),
           ),

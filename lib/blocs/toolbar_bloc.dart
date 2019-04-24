@@ -5,6 +5,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 
@@ -171,7 +172,25 @@ class ToolbarBloc extends BlocBase {
     return IconButton(
       icon: Image.asset('assets/icons/changeToCitizen.png'),
       tooltip: 'Skift til borger tilstand',
-      onPressed: () {},
+      onPressed: () {
+        Alert(
+            context: context,
+            style: _alertStyle,
+            title: 'Skift til borger',
+            buttons: <DialogButton>[
+              DialogButton(
+                onPressed: () {
+                  _authBloc.setMode(WeekplanMode.citizen);
+                  Routes.pop(context);
+                },
+                child: const Text(
+                  'Bekræft',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                color: const Color.fromRGBO(255, 157, 0, 100),
+              )
+            ]).show();
+      },
     );
   }
 

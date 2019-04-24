@@ -96,28 +96,4 @@ void main() {
 
     weekplanBloc.addActivity(activity, 0);
   }));
-  test('Check if the mode defaults to guardian', async((DoneFn done) {
-    weekplanBloc.mode.listen((WeekplanMode mode) {
-      expect(mode, WeekplanMode.guardian);
-      done();
-    });
-  }));
-  test('Test if mode is changed to citizen when setMode is called with citizen',
-      async((DoneFn done) {
-    weekplanBloc.mode.skip(1).listen((WeekplanMode mode) {
-      expect(mode, WeekplanMode.citizen);
-      done();
-    });
-    weekplanBloc.setMode(WeekplanMode.citizen);
-  }));
-
-  test(
-      'Test if mode is changed to guardian when setMode is called with guardian',
-      async((DoneFn done) {
-    weekplanBloc.mode.skip(1).listen((WeekplanMode mode) {
-      expect(mode, WeekplanMode.guardian);
-      done();
-    });
-    weekplanBloc.setMode(WeekplanMode.guardian);
-  }));
 }
