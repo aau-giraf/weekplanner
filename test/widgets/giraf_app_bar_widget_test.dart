@@ -275,25 +275,23 @@ void main() {
         appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
 
-    await tester.tap(find.byKey(Key('ChangeToGuardian')));
+    await tester.pumpAndSettle();
 
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
+    await tester.tap(find.byKey(const Key('ChangeToGuardian')));
 
-    await tester.enterText(find.byKey(Key("PasswordField")), "password");
+    await tester.pumpAndSettle();
 
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
+    await tester.enterText(find.byKey(const Key('PasswordField')), 'password');
 
-    await tester.tap(find.byKey(Key('ConfirmButton')));
+    await tester.pumpAndSettle();
 
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
+    await tester.tap(find.byKey(const Key('ConfirmButton')));
 
-    expect(find.byKey(Key('NotifyDialogOkayButton')), findsNothing);
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('WrongUsernameOrPasswordDialog')),
+                      findsNothing);
   });
 
 
@@ -303,24 +301,22 @@ void main() {
         appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
 
-    await tester.tap(find.byKey(Key('ChangeToGuardian')));
+    await tester.pumpAndSettle();
 
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
+    await tester.tap(find.byKey(const Key('ChangeToGuardian')));
 
-    await tester.enterText(find.byKey(Key("PasswordField")), "test");
+    await tester.pumpAndSettle();
 
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
+    await tester.enterText(find.byKey(const Key('PasswordField')),
+                                      'wrongpassword');
 
-    await tester.tap(find.byKey(Key('ConfirmButton')));
+    await tester.pumpAndSettle();
 
-    await tester.pump();
-    await tester.pump(const Duration(seconds:3));
+    await tester.tap(find.byKey(const Key('ConfirmButton')));
 
-    expect(find.byKey(Key('NotifyDialogOkayButton')), findsOneWidget);
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
   });
 }

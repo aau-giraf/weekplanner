@@ -200,7 +200,7 @@ class ToolbarBloc extends BlocBase {
                   ),
                 ),
                 TextField(
-                  key: const Key("PasswordField"),
+                  key: const Key('PasswordField'),
                   controller: passwordCtrl,
                   obscureText: true,
                   decoration: InputDecoration(
