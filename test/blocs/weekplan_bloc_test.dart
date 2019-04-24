@@ -13,6 +13,7 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -94,6 +95,29 @@ void main() {
     weekplanBloc.setWeek(week, user);
 
     weekplanBloc.addActivity(activity, 0);
-    
+  }));
+  test('Check if the mode defaults to guardian', async((DoneFn done) {
+    weekplanBloc.mode.listen((WeekplanMode mode) {
+      expect(mode, WeekplanMode.guardian);
+      done();
+    });
+  }));
+  test('Test if mode is changed to citizen when setMode is called with citizen',
+      async((DoneFn done) {
+    weekplanBloc.mode.skip(1).listen((WeekplanMode mode) {
+      expect(mode, WeekplanMode.citizen);
+      done();
+    });
+    weekplanBloc.setMode(WeekplanMode.citizen);
+  }));
+
+  test(
+      'Test if mode is changed to guardian when setMode is called with guardian',
+      async((DoneFn done) {
+    weekplanBloc.mode.skip(1).listen((WeekplanMode mode) {
+      expect(mode, WeekplanMode.guardian);
+      done();
+    });
+    weekplanBloc.setMode(WeekplanMode.guardian);
   }));
 }

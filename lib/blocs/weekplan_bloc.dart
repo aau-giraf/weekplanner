@@ -4,6 +4,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
 /// Bloc that streams the currently chosen weekplan
@@ -16,10 +17,18 @@ class WeekplanBloc extends BlocBase {
 
   final BehaviorSubject<UserWeekModel> _userWeek =
       BehaviorSubject<UserWeekModel>();
+  final BehaviorSubject<WeekplanMode> _mode =
+      BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
+  /// The stream that emits the current mode
+  Observable<WeekplanMode> get mode => _mode.stream;
   /// The stream that emits the currently chosen weekplan
-  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+  Observable<UserWeekModel> get userWeek => _userWeek.stream;
 
+  /// Updates the mode of the weekpan
+  void setMode(WeekplanMode mode) {
+    _mode.add(mode);
+  }
   /// Sink to set the currently chosen week
   void setWeek(WeekModel week, UsernameModel user) {
     _userWeek.add(UserWeekModel(week, user));

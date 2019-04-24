@@ -6,6 +6,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -39,22 +40,28 @@ class WeekplanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GirafAppBar(title: 'Ugeplan'),
-      body: StreamBuilder<UserWeekModel>(
-        stream: weekplanBloc.userWeek,
-        initialData: null,
-        builder: (BuildContext context, AsyncSnapshot<UserWeekModel> snapshot) {
-          if (snapshot.hasData) {
-            return _buildWeeks(snapshot.data.week, context);
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
+    return StreamBuilder<WeekplanMode>(
+        stream: weekplanBloc.mode,
+        builder: (BuildContext context,
+            AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+          return Scaffold(
+            appBar: GirafAppBar(title: 'Ugeplan'),
+            body: StreamBuilder<UserWeekModel>(
+              stream: weekplanBloc.userWeek,
+              initialData: null,
+              builder: (BuildContext context,
+                  AsyncSnapshot<UserWeekModel> snapshot) {
+                if (snapshot.hasData) {
+                  return _buildWeeks(snapshot.data.week, context);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          );
+        });
   }
 
   Row _buildWeeks(WeekModel weekModel, BuildContext context) {
