@@ -16,7 +16,7 @@ jobs:
         inputs:
           target: apk
           projectDirectory: $(projectDirectory)
-      - task: FlutterBuild@1
+      - task: FlutterBuild@0
           inputs:
             target: ios
             projectDirectory: $(projectDirectory)
@@ -27,7 +27,7 @@ jobs:
         inputs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
-      - task: CopyFiles@3
+      - task: CopyFiles@2
           inputs:
             contents: '**/*.app'
             targetFolder: '$(build.artifactStagingDirectory)'
