@@ -58,7 +58,8 @@ class NewWeekplanScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           labelText: 'År',
                           errorText: (snapshot?.data == false)
-                              ? 'År skal angives som fire cifre'
+                              ? 'År skal angives som fire cifre '
+                                  'og være inden for et år af i dag'
                               : null,
                           border: const OutlineInputBorder(
                               borderSide: BorderSide())),
@@ -86,6 +87,7 @@ class NewWeekplanScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Container(
+              key: const Key('NewWeekplanPictogram'),
               width: 200,
               height: 200,
               child: StreamBuilder<PictogramModel>(
@@ -152,7 +154,7 @@ class NewWeekplanScreen extends StatelessWidget {
           ? () {
               _bloc.saveWeekplan().listen((WeekModel response) {
                 if (response != null) {
-                  Routes.pop(context, response);
+                  Routes.pop<WeekModel>(context, response);
                 }
               });
             }

@@ -12,9 +12,13 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// New-Weekplan Business Logic Component.
 class NewWeekplanBloc extends BlocBase {
-  /// New-Weekplan Business Logic Component.
-  ///
-  /// Gives the ability to create a new weekplan.
+  /// Constructor for [NewWeekplanBloc].
+  /// The bloc contains sinks to handle when different inputs are entered and 
+  /// streams to tell if the inputs are valid.
+  /// The bloc is also able to save the newly created weekplan.
+  /// 
+  /// It is important that the bloc is initialized before use! 
+  /// This is done with the method [initialize].
   NewWeekplanBloc(this._api);
 
   final Api _api;
@@ -68,7 +72,8 @@ class NewWeekplanBloc extends BlocBase {
           .asBroadcastStream();
 
   /// Resets the bloc if it already contains information from the last time it
-  /// was used. Should always be called before using the bloc.
+  /// was used. Switches user to the one provided. 
+  /// This method should always be called before using the bloc.
   void initialize(UsernameModel user) {
     if (_user != null) {
       resetBloc();

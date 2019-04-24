@@ -28,6 +28,7 @@ void main() {
       name: 'Week',
       weekNumber: 1,
       weekYear: 2019);
+  final int currentYear = DateTime.now().year;
 
   setUp(() {
     api = Api('any');
@@ -42,7 +43,7 @@ void main() {
 
   test('Should save the new weekplan', async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2019');
+    bloc.onYearChanged.add(currentYear.toString());
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(thumbnail);
     bloc.saveWeekplan();
@@ -69,9 +70,9 @@ void main() {
     });
   }));
 
-  test('Should validate year: 2004', async((DoneFn done) {
+  test('Should validate year: current year', async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2004');
+    bloc.onYearChanged.add(currentYear.toString());
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -79,8 +80,19 @@ void main() {
     });
   }));
 
-  test('Should not validate year: 218', async((DoneFn done) {
-    bloc.onYearChanged.add('218');
+  test('Should validate year: one year before current year',
+      async((DoneFn done) {
+    bloc.onYearChanged.add((currentYear - 1).toString());
+    bloc.validYearStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
+
+  test('Should not validate year: two years before current year',
+      async((DoneFn done) {
+    bloc.onYearChanged.add((currentYear - 2).toString());
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -88,8 +100,19 @@ void main() {
     });
   }));
 
-  test('Should not validate year: -218', async((DoneFn done) {
-    bloc.onYearChanged.add('-218');
+  test('Should validate year: one year after current year',
+      async((DoneFn done) {
+    bloc.onYearChanged.add((currentYear + 1).toString());
+    bloc.validYearStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
+
+  test('Should not validate year: two years after current year',
+      async((DoneFn done) {
+    bloc.onYearChanged.add((currentYear + 2).toString());
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -97,8 +120,9 @@ void main() {
     });
   }));
 
-  test('Should not validate year: [space]218', async((DoneFn done) {
-    bloc.onYearChanged.add(' 218');
+  test('Should not validate year: negative value for year',
+      async((DoneFn done) {
+    bloc.onYearChanged.add((-currentYear).toString());
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -106,25 +130,7 @@ void main() {
     });
   }));
 
-  test('Should not validate year: 20019', async((DoneFn done) {
-    bloc.onYearChanged.add('20019');
-    bloc.validYearStream.listen((bool isValid) {
-      expect(isValid, isNotNull);
-      expect(isValid, false);
-      done();
-    });
-  }));
-
-  test('Should not validate year: 2O19 (letter O)', async((DoneFn done) {
-    bloc.onYearChanged.add('2O19');
-    bloc.validYearStream.listen((bool isValid) {
-      expect(isValid, isNotNull);
-      expect(isValid, false);
-      done();
-    });
-  }));
-
-  test('Should not validate year: [empty string', async((DoneFn done) {
+  test('Should not validate year: [empty string]', async((DoneFn done) {
     bloc.onYearChanged.add('');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
@@ -172,7 +178,7 @@ void main() {
   test('Should see all inputs as valid when they are valid individually',
       async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2019');
+    bloc.onYearChanged.add(currentYear.toString());
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(thumbnail);
     bloc.allInputsAreValidStream.listen((bool isValid) {
@@ -185,7 +191,7 @@ void main() {
   test('Should not see all inputs as valid when week number is invalid',
       async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2019');
+    bloc.onYearChanged.add(currentYear.toString());
     bloc.onWeekNumberChanged.add('-42');
     bloc.onThumbnailChanged.add(thumbnail);
     bloc.allInputsAreValidStream.listen((bool isValid) {
@@ -198,7 +204,7 @@ void main() {
   test('Should not see all inputs as valid when title is invalid',
       async((DoneFn done) {
     bloc.onTitleChanged.add('');
-    bloc.onYearChanged.add('2019');
+    bloc.onYearChanged.add(currentYear.toString());
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(thumbnail);
     bloc.allInputsAreValidStream.listen((bool isValid) {
@@ -211,7 +217,7 @@ void main() {
   test('Should not see all inputs as valid when thumbnail is missing',
       async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2018');
+    bloc.onYearChanged.add(currentYear.toString());
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(null);
     bloc.allInputsAreValidStream.listen((bool isValid) {
@@ -223,7 +229,7 @@ void main() {
 
   test('Should reset input streams to default values', async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2019');
+    bloc.onYearChanged.add(currentYear.toString());
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(thumbnail);
     bloc.resetBloc();
