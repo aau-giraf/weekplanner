@@ -11,7 +11,7 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 /// Screen for creating a new weekplan.
 class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
-  /// Requires a GirafUserModel to save the new weekplan.
+  /// Requires a [UsernameModel] to be able to save the new weekplan.
   NewWeekplanScreen(UsernameModel user)
       : _bloc = di.getDependency<NewWeekplanBloc>() {
     _bloc.initialize(user);
@@ -21,6 +21,8 @@ class NewWeekplanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const TextStyle _style = TextStyle(fontSize: 20);
+
     return Scaffold(
         appBar: GirafAppBar(title: 'Ny Ugeplan'),
         body: ListView(children: <Widget>[
@@ -32,6 +34,7 @@ class NewWeekplanScreen extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return TextField(
                       onChanged: _bloc.onTitleChanged.add,
+                      style: _style,
                       decoration: InputDecoration(
                           labelText: 'Titel',
                           errorText: (snapshot?.data == false)
@@ -50,6 +53,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     return TextField(
                       keyboardType: TextInputType.number,
                       onChanged: _bloc.onYearChanged.add,
+                      style: _style,
                       decoration: InputDecoration(
                           labelText: 'År',
                           errorText: (snapshot?.data == false)
@@ -68,6 +72,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     return TextField(
                       keyboardType: TextInputType.number,
                       onChanged: _bloc.onWeekNumberChanged.add,
+                      style: _style,
                       decoration: InputDecoration(
                           labelText: 'Ugenummer',
                           errorText: (snapshot?.data == false)
@@ -110,7 +115,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 24),
                     child: StreamBuilder<bool>(
-                      stream: _bloc.validInputFieldsStream,
+                      stream: _bloc.allInputsAreValidStream,
                       builder: _buildSaveButton,
                     ),
                   ),

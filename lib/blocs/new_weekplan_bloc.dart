@@ -57,8 +57,8 @@ class NewWeekplanBloc extends BlocBase {
   /// Streams the chosen thumbnail.
   Observable<PictogramModel> get thumbnailStream => _thumbnailController.stream;
 
-  /// Gives information about whether all input fields are valid.
-  Observable<bool> get validInputFieldsStream =>
+  /// Gives information about whether all inputs are valid.
+  Observable<bool> get allInputsAreValidStream =>
       Observable.combineLatest4<bool, bool, bool, PictogramModel, bool>(
               validTitleStream,
               validYearStream,
