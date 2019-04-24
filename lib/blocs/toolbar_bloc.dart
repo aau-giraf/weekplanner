@@ -16,7 +16,7 @@ class ToolbarBloc extends BlocBase {
   BehaviorSubject<List<IconButton>> _visibleButtons =
       BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc authBloc = di.getDependency<AuthBloc>();
 
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
   void updateIcons(List<AppBarIcon> icons, BuildContext context) {
@@ -194,7 +194,7 @@ class ToolbarBloc extends BlocBase {
                     style: DefaultTextStyle.of(context).style,
                     children: <TextSpan>[
                       TextSpan(
-                          text: _authBloc.loggedInUsername,
+                          text: authBloc.loggedInUsername,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
@@ -214,7 +214,7 @@ class ToolbarBloc extends BlocBase {
               DialogButton(
                 key: const Key('ConfirmButton'),
                 onPressed: () {
-                  loginFromPopUp(context, _authBloc.loggedInUsername,
+                  loginFromPopUp(context, authBloc.loggedInUsername,
                       passwordCtrl.value.text);
                 },
                 child: const Text(
@@ -297,7 +297,7 @@ class ToolbarBloc extends BlocBase {
                 style: TextStyle(color: Colors.black, fontSize: 20),
               ),
               onPressed: () {
-                _authBloc.logout();
+                authBloc.logout();
               },
               color: const Color.fromRGBO(255, 157, 0, 100),
               width: 120,
@@ -381,7 +381,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Used to authenticate a user.
   void loginFromPopUp(BuildContext context, String username, String password) {
-    _authBloc.authenticateFromPopUp(username, password, context);
+    authBloc.authenticateFromPopUp(username, password, context);
     passwordCtrl.value = TextEditingValue();
   }
 

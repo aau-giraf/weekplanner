@@ -62,17 +62,18 @@ class AuthBloc extends BlocBase {
   /// Authenticates the user only by password when signing-in from PopUp.
   void authenticateFromPopUp(String username, String password,
                              BuildContext context) {
+    // Make sure the status for the upcoming
+    // login is false until proven otherwise
+    loginStatus = false;
     showLoadingSpinner(context, false, () => showFailureDialog(context), 2000);
 
     _api.account.login(username, password).take(1).listen((bool status) {
-
       if (status){
         loginStatus = true;
         //Pop the popup
         Routes.pop(context);
         }
     });
-
     }
 
 

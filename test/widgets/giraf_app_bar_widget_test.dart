@@ -317,6 +317,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
+    expect(find.byType(AlertDialog),
+                      findsOneWidget);
   });
 }
