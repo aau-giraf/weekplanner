@@ -15,15 +15,22 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import '../test_image.dart';
 
 class MockNewWeekplanBloc extends NewWeekplanBloc {
-  MockNewWeekplanBloc(Api api) : super(api);
+  MockNewWeekplanBloc(this.api) : super(api);
 
   bool acceptAllInputs = true;
+  Api api;
+
+  @override
+  Observable<WeekModel> saveWeekplan() {
+    return api.week.update(any, any, any, any);
+  }
 
   @override
   Observable<bool> get validTitleStream =>
@@ -40,6 +47,9 @@ class MockNewWeekplanBloc extends NewWeekplanBloc {
   @override
   Observable<PictogramModel> get thumbnailStream =>
       Observable<PictogramModel>.just(mockPictogram);
+
+  @override
+  Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
 }
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -61,28 +71,24 @@ final WeekModel mockWeek = WeekModel(
     weekNumber: 1,
     weekYear: 2019);
 
+final UsernameModel mockUser =
+    UsernameModel(name: 'test', role: 'test', id: 'test');
+
 void main() {
   MockNewWeekplanBloc mockBloc;
   Api api;
-  MockWeekApi weekApi;
-  MockPictogramApi pictogramApi;
-  final UsernameModel mockUser =
-      UsernameModel(name: 'test', role: 'test', id: 'test');
 
   setUp(() {
     api = Api('any');
-    weekApi = MockWeekApi();
-    pictogramApi = MockPictogramApi();
-    api.week = weekApi;
-    api.pictogram = pictogramApi;
+    api.week = MockWeekApi();
+    api.pictogram = MockPictogramApi();
     mockBloc = MockNewWeekplanBloc(api);
 
-    when(pictogramApi.getImage(mockPictogram.id))
+    when(api.pictogram.getImage(mockPictogram.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(api.week.update(any, any, any, any)).thenAnswer((_) {
-      return Observable<WeekModel>.just(mockWeek);
-    });
+    when(api.week.update(any, any, any, any))
+        .thenAnswer((_) => Observable<WeekModel>.just(mockWeek));
 
     di.clearAll();
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
@@ -180,5 +186,30 @@ void main() {
     await tester.pump();
 
     expect(find.text('Ugenummer skal være mellem 1 og 53'), findsNothing);
+  });
+
+  testWidgets('Click on thumbnail redirects to pictogram search screen',
+      (WidgetTester tester) async {
+    mockBloc.acceptAllInputs = true;
+    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.tap(find.byKey(const Key('NewWeekplanThumbnailKey')));
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.byType(PictogramSearch), findsOneWidget);
+  });
+
+  testWidgets(
+      'Click on save weekplan button saves weekplan and return saved weekplan',
+      (WidgetTester tester) async {
+    mockBloc.acceptAllInputs = true;
+    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
+
+    verify(api.week.update(any, any, any, any));
+    mockBloc.saveWeekplan().listen((WeekModel response) async {
+      expect(response, mockWeek);
+    });
   });
 }

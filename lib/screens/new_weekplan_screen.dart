@@ -87,7 +87,7 @@ class NewWeekplanScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Container(
-              key: const Key('NewWeekplanPictogram'),
+              key: const Key('NewWeekplanThumbnailKey'),
               width: 200,
               height: 200,
               child: StreamBuilder<PictogramModel>(
@@ -145,6 +145,7 @@ class NewWeekplanScreen extends StatelessWidget {
 
   Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
     return RaisedButton(
+      key: const Key('NewWeekplanSaveBtnKey'),
       child: const Text(
         'Gem ugeplan',
         style: TextStyle(color: Colors.white),
