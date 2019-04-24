@@ -77,9 +77,9 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   /// Saves the entered information to the database.
-  void saveWeekplan() {
+  Observable<WeekModel> saveWeekplan() {
     if (_user == null) {
-      return;
+      return null;
     }
 
     final String _title = _titleController.value;
@@ -102,10 +102,8 @@ class NewWeekplanBloc extends BlocBase {
           WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
         ]);
 
-    _api.week
-        .update(
-            _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
-        .listen((WeekModel response) {});
+    return _api.week.update(
+        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
   }
 
   /// Resets the bloc to its default values.

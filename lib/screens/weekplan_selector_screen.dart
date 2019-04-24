@@ -77,7 +77,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       BuildContext context, WeekModel weekplan, BoxConstraints constraint) {
     return GestureDetector(
         onTap: () => Routes.push(context, NewWeekplanScreen(_user))
-            .then((Object object) => _weekBloc.load(_user, true)),
+            .then((Object object) => {_weekBloc.load(_user, true)}),
         child: Icon(
           Icons.add,
           size: constraint.maxHeight,

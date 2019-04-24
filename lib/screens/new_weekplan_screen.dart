@@ -1,5 +1,6 @@
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -149,8 +150,11 @@ class NewWeekplanScreen extends StatelessWidget {
       color: Colors.blue,
       onPressed: (snapshot?.data == true)
           ? () {
-              _bloc.saveWeekplan();
-              Routes.pop(context);
+              _bloc.saveWeekplan().listen((WeekModel response) {
+                if (response != null) {
+                  Routes.pop(context, response);
+                }
+              });
             }
           : null,
     );
