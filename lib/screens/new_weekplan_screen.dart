@@ -25,7 +25,7 @@ class NewWeekplanScreen extends StatelessWidget {
     const TextStyle _style = TextStyle(fontSize: 20);
 
     return Scaffold(
-        appBar: GirafAppBar(title: 'Ny Ugeplan'),
+        appBar: GirafAppBar(title: 'Ny ugeplan'),
         body: ListView(children: <Widget>[
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
