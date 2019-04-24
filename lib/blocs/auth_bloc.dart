@@ -52,6 +52,7 @@ class AuthBloc extends BlocBase {
     }
   }
 
+  /// Shows a failure dialog
   void showFailureDialog(BuildContext context){
     showDialog<Center>(
         barrierDismissible: false,

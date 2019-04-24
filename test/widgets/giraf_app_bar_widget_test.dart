@@ -13,7 +13,16 @@ import 'package:mockito/mockito.dart';
 
 class MockAuth extends Mock implements AuthBloc {}
 class MockAccApi extends Mock implements AccountApi {
-  
+
+  @override
+  Observable<bool> login(String username, String password) {
+    if (username == 'Graatand' && password == 'password'){
+      return Observable<bool>.just(true);
+    }
+    else{
+      return Observable<bool>.just(false);
+    }
+  }
 }
 /// Used to retrieve the visibility widget wrapping the editbutton
 const String keyOfVisibilityForEdit = 'visibilityEditBtn';
@@ -24,6 +33,7 @@ void main() {
 
   setUp(() {
     api = Api('any');
+    api.account = MockAccApi();
     di.clearAll();
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     bloc = ToolbarBloc();
