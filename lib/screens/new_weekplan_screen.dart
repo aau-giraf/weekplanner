@@ -144,7 +144,7 @@ class NewWeekplanScreen extends StatelessWidget {
   Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
     return RaisedButton(
       child: const Text(
-        'Gem Ugeplan',
+        'Gem ugeplan',
         style: TextStyle(color: Colors.white),
       ),
       color: Colors.blue,
