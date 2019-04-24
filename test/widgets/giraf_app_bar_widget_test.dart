@@ -292,7 +292,7 @@ void main() {
         title: 'Ugeplan',
         appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
 
-    girafAppBar.toolbarBloc.authBloc.loggedInUsername = "Graatand";
+    girafAppBar.toolbarBloc.authBloc.loggedInUsername = 'Graatand';
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
@@ -311,7 +311,7 @@ void main() {
 
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    expect(find.byKey(Key(keyOfWrongUsernameOrPassword)),
+    expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
         findsNothing);
   });
 
@@ -321,7 +321,7 @@ void main() {
         title: 'Ugeplan',
         appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
 
-    girafAppBar.toolbarBloc.authBloc.loggedInUsername = "Graatand";
+    girafAppBar.toolbarBloc.authBloc.loggedInUsername = 'Graatand';
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
 
@@ -340,7 +340,7 @@ void main() {
 
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    expect(find.byKey(Key(keyOfWrongUsernameOrPassword)),
+    expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
                       findsOneWidget);
   });
 }
