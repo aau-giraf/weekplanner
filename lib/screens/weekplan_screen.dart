@@ -90,14 +90,12 @@ class WeekplanScreen extends StatelessWidget {
                       child: Stack(
                         alignment: AlignmentDirectional.center,
                         children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Expanded(
-                                flex: 0,
-                                child: _getPictogram(
-                                    context, activities[index]),
-                              ),
-                            ],
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                            child: FittedBox(
+                              child: _getPictogram(activities[index]),
+                            ),
                           ),
                           Icon(
                             Icons.check,
@@ -116,7 +114,10 @@ class WeekplanScreen extends StatelessWidget {
                       day.index.toString() + activities[index].id.toString()),
                   onTap: () => Routes.push(context,
                       ShowActivityScreen(_week, activities[index], _user)),
-                  child: _getPictogram(context, activities[index]));
+                  child: Container(child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: _getPictogram(activities[index]),
+                  )));
             },
             itemCount: activities.length,
           ),
@@ -125,7 +126,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  Widget _getPictogram(BuildContext context, ActivityModel activity) {
+  Widget _getPictogram(ActivityModel activity) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     bloc.loadPictogramById(activity.pictogram.id);
     return StreamBuilder<Image>(
