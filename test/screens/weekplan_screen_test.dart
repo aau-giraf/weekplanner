@@ -65,7 +65,7 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     api.week = weekApi;
-    bloc = WeekplanBloc();
+    bloc = WeekplanBloc(api);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));

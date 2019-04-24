@@ -24,6 +24,7 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="user">owner of the weekplan</param>
   WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
     weekplanBloc.setWeek(_week);
+    weekplanBloc.load(_user);
   }
 
   /// The WeekplanBloc that contains the currently chosen week
@@ -34,9 +35,7 @@ class WeekplanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(
-        title: 'Ugeplan'
-      ),
+      appBar: GirafAppBar(title: 'Ugeplan'),
       body: StreamBuilder<WeekModel>(
         stream: weekplanBloc.week,
         initialData: null,
@@ -66,20 +65,21 @@ class WeekplanScreen extends StatelessWidget {
 
   BottomAppBar buildBottomAppBar() {
     return BottomAppBar(
-              color: const Color(0xAAFF6600),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 50,
-                    icon: const Icon(Icons.delete_forever),
-                    onPressed: () {
-                      //.deleteMarkedActivities(_markedActivities);
-                    },
-                  ),
-                ],
-              ));
+        color: const Color(0xAAFF6600),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              iconSize: 50,
+              icon: const Icon(Icons.delete_forever),
+              onPressed: () {
+                weekplanBloc.deleteMarkedActivities();
+                weekplanBloc.toggleEditMode();
+              },
+            ),
+          ],
+        ));
   }
 
   Row _buildWeeks(WeekModel weekModel) {
@@ -107,51 +107,104 @@ class WeekplanScreen extends StatelessWidget {
     return Column(
       children: <Widget>[
         _translateWeekDay(day),
-        Expanded(
-          child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              if (activities[index].state == ActivityState.Completed) {
-                return GestureDetector(
-                  onLongPress: () => weekplanBloc.toggleEditMode(),
-                  onTap: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)),
-                  child: Card(
-                    child: FittedBox(
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: PictogramImage(
-                              pictogram: activities[index].pictogram,
-                              onPressed: null,
-                            ),
-                          ),
-                          Icon(
-                            Icons.check,
-                            key: const Key('IconComplete'),
-                            color: Colors.green,
-                            size: MediaQuery.of(context).size.width,
-                          )
-                        ],
+        StreamBuilder(
+            stream: weekplanBloc.markedActivities,
+            builder: (BuildContext context,
+                AsyncSnapshot<List<ActivityModel>> markedActivities) {
+              return StreamBuilder<bool>(
+                  initialData: null,
+                  stream: weekplanBloc.editMode,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (BuildContext context, int index) {
+                          bool isMarked =
+                              weekplanBloc.isActivityMarked(activities[index]);
+                          return GestureDetector(
+                            onTap: () {
+                              if (snapshot.data) {
+                                if (isMarked) {
+                                  weekplanBloc
+                                      .removeMarkedActivity(activities[index]);
+                                } else {
+                                  weekplanBloc
+                                      .addMarkedActivity(activities[index]);
+                                  print(index);
+                                }
+                              } else {
+                                Routes.push(
+                                    context,
+                                    ShowActivityScreen(
+                                        _week, activities[index], _user));
+                              }
+                            },
+                            onLongPress: () {
+                              if (snapshot.data) {
+                                weekplanBloc.clearMarkedActivities();
+                              } else {
+                                weekplanBloc
+                                    .addMarkedActivity(activities[index]);
+                              }
+                              weekplanBloc.toggleEditMode();
+                            },
+                            child: isMarked
+                                ? Container(
+                                    margin: const EdgeInsets.all(1),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.black, width: 10)),
+                                    child: buildPictogramCard(
+                                      context,
+                                      activities,
+                                      index,
+                                      activities[index].state,
+                                    ),
+                                  )
+                                : buildPictogramCard(context, activities, index,
+                                    activities[index].state),
+                          );
+                        },
+                        itemCount: activities.length,
                       ),
-                    ),
-                  ),
-                );
-              }
-
-              return PictogramImage(
-                  pictogram: activities[index].pictogram,
-                  key: Key(
-                      day.index.toString() + activities[index].id.toString()),
-                  onLongPressed: () => weekplanBloc.toggleEditMode(),
-                  onPressed: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)));
-            },
-            itemCount: activities.length,
-          ),
-        ),
+                    );
+                  });
+            })
       ],
+    );
+  }
+
+  Card buildPictogramCard(
+    BuildContext context,
+    List<ActivityModel> activities,
+    int index,
+    ActivityState activityState,
+  ) {
+    Widget icon = Container();
+    if (activityState == ActivityState.Completed) {
+      icon = Icon(
+        Icons.check,
+        key: const Key('IconComplete'),
+        color: Colors.green,
+        size: MediaQuery.of(context).size.width,
+      );
+    }
+
+    return Card(
+      child: FittedBox(
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: <Widget>[
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: PictogramImage(
+                pictogram: activities[index].pictogram,
+              ),
+            ),
+            icon
+          ],
+        ),
+      ),
     );
   }
 
