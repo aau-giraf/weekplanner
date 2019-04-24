@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 class MockScreen extends StatelessWidget {
@@ -9,11 +10,9 @@ class MockScreen extends StatelessWidget {
       body: Container(
           child: Column(
             children: <Widget>[
-              RaisedButton(
+              GirafButton(
                   key: const Key('FirstButton'),
-                  onPressed: () {
-                    notifyDialog(context);
-                  }),
+                  onPressed: () {notifyDialog(context);}),
             ],
           )),
     );
@@ -36,6 +35,8 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
     await tester.pump();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
+
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
 
@@ -46,7 +47,9 @@ void main() {
         await tester.pump();
         expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
         await tester.tap(find.byKey(const Key('NotifyDialogOkayButton')));
+        await tester.pumpAndSettle(const Duration(milliseconds: 200));
         await tester.pump();
+
         expect(find.byType(GirafNotifyDialog), findsNothing);
       });
 
