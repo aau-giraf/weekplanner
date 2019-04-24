@@ -14,12 +14,8 @@ jobs:
           script: $(FlutterToolPath)/flutter analyze
       - task: FlutterBuild@0
         inputs:
-          target: apk
+          target: All
           projectDirectory: $(projectDirectory)
-      - task: FlutterBuild@0
-          inputs:
-            target: ios
-            projectDirectory: $(projectDirectory)
       - task: FlutterTest@0
         inputs:
           projectDirectory: $(projectDirectory)
