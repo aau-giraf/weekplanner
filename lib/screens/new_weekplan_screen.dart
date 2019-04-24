@@ -104,7 +104,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
                     child: RaisedButton(
                       child: Text(
-                        'Vælg Skabelon',
+                        'Vælg skabelon',
                         style: TextStyle(color: Colors.white),
                       ),
                       color: Colors.blue,
