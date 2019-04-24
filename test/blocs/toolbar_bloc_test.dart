@@ -23,7 +23,7 @@ void main() {
       async((DoneFn done) {
     bloc.updateIcons(null, null);
     bloc.visibleButtons.listen((List<IconButton> response) {
-      expect(response.length, 2);
+      expect(response.length, 3);
     });
     done();
   }));
