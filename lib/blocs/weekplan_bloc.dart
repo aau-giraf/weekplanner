@@ -94,6 +94,11 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
+  /// Returns the number of marked activities
+  int getNumberOfMarkedActivities() {
+    return _markedActivities.value.length;
+  }
+
   @override
   void dispose() {
     _userWeek.close();
