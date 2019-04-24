@@ -33,10 +33,11 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: MockScreenButtonTest()));
 
     expect(find.text('PressButton'), findsOneWidget);
-    expect(find.byIcon(Icons.fastfood), findsOneWidget);
+    expect(find.byWidget(const ImageIcon(AssetImage('assets/icons/accept.png'))),
+        findsOneWidget);
   });
 
-  //This test is not done
+  // This test is not done
   testWidgets('GirafButton is enabled', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreenButtonTest()));
     final Finder submit = find.widgetWithText(GirafButton, 'PressButton');
