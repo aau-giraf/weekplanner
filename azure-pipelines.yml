@@ -16,6 +16,10 @@ jobs:
         inputs:
           target: apk
           projectDirectory: $(projectDirectory)
+      - task: FlutterBuild@1
+          inputs:
+            target: ios
+            projectDirectory: $(projectDirectory)
       - task: FlutterTest@0
         inputs:
           projectDirectory: $(projectDirectory)
@@ -23,4 +27,8 @@ jobs:
         inputs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
+      - task: CopyFiles@3
+          inputs:
+            contents: '**/*.app'
+            targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
