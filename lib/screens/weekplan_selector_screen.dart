@@ -64,8 +64,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlanAdder(
       BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
-      onTap: () =>
-          Routes.push(context, WeekplanScreen(weekplan, _user)),
+      onTap: () => Routes.push(context, WeekplanScreen(weekplan, _user)),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
@@ -77,8 +76,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlan(
       BuildContext context, WeekModel weekplan, BoxConstraints constraint) {
     return GestureDetector(
-        onTap: () => Routes.push(context,
-            NewWeekplanScreen(_user)),
+        onTap: () => Routes.push(context, NewWeekplanScreen(_user))
+            .then((Object object) => _weekBloc.load(_user, true)),
         child: Icon(
           Icons.add,
           size: constraint.maxHeight,
