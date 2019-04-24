@@ -27,7 +27,7 @@ class GirafButton extends StatefulWidget {
   final String text;
 
   /// The icon placed next to the text on the button.
-  final Widget icon;
+  final ImageIcon icon;
 
   /// The width of the button.
   final double width;
@@ -51,10 +51,10 @@ class GirafButton extends StatefulWidget {
   final Observable<bool> isEnabledStream;
 
   @override
-  GirafButtonState createState() => GirafButtonState();
+  _GirafButtonState createState() => _GirafButtonState();
 }
 
-class GirafButtonState extends State<GirafButton> {
+class _GirafButtonState extends State<GirafButton> {
   @override
   void initState() {
     _isEnabled = widget.isEnabled;

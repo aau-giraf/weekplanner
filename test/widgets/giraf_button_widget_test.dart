@@ -14,9 +14,8 @@ class MockScreenButtonTest extends StatelessWidget {
               key: const Key('Button'),
               text: 'PressButton',
               onPressed: () {},
-              icon: const Icon(Icons.fastfood),
-              isEnabledStream: Observable<bool>.just(false)
-          ),
+              icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
+              isEnabledStream: Observable<bool>.just(false)),
         ],
       )),
     );
@@ -38,13 +37,10 @@ void main() {
   });
 
   //This test is not done
-  testWidgets('GirafButton is enabled',
-  (WidgetTester tester) async {
+  testWidgets('GirafButton is enabled', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreenButtonTest()));
-  final Finder submit = find.widgetWithText(GirafButton, 'PressButton');
+    final Finder submit = find.widgetWithText(GirafButton, 'PressButton');
 
-  expect(tester.widget<GirafButton>(submit).isEnabled,
-  isTrue);
+    expect(tester.widget<GirafButton>(submit).isEnabled, isTrue);
   });
-
 }
