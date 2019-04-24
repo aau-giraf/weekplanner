@@ -10,6 +10,7 @@ import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -59,7 +60,7 @@ class WeekplanScreen extends StatelessWidget {
         initialData: false,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data) {
-            return buildBottomAppBar();
+            return buildBottomAppBar(context);
           } else {
             return Container(width: 0.0, height: 0.0);
           }
@@ -68,7 +69,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  BottomAppBar buildBottomAppBar() {
+  BottomAppBar buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
         color: const Color(0xAAFF6600),
         child: Row(
@@ -79,8 +80,24 @@ class WeekplanScreen extends StatelessWidget {
               iconSize: 50,
               icon: const Icon(Icons.delete_forever),
               onPressed: () {
-                weekplanBloc.deleteMarkedActivities();
-                weekplanBloc.toggleEditMode();
+                showDialog<Center>(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return GirafConfirmDialog(
+                          title: 'Bekræft',
+                          description: 'Vil du slette' +
+                              ' ${weekplanBloc.getNumberOfMarkedActivities()}' +
+                              ' aktivitet(er)',
+                          confirmButtonText: 'Bekræft',
+                          confirmButtonIcon: const ImageIcon(
+                              AssetImage('assets/icons/accept.png')),
+                          confirmOnPressed: () {
+                            weekplanBloc.deleteMarkedActivities();
+                            weekplanBloc.toggleEditMode();
+                            Routes.pop(context);
+                          });
+                    });
               },
             ),
           ],
