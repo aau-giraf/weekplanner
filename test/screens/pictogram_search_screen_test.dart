@@ -143,7 +143,6 @@ void main() {
 
   testWidgets('Display text to user if no result is found after 10 seconds',
           (WidgetTester tester) async {
-    final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
@@ -155,7 +154,7 @@ void main() {
 
     await tester.pump(const Duration(milliseconds: 11000));
 
-    expect(find.byKey(Key("timeoutWidget")), findsOneWidget);
+    expect(find.byKey(const Key('timeoutWidget')), findsOneWidget);
 
   });
 }

@@ -12,7 +12,6 @@ import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
-import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
 
 /// Color of the add buttons
