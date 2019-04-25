@@ -104,43 +104,34 @@ class WeekplanScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
-              if (activities[index].state == ActivityState.Completed) {
-                return GestureDetector(
-                  onTap: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)),
-                  child: Card(
-                    child: FittedBox(
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width,
-                            child: FittedBox(
-                              child: _getPictogram(activities[index]),
-                            ),
+              return GestureDetector(
+                onTap: () => Routes.push(context,
+                    ShowActivityScreen(_week, activities[index], _user)),
+                child: Card(
+                  child: FittedBox(
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: <Widget>[
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          child: FittedBox(
+                            child: _getPictogram(activities[index]),
                           ),
-                          Icon(
-                            Icons.check,
-                            key: const Key('IconComplete'),
-                            size: MediaQuery.of(context).size.width,
-                            color: Colors.green,
-                          ),
-                        ],
-                      ),
+                        ),
+                        (activities[index].state == ActivityState.Completed)
+                            ? Icon(
+                                Icons.check,
+                                key: const Key('IconComplete'),
+                                size: MediaQuery.of(context).size.width,
+                                color: Colors.green,
+                              )
+                            : null,
+                      ].where((Widget w) => w != null).toList(),
                     ),
                   ),
-                );
-              }
-              return GestureDetector(
-                  key: Key(
-                      day.index.toString() + activities[index].id.toString()),
-                  onTap: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)),
-                  child: Container(child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: _getPictogram(activities[index]),
-                  )));
+                ),
+              );
             },
             itemCount: activities.length,
           ),
@@ -197,8 +188,7 @@ class WeekplanScreen extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         return Container(
-          child: snapshot.data,
-          key: const Key('PictogramImage'));
+            child: snapshot.data, key: const Key('PictogramImage'));
       },
     );
   }

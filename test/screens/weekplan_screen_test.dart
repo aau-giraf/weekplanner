@@ -174,4 +174,34 @@ void main() {
     authBloc.setMode(WeekplanMode.guardian);
     await done.future;
   });
+
+  testWidgets('When in citizens mode I should only see switch mode icon',
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    authBloc.mode.skip(1).listen((_) async {
+      await tester.pump();
+
+      GirafAppBar widget = find
+          .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
+          .evaluate()
+          .first
+          .widget;
+
+      if (widget != null) {
+        expect(widget.appBarIcons.length == 1, true);
+        expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian), true);
+      } else {
+        fail('Could not find GirafAppBar');
+      }
+
+      done.complete();
+    });
+
+    authBloc.setMode(WeekplanMode.citizen);
+    await done.future;
+  });
 }
