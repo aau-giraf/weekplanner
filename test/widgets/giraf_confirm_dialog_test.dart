@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 class MockScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class MockScreen extends StatelessWidget {
       body: Container(
           child: Column(
         children: <Widget>[
-          RaisedButton(
+          GirafButton(
               key: const Key('FirstButton'),
               onPressed: () {
                 confirmDialog(context);
@@ -41,7 +42,7 @@ void main() {
   testWidgets('Test if Confirm Dialog is shown', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
 
@@ -52,7 +53,7 @@ void main() {
     await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
     await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsNothing);
   });
 
@@ -65,7 +66,7 @@ void main() {
     await tester.pump();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsNothing);
   });
 }
