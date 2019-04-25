@@ -51,7 +51,7 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: CopyFiles@2
         inputs:
-          contents: '**/*.ipa'
+          contents: '**/$(BuildConfiguration)/**'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         inputs:
