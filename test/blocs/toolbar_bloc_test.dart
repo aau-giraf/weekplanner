@@ -29,10 +29,10 @@ void main() {
   }));
 
   test('Defined icon is added to stream', async((DoneFn done) {
-    List<AppBarIcon> iconsList;
-    iconsList = <AppBarIcon>[];
-    iconsList.add(AppBarIcon.undo);
-    bloc.updateIcons(iconsList, null);
+    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>
+    {AppBarIcon.undo : null};
+
+    bloc.updateIcons(icons, null);
 
     bloc.visibleButtons.listen((List<IconButton> response) {
       expect(response.length, 1);
@@ -42,11 +42,9 @@ void main() {
   }));
 
   test('Defined icons are added to stream', async((DoneFn done) {
-    List<AppBarIcon> iconsList;
-    iconsList = <AppBarIcon>[];
-    iconsList.add(AppBarIcon.undo);
-    iconsList.add(AppBarIcon.search);
-    bloc.updateIcons(iconsList, null);
+    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>
+    {AppBarIcon.undo : null, AppBarIcon.search: null};
+    bloc.updateIcons(icons, null);
 
     bloc.visibleButtons.listen((List<IconButton> response) {
       expect(response.length, 2);

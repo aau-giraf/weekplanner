@@ -79,6 +79,9 @@ class WeekplanBloc extends BlocBase {
 
   /// Toggles edit mode
   void toggleEditMode() {
+    if (_editMode.value){
+      clearMarkedActivities();
+    }
     _editMode.add(!_editMode.value);
   }
 

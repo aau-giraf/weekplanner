@@ -169,28 +169,15 @@ void main() {
 
     expect(resultValue, false);
 
-    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
-        getActivity(Weekday.Monday).id.toString())));
+    await tester.tap(find.byTooltip('Rediger'));
     await tester.pump();
 
     expect(resultValue, true);
 
-    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
-        getActivity(Weekday.Monday).id.toString())));
+    await tester.tap(find.byTooltip('Rediger'));
     await tester.pump();
 
     expect(resultValue, false);
-  });
-
-  testWidgets('Long press selects activity', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-
-    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
-        getActivity(Weekday.Monday).id.toString())));
-    await tester.pump();
-
-    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
   });
 
   testWidgets('Tap on an activity in edit mode marks it',
@@ -198,15 +185,14 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
-        getActivity(Weekday.Monday).id.toString())));
+    await tester.tap(find.byTooltip('Rediger'));
     await tester.pump();
 
     await tester.tap(find.byKey(Key(Weekday.Wednesday.index.toString() +
         getActivity(Weekday.Wednesday).id.toString())));
     await tester.pump();
 
-    expect(find.byKey(const Key('isSelectedKey')), findsNWidgets(2));
+    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
   });
 
   testWidgets('Leaving editmode deselects all activities',
@@ -214,18 +200,16 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
-        getActivity(Weekday.Monday).id.toString())));
+    await tester.tap(find.byTooltip('Rediger'));
     await tester.pump();
 
     await tester.tap(find.byKey(Key(Weekday.Wednesday.index.toString() +
         getActivity(Weekday.Wednesday).id.toString())));
     await tester.pump();
 
-    expect(find.byKey(const Key('isSelectedKey')), findsNWidgets(2));
+    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
 
-    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
-        getActivity(Weekday.Monday).id.toString())));
+    await tester.tap(find.byTooltip('Rediger'));
     await tester.pump();
 
     expect(find.byKey(const Key('isSelectedKey')), findsNothing);
@@ -239,7 +223,10 @@ void main() {
     final Key selectedPictogram = Key(Weekday.Monday.index.toString() +
         getActivity(Weekday.Monday).id.toString());
 
-    await tester.longPress(find.byKey(selectedPictogram));
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    await tester.tap(find.byKey(selectedPictogram));
     await tester.pump();
 
     await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
@@ -260,7 +247,10 @@ void main() {
     final Key selectedPictogram = Key(Weekday.Tuesday.index.toString() +
         getActivity(Weekday.Tuesday).id.toString());
 
-    await tester.longPress(find.byKey(selectedPictogram));
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    await tester.tap(find.byKey(selectedPictogram));
     await tester.pump();
 
     await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));

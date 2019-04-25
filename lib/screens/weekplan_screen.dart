@@ -7,6 +7,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -41,7 +42,14 @@ class WeekplanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(title: 'Ugeplan'),
+      appBar: GirafAppBar(
+        title: 'Ugeplan',
+        appBarIcons: <AppBarIcon, VoidCallback>{
+          AppBarIcon.edit: () => weekplanBloc.toggleEditMode(),
+          AppBarIcon.settings: null,
+          AppBarIcon.logout: null
+        },
+      ),
       body: StreamBuilder<UserWeekModel>(
         stream: weekplanBloc.userWeek,
         initialData: null,
@@ -194,9 +202,6 @@ class WeekplanScreen extends StatelessWidget {
                           handleOnTapActivity(
                               snapshot, isMarked, activities, index, context);
                         },
-                        onLongPress: () {
-                          handleLongPressActivity(snapshot, activities, index);
-                        },
                         child:
                             buildIsMarked(isMarked, context, activities, index),
                       );
@@ -206,17 +211,6 @@ class WeekplanScreen extends StatelessWidget {
                 );
               });
         });
-  }
-
-  /// Handles long press on a activity
-  void handleLongPressActivity(
-      AsyncSnapshot<bool> snapshot, List<ActivityModel> activities, int index) {
-    if (snapshot.data) {
-      weekplanBloc.clearMarkedActivities();
-    } else {
-      weekplanBloc.addMarkedActivity(activities[index]);
-    }
-    weekplanBloc.toggleEditMode();
   }
 
   /// Handles tap on a activity
