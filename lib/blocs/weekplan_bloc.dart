@@ -57,7 +57,7 @@ class WeekplanBloc extends BlocBase {
     final WeekModel week = _userWeek.value.week;
     final UsernameModel user = _userWeek.value.user;
 
-    // Removed from dayFrom
+    // Removed from dayFrom, the day the pictogram is dragged from
     int dayLength = week.days[dayFrom.index].activities.length;
 
     for (int i = activity.order + 1; i < dayLength; i++) {
@@ -71,7 +71,7 @@ class WeekplanBloc extends BlocBase {
         ? newOrder - 1
         : newOrder;
 
-    // Inserts into dayTo
+    // Inserts into dayTo, the day that the pictogram is inserted to
     dayLength = week.days[dayTo.index].activities.length;
 
     for (int i = activity.order; i < dayLength; i++) {

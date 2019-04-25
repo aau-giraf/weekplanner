@@ -135,11 +135,13 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  DragTarget<dynamic> _dragTargetPlaceholder(
+  // Used for grayed out drag targets in the end on column.
+  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPlaceholder(
       int dropTargetIndex, WeekdayModel weekday) {
-    return DragTarget<dynamic>(
+    return DragTarget<Tuple2<ActivityModel, Weekday>>(
       key: const Key('DragTargetPlaceholder'),
-      builder: (BuildContext context, List<dynamic> candidateData,
+      builder: (BuildContext context,
+          List<Tuple2<ActivityModel, Weekday>> candidateData,
           List<dynamic> rejectedData) {
         return AspectRatio(
           aspectRatio: 1,
@@ -149,34 +151,36 @@ class WeekplanScreen extends StatelessWidget {
           ),
         );
       },
-      onWillAccept: (dynamic data) {
+      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
+        // Draggable can be dropped on every drop target
         return true;
       },
-      onAccept: (dynamic data) {
+      onAccept: (Tuple2<ActivityModel, Weekday> data) {
         weekplanBloc.reorderActivities(
             data.item1, data.item2, weekday.day, dropTargetIndex);
       },
     );
   }
 
-  DragTarget<dynamic> _dragTargetPictogram(int index, WeekdayModel weekday) {
-    return DragTarget<dynamic>(
+  // Returns the draggable pictograms, which also functions as drop targets.
+  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
+      int index, WeekdayModel weekday) {
+    return DragTarget<Tuple2<ActivityModel, Weekday>>(
       key: const Key('DragTarget'),
-      builder: (BuildContext context, List<dynamic> candidateData,
+      builder: (BuildContext context,
+          List<Tuple2<ActivityModel, Weekday>> candidateData,
           List<dynamic> rejectedData) {
-        return LongPressDraggable<dynamic>(
+        return LongPressDraggable<Tuple2<ActivityModel, Weekday>>(
           data: Tuple2<ActivityModel, Weekday>(
               weekday.activities[index], weekday.day),
           dragAnchor: DragAnchor.pointer,
           child: _pictogramIconStack(context, index, weekday),
           childWhenDragging: Opacity(
-            opacity: 0.5,
-            child: _pictogramIconStack(context, index, weekday)
-          ),
+              opacity: 0.5,
+              child: _pictogramIconStack(context, index, weekday)),
           onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
-          onDragCompleted: () {
-            weekplanBloc.setActivityPlaceholderVisible(false);
-          },
+          onDragCompleted: () =>
+              weekplanBloc.setActivityPlaceholderVisible(false),
           onDragEnd: (DraggableDetails details) =>
               weekplanBloc.setActivityPlaceholderVisible(false),
           feedback: Container(
@@ -185,16 +189,18 @@ class WeekplanScreen extends StatelessWidget {
               child: _pictogramIconStack(context, index, weekday)),
         );
       },
-      onWillAccept: (dynamic data) {
+      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
+        // Draggable can be dropped on every drop target
         return true;
       },
-      onAccept: (dynamic data) {
+      onAccept: (Tuple2<ActivityModel, Weekday> data) {
         weekplanBloc.reorderActivities(
             data.item1, data.item2, weekday.day, index);
       },
     );
   }
 
+  // Returning a widget for that stacks a pictogram and an accept icon
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday) {
     return FittedBox(
