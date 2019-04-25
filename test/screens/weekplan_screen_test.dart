@@ -8,12 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
@@ -52,6 +55,9 @@ void main() {
     WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[activity]),
   ]);
 
+  final UsernameModel user =
+      UsernameModel(name: 'test', id: 'test', role: 'test');
+
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
@@ -69,24 +75,23 @@ void main() {
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
+    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
+        MaterialApp(home: WeekplanScreen(weekModel, user)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
   });
 
   testWidgets('Has all days of the week', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     const List<String> days = <String>[
@@ -106,15 +111,32 @@ void main() {
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
+        MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsNWidgets(7));
   });
 
+  testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
+    activity.state = ActivityState.Completed;
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('IconComplete')), findsNWidgets(7));
+  });
+
+  testWidgets('Activity has no checkmark when Normal',
+      (WidgetTester tester) async {
+    activity.state = ActivityState.Normal;
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('IconComplete')), findsNothing);
+  });
+
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(week: weekModel, user: null)));
+        MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));

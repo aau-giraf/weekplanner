@@ -13,15 +13,14 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 /// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
-  /// Requies a UsernameModel user to load weekplans
-  WeekplanSelectorScreen(this.user)
+  /// Requires a user to load weekplans
+  WeekplanSelectorScreen(this._user)
       : _weekBloc = di.getDependency<WeekplansBloc>() {
-    _weekBloc.load(user, true);
+    _weekBloc.load(_user, true);
   }
 
   final WeekplansBloc _weekBloc;
-
-  final UsernameModel user;
+  final UsernameModel _user;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +64,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
       onTap: () =>
-          Routes.push(context, WeekplanScreen(week: weekplan, user: null)),
+          Routes.push(context, WeekplanScreen(weekplan, _user)),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {

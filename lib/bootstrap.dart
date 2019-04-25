@@ -1,4 +1,5 @@
 import 'package:injector/injector.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
@@ -54,6 +55,10 @@ class Bootstrap {
 
     di.registerDependency<AddActivityBloc>((_) {
       return AddActivityBloc();
+    });
+
+    di.registerDependency<ActivityBloc>((Injector i) {
+      return ActivityBloc(i.getDependency<Api>());
     });
 
     di.registerDependency<SettingsBloc>((Injector i) {
