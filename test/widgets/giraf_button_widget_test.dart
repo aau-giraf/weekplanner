@@ -4,6 +4,8 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class MockScreen extends StatelessWidget {
+  bool isPressed = false;
+  BehaviorSubject<bool> btnEnabled = BehaviorSubject<bool>.seeded(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,11 +13,14 @@ class MockScreen extends StatelessWidget {
           child: Column(
         children: <Widget>[
           GirafButton(
-              key: const Key('Button'),
-              text: 'PressButton',
-              onPressed: () {},
-              icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
-              isEnabledStream: Observable<bool>.just(false)),
+            key: const Key('Button'),
+            text: 'PressButton',
+            onPressed: () {
+              isPressed = true;
+            },
+            icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
+            isEnabledStream: btnEnabled,
+          ),
         ],
       )),
     );
@@ -40,5 +45,30 @@ void main() {
     expect(
         find.byWidget(const ImageIcon(AssetImage('assets/icons/accept.png'))),
         findsOneWidget);
+  });
+
+  testWidgets(
+      'GirafButton is pressed and'
+      ' works when enabled', (WidgetTester tester) async {
+    MockScreen screen = MockScreen();
+    await tester.pumpWidget(MaterialApp(home: screen));
+    screen.btnEnabled.add(true);
+    await tester.pumpAndSettle();
+    expect(screen.isPressed, isFalse);
+    await tester.tap(find.byKey(const Key('Button')));
+    await tester.pump();
+    expect(screen.isPressed, isTrue);
+  });
+
+  testWidgets(
+      'GirafButton is pressed and'
+      ' does not work when disabled', (WidgetTester tester) async {
+    MockScreen screen = MockScreen();
+    await tester.pumpWidget(MaterialApp(home: screen));
+    await tester.pump();
+    expect(screen.isPressed, isFalse);
+    await tester.tap(find.byKey(const Key('Button')));
+    await tester.pump();
+    expect(screen.isPressed, isFalse);
   });
 }
