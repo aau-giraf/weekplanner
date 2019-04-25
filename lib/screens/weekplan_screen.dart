@@ -5,6 +5,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/user_week_model.dart';
@@ -208,15 +209,21 @@ class WeekplanScreen extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         children: <Widget>[
           SizedBox(
+              height: MediaQuery.of(context).size.width,
               width: MediaQuery.of(context).size.width,
-              child: PictogramImage(
-                pictogram: weekday.activities[index].pictogram,
-                key: Key(weekday.day.index.toString() +
-                    weekday.activities[index].id.toString()),
-                onPressed: () => Routes.push(
-                    context,
-                    ShowActivityScreen(
-                        _week, weekday.activities[index], _user)),
+              child: FittedBox(
+                child: GestureDetector(
+                    key: Key(weekday.day.index.toString() +
+                        weekday.activities[index].id.toString()),
+                    onTap: () => Routes.push(
+                        context,
+                        ShowActivityScreen(
+                            _week, weekday.activities[index], _user)),
+                    child: Container(
+                        child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: _getPictogram(weekday.activities[index]),
+                    ))),
               )),
           weekday.activities[index].state == ActivityState.Completed
               ? IgnorePointer(
@@ -230,6 +237,21 @@ class WeekplanScreen extends StatelessWidget {
               : Container(),
         ],
       ),
+    );
+  }
+
+  Widget _getPictogram(ActivityModel activity) {
+    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    bloc.loadPictogramById(activity.pictogram.id);
+    return StreamBuilder<Image>(
+      stream: bloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        if (snapshot.data == null) {
+          return const CircularProgressIndicator();
+        }
+        return Container(
+            child: snapshot.data, key: const Key('PictogramImage'));
+      },
     );
   }
 
