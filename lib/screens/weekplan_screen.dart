@@ -135,7 +135,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  // Used for grayed out drag targets in the end on column.
+  // Returns the grayed out drag targets in the end on column.
   DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPlaceholder(
       int dropTargetIndex, WeekdayModel weekday) {
     return DragTarget<Tuple2<ActivityModel, Weekday>>(
