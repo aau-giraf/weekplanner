@@ -35,7 +35,7 @@ jobs:
           script: $(FlutterToolPath)/flutter analyze
       - task: FlutterBuild@0
         inputs:
-          target: iOS
+          target: ios
           projectDirectory: $(projectDirectory)
       - task: FlutterTest@0
         inputs:
