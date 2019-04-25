@@ -9,6 +9,7 @@ jobs:
     steps:
       - task: FlutterInstall@0
       - task: Bash@3
+        displayName: 'Linter'
         inputs:
           targetType: inline
           script: $(FlutterToolPath)/flutter analyze
@@ -26,7 +27,7 @@ jobs:
       - task: PublishBuildArtifacts@1
         inputs:
           pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          artifactName: drop1
+          artifactName: Android
   - job: iOS
     pool:
       vmImage: 'macOS-10.13'
@@ -39,6 +40,7 @@ jobs:
           provProfileSecureFile: '82a27128-6283-49f0-90a3-2440591810d1.mobileprovision'
       - task: FlutterInstall@0
       - task: Bash@3
+        displayName: 'Linter'
         inputs:
           targetType: inline
           script: $(FlutterToolPath)/flutter analyze
@@ -46,11 +48,16 @@ jobs:
         inputs:
           target: ios
           projectDirectory: $(projectDirectory)
+      - task: ArchiveFiles@2
+        inputs:
+          ootFolderOrFile: '$(projectDirectory)/build/ios/Runner.app/'
+          includeRootFolder: true
+          rchiveType: 'zip'
       - task: CopyFiles@2
         inputs:
-          contents: '/Users/vsts/agent/2.150.0/work/1/s/build/ios/iphoneos/Runner.app'
+          contents: '$(projectDirectory)/build/ios/*.zip'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         inputs:
-          pathtoPublish: '$(projectDirectory)'
-          artifactName: drop2
+          pathtoPublish: '$(build.artifactStagingDirectory)'
+          artifactName: iOS
