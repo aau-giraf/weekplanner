@@ -26,8 +26,8 @@ void main() {
     int count = 0;
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-        (_) =>
-            BehaviorSubject<List<PictogramModel>>.seeded(<PictogramModel>[]));
+            (_) =>
+        BehaviorSubject<List<PictogramModel>>.seeded(<PictogramModel>[]));
 
     bloc.pictograms.listen((List<PictogramModel> response) {
       switch (count) {
@@ -48,5 +48,9 @@ void main() {
   test('Should dispose stream', async((DoneFn done) {
     bloc.pictograms.listen((_) {}, onDone: done);
     bloc.dispose();
+  }));
+
+  test('Result of depends on internet connection', async((DoneFn done) {
+
   }));
 }

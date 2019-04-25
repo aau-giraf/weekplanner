@@ -71,7 +71,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
     await tester.enterText(find.byType(TextField), query);
 
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 11000));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
@@ -98,7 +98,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
     await tester.enterText(find.byType(TextField), query);
 
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 11000));
 
     bloc.pictograms.listen((List<PictogramModel> images) async {
       await tester.pump();
@@ -125,7 +125,7 @@ void main() {
       ),
     );
     await tester.enterText(find.byType(TextField), query);
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 11000));
 
     bloc.pictograms.listen((List<PictogramModel> images) async {
       await tester.pump();
@@ -138,7 +138,6 @@ void main() {
       expect(await pushedRoute.popped, pictogramModel);
       done.complete(true);
     });
-
     await done.future;
   });
 }
