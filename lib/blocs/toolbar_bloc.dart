@@ -171,6 +171,7 @@ class ToolbarBloc extends BlocBase {
 
   IconButton _createIconChangeToCitizen(BuildContext context) {
     return IconButton(
+        key: const Key('IconChangeToCitizen'),
         icon: Image.asset('assets/icons/changeToCitizen.png'),
         tooltip: 'Skift til borger tilstand',
         onPressed: () {
@@ -196,6 +197,7 @@ class ToolbarBloc extends BlocBase {
 
   IconButton _createIconChangeToGuardian(BuildContext context) {
     return IconButton(
+      key: const Key('IconChangeToGuardian'),
       icon: Image.asset('assets/icons/changeToGuardian.png'),
       tooltip: 'Skift til værge tilstand',
       onPressed: () {
@@ -219,6 +221,7 @@ class ToolbarBloc extends BlocBase {
                   ),
                 ),
                 TextField(
+                  key: const Key('SwitchToGuardianPassword'),
                   controller: passwordCtrl,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -230,6 +233,7 @@ class ToolbarBloc extends BlocBase {
             ),
             buttons: <DialogButton>[
               DialogButton(
+                key: const Key('SwitchToGuardianSubmit'),
                 onPressed: () {
                   login(context, _authBloc.loggedInUsername,
                       passwordCtrl.value.text);

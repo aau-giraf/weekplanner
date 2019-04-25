@@ -9,6 +9,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -23,9 +24,22 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
+
+class MockAuthBlock extends AuthBloc{
+  MockAuthBlock(Api api) : super(api);
+
+  @override
+  void authenticate(String username, String password) {
+    if(password == 'password'){
+      setMode(WeekplanMode.guardian);
+    }
+  }
+
+}
 
 void main() {
   WeekplanBloc bloc;
@@ -69,7 +83,7 @@ void main() {
     api.pictogram = pictogramApi;
     api.week = weekApi;
     bloc = WeekplanBloc(api);
-    authBloc = AuthBloc(api);
+    authBloc = MockAuthBlock(api);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
@@ -140,7 +154,8 @@ void main() {
 
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
+
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
   });
@@ -204,4 +219,149 @@ void main() {
     authBloc.setMode(WeekplanMode.citizen);
     await done.future;
   });
+
+  testWidgets("When switching to citizens mode the add activityButton should disappear",
+          (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+
+    await tester.pumpAndSettle();
+
+    // Ensure the buttons are present before the switch
+    expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
+
+    authBloc.mode.skip(1).listen((_) async {
+      await tester.pump();
+      // Ensure the buttons are not present after the switch
+      expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(0));
+      done.complete();
+    });
+
+    authBloc.setMode(WeekplanMode.citizen);
+    await done.future;
+  });
+
+  testWidgets('When in guardian mode tapping the switch mode, should switch mode',
+          (WidgetTester tester) async {
+        final Completer<bool> done = Completer<bool>();
+        final Completer<bool> tapComplete = Completer<bool>();
+
+        await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+        await tester.pumpAndSettle();
+
+        authBloc.mode.skip(1).listen((WeekplanMode mode) async {
+          await tapComplete.future;
+
+          expect(mode == WeekplanMode.citizen, true);
+
+          GirafAppBar widget = find
+              .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
+              .evaluate()
+              .first
+              .widget;
+
+          if (widget != null) {
+            expect(widget.appBarIcons.length == 1, true);
+            expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian), true);
+          } else {
+            fail('Could not find GirafAppBar');
+          }
+
+
+          done.complete();
+        });
+
+        Finder button = find.byKey(const Key('IconChangeToCitizen'));
+        expect(button, findsOneWidget);
+
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+
+        final Finder dialog = find.byWidgetPredicate(
+                (Widget widget) => widget is GirafConfirmDialog
+        );
+
+        expect(dialog, findsOneWidget);
+
+        final Finder okBtn =
+          find.byKey(const Key('ConfirmDialogConfirmButton'));
+
+        expect(okBtn, findsOneWidget);
+
+        await tester.tap(okBtn);
+        await tester.pumpAndSettle();
+
+        tapComplete.complete();
+
+        await done.future;
+      });
+
+  testWidgets('When in citizen mode tapping the switch mode, should switch mode',
+          (WidgetTester tester) async {
+        final Completer<bool> done = Completer<bool>();
+        final Completer<bool> tapComplete = Completer<bool>();
+
+        await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+        await tester.pumpAndSettle();
+
+        authBloc.mode.skip(2).listen((WeekplanMode mode) async {
+          await tapComplete.future;
+
+          expect(mode == WeekplanMode.guardian, true);
+
+          GirafAppBar widget = find
+              .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
+              .evaluate()
+              .first
+              .widget;
+
+          if (widget != null) {
+            expect(widget.appBarIcons.length > 1, true);
+            expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen), true);
+          } else {
+            fail('Could not find GirafAppBar');
+          }
+
+
+          done.complete();
+        });
+
+        authBloc.setMode(WeekplanMode.citizen);
+
+        await tester.pumpAndSettle();
+
+        Finder button = find.byKey(const Key('IconChangeToGuardian'));
+
+        expect(button, findsOneWidget);
+
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+
+        final Finder dialog = find.byWidgetPredicate(
+                (Widget widget) => widget is AlertDialog
+        );
+
+        expect(dialog, findsOneWidget);
+
+        final Finder passField =
+          find.byKey(const Key('SwitchToGuardianPassword'));
+
+        expect(passField, findsOneWidget);
+
+        await tester.enterText(passField, 'password');
+
+        final Finder okBtn =
+          find.byKey(const Key('SwitchToGuardianSubmit'));
+
+        expect(okBtn, findsOneWidget);
+
+        await tester.tap(okBtn);
+        await tester.pumpAndSettle();
+
+        tapComplete.complete();
+
+        await done.future;
+      });
+
 }
