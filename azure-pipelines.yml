@@ -51,7 +51,7 @@ jobs:
       - task: ArchiveFiles@2
         inputs:
           ootFolderOrFile: '$(projectDirectory)/build/ios/Runner.app/'
-          includeRootFolder: true
+          #includeRootFolder: true
           rchiveType: 'zip'
       - task: CopyFiles@2
         inputs:
