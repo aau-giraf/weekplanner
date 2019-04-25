@@ -28,9 +28,12 @@ jobs:
     pool:
       vmImage: 'macOS-10.13'
     steps:
+      - task: DownloadSecureFile@1
+        inputs:
+          secureFile: 'cert.p12'
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'cert.p12'
+          certSecureFile: $env:DOWNLOADSECUREFILE_SECUREFILEPATH
       - task: FlutterInstall@0
       - task: Bash@3
         inputs:
