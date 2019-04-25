@@ -27,7 +27,6 @@ class PictogramBloc extends BlocBase {
 
   final Api _api;
   Timer _debounceTimer;
-  Timer _timeoutTimer;
 
   /// Initializes a search for [query].
   ///
@@ -50,7 +49,8 @@ class PictogramBloc extends BlocBase {
     List<PictogramModel> _resultPlaceholder;
 
     _debounceTimer = Timer(Duration(milliseconds: _debounceTime), () {
-      _timeoutTimer = Timer(Duration(milliseconds: _timeoutTime), () {
+      //Timer for sending an error if getting pictogram results takes too long
+      Timer(Duration(milliseconds: _timeoutTime), () {
         if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
           _pictograms.addError(null);
         }
