@@ -1,4 +1,6 @@
 import 'package:api_client/api/api.dart';
+import 'package:api_client/api/pictogram_api.dart';
+import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -20,11 +22,13 @@ import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
-import '../blocs/pictogram_bloc_test.dart';
-import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
 
+class MockWeekApi extends Mock implements WeekApi {}
+class MockPictogramApi extends Mock implements PictogramApi {}
+
 void main() {
+  
   WeekplanBloc bloc;
   Api api;
   MockWeekApi weekApi;
@@ -127,6 +131,7 @@ void main() {
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
     await tester.pump();
     await tester.pump();
 
