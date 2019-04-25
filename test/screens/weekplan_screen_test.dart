@@ -41,11 +41,12 @@ void main() {
       id: 1,
       pictogram: pictogramModel,
       isChoiceBoard: true,
-      state: null,
+      state: ActivityState.Completed,
       order: 1);
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
+    WeekdayModel(
+        day: Weekday.Monday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
@@ -82,8 +83,7 @@ void main() {
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
@@ -109,8 +109,7 @@ void main() {
   });
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
     await tester.pump();
 
@@ -135,10 +134,37 @@ void main() {
   });
 
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('GreyDragVisibleKey')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target placeholder is build',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    bloc.setActivityPlaceholderVisible(true);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(7));
+
+    bloc.setActivityPlaceholderVisible(false);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
   });
 }
