@@ -50,13 +50,10 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: ArchiveFiles@2
         inputs:
-          ootFolderOrFile: $(agent.buildDirectory)
+          rootFolderOrFile: '$(Build.BinariesDirectory)'
           includeRootFolder: true
           rchiveType: 'zip'
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.zip'
-          targetFolder: '$(build.artifactStagingDirectory)'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/ios_app.zip'
       - task: PublishBuildArtifacts@1
         inputs:
           pathtoPublish: $(build.artifactStagingDirectory)
