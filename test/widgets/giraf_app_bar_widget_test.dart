@@ -325,10 +325,8 @@ void main() {
         await tester.tap(find.byTooltip('Log ud'));
         await tester.pumpAndSettle();
         expect(find.byType(GirafConfirmDialog), findsOneWidget);
-        await tester.pump();
         expect(find.byKey(const Key('ConfirmDialogConfirmButton')),
             findsOneWidget);
-        await tester.pump();
         await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
         authBloc.loggedIn.listen((bool statusLogout) async {
           if (statusLogout == false) {
