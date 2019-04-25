@@ -8,7 +8,6 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -58,7 +57,6 @@ void main() {
   MockAuth authBloc;
 
   setUp(() {
-    api = Api('any');
     di.clearAll();
     authBloc = MockAuth();
     di.registerDependency<AuthBloc>((_) => authBloc);
