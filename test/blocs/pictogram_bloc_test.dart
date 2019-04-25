@@ -49,8 +49,4 @@ void main() {
     bloc.pictograms.listen((_) {}, onDone: done);
     bloc.dispose();
   }));
-
-  test('Result of depends on internet connection', async((DoneFn done) {
-
-  }));
 }
