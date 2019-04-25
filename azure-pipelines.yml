@@ -33,7 +33,7 @@ jobs:
           secureFile: 'cert.p12'
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: $env:DOWNLOADSECUREFILE_SECUREFILEPATH
+          certSecureFile: '$(Agent.TempDirectory)/cert.p12'
       - task: FlutterInstall@0
       - task: Bash@3
         inputs:
