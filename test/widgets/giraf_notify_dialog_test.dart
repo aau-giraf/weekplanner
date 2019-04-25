@@ -34,7 +34,6 @@ void main() {
   testWidgets('Test if Notify Dialog is shown', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
-    await tester.pump();
     // Need to wait for the pressed state of the button to go back to default
     await tester.pumpAndSettle(const Duration(milliseconds: 200));
 
@@ -49,7 +48,6 @@ void main() {
         expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
         await tester.tap(find.byKey(const Key('NotifyDialogOkayButton')));
         await tester.pumpAndSettle(const Duration(milliseconds: 200));
-        await tester.pump();
 
         expect(find.byType(GirafNotifyDialog), findsNothing);
       });
