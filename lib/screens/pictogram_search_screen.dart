@@ -53,13 +53,13 @@ class PictogramSearch extends StatelessWidget {
 
                       }
                       else if(snapshot.hasError){
-                        return InkWell(
+                        return const InkWell(
                           key: Key("timeoutWidget"),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Text("Søgningen gav ingen resultater. Tjek internetforbindelsen."),
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text('Søgningen gav ingen resultater. '
+                                'Tjek internetforbindelsen.'),
                           ),
-                          onTap: () => _bloc.search,
                         );
                       }
                       else {

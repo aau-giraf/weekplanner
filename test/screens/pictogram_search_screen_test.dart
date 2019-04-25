@@ -141,7 +141,8 @@ void main() {
     await done.future;
   });
 
-  testWidgets('Display test to user if no result is found after 10 seconds', (WidgetTester tester) async {
+  testWidgets('Display text to user if no result is found after 10 seconds',
+          (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 

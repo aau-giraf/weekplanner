@@ -47,19 +47,19 @@ class PictogramBloc extends BlocBase {
       _debounceTimer.cancel();
     }
     _pictograms.add(null);
-    List<PictogramModel> resultPlaceholder;
+    List<PictogramModel> _resultPlaceholder;
 
     _debounceTimer = Timer(Duration(milliseconds: _debounceTime), () {
       _timeoutTimer = Timer(Duration(milliseconds: _timeoutTime), () {
-        if (resultPlaceholder == null) {
+        if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
           _pictograms.addError(null);
         }
       });
       _api.pictogram
           .getAll(page: 1, pageSize: 10, query: query)
           .listen((List<PictogramModel> results) {
-        resultPlaceholder = results;
-        _pictograms.add(resultPlaceholder);
+        _resultPlaceholder = results;
+        _pictograms.add(_resultPlaceholder);
       });
     });
   }
