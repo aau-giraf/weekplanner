@@ -60,11 +60,12 @@ void main() {
       id: 1,
       pictogram: pictogramModel,
       isChoiceBoard: true,
-      state: null,
+      state: ActivityState.Completed,
       order: 1);
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
+    WeekdayModel(
+        day: Weekday.Monday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
@@ -242,6 +243,34 @@ void main() {
     await done.future;
   });
 
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('GreyDragVisibleKey')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target placeholder is build',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    bloc.setActivityPlaceholderVisible(true);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(7));
+
+    bloc.setActivityPlaceholderVisible(false);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
+  });
+
   testWidgets('When in guardian mode tapping the switch mode, should switch mode',
           (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
@@ -285,7 +314,7 @@ void main() {
         expect(dialog, findsOneWidget);
 
         final Finder okBtn =
-          find.byKey(const Key('ConfirmDialogConfirmButton'));
+        find.byKey(const Key('ConfirmDialogConfirmButton'));
 
         expect(okBtn, findsOneWidget);
 
@@ -345,14 +374,14 @@ void main() {
         expect(dialog, findsOneWidget);
 
         final Finder passField =
-          find.byKey(const Key('SwitchToGuardianPassword'));
+        find.byKey(const Key('SwitchToGuardianPassword'));
 
         expect(passField, findsOneWidget);
 
         await tester.enterText(passField, 'password');
 
         final Finder okBtn =
-          find.byKey(const Key('SwitchToGuardianSubmit'));
+        find.byKey(const Key('SwitchToGuardianSubmit'));
 
         expect(okBtn, findsOneWidget);
 

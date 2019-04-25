@@ -1,3 +1,4 @@
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -16,6 +17,7 @@ import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:tuple/tuple.dart';
 
 /// Color of the add buttons
 const Color buttonColor = Color(0xA0FFFFFF);
@@ -90,51 +92,36 @@ class WeekplanScreen extends StatelessWidget {
       weekDays.add(Expanded(
           child: Card(
               color: Color(weekColors[i]),
-              child: _day(weekModel.days[i].day, weekModel.days[i].activities,
-                  context))));
+              child: _day(weekModel.days[i], context))));
     }
     return Row(children: weekDays);
   }
 
-  Column _day(
-      Weekday day, List<ActivityModel> activities, BuildContext context) {
+  Column _day(WeekdayModel weekday, BuildContext context) {
     return Column(
       children: <Widget>[
-        _translateWeekDay(day),
+        _translateWeekDay(weekday.day),
         Expanded(
           child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () => Routes.push(context,
-                    ShowActivityScreen(_week, activities[index], _user)),
-                child: Card(
-                  child: FittedBox(
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width,
-                          child: FittedBox(
-                            child: _getPictogram(activities[index]),
-                          ),
-                        ),
-                        (activities[index].state == ActivityState.Completed)
-                            ? Icon(
-                                Icons.check,
-                                key: const Key('IconComplete'),
-                                size: MediaQuery.of(context).size.width,
-                                color: Colors.green,
-                              )
-                            : null,
-                      ].where((Widget w) => w != null).toList(),
-                    ),
-                  ),
-                ),
-              );
-            },
-            itemCount: activities.length,
-          ),
+              itemBuilder: (BuildContext context, int index) {
+                if (index == weekday.activities.length) {
+                  return StreamBuilder<bool>(
+                      stream: weekplanBloc.activityPlaceholderVisible,
+                      initialData: false,
+                      builder:
+                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                        return Visibility(
+                          key: const Key('GreyDragVisibleKey'),
+                          visible: snapshot.data,
+                          child: _dragTargetPlaceholder(index, weekday),
+                        );
+                      });
+                }
+                return _dragTargetPictogram(index, weekday);
+              },
+              itemCount:
+                  weekday.activities.length + 1 //+1 for gray box (DragTarget),
+              ),
         ),
         Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
@@ -159,10 +146,10 @@ class WeekplanScreen extends StatelessWidget {
                                   ActivityModel(
                                       id: newActivity.id,
                                       pictogram: newActivity,
-                                      order: activities.length,
+                                      order: weekday.activities.length,
                                       state: ActivityState.Active,
                                       isChoiceBoard: false),
-                                  day.index);
+                                  weekday.day.index);
                             }
                           }),
                     );
@@ -171,6 +158,110 @@ class WeekplanScreen extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+
+  // Returns the grayed out drag targets in the end of the columns.
+  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPlaceholder(
+      int dropTargetIndex, WeekdayModel weekday) {
+    return DragTarget<Tuple2<ActivityModel, Weekday>>(
+      key: const Key('DragTargetPlaceholder'),
+      builder: (BuildContext context,
+          List<Tuple2<ActivityModel, Weekday>> candidateData,
+          List<dynamic> rejectedData) {
+        return AspectRatio(
+          aspectRatio: 1,
+          child: Card(
+            color: const Color.fromRGBO(200, 200, 200, 0.5),
+            child: ListTile(),
+          ),
+        );
+      },
+      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
+        // Draggable can be dropped on every drop target
+        return true;
+      },
+      onAccept: (Tuple2<ActivityModel, Weekday> data) {
+        weekplanBloc.reorderActivities(
+            data.item1, data.item2, weekday.day, dropTargetIndex);
+      },
+    );
+  }
+
+  // Returns the draggable pictograms, which also function as drop targets.
+  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
+      int index, WeekdayModel weekday) {
+    return DragTarget<Tuple2<ActivityModel, Weekday>>(
+      key: const Key('DragTarget'),
+      builder: (BuildContext context,
+          List<Tuple2<ActivityModel, Weekday>> candidateData,
+          List<dynamic> rejectedData) {
+        return LongPressDraggable<Tuple2<ActivityModel, Weekday>>(
+          data: Tuple2<ActivityModel, Weekday>(
+              weekday.activities[index], weekday.day),
+          dragAnchor: DragAnchor.pointer,
+          child: _pictogramIconStack(context, index, weekday),
+          childWhenDragging: Opacity(
+              opacity: 0.5,
+              child: _pictogramIconStack(context, index, weekday)),
+          onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
+          onDragCompleted: () =>
+              weekplanBloc.setActivityPlaceholderVisible(false),
+          onDragEnd: (DraggableDetails details) =>
+              weekplanBloc.setActivityPlaceholderVisible(false),
+          feedback: Container(
+              height: 150,
+              width: 150,
+              child: _pictogramIconStack(context, index, weekday)),
+        );
+      },
+      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
+        // Draggable can be dropped on every drop target
+        return true;
+      },
+      onAccept: (Tuple2<ActivityModel, Weekday> data) {
+        weekplanBloc.reorderActivities(
+            data.item1, data.item2, weekday.day, index);
+      },
+    );
+  }
+
+  // Returning a widget that stacks a pictogram and an accept icon
+  FittedBox _pictogramIconStack(
+      BuildContext context, int index, WeekdayModel weekday) {
+    return FittedBox(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          SizedBox(
+              height: MediaQuery.of(context).size.width,
+              width: MediaQuery.of(context).size.width,
+              child: FittedBox(
+                child: GestureDetector(
+                    key: Key(weekday.day.index.toString() +
+                        weekday.activities[index].id.toString()),
+                    onTap: () => Routes.push(
+                        context,
+                        ShowActivityScreen(
+                            _week, weekday.activities[index], _user)),
+                    child: Container(
+                        child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: _getPictogram(weekday.activities[index]),
+                    ))),
+              )),
+          weekday.activities[index].state == ActivityState.Completed
+              ? IgnorePointer(
+                  child: Image(
+                  image: const AssetImage('assets/icons/accept.png'),
+                  key: const Key('IconComplete'),
+                  color: Colors.green,
+                  fit: BoxFit.fitWidth,
+                  width: MediaQuery.of(context).size.width,
+                ))
+              : Container(),
+        ],
+      ),
     );
   }
 
@@ -223,15 +314,17 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
-        key: Key(translation),
-        color: buttonColor,
-        child: ListTile(
-            title: Text(
+      key: Key(translation),
+      color: buttonColor,
+      child: ListTile(
+        title: Text(
           translation,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
-        )));
+        ),
+      ),
+    );
   }
 }
