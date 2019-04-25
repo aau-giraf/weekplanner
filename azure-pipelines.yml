@@ -50,7 +50,7 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: '$(Build.BinariesDirectory)'
+          rootFolderOrFile: '$(projectDirectory)/build/ios/iphoneos/Runner.app'
           includeRootFolder: true
           rchiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/ios_app.zip'
