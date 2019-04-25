@@ -24,6 +24,9 @@ jobs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          artifactName: drop1
   - job: iOS
     pool:
       vmImage: 'macOS-10.13'
@@ -48,6 +51,9 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: CopyFiles@2
         inputs:
-          contents: '$(projectDirectory)/build/ios/**/*.app'
+          contents: '**/*.ipa'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          artifactName: drop2
