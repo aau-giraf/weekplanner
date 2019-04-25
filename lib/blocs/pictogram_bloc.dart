@@ -52,7 +52,8 @@ class PictogramBloc extends BlocBase {
       //Timer for sending an error if getting pictogram results takes too long
       Timer(Duration(milliseconds: _timeoutTime), () {
         if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
-          _pictograms.addError(null);
+          _pictograms.addError('Søgningen gav ingen resultater. '
+              'Tjek internetforbindelsen.');
         }
       });
       _api.pictogram
