@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// A button for the Giraf application.
-/// The design of the button follows the design guide on the Giraf wiki:
-/// https://aau-giraf.github.io/wiki/design_guide/buttons.html
 class GirafButton extends StatefulWidget {
   /// A button for the Giraf application.
   /// The button can contain some text and an icon both of which are optional.
