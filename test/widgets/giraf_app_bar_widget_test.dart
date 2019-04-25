@@ -55,7 +55,6 @@ const String keyOfVisibilityForEdit = 'visibilityEditBtn';
 
 void main() {
   ToolbarBloc bloc;
-  Api api;
   MockAuth authBloc;
 
   setUp(() {
@@ -329,7 +328,8 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(GirafConfirmDialog), findsOneWidget);
         await tester.pump();
-        expect(find.byKey(const Key('ConfirmDialogConfirmButton')), findsOneWidget);
+        expect(find.byKey(const Key('ConfirmDialogConfirmButton')),
+            findsOneWidget);
         await tester.pump();
         await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
         authBloc.loggedIn.listen((bool statusLogout) async {
