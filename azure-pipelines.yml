@@ -48,9 +48,9 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: CopyFiles@2
         inputs:
-          contents: '**/$(BuildConfiguration)/**'
+          contents: '/Users/vsts/agent/2.150.0/work/1/s/build/ios/iphoneos/Runner.app'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         inputs:
-          pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          pathtoPublish: '$(projectDirectory)'
           artifactName: drop2
