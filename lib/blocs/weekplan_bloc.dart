@@ -38,12 +38,6 @@ class WeekplanBloc extends BlocBase {
     _activityPlaceholderVisible.add(visibility);
   }
 
-  final BehaviorSubject<bool> _loadingWeek =
-      BehaviorSubject<bool>.seeded(false);
-
-  /// The current visibility of the activityPlaceholder-container.
-  Stream<bool> get loadingWeek => _loadingWeek.stream;
-
   /// Adds an activity to the given day.
   void addActivity(ActivityModel activity, int day) {
     final WeekModel week = _userWeek.value.week;

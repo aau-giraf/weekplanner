@@ -4,6 +4,7 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -46,7 +47,8 @@ void main() {
       order: 1);
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
+    WeekdayModel(
+        day: Weekday.Monday, activities: <ActivityModel>[activity, activity]),
     WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
@@ -83,8 +85,7 @@ void main() {
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
@@ -110,11 +111,10 @@ void main() {
   });
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    expect(find.byType(PictogramImage), findsNWidgets(7));
+    expect(find.byType(PictogramImage), findsNWidgets(8));
   });
 
   testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
@@ -122,7 +122,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    expect(find.byKey(const Key('IconComplete')), findsNWidgets(7));
+    expect(find.byKey(const Key('IconComplete')), findsNWidgets(8));
   });
 
   testWidgets('Activity has no checkmark when Normal',
@@ -135,18 +135,57 @@ void main() {
   });
 
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
   });
 
   testWidgets('Every drag target is build', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
+    expect(find.byKey(const Key('DragTarget')), findsNWidgets(8));
+  });
+
+  /*testWidgets('Every drag target placeholder is build',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    await longPressDrag(
+        tester,
+        tester.getCenter(find.byKey(const Key('DragTarget')).first),
+        tester.getCenter(find.byKey(const Key('DragTarget')).first));
+
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(7));
+
+    bloc.setActivityPlaceholderVisible(false);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
+  });*/
+
+  testWidgets('Every drag target placeholder is build',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    bloc.setActivityPlaceholderVisible(true);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(7));
+
+    bloc.setActivityPlaceholderVisible(false);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
   });
 }
+
+/*Future<void> longPressDrag(
+    WidgetTester tester, Offset start, Offset end) async {
+  final TestGesture drag = await tester.startGesture(start);
+  await tester.pump(kLongPressTimeout + kPressTimeout);
+  await drag.moveTo(end);
+  await tester.pump(kPressTimeout);
+  await drag.up();
+}*/

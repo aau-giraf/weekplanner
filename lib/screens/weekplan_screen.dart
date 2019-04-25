@@ -107,21 +107,17 @@ class WeekplanScreen extends StatelessWidget {
                         alignment: AlignmentDirectional.center,
                         children: <Widget>[
                           SizedBox(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
+                            width: MediaQuery.of(context).size.width,
                             child: _dragTargetPictogram(index, weekday),
                           ),
                           IgnorePointer(
-                            child: Icon(
-                              Icons.check,
+                            child: Image(
+                              image:
+                                  const AssetImage('assets/icons/accept.png'),
                               key: const Key('IconComplete'),
                               color: Colors.green,
-                              size: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width,
+                              fit: BoxFit.fitWidth,
+                              width: MediaQuery.of(context).size.width,
                             ),
                           )
                         ],
@@ -131,8 +127,9 @@ class WeekplanScreen extends StatelessWidget {
                 }
                 return _dragTargetPictogram(index, weekday);
               },
-              itemCount: weekday.activities.length + 1 //+1 for gray box,
-          ),
+              itemCount:
+                  weekday.activities.length + 1 //+1 for gray box (DragTarget),
+              ),
         ),
         Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
@@ -145,7 +142,7 @@ class WeekplanScreen extends StatelessWidget {
                   color: buttonColor,
                   onPressed: () async {
                     final PictogramModel newActivity =
-                    await Routes.push(context, PictogramSearch());
+                        await Routes.push(context, PictogramSearch());
                     if (newActivity != null) {
                       weekplanBloc.addActivity(
                           ActivityModel(
@@ -164,8 +161,8 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  DragTarget<dynamic> _dragTargetPlaceholder(int dropTargetIndex,
-      WeekdayModel weekday) {
+  DragTarget<dynamic> _dragTargetPlaceholder(
+      int dropTargetIndex, WeekdayModel weekday) {
     return DragTarget<dynamic>(
       key: const Key('DragTargetPlaceholder'),
       builder: (BuildContext context, List<dynamic> candidateData,
@@ -201,10 +198,8 @@ class WeekplanScreen extends StatelessWidget {
             pictogram: weekday.activities[index].pictogram,
             key: Key(weekday.day.index.toString() +
                 weekday.activities[index].id.toString()),
-            onPressed: () =>
-                Routes.push(context,
-                    ShowActivityScreen(
-                        _week, weekday.activities[index], _user)),
+            onPressed: () => Routes.push(context,
+                ShowActivityScreen(_week, weekday.activities[index], _user)),
           ),
           childWhenDragging: Opacity(
             opacity: 0.5,
@@ -227,23 +222,18 @@ class WeekplanScreen extends StatelessWidget {
                 alignment: AlignmentDirectional.center,
                 children: <Widget>[
                   SizedBox(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     child: _dragTargetPictogram(index, weekday),
                   ),
                   weekday.activities[index].state == ActivityState.Completed
                       ? IgnorePointer(
-                      child: Icon(
-                        Icons.check,
-                        key: const Key('IconComplete'),
-                        color: Colors.green,
-                        size: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                      ))
+                          child: Image(
+                          image: const AssetImage('assets/icons/accept.png'),
+                          key: const Key('IconComplete'),
+                          color: Colors.green,
+                          fit: BoxFit.fitWidth,
+                          width: MediaQuery.of(context).size.width,
+                        ))
                       : Container(),
                 ],
               ),
@@ -291,15 +281,17 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
-        key: Key(translation),
-        color: buttonColor,
-        child: ListTile(
-            title: Text(
-              translation,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            )));
+      key: Key(translation),
+      color: buttonColor,
+      child: ListTile(
+        title: Text(
+          translation,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 }
