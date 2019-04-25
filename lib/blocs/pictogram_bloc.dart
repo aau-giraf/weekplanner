@@ -51,7 +51,7 @@ class PictogramBloc extends BlocBase {
 
     _debounceTimer = Timer(Duration(milliseconds: _debounceTime), () {
       _timeoutTimer = Timer(Duration(milliseconds: _timeoutTime), () {
-        if (resultPlaceholder == null || resultPlaceholder.isEmpty) {
+        if (resultPlaceholder == null) {
           _pictograms.addError(null);
         }
       });
