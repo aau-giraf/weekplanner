@@ -135,7 +135,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  // Returns the grayed out drag targets in the end on column.
+  // Returns the grayed out drag targets in the end of the columns.
   DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPlaceholder(
       int dropTargetIndex, WeekdayModel weekday) {
     return DragTarget<Tuple2<ActivityModel, Weekday>>(
@@ -162,7 +162,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  // Returns the draggable pictograms, which also functions as drop targets.
+  // Returns the draggable pictograms, which also function as drop targets.
   DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
       int index, WeekdayModel weekday) {
     return DragTarget<Tuple2<ActivityModel, Weekday>>(
@@ -200,7 +200,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  // Returning a widget for that stacks a pictogram and an accept icon
+  // Returning a widget that stacks a pictogram and an accept icon
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday) {
     return FittedBox(
