@@ -50,14 +50,14 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: ArchiveFiles@2
         inputs:
-          ootFolderOrFile: '$(projectDirectory)/build/ios/Runner.app/'
-          #includeRootFolder: true
+          ootFolderOrFile: $(agent.buildDirectory)
+          includeRootFolder: true
           rchiveType: 'zip'
       - task: CopyFiles@2
         inputs:
-          contents: '$(projectDirectory)/build/ios/*.zip'
+          contents: '**/*.zip'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         inputs:
-          pathtoPublish: '$(build.artifactStagingDirectory)'
+          pathtoPublish: $(build.artifactStagingDirectory)
           artifactName: iOS
