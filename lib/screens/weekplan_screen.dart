@@ -39,7 +39,7 @@ class WeekplanScreen extends StatelessWidget {
   /// The WeekplanBloc that contains the current chosen weekplan
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
   final UsernameModel _user;
-  WeekModel _week;
+  final WeekModel _week;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,6 @@ class WeekplanScreen extends StatelessWidget {
         initialData: null,
         builder: (BuildContext context, AsyncSnapshot<UserWeekModel> snapshot) {
           if (snapshot.hasData) {
-            _week = snapshot.data.week;
             return _buildWeeks(snapshot.data.week, context);
           } else {
             return const Center(
