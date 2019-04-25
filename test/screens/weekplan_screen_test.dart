@@ -25,10 +25,10 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../test_image.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
+
 class MockPictogramApi extends Mock implements PictogramApi {}
 
 void main() {
-  
   WeekplanBloc bloc;
   Api api;
   MockWeekApi weekApi;
@@ -162,7 +162,35 @@ void main() {
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
   });
 
-  testWidgets('Long click on an activity toggles edit mode',
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('GreyDragVisibleKey')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target placeholder is build',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    bloc.setActivityPlaceholderVisible(true);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(7));
+
+    bloc.setActivityPlaceholderVisible(false);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
+  });
+
+  testWidgets('Click on edit icon toggles edit mode',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();

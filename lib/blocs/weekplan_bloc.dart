@@ -1,5 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -12,14 +13,16 @@ class WeekplanBloc extends BlocBase {
   /// Constructor that initializes _api
   WeekplanBloc(this._api);
 
+  /// The API
+  final Api _api;
+
   final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<List<ActivityModel>> _markedActivities =
       BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
   final BehaviorSubject<UserWeekModel> _userWeek =
       BehaviorSubject<UserWeekModel>();
-
-  /// The API
-  final Api _api;
+  final BehaviorSubject<bool> _activityPlaceholderVisible =
+  BehaviorSubject<bool>.seeded(false);
 
   /// The stream that emits the current chosen weekplan
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
@@ -29,6 +32,10 @@ class WeekplanBloc extends BlocBase {
 
   /// The stream that emits the marked activities
   Stream<List<ActivityModel>> get markedActivities => _markedActivities.stream;
+
+  /// The current visibility of the activityPlaceholder-container.
+  Stream<bool> get activityPlaceholderVisible =>
+      _activityPlaceholderVisible.stream;
 
   /// Sink to set the currently chosen week
   void setWeek(WeekModel week, UsernameModel user) {
@@ -79,10 +86,15 @@ class WeekplanBloc extends BlocBase {
 
   /// Toggles edit mode
   void toggleEditMode() {
-    if (_editMode.value){
+    if (_editMode.value) {
       clearMarkedActivities();
     }
     _editMode.add(!_editMode.value);
+  }
+
+  /// Used to change the visibility of the activityPlaceholder container.
+  void setActivityPlaceholderVisible(bool visibility) {
+    _activityPlaceholderVisible.add(visibility);
   }
 
   /// Adds an activity to the given day.
@@ -101,6 +113,41 @@ class WeekplanBloc extends BlocBase {
   /// Returns the number of marked activities
   int getNumberOfMarkedActivities() {
     return _markedActivities.value.length;
+  }
+  /// Reorders activities between same or different days.
+  void reorderActivities(
+      ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+
+    // Removed from dayFrom, the day the pictogram is dragged from
+    int dayLength = week.days[dayFrom.index].activities.length;
+
+    for (int i = activity.order + 1; i < dayLength; i++) {
+      week.days[dayFrom.index].activities[i].order -= 1;
+    }
+
+    week.days[dayFrom.index].activities.remove(activity);
+
+    activity.order = dayFrom == dayTo &&
+            week.days[dayTo.index].activities.length == newOrder - 1
+        ? newOrder - 1
+        : newOrder;
+
+    // Inserts into dayTo, the day that the pictogram is inserted to
+    dayLength = week.days[dayTo.index].activities.length;
+
+    for (int i = activity.order; i < dayLength; i++) {
+      week.days[dayTo.index].activities[i].order += 1;
+    }
+
+    week.days[dayTo.index].activities.insert(activity.order, activity);
+
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel newWeek) {
+      _userWeek.add(UserWeekModel(week, user));
+    });
   }
 
   @override

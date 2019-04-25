@@ -1,3 +1,4 @@
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -15,6 +16,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:tuple/tuple.dart';
 
 /// Color of the add buttons
 const Color buttonColor = Color(0xA0FFFFFF);
@@ -37,7 +39,7 @@ class WeekplanScreen extends StatelessWidget {
   /// The WeekplanBloc that contains the current chosen weekplan
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
   final UsernameModel _user;
-  final WeekModel _week;
+  WeekModel _week;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class WeekplanScreen extends StatelessWidget {
         initialData: null,
         builder: (BuildContext context, AsyncSnapshot<UserWeekModel> snapshot) {
           if (snapshot.hasData) {
+            _week = snapshot.data.week;
             return _buildWeeks(snapshot.data.week, context);
           } else {
             return const Center(
@@ -137,18 +140,16 @@ class WeekplanScreen extends StatelessWidget {
       weekDays.add(Expanded(
           child: Card(
               color: Color(weekColors[i]),
-              child: _day(weekModel.days[i].day, weekModel.days[i].activities,
-                  context))));
+              child: _day(weekModel.days[i], context))));
     }
     return Row(children: weekDays);
   }
 
-  Column _day(
-      Weekday day, List<ActivityModel> activities, BuildContext context) {
+  Column _day(WeekdayModel weekday, BuildContext context) {
     return Column(
       children: <Widget>[
-        _translateWeekDay(day),
-        buildDayActivities(activities, day),
+        _translateWeekDay(weekday.day),
+        buildDayActivities(weekday.activities, weekday),
         Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: ButtonTheme(
@@ -166,10 +167,10 @@ class WeekplanScreen extends StatelessWidget {
                           ActivityModel(
                               id: newActivity.id,
                               pictogram: newActivity,
-                              order: activities.length,
+                              order: weekday.activities.length,
                               state: ActivityState.Normal,
                               isChoiceBoard: false),
-                          day.index);
+                          weekday.day.index);
                     }
                   }),
             ),
@@ -181,7 +182,7 @@ class WeekplanScreen extends StatelessWidget {
 
   /// Builds a day's activities
   StreamBuilder<List<ActivityModel>> buildDayActivities(
-      List<ActivityModel> activities, Weekday day) {
+      List<ActivityModel> activities, WeekdayModel weekday) {
     return StreamBuilder<List<ActivityModel>>(
         stream: weekplanBloc.markedActivities,
         builder: (BuildContext context,
@@ -193,20 +194,22 @@ class WeekplanScreen extends StatelessWidget {
                 return Expanded(
                   child: ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
-                      final bool isMarked =
-                          weekplanBloc.isActivityMarked(activities[index]);
-                      return GestureDetector(
-                        key: Key(day.index.toString() +
-                            activities[index].id.toString()),
-                        onTap: () {
-                          handleOnTapActivity(
-                              snapshot, isMarked, activities, index, context);
-                        },
-                        child:
-                            buildIsMarked(isMarked, context, activities, index),
-                      );
+                      if (index == weekday.activities.length) {
+                        return StreamBuilder<bool>(
+                            stream: weekplanBloc.activityPlaceholderVisible,
+                            initialData: false,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<bool> snapshot) {
+                              return Visibility(
+                                key: const Key('GreyDragVisibleKey'),
+                                visible: snapshot.data,
+                                child: _dragTargetPlaceholder(index, weekday),
+                              );
+                            });
+                      }
+                      return _dragTargetPictogram(index, weekday, snapshot);
                     },
-                    itemCount: activities.length,
+                    itemCount: weekday.activities.length + 1,
                   ),
                 );
               });
@@ -233,9 +236,10 @@ class WeekplanScreen extends StatelessWidget {
     if (isMarked) {
       return Container(
           key: const Key('isSelectedKey'),
-          margin: const EdgeInsets.all(1),
+          margin: const EdgeInsets.all(20),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 10)),
+              BoxDecoration(border: Border.all(color: Colors.black, width:
+              50)),
           child: buildActivityCard(
             context,
             activities,
@@ -246,6 +250,101 @@ class WeekplanScreen extends StatelessWidget {
       return buildActivityCard(
           context, activities, index, activities[index].state);
     }
+  }
+
+  // Returns the grayed out drag targets in the end of the columns.
+  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPlaceholder(
+      int dropTargetIndex, WeekdayModel weekday) {
+    return DragTarget<Tuple2<ActivityModel, Weekday>>(
+      key: const Key('DragTargetPlaceholder'),
+      builder: (BuildContext context,
+          List<Tuple2<ActivityModel, Weekday>> candidateData,
+          List<dynamic> rejectedData) {
+        return AspectRatio(
+          aspectRatio: 1,
+          child: Card(
+            color: const Color.fromRGBO(200, 200, 200, 0.5),
+            child: ListTile(),
+          ),
+        );
+      },
+      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
+        // Draggable can be dropped on every drop target
+        return true;
+      },
+      onAccept: (Tuple2<ActivityModel, Weekday> data) {
+        weekplanBloc.reorderActivities(
+            data.item1, data.item2, weekday.day, dropTargetIndex);
+      },
+    );
+  }
+
+  // Returns the draggable pictograms, which also function as drop targets.
+  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
+      int index, WeekdayModel weekday, AsyncSnapshot<bool> snapshot) {
+    return DragTarget<Tuple2<ActivityModel, Weekday>>(
+      key: const Key('DragTarget'),
+      builder: (BuildContext context,
+          List<Tuple2<ActivityModel, Weekday>> candidateData,
+          List<dynamic> rejectedData) {
+        return LongPressDraggable<Tuple2<ActivityModel, Weekday>>(
+          data: Tuple2<ActivityModel, Weekday>(
+              weekday.activities[index], weekday.day),
+          dragAnchor: DragAnchor.pointer,
+          child: _pictogramIconStack(context, index, weekday, snapshot),
+          childWhenDragging: Opacity(
+              opacity: 0.5,
+              child: _pictogramIconStack(context, index, weekday, snapshot)),
+          onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
+          onDragCompleted: () =>
+              weekplanBloc.setActivityPlaceholderVisible(false),
+          onDragEnd: (DraggableDetails details) =>
+              weekplanBloc.setActivityPlaceholderVisible(false),
+          feedback: Container(
+              height: 150,
+              width: 150,
+              child: _pictogramIconStack(context, index, weekday, snapshot)),
+        );
+      },
+      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
+        // Draggable can be dropped on every drop target
+        return true;
+      },
+      onAccept: (Tuple2<ActivityModel, Weekday> data) {
+        weekplanBloc.reorderActivities(
+            data.item1, data.item2, weekday.day, index);
+      },
+    );
+  }
+
+  // Returning a widget that stacks a pictogram and an accept icon
+  FittedBox _pictogramIconStack(BuildContext context, int index,
+      WeekdayModel weekday, AsyncSnapshot<bool> snapshot) {
+    final bool isMarked =
+        weekplanBloc.isActivityMarked(weekday.activities[index]);
+
+    return FittedBox(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          SizedBox(
+              height: MediaQuery.of(context).size.width,
+              width: MediaQuery.of(context).size.width,
+              child: FittedBox(
+                child: GestureDetector(
+                  key: Key(weekday.day.index.toString() +
+                      weekday.activities[index].id.toString()),
+                  onTap: () {
+                    handleOnTapActivity(
+                        snapshot, isMarked, weekday.activities, index, context);
+                  },
+                  child: buildIsMarked(
+                      isMarked, context, weekday.activities, index),
+                ),
+              )),
+        ],
+      ),
+    );
   }
 
   Widget _getPictogram(ActivityModel activity) {
@@ -281,6 +380,7 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
+        margin: const EdgeInsets.all(20),
         child: FittedBox(
       child: Stack(
         alignment: AlignmentDirectional.center,
@@ -328,15 +428,17 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
-        key: Key(translation),
-        color: buttonColor,
-        child: ListTile(
-            title: Text(
+      key: Key(translation),
+      color: buttonColor,
+      child: ListTile(
+        title: Text(
           translation,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
-        )));
+        ),
+      ),
+    );
   }
 }
