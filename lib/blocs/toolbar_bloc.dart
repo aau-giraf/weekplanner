@@ -16,9 +16,11 @@ class ToolbarBloc extends BlocBase {
   BehaviorSubject<List<IconButton>> _visibleButtons =
       BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
+  /// Hold the refernece to a authbloc instance.
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
 
-  //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
+  /// Based on a list of the enum AppBarIcon this method
+  /// populates a list of IconButtons to render in the nav-bar
   void updateIcons(List<AppBarIcon> icons, BuildContext context) {
     List<IconButton> _iconsToAdd;
     _iconsToAdd = <IconButton>[];
@@ -228,6 +230,8 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
+
+
   IconButton _createIconCopy() {
     return IconButton(
       icon: Image.asset('assets/icons/copy.png'),
@@ -381,6 +385,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Used to authenticate a user.
   void loginFromPopUp(BuildContext context, String username, String password) {
+
     authBloc.authenticateFromPopUp(username, password, context);
   }
 
