@@ -51,6 +51,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
+  /// Reorders activities between same or different days.
   void reorderActivities(
       ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
     final WeekModel week = _userWeek.value.week;

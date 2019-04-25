@@ -102,27 +102,7 @@ class WeekplanScreen extends StatelessWidget {
                 if (weekday.activities[index].state ==
                     ActivityState.Completed) {
                   return Card(
-                    child: FittedBox(
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: _dragTargetPictogram(index, weekday),
-                          ),
-                          IgnorePointer(
-                            child: Image(
-                              image:
-                                  const AssetImage('assets/icons/accept.png'),
-                              key: const Key('IconComplete'),
-                              color: Colors.green,
-                              fit: BoxFit.fitWidth,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: _pictogramIconStack(context, index, weekday)
                   );
                 }
                 return _dragTargetPictogram(index, weekday);
@@ -217,27 +197,7 @@ class WeekplanScreen extends StatelessWidget {
           feedback: Container(
             height: 150,
             width: 150,
-            child: FittedBox(
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: _dragTargetPictogram(index, weekday),
-                  ),
-                  weekday.activities[index].state == ActivityState.Completed
-                      ? IgnorePointer(
-                          child: Image(
-                          image: const AssetImage('assets/icons/accept.png'),
-                          key: const Key('IconComplete'),
-                          color: Colors.green,
-                          fit: BoxFit.fitWidth,
-                          width: MediaQuery.of(context).size.width,
-                        ))
-                      : Container(),
-                ],
-              ),
-            ),
+              child: _pictogramIconStack(context, index, weekday)
           ),
         );
       },
@@ -248,6 +208,31 @@ class WeekplanScreen extends StatelessWidget {
         weekplanBloc.reorderActivities(
             data.item1, data.item2, weekday.day, index);
       },
+    );
+  }
+
+  FittedBox _pictogramIconStack(
+      BuildContext context, int index, WeekdayModel weekday) {
+    return FittedBox(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: _dragTargetPictogram(index, weekday),
+          ),
+          weekday.activities[index].state == ActivityState.Completed
+              ? IgnorePointer(
+                  child: Image(
+                  image: const AssetImage('assets/icons/accept.png'),
+                  key: const Key('IconComplete'),
+                  color: Colors.green,
+                  fit: BoxFit.fitWidth,
+                  width: MediaQuery.of(context).size.width,
+                ))
+              : Container(),
+        ],
+      ),
     );
   }
 

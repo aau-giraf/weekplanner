@@ -4,7 +4,6 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -48,7 +47,7 @@ void main() {
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
     WeekdayModel(
-        day: Weekday.Monday, activities: <ActivityModel>[activity, activity]),
+        day: Weekday.Monday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
@@ -114,7 +113,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    expect(find.byType(PictogramImage), findsNWidgets(8));
+    expect(find.byType(PictogramImage), findsNWidgets(7));
   });
 
   testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
@@ -122,7 +121,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    expect(find.byKey(const Key('IconComplete')), findsNWidgets(8));
+    expect(find.byKey(const Key('IconComplete')), findsNWidgets(7));
   });
 
   testWidgets('Activity has no checkmark when Normal',
@@ -145,7 +144,14 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    expect(find.byKey(const Key('DragTarget')), findsNWidgets(8));
+    expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('GreyDragVisibleKey')), findsNWidgets(7));
   });
 
   /*testWidgets('Every drag target placeholder is build',
