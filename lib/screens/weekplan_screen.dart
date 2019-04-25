@@ -99,12 +99,6 @@ class WeekplanScreen extends StatelessWidget {
                         );
                       });
                 }
-                if (weekday.activities[index].state ==
-                    ActivityState.Completed) {
-                  return Card(
-                    child: _pictogramIconStack(context, index, weekday)
-                  );
-                }
                 return _dragTargetPictogram(index, weekday);
               },
               itemCount:
@@ -174,19 +168,10 @@ class WeekplanScreen extends StatelessWidget {
           data: Tuple2<ActivityModel, Weekday>(
               weekday.activities[index], weekday.day),
           dragAnchor: DragAnchor.pointer,
-          child: PictogramImage(
-            pictogram: weekday.activities[index].pictogram,
-            key: Key(weekday.day.index.toString() +
-                weekday.activities[index].id.toString()),
-            onPressed: () => Routes.push(context,
-                ShowActivityScreen(_week, weekday.activities[index], _user)),
-          ),
+          child: _pictogramIconStack(context, index, weekday),
           childWhenDragging: Opacity(
             opacity: 0.5,
-            child: PictogramImage(
-              pictogram: weekday.activities[index].pictogram,
-              onPressed: () => null,
-            ),
+            child: _pictogramIconStack(context, index, weekday)
           ),
           onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
           onDragCompleted: () {
@@ -195,10 +180,9 @@ class WeekplanScreen extends StatelessWidget {
           onDragEnd: (DraggableDetails details) =>
               weekplanBloc.setActivityPlaceholderVisible(false),
           feedback: Container(
-            height: 150,
-            width: 150,
-              child: _pictogramIconStack(context, index, weekday)
-          ),
+              height: 150,
+              width: 150,
+              child: _pictogramIconStack(context, index, weekday)),
         );
       },
       onWillAccept: (dynamic data) {
@@ -218,9 +202,16 @@ class WeekplanScreen extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         children: <Widget>[
           SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: _dragTargetPictogram(index, weekday),
-          ),
+              width: MediaQuery.of(context).size.width,
+              child: PictogramImage(
+                pictogram: weekday.activities[index].pictogram,
+                key: Key(weekday.day.index.toString() +
+                    weekday.activities[index].id.toString()),
+                onPressed: () => Routes.push(
+                    context,
+                    ShowActivityScreen(
+                        _week, weekday.activities[index], _user)),
+              )),
           weekday.activities[index].state == ActivityState.Completed
               ? IgnorePointer(
                   child: Image(
