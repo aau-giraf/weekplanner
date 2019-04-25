@@ -2,6 +2,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
@@ -35,6 +36,12 @@ class NewWeekplanScreen extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return TextField(
                       onChanged: _bloc.onTitleChanged.add,
+                      keyboardType: TextInputType.text,
+                      // To avoid emojis and other special characters
+                      inputFormatters: [
+                        WhitelistingTextInputFormatter(
+                            RegExp('[a-zA-Z0-9æøåÆØÅ,._#\'()\-]'))
+                      ],
                       style: _style,
                       decoration: InputDecoration(
                           labelText: 'Titel',
