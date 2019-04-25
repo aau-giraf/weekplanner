@@ -154,24 +154,6 @@ void main() {
     expect(find.byKey(const Key('GreyDragVisibleKey')), findsNWidgets(7));
   });
 
-  /*testWidgets('Every drag target placeholder is build',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-
-    await longPressDrag(
-        tester,
-        tester.getCenter(find.byKey(const Key('DragTarget')).first),
-        tester.getCenter(find.byKey(const Key('DragTarget')).first));
-
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(7));
-
-    bloc.setActivityPlaceholderVisible(false);
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
-  });*/
-
   testWidgets('Every drag target placeholder is build',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
@@ -186,12 +168,3 @@ void main() {
     expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
   });
 }
-
-/*Future<void> longPressDrag(
-    WidgetTester tester, Offset start, Offset end) async {
-  final TestGesture drag = await tester.startGesture(start);
-  await tester.pump(kLongPressTimeout + kPressTimeout);
-  await drag.moveTo(end);
-  await tester.pump(kPressTimeout);
-  await drag.up();
-}*/
