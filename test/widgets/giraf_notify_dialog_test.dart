@@ -35,7 +35,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('FirstButton')));
     // Need to wait for the pressed state of the button to go back to default
-    await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    await tester.pumpAndSettle();
 
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
@@ -47,7 +47,7 @@ void main() {
         await tester.pump();
         expect(find.byKey(const Key('NotifyDialogOkayButton')), findsOneWidget);
         await tester.tap(find.byKey(const Key('NotifyDialogOkayButton')));
-        await tester.pumpAndSettle(const Duration(milliseconds: 200));
+        await tester.pumpAndSettle();
 
         expect(find.byType(GirafNotifyDialog), findsNothing);
       });
