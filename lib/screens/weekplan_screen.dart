@@ -140,57 +140,7 @@ class WeekplanScreen extends StatelessWidget {
     return Column(
       children: <Widget>[
         _translateWeekDay(day),
-        StreamBuilder<List<ActivityModel>>(
-            stream: weekplanBloc.markedActivities,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<ActivityModel>> markedActivities) {
-              return StreamBuilder<bool>(
-                  initialData: false,
-                  stream: weekplanBloc.editMode,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                    return Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (BuildContext context, int index) {
-                          final bool isMarked =
-                              weekplanBloc.isActivityMarked(activities[index]);
-                          return GestureDetector(
-                            key: Key(day.index.toString() +
-                                activities[index].id.toString()),
-                            onTap: () {
-                              if (snapshot.data) {
-                                if (isMarked) {
-                                  weekplanBloc
-                                      .removeMarkedActivity(activities[index]);
-                                } else {
-                                  weekplanBloc
-                                      .addMarkedActivity(activities[index]);
-                                }
-                              } else {
-                                Routes.push(
-                                    context,
-                                    ShowActivityScreen(
-                                        _week, activities[index], _user));
-                              }
-                            },
-                            onLongPress: () {
-                              if (snapshot.data) {
-                                weekplanBloc.clearMarkedActivities();
-                              } else {
-                                weekplanBloc
-                                    .addMarkedActivity(activities[index]);
-                              }
-                              weekplanBloc.toggleEditMode();
-                            },
-                            child: buildIsMarked(
-                                isMarked, context, activities, index),
-                          );
-                        },
-                        itemCount: activities.length,
-                      ),
-                    );
-                  });
-            }),
+        buildDayActivities(activities, day),
         Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
           child: ButtonTheme(
@@ -219,6 +169,68 @@ class WeekplanScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  /// Builds a day's activities
+  StreamBuilder<List<ActivityModel>> buildDayActivities(
+      List<ActivityModel> activities, Weekday day) {
+    return StreamBuilder<List<ActivityModel>>(
+        stream: weekplanBloc.markedActivities,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ActivityModel>> markedActivities) {
+          return StreamBuilder<bool>(
+              initialData: false,
+              stream: weekplanBloc.editMode,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      final bool isMarked =
+                          weekplanBloc.isActivityMarked(activities[index]);
+                      return GestureDetector(
+                        key: Key(day.index.toString() +
+                            activities[index].id.toString()),
+                        onTap: () {
+                          handleOnTapActivity(
+                              snapshot, isMarked, activities, index, context);
+                        },
+                        onLongPress: () {
+                          handleLongPressActivity(snapshot, activities, index);
+                        },
+                        child:
+                            buildIsMarked(isMarked, context, activities, index),
+                      );
+                    },
+                    itemCount: activities.length,
+                  ),
+                );
+              });
+        });
+  }
+
+  /// Handles long press on a activity
+  void handleLongPressActivity(
+      AsyncSnapshot<bool> snapshot, List<ActivityModel> activities, int index) {
+    if (snapshot.data) {
+      weekplanBloc.clearMarkedActivities();
+    } else {
+      weekplanBloc.addMarkedActivity(activities[index]);
+    }
+    weekplanBloc.toggleEditMode();
+  }
+
+  /// Handles tap on a activity
+  void handleOnTapActivity(AsyncSnapshot<bool> snapshot, bool isMarked,
+      List<ActivityModel> activities, int index, BuildContext context) {
+    if (snapshot.data) {
+      if (isMarked) {
+        weekplanBloc.removeMarkedActivity(activities[index]);
+      } else {
+        weekplanBloc.addMarkedActivity(activities[index]);
+      }
+    } else {
+      Routes.push(context, ShowActivityScreen(_week, activities[index], _user));
+    }
   }
 
   /// Builds activity card with a complete if is marked
