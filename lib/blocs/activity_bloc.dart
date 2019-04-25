@@ -36,11 +36,9 @@ class ActivityBloc extends BlocBase {
   /// Mark the selected activity as complete. Toggle function, if activity is
   /// Completed, it will become Normal
   void completeActivity() {
-    print(_activityModel.state);
     _activityModel.state = _activityModel.state == ActivityState.Completed
         ? ActivityState.Normal
         : ActivityState.Completed;
-    print(_activityModel.state);
     update();
   }
 
