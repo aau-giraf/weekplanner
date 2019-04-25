@@ -6,18 +6,20 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(WeekModel weekModel, this._activity, UsernameModel
-  girafUser,
+  ShowActivityScreen(
+      WeekModel weekModel, this._activity, UsernameModel girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(weekModel, _activity, girafUser);
   }
+
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
@@ -53,6 +55,7 @@ class ShowActivityScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Aktivitet',
+          appBarIcons: <AppBarIcon>[],
         ),
         body: childContainer);
   }

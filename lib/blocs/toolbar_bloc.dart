@@ -8,6 +8,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
@@ -15,7 +16,7 @@ class ToolbarBloc extends BlocBase {
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
   BehaviorSubject<List<IconButton>> _visibleButtons =
-      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+  BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
@@ -34,14 +35,14 @@ class ToolbarBloc extends BlocBase {
     }
 
     final BehaviorSubject<List<IconButton>> iconList =
-        BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+    BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
     iconList.add(_iconsToAdd);
     _visibleButtons = iconList;
   }
 
   /// Find the icon picture based on the input enum
-  void _addIconButton(
-      List<IconButton> _iconsToAdd, AppBarIcon icon, BuildContext context) {
+  void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
+      BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept());
@@ -170,27 +171,26 @@ class ToolbarBloc extends BlocBase {
 
   IconButton _createIconChangeToCitizen(BuildContext context) {
     return IconButton(
-      icon: Image.asset('assets/icons/changeToCitizen.png'),
-      tooltip: 'Skift til borger tilstand',
-      onPressed: () {
-        Alert(
-            context: context,
-            style: _alertStyle,
-            title: 'Skift til borger',
-            buttons: <DialogButton>[
-              DialogButton(
-                onPressed: () {
-                  _authBloc.setMode(WeekplanMode.citizen);
-                  Routes.pop(context);
-                },
-                child: const Text(
-                  'Bekræft',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                color: const Color.fromRGBO(255, 157, 0, 100),
-              )
-            ]).show();
-      },
+        icon: Image.asset('assets/icons/changeToCitizen.png'),
+        tooltip: 'Skift til borger tilstand',
+        onPressed: () {
+          showDialog < GirafConfirmDialog > (
+              context: context, builder: (BuildContext context)
+          {
+            return GirafConfirmDialog(
+              confirmButtonIcon: ImageIcon(
+                  AssetImage('assets/icons/accept.png')),
+              confirmButtonText: 'Ok',
+              confirmOnPressed: () {
+                _authBloc.setMode(WeekplanMode.citizen);
+                Routes.pop(context);
+              },
+              title: 'Skift til borger',
+            );
+          }
+          );
+
+        }
     );
   }
 
@@ -208,7 +208,9 @@ class ToolbarBloc extends BlocBase {
                 RichText(
                   text: TextSpan(
                     text: 'Logget ind som ',
-                    style: DefaultTextStyle.of(context).style,
+                    style: DefaultTextStyle
+                        .of(context)
+                        .style,
                     children: <TextSpan>[
                       TextSpan(
                           text: _authBloc.loggedInUsername,

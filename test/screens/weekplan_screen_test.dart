@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -17,6 +19,8 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
@@ -27,6 +31,7 @@ import '../test_image.dart';
 void main() {
   WeekplanBloc bloc;
   Api api;
+  AuthBloc authBloc;
   MockWeekApi weekApi;
   MockPictogramApi pictogramApi;
 
@@ -65,13 +70,14 @@ void main() {
     api.pictogram = pictogramApi;
     api.week = weekApi;
     bloc = WeekplanBloc(api);
+    authBloc = AuthBloc(api);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>((_) => authBloc);
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
@@ -83,8 +89,7 @@ void main() {
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
@@ -110,8 +115,7 @@ void main() {
   });
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsNWidgets(7));
@@ -135,10 +139,39 @@ void main() {
   });
 
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
+  });
+
+  testWidgets('When in guardian mode I should see more than just switch mode',
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    authBloc.mode.skip(1).listen((_) async {
+      await tester.pump();
+
+      GirafAppBar widget = find
+          .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
+          .evaluate()
+          .first
+          .widget;
+
+      if (widget != null) {
+        expect(widget.appBarIcons.length > 1, true);
+        expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen), true);
+      } else {
+        fail('Could not find GirafAppBar');
+      }
+
+      done.complete();
+    });
+
+    authBloc.setMode(WeekplanMode.guardian);
+    await done.future;
   });
 }

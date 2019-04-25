@@ -49,16 +49,14 @@ class WeekplanScreen extends StatelessWidget {
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
           return Scaffold(
             appBar: GirafAppBar(
-              title: 'Ugeplan',
-              appBarIcons:
-                (weekModeSnapshot.data == WeekplanMode.guardian)
+                title: 'Ugeplan',
+                appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
                     ? <AppBarIcon>[
                         AppBarIcon.changeToCitizen,
                         AppBarIcon.settings,
                         AppBarIcon.logout,
                       ]
-                    : <AppBarIcon>[AppBarIcon.changeToGuardian]
-            ),
+                    : <AppBarIcon>[AppBarIcon.changeToGuardian]),
             body: StreamBuilder<UserWeekModel>(
               stream: weekplanBloc.userWeek,
               initialData: null,
@@ -106,52 +104,34 @@ class WeekplanScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
-              if (activities[index].state == ActivityState.Completed) {
-                return GestureDetector(
-                  onTap: () => Routes.push(context,
-                      ShowActivityScreen(_week, activities[index], _user)),
-                  child: Card(
-                    child: FittedBox(
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: PictogramImage(
-                              pictogram: activities[index].pictogram,
-                              onPressed: () => null,
-                            ),
+              return GestureDetector(
+                onTap: () => _iconClick(context, activities[index]),
+                child: Card(
+                  child: FittedBox(
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: <Widget>[
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: PictogramImage(
+                            pictogram: activities[index].pictogram,
+                            onPressed: () =>
+                                _iconClick(context, activities[index]),
                           ),
-                          Icon(
-                            Icons.check,
-                            key: const Key('IconComplete'),
-                            color: Colors.green,
-                            size: MediaQuery.of(context).size.width,
-                          )
-                        ],
-                      ),
+                        ),
+                        (activities[index].state == ActivityState.Completed)
+                            ? Icon(
+                                Icons.check,
+                                key: const Key('IconComplete'),
+                                color: Colors.green,
+                                size: MediaQuery.of(context).size.width,
+                              )
+                            : null
+                      ].where((Widget w) => w != null).toList(),
                     ),
                   ),
-                );
-              }
-
-              return StreamBuilder<WeekplanMode>(
-                  stream: authBloc.mode,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<WeekplanMode> snapshot) {
-                    return PictogramImage(
-                        pictogram: activities[index].pictogram,
-                        key: Key(day.index.toString() +
-                            activities[index].id.toString()),
-                        onPressed: () {
-                          if (snapshot.data == WeekplanMode.citizen) {
-                            Routes.push(
-                                context,
-                                ShowActivityScreen(
-                                    _week, activities[index], _user));
-                          }
-                        });
-                  });
+                ),
+              );
             },
             itemCount: activities.length,
           ),
@@ -192,6 +172,10 @@ class WeekplanScreen extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void _iconClick(BuildContext context, ActivityModel activity) {
+    Routes.push(context, ShowActivityScreen(_week, activity, _user));
   }
 
   Card _translateWeekDay(Weekday day) {
