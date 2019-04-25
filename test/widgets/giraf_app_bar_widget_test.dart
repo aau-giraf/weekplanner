@@ -45,7 +45,8 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
             title: 'TestTitle',
-            appBarIcons: const <AppBarIcon>[AppBarIcon.logout]));
+            appBarIcons: const <AppBarIcon, VoidCallback>{
+              AppBarIcon.logout: null}));
   }
 }
 
