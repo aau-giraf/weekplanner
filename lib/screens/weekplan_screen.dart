@@ -33,7 +33,7 @@ class WeekplanScreen extends StatelessWidget {
     weekplanBloc.setWeek(_week, _user);
   }
 
-  /// The WeekplanBloc that contains the currently chosen week
+  /// The WeekplanBloc that contains the current chosen weekplan
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
   final UsernameModel _user;
   final WeekModel _week;
@@ -69,6 +69,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
+  /// Builds the BottomAppBar when in edit mode
   BottomAppBar buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
         color: const Color(0xAAFF6600),
@@ -81,28 +82,36 @@ class WeekplanScreen extends StatelessWidget {
               iconSize: 50,
               icon: const Icon(Icons.delete_forever),
               onPressed: () {
-                showDialog<Center>(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (BuildContext context) {
-                      return GirafConfirmDialog(
-                          title: 'Bekræft',
-                          description: 'Vil du slette' +
-                              ' ${weekplanBloc.getNumberOfMarkedActivities()}' +
-                              ' aktivitet(er)',
-                          confirmButtonText: 'Bekræft',
-                          confirmButtonIcon: const ImageIcon(
-                              AssetImage('assets/icons/accept.png')),
-                          confirmOnPressed: () {
-                            weekplanBloc.deleteMarkedActivities();
-                            weekplanBloc.toggleEditMode();
-                            Routes.pop(context);
-                          });
-                    });
+                /// Shows dialog to confirm/cancel deletion
+                buildShowDialog(context);
               },
             ),
           ],
         ));
+  }
+
+  /// Builds dialog box to confirm/cancel deletion
+  Future<Center> buildShowDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+              title: 'Bekræft',
+              description: 'Vil du slette' +
+                  ' ${weekplanBloc.getNumberOfMarkedActivities()}' +
+                  ' aktivitet(er)',
+              confirmButtonText: 'Bekræft',
+              confirmButtonIcon:
+                  const ImageIcon(AssetImage('assets/icons/accept.png')),
+              confirmOnPressed: () {
+                weekplanBloc.deleteMarkedActivities();
+                weekplanBloc.toggleEditMode();
+
+                /// Closes the dialog box
+                Routes.pop(context);
+              });
+        });
   }
 
   Row _buildWeeks(WeekModel weekModel, BuildContext context) {
@@ -248,7 +257,8 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  Card buildPictogramCard(
+  /// Builds card that displays the activity
+  Card buildActivityCard(
     BuildContext context,
     List<ActivityModel> activities,
     int index,
@@ -265,21 +275,20 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
-      key: const Key('PictogramCard'),
-        child: FittedBox(
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: <Widget>[
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            child: FittedBox(
-              child: _getPictogram(activities[index]),
+      child: FittedBox(
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: <Widget>[
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width,
+              child: FittedBox(
+                child: _getPictogram(activities[index]),
+              ),
             ),
-          ),
-          icon
-        ],
-      ),
+            icon
+          ],
+        ),
     ));
   }
 
