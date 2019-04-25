@@ -48,6 +48,6 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: CopyFiles@2
         inputs:
-          contents: '**/*.app'
+          contents: '$(projectDirectory)/build/ios/**/*.app'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
