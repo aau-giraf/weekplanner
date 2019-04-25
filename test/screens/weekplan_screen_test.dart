@@ -21,6 +21,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
@@ -39,22 +40,35 @@ void main() {
       imageUrl: 'http://any.tld',
       imageHash: null);
 
-  final ActivityModel activity = ActivityModel(
-      id: 1,
-      pictogram: pictogramModel,
-      isChoiceBoard: true,
-      state: null,
-      order: 1);
+  ActivityModel newActivity(int id) {
+    return ActivityModel(
+        id: id,
+        pictogram: pictogramModel,
+        isChoiceBoard: true,
+        state: null,
+        order: 1);
+  }
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Friday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Saturday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[activity]),
+    WeekdayModel(
+        day: Weekday.Monday, activities: <ActivityModel>[newActivity(1)]),
+    WeekdayModel(
+        day: Weekday.Tuesday, activities: <ActivityModel>[newActivity(2)]),
+    WeekdayModel(
+        day: Weekday.Wednesday, activities: <ActivityModel>[newActivity(3)]),
+    WeekdayModel(
+        day: Weekday.Thursday, activities: <ActivityModel>[newActivity(4)]),
+    WeekdayModel(
+        day: Weekday.Friday, activities: <ActivityModel>[newActivity(5)]),
+    WeekdayModel(
+        day: Weekday.Saturday, activities: <ActivityModel>[newActivity(6)]),
+    WeekdayModel(
+        day: Weekday.Sunday, activities: <ActivityModel>[newActivity(7)]),
   ]);
+
+  ActivityModel getActivity(Weekday day) {
+    return weekModel.days[day.index].activities.first;
+  }
 
   final UsernameModel user =
       UsernameModel(name: 'test', id: 'test', role: 'test');
@@ -69,6 +83,10 @@ void main() {
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
+
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(weekModel);
+    });
 
     di.clearAll();
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
@@ -118,16 +136,16 @@ void main() {
   });
 
   testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
-    activity.state = ActivityState.Completed;
+    getActivity(Weekday.Monday).state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    expect(find.byKey(const Key('IconComplete')), findsNWidgets(7));
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
   testWidgets('Activity has no checkmark when Normal',
       (WidgetTester tester) async {
-    activity.state = ActivityState.Normal;
+    getActivity(Weekday.Monday).state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
@@ -143,7 +161,6 @@ void main() {
 
   testWidgets('Long click on an activity toggles edit mode',
       (WidgetTester tester) async {
-    // final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
     bool resultValue = false;
@@ -154,28 +171,107 @@ void main() {
 
     expect(resultValue, false);
 
-    await tester.longPress(find
-        .byKey(Key(Weekday.Monday.index.toString() + activity.id.toString())));
+    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
+        getActivity(Weekday.Monday).id.toString())));
     await tester.pump();
 
     expect(resultValue, true);
 
-    await tester.longPress(find
-        .byKey(Key(Weekday.Monday.index.toString() + activity.id.toString())));
+    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
+        getActivity(Weekday.Monday).id.toString())));
     await tester.pump();
 
     expect(resultValue, false);
   });
 
   testWidgets('Long press selects activity', (WidgetTester tester) async {
-    // final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pump();
 
-    await tester.longPress(find.byKey(
-        Key(Weekday.Wednesday.index.toString() + activity.id.toString())));
+    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
+        getActivity(Weekday.Monday).id.toString())));
     await tester.pump();
 
-    expect(find.byKey(Key('isSelectedKey')), findsOneWidget);
+    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
+  });
+
+  testWidgets('Tap on an activity in edit mode marks it',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
+        getActivity(Weekday.Monday).id.toString())));
+    await tester.pump();
+
+    await tester.tap(find.byKey(Key(Weekday.Wednesday.index.toString() +
+        getActivity(Weekday.Wednesday).id.toString())));
+    await tester.pump();
+
+    expect(find.byKey(const Key('isSelectedKey')), findsNWidgets(2));
+  });
+
+  testWidgets('Leaving editmode deselects all activities',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
+        getActivity(Weekday.Monday).id.toString())));
+    await tester.pump();
+
+    await tester.tap(find.byKey(Key(Weekday.Wednesday.index.toString() +
+        getActivity(Weekday.Wednesday).id.toString())));
+    await tester.pump();
+
+    expect(find.byKey(const Key('isSelectedKey')), findsNWidgets(2));
+
+    await tester.longPress(find.byKey(Key(Weekday.Monday.index.toString() +
+        getActivity(Weekday.Monday).id.toString())));
+    await tester.pump();
+
+    expect(find.byKey(const Key('isSelectedKey')), findsNothing);
+  });
+
+  testWidgets('Deletes activties when click on confirm in dialog',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    final Key selectedPictogram = Key(Weekday.Monday.index.toString() +
+        getActivity(Weekday.Monday).id.toString());
+
+    await tester.longPress(find.byKey(selectedPictogram));
+    await tester.pump();
+
+    await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
+    await tester.pump();
+
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pump();
+
+    expect(find.byKey(selectedPictogram), findsNothing);
+  });
+
+  testWidgets('Does not delete activties when click on cancel in dialog',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    final Key selectedPictogram = Key(Weekday.Tuesday.index.toString() +
+        getActivity(Weekday.Tuesday).id.toString());
+
+    await tester.longPress(find.byKey(selectedPictogram));
+    await tester.pump();
+
+    await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
+    await tester.pump();
+
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
+    await tester.pump();
+
+    expect(find.byKey(selectedPictogram), findsOneWidget);
   });
 }

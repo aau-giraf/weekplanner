@@ -77,6 +77,7 @@ class WeekplanScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             IconButton(
+              key: const Key('DeleteActivtiesButton'),
               iconSize: 50,
               icon: const Icon(Icons.delete_forever),
               onPressed: () {
@@ -172,22 +173,8 @@ class WeekplanScreen extends StatelessWidget {
                               }
                               weekplanBloc.toggleEditMode();
                             },
-                            child: isMarked
-                                ? Container(
-                                  key: Key('isSelectedKey'),
-                                    margin: const EdgeInsets.all(1),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black, width: 10)),
-                                    child: buildPictogramCard(
-                                      context,
-                                      activities,
-                                      index,
-                                      activities[index].state,
-                                    ),
-                                  )
-                                : buildPictogramCard(context, activities, index,
-                                    activities[index].state),
+                            child: buildIsMarked(
+                                isMarked, context, activities, index),
                           );
                         },
                         itemCount: activities.length,
@@ -225,6 +212,27 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
+  StatelessWidget buildIsMarked(bool isMarked, BuildContext context,
+      List<ActivityModel> activities, int index) {
+
+    if (isMarked) {
+      return Container(
+          key: const Key('isSelectedKey'),
+          margin: const EdgeInsets.all(1),
+          decoration:
+              BoxDecoration(border: Border.all(color: Colors.black, width: 10)),
+          child: buildPictogramCard(
+            context,
+            activities,
+            index,
+            activities[index].state,
+          ));
+    } else {
+      return buildPictogramCard(
+          context, activities, index, activities[index].state);
+    }
+  }
+
   Widget _getPictogram(ActivityModel activity) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     bloc.loadPictogramById(activity.pictogram.id);
@@ -235,8 +243,7 @@ class WeekplanScreen extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         return Container(
-          child: snapshot.data, 
-          key: const Key('PictogramImage'));
+            child: snapshot.data, key: const Key('PictogramImage'));
       },
     );
   }
@@ -258,6 +265,7 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
+      key: const Key('PictogramCard'),
         child: FittedBox(
       child: Stack(
         alignment: AlignmentDirectional.center,
@@ -269,12 +277,7 @@ class WeekplanScreen extends StatelessWidget {
               child: _getPictogram(activities[index]),
             ),
           ),
-          Icon(
-            Icons.check,
-            key: const Key('IconComplete'),
-            size: MediaQuery.of(context).size.width,
-            color: Colors.green,
-          ),
+          icon
         ],
       ),
     ));

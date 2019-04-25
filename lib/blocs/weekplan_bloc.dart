@@ -39,7 +39,6 @@ class WeekplanBloc extends BlocBase {
   /// Adds a new marked activity
   void addMarkedActivity(ActivityModel activityModel) {
     final List<ActivityModel> localMarkedActivities = _markedActivities.value;
-    print(localMarkedActivities.length);
 
     localMarkedActivities.add(activityModel);
     _markedActivities.add(localMarkedActivities);
