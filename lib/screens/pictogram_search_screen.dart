@@ -54,9 +54,9 @@ class PictogramSearch extends StatelessWidget {
                       }
                       else if(snapshot.hasError){
                         return InkWell(
-                          key: Key('timeoutWidget'),
+                          key: const Key('timeoutWidget'),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Text(snapshot.error.toString()),
                           ),
                         );
