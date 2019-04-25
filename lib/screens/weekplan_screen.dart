@@ -159,7 +159,7 @@ class WeekplanScreen extends StatelessWidget {
                               id: newActivity.id,
                               pictogram: newActivity,
                               order: activities.length,
-                              state: ActivityState.Active,
+                              state: ActivityState.Normal,
                               isChoiceBoard: false),
                           day.index);
                     }
