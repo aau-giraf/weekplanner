@@ -27,7 +27,7 @@ class WeekplanBloc extends BlocBase {
   }
 
   final BehaviorSubject<bool> _activityPlaceholderVisible =
-  BehaviorSubject<bool>.seeded(false);
+      BehaviorSubject<bool>.seeded(false);
 
   /// The current visibility of the activityPlaceholder-container.
   Stream<bool> get activityPlaceholderVisible =>
@@ -39,11 +39,10 @@ class WeekplanBloc extends BlocBase {
   }
 
   final BehaviorSubject<bool> _loadingWeek =
-  BehaviorSubject<bool>.seeded(false);
+      BehaviorSubject<bool>.seeded(false);
 
   /// The current visibility of the activityPlaceholder-container.
-  Stream<bool> get loadingWeek =>
-      _loadingWeek.stream;
+  Stream<bool> get loadingWeek => _loadingWeek.stream;
 
   /// Adds an activity to the given day.
   void addActivity(ActivityModel activity, int day) {
@@ -58,8 +57,8 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  void reorderActivities(ActivityModel activity, Weekday dayFrom, Weekday dayTo,
-      int newOrder) {
+  void reorderActivities(
+      ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
     final WeekModel week = _userWeek.value.week;
     final UsernameModel user = _userWeek.value.user;
 
@@ -73,7 +72,7 @@ class WeekplanBloc extends BlocBase {
     week.days[dayFrom.index].activities.remove(activity);
 
     activity.order = dayFrom == dayTo &&
-        week.days[dayTo.index].activities.length == newOrder - 1
+            week.days[dayTo.index].activities.length == newOrder - 1
         ? newOrder - 1
         : newOrder;
 

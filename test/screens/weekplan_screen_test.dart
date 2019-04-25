@@ -42,7 +42,7 @@ void main() {
       id: 1,
       pictogram: pictogramModel,
       isChoiceBoard: true,
-      state: null,
+      state: ActivityState.Completed,
       order: 1);
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
@@ -140,5 +140,13 @@ void main() {
     await tester.pump();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
+  });
+
+  testWidgets('Every drag target is build', (WidgetTester tester) async {
+    await tester.pumpWidget(
+        MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
   });
 }

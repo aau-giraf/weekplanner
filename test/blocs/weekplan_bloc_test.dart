@@ -51,7 +51,7 @@ void main() {
       weekYear: 2019);
 
   final UsernameModel user =
-  UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+      UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
 
   setUp(() {
     api = Api('any');
@@ -126,20 +126,20 @@ void main() {
 
     weekplanBloc.setWeek(week, user);
 
-    weekplanBloc.reorderActivities(
-        modelToMove, Weekday.Monday, Weekday.Tuesday, 1);
-
-    weekplanBloc.userWeek.listen((UserWeekModel response) {
+    weekplanBloc.userWeek.skip(1).listen((UserWeekModel response) {
       expect(response.week.days[1].activities[0].id, 2);
       expect(response.week.days[1].activities[1].id, modelToMove.id);
       expect(response.week.days[0].activities.length, 0);
       expect(response.week.days[1].activities.length, 2);
       done();
     });
+
+    weekplanBloc.reorderActivities(
+        modelToMove, Weekday.Monday, Weekday.Tuesday, 1);
   }));
 
   test('Reorder activity from monday to monday', async((DoneFn done) {
-    final WeekModel week = WeekModel(
+    final WeekModel testWeek = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
@@ -157,18 +157,15 @@ void main() {
 
     final ActivityModel modelToMove = ActivityModel(
         id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
-    week.days[0].activities.add(modelToMove);
-    week.days[0].activities.add(ActivityModel(
+    testWeek.days[0].activities.add(modelToMove);
+    testWeek.days[0].activities.add(ActivityModel(
         id: 2, pictogram: null, order: 1, state: null, isChoiceBoard: false));
-    week.days[0].activities.add(ActivityModel(
+    testWeek.days[0].activities.add(ActivityModel(
         id: 3, pictogram: null, order: 2, state: null, isChoiceBoard: false));
 
-    weekplanBloc.setWeek(week, user);
+    weekplanBloc.setWeek(testWeek, user);
 
-    weekplanBloc.reorderActivities(
-        modelToMove, Weekday.Monday, Weekday.Monday, 2);
-
-    weekplanBloc.userWeek.listen((UserWeekModel response) {
+    weekplanBloc.userWeek.skip(1).listen((UserWeekModel response) {
       expect(response.week.days[0].activities[0].id, 2);
       expect(response.week.days[0].activities[0].order, 0);
       expect(response.week.days[0].activities[1].id, 3);
@@ -177,5 +174,8 @@ void main() {
       expect(response.week.days[0].activities[2].order, 2);
       done();
     });
+
+    weekplanBloc.reorderActivities(
+        modelToMove, Weekday.Monday, Weekday.Monday, 2);
   }));
 }
