@@ -4,6 +4,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -13,7 +14,6 @@ import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
 
@@ -104,34 +104,43 @@ class WeekplanScreen extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () => _iconClick(context, activities[index]),
-                child: Card(
-                  child: FittedBox(
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: PictogramImage(
-                            pictogram: activities[index].pictogram,
-                            onPressed: () =>
-                                _iconClick(context, activities[index]),
+              if (activities[index].state == ActivityState.Completed) {
+                return GestureDetector(
+                  onTap: () => Routes.push(context,
+                      ShowActivityScreen(_week, activities[index], _user)),
+                  child: Card(
+                    child: FittedBox(
+                      child: Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                            child: FittedBox(
+                              child: _getPictogram(activities[index]),
+                            ),
                           ),
-                        ),
-                        (activities[index].state == ActivityState.Completed)
-                            ? Icon(
-                                Icons.check,
-                                key: const Key('IconComplete'),
-                                color: Colors.green,
-                                size: MediaQuery.of(context).size.width,
-                              )
-                            : null
-                      ].where((Widget w) => w != null).toList(),
+                          Icon(
+                            Icons.check,
+                            key: const Key('IconComplete'),
+                            size: MediaQuery.of(context).size.width,
+                            color: Colors.green,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
+                );
+              }
+              return GestureDetector(
+                  key: Key(
+                      day.index.toString() + activities[index].id.toString()),
+                  onTap: () => Routes.push(context,
+                      ShowActivityScreen(_week, activities[index], _user)),
+                  child: Container(child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: _getPictogram(activities[index]),
+                  )));
             },
             itemCount: activities.length,
           ),
@@ -176,6 +185,22 @@ class WeekplanScreen extends StatelessWidget {
 
   void _iconClick(BuildContext context, ActivityModel activity) {
     Routes.push(context, ShowActivityScreen(_week, activity, _user));
+  }
+
+  Widget _getPictogram(ActivityModel activity) {
+    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    bloc.loadPictogramById(activity.pictogram.id);
+    return StreamBuilder<Image>(
+      stream: bloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        if (snapshot.data == null) {
+          return const CircularProgressIndicator();
+        }
+        return Container(
+          child: snapshot.data,
+          key: const Key('PictogramImage'));
+      },
+    );
   }
 
   Card _translateWeekDay(Weekday day) {
