@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';

@@ -192,7 +192,7 @@ void main() {
     final UsernameModel user =
         UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
 
-    ActivityModel activity = ActivityModel(
+    final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
             id: null,

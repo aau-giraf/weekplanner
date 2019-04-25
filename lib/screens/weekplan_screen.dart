@@ -98,8 +98,8 @@ class WeekplanScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return GirafConfirmDialog(
               title: 'Bekræft',
-              description: 'Vil du slette' +
-                  ' ${weekplanBloc.getNumberOfMarkedActivities()}' +
+              description: 'Vil du slette ' +
+                  weekplanBloc.getNumberOfMarkedActivities().toString() +
                   ' aktivitet(er)',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
@@ -140,7 +140,7 @@ class WeekplanScreen extends StatelessWidget {
     return Column(
       children: <Widget>[
         _translateWeekDay(day),
-        StreamBuilder(
+        StreamBuilder<List<ActivityModel>>(
             stream: weekplanBloc.markedActivities,
             builder: (BuildContext context,
                 AsyncSnapshot<List<ActivityModel>> markedActivities) {
@@ -152,7 +152,7 @@ class WeekplanScreen extends StatelessWidget {
                     return Expanded(
                       child: ListView.builder(
                         itemBuilder: (BuildContext context, int index) {
-                          bool isMarked =
+                          final bool isMarked =
                               weekplanBloc.isActivityMarked(activities[index]);
                           return GestureDetector(
                             key: Key(day.index.toString() +
@@ -221,23 +221,23 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
+  /// Builds activity card with a complete if is marked
   StatelessWidget buildIsMarked(bool isMarked, BuildContext context,
       List<ActivityModel> activities, int index) {
-
     if (isMarked) {
       return Container(
           key: const Key('isSelectedKey'),
           margin: const EdgeInsets.all(1),
           decoration:
               BoxDecoration(border: Border.all(color: Colors.black, width: 10)),
-          child: buildPictogramCard(
+          child: buildActivityCard(
             context,
             activities,
             index,
             activities[index].state,
           ));
     } else {
-      return buildPictogramCard(
+      return buildActivityCard(
           context, activities, index, activities[index].state);
     }
   }
@@ -275,20 +275,20 @@ class WeekplanScreen extends StatelessWidget {
     }
 
     return Card(
-      child: FittedBox(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: <Widget>[
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              child: FittedBox(
-                child: _getPictogram(activities[index]),
-              ),
+        child: FittedBox(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width,
+            child: FittedBox(
+              child: _getPictogram(activities[index]),
             ),
-            icon
-          ],
-        ),
+          ),
+          icon
+        ],
+      ),
     ));
   }
 
