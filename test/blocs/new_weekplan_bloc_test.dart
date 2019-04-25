@@ -110,12 +110,12 @@ void main() {
     });
   }));
 
-  test('Should not validate year: two years after current year',
+  test('Should validate year: two years after current year',
       async((DoneFn done) {
     bloc.onYearChanged.add((currentYear + 2).toString());
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
-      expect(isValid, false);
+      expect(isValid, true);
       done();
     });
   }));

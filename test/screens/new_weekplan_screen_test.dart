@@ -134,7 +134,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
     await tester.pump();
 
-    expect(find.text('Titel skal bestå af mindst et tegn'), findsOneWidget);
+    expect(find.text('Titel skal angives'), findsOneWidget);
   });
 
   testWidgets('No error text is shown on valid title input',
@@ -143,7 +143,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
     await tester.pump();
 
-    expect(find.text('Titel skal bestå af mindst et tegn'), findsNothing);
+    expect(find.text('Titel skal angives'), findsNothing);
   });
 
   testWidgets('Error text is shown on invalid year input',
@@ -154,7 +154,7 @@ void main() {
 
     expect(
         find.text('År skal angives som fire cifre '
-            'og være inden for et år af i dag'),
+            'og være i fremtiden'),
         findsOneWidget);
   });
 
@@ -166,7 +166,7 @@ void main() {
 
     expect(
         find.text('År skal angives som fire cifre '
-            'og være inden for et år af i dag'),
+            'og være i fremtiden'),
         findsNothing);
   });
 
@@ -193,8 +193,7 @@ void main() {
     mockBloc.acceptAllInputs = true;
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
     await tester.tap(find.byKey(const Key('NewWeekplanThumbnailKey')));
-    await tester.pump();
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.byType(PictogramSearch), findsOneWidget);
   });

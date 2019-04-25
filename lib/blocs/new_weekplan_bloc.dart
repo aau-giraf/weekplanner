@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -13,11 +12,11 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 /// New-Weekplan Business Logic Component.
 class NewWeekplanBloc extends BlocBase {
   /// Constructor for [NewWeekplanBloc].
-  /// The bloc contains sinks to handle when different inputs are entered and 
+  /// The bloc contains sinks to handle when different inputs are entered and
   /// streams to tell if the inputs are valid.
   /// The bloc is also able to save the newly created weekplan.
   /// 
-  /// It is important that the bloc is initialized before use! 
+  /// It is important that the bloc is initialized before use!
   /// This is done with the method [initialize].
   NewWeekplanBloc(this._api);
 
@@ -72,7 +71,7 @@ class NewWeekplanBloc extends BlocBase {
           .asBroadcastStream();
 
   /// Resets the bloc if it already contains information from the last time it
-  /// was used. Switches user to the one provided. 
+  /// was used. Switches user to the one provided.
   /// This method should always be called before using the bloc.
   void initialize(UsernameModel user) {
     if (_user != null) {
@@ -147,8 +146,7 @@ class NewWeekplanBloc extends BlocBase {
     } else {
       final int year = int.tryParse(input);
       final int currentYear = DateTime.now().year;
-      sink.add(
-          year != null && year >= currentYear - 1 && year <= currentYear + 1);
+      sink.add(year != null && year >= currentYear - 1 && year <= 9999);
     }
   });
 

@@ -39,7 +39,7 @@ class NewWeekplanScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           labelText: 'Titel',
                           errorText: (snapshot?.data == false)
-                              ? 'Titel skal bestå af mindst et tegn'
+                              ? 'Titel skal angives'
                               : null,
                           border: const OutlineInputBorder(
                               borderSide: BorderSide())),
@@ -59,7 +59,7 @@ class NewWeekplanScreen extends StatelessWidget {
                           labelText: 'År',
                           errorText: (snapshot?.data == false)
                               ? 'År skal angives som fire cifre '
-                                  'og være inden for et år af i dag'
+                                  'og være i fremtiden'
                               : null,
                           border: const OutlineInputBorder(
                               borderSide: BorderSide())),
