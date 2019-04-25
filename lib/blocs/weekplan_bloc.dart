@@ -9,8 +9,7 @@ import 'package:weekplanner/models/user_week_model.dart';
 
 /// Bloc that streams the currently chosen weekplan
 class WeekplanBloc extends BlocBase {
-  /// Default Constructor.
-  /// Initilizes values
+  /// Constructor that initializes _api
   WeekplanBloc(this._api);
 
   final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
@@ -22,10 +21,10 @@ class WeekplanBloc extends BlocBase {
   /// The API
   final Api _api;
 
-  /// The stream that emits the currently chosen weekplan
+  /// The stream that emits the current chosen weekplan
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
-  /// The stream that emits whether in edit mode or citizen
+  /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
 
   /// The stream that emits the marked activities
@@ -36,16 +35,15 @@ class WeekplanBloc extends BlocBase {
     _userWeek.add(UserWeekModel(week, user));
   }
 
-  /// Adds a new marked activity
+  /// Adds a new marked activity to the stream
   void addMarkedActivity(ActivityModel activityModel) {
     final List<ActivityModel> localMarkedActivities = _markedActivities.value;
-    print(localMarkedActivities.length);
 
     localMarkedActivities.add(activityModel);
     _markedActivities.add(localMarkedActivities);
   }
 
-  /// Removes a marked activity
+  /// Removes a marked activity from the stream
   void removeMarkedActivity(ActivityModel activityModel) {
     final List<ActivityModel> localMarkedActivities = _markedActivities.value;
 
@@ -58,7 +56,7 @@ class WeekplanBloc extends BlocBase {
     _markedActivities.add(<ActivityModel>[]);
   }
 
-  /// Is activity marked
+  /// Checks if an activity is marked
   bool isActivityMarked(ActivityModel activityModel) {
     return _markedActivities.value?.contains(activityModel) ?? false;
   }
@@ -74,6 +72,7 @@ class WeekplanBloc extends BlocBase {
     }
 
     clearMarkedActivities();
+    /// Updates the weekplan in the database
     _api.week.update(user.id, week.weekYear,
         week.weekNumber, week).listen((WeekModel onData) => null);
   }
