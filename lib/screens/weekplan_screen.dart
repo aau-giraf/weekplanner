@@ -1,3 +1,4 @@
+import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -11,7 +12,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
-import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:api_client/models/pictogram_model.dart';
 
 /// Color of the add buttons
