@@ -22,7 +22,7 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: CopyFiles@2
         inputs:
-          contents: '$(projectDirectory)/build/app/outputs/apk/**/*.apk'
+          contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         inputs:
@@ -57,4 +57,4 @@ jobs:
       - task: PublishBuildArtifacts@1
         inputs:
           pathtoPublish: $(build.artifactStagingDirectory)
-          artifactName: iOS
+          artifactName: iOS (iPhone, iPad)
