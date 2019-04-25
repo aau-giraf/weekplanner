@@ -22,7 +22,7 @@ jobs:
           projectDirectory: $(projectDirectory)
       - task: CopyFiles@2
         inputs:
-          contents: '**/*.apk'
+          contents: '$(projectDirectory)/build/app/outputs/apk/release/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         inputs:
