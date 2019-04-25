@@ -145,8 +145,7 @@ class NewWeekplanBloc extends BlocBase {
       sink.add(null);
     } else {
       final int year = int.tryParse(input);
-      final int currentYear = DateTime.now().year;
-      sink.add(year != null && year >= currentYear - 1 && year <= 9999);
+      sink.add(year != null && year >= 1000 && year <= 9999);
     }
   });
 

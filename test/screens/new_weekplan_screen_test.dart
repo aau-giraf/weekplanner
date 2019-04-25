@@ -153,8 +153,7 @@ void main() {
     await tester.pump();
 
     expect(
-        find.text('År skal angives som fire cifre '
-            'og være i fremtiden'),
+        find.text('År skal angives som fire cifre'),
         findsOneWidget);
   });
 
@@ -165,8 +164,7 @@ void main() {
     await tester.pump();
 
     expect(
-        find.text('År skal angives som fire cifre '
-            'og være i fremtiden'),
+        find.text('År skal angives som fire cifre'),
         findsNothing);
   });
 

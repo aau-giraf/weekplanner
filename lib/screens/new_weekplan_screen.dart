@@ -58,8 +58,7 @@ class NewWeekplanScreen extends StatelessWidget {
                       decoration: InputDecoration(
                           labelText: 'År',
                           errorText: (snapshot?.data == false)
-                              ? 'År skal angives som fire cifre '
-                                  'og være i fremtiden'
+                              ? 'År skal angives som fire cifre'
                               : null,
                           border: const OutlineInputBorder(
                               borderSide: BorderSide())),
