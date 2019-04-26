@@ -22,24 +22,26 @@ class MockScreen extends StatelessWidget {
 
 void main() {
   int i = 0;
+  const Key widgetAvatar = Key('WidgetAvatar');
+  const Key widgetText = Key('WidgetText');
   final MockScreen mockScreen = MockScreen(callback: () => ++i);
 
   testWidgets('Test if citizen text appears', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: mockScreen));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('WidgetText')), findsNWidgets(1));
+    expect(find.byKey(widgetText), findsOneWidget);
   });
 
   testWidgets('Test if citizen avatar appears', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: mockScreen));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('WidgetAvatar')), findsNWidgets(1));
+    expect(find.byKey(widgetAvatar), findsOneWidget);
   });
 
   testWidgets('Test if text is the username', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: mockScreen));
     await tester.pumpAndSettle();
-    expect(find.text('Testname'), findsNWidgets(1));
+    expect(find.text('Testname'), findsOneWidget);
   });
 
   testWidgets('Test if callback is working on avatar',
@@ -47,7 +49,7 @@ void main() {
     i = 0;
     await tester.pumpWidget(MaterialApp(home: mockScreen));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('WidgetAvatar')));
+    await tester.tap(find.byKey(widgetAvatar));
     expect(i, 1);
   });
 
@@ -56,7 +58,7 @@ void main() {
     i = 0;
     await tester.pumpWidget(MaterialApp(home: mockScreen));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('WidgetText')));
+    await tester.tap(find.byKey(widgetText));
     expect(i, 1);
   });
 }

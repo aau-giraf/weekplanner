@@ -2,10 +2,14 @@ import 'package:api_client/models/username_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+/// Citizen avatar used for choose citizen screen
 class CitizenAvatar extends StatelessWidget {
+  /// Constructor for the citizens avatar
   const CitizenAvatar({this.usernameModel, this.onPressed});
 
+  /// Usermodel for displaying a user
   final UsernameModel usernameModel;
+  /// Callback when pressed
   final VoidCallback onPressed;
 
   @override
