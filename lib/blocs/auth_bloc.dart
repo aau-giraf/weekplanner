@@ -1,6 +1,8 @@
 import 'package:api_client/api/api.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/routes.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -35,10 +37,12 @@ class AuthBloc extends BlocBase {
   }
 
   /// Logs the currently logged in user out
-  void logout() {
+  void logout(BuildContext context) {
     _api.account.logout().take(1).listen((_) {
       _loggedIn.add(false);
     });
+
+    Routes.goHome(context);
   }
 
   @override

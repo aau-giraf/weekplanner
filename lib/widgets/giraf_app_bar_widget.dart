@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/widgets/giraf_title_header.dart';
 
 
 /// Toolbar of the application.
@@ -29,7 +30,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     toolbarBloc.updateIcons(appBarIcons, context);
     return AppBar(
         title: Text(title),
-        backgroundColor: const Color(0xAAFF6600),
+        flexibleSpace: const GirafTitleHeader(),
         actions: <Widget>[
           StreamBuilder<List<IconButton>>(
               initialData: const <IconButton>[],
