@@ -206,7 +206,8 @@ class WeekplanScreen extends StatelessWidget {
                               );
                             });
                       }
-                      return _dragTargetPictogram(index, weekday, snapshot);
+                      return _dragTargetPictogram(
+                          index, weekday, snapshot.data);
                     },
                     itemCount: weekday.activities.length + 1,
                   ),
@@ -216,9 +217,9 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Handles tap on a activity
-  void handleOnTapActivity(AsyncSnapshot<bool> snapshot, bool isMarked,
+  void handleOnTapActivity(bool inEditMode, bool isMarked,
       List<ActivityModel> activities, int index, BuildContext context) {
-    if (snapshot.data) {
+    if (inEditMode) {
       if (isMarked) {
         weekplanBloc.removeMarkedActivity(activities[index]);
       } else {
@@ -280,7 +281,7 @@ class WeekplanScreen extends StatelessWidget {
 
   // Returns the draggable pictograms, which also function as drop targets.
   DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
-      int index, WeekdayModel weekday, AsyncSnapshot<bool> snapshot) {
+      int index, WeekdayModel weekday, bool inEditMode) {
     return DragTarget<Tuple2<ActivityModel, Weekday>>(
       key: const Key('DragTarget'),
       builder: (BuildContext context,
@@ -290,10 +291,10 @@ class WeekplanScreen extends StatelessWidget {
           data: Tuple2<ActivityModel, Weekday>(
               weekday.activities[index], weekday.day),
           dragAnchor: DragAnchor.pointer,
-          child: _pictogramIconStack(context, index, weekday, snapshot),
+          child: _pictogramIconStack(context, index, weekday, inEditMode),
           childWhenDragging: Opacity(
               opacity: 0.5,
-              child: _pictogramIconStack(context, index, weekday, snapshot)),
+              child: _pictogramIconStack(context, index, weekday, inEditMode)),
           onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
           onDragCompleted: () =>
               weekplanBloc.setActivityPlaceholderVisible(false),
@@ -302,7 +303,7 @@ class WeekplanScreen extends StatelessWidget {
           feedback: Container(
               height: 150,
               width: 150,
-              child: _pictogramIconStack(context, index, weekday, snapshot)),
+              child: _pictogramIconStack(context, index, weekday, inEditMode)),
         );
       },
       onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
@@ -317,8 +318,8 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   // Returning a widget that stacks a pictogram and an accept icon
-  FittedBox _pictogramIconStack(BuildContext context, int index,
-      WeekdayModel weekday, AsyncSnapshot<bool> snapshot) {
+  FittedBox _pictogramIconStack(
+      BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final bool isMarked =
         weekplanBloc.isActivityMarked(weekday.activities[index]);
 
@@ -334,8 +335,8 @@ class WeekplanScreen extends StatelessWidget {
                   key: Key(weekday.day.index.toString() +
                       weekday.activities[index].id.toString()),
                   onTap: () {
-                    handleOnTapActivity(
-                        snapshot, isMarked, weekday.activities, index, context);
+                    handleOnTapActivity(inEditMode, isMarked,
+                        weekday.activities, index, context);
                   },
                   child: buildIsMarked(
                       isMarked, context, weekday.activities, index),
@@ -381,20 +382,20 @@ class WeekplanScreen extends StatelessWidget {
     return Card(
         margin: const EdgeInsets.all(20),
         child: FittedBox(
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: <Widget>[
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            child: FittedBox(
-              child: _getPictogram(activities[index]),
-            ),
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: <Widget>[
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width,
+                child: FittedBox(
+                  child: _getPictogram(activities[index]),
+                ),
+              ),
+              icon
+            ],
           ),
-          icon
-        ],
-      ),
-    ));
+        ));
   }
 
   Card _translateWeekDay(Weekday day) {

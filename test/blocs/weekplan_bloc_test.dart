@@ -34,7 +34,6 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   WeekplanBloc weekplanBloc;
   Api api;
-  MockWeekApi weekApi;
 
   final WeekModel week = WeekModel(
       thumbnail: PictogramModel(
@@ -57,8 +56,6 @@ void main() {
 
   setUp(() {
     api = Api('any');
-    weekApi = MockWeekApi();
-    api.week = weekApi;
 
     api.user = MockUserApi();
     api.week = MockWeekApi();
@@ -80,6 +77,7 @@ void main() {
   });
 
   test('Adds an activity to a list of marked activities', () {
+    // Create an ActivityModel, to add to the list of marked activites.
     final ActivityModel activityModel = ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -93,6 +91,7 @@ void main() {
         order: null,
         state: null);
 
+    // Add the ActivityModel to the list of marked activities. 
     weekplanBloc.addMarkedActivity(activityModel);
 
     weekplanBloc.markedActivities
