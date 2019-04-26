@@ -14,7 +14,6 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
-import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}

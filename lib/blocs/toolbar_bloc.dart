@@ -179,7 +179,7 @@ class ToolbarBloc extends BlocBase {
               context: context, builder: (BuildContext context)
           {
             return GirafConfirmDialog(
-              confirmButtonIcon: ImageIcon(
+              confirmButtonIcon: const ImageIcon(
                   AssetImage('assets/icons/accept.png')),
               confirmButtonText: 'Ok',
               confirmOnPressed: () {

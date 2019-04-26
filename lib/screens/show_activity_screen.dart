@@ -55,7 +55,7 @@ class ShowActivityScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Aktivitet',
-          appBarIcons: <AppBarIcon>[],
+          appBarIcons: const <AppBarIcon>[],
         ),
         body: childContainer);
   }

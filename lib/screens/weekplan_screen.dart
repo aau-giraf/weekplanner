@@ -265,10 +265,6 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  void _iconClick(BuildContext context, ActivityModel activity) {
-    Routes.push(context, ShowActivityScreen(_week, activity, _user));
-  }
-
   Widget _getPictogram(ActivityModel activity) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     bloc.loadPictogramById(activity.pictogram.id);

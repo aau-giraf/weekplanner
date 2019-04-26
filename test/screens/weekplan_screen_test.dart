@@ -9,7 +9,6 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -171,7 +170,7 @@ void main() {
     authBloc.mode.skip(1).listen((_) async {
       await tester.pump();
 
-      GirafAppBar widget = find
+      final GirafAppBar widget = find
           .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
           .evaluate()
           .first
@@ -201,7 +200,7 @@ void main() {
     authBloc.mode.skip(1).listen((_) async {
       await tester.pump();
 
-      GirafAppBar widget = find
+      final GirafAppBar widget = find
           .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
           .evaluate()
           .first
@@ -221,7 +220,9 @@ void main() {
     await done.future;
   });
 
-  testWidgets("When switching to citizens mode the add activityButton should disappear",
+  testWidgets(
+      'When switching to citizens mode the add activityButton should disappear'
+      ,
           (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
 
@@ -271,12 +272,16 @@ void main() {
     expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
   });
 
-  testWidgets('When in guardian mode tapping the switch mode, should switch mode',
+  testWidgets(
+      'When in guardian mode tapping the switch mode, should switch mode'
+      ,
           (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
         final Completer<bool> tapComplete = Completer<bool>();
 
-        await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+        await tester.pumpWidget(
+            MaterialApp(home: WeekplanScreen(weekModel, user))
+        );
         await tester.pumpAndSettle();
 
         authBloc.mode.skip(1).listen((WeekplanMode mode) async {
@@ -284,7 +289,7 @@ void main() {
 
           expect(mode == WeekplanMode.citizen, true);
 
-          GirafAppBar widget = find
+          final GirafAppBar widget = find
               .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
               .evaluate()
               .first
@@ -292,7 +297,9 @@ void main() {
 
           if (widget != null) {
             expect(widget.appBarIcons.length == 1, true);
-            expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian), true);
+            expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian),
+                true
+            );
           } else {
             fail('Could not find GirafAppBar');
           }
@@ -301,7 +308,7 @@ void main() {
           done.complete();
         });
 
-        Finder button = find.byKey(const Key('IconChangeToCitizen'));
+        final Finder button = find.byKey(const Key('IconChangeToCitizen'));
         expect(button, findsOneWidget);
 
         await tester.tap(button);
@@ -326,12 +333,16 @@ void main() {
         await done.future;
       });
 
-  testWidgets('When in citizen mode tapping the switch mode, should switch mode',
+  testWidgets(
+      'When in citizen mode tapping the switch mode, should switch mode'
+      ,
           (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
         final Completer<bool> tapComplete = Completer<bool>();
 
-        await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+        await tester.pumpWidget(
+            MaterialApp(home: WeekplanScreen(weekModel, user))
+        );
         await tester.pumpAndSettle();
 
         authBloc.mode.skip(2).listen((WeekplanMode mode) async {
@@ -339,7 +350,7 @@ void main() {
 
           expect(mode == WeekplanMode.guardian, true);
 
-          GirafAppBar widget = find
+          final GirafAppBar widget = find
               .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
               .evaluate()
               .first
@@ -347,7 +358,9 @@ void main() {
 
           if (widget != null) {
             expect(widget.appBarIcons.length > 1, true);
-            expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen), true);
+            expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen),
+                true
+            );
           } else {
             fail('Could not find GirafAppBar');
           }
@@ -360,7 +373,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        Finder button = find.byKey(const Key('IconChangeToGuardian'));
+        final Finder button = find.byKey(const Key('IconChangeToGuardian'));
 
         expect(button, findsOneWidget);
 
