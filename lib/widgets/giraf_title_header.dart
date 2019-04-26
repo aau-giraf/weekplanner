@@ -19,20 +19,24 @@ class GirafTitleHeader extends StatelessWidget implements PreferredSizeWidget {
           child: Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Center(child: Text(title, textAlign: TextAlign.center,)),
+              child: Center(
+                  child: Text(
+                title ?? '',
+                textAlign: TextAlign.center,
+              )),
             ),
             decoration: BoxDecoration(
                 gradient: const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: <double>[
-                      0.33,
-                      0.66
-                    ],
+                  0.33,
+                  0.66
+                ],
                     colors: <Color>[
-                      Color.fromRGBO(254, 215, 108, 1),
-                      Color.fromRGBO(253, 187, 85, 1),
-                    ])),
+                  Color.fromRGBO(254, 215, 108, 1),
+                  Color.fromRGBO(253, 187, 85, 1),
+                ])),
           ),
         ),
       ],
