@@ -17,11 +17,81 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
+
+class MockWeekPlanBloc extends Mock implements WeekplanBloc {
+  final BehaviorSubject<UserWeekModel> _userWeek =
+      BehaviorSubject<UserWeekModel>();
+
+  /// The stream that emits the currently chosen weekplan
+  @override
+  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+
+  final WeekModel _mockweek = WeekModel(
+      thumbnail: PictogramModel(
+          imageUrl: null,
+          imageHash: null,
+          accessLevel: null,
+          title: null,
+          id: null,
+          lastEdit: null),
+      days: <WeekdayModel>[
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
+      ],
+      name: 'Week',
+      weekNumber: 1,
+      weekYear: 2019);
+  @override
+  void loadWeek(WeekModel week, UsernameModel user) {
+    _userWeek.add(UserWeekModel(week, user));
+  }
+
+  @override
+  void addActivity(ActivityModel activity, int day) {
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+    week.days[day].activities.add(activity);
+    loadWeek(week, user);
+  }
+
+  @override
+  void reorderActivities(
+      ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+
+    // Removed from dayFrom, the day the pictogram is dragged from
+    int dayLength = week.days[dayFrom.index].activities.length;
+
+    for (int i = activity.order + 1; i < dayLength; i++) {
+      week.days[dayFrom.index].activities[i].order -= 1;
+    }
+
+    week.days[dayFrom.index].activities.remove(activity);
+
+    activity.order = dayFrom == dayTo &&
+            week.days[dayTo.index].activities.length == newOrder - 1
+        ? newOrder - 1
+        : newOrder;
+
+    // Inserts into dayTo, the day that the pictogram is inserted to
+    dayLength = week.days[dayTo.index].activities.length;
+
+    for (int i = activity.order; i < dayLength; i++) {
+      week.days[dayTo.index].activities[i].order += 1;
+    }
+
+    week.days[dayTo.index].activities.insert(activity.order, activity);
+
+    _userWeek.add(UserWeekModel(week, user));
+  }
+}
 
 void main() {
   WeekplanBloc bloc;
@@ -45,8 +115,7 @@ void main() {
       order: 1);
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(
-        day: Weekday.Monday, activities: <ActivityModel>[activity]),
+    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),

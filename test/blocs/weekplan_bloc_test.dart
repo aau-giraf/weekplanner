@@ -16,8 +16,7 @@ import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
-class MockWeekApi extends Mock implements WeekApi {
-}
+class MockWeekApi extends Mock implements WeekApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -32,9 +31,77 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
+class MockWeekPlanBloc extends Mock implements WeekplanBloc {
+  final BehaviorSubject<UserWeekModel> _userWeek =
+      BehaviorSubject<UserWeekModel>();
+
+  /// The stream that emits the currently chosen weekplan
+  @override
+  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+
+  final WeekModel _mockweek = WeekModel(
+      thumbnail: PictogramModel(
+          imageUrl: null,
+          imageHash: null,
+          accessLevel: null,
+          title: null,
+          id: null,
+          lastEdit: null),
+      days: <WeekdayModel>[
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
+      ],
+      name: 'Week',
+      weekNumber: 1,
+      weekYear: 2019);
+  @override
+  void loadWeek(WeekModel week, UsernameModel user) {
+    _userWeek.add(UserWeekModel(week, user));
+  }
+
+  @override
+  void addActivity(ActivityModel activity, int day) {
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+    week.days[day].activities.add(activity);
+    loadWeek(week, user);
+  }
+
+  @override
+  void reorderActivities(
+      ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+
+    // Removed from dayFrom, the day the pictogram is dragged from
+    int dayLength = week.days[dayFrom.index].activities.length;
+
+    for (int i = activity.order + 1; i < dayLength; i++) {
+      week.days[dayFrom.index].activities[i].order -= 1;
+    }
+
+    week.days[dayFrom.index].activities.remove(activity);
+
+    activity.order = dayFrom == dayTo &&
+            week.days[dayTo.index].activities.length == newOrder - 1
+        ? newOrder - 1
+        : newOrder;
+
+    // Inserts into dayTo, the day that the pictogram is inserted to
+    dayLength = week.days[dayTo.index].activities.length;
+
+    for (int i = activity.order; i < dayLength; i++) {
+      week.days[dayTo.index].activities[i].order += 1;
+    }
+
+    week.days[dayTo.index].activities.insert(activity.order, activity);
+
+    _userWeek.add(UserWeekModel(week, user));
+  }
+}
 
 void main() {
-  WeekplanBloc weekplanBloc;
+  MockWeekPlanBloc weekplanBloc;
   Api api;
   final WeekModel week = WeekModel(
       thumbnail: PictogramModel(
@@ -69,42 +136,37 @@ void main() {
       return Observable<WeekModel>.just(mockWeek);
     });
 
-    weekplanBloc = WeekplanBloc(api);
+    weekplanBloc = MockWeekPlanBloc();
   });
 
-  test('Loads a weekplan for the weekplan view', () {
+  test('Loads a weekplan for the weekplan view', async((DoneFn done) {
     final WeekModel week = WeekModel(name: 'test week');
-    weekplanBloc.loadWeek(week, user);
-
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
       expect(response.week, equals(week));
+      done();
     });
-  });
+    weekplanBloc.loadWeek(week, user);
+  }));
 
   test('Adds an activity to a given weekplan', async((DoneFn done) {
     final UsernameModel user =
         UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
-
     final ActivityModel activity = ActivityModel(
         order: null,
         isChoiceBoard: null,
         state: null,
         id: null,
         pictogram: null);
-
+    weekplanBloc.loadWeek(week, user);
     weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeek) {
-      verify(api.week.update(any, any, any, any));
+      //verify(api.week.update(any, any, any, any));
       expect(userWeek.week, week);
       expect(userWeek.user, user);
       expect(userWeek.week.days.first.activities.length, 1);
       expect(userWeek.week.days.first.activities.first, activity);
       done();
     });
-
-    // Used by the addActivity
-    weekplanBloc.loadWeek(week, user);
-
     weekplanBloc.addActivity(activity, 0);
   }));
 
