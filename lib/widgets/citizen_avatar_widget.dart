@@ -27,6 +27,7 @@ class CitizenAvatar extends StatelessWidget {
                             aspectRatio: 1,
                             child: Container(
                               child: const CircleAvatar(
+                                key: Key('WidgetAvatar'),
                                 radius: 20,
                                 backgroundImage: AssetImage(
                                     'assets/login_screen_background_image.png'),
@@ -40,6 +41,7 @@ class CitizenAvatar extends StatelessWidget {
                                 ? usernameModel.name
                                 : usernameModel.name.substring(0, 14) + '..',
                             style: const TextStyle(fontSize: 40.0),
+                            key: const Key('WidgetText'),
                             maxLines: 1,
                           ),
                         ),
