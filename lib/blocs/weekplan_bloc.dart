@@ -22,8 +22,12 @@ class WeekplanBloc extends BlocBase {
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// Sink to set the currently chosen week
-  void setWeek(WeekModel week, UsernameModel user) {
-    _userWeek.add(UserWeekModel(week, user));
+  void loadWeek(WeekModel week, UsernameModel user) {
+    _api.week
+        .get(user.id, week.weekYear, week.weekNumber)
+        .listen((WeekModel loadedWeek) {
+      _userWeek.add(UserWeekModel(loadedWeek, user));
+    });
   }
 
   final BehaviorSubject<bool> _activityPlaceholderVisible =
@@ -49,6 +53,7 @@ class WeekplanBloc extends BlocBase {
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
+    _userWeek.add(UserWeekModel(week, user));
   }
 
   /// Reorders activities between same or different days.

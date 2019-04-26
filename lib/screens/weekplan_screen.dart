@@ -31,7 +31,7 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="week">Week that should be shown on the weekplan</param>
   /// <param name="user">owner of the weekplan</param>
   WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
-    weekplanBloc.setWeek(_week, _user);
+    weekplanBloc.loadWeek(_week, _user);
   }
 
   /// The WeekplanBloc that contains the currently chosen week
@@ -115,7 +115,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: Image.asset('assets/icons/add.png'),
                   color: buttonColor,
                   onPressed: () async {
-                    final PictogramModel newActivity =
+                    PictogramModel newActivity =
                         await Routes.push(context, PictogramSearch());
                     if (newActivity != null) {
                       weekplanBloc.addActivity(
@@ -126,6 +126,7 @@ class WeekplanScreen extends StatelessWidget {
                               state: ActivityState.Active,
                               isChoiceBoard: false),
                           weekday.day.index);
+                      newActivity = null;
                     }
                   }),
             ),
