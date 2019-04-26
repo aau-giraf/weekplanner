@@ -41,7 +41,7 @@ class NewWeekplanScreen extends StatelessWidget {
                       // To avoid emojis and other special characters
                       inputFormatters: <TextInputFormatter>[
                         WhitelistingTextInputFormatter(
-                            RegExp('[a-zA-Z0-9æøåÆØÅ,._#\'()\-]'))
+                            RegExp('[ -~\u00C0-\u00FF]'))
                       ],
                       style: _style,
                       decoration: InputDecoration(
