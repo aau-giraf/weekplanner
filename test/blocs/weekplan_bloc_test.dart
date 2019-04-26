@@ -34,7 +34,6 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   WeekplanBloc weekplanBloc;
   Api api;
-  MockWeekApi weekApi;
 
   final WeekModel week = WeekModel(
       thumbnail: PictogramModel(

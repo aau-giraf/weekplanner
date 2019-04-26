@@ -129,7 +129,7 @@ void main() {
     }
   });
 
-  testWidgets('pictograms are rendered', (WidgetTester tester) async {
+  testWidgets('Pictograms are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
     await tester.pumpAndSettle();
 
