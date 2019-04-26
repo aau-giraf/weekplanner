@@ -14,15 +14,6 @@ class CitizenAvatar extends StatelessWidget {
     final Size size = query.size;
     final double diagonal =
         sqrt((size.width * size.width) + (size.height * size.height));
-
-    /*
-    print(
-      'size: ${size.width}x${size.height}\n'
-      'pixelRatio: ${query.devicePixelRatio}\n'
-      'pixels: ${size.width * query.devicePixelRatio}x${size.height * query.devicePixelRatio}\n'
-      'diagonal: $diagonal'
-    );
-    */
     return diagonal > 1100.0;
   }
 
