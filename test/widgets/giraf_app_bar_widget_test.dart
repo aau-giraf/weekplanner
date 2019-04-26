@@ -34,7 +34,7 @@ class MockAuth extends Mock implements AuthBloc {
   }
 
   @override
-  void logout() {
+  void logout(BuildContext context) {
     _loggedIn.add(false);
   }
 }
