@@ -11,13 +11,14 @@ class CitizenAvatar extends StatelessWidget {
 
   /// Usermodel for displaying a user
   final UsernameModel usernameModel;
+
   /// Callback when pressed
   final VoidCallback onPressed;
 
   bool _isTablet(MediaQueryData query) {
     final Size size = query.size;
     final double diagonal =
-        sqrt((size.width * size.width) + (size.height * size.height));
+    sqrt((size.width * size.width) + (size.height * size.height));
     return diagonal > 1100.0;
   }
 
@@ -49,32 +50,32 @@ class CitizenAvatar extends StatelessWidget {
                             ),
                           ),
                         ),
-                    ),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 200.0,
-                        maxWidth: 200.0,
-                        minHeight: 15.0,
-                        maxHeight: _isTablet(query) ? 50.0 : 15.0,
-                      ),
-                      child: Center(
-                        child: AutoSizeText(
-                          key: Key('WidgetText'),
-                          usernameModel.name.length <= 15
-                              ? usernameModel.name
-                              : usernameModel.name.substring(0, 14) + '..',
-                          style:
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: 200.0,
+                            maxWidth: 200.0,
+                            minHeight: 15.0,
+                            maxHeight: _isTablet(query) ? 50.0 : 15.0,
+                          ),
+                          child: Center(
+                            child: AutoSizeText(
+                              usernameModel.name.length <= 15
+                                  ? usernameModel.name
+                                  : usernameModel.name.substring(0, 14) + '..',
+                              key: const Key('WidgetText'),
+                              style:
                               TextStyle(fontSize: _isTablet(query) ? 30.0 : 20),
-                        ),
-                      ),
-                    )
-                  ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
-        )),
-      ),
+              ],
+            )),
+      )
+      ,
     );
   }
 }
