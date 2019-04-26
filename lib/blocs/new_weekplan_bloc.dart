@@ -134,7 +134,7 @@ class NewWeekplanBloc extends BlocBase {
     if (input == null) {
       sink.add(null);
     } else {
-      sink.add(input.isNotEmpty);
+      sink.add(input.trim().isNotEmpty);
     }
   });
 

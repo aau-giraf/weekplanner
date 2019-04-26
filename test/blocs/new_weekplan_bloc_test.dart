@@ -60,6 +60,15 @@ void main() {
     });
   }));
 
+  test('Should not validate title: [space]', async((DoneFn done) {
+    bloc.onTitleChanged.add(' ');
+    bloc.validTitleStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
   test('Should not validate title: [empty string]', async((DoneFn done) {
     bloc.onTitleChanged.add('');
     bloc.validTitleStream.listen((bool isValid) {
@@ -79,8 +88,7 @@ void main() {
     });
   }));
 
-  test('Should validate year: 1990',
-      async((DoneFn done) {
+  test('Should validate year: 1990', async((DoneFn done) {
     bloc.onYearChanged.add('1990');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);
@@ -89,8 +97,7 @@ void main() {
     });
   }));
 
-  test('Should not validate year: 1',
-      async((DoneFn done) {
+  test('Should not validate year: 1', async((DoneFn done) {
     bloc.onYearChanged.add('1');
     bloc.validYearStream.listen((bool isValid) {
       expect(isValid, isNotNull);

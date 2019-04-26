@@ -152,9 +152,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
     await tester.pump();
 
-    expect(
-        find.text('År skal angives som fire cifre'),
-        findsOneWidget);
+    expect(find.text('År skal angives som fire cifre'), findsOneWidget);
   });
 
   testWidgets('No error text is shown on valid year input',
@@ -163,9 +161,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
     await tester.pump();
 
-    expect(
-        find.text('År skal angives som fire cifre'),
-        findsNothing);
+    expect(find.text('År skal angives som fire cifre'), findsNothing);
   });
 
   testWidgets('Error text is shown on invalid week number input',
@@ -184,6 +180,16 @@ void main() {
     await tester.pump();
 
     expect(find.text('Ugenummer skal være mellem 1 og 53'), findsNothing);
+  });
+
+  testWidgets('Emojis are blacklisted from title field',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.enterText(
+        find.byKey(const Key('NewWeekplanTitleField')), '☺♥');
+    await tester.pump();
+
+    expect(find.text('☺♥'), findsNothing);
   });
 
   testWidgets('Click on thumbnail redirects to pictogram search screen',
