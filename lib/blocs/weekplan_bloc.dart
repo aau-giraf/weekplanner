@@ -84,7 +84,7 @@ class WeekplanBloc extends BlocBase {
     clearMarkedActivities();
     /// Updates the weekplan in the database
     _api.week.update(user.id, week.weekYear,
-        week.weekNumber, week).listen((WeekModel onData) => null);
+        week.weekNumber, week).listen((WeekModel onData) {});
   }
 
   /// Toggles edit mode
