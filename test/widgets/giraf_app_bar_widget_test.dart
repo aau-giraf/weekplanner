@@ -328,7 +328,7 @@ void main() {
         expect(find.byKey(const Key('ConfirmDialogConfirmButton')),
             findsOneWidget);
         await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
-        await tester.pumpAndSettle();
+        await tester.pump();
         authBloc.loggedIn.listen((bool statusLogout) async {
           if (statusLogout == false) {
             expect(statusLogout, isFalse);
