@@ -199,8 +199,9 @@ void main() {
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
       expect(success, true);
-      await done.future;
+      done.complete();
     });
+    await done.future;
   });
 
   testWidgets(
