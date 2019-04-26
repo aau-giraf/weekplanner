@@ -152,6 +152,7 @@ class ShowActivityScreen extends StatelessWidget {
                         children: <Widget>[
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
                               child: buildLoadPictogramImage()),
                           snapshot.data.state == ActivityState.Completed
                               ? Icon(
