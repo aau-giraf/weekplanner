@@ -39,21 +39,6 @@ class MockWeekPlanBloc extends Mock implements WeekplanBloc {
   @override
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
-  final WeekModel _mockweek = WeekModel(
-      thumbnail: PictogramModel(
-          imageUrl: null,
-          imageHash: null,
-          accessLevel: null,
-          title: null,
-          id: null,
-          lastEdit: null),
-      days: <WeekdayModel>[
-        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
-        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
-      ],
-      name: 'Week',
-      weekNumber: 1,
-      weekYear: 2019);
   @override
   void loadWeek(WeekModel week, UsernameModel user) {
     _userWeek.add(UserWeekModel(week, user));
@@ -118,7 +103,7 @@ void main() {
       name: 'Week',
       weekNumber: 1,
       weekYear: 2019);
-  WeekModel mockWeek = null;
+  WeekModel mockWeek;
   final UsernameModel user =
       UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
 
