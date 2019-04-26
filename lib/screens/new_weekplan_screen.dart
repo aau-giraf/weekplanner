@@ -35,10 +35,11 @@ class NewWeekplanScreen extends StatelessWidget {
                   builder:
                       (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     return TextField(
+                      key: const Key('NewWeekplanTitleField'),
                       onChanged: _bloc.onTitleChanged.add,
                       keyboardType: TextInputType.text,
                       // To avoid emojis and other special characters
-                      inputFormatters: [
+                      inputFormatters: <TextInputFormatter>[
                         WhitelistingTextInputFormatter(
                             RegExp('[a-zA-Z0-9æøåÆØÅ,._#\'()\-]'))
                       ],
