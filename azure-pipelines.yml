@@ -28,6 +28,7 @@ jobs:
         inputs:
           pathtoPublish: '$(Build.ArtifactStagingDirectory)'
           artifactName: Android
+  # This is for compiling to iOS, it is done, but there is no valid developer license, so it is commented out
   #- job: iOS
   #  pool:
   #    vmImage: 'macOS-10.13'
