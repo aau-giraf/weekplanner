@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter/material.dart';
@@ -28,29 +30,30 @@ void main() {
     done();
   }));
 
-  test('Defined icon is added to stream', async((DoneFn done) {
+  test('Defined icon is added to stream', async((DoneFn done) async {
+    final Completer<bool> done = Completer<bool>();
     final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>
     {AppBarIcon.undo : null};
-
-    bloc.updateIcons(icons, null);
-
+    
     bloc.visibleButtons.listen((List<IconButton> response) {
       expect(response.length, 1);
+      done.complete();
     });
 
-    done();
+    bloc.updateIcons(icons, null);
+    await done.future;
   }));
 
   test('Defined icons are added to stream', async((DoneFn done) {
     final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>
     {AppBarIcon.undo : null, AppBarIcon.search: null};
-    bloc.updateIcons(icons, null);
 
     bloc.visibleButtons.listen((List<IconButton> response) {
       expect(response.length, 2);
+      done();
     });
 
-    done();
+    bloc.updateIcons(icons, null);
   }));
 
 }

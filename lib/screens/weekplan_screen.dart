@@ -239,14 +239,14 @@ class WeekplanScreen extends StatelessWidget {
           decoration:
               BoxDecoration(border: Border.all(color: Colors.black, width:
               50)),
-          child: buildActivityCard(
+          child: _buildActivityCard(
             context,
             activities,
             index,
             activities[index].state,
           ));
     } else {
-      return buildActivityCard(
+      return _buildActivityCard(
           context, activities, index, activities[index].state);
     }
   }
@@ -362,7 +362,7 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Builds card that displays the activity
-  Card buildActivityCard(
+  Card _buildActivityCard(
     BuildContext context,
     List<ActivityModel> activities,
     int index,

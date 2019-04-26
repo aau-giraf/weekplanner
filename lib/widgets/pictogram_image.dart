@@ -25,10 +25,7 @@ class PictogramImage extends StatelessWidget {
   /// The provided callback function which will be called on
   /// every press of the image
   final VoidCallback onPressed;
-
-  /// The provided callback function which will be called on
-  /// every long press of the activity
-
+  
   final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
   final Widget _loading = Center(
       child: Container(

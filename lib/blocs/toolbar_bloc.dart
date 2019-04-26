@@ -11,11 +11,12 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
+
+  final BehaviorSubject<List<IconButton>> _visibleButtons =
+      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+
   /// The current visibility of the edit-button.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
-
-  BehaviorSubject<List<IconButton>> _visibleButtons =
-      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
@@ -24,28 +25,20 @@ class ToolbarBloc extends BlocBase {
     List<IconButton> _iconsToAdd;
     _iconsToAdd = <IconButton>[];
 
-    icons ??= <AppBarIcon, VoidCallback>{
+    if (icons == null){
+      icons = <AppBarIcon, VoidCallback>{
         AppBarIcon.settings: null,
         AppBarIcon.logout: null
       };
-
+    }
+    
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
     }
-
-    /*if (icons == null) {
-      icons = <AppBarIcon>[];
-      icons.add(AppBarIcon.settings);
-      icons.add(AppBarIcon.logout);
-    }
-    for (AppBarIcon icon in icons) {
-      _addIconButton(_iconsToAdd, icon, context);
-    }*/
-
-    final BehaviorSubject<List<IconButton>> iconList =
-        BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
-    iconList.add(_iconsToAdd);
-    _visibleButtons = iconList;
+    
+    print(_visibleButtons.value.length);
+    _visibleButtons.add(_iconsToAdd);
+    print(_visibleButtons.value.length);
   }
 
   /// Find the icon picture based on the input enum

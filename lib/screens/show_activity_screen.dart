@@ -153,7 +153,7 @@ class ShowActivityScreen extends StatelessWidget {
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
                               child: buildLoadPictogramImage()),
-                          snapshot.data.state == ActivityState.Completed
+                              snapshot.data.state == ActivityState.Completed
                               ? Icon(
                                   Icons.check,
                                   key: const Key('IconComplete'),
@@ -206,7 +206,7 @@ class ShowActivityScreen extends StatelessWidget {
     return StreamBuilder<Image>(
         stream: _pictoImageBloc.image,
         builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-          return FittedBox(
+          return SizedBox(
               child: snapshot.data,
               // Key is used for testing the widget.
               key: Key(_activity.id.toString()));

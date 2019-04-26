@@ -16,9 +16,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
   /// Used to store the icons that should be displayed in the appbar.
-  //final List<AppBarIcon> appBarIcons;
-
-  //final List<VoidCallback> appBarCallback;
   final Map<AppBarIcon, VoidCallback> appBarIcons;
 
   /// Contains the functionality of the toolbar.
