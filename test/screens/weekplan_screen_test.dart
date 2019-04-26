@@ -28,6 +28,7 @@ import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
 
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 class MockAuthBlock extends AuthBloc{
   MockAuthBlock(Api api) : super(api);
 
@@ -171,14 +172,14 @@ void main() {
       await tester.pump();
 
       final GirafAppBar widget = find
-          .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
+          .byType(GirafAppBar)
           .evaluate()
           .first
           .widget;
 
       if (widget != null) {
-        expect(widget.appBarIcons.length > 1, true);
-        expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen), true);
+        expect(widget.appBarIcons.length, greaterThan(1));
+        expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen), isTrue);
       } else {
         fail('Could not find GirafAppBar');
       }
@@ -201,14 +202,16 @@ void main() {
       await tester.pump();
 
       final GirafAppBar widget = find
-          .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
+          .byType(GirafAppBar)
           .evaluate()
           .first
           .widget;
 
       if (widget != null) {
-        expect(widget.appBarIcons.length == 1, true);
-        expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian), true);
+        expect(widget.appBarIcons.length, equals(1));
+        expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian),
+            isTrue
+        );
       } else {
         fail('Could not find GirafAppBar');
       }
@@ -273,137 +276,137 @@ void main() {
   });
 
   testWidgets(
-      'When in guardian mode tapping the switch mode, should switch mode'
-      ,
+      'As a guardian tapping the switch to citizen a dialog should appear',
           (WidgetTester tester) async {
+            await tester.pumpWidget(
+                MaterialApp(
+                    home: WeekplanScreen(weekModel, user),
+                )
+            );
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const Key('IconChangeToCitizen')));
+            await tester.pumpAndSettle();
+            final Finder dialog = find.byType(GirafConfirmDialog);
+            final GirafConfirmDialog dialogWidget = dialog
+                .evaluate().first.widget;
+
+            expect(dialog, findsOneWidget);
+            expect(dialogWidget.title, equals('Skift til borger'));
+            expect(
+                dialogWidget.description,
+                equals('Vil du skifte til borger tilstand?')
+            );
+            expect(dialogWidget.confirmButtonText, equals('Skift'));
+            expect(
+                dialogWidget.confirmButtonIcon,
+                equals(const ImageIcon(
+                    AssetImage('assets/icons/changeToCitizen.png')
+                  )
+                )
+            );
+          });
+
+  testWidgets(
+    'In the switch to citizen dialog, confirming should switch mode and pop',
+      (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
         final Completer<bool> tapComplete = Completer<bool>();
-
+        final MockNavigatorObserver observer = MockNavigatorObserver();
         await tester.pumpWidget(
-            MaterialApp(home: WeekplanScreen(weekModel, user))
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user),
+              navigatorObservers: <NavigatorObserver>[observer],
+            )
         );
         await tester.pumpAndSettle();
-
         authBloc.mode.skip(1).listen((WeekplanMode mode) async {
           await tapComplete.future;
-
-          expect(mode == WeekplanMode.citizen, true);
-
-          final GirafAppBar widget = find
-              .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
-              .evaluate()
-              .first
-              .widget;
-
-          if (widget != null) {
-            expect(widget.appBarIcons.length == 1, true);
-            expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian),
-                true
-            );
-          } else {
-            fail('Could not find GirafAppBar');
-          }
-
-
+          expect(WeekplanMode.citizen, equals(mode));
           done.complete();
         });
-
-        final Finder button = find.byKey(const Key('IconChangeToCitizen'));
-        expect(button, findsOneWidget);
-
-        await tester.tap(button);
+        await tester.tap(find.byKey(const Key('IconChangeToCitizen')));
         await tester.pumpAndSettle();
 
-        final Finder dialog = find.byWidgetPredicate(
-                (Widget widget) => widget is GirafConfirmDialog
-        );
-
-        expect(dialog, findsOneWidget);
-
-        final Finder okBtn =
-        find.byKey(const Key('ConfirmDialogConfirmButton'));
-
-        expect(okBtn, findsOneWidget);
-
-        await tester.tap(okBtn);
+        await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
         await tester.pumpAndSettle();
 
         tapComplete.complete();
 
+        final VerificationResult verificationResult =
+          verify(observer.didPop(any, any));
+
+        expect(verificationResult.callCount, equals(1));
+
         await done.future;
-      });
+      }
+  );
 
   testWidgets(
-      'When in citizen mode tapping the switch mode, should switch mode'
-      ,
-          (WidgetTester tester) async {
+    'As a citizen tapping the switch to gaurdian a dialog should appear',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user),
+            )
+        );
+        await tester.pumpAndSettle();
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+        await tester.pumpAndSettle();
+        final Finder dialog = find.byType(AlertDialog);
+        final Finder passField =
+          find.byKey(const Key('SwitchToGuardianPassword'));
+
+        expect(dialog, findsOneWidget);
+        expect(passField, findsOneWidget);
+      }
+  );
+
+  testWidgets(
+      'In the switch to guardian dialog, confirming should switch mode and pop',
+      (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
         final Completer<bool> tapComplete = Completer<bool>();
-
+        final MockNavigatorObserver observer = MockNavigatorObserver();
         await tester.pumpWidget(
-            MaterialApp(home: WeekplanScreen(weekModel, user))
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user),
+              navigatorObservers: <NavigatorObserver>[observer],
+            )
         );
         await tester.pumpAndSettle();
 
+        // We need to skip 2 this time, first skip the seeded value
+        // second skip the switch to citizen mode (which is part of the arrange
+        // step for this test)
         authBloc.mode.skip(2).listen((WeekplanMode mode) async {
           await tapComplete.future;
-
-          expect(mode == WeekplanMode.guardian, true);
-
-          final GirafAppBar widget = find
-              .byWidgetPredicate((Widget widget) => widget is GirafAppBar)
-              .evaluate()
-              .first
-              .widget;
-
-          if (widget != null) {
-            expect(widget.appBarIcons.length > 1, true);
-            expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen),
-                true
-            );
-          } else {
-            fail('Could not find GirafAppBar');
-          }
-
-
+          expect(WeekplanMode.guardian, equals(mode));
           done.complete();
         });
 
         authBloc.setMode(WeekplanMode.citizen);
-
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
         await tester.pumpAndSettle();
 
-        final Finder button = find.byKey(const Key('IconChangeToGuardian'));
-
-        expect(button, findsOneWidget);
-
-        await tester.tap(button);
-        await tester.pumpAndSettle();
-
-        final Finder dialog = find.byWidgetPredicate(
-                (Widget widget) => widget is AlertDialog
+        await tester.enterText(
+            find.byKey(const Key('SwitchToGuardianPassword')),
+            'password'
         );
+        await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
-        expect(dialog, findsOneWidget);
-
-        final Finder passField =
-        find.byKey(const Key('SwitchToGuardianPassword'));
-
-        expect(passField, findsOneWidget);
-
-        await tester.enterText(passField, 'password');
-
-        final Finder okBtn =
-        find.byKey(const Key('SwitchToGuardianSubmit'));
-
-        expect(okBtn, findsOneWidget);
-
-        await tester.tap(okBtn);
         await tester.pumpAndSettle();
 
         tapComplete.complete();
 
-        await done.future;
-      });
+        final VerificationResult verificationResult =
+        verify(observer.didPop(captureAny, captureAny));
 
+        expect(verificationResult.callCount, equals(1));
+
+        await done.future;
+      }
+  );
 }

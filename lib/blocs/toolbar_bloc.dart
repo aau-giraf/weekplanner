@@ -180,8 +180,9 @@ class ToolbarBloc extends BlocBase {
           {
             return GirafConfirmDialog(
               confirmButtonIcon: const ImageIcon(
-                  AssetImage('assets/icons/accept.png')),
-              confirmButtonText: 'Ok',
+                  AssetImage('assets/icons/changeToCitizen.png')),
+              confirmButtonText: 'Skift',
+              description: 'Vil du skifte til borger tilstand?',
               confirmOnPressed: () {
                 _authBloc.setMode(WeekplanMode.citizen);
                 Routes.pop(context);
