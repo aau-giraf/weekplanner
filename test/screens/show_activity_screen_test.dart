@@ -92,13 +92,12 @@ void main() {
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
-  testWidgets('Activity pictogram and timer card is rendered',
+  testWidgets('Activity pictogram is rendered',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
     await tester.pump(Duration.zero);
 
-    expect(find.text('Timer'), findsOneWidget);
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
   });
 

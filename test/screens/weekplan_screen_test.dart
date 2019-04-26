@@ -17,11 +17,14 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   WeekplanBloc bloc;
@@ -45,8 +48,7 @@ void main() {
       order: 1);
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(
-        day: Weekday.Monday, activities: <ActivityModel>[activity]),
+    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
@@ -166,5 +168,25 @@ void main() {
     bloc.setActivityPlaceholderVisible(false);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
+  });
+
+  testWidgets(
+      'Check if ShowActivityScreen is pushed when a pictogram is tapped',
+      (WidgetTester tester) async {
+    final MockNavigatorObserver mockObserver = MockNavigatorObserver();
+
+    await tester.pumpWidget(MaterialApp(
+      home: WeekplanScreen(weekModel, user),
+      navigatorObservers: <NavigatorObserver>[mockObserver],
+    ));
+    await tester.pump();
+
+    await tester.tap(find
+        .byKey(Key(Weekday.Tuesday.index.toString() + activity.id.toString())));
+    await tester.pumpAndSettle();
+
+    verify(mockObserver.didPush(any, any));
+
+    expect(find.byType(ShowActivityScreen), findsOneWidget);
   });
 }
