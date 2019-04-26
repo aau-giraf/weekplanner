@@ -91,13 +91,14 @@ void main() {
         order: null,
         state: null);
 
-    // Add the ActivityModel to the list of marked activities. 
-    weekplanBloc.addMarkedActivity(activityModel);
+    // Add the ActivityModel to the list of marked activities.
 
     weekplanBloc.markedActivities
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 1);
     });
+
+    weekplanBloc.addMarkedActivity(activityModel);
   });
 
   test('Removes an activity to a list of marked activities', () {
@@ -127,15 +128,15 @@ void main() {
         order: null,
         state: null);
 
-    weekplanBloc.addMarkedActivity(firstActivityModel);
-    weekplanBloc.addMarkedActivity(secondActivityModel);
-
-    weekplanBloc.removeMarkedActivity(firstActivityModel);
-
     weekplanBloc.markedActivities
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 1);
     });
+
+    weekplanBloc.addMarkedActivity(firstActivityModel);
+    weekplanBloc.addMarkedActivity(secondActivityModel);
+
+    weekplanBloc.removeMarkedActivity(firstActivityModel);
   });
 
   test('Clears list of marked activities', () {
@@ -152,12 +153,13 @@ void main() {
         order: null,
         state: null));
 
-    weekplanBloc.clearMarkedActivities();
-
     weekplanBloc.markedActivities
+        .skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 0);
     });
+
+    weekplanBloc.clearMarkedActivities();
   });
 
   test('Checks if the activity is in the list of marked activities', () {
@@ -174,21 +176,21 @@ void main() {
         order: null,
         state: null);
 
-    weekplanBloc.addMarkedActivity(activity);
-
     weekplanBloc.markedActivities
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(weekplanBloc.isActivityMarked(activity), true);
     });
+
+    weekplanBloc.addMarkedActivity(activity);
   });
 
   test('Checks if the edit mode toggles from false', () {
     /// Editmode stream initial value is false.
-    weekplanBloc.toggleEditMode();
-
-    weekplanBloc.editMode.listen((bool toggle) {
+    weekplanBloc.editMode.skip(1).listen((bool toggle) {
       expect(toggle, true);
     });
+
+    weekplanBloc.toggleEditMode();
   });
 
   test('Checks if marked activities is deleted from a users weekplan', () {
@@ -228,23 +230,24 @@ void main() {
 
     weekplanBloc.addMarkedActivity(activity);
 
-    weekplanBloc.deleteMarkedActivities();
-
     weekplanBloc.userWeek.listen((UserWeekModel userWeekModel) {
       verify(api.week.update(any, any, any, any));
       expect(userWeekModel.week.days[Weekday.Monday.index].activities,
           <ActivityModel>[]);
     });
+
+    weekplanBloc.deleteMarkedActivities();
   });
 
   test('Checks if the edit mode toggles from true', () {
-    /// Editmode stream initial value is false.
-    weekplanBloc.toggleEditMode();
+    /// Edit mode stream initial value is false.
     weekplanBloc.toggleEditMode();
 
-    weekplanBloc.editMode.listen((bool toggle) {
+    weekplanBloc.editMode.skip(1).listen((bool toggle) {
       expect(toggle, false);
     });
+
+    weekplanBloc.toggleEditMode();
   });
 
   test('Adds an activity to a given weekplan', async((DoneFn done) {

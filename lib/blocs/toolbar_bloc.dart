@@ -35,10 +35,8 @@ class ToolbarBloc extends BlocBase {
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
     }
-    
-    print(_visibleButtons.value.length);
+
     _visibleButtons.add(_iconsToAdd);
-    print(_visibleButtons.value.length);
   }
 
   /// Find the icon picture based on the input enum

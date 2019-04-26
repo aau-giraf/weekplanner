@@ -23,37 +23,37 @@ void main() {
 
   test('Should insert standard icons when none are defined',
       async((DoneFn done) {
+    bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
+      expect(response.length, 2);
+      done();
+    });
     bloc.updateIcons(null, null);
-    bloc.visibleButtons.listen((List<IconButton> response) {
-      expect(response.length, 2);
-    });
-    done();
   }));
 
-  test('Defined icon is added to stream', async((DoneFn done) async {
-    final Completer<bool> done = Completer<bool>();
-    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>
-    {AppBarIcon.undo : null};
-    
-    bloc.visibleButtons.listen((List<IconButton> response) {
+  test('Defined icon is added to stream', async((DoneFn done) {
+    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
+      AppBarIcon.undo: null
+    };
+
+    bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
       expect(response.length, 1);
-      done.complete();
-    });
-
-    bloc.updateIcons(icons, null);
-    await done.future;
-  }));
-
-  test('Defined icons are added to stream', async((DoneFn done) {
-    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>
-    {AppBarIcon.undo : null, AppBarIcon.search: null};
-
-    bloc.visibleButtons.listen((List<IconButton> response) {
-      expect(response.length, 2);
       done();
     });
 
     bloc.updateIcons(icons, null);
   }));
 
+  test('Defined icons are added to stream', async((DoneFn done) {
+    final Map<AppBarIcon, VoidCallback> icons = <AppBarIcon, VoidCallback>{
+      AppBarIcon.undo: null,
+      AppBarIcon.search: null
+    };
+
+    bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
+      expect(response.length, 2);
+      done();
+    });
+
+    bloc.updateIcons(icons, null);
+  }));
 }
