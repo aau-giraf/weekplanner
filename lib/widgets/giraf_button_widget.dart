@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// A button for the Giraf application.
-/// The design of the button follows the design guide on the Giraf wiki:
-/// https://aau-giraf.github.io/wiki/design_guide/buttons.html
 class GirafButton extends StatefulWidget {
   /// A button for the Giraf application.
   /// The button can contain some text and an icon both of which are optional.
@@ -88,6 +85,7 @@ class _GirafButtonState extends State<GirafButton> {
   bool _isPressed;
   bool _isEnabled;
   StreamSubscription<bool> _isEnabledSubscription;
+  Timer _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +125,7 @@ class _GirafButtonState extends State<GirafButton> {
       widget.onPressed();
       // On a quick tap the pressed state is not shown, because the state
       // changes too fast, hence we introduce a delay.
-      Timer(const Duration(milliseconds: 100),
+      _timer = Timer(const Duration(milliseconds: 100),
           () => setState(() => _isPressed = false));
     }
   }
@@ -185,6 +183,7 @@ class _GirafButtonState extends State<GirafButton> {
   @override
   void dispose() {
     _isEnabledSubscription?.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 }
