@@ -1,5 +1,4 @@
 import 'package:api_client/models/weekday_model.dart';
-import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
