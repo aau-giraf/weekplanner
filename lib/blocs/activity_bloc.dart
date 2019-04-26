@@ -60,7 +60,6 @@ class ActivityBloc extends BlocBase {
           // A better endpoint would be needed to add the result from the API.
       _activityModelStream.add(_activityModel);
       _weekModel = weekModel;
-      print(weekModel.days[0].activities[0].state);
     });
   }
 

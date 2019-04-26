@@ -131,9 +131,7 @@ void main() {
 
   testWidgets('pictograms are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-    await tester.pump();
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('PictogramImage')), findsNWidgets(7));
   });
