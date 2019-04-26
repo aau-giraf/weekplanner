@@ -91,6 +91,19 @@ class MockWeekPlanBloc extends Mock implements WeekplanBloc {
 
     _userWeek.add(UserWeekModel(week, user));
   }
+
+  final BehaviorSubject<bool> _activityPlaceholderVisible =
+      BehaviorSubject<bool>.seeded(false);
+
+  @override
+  Stream<bool> get activityPlaceholderVisible =>
+      _activityPlaceholderVisible.stream;
+
+  /// Used to change the visibility of the activityPlaceholder container.
+  @override
+  void setActivityPlaceholderVisible(bool visibility) {
+    _activityPlaceholderVisible.add(visibility);
+  }
 }
 
 void main() {
@@ -133,7 +146,7 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     api.week = weekApi;
-    bloc = WeekplanBloc(api);
+    bloc = MockWeekPlanBloc();
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
