@@ -9,6 +9,7 @@ jobs:
     steps:
       - task: FlutterInstall@0
       - task: Bash@3
+        displayName: 'Linter'
         inputs:
           targetType: inline
           script: $(FlutterToolPath)/flutter analyze
@@ -24,3 +25,37 @@ jobs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          artifactName: Android
+  # This is for compiling to iOS, it is done, but there is no valid developer license, so it is commented out
+  #- job: iOS
+  #  pool:
+  #    vmImage: 'macOS-10.13'
+  #  steps:
+  #    - task: InstallAppleCertificate@2
+  #      inputs:
+  #        certSecureFile: 'cert.p12'
+  #    - task: InstallAppleProvisioningProfile@1
+  #      inputs:
+  #        provProfileSecureFile: '82a27128-6283-49f0-90a3-2440591810d1.mobileprovision'
+  #    - task: FlutterInstall@0
+  #    - task: Bash@3
+  #      displayName: 'Linter'
+  #      inputs:
+  #        targetType: inline
+  #        script: $(FlutterToolPath)/flutter analyze
+  #    - task: FlutterBuild@0
+  #      inputs:
+  #        target: ios
+  #        projectDirectory: $(projectDirectory)
+  #    - task: ArchiveFiles@2
+  #      inputs:
+  #        rootFolderOrFile: '$(projectDirectory)/build/ios/iphoneos/Runner.app'
+  #        includeRootFolder: true
+  #        rchiveType: 'zip'
+  #        archiveFile: '$(Build.ArtifactStagingDirectory)/ios_app.zip'
+  #    - task: PublishBuildArtifacts@1
+  #      inputs:
+  #        pathtoPublish: $(build.artifactStagingDirectory)
+  #        artifactName: iOS (iPhone, iPad)
