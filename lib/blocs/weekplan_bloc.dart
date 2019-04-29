@@ -53,7 +53,6 @@ class WeekplanBloc extends BlocBase {
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
-    _userWeek.add(UserWeekModel(week, user));
   }
 
   /// Reorders activities between same or different days.
