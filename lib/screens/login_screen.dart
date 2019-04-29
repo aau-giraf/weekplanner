@@ -39,9 +39,8 @@ class LoginScreenState extends State<LoginScreen> {
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
-      if (snapshot) {
-        // This is used instead of pop, because it fixes a login bug
-        Routes.goHome(currentContext);
+      if(snapshot){
+        Routes.pop(context);
       }
     });
   }
