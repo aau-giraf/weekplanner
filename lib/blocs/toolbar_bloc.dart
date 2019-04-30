@@ -236,8 +236,7 @@ class ToolbarBloc extends BlocBase {
               DialogButton(
                 key: const Key('SwitchToGuardianSubmit'),
                 onPressed: () {
-                  login(context, _authBloc.loggedInUsername,
-                      passwordCtrl.value.text);
+                  login(_authBloc.loggedInUsername, passwordCtrl.value.text);
                   Routes.pop(context);
                 },
                 child: const Text(
@@ -306,7 +305,7 @@ class ToolbarBloc extends BlocBase {
                 confirmButtonText: 'Log ud',
                 confirmButtonIcon:
                     const ImageIcon(AssetImage('assets/icons/logout.png')),
-                confirmOnPressed: () => _authBloc.logout(context),
+                confirmOnPressed: () => _authBloc.logout(),
               );
             });
       },
@@ -385,7 +384,7 @@ class ToolbarBloc extends BlocBase {
   );
 
   /// Used to authenticate a user.
-  void login(BuildContext context, String username, String password) {
+  void login(String username, String password) {
     _authBloc.authenticate(username, password);
   }
 
