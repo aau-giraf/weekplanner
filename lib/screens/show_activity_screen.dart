@@ -7,17 +7,19 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(WeekModel weekModel, this._activity, UsernameModel
-  girafUser,
+  ShowActivityScreen(
+      WeekModel weekModel, this._activity, UsernameModel girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(weekModel, _activity, girafUser);
   }
+
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
@@ -40,9 +42,7 @@ class ShowActivityScreen extends StatelessWidget {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
-      childContainer = Column(
-        children: buildScreen(),
-      );
+      childContainer = Column(children: buildScreen());
     } else if (orientation == Orientation.landscape) {
       childContainer = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,6 +76,22 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       ),
+      Expanded(
+        flex: 4,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Card(
+                child: Column(
+                  children: buildTimer(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      )
     ];
   }
 
@@ -117,6 +133,61 @@ class ShowActivityScreen extends StatelessWidget {
                     }))),
       ),
       buildButtonBar()
+    ];
+  }
+
+  /// Builds the timer widget.
+  List<Widget> buildTimer() {
+    return <Widget>[
+      Center(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+            Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
+      )),
+      Expanded(
+        child: FittedBox(
+          child: const CircularProgressIndicator(
+            strokeWidth: 5,
+            backgroundColor: Colors.red,
+            value: 0.3,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                child: GirafButton(
+                  onPressed: () {
+                    return null;
+                  },
+                  icon: const ImageIcon(AssetImage('assets/icons/play.png')),
+                ),
+              ),
+              Flexible(
+                child: GirafButton(
+                  onPressed: () {
+                    return null;
+                  },
+                  icon: const ImageIcon(AssetImage('assets/icons/pause.png')),
+                ),
+              ),
+              Flexible(
+                child: GirafButton(
+                  onPressed: () {
+                    return null;
+                  },
+                  icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
     ];
   }
 

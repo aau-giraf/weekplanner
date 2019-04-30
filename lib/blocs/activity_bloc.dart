@@ -63,6 +63,18 @@ class ActivityBloc extends BlocBase {
     });
   }
 
+  void playTimer(){
+
+  }
+
+  void pauseTimer(){
+
+  }
+
+  void stopTimer(){
+    
+  }
+
   @override
   void dispose() {
     _activityModelStream.close();
