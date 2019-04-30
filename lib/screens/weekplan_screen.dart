@@ -82,12 +82,25 @@ class WeekplanScreen extends StatelessWidget {
   /// Builds the BottomAppBar when in edit mode
   BottomAppBar buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
-        color: const Color(0xAAFF6600),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            IconButton(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: <double>[
+                  0.33,
+                  0.66
+                ],
+                    colors: <Color>[
+                  Color.fromRGBO(254, 215, 108, 1),
+                  Color.fromRGBO(253, 187, 85, 1),
+                ])),
+            child: IconButton(
               key: const Key('DeleteActivtiesButton'),
               iconSize: 50,
               icon: const Icon(Icons.delete_forever),
@@ -96,8 +109,10 @@ class WeekplanScreen extends StatelessWidget {
                 buildShowDialog(context);
               },
             ),
-          ],
-        ));
+          ),
+        ),
+      ],
+    ));
   }
 
   /// Builds dialog box to confirm/cancel deletion
@@ -238,8 +253,7 @@ class WeekplanScreen extends StatelessWidget {
           key: const Key('isSelectedKey'),
           margin: const EdgeInsets.all(20),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width:
-              50)),
+              BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
           child: _buildActivityCard(
             context,
             activities,
