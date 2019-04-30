@@ -1,3 +1,4 @@
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -11,13 +12,16 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(WeekModel weekModel, this._activity, UsernameModel
+  ShowActivityScreen(WeekModel weekModel, this._activity, this._weekday, UsernameModel
   girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(weekModel, _activity, girafUser);
   }
+
+  final WeekdayModel _weekday;
+
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
@@ -188,7 +192,7 @@ class ShowActivityScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                   onPressed: () {
-                    _activityBloc.completeActivity();
+                    _activityBloc.completeActivity(_weekday);
                   },
                   child: snapshot.data.state != ActivityState.Completed
                       ? const Icon(Icons.check, color: Colors.green)

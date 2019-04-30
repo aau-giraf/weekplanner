@@ -218,7 +218,7 @@ class WeekplanScreen extends StatelessWidget {
                     onTap: () => Routes.push(
                         context,
                         ShowActivityScreen(
-                            _week, weekday.activities[index], _user)),
+                            _week, weekday.activities[index], weekday, _user)),
                     child: Container(
                         child: Padding(
                       padding: const EdgeInsets.all(4.0),

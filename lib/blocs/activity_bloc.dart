@@ -1,3 +1,4 @@
+import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -35,10 +36,16 @@ class ActivityBloc extends BlocBase {
 
   /// Mark the selected activity as complete. Toggle function, if activity is
   /// Completed, it will become Normal
-  void completeActivity() {
-    _activityModel.state = _activityModel.state == ActivityState.Completed
-        ? ActivityState.Normal
-        : ActivityState.Completed;
+  void completeActivity(WeekdayModel weekday) {
+    if (_activityModel.state != ActivityState.Completed) {
+      _activityModel.state = ActivityState.Completed;
+    } else {
+      _activityModel.state = ActivityState.Active;
+    }
+
+    _weekModel.days[weekday.day.index].activities[_activityModel.order] =
+        _activityModel;
+
     update();
   }
 
