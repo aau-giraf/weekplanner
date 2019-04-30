@@ -28,6 +28,7 @@ class WeekplanBloc extends BlocBase {
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
     });
+    _userWeek.add(UserWeekModel(week, user));
   }
 
   final BehaviorSubject<bool> _activityPlaceholderVisible =
