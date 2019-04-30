@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -425,6 +427,36 @@ void main() {
         expect(verificationResult.callCount, equals(1));
 
         await done.future;
+      }
+  );
+
+  testWidgets('As a gaurdian I should be able to drag-n-drop activities',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(
+            MaterialApp(
+                home: WeekplanScreen(weekModel, user)
+            )
+        );
+        await tester.pumpAndSettle();
+        authBloc.setMode(WeekplanMode.guardian);
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
+      }
+  );
+
+  testWidgets('As a citizen I should not be able to drag-n-drop activities',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user)
+            )
+        );
+        await tester.pumpAndSettle();
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('DragTarget')), findsNothing);
       }
   );
 }

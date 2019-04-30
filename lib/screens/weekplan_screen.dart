@@ -117,7 +117,17 @@ class WeekplanScreen extends StatelessWidget {
                         );
                       });
                 }
-                return _dragTargetPictogram(index, weekday);
+                return StreamBuilder<WeekplanMode>(
+                  stream: authBloc.mode,
+                  initialData: WeekplanMode.guardian,
+                  builder:
+                      (BuildContext context,
+                      AsyncSnapshot<WeekplanMode> snapshot) {
+                      if(snapshot.data == WeekplanMode.guardian){
+                        return _dragTargetPictogram(index, weekday);
+                      }
+                       return _pictogramIconStack(context, index, weekday);
+                    });
               },
               itemCount:
                   weekday.activities.length + 1 //+1 for gray box (DragTarget),
