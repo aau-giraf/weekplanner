@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -215,7 +217,9 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 key: const Key('ConfirmButton'),
-                onPressed: () {
+                onPressed: _loggingIn
+                  ? null
+                  : () {
                   loginFromPopUp(context, authBloc.loggedInUsername,
                       passwordCtrl.value.text);
                 },
@@ -230,7 +234,7 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-
+  bool _loggingIn = false;
 
   IconButton _createIconCopy() {
     return IconButton(
@@ -385,7 +389,12 @@ class ToolbarBloc extends BlocBase {
 
   /// Used to authenticate a user.
   void loginFromPopUp(BuildContext context, String username, String password) {
+    _loggingIn = true;
 
+    //Ensures that the login button cannot be spammed more than once every 5 sec
+    Timer(Duration(seconds: 5),(){
+      _loggingIn = false;
+    });
     authBloc.authenticateFromPopUp(username, password, context);
   }
 
