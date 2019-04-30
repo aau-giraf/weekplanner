@@ -252,12 +252,11 @@ class WeekplanScreen extends StatelessWidget {
               )),
           weekday.activities[index].state == ActivityState.Completed
               ? IgnorePointer(
-                  child: Image(
-                  image: const AssetImage('assets/icons/accept.png'),
+                  child: Icon(
+                  Icons.check,
                   key: const Key('IconComplete'),
                   color: Colors.green,
-                  fit: BoxFit.fitWidth,
-                  width: MediaQuery.of(context).size.width,
+                  size: MediaQuery.of(context).size.width,
                 ))
               : Container(),
         ],

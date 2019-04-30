@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -21,6 +19,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -64,8 +63,7 @@ void main() {
       order: 1);
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(
-        day: Weekday.Monday, activities: <ActivityModel>[activity]),
+    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
     WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
@@ -273,6 +271,26 @@ void main() {
     bloc.setActivityPlaceholderVisible(false);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
+  });
+
+  testWidgets(
+      'Check if ShowActivityScreen is pushed when a pictogram is tapped',
+      (WidgetTester tester) async {
+    final MockNavigatorObserver mockObserver = MockNavigatorObserver();
+
+    await tester.pumpWidget(MaterialApp(
+      home: WeekplanScreen(weekModel, user),
+      navigatorObservers: <NavigatorObserver>[mockObserver],
+    ));
+    await tester.pump();
+
+    await tester.tap(find
+        .byKey(Key(Weekday.Tuesday.index.toString() + activity.id.toString())));
+    await tester.pumpAndSettle();
+
+    verify(mockObserver.didPush(any, any));
+
+    expect(find.byType(ShowActivityScreen), findsOneWidget);
   });
 
   testWidgets(

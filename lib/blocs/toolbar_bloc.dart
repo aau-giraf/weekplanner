@@ -306,7 +306,7 @@ class ToolbarBloc extends BlocBase {
                 confirmButtonText: 'Log ud',
                 confirmButtonIcon:
                     const ImageIcon(AssetImage('assets/icons/logout.png')),
-                confirmOnPressed: () => _authBloc.logout(),
+                confirmOnPressed: () => _authBloc.logout(context),
               );
             });
       },
