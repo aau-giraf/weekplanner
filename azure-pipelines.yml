@@ -7,13 +7,12 @@ jobs:
     pool:
       vmImage: 'ubuntu-16.04'
     steps:
-
       #- task: FlutterInstall@0
       - task: Bash@3
-          displayName: 'FlutterInstall'
-          inputs:
-            targetType: inline
-            script: '/bin/wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.2.1-stable.tar.xz .; /bin/tar xf ./flutter_linux_v1.2.1-stable.tar.xz'# Write your commands here# Use the environment variables input below to pass secret variables to this script' # Required when targetType == Inline
+        displayName: 'FlutterInstall'
+        inputs:
+          targetType: inline
+          script: '/bin/wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.2.1-stable.tar.xz .; /bin/tar xf ./flutter_linux_v1.2.1-stable.tar.xz'# Write your commands here# Use the environment variables input below to pass secret variables to this script' # Required when targetType == Inline
       - task: Bash@3
         displayName: 'Linter'
         inputs:
