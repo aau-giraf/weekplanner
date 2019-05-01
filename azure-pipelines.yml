@@ -11,7 +11,7 @@ jobs:
       - task: Bash@3
         displayName: 'FlutterInstall'
         inputs:
-          script: '/bin/wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.2.1-stable.tar.xz $(FlutterToolPath); /bin/tar xf $(FlutterToolPath)/flutter_linux_v1.2.1-stable.tar.xz'# Write your commands here# Use the environment variables input below to pass secret variables to this script' # Required when targetType == Inline
+          scriptPath: $(projectDirectory)/flutterinstall.sh
       - task: Bash@3
         displayName: 'Linter'
         inputs:
