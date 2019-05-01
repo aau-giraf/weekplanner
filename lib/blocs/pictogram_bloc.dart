@@ -48,7 +48,7 @@ class PictogramBloc extends BlocBase {
 
     _pictograms.add(null);
 
-    _timer = Timer(const Duration(milliseconds: _milliseconds), () {
+    _timer = Timer(Duration(milliseconds: _milliseconds), () {
       _api.pictogram
           .getAll(page: 1, pageSize: 10, query: query)
           .listen((List<PictogramModel> results) {
