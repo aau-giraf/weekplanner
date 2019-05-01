@@ -22,6 +22,7 @@ class PictogramBloc extends BlocBase {
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
+
   final BehaviorSubject<List<PictogramModel>> _pictograms =
   BehaviorSubject<List<PictogramModel>>();
 
@@ -45,6 +46,7 @@ class PictogramBloc extends BlocBase {
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
     }
+
     _pictograms.add(null);
     List<PictogramModel> _resultPlaceholder;
 

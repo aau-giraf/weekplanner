@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -17,18 +19,33 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../blocs/pictogram_bloc_test.dart';
 import '../blocs/weekplan_bloc_test.dart';
 import '../test_image.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+class MockAuthBlock extends AuthBloc{
+  MockAuthBlock(Api api) : super(api);
+
+  @override
+  void authenticate(String username, String password) {
+    if(password == 'password'){
+      setMode(WeekplanMode.guardian);
+    }
+  }
+
+}
 
 void main() {
   WeekplanBloc bloc;
   Api api;
+  AuthBloc authBloc;
   MockWeekApi weekApi;
   MockPictogramApi pictogramApi;
 
@@ -67,13 +84,14 @@ void main() {
     api.pictogram = pictogramApi;
     api.week = weekApi;
     bloc = WeekplanBloc(api);
+    authBloc = MockAuthBlock(api);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>((_) => authBloc);
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
@@ -137,9 +155,96 @@ void main() {
 
   testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
+
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
+  });
+
+  testWidgets('When in guardian mode I should see more than just switch mode',
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    authBloc.mode.skip(1).listen((_) async {
+      await tester.pump();
+
+      final GirafAppBar widget = find
+          .byType(GirafAppBar)
+          .evaluate()
+          .first
+          .widget;
+
+      if (widget != null) {
+        expect(widget.appBarIcons.length, greaterThan(1));
+        expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen), isTrue);
+      } else {
+        fail('Could not find GirafAppBar');
+      }
+
+      done.complete();
+    });
+
+    authBloc.setMode(WeekplanMode.guardian);
+    await done.future;
+  });
+
+  testWidgets('When in citizens mode I should only see switch mode icon',
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    authBloc.mode.skip(1).listen((_) async {
+      await tester.pump();
+
+      final GirafAppBar widget = find
+          .byType(GirafAppBar)
+          .evaluate()
+          .first
+          .widget;
+
+      if (widget != null) {
+        expect(widget.appBarIcons.length, equals(1));
+        expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian),
+            isTrue
+        );
+      } else {
+        fail('Could not find GirafAppBar');
+      }
+
+      done.complete();
+    });
+
+    authBloc.setMode(WeekplanMode.citizen);
+    await done.future;
+  });
+
+  testWidgets(
+      'When switching to citizens mode the add activityButton should disappear'
+      ,
+          (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+
+    await tester.pumpAndSettle();
+
+    // Ensure the buttons are present before the switch
+    expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
+
+    authBloc.mode.skip(1).listen((_) async {
+      await tester.pump();
+      // Ensure the buttons are not present after the switch
+      expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(0));
+      done.complete();
+    });
+
+    authBloc.setMode(WeekplanMode.citizen);
+    await done.future;
   });
 
   testWidgets('Every drag target is build', (WidgetTester tester) async {
@@ -189,4 +294,169 @@ void main() {
 
     expect(find.byType(ShowActivityScreen), findsOneWidget);
   });
+
+  testWidgets(
+      'As a guardian tapping the switch to citizen a dialog should appear',
+          (WidgetTester tester) async {
+            await tester.pumpWidget(
+                MaterialApp(
+                    home: WeekplanScreen(weekModel, user),
+                )
+            );
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const Key('IconChangeToCitizen')));
+            await tester.pumpAndSettle();
+            final Finder dialog = find.byType(GirafConfirmDialog);
+            final GirafConfirmDialog dialogWidget = dialog
+                .evaluate().first.widget;
+
+            expect(dialog, findsOneWidget);
+            expect(dialogWidget.title, equals('Skift til borger'));
+            expect(
+                dialogWidget.description,
+                equals('Vil du skifte til borger tilstand?')
+            );
+            expect(dialogWidget.confirmButtonText, equals('Skift'));
+            expect(
+                dialogWidget.confirmButtonIcon,
+                equals(const ImageIcon(
+                    AssetImage('assets/icons/changeToCitizen.png')
+                  )
+                )
+            );
+          });
+
+  testWidgets(
+    'In the switch to citizen dialog, confirming should switch mode and pop',
+      (WidgetTester tester) async {
+        final Completer<bool> done = Completer<bool>();
+        final Completer<bool> tapComplete = Completer<bool>();
+        final MockNavigatorObserver observer = MockNavigatorObserver();
+        await tester.pumpWidget(
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user),
+              navigatorObservers: <NavigatorObserver>[observer],
+            )
+        );
+        await tester.pumpAndSettle();
+        authBloc.mode.skip(1).listen((WeekplanMode mode) async {
+          await tapComplete.future;
+          expect(WeekplanMode.citizen, equals(mode));
+          done.complete();
+        });
+        await tester.tap(find.byKey(const Key('IconChangeToCitizen')));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+        await tester.pumpAndSettle();
+
+        tapComplete.complete();
+
+        final VerificationResult verificationResult =
+          verify(observer.didPop(any, any));
+
+        expect(verificationResult.callCount, equals(1));
+
+        await done.future;
+      }
+  );
+
+  testWidgets(
+    'As a citizen tapping the switch to gaurdian a dialog should appear',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user),
+            )
+        );
+        await tester.pumpAndSettle();
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+        await tester.pumpAndSettle();
+        final Finder dialog = find.byType(AlertDialog);
+        final Finder passField =
+          find.byKey(const Key('SwitchToGuardianPassword'));
+
+        expect(dialog, findsOneWidget);
+        expect(passField, findsOneWidget);
+      }
+  );
+
+  testWidgets(
+      'In the switch to guardian dialog, confirming should switch mode and pop',
+      (WidgetTester tester) async {
+        final Completer<bool> done = Completer<bool>();
+        final Completer<bool> tapComplete = Completer<bool>();
+        final MockNavigatorObserver observer = MockNavigatorObserver();
+        await tester.pumpWidget(
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user),
+              navigatorObservers: <NavigatorObserver>[observer],
+            )
+        );
+        await tester.pumpAndSettle();
+
+        // We need to skip 2 this time, first skip the seeded value
+        // second skip the switch to citizen mode (which is part of the arrange
+        // step for this test)
+        authBloc.mode.skip(2).listen((WeekplanMode mode) async {
+          await tapComplete.future;
+          expect(WeekplanMode.guardian, equals(mode));
+          done.complete();
+        });
+
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('SwitchToGuardianPassword')),
+            'password'
+        );
+        await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+        await tester.pumpAndSettle();
+
+        tapComplete.complete();
+
+        final VerificationResult verificationResult =
+        verify(observer.didPop(captureAny, captureAny));
+
+        expect(verificationResult.callCount, equals(1));
+
+        await done.future;
+      }
+  );
+
+  testWidgets('As a gaurdian I should be able to drag-n-drop activities',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(
+            MaterialApp(
+                home: WeekplanScreen(weekModel, user)
+            )
+        );
+        await tester.pumpAndSettle();
+        authBloc.setMode(WeekplanMode.guardian);
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
+      }
+  );
+
+  testWidgets('As a citizen I should not be able to drag-n-drop activities',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+            MaterialApp(
+              home: WeekplanScreen(weekModel, user)
+            )
+        );
+        await tester.pumpAndSettle();
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('DragTarget')), findsNothing);
+      }
+  );
 }
