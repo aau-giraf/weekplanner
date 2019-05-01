@@ -6,8 +6,11 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -36,27 +39,42 @@ class WeekplanScreen extends StatelessWidget {
 
   /// The WeekplanBloc that contains the currently chosen week
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
+  final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: GirafAppBar(title: 'Ugeplan'),
-      body: StreamBuilder<UserWeekModel>(
-        stream: weekplanBloc.userWeek,
-        initialData: null,
-        builder: (BuildContext context, AsyncSnapshot<UserWeekModel> snapshot) {
-          if (snapshot.hasData) {
-            return _buildWeeks(snapshot.data.week, context);
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
+    return StreamBuilder<WeekplanMode>(
+        stream: authBloc.mode,
+        builder: (BuildContext context,
+            AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+          return Scaffold(
+            appBar: GirafAppBar(
+                title: 'Ugeplan',
+                appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
+                    ? <AppBarIcon>[
+                        AppBarIcon.changeToCitizen,
+                        AppBarIcon.settings,
+                        AppBarIcon.logout,
+                      ]
+                    : <AppBarIcon>[AppBarIcon.changeToGuardian]),
+            body: StreamBuilder<UserWeekModel>(
+              stream: weekplanBloc.userWeek,
+              initialData: null,
+              builder: (BuildContext context,
+                  AsyncSnapshot<UserWeekModel> snapshot) {
+                if (snapshot.hasData) {
+                  return _buildWeeks(snapshot.data.week, context);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          );
+        });
   }
 
   Row _buildWeeks(WeekModel weekModel, BuildContext context) {
@@ -99,7 +117,17 @@ class WeekplanScreen extends StatelessWidget {
                         );
                       });
                 }
-                return _dragTargetPictogram(index, weekday);
+                return StreamBuilder<WeekplanMode>(
+                  stream: authBloc.mode,
+                  initialData: WeekplanMode.guardian,
+                  builder:
+                      (BuildContext context,
+                      AsyncSnapshot<WeekplanMode> snapshot) {
+                      if(snapshot.data == WeekplanMode.guardian){
+                        return _dragTargetPictogram(index, weekday);
+                      }
+                       return _pictogramIconStack(context, index, weekday);
+                    });
               },
               itemCount:
                   weekday.activities.length + 1 //+1 for gray box (DragTarget),
@@ -110,23 +138,31 @@ class WeekplanScreen extends StatelessWidget {
           child: ButtonTheme(
             child: SizedBox(
               width: double.infinity,
-              child: RaisedButton(
-                  key: const Key('AddActivityButton'),
-                  child: Image.asset('assets/icons/add.png'),
-                  color: buttonColor,
-                  onPressed: () async {
-                    final PictogramModel newActivity =
-                        await Routes.push(context, PictogramSearch());
-                    if (newActivity != null) {
-                      weekplanBloc.addActivity(
-                          ActivityModel(
-                              id: newActivity.id,
-                              pictogram: newActivity,
-                              order: weekday.activities.length,
-                              state: ActivityState.Active,
-                              isChoiceBoard: false),
-                          weekday.day.index);
-                    }
+              child: StreamBuilder<WeekplanMode>(
+                  stream: authBloc.mode,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<WeekplanMode> snapshot) {
+                    return Visibility(
+                      visible: snapshot.data == WeekplanMode.guardian,
+                      child: RaisedButton(
+                          key: const Key('AddActivityButton'),
+                          child: Image.asset('assets/icons/add.png'),
+                          color: buttonColor,
+                          onPressed: () async {
+                            final PictogramModel newActivity =
+                                await Routes.push(context, PictogramSearch());
+                            if (newActivity != null) {
+                              weekplanBloc.addActivity(
+                                  ActivityModel(
+                                      id: newActivity.id,
+                                      pictogram: newActivity,
+                                      order: weekday.activities.length,
+                                      state: ActivityState.Active,
+                                      isChoiceBoard: false),
+                                  weekday.day.index);
+                            }
+                          }),
+                    );
                   }),
             ),
           ),
