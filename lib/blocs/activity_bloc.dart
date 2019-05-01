@@ -43,8 +43,7 @@ class ActivityBloc extends BlocBase {
       _activityModel.state = ActivityState.Active;
     }
 
-    _weekModel.days[weekday.day.index].activities[_activityModel.order] =
-        _activityModel;
+    _weekModel.days[weekday.day.index] = weekday;
 
     update();
   }
@@ -64,7 +63,7 @@ class ActivityBloc extends BlocBase {
         .update(
             _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
         .listen((WeekModel weekModel) {
-          // A better endpoint would be needed to add the result from the API.
+      // A better endpoint would be needed to add the result from the API.
       _activityModelStream.add(_activityModel);
       _weekModel = weekModel;
     });
