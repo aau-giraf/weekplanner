@@ -13,6 +13,7 @@ import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -96,6 +97,11 @@ class WeekplanScreen extends StatelessWidget {
                 buildShowDialog(context);
               },
             ),
+            GirafButton(
+              text: 'Kopier',
+              icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+              onPressed: () {},
+            )
           ],
         ));
   }
