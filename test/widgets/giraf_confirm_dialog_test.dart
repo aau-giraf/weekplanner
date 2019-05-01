@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 class MockScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class MockScreen extends StatelessWidget {
       body: Container(
           child: Column(
         children: <Widget>[
-          RaisedButton(
+          GirafButton(
               key: const Key('FirstButton'),
               onPressed: () {
                 confirmDialog(context);

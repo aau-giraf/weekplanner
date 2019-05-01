@@ -6,6 +6,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
@@ -55,6 +56,7 @@ class ShowActivityScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Aktivitet',
+          appBarIcons: const <AppBarIcon>[],
         ),
         body: childContainer);
   }
