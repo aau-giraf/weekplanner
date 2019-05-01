@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
 ///A dialog widget presented to the user to confirm an action, such as
@@ -73,63 +74,31 @@ class GirafConfirmDialog extends StatelessWidget {
                   fit: FlexFit.loose,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 5),
-                    child: RaisedButton(
+                    child: GirafButton(
                         key: const Key('ConfirmDialogCancelButton'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: const BorderSide(
-                                color: Color.fromRGBO(0, 0, 0, 0.3))),
-                        color: const Color.fromRGBO(255, 157, 0, 1),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const <Widget>[
-                            ImageIcon(
-                              AssetImage('assets/icons/cancel.png'),
-                              color: Color.fromRGBO(0, 0, 0, 1),
-                            ),
-                            Text(
-                              'Fortryd',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
+                        text: 'Fortryd',
+                        icon: const ImageIcon(
+                            AssetImage('assets/icons/cancel.png'),
+                            color: Colors.black),
                         onPressed: () {
                           Routes.pop(context);
                         }),
                   ),
                 ),
                 Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: RaisedButton(
-                        key: const Key('ConfirmDialogConfirmButton'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: const BorderSide(
-                                color: Color.fromRGBO(0, 0, 0, 0.3))),
-                        color: const Color.fromRGBO(255, 157, 0, 1),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            confirmButtonIcon,
-                            Flexible(
-                              fit: FlexFit.tight,
-                              child: Text(
-                                confirmButtonText,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () {
-                          confirmOnPressed();
-                        }),
-                  ),
-                ),
+                    fit: FlexFit.loose,
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: GirafButton(
+                            key: const Key('ConfirmDialogConfirmButton'),
+                            text: confirmButtonText,
+                            icon: confirmButtonIcon,
+                            onPressed: () {
+                              confirmOnPressed();
+                            })))
               ],
             ),
-          )
+          ),
         ],
       ),
     );
