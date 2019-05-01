@@ -238,7 +238,7 @@ class ToolbarBloc extends BlocBase {
                 onPressed: () {
                   login(_authBloc.loggedInUsername, passwordCtrl.value.text);
                   Routes.pop(context);
-				  passwordCtrl.clear();
+		  passwordCtrl.clear();
                 },
                 child: const Text(
                   'Bekræft',
