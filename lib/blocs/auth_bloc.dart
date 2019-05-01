@@ -36,7 +36,7 @@ class AuthBloc extends BlocBase {
 
   /// Logs the currently logged in user out
   void logout() {
-    _api.account.logout().take(1).listen((_) {
+    _api.account.logout().listen((_) {
       _loggedIn.add(false);
     });
   }

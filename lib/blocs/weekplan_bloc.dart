@@ -90,5 +90,6 @@ class WeekplanBloc extends BlocBase {
   @override
   void dispose() {
     _userWeek.close();
+    _activityPlaceholderVisible.close();
   }
 }

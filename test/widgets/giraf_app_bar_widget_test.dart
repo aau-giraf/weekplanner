@@ -307,34 +307,32 @@ void main() {
   });
 
   testWidgets('GirafConfirmDialog is shown on logout icon press',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: MockScreen()));
-        await tester.pump();
-        expect(find.byTooltip('Log ud'), findsOneWidget);
-        await tester.tap(find.byTooltip('Log ud'));
-        await tester.pump();
-        expect(find.byType(GirafConfirmDialog), findsOneWidget);
-      });
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.pump();
+    expect(find.byTooltip('Log ud'), findsOneWidget);
+    await tester.tap(find.byTooltip('Log ud'));
+    await tester.pump();
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+  });
 
   testWidgets('User is logged out on confirmation in GirafConfirmDialog',
-          (WidgetTester tester) async {
-        final Completer<bool> done = Completer<bool>();
-        await tester.pumpWidget(MaterialApp(home: MockScreen()));
-        await tester.pump();
-        expect(find.byTooltip('Log ud'), findsOneWidget);
-        await tester.tap(find.byTooltip('Log ud'));
-        await tester.pump();
-        expect(find.byType(GirafConfirmDialog), findsOneWidget);
-        expect(find.byKey(const Key('ConfirmDialogConfirmButton')),
-            findsOneWidget);
-        await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
-        await tester.pump();
-        authBloc.loggedIn.listen((bool statusLogout) async {
-          if (statusLogout == false) {
-            expect(statusLogout, isFalse);
-            done.complete();
-          }
-        });
-        await done.future;
-      });
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.pump();
+    expect(find.byTooltip('Log ud'), findsOneWidget);
+    await tester.tap(find.byTooltip('Log ud'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    expect(find.byKey(const Key('ConfirmDialogConfirmButton')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    authBloc.loggedIn.listen((bool statusLogout) async {
+      if (statusLogout == false) {
+        expect(statusLogout, isFalse);
+        done.complete();
+      }
+    });
+    await done.future;
+  });
 }

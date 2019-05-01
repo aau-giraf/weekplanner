@@ -6,7 +6,8 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
 
 /// For how long the debouncer should wait
-const int _milliseconds = 250;
+const int _debounceTime = 250;
+const int _timeoutTime = 10000;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
@@ -21,12 +22,11 @@ class PictogramBloc extends BlocBase {
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
-
   final BehaviorSubject<List<PictogramModel>> _pictograms =
-      BehaviorSubject<List<PictogramModel>>();
+  BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
-  Timer _timer;
+  Timer _debounceTimer;
 
   /// Initializes a search for [query].
   ///
@@ -42,20 +42,29 @@ class PictogramBloc extends BlocBase {
       return;
     }
 
-    if (_timer != null) {
-      _timer.cancel();
+    if (_debounceTimer != null) {
+      _debounceTimer.cancel();
     }
-
     _pictograms.add(null);
+    List<PictogramModel> _resultPlaceholder;
 
-    _timer = Timer(Duration(milliseconds: _milliseconds), () {
+    _debounceTimer = Timer(Duration(milliseconds: _debounceTime), () {
+      //Timer for sending an error if getting pictogram results takes too long
+      Timer(Duration(milliseconds: _timeoutTime), () {
+        if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
+          _pictograms.addError('Søgningen gav ingen resultater. '
+              'Tjek internetforbindelsen.');
+        }
+      });
       _api.pictogram
           .getAll(page: 1, pageSize: 10, query: query)
           .listen((List<PictogramModel> results) {
-        _pictograms.add(results);
+        _resultPlaceholder = results;
+        _pictograms.add(_resultPlaceholder);
       });
     });
   }
+
 
   @override
   void dispose() {

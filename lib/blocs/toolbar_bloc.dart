@@ -211,8 +211,7 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 onPressed: () {
-                  login(context, _authBloc.loggedInUsername,
-                      passwordCtrl.value.text);
+                  login(_authBloc.loggedInUsername, passwordCtrl.value.text);
                   Routes.pop(context);
                 },
                 child: const Text(
@@ -360,7 +359,7 @@ class ToolbarBloc extends BlocBase {
   );
 
   /// Used to authenticate a user.
-  void login(BuildContext context, String username, String password) {
+  void login(String username, String password) {
     _authBloc.authenticate(username, password);
   }
 
