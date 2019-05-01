@@ -11,7 +11,7 @@ jobs:
       - task: ShellScript@2
         displayName: 'FlutterInstall'
         inputs:
-          scriptPath: '**/*.sh'
+          scriptPath: '$(projectDirectory)/flutterinstall.sh'
       - task: Bash@3
         displayName: 'Linter'
         inputs:
