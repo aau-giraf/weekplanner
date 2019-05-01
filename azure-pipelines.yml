@@ -16,14 +16,19 @@ jobs:
         displayName: 'Linter'
         inputs:
           targetType: inline
-          script: $(FlutterToolPath)/flutter analyze
-      - task: FlutterBuild@0
+          script: '$(projectDirectory)/flutter/bin/flutter analyze'
+      - task: Bash@3
+          displayName: 'Linter'
+          inputs:
+            targetType: inline
+            script: '$(projectDirectory)/flutter/bin/flutter build apk'
+      - task: Bash@3
+          displayName: 'Linter'
+          inputs:
+            targetType: inline
+            script: '$(projectDirectory)/flutter/bin/flutter analyze'
         inputs:
-          target: apk
-          projectDirectory: $(projectDirectory)
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: $(projectDirectory)
+          projectDirectory: '$(projectDirectory)'
       - task: CopyFiles@2
         inputs:
           contents: '**/*.apk'
