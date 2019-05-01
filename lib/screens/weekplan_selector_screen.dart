@@ -7,6 +7,7 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
@@ -63,8 +64,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlanAdder(
       BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
     return GestureDetector(
-      onTap: () =>
-          Routes.push(context, WeekplanScreen(weekplan, _user)),
+      onTap: () => Routes.push(context, WeekplanScreen(weekplan, _user)),
       child: StreamBuilder<Image>(
           stream: bloc.image,
           builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
@@ -76,7 +76,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekPlan(
       BuildContext context, WeekModel weekplan, BoxConstraints constraint) {
     return GestureDetector(
-        onTap: () => () {}, // onTap for adding a new weekplan
+        onTap: () => Routes.push<WeekModel>(context, NewWeekplanScreen(_user))
+            .then((WeekModel newWeek) => {_weekBloc.load(_user, true)}),
         child: Icon(
           Icons.add,
           size: constraint.maxHeight,
@@ -117,8 +118,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   return AutoSizeText(
                     weekplan.name,
                     style: const TextStyle(fontSize: 18),
-                    maxLines: 2,
+                    maxLines: 1,
+                    minFontSize: 14,
                     textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   );
                 }))
               ],

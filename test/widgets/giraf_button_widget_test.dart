@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:flutter/material.dart';
 
-class MockScreenButtonTest extends StatelessWidget {
+class MockScreen extends StatelessWidget {
+  final BehaviorSubject<bool> isPressed = BehaviorSubject<bool>.seeded(false);
+  final BehaviorSubject<bool> btnEnabled = BehaviorSubject<bool>.seeded(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,11 +15,14 @@ class MockScreenButtonTest extends StatelessWidget {
           child: Column(
         children: <Widget>[
           GirafButton(
-              key: const Key('Button'),
-              text: 'PressButton',
-              onPressed: () {},
-              icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
-              isEnabledStream: Observable<bool>.just(false)),
+            key: const Key('Button'),
+            text: 'PressButton',
+            onPressed: () {
+              isPressed.add(true);
+            },
+            icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
+            isEnabledStream: btnEnabled,
+          ),
         ],
       )),
     );
@@ -24,23 +31,54 @@ class MockScreenButtonTest extends StatelessWidget {
 
 void main() {
   testWidgets('Test if GirafButton is shown', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: MockScreenButtonTest()));
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
     expect(find.byType(GirafButton), findsOneWidget);
   });
 
-  testWidgets('GirafButton has a title and an icon',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: MockScreenButtonTest()));
+  testWidgets('GirafButton has a title', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
 
     expect(find.text('PressButton'), findsOneWidget);
-    expect(find.byIcon(Icons.fastfood), findsOneWidget);
   });
 
-  //This test is not done
-  testWidgets('GirafButton is enabled', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: MockScreenButtonTest()));
-    final Finder submit = find.widgetWithText(GirafButton, 'PressButton');
+  testWidgets('GirafButton has an icon', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
 
-    expect(tester.widget<GirafButton>(submit).isEnabled, isTrue);
+    expect(
+        find.byWidget(const ImageIcon(AssetImage('assets/icons/accept.png'))),
+        findsOneWidget);
+  });
+
+  testWidgets(
+      'GirafButton is pressed and'
+      ' works when enabled', (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+    final MockScreen screen = MockScreen();
+    await tester.pumpWidget(MaterialApp(home: screen));
+    screen.btnEnabled.add(true);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('Button')));
+    await tester.pump();
+    screen.isPressed.listen((bool status) {
+      expect(status, isTrue);
+      done.complete();
+    });
+    await done.future;
+  });
+
+  testWidgets(
+      'GirafButton is pressed and'
+      ' does not work when disabled', (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+    final MockScreen screen = MockScreen();
+    await tester.pumpWidget(MaterialApp(home: screen));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('Button')));
+    await tester.pump();
+    screen.isPressed.listen((bool status) {
+      expect(status, isFalse);
+      done.complete();
+    });
+    await done.future;
   });
 }

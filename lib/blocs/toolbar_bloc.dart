@@ -7,6 +7,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
@@ -210,8 +211,7 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 onPressed: () {
-                  login(context, _authBloc.loggedInUsername,
-                      passwordCtrl.value.text);
+                  login(_authBloc.loggedInUsername, passwordCtrl.value.text);
                   Routes.pop(context);
                 },
                 child: const Text(
@@ -270,37 +270,19 @@ class ToolbarBloc extends BlocBase {
       icon: Image.asset('assets/icons/logout.png'),
       tooltip: 'Log ud',
       onPressed: () {
-        Alert(
-          context: context,
-          type: AlertType.none,
-          style: _alertStyle,
-          title: 'Log ud',
-          desc: 'Vil du logge ud?',
-          buttons: <DialogButton>[
-            DialogButton(
-              child: const Text(
-                'Fortryd',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              color: const Color.fromRGBO(255, 157, 0, 100),
-              width: 120,
-            ),
-            DialogButton(
-              child: const Text(
-                'Log ud',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              onPressed: () {
-                _authBloc.logout();
-              },
-              color: const Color.fromRGBO(255, 157, 0, 100),
-              width: 120,
-            ),
-          ],
-        ).show();
+        showDialog<Center>(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return GirafConfirmDialog(
+                title: 'Log ud',
+                description: 'Vil du logge ud?',
+                confirmButtonText: 'Log ud',
+                confirmButtonIcon:
+                    const ImageIcon(AssetImage('assets/icons/logout.png')),
+                confirmOnPressed: () => _authBloc.logout(),
+              );
+            });
       },
     );
   }
@@ -355,7 +337,7 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  /// Password controller for passing information from a text field 
+  /// Password controller for passing information from a text field
   /// to the authenticator.
   final TextEditingController passwordCtrl = TextEditingController();
 
@@ -377,7 +359,7 @@ class ToolbarBloc extends BlocBase {
   );
 
   /// Used to authenticate a user.
-  void login(BuildContext context, String username, String password) {
+  void login(String username, String password) {
     _authBloc.authenticate(username, password);
   }
 
