@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
 /// An AlertDialog for notifications, with a title and description as input.
@@ -53,33 +54,20 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 0),
-            child: ButtonBar(
-              alignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RaisedButton(
+              padding: const EdgeInsets.only(bottom: 0),
+              child: ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GirafButton(
                     key: const Key('NotifyDialogOkayButton'),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color.fromRGBO(0, 0, 0, 0.3))),
-                    color: const Color.fromRGBO(255, 157, 0, 1),
-                    child: Row(
-                      children: const <Widget>[
-                        ImageIcon(
-                          AssetImage('assets/icons/accept.png'),
-                          color: Color.fromRGBO(0, 0, 0, 1),),
-                        Text(
-                          'Okay',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {
-                      Routes.pop(context);
-                    }),
-              ],
-            ),
+                    text: 'Okay',
+                    icon: const ImageIcon(
+                      AssetImage('assets/icons/accept.png'),
+                      color: Color.fromRGBO(0, 0, 0, 1),),
+                    onPressed: (){Routes.pop(context);},
+                  )
+                ],
+              )
           )
         ],
       ),

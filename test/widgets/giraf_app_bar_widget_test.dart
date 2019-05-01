@@ -1,4 +1,5 @@
 import 'package:api_client/api/account_api.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,11 +8,47 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
-class MockAuth extends Mock implements AuthBloc {}
+class MockAuth extends Mock implements AuthBloc {
+  @override
+  Observable<bool> get loggedIn => _loggedIn.stream;
+  final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(true);
+
+  @override
+  String loggedInUsername = 'Graatand';
+
+  @override
+  void authenticate(String username, String password) {
+    // Mock the API and allow these 2 users to ?login?
+    final bool status = (username == 'test' && password == 'test') ||
+        (username == 'Graatand' && password == 'password');
+    // If there is a successful login, remove the loading spinner,
+    // and push the status to the stream
+    if (status) {
+      loggedInUsername = username;
+    }
+    _loggedIn.add(status);
+  }
+
+  @override
+  void logout() {
+    _loggedIn.add(false);
+  }
+}
+
+class MockScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: GirafAppBar(
+            title: 'TestTitle',
+            appBarIcons: const <AppBarIcon>[AppBarIcon.logout]));
+  }
+}
+
 class MockAccApi extends Mock implements AccountApi {
 
   @override
@@ -35,12 +72,14 @@ const String keyOfConfirmButton = 'ConfirmButton';
 void main() {
   ToolbarBloc bloc;
   Api api;
+  MockAuth authBloc;
 
   setUp(() {
     api = Api('any');
     api.account = MockAccApi();
     di.clearAll();
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    authBloc = MockAuth();
+    di.registerDependency<AuthBloc>((_) => authBloc);
     bloc = ToolbarBloc();
     di.registerDependency<ToolbarBloc>((_) => bloc);
   });
@@ -287,6 +326,36 @@ void main() {
     expect(find.byTooltip('Fortryd'), findsOneWidget);
   });
 
+  testWidgets('GirafConfirmDialog is shown on logout icon press',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.pump();
+    expect(find.byTooltip('Log ud'), findsOneWidget);
+    await tester.tap(find.byTooltip('Log ud'));
+    await tester.pump();
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+  });
+
+  testWidgets('User is logged out on confirmation in GirafConfirmDialog',
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.pump();
+    expect(find.byTooltip('Log ud'), findsOneWidget);
+    await tester.tap(find.byTooltip('Log ud'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    expect(find.byKey(const Key('ConfirmDialogConfirmButton')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    authBloc.loggedIn.listen((bool statusLogout) async {
+      if (statusLogout == false) {
+        expect(statusLogout, isFalse);
+        done.complete();
+      }
+    });
+    await done.future;
+  });
+
   testWidgets('Dialog should not be visible', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
@@ -332,7 +401,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
-                                      'wrongpassword');
+        'wrongpassword');
 
     await tester.pumpAndSettle();
 
@@ -341,6 +410,6 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
-                      findsOneWidget);
+        findsOneWidget);
   });
 }

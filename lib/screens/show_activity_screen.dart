@@ -6,18 +6,20 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(WeekModel weekModel, this._activity, UsernameModel
-  girafUser,
+  ShowActivityScreen(
+      WeekModel weekModel, this._activity, UsernameModel girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(weekModel, _activity, girafUser);
   }
+
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
@@ -34,7 +36,7 @@ class ShowActivityScreen extends StatelessWidget {
     return buildScreenFromOrientation(orientation);
   }
 
-  /// Build the activity and timer screens in a row or column
+  /// Build the activity screens in a row or column
   /// depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(Orientation orientation) {
     Widget childContainer;
@@ -53,11 +55,12 @@ class ShowActivityScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Aktivitet',
+          appBarIcons: const <AppBarIcon>[],
         ),
         body: childContainer);
   }
 
-  /// Builds the activity and timer cards.
+  /// Builds the activity.
   List<Widget> buildScreen() {
     return <Widget>[
       Expanded(
@@ -76,56 +79,6 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       ),
-      Expanded(
-        flex: 4,
-        child: Center(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Column(
-                  children: buildTimer(),
-                ),
-              ),
-            ),
-          ),
-        ),
-      )
-    ];
-  }
-
-  /// Builds the timer widget.
-  List<Widget> buildTimer() {
-    return <Widget>[
-      Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:
-            Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
-      )),
-      Expanded(
-        child: FittedBox(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromRGBO(35, 35, 35, 1.0),
-                        width: 0.25)),
-                child: const Icon(Icons.timer))),
-      ),
-      Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            child: OutlineButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                onPressed: null,
-                color: Colors.green,
-                child: const Text(
-                  'Start',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                )),
-          ))
     ];
   }
 
@@ -152,6 +105,7 @@ class ShowActivityScreen extends StatelessWidget {
                         children: <Widget>[
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
                               child: buildLoadPictogramImage()),
                           snapshot.data.state == ActivityState.Completed
                               ? Icon(

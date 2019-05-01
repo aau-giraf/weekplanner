@@ -7,8 +7,10 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
@@ -17,10 +19,9 @@ class ToolbarBloc extends BlocBase {
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
   BehaviorSubject<List<IconButton>> _visibleButtons =
-      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+  BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
-  /// Hold the refernece to a authbloc instance.
-  final AuthBloc authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Based on a list of the enum AppBarIcon this method
   /// populates a list of IconButtons to render in the nav-bar
@@ -30,7 +31,6 @@ class ToolbarBloc extends BlocBase {
 
     if (icons == null) {
       icons = <AppBarIcon>[];
-      icons.add(AppBarIcon.changeToGuardian);
       icons.add(AppBarIcon.settings);
       icons.add(AppBarIcon.logout);
     }
@@ -39,14 +39,14 @@ class ToolbarBloc extends BlocBase {
     }
 
     final BehaviorSubject<List<IconButton>> iconList =
-        BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+    BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
     iconList.add(_iconsToAdd);
     _visibleButtons = iconList;
   }
 
   /// Find the icon picture based on the input enum
-  void _addIconButton(
-      List<IconButton> _iconsToAdd, AppBarIcon icon, BuildContext context) {
+  void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
+      BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept());
@@ -175,15 +175,34 @@ class ToolbarBloc extends BlocBase {
 
   IconButton _createIconChangeToCitizen(BuildContext context) {
     return IconButton(
-      icon: Image.asset('assets/icons/changeToCitizen.png'),
-      tooltip: 'Skift til borger tilstand',
-      onPressed: () {},
+        key: const Key('IconChangeToCitizen'),
+        icon: Image.asset('assets/icons/changeToCitizen.png'),
+        tooltip: 'Skift til borger tilstand',
+        onPressed: () {
+          showDialog < GirafConfirmDialog > (
+              context: context, builder: (BuildContext context)
+          {
+            return GirafConfirmDialog(
+              confirmButtonIcon: const ImageIcon(
+                  AssetImage('assets/icons/changeToCitizen.png')),
+              confirmButtonText: 'Skift',
+              description: 'Vil du skifte til borger tilstand?',
+              confirmOnPressed: () {
+                _authBloc.setMode(WeekplanMode.citizen);
+                Routes.pop(context);
+              },
+              title: 'Skift til borger',
+            );
+          }
+          );
+
+        }
     );
   }
 
   IconButton _createIconChangeToGuardian(BuildContext context) {
     return IconButton(
-      key: const Key('ChangeToGuardian'),
+      key: const Key('IconChangeToGuardian'),
       icon: Image.asset('assets/icons/changeToGuardian.png'),
       tooltip: 'Skift til værge tilstand',
       onPressed: () {
@@ -196,16 +215,18 @@ class ToolbarBloc extends BlocBase {
                 RichText(
                   text: TextSpan(
                     text: 'Logget ind som ',
-                    style: DefaultTextStyle.of(context).style,
+                    style: DefaultTextStyle
+                        .of(context)
+                        .style,
                     children: <TextSpan>[
                       TextSpan(
-                          text: authBloc.loggedInUsername,
+                          text: _authBloc.loggedInUsername,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
                 TextField(
-                  key: const Key('PasswordField'),
+                  key: const Key('SwitchToGuardianPassword'),
                   controller: passwordCtrl,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -217,7 +238,7 @@ class ToolbarBloc extends BlocBase {
             ),
             buttons: <DialogButton>[
               DialogButton(
-                key: const Key('ConfirmButton'),
+                key: const Key('SwitchToGuardianSubmit'),
                 onPressed: _loggingIn
                   ? null
                   : () {
@@ -288,37 +309,19 @@ class ToolbarBloc extends BlocBase {
       icon: Image.asset('assets/icons/logout.png'),
       tooltip: 'Log ud',
       onPressed: () {
-        Alert(
-          context: context,
-          type: AlertType.none,
-          style: _alertStyle,
-          title: 'Log ud',
-          desc: 'Vil du logge ud?',
-          buttons: <DialogButton>[
-            DialogButton(
-              child: const Text(
-                'Fortryd',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              color: const Color.fromRGBO(255, 157, 0, 100),
-              width: 120,
-            ),
-            DialogButton(
-              child: const Text(
-                'Log ud',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              onPressed: () {
-                authBloc.logout();
-              },
-              color: const Color.fromRGBO(255, 157, 0, 100),
-              width: 120,
-            ),
-          ],
-        ).show();
+        showDialog<Center>(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return GirafConfirmDialog(
+                title: 'Log ud',
+                description: 'Vil du logge ud?',
+                confirmButtonText: 'Log ud',
+                confirmButtonIcon:
+                    const ImageIcon(AssetImage('assets/icons/logout.png')),
+                confirmOnPressed: () => _authBloc.logout(),
+              );
+            });
       },
     );
   }
@@ -373,7 +376,7 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  /// Password controller for passing information from a text field 
+  /// Password controller for passing information from a text field
   /// to the authenticator.
   final TextEditingController passwordCtrl = TextEditingController();
 
@@ -395,6 +398,11 @@ class ToolbarBloc extends BlocBase {
   );
 
   /// Used to authenticate a user.
+  void login(BuildContext context, String username, String password) {
+    _authBloc.authenticate(username, password);
+  }
+
+  /// Used to authenticate a user from popup.
   void loginFromPopUp(BuildContext context, String username, String password) {
     _loggingIn = true;
 
