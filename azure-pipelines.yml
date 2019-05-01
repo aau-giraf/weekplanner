@@ -9,7 +9,7 @@ jobs:
     steps:
       #- task: FlutterInstall@0
       - task: ShellScript@2
-        displayName: 'FlutterInstall'
+        displayName: 'Flutter Install'
         inputs:
           scriptPath: '$(projectDirectory)/flutterinstall.sh'
       - task: Bash@3
@@ -18,10 +18,10 @@ jobs:
           targetType: inline
           script: $(projectDirectory)/flutter/bin/flutter analyze
       - task: Bash@3
-          displayName: 'FLutter Test'
-          inputs:
-            targetType: inline
-            script: $(projectDirectory)/flutter/bin/flutter build apk
+        displayName: 'FLutter Build'
+        inputs:
+          targetType: inline
+          script: $(projectDirectory)/flutter/bin/flutter build apk
       - task: Bash@3
         displayName: 'FLutter Test'
         inputs:
