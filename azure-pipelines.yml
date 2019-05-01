@@ -8,7 +8,7 @@ jobs:
       vmImage: 'ubuntu-16.04'
     steps:
       #- task: FlutterInstall@0
-      - task: Bash@3
+      - task: ShellScript@2
         displayName: 'FlutterInstall'
         inputs:
           scriptPath: '**/*.sh'
