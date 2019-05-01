@@ -24,7 +24,7 @@ class PictogramBloc extends BlocBase {
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
 
   final BehaviorSubject<List<PictogramModel>> _pictograms =
-  BehaviorSubject<List<PictogramModel>>();
+      BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
   Timer _debounceTimer;
@@ -51,7 +51,7 @@ class PictogramBloc extends BlocBase {
     List<PictogramModel> _resultPlaceholder;
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
       //Timer for sending an error if getting pictogram results takes too long
-      Timer(Duration(milliseconds: _timeoutTime), () {
+      Timer(const Duration(milliseconds: _timeoutTime), () {
         if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
           _pictograms.addError('Søgningen gav ingen resultater. '
               'Tjek internetforbindelsen.');
