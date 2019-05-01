@@ -81,6 +81,22 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       ),
+      Expanded(
+        flex: 4,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Card(
+                child: Column(
+                  children: buildTimer(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      )
     ];
   }
 
@@ -122,6 +138,61 @@ class ShowActivityScreen extends StatelessWidget {
                     }))),
       ),
       buildButtonBar(),
+    ];
+  }
+
+  /// Builds the timer widget.
+  List<Widget> buildTimer() {
+    return <Widget>[
+      Center(
+          child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+            Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
+      )),
+      Expanded(
+        child: FittedBox(
+          child: const CircularProgressIndicator(
+            strokeWidth: 5,
+            backgroundColor: Colors.red,
+            value: 0.3,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                child: GirafButton(
+                  onPressed: () {
+                    return null;
+                  },
+                  icon: const ImageIcon(AssetImage('assets/icons/play.png')),
+                ),
+              ),
+              Flexible(
+                child: GirafButton(
+                  onPressed: () {
+                    return null;
+                  },
+                  icon: const ImageIcon(AssetImage('assets/icons/pause.png')),
+                ),
+              ),
+              Flexible(
+                child: GirafButton(
+                  onPressed: () {
+                    return null;
+                  },
+                  icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
     ];
   }
 
