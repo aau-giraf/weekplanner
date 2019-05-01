@@ -365,7 +365,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Password controller for passing information from a text field
   /// to the authenticator.
-  final TextEditingController passwordCtrl = TextEditingController( );
+  final TextEditingController passwordCtrl = TextEditingController();
 
   final AlertStyle _alertStyle = AlertStyle(
     animationType: AnimationType.grow,
