@@ -82,12 +82,14 @@ void main() {
 
   testWidgets('renders', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
@@ -95,7 +97,8 @@ void main() {
   testWidgets('Activity pictogram and timer card is rendered',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
     await tester.pump(Duration.zero);
 
     expect(find.text('Timer'), findsOneWidget);
@@ -104,7 +107,8 @@ void main() {
 
   testWidgets('ButtonBar is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
 
     expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
   });
@@ -112,7 +116,8 @@ void main() {
   testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
@@ -122,7 +127,8 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconComplete')), findsNothing);
@@ -132,7 +138,8 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -145,7 +152,8 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(
+            mockWeek, mockActivity, mockWeekdayModels.first, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));

@@ -30,14 +30,13 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="key">Key of the widget</param>
   /// <param name="week">Week that should be shown on the weekplan</param>
   /// <param name="user">owner of the weekplan</param>
-  WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
-    weekplanBloc.loadWeek(_week, _user);
+  WeekplanScreen(WeekModel week, UsernameModel user, {Key key})
+      : super(key: key) {
+    weekplanBloc.loadWeek(week, user);
   }
 
   /// The WeekplanBloc that contains the currently chosen week
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
-  final UsernameModel _user;
-  final WeekModel _week;
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +217,10 @@ class WeekplanScreen extends StatelessWidget {
                     onTap: () => Routes.push(
                         context,
                         ShowActivityScreen(
-                            _week, weekday.activities[index], weekday, _user)),
+                            weekplanBloc.week,
+                            weekday.activities[index],
+                            weekday,
+                            weekplanBloc.user)),
                     child: Container(
                         child: Padding(
                       padding: const EdgeInsets.all(4.0),

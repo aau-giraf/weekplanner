@@ -25,7 +25,7 @@ void main() {
   final ActivityModel mockActivity = ActivityModel(
       id: 1,
       pictogram: null,
-      order: 1,
+      order: 0,
       state: ActivityState.Normal,
       isChoiceBoard: false);
 
@@ -64,7 +64,7 @@ void main() {
     final ActivityModel localActivity = mockActivity;
 
     bloc.load(mockWeekModel, localActivity, mockUser);
-    bloc.completeActivity();
+    bloc.completeActivity(mockWeekModel.days.first);
 
     expect(localActivity.state, equals(ActivityState.Completed));
     done();
