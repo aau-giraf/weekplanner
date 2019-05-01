@@ -13,6 +13,7 @@ import 'package:weekplanner/screens/settings_screen.dart';
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
   /// The current visibility of the edit-button.
+  bool clickable = true;
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
   BehaviorSubject<List<IconButton>> _visibleButtons =
@@ -220,8 +221,14 @@ class ToolbarBloc extends BlocBase {
                 onPressed: _loggingIn
                   ? null
                   : () {
-                  loginFromPopUp(context, authBloc.loggedInUsername,
-                      passwordCtrl.value.text);
+                  if(clickable) {
+                    clickable = false;
+                    loginFromPopUp(context, authBloc.loggedInUsername,
+                        passwordCtrl.value.text);
+                    Timer(Duration(milliseconds: 2000), (){
+                      clickable = true;
+                    });
+                  }
                 },
                 child: const Text(
                   'Bekræft',
