@@ -34,6 +34,7 @@ class GirafButton extends StatefulWidget {
 
   /// The function to be called when the button is pressed.
   /// The function must be a void funtion with no input parameters.
+  /// If this is set to null, the button will be disabled.
   final VoidCallback onPressed;
 
   /// Determines whether the button is enabled or disabled by default. If
@@ -127,7 +128,7 @@ class _GirafButtonState extends State<GirafButton> {
       // On a quick tap the pressed state is not shown, because the state
       // changes too fast, hence we introduce a delay.
       _timer = Timer(const Duration(milliseconds: 100),
-              () => setState(() => _isPressed = false));
+          () => setState(() => _isPressed = false));
     }
   }
 
@@ -174,9 +175,9 @@ class _GirafButtonState extends State<GirafButton> {
     else if (widget.text != null)
       return Center(
           child: Text(
-            widget.text,
-            style: textStyle,
-          ));
+        widget.text,
+        style: textStyle,
+      ));
     else if (widget.icon != null) {
       return Center(
         child: widget.icon,
