@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// A button for the Giraf application.
-/// The design of the button follows the design guide on the Giraf wiki:
-/// https://aau-giraf.github.io/wiki/design_guide/buttons.html
 class GirafButton extends StatefulWidget {
   /// A button for the Giraf application.
   /// The button can contain some text and an icon both of which are optional.
@@ -17,7 +14,7 @@ class GirafButton extends StatefulWidget {
     this.text,
     this.icon,
     this.width,
-    this.height = 40,
+    this.height = 40.0,
     @required this.onPressed,
     this.isEnabled = true,
     this.isEnabledStream,
@@ -36,7 +33,7 @@ class GirafButton extends StatefulWidget {
   final double height;
 
   /// The function to be called when the button is pressed.
-  /// The function must be a void function with no input parameters.
+  /// The function must be a void funtion with no input parameters.
   final VoidCallback onPressed;
 
   /// Determines whether the button is enabled or disabled by default. If
@@ -57,7 +54,8 @@ class GirafButton extends StatefulWidget {
 class _GirafButtonState extends State<GirafButton> {
   @override
   void initState() {
-    _isEnabled = widget.isEnabled;
+    // If onPressed callback is null, the button should be disabled.
+    _isEnabled = widget.isEnabled && widget.onPressed != null;
     _isPressed = false;
     if (widget.isEnabledStream != null) {
       _isEnabledSubscription =
@@ -88,6 +86,7 @@ class _GirafButtonState extends State<GirafButton> {
   bool _isPressed;
   bool _isEnabled;
   StreamSubscription<bool> _isEnabledSubscription;
+  Timer _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +126,8 @@ class _GirafButtonState extends State<GirafButton> {
       widget.onPressed();
       // On a quick tap the pressed state is not shown, because the state
       // changes too fast, hence we introduce a delay.
-      Timer(const Duration(milliseconds: 100),
-          () => setState(() => _isPressed = false));
+      _timer = Timer(const Duration(milliseconds: 100),
+              () => setState(() => _isPressed = false));
     }
   }
 
@@ -141,6 +140,11 @@ class _GirafButtonState extends State<GirafButton> {
   void _handleIsEnabledStreamEvent(bool value) {
     // If a null value is emitted reset enabled state to default.
     value ??= widget.isEnabled;
+
+    // If onPressed callback is null, the button should be disabled.
+    if (widget.onPressed == null) {
+      value = false;
+    }
 
     // Only update state if the new value is different from the previous.
     if (value != _isEnabled) {
@@ -170,9 +174,9 @@ class _GirafButtonState extends State<GirafButton> {
     else if (widget.text != null)
       return Center(
           child: Text(
-        widget.text,
-        style: textStyle,
-      ));
+            widget.text,
+            style: textStyle,
+          ));
     else if (widget.icon != null) {
       return Center(
         child: widget.icon,
@@ -185,6 +189,7 @@ class _GirafButtonState extends State<GirafButton> {
   @override
   void dispose() {
     _isEnabledSubscription?.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 }
