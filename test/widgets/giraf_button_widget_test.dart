@@ -1,13 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class MockScreen extends StatelessWidget {
-  final BehaviorSubject<bool> isPressed = BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<bool> btnEnabled = BehaviorSubject<bool>.seeded(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,14 +11,11 @@ class MockScreen extends StatelessWidget {
           child: Column(
         children: <Widget>[
           GirafButton(
-            key: const Key('Button'),
-            text: 'PressButton',
-            onPressed: () {
-              isPressed.add(true);
-            },
-            icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
-            isEnabledStream: btnEnabled,
-          ),
+              key: const Key('Button'),
+              text: 'PressButton',
+              onPressed: () {},
+              icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
+              isEnabledStream: Observable<bool>.just(false)),
         ],
       )),
     );
@@ -47,38 +40,5 @@ void main() {
     expect(
         find.byWidget(const ImageIcon(AssetImage('assets/icons/accept.png'))),
         findsOneWidget);
-  });
-
-  testWidgets(
-      'GirafButton is pressed and'
-      ' works when enabled', (WidgetTester tester) async {
-    final Completer<bool> done = Completer<bool>();
-    final MockScreen screen = MockScreen();
-    await tester.pumpWidget(MaterialApp(home: screen));
-    screen.btnEnabled.add(true);
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('Button')));
-    await tester.pump();
-    screen.isPressed.listen((bool status) {
-      expect(status, isTrue);
-      done.complete();
-    });
-    await done.future;
-  });
-
-  testWidgets(
-      'GirafButton is pressed and'
-      ' does not work when disabled', (WidgetTester tester) async {
-    final Completer<bool> done = Completer<bool>();
-    final MockScreen screen = MockScreen();
-    await tester.pumpWidget(MaterialApp(home: screen));
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('Button')));
-    await tester.pump();
-    screen.isPressed.listen((bool status) {
-      expect(status, isFalse);
-      done.complete();
-    });
-    await done.future;
   });
 }
