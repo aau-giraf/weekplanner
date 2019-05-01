@@ -13,13 +13,14 @@ dependencies:
   injector: ^1.0.6
   api_client:
     git:
-      url: https://github.com/aau-giraf/api_client.git
+      url: https://github.com/MStenkaer/api_client.git
   auto_size_text: ^1.1.1
   rflutter_alert: ^1.0.2
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
   tuple: ^1.0.2
+  countdown: ^0.1.0
 
 dev_dependencies:
   async_test:

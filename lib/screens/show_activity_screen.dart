@@ -146,14 +146,26 @@ class ShowActivityScreen extends StatelessWidget {
             Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
       )),
       Expanded(
-        child: FittedBox(
-          child: const CircularProgressIndicator(
-            strokeWidth: 5,
-            backgroundColor: Colors.red,
-            value: 0.3,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        ),
+        child: StreamBuilder<double>(
+            stream: _activityBloc.timerProgressStream,
+            builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
+              return FittedBox(
+                  child: Padding(
+                padding: const EdgeInsets.all(0),
+                child: Container(
+                  decoration: ShapeDecoration(
+                      shape: CircleBorder(
+                        side: BorderSide(color: Colors.black, width: 26))),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 50,
+                    backgroundColor: Colors.red,
+                    value: snapshot.data,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ));
+            }),
       ),
       Padding(
         padding: const EdgeInsets.all(8.0),
@@ -163,7 +175,7 @@ class ShowActivityScreen extends StatelessWidget {
               Flexible(
                 child: GirafButton(
                   onPressed: () {
-                    return null;
+                    _activityBloc.playTimer();
                   },
                   icon: const ImageIcon(AssetImage('assets/icons/play.png')),
                 ),
@@ -171,7 +183,7 @@ class ShowActivityScreen extends StatelessWidget {
               Flexible(
                 child: GirafButton(
                   onPressed: () {
-                    return null;
+                    _activityBloc.pauseTimer();
                   },
                   icon: const ImageIcon(AssetImage('assets/icons/pause.png')),
                 ),
@@ -179,7 +191,7 @@ class ShowActivityScreen extends StatelessWidget {
               Flexible(
                 child: GirafButton(
                   onPressed: () {
-                    return null;
+                    _activityBloc.stopTimer();
                   },
                   icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
                 ),

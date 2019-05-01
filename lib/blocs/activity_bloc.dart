@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:api_client/models/timer_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -5,6 +7,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:countdown/countdown.dart';
 
 /// Logic for activities
 class ActivityBloc extends BlocBase {
@@ -19,6 +22,13 @@ class ActivityBloc extends BlocBase {
   final BehaviorSubject<ActivityModel> _activityModelStream =
       BehaviorSubject<ActivityModel>();
 
+  /// Stream for the progress of the timer.
+  Stream<double> get timerProgressStream => _timerProgressStream.stream;
+
+  /// BehaivorSubject for the updated weekmodel.
+  final BehaviorSubject<double> _timerProgressStream =
+      BehaviorSubject<double>.seeded(0.0);
+
   final Api _api;
   ActivityModel _activityModel;
   WeekModel _weekModel;
@@ -31,6 +41,7 @@ class ActivityBloc extends BlocBase {
     _weekModel = weekModel;
     _user = user;
     _activityModelStream.add(activityModel);
+    _initTimer();
   }
 
   /// Mark the selected activity as complete. Toggle function, if activity is
@@ -57,26 +68,88 @@ class ActivityBloc extends BlocBase {
         .update(
             _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
         .listen((WeekModel weekModel) {
-          // A better endpoint would be needed to add the result from the API.
+      // A better endpoint would be needed to add the result from the API.
       _activityModelStream.add(_activityModel);
       _weekModel = weekModel;
     });
   }
 
-  void playTimer(){
+  CountDown _countDown;
+  StreamSubscription<Duration> _timerStream;
 
+  void _initTimer() {
+    _activityModel.timer = TimerModel(
+        startTime: DateTime.now(), progress: 3, fullLength: 10, paused: true);
+
+    final DateTime endTime = _activityModel.timer.startTime.add(Duration(
+        seconds:
+            _activityModel.timer.fullLength - _activityModel.timer.progress));
+    if (_activityModel.timer != null) {
+      if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
+          DateTime.now().isBefore(endTime) &&
+          !_activityModel.timer.paused) {
+        _startCounter(endTime, _activityModel.timer.paused);
+      } else if (_activityModel.timer.paused) {
+        _timerProgressStream.add(1 -
+            (1 /
+                _activityModel.timer.fullLength *
+                (_activityModel.timer.fullLength -
+                    _activityModel.timer.progress)));
+        _startCounter(endTime, _activityModel.timer.paused);
+      }
+    }
   }
 
-  void pauseTimer(){
+  void _startCounter(DateTime endTime, bool paused) {
+    _countDown = CountDown(endTime.difference(DateTime.now()));
+    _timerStream = _countDown.stream.listen(null);
+    paused ? _timerStream.pause() : null;
 
+    _timerStream.onData((Duration d) {
+      addProgress(d);
+    });
+
+    _timerStream.onDone(() {
+      _activityModel.timer.progress = _activityModel.timer.fullLength;
+    });
   }
 
-  void stopTimer(){
-    
+  void addProgress(Duration d) {
+    _timerProgressStream
+        .add(1 - (1 / _activityModel.timer.fullLength * (d.inSeconds)));
+  }
+
+  void playTimer() {
+    if (_activityModel.timer != null &&
+        _timerStream != null &&
+        _activityModel.timer.paused) {
+      _activityModel.timer.paused = false;
+      _activityModel.timer.startTime = DateTime.now();
+      _timerStream.resume();
+    }
+    //update();
+  }
+
+  void pauseTimer() {
+    if (_activityModel.timer != null &&
+        _timerStream != null &&
+        !_activityModel.timer.paused) {
+      _activityModel.timer.paused = true;
+      _activityModel.timer.progress +=
+          _activityModel.timer.startTime.difference(DateTime.now()).inSeconds;
+      _timerStream.pause();
+    }
+    //update();
+  }
+
+  void stopTimer() {
+    _activityModel.timer.paused = true;
+    //update();
   }
 
   @override
   void dispose() {
     _activityModelStream.close();
+    _timerProgressStream.close();
   }
 }
