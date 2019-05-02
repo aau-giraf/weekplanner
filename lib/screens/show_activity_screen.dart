@@ -161,22 +161,25 @@ class ShowActivityScreen extends StatelessWidget {
             stream: _activityBloc.timerProgressStream,
             builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
               return FittedBox(
-                  child: Padding(
-                padding: const EdgeInsets.all(0),
                 child: Container(
                   decoration: const ShapeDecoration(
                       shape: CircleBorder(
                           side: BorderSide(
-                              color: Colors.black, width: 26))),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 50,
+                              color: Colors.black, width: 0.5))),
+                  child: CircleAvatar(
                     backgroundColor: Colors.red,
-                    value: snapshot.data,
-                    valueColor:
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 30,
+                        value: snapshot.data,
+                        valueColor:
                         const AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ),
                   ),
                 ),
-              ));
+              );
             }),
       ),
       Padding(
@@ -189,9 +192,9 @@ class ShowActivityScreen extends StatelessWidget {
                   onPressed: () {
                     _activityBloc.playTimer();
                   },
-                  icon: _activityBloc.timerIsPlaying() ?
-                  const ImageIcon(AssetImage('assets/icons/play.png')) :
-                  const ImageIcon(AssetImage('assets/icons/pause.png')),
+                  icon: _activityBloc.timerIsPlaying()
+                      ? const ImageIcon(AssetImage('assets/icons/play.png'))
+                      : const ImageIcon(AssetImage('assets/icons/pause.png')),
                 ),
               ),
               Flexible(
@@ -203,23 +206,22 @@ class ShowActivityScreen extends StatelessWidget {
                 ),
               ),
               StreamBuilder<WeekplanMode>(
-                stream: _authBloc.mode,
-                builder: (BuildContext context,
-                    AsyncSnapshot<WeekplanMode> snapshot) {
-                  return Visibility(
-                    visible: snapshot.data == WeekplanMode.guardian,
-                    child: Flexible(
-                      child: GirafButton(
-                        onPressed: () {
-                          _activityBloc.stopTimer();
-                        },
-                        icon: const ImageIcon(AssetImage(
-                            'assets/icons/delete.png')),
+                  stream: _authBloc.mode,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<WeekplanMode> snapshot) {
+                    return Visibility(
+                      visible: snapshot.data == WeekplanMode.guardian,
+                      child: Flexible(
+                        child: GirafButton(
+                          onPressed: () {
+                            _activityBloc.stopTimer();
+                          },
+                          icon: const ImageIcon(
+                              AssetImage('assets/icons/delete.png')),
+                        ),
                       ),
-                    ),
-                  );
-                }
-              ),
+                    );
+                  }),
             ],
           ),
         ),
