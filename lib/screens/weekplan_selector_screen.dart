@@ -118,8 +118,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   return AutoSizeText(
                     weekplan.name,
                     style: const TextStyle(fontSize: 18),
-                    maxLines: 2,
+                    maxLines: 1,
+                    minFontSize: 14,
                     textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   );
                 }))
               ],

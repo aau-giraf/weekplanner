@@ -19,7 +19,7 @@ class WeekplanBloc extends BlocBase {
       BehaviorSubject<UserWeekModel>();
 
   /// The stream that emits the currently chosen weekplan
-  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+  Observable<UserWeekModel> get userWeek => _userWeek.stream;
 
   UsernameModel user;
   WeekModel week;
@@ -100,5 +100,6 @@ class WeekplanBloc extends BlocBase {
   @override
   void dispose() {
     _userWeek.close();
+    _activityPlaceholderVisible.close();
   }
 }

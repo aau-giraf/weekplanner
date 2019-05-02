@@ -37,7 +37,7 @@ class MockWeekPlanBloc extends Mock implements WeekplanBloc {
 
   /// The stream that emits the currently chosen weekplan
   @override
-  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+  Observable<UserWeekModel> get userWeek => _userWeek.stream;
 
   @override
   void loadWeek(WeekModel week, UsernameModel user) {
@@ -145,7 +145,6 @@ void main() {
         pictogram: null);
     weekplanBloc.loadWeek(week, user);
     weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeek) {
-      verify(api.week.update(any, any, any, any));
       expect(userWeek.week, week);
       expect(userWeek.user, user);
       expect(userWeek.week.days.first.activities.length, 1);
