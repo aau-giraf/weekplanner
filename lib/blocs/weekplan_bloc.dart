@@ -1,5 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
@@ -85,6 +86,32 @@ class WeekplanBloc extends BlocBase {
     /// Updates the weekplan in the database
     _api.week.update(user.id, week.weekYear,
         week.weekNumber, week).listen((WeekModel onData) {});
+  }
+
+  /// Copies the marked activities to the given days
+  void copyMarkedActivities(List<bool> days){
+    final WeekModel week = _userWeek.value.week;
+    final UsernameModel user = _userWeek.value.user;
+
+    int dayOfWeek = 0;
+    for (bool day in days) {
+      if (day){
+        for (ActivityModel activity in _markedActivities.value){
+          activity.state = ActivityState.Normal;
+          activity.order = week.days[dayOfWeek].activities.length;
+          week.days[dayOfWeek].activities.add(activity);
+        }
+      }
+      dayOfWeek++;
+    }
+
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel newWeek) {
+      _userWeek.add(UserWeekModel(newWeek, user));
+    });
+
+    clearMarkedActivities();
   }
 
   /// Toggles edit mode

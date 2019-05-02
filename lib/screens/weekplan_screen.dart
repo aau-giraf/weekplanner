@@ -18,6 +18,7 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:tuple/tuple.dart';
+import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
 /// Color of the add buttons
 const Color buttonColor = Color(0xA0FFFFFF);
@@ -83,27 +84,92 @@ class WeekplanScreen extends StatelessWidget {
   /// Builds the BottomAppBar when in edit mode
   BottomAppBar buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
-        color: const Color(0xAAFF6600),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            IconButton(
-              key: const Key('DeleteActivtiesButton'),
-              iconSize: 50,
-              icon: const Icon(Icons.delete_forever),
-              onPressed: () {
-                /// Shows dialog to confirm/cancel deletion
-                buildShowDialog(context);
-              },
-            ),
-            GirafButton(
-              text: 'Kopier',
-              icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-              onPressed: () {},
-            )
-          ],
-        ));
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+          Expanded(
+              child: Container(
+                  decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: <double>[
+                        0.33,
+                        0.66
+                      ],
+                          colors: <Color>[
+                        Color.fromRGBO(254, 215, 108, 1),
+                        Color.fromRGBO(253, 187, 85, 1),
+                      ])),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        child: GirafButton(
+                          width: 150,
+                          text: 'Annuller',
+                          icon: const ImageIcon(
+                              AssetImage('assets/icons/cancel.png')),
+                          onPressed: () {},
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        child: GirafButton(
+                          width: 150,
+                          text: 'Kopier',
+                          icon: const ImageIcon(
+                              AssetImage('assets/icons/copy.png')),
+                          onPressed: () {
+                            _buildCopyDialog(context);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        child: GirafButton(
+                            width: 150,
+                            text: 'Slet',
+                            key: const Key('DeleteActivtiesButton'),
+                            icon: const ImageIcon(
+                                AssetImage('assets/icons/delete.png')),
+                            onPressed: () {
+                              /// Shows dialog to confirm/cancel deletion
+                              buildShowDialog(context);
+                            }),
+                      ),
+                    ],
+                  )))
+        ]));
+  }
+
+  void _copyActivities(List<bool> days, BuildContext context) {
+    weekplanBloc.copyMarkedActivities(days);
+    Routes.pop(context);
+    weekplanBloc.toggleEditMode();
+  }
+
+  Future<Center> _buildCopyDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafCopyActivitiesDialog(
+            title: 'Kopier Aktiviteter',
+            description: 'Vælg en dag de markeret aktiviteter skal kopieres '
+                'til',
+            confirmButtonText: 'Kopier',
+            confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/accept.png')),
+            confirmOnPressed: _copyActivities,
+          );
+        });
   }
 
   /// Builds dialog box to confirm/cancel deletion
@@ -244,8 +310,7 @@ class WeekplanScreen extends StatelessWidget {
           key: const Key('isSelectedKey'),
           margin: const EdgeInsets.all(20),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width:
-              50)),
+              BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
           child: _buildActivityCard(
             context,
             activities,
