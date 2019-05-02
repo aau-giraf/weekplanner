@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -23,6 +24,7 @@ class ShowActivityScreen extends StatelessWidget {
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(weekModel, _activity, girafUser);
+    _timerBloc.load(_activity);
   }
 
   final ActivityModel _activity;
@@ -30,6 +32,8 @@ class ShowActivityScreen extends StatelessWidget {
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  final TimerBloc _timerBloc = TimerBloc();
+
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Text style used for title.
@@ -38,6 +42,7 @@ class ShowActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
+    _timerBloc.initTimer();
 
     ///Used to check if the keyboard is visible
     return buildScreenFromOrientation(orientation, context);
@@ -158,14 +163,13 @@ class ShowActivityScreen extends StatelessWidget {
       )),
       Expanded(
         child: StreamBuilder<double>(
-            stream: _activityBloc.timerProgressStream,
+            stream: _timerBloc.timerProgressStream,
             builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
               return FittedBox(
                 child: Container(
                   decoration: const ShapeDecoration(
                       shape: CircleBorder(
-                          side: BorderSide(
-                              color: Colors.black, width: 0.5))),
+                          side: BorderSide(color: Colors.black, width: 0.5))),
                   child: CircleAvatar(
                     backgroundColor: Colors.red,
                     child: Padding(
@@ -174,7 +178,7 @@ class ShowActivityScreen extends StatelessWidget {
                         strokeWidth: 30,
                         value: snapshot.data,
                         valueColor:
-                        const AlwaysStoppedAnimation<Color>(Colors.white),
+                            const AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     ),
                   ),
@@ -188,24 +192,26 @@ class ShowActivityScreen extends StatelessWidget {
           child: Row(
             children: <Widget>[
               StreamBuilder<bool>(
-                stream: _activityBloc.timerIsRunning,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  return Flexible(
-                    child: GirafButton(
-                      onPressed: () {
-                        _activityBloc.playTimer();
-                      },
-                      icon: snapshot.data ?
-                      const ImageIcon(AssetImage('assets/icons/pause.png')) :
-                      const ImageIcon(AssetImage('assets/icons/play.png')),
-                    ),
-                  );
-                }
-              ),
+                  stream: _timerBloc.timerIsRunning,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    return Flexible(
+                      child: GirafButton(
+                        onPressed: () {
+                          _timerBloc.playTimer();
+                        },
+                        icon: snapshot.data
+                            ? const ImageIcon(
+                                AssetImage('assets/icons/pause.png'))
+                            : const ImageIcon(
+                                AssetImage('assets/icons/play.png')),
+                      ),
+                    );
+                  }),
               Flexible(
                 child: GirafButton(
                   onPressed: () {
-                    _activityBloc.pauseTimer();
+                    _timerBloc.pauseTimer();
                   },
                   icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
                 ),
@@ -219,7 +225,7 @@ class ShowActivityScreen extends StatelessWidget {
                       child: Flexible(
                         child: GirafButton(
                           onPressed: () {
-                            _activityBloc.stopTimer();
+                            _timerBloc.stopTimer();
                           },
                           icon: const ImageIcon(
                               AssetImage('assets/icons/delete.png')),
