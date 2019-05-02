@@ -1,3 +1,4 @@
+import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -35,10 +36,15 @@ class ActivityBloc extends BlocBase {
 
   /// Mark the selected activity as complete. Toggle function, if activity is
   /// Completed, it will become Normal
-  void completeActivity() {
-    _activityModel.state = _activityModel.state == ActivityState.Completed
-        ? ActivityState.Normal
-        : ActivityState.Completed;
+  void completeActivity(WeekdayModel weekday) {
+    if (_activityModel.state != ActivityState.Completed) {
+      _activityModel.state = ActivityState.Completed;
+    } else {
+      _activityModel.state = ActivityState.Active;
+    }
+
+    _weekModel.days[weekday.day.index] = weekday;
+
     update();
   }
 
@@ -57,7 +63,7 @@ class ActivityBloc extends BlocBase {
         .update(
             _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
         .listen((WeekModel weekModel) {
-          // A better endpoint would be needed to add the result from the API.
+      // A better endpoint would be needed to add the result from the API.
       _activityModelStream.add(_activityModel);
       _weekModel = weekModel;
     });

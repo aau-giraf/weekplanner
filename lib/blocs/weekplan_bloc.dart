@@ -19,11 +19,20 @@ class WeekplanBloc extends BlocBase {
       BehaviorSubject<UserWeekModel>();
 
   /// The stream that emits the currently chosen weekplan
-  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+  Observable<UserWeekModel> get userWeek => _userWeek.stream;
+
+  UsernameModel user;
+  WeekModel week;
 
   /// Sink to set the currently chosen week
-  void setWeek(WeekModel week, UsernameModel user) {
-    _userWeek.add(UserWeekModel(week, user));
+  void loadWeek(WeekModel week, UsernameModel user) {
+    _api.week
+        .get(user.id, week.weekYear, week.weekNumber)
+        .listen((WeekModel loadedWeek) {
+      _userWeek.add(UserWeekModel(loadedWeek, user));
+      this.week = loadedWeek;
+    });
+    this.user = user;
   }
 
   final BehaviorSubject<bool> _activityPlaceholderVisible =
