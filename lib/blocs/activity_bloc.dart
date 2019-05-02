@@ -36,6 +36,14 @@ class ActivityBloc extends BlocBase {
   final BehaviorSubject<bool> _timerRunningStream =
   BehaviorSubject<bool>.seeded(false);
 
+  /// stream for checking if the timer is running
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+
+  /// BehaivorSubject for to check if timer is running.
+  final BehaviorSubject<bool> _timerInstantiatedStream =
+  BehaviorSubject<bool>.seeded(false);
+
+
   final Api _api;
   ActivityModel _activityModel;
   WeekModel _weekModel;
@@ -104,6 +112,7 @@ class ActivityBloc extends BlocBase {
                     _activityModel.timer.progress)));
         _startCounter(endTime, _activityModel.timer.paused);
       }
+      _timerInstantiatedStream.add(true);
     }
   }
 
@@ -155,6 +164,10 @@ class ActivityBloc extends BlocBase {
     _activityModel.timer.paused = true;
     _timerRunningStream.add(!_activityModel.timer.paused);
     //update();
+  }
+
+  void deleteTimer(){
+    _timerInstantiatedStream.add(false);
   }
 
   @override
