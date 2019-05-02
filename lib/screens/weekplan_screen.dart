@@ -384,7 +384,7 @@ class WeekplanScreen extends StatelessWidget {
     int index,
     ActivityState activityState,
   ) {
-    Widget icon = activityState == ActivityState.Completed
+    final Widget icon = activityState == ActivityState.Completed
         ? Icon(
             Icons.check,
             key: const Key('IconComplete'),

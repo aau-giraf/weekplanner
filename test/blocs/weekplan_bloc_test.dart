@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -68,17 +66,19 @@ void main() {
     weekplanBloc = WeekplanBloc(api);
   });
 
-  test('Loads a weekplan for the weekplan view', () {
+  test('Loads a weekplan for the weekplan view', async((DoneFn done) {
     final WeekModel week = WeekModel(name: 'test week');
-    weekplanBloc.setWeek(week, null);
 
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
       expect(response.week, equals(week));
+      done();
     });
-  });
 
-  test('Adds an activity to a list of marked activities', () {
+    weekplanBloc.setWeek(week, null);
+  }));
+
+  test('Adds an activity to a list of marked activities', async((DoneFn done) {
     // Create an ActivityModel, to add to the list of marked activites.
     final ActivityModel activityModel = ActivityModel(
         pictogram: PictogramModel(
@@ -95,14 +95,15 @@ void main() {
 
     
 
-    weekplanBloc.markedActivities
+    weekplanBloc.markedActivities.skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 1);
+      done();
     });
 
     // Add the ActivityModel to the list of marked activities.
     weekplanBloc.addMarkedActivity(activityModel);
-  });
+  }));
 
   test('Removes an activity to a list of marked activities', 
   async((DoneFn done) {
@@ -146,7 +147,7 @@ void main() {
     weekplanBloc.removeMarkedActivity(secondActivityModel);
   }));
 
-  test('Clears list of marked activities', () {
+  test('Clears list of marked activities', async((DoneFn done) {
     weekplanBloc.addMarkedActivity(ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -164,12 +165,14 @@ void main() {
         .skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 0);
+      done();
     });
 
     weekplanBloc.clearMarkedActivities();
-  });
+  }));
 
-  test('Checks if the activity is in the list of marked activities', () {
+  test('Checks if the activity is in the list of marked activities', 
+  async((DoneFn done) {
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -183,22 +186,24 @@ void main() {
         order: null,
         state: null);
 
-    weekplanBloc.markedActivities
+    weekplanBloc.markedActivities.skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(weekplanBloc.isActivityMarked(activity), true);
+      done();
     });
 
     weekplanBloc.addMarkedActivity(activity);
-  });
+  }));
 
-  test('Checks if the edit mode toggles from false', () {
+  test('Checks if the edit mode toggles from false', async((DoneFn done) {
     /// Editmode stream initial value is false.
     weekplanBloc.editMode.skip(1).listen((bool toggle) {
       expect(toggle, true);
+      done();
     });
 
     weekplanBloc.toggleEditMode();
-  });
+  }));
 
   test('Checks if marked activities are deleted from a users weekplan', 
   async((DoneFn done) {
