@@ -29,6 +29,13 @@ class ActivityBloc extends BlocBase {
   final BehaviorSubject<double> _timerProgressStream =
       BehaviorSubject<double>.seeded(0.0);
 
+  /// stream for checking if the timer is running
+  Stream<bool> get timerIsRunning => _timerRunningStream.stream;
+
+  /// BehaivorSubject for to check if timer is running.
+  final BehaviorSubject<bool> _timerRunningStream =
+  BehaviorSubject<bool>.seeded(false);
+
   final Api _api;
   ActivityModel _activityModel;
   WeekModel _weekModel;
@@ -126,6 +133,7 @@ class ActivityBloc extends BlocBase {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
       _timerStream.resume();
+      _timerRunningStream.add(!_activityModel.timer.paused);
     }
     //update();
   }
@@ -138,23 +146,21 @@ class ActivityBloc extends BlocBase {
       _activityModel.timer.progress +=
           _activityModel.timer.startTime.difference(DateTime.now()).inSeconds;
       _timerStream.pause();
+      _timerRunningStream.add(!_activityModel.timer.paused);
     }
     //update();
   }
 
   void stopTimer() {
     _activityModel.timer.paused = true;
+    _timerRunningStream.add(!_activityModel.timer.paused);
     //update();
-  }
-
-  ///method to get whether the timer is playing
-  bool timerIsPlaying(){
-    return _activityModel.timer == null ? false : !_activityModel.timer.paused;
   }
 
   @override
   void dispose() {
     _activityModelStream.close();
     _timerProgressStream.close();
+    _timerRunningStream.close();
   }
 }
