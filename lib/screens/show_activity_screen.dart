@@ -166,7 +166,7 @@ class ShowActivityScreen extends StatelessWidget {
         child: StreamBuilder<bool>(
           stream: _timerBloc.timerIsInstantiated,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return snapshot.data
+            return !snapshot.data
                 ? FittedBox(
                     child: Padding(
                     padding: const EdgeInsets.all(0),
@@ -174,7 +174,9 @@ class ShowActivityScreen extends StatelessWidget {
                       child: IconButton(
                           icon: const ImageIcon(
                               AssetImage('assets/icons/addTimer.png')),
-                          onPressed: () {}),
+                          onPressed: () {
+                            buildTimerDialogAndReturnDuration(context);
+                          }),
                     ),
                   ))
                 : FittedBox(
@@ -209,7 +211,7 @@ class ShowActivityScreen extends StatelessWidget {
           stream: _timerBloc.timerIsInstantiated,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return Visibility(
-              visible: !snapshot.data,
+              visible: snapshot.data,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -312,14 +314,12 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// returns a dialog where time can be decided for an activity(timer)
-  Future<Duration> buildTimerDialogAndReturnDuration(
-      BuildContext context) async {
-    Duration durationFromTextfield;
+  void buildTimerDialogAndReturnDuration(BuildContext context) {
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final bool isInPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     final TextEditingController txtController = TextEditingController();
-    await showDialog<Center>(
+    showDialog<Center>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -449,8 +449,8 @@ class ShowActivityScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(5, 0, 10, 10),
                             child: GirafButton(
                               onPressed: () {
-                                durationFromTextfield =
-                                    CalculateDuration(txtController.text);
+                                _timerBloc.addTimer(
+                                    CalculateDuration(txtController.text));
                                 Routes.pop(context);
                               },
                               icon: const ImageIcon(
@@ -463,9 +463,7 @@ class ShowActivityScreen extends StatelessWidget {
               ],
             ),
           );
-        }).then((val) {
-      return durationFromTextfield;
-    });
+        });
   }
 
   Duration CalculateDuration(String durationFromTextField) {

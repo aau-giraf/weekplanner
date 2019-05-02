@@ -14,34 +14,45 @@ class TimerBloc extends BlocBase {
 
   /// BehaivorSubject for the updated weekmodel.
   final BehaviorSubject<double> _timerProgressStream =
-  BehaviorSubject<double>.seeded(0.0);
+      BehaviorSubject<double>.seeded(0.0);
 
   /// stream for checking if the timer is running
   Stream<bool> get timerIsRunning => _timerRunningStream.stream;
 
   /// BehaivorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerRunningStream =
-  BehaviorSubject<bool>.seeded(false);
+      BehaviorSubject<bool>.seeded(false);
 
   /// stream for checking if the timer is running
   Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
 
   /// BehaivorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerInstantiatedStream =
-  BehaviorSubject<bool>.seeded(false);
+      BehaviorSubject<bool>.seeded(true);
 
   void load(ActivityModel activity) {
     _activityModel = activity;
+
+    _activityModel.timer != null
+        ? _timerInstantiatedStream.add(true)
+        : _timerInstantiatedStream.add(false);
+  }
+
+  void addTimer(Duration duration) {
+    _activityModel.timer = TimerModel(
+        startTime: DateTime.now(),
+        progress: 0,
+        fullLength: duration.inSeconds,
+        paused: true);
+    _timerInstantiatedStream.add(true);
   }
 
   void initTimer() {
-    _activityModel.timer = TimerModel(
-        startTime: DateTime.now(), progress: 3, fullLength: 10, paused: true);
-
-    final DateTime endTime = _activityModel.timer.startTime.add(Duration(
-        seconds:
-            _activityModel.timer.fullLength - _activityModel.timer.progress));
     if (_activityModel.timer != null) {
+      final DateTime endTime = _activityModel.timer.startTime.add(Duration(
+          seconds:
+              _activityModel.timer.fullLength - _activityModel.timer.progress));
+
       if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
           DateTime.now().isBefore(endTime) &&
           !_activityModel.timer.paused) {
@@ -73,8 +84,7 @@ class TimerBloc extends BlocBase {
   }
 
   void playTimer() {
-    if (_activityModel.timer != null &&
-        _activityModel.timer.paused) {
+    if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
 
@@ -113,7 +123,7 @@ class TimerBloc extends BlocBase {
     //update();
   }
 
-  void deleteTimer(){
+  void deleteTimer() {
     _timerInstantiatedStream.add(false);
   }
 
