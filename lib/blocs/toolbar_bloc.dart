@@ -5,6 +5,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -15,7 +16,7 @@ class ToolbarBloc extends BlocBase {
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
   BehaviorSubject<List<IconButton>> _visibleButtons =
-      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+  BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
@@ -34,14 +35,14 @@ class ToolbarBloc extends BlocBase {
     }
 
     final BehaviorSubject<List<IconButton>> iconList =
-        BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+    BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
     iconList.add(_iconsToAdd);
     _visibleButtons = iconList;
   }
 
   /// Find the icon picture based on the input enum
-  void _addIconButton(
-      List<IconButton> _iconsToAdd, AppBarIcon icon, BuildContext context) {
+  void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
+      BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept());
@@ -170,14 +171,34 @@ class ToolbarBloc extends BlocBase {
 
   IconButton _createIconChangeToCitizen(BuildContext context) {
     return IconButton(
-      icon: Image.asset('assets/icons/changeToCitizen.png'),
-      tooltip: 'Skift til borger tilstand',
-      onPressed: () {},
+        key: const Key('IconChangeToCitizen'),
+        icon: Image.asset('assets/icons/changeToCitizen.png'),
+        tooltip: 'Skift til borger tilstand',
+        onPressed: () {
+          showDialog < GirafConfirmDialog > (
+              context: context, builder: (BuildContext context)
+          {
+            return GirafConfirmDialog(
+              confirmButtonIcon: const ImageIcon(
+                  AssetImage('assets/icons/changeToCitizen.png')),
+              confirmButtonText: 'Skift',
+              description: 'Vil du skifte til borger tilstand?',
+              confirmOnPressed: () {
+                _authBloc.setMode(WeekplanMode.citizen);
+                Routes.pop(context);
+              },
+              title: 'Skift til borger',
+            );
+          }
+          );
+
+        }
     );
   }
 
   IconButton _createIconChangeToGuardian(BuildContext context) {
     return IconButton(
+      key: const Key('IconChangeToGuardian'),
       icon: Image.asset('assets/icons/changeToGuardian.png'),
       tooltip: 'Skift til værge tilstand',
       onPressed: () {
@@ -190,7 +211,9 @@ class ToolbarBloc extends BlocBase {
                 RichText(
                   text: TextSpan(
                     text: 'Logget ind som ',
-                    style: DefaultTextStyle.of(context).style,
+                    style: DefaultTextStyle
+                        .of(context)
+                        .style,
                     children: <TextSpan>[
                       TextSpan(
                           text: _authBloc.loggedInUsername,
@@ -199,6 +222,7 @@ class ToolbarBloc extends BlocBase {
                   ),
                 ),
                 TextField(
+                  key: const Key('SwitchToGuardianPassword'),
                   controller: passwordCtrl,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -210,9 +234,9 @@ class ToolbarBloc extends BlocBase {
             ),
             buttons: <DialogButton>[
               DialogButton(
+                key: const Key('SwitchToGuardianSubmit'),
                 onPressed: () {
-                  login(context, _authBloc.loggedInUsername,
-                      passwordCtrl.value.text);
+                  login(_authBloc.loggedInUsername, passwordCtrl.value.text);
                   Routes.pop(context);
                 },
                 child: const Text(
@@ -281,7 +305,7 @@ class ToolbarBloc extends BlocBase {
                 confirmButtonText: 'Log ud',
                 confirmButtonIcon:
                     const ImageIcon(AssetImage('assets/icons/logout.png')),
-                confirmOnPressed: () => _authBloc.logout(context),
+                confirmOnPressed: () => _authBloc.logout(),
               );
             });
       },
@@ -360,7 +384,7 @@ class ToolbarBloc extends BlocBase {
   );
 
   /// Used to authenticate a user.
-  void login(BuildContext context, String username, String password) {
+  void login(String username, String password) {
     _authBloc.authenticate(username, password);
   }
 
