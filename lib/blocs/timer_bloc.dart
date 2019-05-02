@@ -114,7 +114,7 @@ class TimerBloc extends BlocBase {
                 _activityModel.timer.fullLength *
                 (c.remaining.inMilliseconds / 1000).ceil()));
       });
-      _timerRunningStream.add(_activityModel.timer.paused);
+      _timerRunningStream.add(true);
     }
     //update();
   }
@@ -125,18 +125,27 @@ class TimerBloc extends BlocBase {
         !_activityModel.timer.paused) {
       _activityModel.timer.paused = true;
       _activityModel.timer.progress += _countDown.elapsed.inSeconds;
+<<<<<<< HEAD
       _resetCounterAndStopwatch();
       _timerRunningStream.add(!_activityModel.timer.paused);
+=======
+      _countDown.cancel();
+      _timerRunningStream.add(false);
+>>>>>>> 28353f619716c20d1cfec9878cda1860719c2544
     }
     //update();
   }
 
   void stopTimer() {
     _activityModel.timer.paused = true;
+<<<<<<< HEAD
     _resetCounterAndStopwatch();
     _activityModel.timer.progress = 0;
     _timerRunningStream.add(!_activityModel.timer.paused);
     _timerProgressStream.add(0);
+=======
+    _timerRunningStream.add(false);
+>>>>>>> 28353f619716c20d1cfec9878cda1860719c2544
     //update();
   }
 
