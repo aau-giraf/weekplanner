@@ -57,8 +57,10 @@ class TimerBloc extends BlocBase {
       if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
           DateTime.now().isBefore(endTime) &&
           !_activityModel.timer.paused) {
+        _timerRunningStream.add(true);
         _startCounter(endTime, _activityModel.timer.paused);
       } else if (_activityModel.timer.paused) {
+        _timerRunningStream.add(false);
         _timerProgressStream.add(1 -
             (1 /
                 _activityModel.timer.fullLength *
