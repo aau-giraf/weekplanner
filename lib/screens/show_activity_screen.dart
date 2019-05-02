@@ -198,7 +198,8 @@ class ShowActivityScreen extends StatelessWidget {
                     return Flexible(
                       child: GirafButton(
                         onPressed: () {
-                          _timerBloc.playTimer();
+                          snapshot.data ?
+                          _timerBloc.pauseTimer() : _timerBloc.playTimer();
                         },
                         icon: snapshot.data
                             ? const ImageIcon(
