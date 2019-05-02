@@ -36,7 +36,7 @@ class WeekplanScreen extends StatelessWidget {
     weekplanBloc.setWeek(_week, _user);
   }
 
-  /// The WeekplanBloc that contains the current chosen weekplan
+  /// The WeekplanBloc that contains the currently chosen weekplan
   final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
   final UsernameModel _user;
   final WeekModel _week;
@@ -48,8 +48,8 @@ class WeekplanScreen extends StatelessWidget {
         title: 'Ugeplan',
         appBarIcons: <AppBarIcon, VoidCallback>{
           AppBarIcon.edit: () => weekplanBloc.toggleEditMode(),
-          AppBarIcon.settings: null,
-          AppBarIcon.logout: null
+          AppBarIcon.settings: () {},
+          AppBarIcon.logout: () {}
         },
       ),
       body: StreamBuilder<UserWeekModel>(
@@ -93,8 +93,8 @@ class WeekplanScreen extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: <double>[
-                  0.33,
-                  0.66
+                  1 / 3,
+                  2 / 3
                 ],
                     colors: <Color>[
                   Color.fromRGBO(254, 215, 108, 1),
@@ -105,7 +105,7 @@ class WeekplanScreen extends StatelessWidget {
               iconSize: 50,
               icon: const Icon(Icons.delete_forever),
               onPressed: () {
-                /// Shows dialog to confirm/cancel deletion
+                // Shows dialog to confirm/cancel deletion
                 buildShowDialog(context);
               },
             ),
@@ -133,7 +133,7 @@ class WeekplanScreen extends StatelessWidget {
                 weekplanBloc.deleteMarkedActivities();
                 weekplanBloc.toggleEditMode();
 
-                /// Closes the dialog box
+                // Closes the dialog box
                 Routes.pop(context);
               });
         });
@@ -220,9 +220,10 @@ class WeekplanScreen extends StatelessWidget {
                                 child: _dragTargetPlaceholder(index, weekday),
                               );
                             });
+                      } else {
+                        return _dragTargetPictogram(
+                            index, weekday, snapshot.data);
                       }
-                      return _dragTargetPictogram(
-                          index, weekday, snapshot.data);
                     },
                     itemCount: weekday.activities.length + 1,
                   ),
@@ -383,15 +384,14 @@ class WeekplanScreen extends StatelessWidget {
     int index,
     ActivityState activityState,
   ) {
-    Widget icon = Container();
-    if (activityState == ActivityState.Completed) {
-      icon = Icon(
-        Icons.check,
-        key: const Key('IconComplete'),
-        color: Colors.green,
-        size: MediaQuery.of(context).size.width,
-      );
-    }
+    Widget icon = activityState == ActivityState.Completed
+        ? Icon(
+            Icons.check,
+            key: const Key('IconComplete'),
+            color: Colors.green,
+            size: MediaQuery.of(context).size.width,
+          )
+        : Container();
 
     return Card(
         margin: const EdgeInsets.all(20),

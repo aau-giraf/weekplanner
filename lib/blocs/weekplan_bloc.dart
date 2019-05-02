@@ -24,7 +24,7 @@ class WeekplanBloc extends BlocBase {
   final BehaviorSubject<bool> _activityPlaceholderVisible =
   BehaviorSubject<bool>.seeded(false);
 
-  /// The stream that emits the current chosen weekplan
+  /// The stream that emits the currently chosen weekplan
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in editMode or not
@@ -82,7 +82,7 @@ class WeekplanBloc extends BlocBase {
     }
 
     clearMarkedActivities();
-    /// Updates the weekplan in the database
+    // Updates the weekplan in the database
     _api.week.update(user.id, week.weekYear,
         week.weekNumber, week).listen((WeekModel onData) {});
   }
