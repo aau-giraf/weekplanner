@@ -66,17 +66,19 @@ void main() {
     weekplanBloc = WeekplanBloc(api);
   });
 
-  test('Loads a weekplan for the weekplan view', () {
+  test('Loads a weekplan for the weekplan view', async((DoneFn done) {
     final WeekModel week = WeekModel(name: 'test week');
-    weekplanBloc.setWeek(week, null);
 
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
       expect(response.week, equals(week));
+      done();
     });
-  });
 
-  test('Adds an activity to a list of marked activities', () {
+    weekplanBloc.setWeek(week, null);
+  }));
+
+  test('Adds an activity to a list of marked activities', async((DoneFn done) {
     // Create an ActivityModel, to add to the list of marked activites.
     final ActivityModel activityModel = ActivityModel(
         pictogram: PictogramModel(
@@ -91,17 +93,20 @@ void main() {
         order: null,
         state: null);
 
-    // Add the ActivityModel to the list of marked activities.
+    
 
-    weekplanBloc.markedActivities
+    weekplanBloc.markedActivities.skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 1);
+      done();
     });
 
+    // Add the ActivityModel to the list of marked activities.
     weekplanBloc.addMarkedActivity(activityModel);
-  });
+  }));
 
-  test('Removes an activity to a list of marked activities', () {
+  test('Removes an activity to a list of marked activities', 
+  async((DoneFn done) {
     final ActivityModel firstActivityModel = ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -128,18 +133,21 @@ void main() {
         order: null,
         state: null);
 
-    weekplanBloc.markedActivities
-        .listen((List<ActivityModel> markedActivitiesList) {
-      expect(markedActivitiesList.length, 1);
-    });
-
+    // Add marked activities to the list to prepare for the removal
     weekplanBloc.addMarkedActivity(firstActivityModel);
     weekplanBloc.addMarkedActivity(secondActivityModel);
 
-    weekplanBloc.removeMarkedActivity(firstActivityModel);
-  });
+    weekplanBloc.markedActivities.skip(1)
+        .listen((List<ActivityModel> markedActivitiesList) {
+          expect(markedActivitiesList.length, 1);
+          done();
+    });
 
-  test('Clears list of marked activities', () {
+    // Delete a marked activity
+    weekplanBloc.removeMarkedActivity(secondActivityModel);
+  }));
+
+  test('Clears list of marked activities', async((DoneFn done) {
     weekplanBloc.addMarkedActivity(ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -157,12 +165,14 @@ void main() {
         .skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 0);
+      done();
     });
 
     weekplanBloc.clearMarkedActivities();
-  });
+  }));
 
-  test('Checks if the activity is in the list of marked activities', () {
+  test('Checks if the activity is in the list of marked activities', 
+  async((DoneFn done) {
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -176,24 +186,27 @@ void main() {
         order: null,
         state: null);
 
-    weekplanBloc.markedActivities
+    weekplanBloc.markedActivities.skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(weekplanBloc.isActivityMarked(activity), true);
+      done();
     });
 
     weekplanBloc.addMarkedActivity(activity);
-  });
+  }));
 
-  test('Checks if the edit mode toggles from false', () {
+  test('Checks if the edit mode toggles from false', async((DoneFn done) {
     /// Editmode stream initial value is false.
     weekplanBloc.editMode.skip(1).listen((bool toggle) {
       expect(toggle, true);
+      done();
     });
 
     weekplanBloc.toggleEditMode();
-  });
+  }));
 
-  test('Checks if marked activities is deleted from a users weekplan', () {
+  test('Checks if marked activities are deleted from a users weekplan', 
+  async((DoneFn done) {
     final UsernameModel user =
         UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
 
@@ -234,21 +247,23 @@ void main() {
       verify(api.week.update(any, any, any, any));
       expect(userWeekModel.week.days[Weekday.Monday.index].activities,
           <ActivityModel>[]);
+      done();
     });
 
     weekplanBloc.deleteMarkedActivities();
-  });
+  }));
 
-  test('Checks if the edit mode toggles from true', () {
+  test('Checks if the edit mode toggles from true', async((DoneFn done) {
     /// Edit mode stream initial value is false.
     weekplanBloc.toggleEditMode();
 
     weekplanBloc.editMode.skip(1).listen((bool toggle) {
       expect(toggle, false);
+      done();
     });
 
     weekplanBloc.toggleEditMode();
-  });
+  }));
 
   test('Adds an activity to a given weekplan', async((DoneFn done) {
     final UsernameModel user =

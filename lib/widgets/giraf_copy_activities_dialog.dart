@@ -42,36 +42,38 @@ class GirafCopyActivitiesDialog extends StatefulWidget {
 class _State extends State<GirafCopyActivitiesDialog> {
   static const Color checkboxColor = Color(0xFFFF9D00);
 
-  final List<bool> _checkboxDays = <bool>[
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  final List<bool> _checkboxDays = List<bool>.filled(7, false);
 
-  void _checkboxMonChanged(bool value) =>
-      setState(() => _checkboxDays[Weekday.Monday.index] = value);
+  void _checkboxChanged(bool value, Weekday day) =>
+      setState(() => _checkboxDays[day.index] = value);
 
-  void _checkboxTueChanged(bool value) =>
-      setState(() => _checkboxDays[Weekday.Tuesday.index] = value);
+  void _checkboxMonChanged(bool value) {
+    _checkboxChanged(value, Weekday.Monday);
+  }
 
-  void _checkboxWedChanged(bool value) =>
-      setState(() => _checkboxDays[Weekday.Wednesday.index] = value);
+  void _checkboxTueChanged(bool value) {
+    _checkboxChanged(value, Weekday.Tuesday);
+  }
 
-  void _checkboxThuChanged(bool value) =>
-      setState(() => _checkboxDays[Weekday.Thursday.index] = value);
+  void _checkboxWedChanged(bool value) {
+    _checkboxChanged(value, Weekday.Wednesday);
+  }
 
-  void _checkboxFriChanged(bool value) =>
-      setState(() => _checkboxDays[Weekday.Friday.index] = value);
+  void _checkboxThuChanged(bool value) {
+    _checkboxChanged(value, Weekday.Thursday);
+  }
 
-  void _checkboxSatChanged(bool value) =>
-      setState(() => _checkboxDays[Weekday.Saturday.index] = value);
+  void _checkboxFriChanged(bool value) {
+    _checkboxChanged(value, Weekday.Friday);
+  }
 
-  void _checkboxSunChanged(bool value) =>
-      setState(() => _checkboxDays[Weekday.Sunday.index] = value);
+  void _checkboxSatChanged(bool value) {
+    _checkboxChanged(value, Weekday.Saturday);
+  }
+
+  void _checkboxSunChanged(bool value) {
+    _checkboxChanged(value, Weekday.Sunday);
+  }
 
   @override
   Widget build(BuildContext context) {
