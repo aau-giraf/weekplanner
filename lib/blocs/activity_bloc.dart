@@ -64,8 +64,6 @@ class ActivityBloc extends BlocBase {
     });
   }
 
-
-
   @override
   void dispose() {
     _activityModelStream.close();

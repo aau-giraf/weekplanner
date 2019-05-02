@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -164,49 +163,50 @@ class ShowActivityScreen extends StatelessWidget {
             Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
       )),
       Expanded(
-<<<<<<< HEAD
         child: StreamBuilder<bool>(
-            stream: _activityBloc.timerIsInstantiated,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return snapshot.data
-                  ? FittedBox(
-                      child: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: Container(
-                        child: IconButton(
-                            icon: const ImageIcon(
-                                AssetImage('assets/icons/addTimer.png')),
-                            onPressed: () {
-                              
-                            }),
-                      ),
-                    ))
-                  : FittedBox(
-                      child: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: StreamBuilder<double>(
-                          stream: _activityBloc.timerProgressStream,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<double> snapshot) {
-                            return Container(
-                              decoration: const ShapeDecoration(
-                                  shape: CircleBorder(
-                                      side: BorderSide(
-                                          color: Colors.black, width: 26))),
+          stream: _timerBloc.timerIsInstantiated,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return snapshot.data
+                ? FittedBox(
+                    child: Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: Container(
+                      child: IconButton(
+                          icon: const ImageIcon(
+                              AssetImage('assets/icons/addTimer.png')),
+                          onPressed: () {}),
+                    ),
+                  ))
+                : FittedBox(
+                    child: StreamBuilder<Object>(
+                      stream: _timerBloc.timerProgressStream,
+                      builder: (context, snapshot) {
+                        return Container(
+                          decoration: const ShapeDecoration(
+                              shape: CircleBorder(
+                                  side: BorderSide(
+                                      color: Colors.black, width: 0.5))),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.red,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
                               child: CircularProgressIndicator(
-                                strokeWidth: 50,
-                                backgroundColor: Colors.red,
+                                strokeWidth: 30,
                                 value: snapshot.data,
                                 valueColor: const AlwaysStoppedAnimation<Color>(
                                     Colors.white),
                               ),
-                            );
-                          }),
-                    ));
-            }),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+          },
+        ),
       ),
       StreamBuilder<bool>(
-          stream: _activityBloc.timerIsInstantiated,
+          stream: _timerBloc.timerIsInstantiated,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return Visibility(
               visible: !snapshot.data,
@@ -216,30 +216,26 @@ class ShowActivityScreen extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       StreamBuilder<bool>(
-                          stream: _activityBloc.timerIsRunning,
+                          stream: _timerBloc.timerIsRunning,
                           builder: (BuildContext context,
                               AsyncSnapshot<bool> snapshot) {
                             return Flexible(
-                              child: snapshot.data
-                                  ? GirafButton(
-                                      onPressed: () {
-                                        _activityBloc.pauseTimer();
-                                      },
-                                      icon: const ImageIcon(
-                                          AssetImage('assets/icons/pause.png')))
-                                  : GirafButton(
-                                      onPressed: () {
-                                        _activityBloc.playTimer();
-                                      },
-                                      icon: const ImageIcon(
-                                          AssetImage('assets/icons/play.png')),
-                                    ),
-                            );
+                                child: GirafButton(
+                                    onPressed: () {
+                                      snapshot.data
+                                          ? _timerBloc.pauseTimer()
+                                          : _timerBloc.playTimer();
+                                    },
+                                    icon: snapshot.data
+                                        ? const ImageIcon(AssetImage(
+                                            'assets/icons/pause.png'))
+                                        : const ImageIcon(AssetImage(
+                                            'assets/icons/play.png'))));
                           }),
                       Flexible(
                         child: GirafButton(
                           onPressed: () {
-                            _activityBloc.stopTimer();
+                            _timerBloc.stopTimer();
                           },
                           icon: const ImageIcon(
                               AssetImage('assets/icons/stop.png')),
@@ -254,7 +250,7 @@ class ShowActivityScreen extends StatelessWidget {
                               child: Flexible(
                                 child: GirafButton(
                                   onPressed: () {
-                                    _activityBloc.deleteTimer();
+                                    _timerBloc.deleteTimer();
                                   },
                                   icon: const ImageIcon(
                                       AssetImage('assets/icons/delete.png')),
@@ -268,84 +264,6 @@ class ShowActivityScreen extends StatelessWidget {
               ),
             );
           })
-=======
-        child: StreamBuilder<double>(
-            stream: _timerBloc.timerProgressStream,
-            builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-              return FittedBox(
-                child: Container(
-                  decoration: const ShapeDecoration(
-                      shape: CircleBorder(
-                          side: BorderSide(color: Colors.black, width: 0.5))),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 30,
-                        value: snapshot.data,
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          child: Row(
-            children: <Widget>[
-              StreamBuilder<bool>(
-                  stream: _timerBloc.timerIsRunning,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                    return Flexible(
-                      child: GirafButton(
-                        onPressed: () {
-                          snapshot.data ?
-                          _timerBloc.pauseTimer() : _timerBloc.playTimer();
-                        },
-                        icon: snapshot.data
-                            ? const ImageIcon(
-                                AssetImage('assets/icons/pause.png'))
-                            : const ImageIcon(
-                                AssetImage('assets/icons/play.png')),
-                      ),
-                    );
-                  }),
-              Flexible(
-                child: GirafButton(
-                  onPressed: () {
-                    _timerBloc.pauseTimer();
-                  },
-                  icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
-                ),
-              ),
-              StreamBuilder<WeekplanMode>(
-                  stream: _authBloc.mode,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<WeekplanMode> snapshot) {
-                    return Visibility(
-                      visible: snapshot.data == WeekplanMode.guardian,
-                      child: Flexible(
-                        child: GirafButton(
-                          onPressed: () {
-                            _timerBloc.stopTimer();
-                          },
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/delete.png')),
-                        ),
-                      ),
-                    );
-                  }),
-            ],
-          ),
-        ),
-      )
->>>>>>> feature_061
     ];
   }
 
@@ -394,13 +312,14 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// returns a dialog where time can be decided for an activity(timer)
-  Future<Duration> buildTimerDialogAndReturnDuration(BuildContext context) async {
+  Future<Duration> buildTimerDialogAndReturnDuration(
+      BuildContext context) async {
     Duration durationFromTextfield;
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final bool isInPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     final TextEditingController txtController = TextEditingController();
-    await showDialog<Center> (
+    await showDialog<Center>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -549,7 +468,7 @@ class ShowActivityScreen extends StatelessWidget {
     });
   }
 
-  Duration CalculateDuration(String durationFromTextField){
+  Duration CalculateDuration(String durationFromTextField) {
     int hours = 0;
     int minutes = 0;
     int seconds = 0;

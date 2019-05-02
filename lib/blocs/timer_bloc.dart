@@ -14,14 +14,21 @@ class TimerBloc extends BlocBase {
 
   /// BehaivorSubject for the updated weekmodel.
   final BehaviorSubject<double> _timerProgressStream =
-      BehaviorSubject<double>.seeded(0.0);
+  BehaviorSubject<double>.seeded(0.0);
 
   /// stream for checking if the timer is running
   Stream<bool> get timerIsRunning => _timerRunningStream.stream;
 
   /// BehaivorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerRunningStream =
-      BehaviorSubject<bool>.seeded(false);
+  BehaviorSubject<bool>.seeded(false);
+
+  /// stream for checking if the timer is running
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+
+  /// BehaivorSubject for to check if timer is running.
+  final BehaviorSubject<bool> _timerInstantiatedStream =
+  BehaviorSubject<bool>.seeded(false);
 
   void load(ActivityModel activity) {
     _activityModel = activity;
@@ -46,6 +53,7 @@ class TimerBloc extends BlocBase {
                 (_activityModel.timer.fullLength -
                     _activityModel.timer.progress)));
       }
+      _timerInstantiatedStream.add(true);
     }
   }
 
@@ -70,12 +78,12 @@ class TimerBloc extends BlocBase {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
 
-      final DateTime endTime = _activityModel.timer.startTime.add(Duration(
+      final DateTime _endTime = _activityModel.timer.startTime.add(Duration(
           seconds:
               _activityModel.timer.fullLength - _activityModel.timer.progress));
 
       _countDown = CountdownTimer(
-          endTime.difference(DateTime.now()), Duration(seconds: 1),
+          _endTime.difference(DateTime.now()), Duration(seconds: 1),
           stopwatch: _stopwatch);
 
       _timerStream = _countDown.listen((CountdownTimer c) {
@@ -103,6 +111,10 @@ class TimerBloc extends BlocBase {
     _activityModel.timer.paused = true;
     _timerRunningStream.add(!_activityModel.timer.paused);
     //update();
+  }
+
+  void deleteTimer(){
+    _timerInstantiatedStream.add(false);
   }
 
   @override
