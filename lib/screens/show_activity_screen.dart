@@ -184,15 +184,20 @@ class ShowActivityScreen extends StatelessWidget {
         child: SizedBox(
           child: Row(
             children: <Widget>[
-              Flexible(
-                child: GirafButton(
-                  onPressed: () {
-                    _activityBloc.playTimer();
-                  },
-                  icon: _activityBloc.timerIsPlaying() ?
-                  const ImageIcon(AssetImage('assets/icons/pause.png')) :
-                  const ImageIcon(AssetImage('assets/icons/play.png')),
-                ),
+              StreamBuilder<bool>(
+                stream: _activityBloc.timerIsRunning,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  return Flexible(
+                    child: GirafButton(
+                      onPressed: () {
+                        _activityBloc.playTimer();
+                      },
+                      icon: snapshot.data ?
+                      const ImageIcon(AssetImage('assets/icons/pause.png')) :
+                      const ImageIcon(AssetImage('assets/icons/play.png')),
+                    ),
+                  );
+                }
               ),
               Flexible(
                 child: GirafButton(
