@@ -237,7 +237,24 @@ class ShowActivityScreen extends StatelessWidget {
                       Flexible(
                         child: GirafButton(
                           onPressed: () {
-                            _timerBloc.stopTimer();
+                            showDialog<Center>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context){
+                                  return GirafConfirmDialog(
+                                    title: 'Stop Timer',
+                                    description: 'Vil du stoppe ' +
+                                        'timeren?',
+                                    confirmButtonText: 'stop',
+                                    confirmButtonIcon: const ImageIcon(
+                                        AssetImage(
+                                            'assets/icons/stop.png')),
+                                    confirmOnPressed: () {
+                                      _timerBloc.stopTimer();
+                                      Routes.pop(context);
+                                    },
+                                  );
+                                });
                           },
                           icon: const ImageIcon(
                               AssetImage('assets/icons/stop.png')),

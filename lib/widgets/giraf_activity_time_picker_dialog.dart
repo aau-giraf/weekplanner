@@ -187,4 +187,10 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
     seconds = int.parse(parts[parts.length - 1]);
     return Duration(hours: hours, minutes: minutes, seconds: seconds);
   }
+
+  ///Method to check whether the user have input something wrong in the
+  ///textfield when trying to accept
+  bool checkTextInput(String input){
+
+  }
 }
