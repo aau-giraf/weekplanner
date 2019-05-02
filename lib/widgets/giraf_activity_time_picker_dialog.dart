@@ -7,7 +7,7 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 
 ///The acitivty time picker dialog is a dialog, asking for a duration input.
 ///The duration should be inserted in the textfield, and the user can either
-///cancel the dialog, or confirm to create the timer for the activity. 
+///cancel the dialog, or confirm to create the timer for the activity.
 class GirafActivityTimerPickerDialog extends StatelessWidget {
 
   ///The activity time picker takes the activity as input, to insert a timer
@@ -66,6 +66,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                 controller: txtController,
                 textDirection: TextDirection.ltr,
                 cursorColor: Colors.white,
+                autofocus: true,
                 decoration: const InputDecoration.collapsed(
                   hintText: '00:00',
                   hintStyle:
