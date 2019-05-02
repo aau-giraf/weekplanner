@@ -6,8 +6,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0343f5af1fd961260e457aa48abb6f8175918f8d"
-      url: "https://github.com/aau-giraf/api_client.git"
+      resolved-ref: eaef181d51905b02f9c48dde703d1bf59eb9242c
+      url: "https://github.com/MStenkaer/api_client.git"
     source: git
     version: "0.0.1"
   async:
@@ -16,7 +16,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.8"
+    version: "2.2.0"
   async_test:
     dependency: "direct dev"
     description:
@@ -54,6 +54,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.11"
+  countdown:
+    dependency: "direct main"
+    description:
+      name: countdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -98,7 +105,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.3+1"
+    version: "0.12.5"
   meta:
     dependency: transitive
     description:
@@ -133,7 +140,7 @@ packages:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.3"
   rflutter_alert:
     dependency: "direct main"
     description:
@@ -180,7 +187,7 @@ packages:
       name: stream_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.8"
+    version: "2.0.0"
   string_scanner:
     dependency: transitive
     description:
@@ -201,7 +208,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.5"
   tuple:
     dependency: "direct main"
     description:
@@ -224,5 +231,5 @@ packages:
     source: hosted
     version: "2.0.8"
 sdks:
-  dart: ">=2.1.1-dev.0.0 <3.0.0"
+  dart: ">=2.2.0 <3.0.0"
   flutter: ">=0.1.4 <2.0.0"
