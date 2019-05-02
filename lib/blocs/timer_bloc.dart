@@ -93,7 +93,7 @@ class TimerBloc extends BlocBase {
               _activityModel.timer.fullLength - _activityModel.timer.progress));
 
       _countDown = CountdownTimer(
-          _endTime.difference(DateTime.now()), Duration(seconds: 1),
+          _endTime.difference(DateTime.now()), Duration(milliseconds: 500),
           stopwatch: _stopwatch);
 
       _timerStream = _countDown.listen((CountdownTimer c) {
@@ -124,6 +124,7 @@ class TimerBloc extends BlocBase {
   }
 
   void deleteTimer() {
+    _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
   }
 
