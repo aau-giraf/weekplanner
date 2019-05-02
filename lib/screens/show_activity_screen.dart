@@ -188,8 +188,8 @@ class ShowActivityScreen extends StatelessWidget {
                     _activityBloc.playTimer();
                   },
                   icon: _activityBloc.timerIsPlaying() ?
-                  const ImageIcon(AssetImage('assets/icons/play.png')) :
-                  const ImageIcon(AssetImage('assets/icons/pause.png')),
+                  const ImageIcon(AssetImage('assets/icons/pause.png')) :
+                  const ImageIcon(AssetImage('assets/icons/play.png')),
                 ),
               ),
               Flexible(
