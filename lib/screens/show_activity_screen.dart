@@ -38,6 +38,7 @@ class ShowActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
+
     ///Used to check if the keyboard is visible
     return buildScreenFromOrientation(orientation, context);
   }
@@ -163,9 +164,10 @@ class ShowActivityScreen extends StatelessWidget {
                   child: Padding(
                 padding: const EdgeInsets.all(0),
                 child: Container(
-                  decoration: ShapeDecoration(
+                  decoration: const ShapeDecoration(
                       shape: CircleBorder(
-                        side: BorderSide(color: Colors.black, width: 26))),
+                          side: BorderSide(
+                              color: Colors.black, width: 26))),
                   child: CircularProgressIndicator(
                     strokeWidth: 50,
                     backgroundColor: Colors.red,
@@ -278,12 +280,12 @@ class ShowActivityScreen extends StatelessWidget {
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0.0),
       titlePadding: const EdgeInsets.all(0.0),
-      shape: Border.all(
-          color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+      shape:
+          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
       title: const Center(
           child: GirafTitleHeader(
-            title: 'Vælg tid for aktivitet',
-          )),
+        title: 'Vælg tid for aktivitet',
+      )),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -293,8 +295,7 @@ class ShowActivityScreen extends StatelessWidget {
             child: Text(
               'Timer : Minutter : Sekunder',
               style: TextStyle(
-                  fontSize: 10,
-                  color: Color.fromRGBO(170, 170, 170, 1)),
+                  fontSize: 10, color: Color.fromRGBO(170, 170, 170, 1)),
             ),
           ),
           Padding(
@@ -302,8 +303,7 @@ class ShowActivityScreen extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey, width: 1),
-                  borderRadius:
-                  const BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                   color: Colors.white),
               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
               child: TextField(
@@ -315,8 +315,7 @@ class ShowActivityScreen extends StatelessWidget {
                 cursorColor: Colors.white,
                 decoration: const InputDecoration.collapsed(
                   hintText: '00:00',
-                  hintStyle: TextStyle(
-                      color: Color.fromRGBO(170, 170, 170, 1)),
+                  hintStyle: TextStyle(color: Color.fromRGBO(170, 170, 170, 1)),
                   fillColor: Colors.white,
                 ),
                 onChanged: (String input) {
@@ -325,13 +324,10 @@ class ShowActivityScreen extends StatelessWidget {
                   if (input.length == 1) {
                     txtController.text = '00:0' + input;
                   } else {
-                    placeholderText =
-                        input.substring(0, input.length);
-                    placeholderText =
-                        placeholderText.replaceAll(':', '');
+                    placeholderText = input.substring(0, input.length);
+                    placeholderText = placeholderText.replaceAll(':', '');
                     for (int i = 0; i < placeholderText.length; i++) {
-                      if (placeholderText.substring(i, i + 1) !=
-                          '0') {
+                      if (placeholderText.substring(i, i + 1) != '0') {
                         if (placeholderText.length - i == 2) {
                           stringToAddd = '00:' +
                               placeholderText.substring(
@@ -354,15 +350,13 @@ class ShowActivityScreen extends StatelessWidget {
                               stringToAddd =
                                   stringToAddd.replaceRange(0, 1, '');
                             } else {
-                              stringToAddd =
-                                  stringToAddd.replaceRange(
-                                      stringToAddd.length - 4,
-                                      stringToAddd.length - 2,
-                                      ':' +
-                                          stringToAddd.substring(
-                                              stringToAddd.length - 4,
-                                              stringToAddd.length -
-                                                  2));
+                              stringToAddd = stringToAddd.replaceRange(
+                                  stringToAddd.length - 4,
+                                  stringToAddd.length - 2,
+                                  ':' +
+                                      stringToAddd.substring(
+                                          stringToAddd.length - 4,
+                                          stringToAddd.length - 2));
                             }
                           }
                           stringToAddd = stringToAddd.replaceRange(
