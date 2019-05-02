@@ -54,7 +54,6 @@ class AuthBloc extends BlocBase {
   /// Shows a dialog when incorrect login in popup.
   void reactToLoginAttemptFromPopUp (BuildContext context) {
     // pops the loading spinner
-    print('Popping in loginattemptfunc');
     Routes.pop(context);
 
     // shows the dialog if the last login attempt was insuccessfull
@@ -87,7 +86,6 @@ class AuthBloc extends BlocBase {
 
     _api.account.login(username, password).take(1).listen((bool status) {
       if (status){
-        print('if: status == true');
         _loginStatus = true;
         //Pop the popup
         Routes.pop(context);

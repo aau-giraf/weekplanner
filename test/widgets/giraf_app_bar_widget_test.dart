@@ -1,4 +1,3 @@
-import 'package:api_client/api/account_api.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +10,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 class MockAuth extends Mock implements AuthBloc {
   @override
@@ -34,6 +34,33 @@ class MockAuth extends Mock implements AuthBloc {
   }
 
   @override
+  //Shows the failure dialog when wrong credentials when logging in from popup.
+  void showFailureDialog(BuildContext context){
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+              title: 'Fejl',
+              description: 'Forkert adgangskode',
+              key: Key('WrongUsernameOrPasswordDialog'));
+        });
+  }
+
+  @override
+  void authenticateFromPopUp(String username, String password,
+                             BuildContext context){
+    // Mock the API and allow these 2 users to ?login?
+    final bool status = (username == 'test' && password == 'test') ||
+        (username == 'Graatand' && password == 'password');
+
+    // If "login" failed show the failure dialog
+    if (!status) {
+      showFailureDialog(context);
+    }
+  }
+
+  @override
   void logout() {
     _loggedIn.add(false);
   }
@@ -45,38 +72,23 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
             title: 'TestTitle',
-            appBarIcons: const <AppBarIcon>[AppBarIcon.logout]));
-  }
-}
-
-class MockAccApi extends Mock implements AccountApi {
-
-  @override
-  Observable<bool> login(String username, String password) {
-    if (username == 'Graatand' && password == 'password'){
-      return Observable<bool>.just(true);
-    }
-    else{
-      return Observable<bool>.just(false);
-    }
+            appBarIcons: const <AppBarIcon>[AppBarIcon.logout,
+              AppBarIcon.changeToGuardian]));
   }
 }
 
 /// Used to retrieve the visibility widget wrapping the editbutton
 const String keyOfVisibilityForEdit = 'visibilityEditBtn';
 const String keyOfWrongUsernameOrPassword = 'WrongUsernameOrPasswordDialog';
-const String keyOfChangeToGuardian = 'ChangeToGuardian';
-const String keyOfPasswordField = 'PasswordField';
-const String keyOfConfirmButton = 'ConfirmButton';
+const String keyOfChangeToGuardian = 'IconChangeToGuardian';
+const String keyOfPasswordField = 'SwitchToGuardianPassword';
+const String keyOfConfirmButton = 'SwitchToGuardianSubmit';
 
 void main() {
   ToolbarBloc bloc;
-  Api api;
   MockAuth authBloc;
 
   setUp(() {
-    api = Api('any');
-    api.account = MockAccApi();
     di.clearAll();
     authBloc = MockAuth();
     di.registerDependency<AuthBloc>((_) => authBloc);
@@ -357,27 +369,17 @@ void main() {
   });
 
   testWidgets('Dialog should not be visible', (WidgetTester tester) async {
-    final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
-
-    girafAppBar.toolbarBloc.authBloc.loggedInUsername = 'Graatand';
-
-    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
-
+    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
-
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
         'password');
-
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
-
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
@@ -386,27 +388,17 @@ void main() {
 
 
   testWidgets('Dialog should be visible', (WidgetTester tester) async {
-    final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
-
-    girafAppBar.toolbarBloc.authBloc.loggedInUsername = 'Graatand';
-
-    await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
-
+    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
-
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
         'wrongpassword');
-
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
-
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),

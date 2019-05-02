@@ -15,11 +15,13 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
   /// The current visibility of the edit-button.
-  bool clickable = true;
+  bool _clickable = true;
+
+  /// Ouputs the buttons to be shown in the toolbar.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
   BehaviorSubject<List<IconButton>> _visibleButtons =
-  BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
@@ -39,14 +41,14 @@ class ToolbarBloc extends BlocBase {
     }
 
     final BehaviorSubject<List<IconButton>> iconList =
-    BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+        BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
     iconList.add(_iconsToAdd);
     _visibleButtons = iconList;
   }
 
   /// Find the icon picture based on the input enum
-  void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
-      BuildContext context) {
+  void _addIconButton(
+      List<IconButton> _iconsToAdd, AppBarIcon icon, BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept());
@@ -179,25 +181,22 @@ class ToolbarBloc extends BlocBase {
         icon: Image.asset('assets/icons/changeToCitizen.png'),
         tooltip: 'Skift til borger tilstand',
         onPressed: () {
-          showDialog < GirafConfirmDialog > (
-              context: context, builder: (BuildContext context)
-          {
-            return GirafConfirmDialog(
-              confirmButtonIcon: const ImageIcon(
-                  AssetImage('assets/icons/changeToCitizen.png')),
-              confirmButtonText: 'Skift',
-              description: 'Vil du skifte til borger tilstand?',
-              confirmOnPressed: () {
-                _authBloc.setMode(WeekplanMode.citizen);
-                Routes.pop(context);
-              },
-              title: 'Skift til borger',
-            );
-          }
-          );
-
-        }
-    );
+          showDialog<GirafConfirmDialog>(
+              context: context,
+              builder: (BuildContext context) {
+                return GirafConfirmDialog(
+                  confirmButtonIcon: const ImageIcon(
+                      AssetImage('assets/icons/changeToCitizen.png')),
+                  confirmButtonText: 'Skift',
+                  description: 'Vil du skifte til borger tilstand?',
+                  confirmOnPressed: () {
+                    _authBloc.setMode(WeekplanMode.citizen);
+                    Routes.pop(context);
+                  },
+                  title: 'Skift til borger',
+                );
+              });
+        });
   }
 
   IconButton _createIconChangeToGuardian(BuildContext context) {
@@ -215,9 +214,7 @@ class ToolbarBloc extends BlocBase {
                 RichText(
                   text: TextSpan(
                     text: 'Logget ind som ',
-                    style: DefaultTextStyle
-                        .of(context)
-                        .style,
+                    style: DefaultTextStyle.of(context).style,
                     children: <TextSpan>[
                       TextSpan(
                           text: _authBloc.loggedInUsername,
@@ -239,18 +236,18 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 key: const Key('SwitchToGuardianSubmit'),
-                onPressed: _loggingIn
-                  ? null
-                  : () {
-                  if(clickable) {
-                    clickable = false;
-                    loginFromPopUp(context, authBloc.loggedInUsername,
-                        passwordCtrl.value.text);
-                    Timer(Duration(milliseconds: 2000), (){
-                      clickable = true;
-                    });
-                  }
-                },
+                onPressed: _clickable
+                    ? () {
+                        if (_clickable) {
+                          _clickable = false;
+                          loginFromPopUp(context, _authBloc.loggedInUsername,
+                              passwordCtrl.value.text);
+                          Timer(const Duration(milliseconds: 2000), () {
+                            _clickable = true;
+                          });
+                        }
+                      }
+                    : null,
                 child: const Text(
                   'Bekræft',
                   style: TextStyle(color: Colors.white, fontSize: 20),
@@ -261,8 +258,6 @@ class ToolbarBloc extends BlocBase {
       },
     );
   }
-
-  bool _loggingIn = false;
 
   IconButton _createIconCopy() {
     return IconButton(
@@ -404,13 +399,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Used to authenticate a user from popup.
   void loginFromPopUp(BuildContext context, String username, String password) {
-    _loggingIn = true;
-
-    //Ensures that the login button cannot be spammed more than once every 5 sec
-    Timer(Duration(seconds: 5),(){
-      _loggingIn = false;
-    });
-    authBloc.authenticateFromPopUp(username, password, context);
+    _authBloc.authenticateFromPopUp(username, password, context);
   }
 
   @override
