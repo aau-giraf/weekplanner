@@ -45,6 +45,7 @@ class TimerBloc extends BlocBase {
         fullLength: duration.inSeconds,
         paused: true);
     _timerInstantiatedStream.add(true);
+    _timerProgressStream.add(0);
   }
 
   void initTimer() {
@@ -70,16 +71,25 @@ class TimerBloc extends BlocBase {
 
   CountdownTimer _countDown;
   StreamSubscription<CountdownTimer> _timerStream;
-  final Stopwatch _stopwatch = Stopwatch();
+  Stopwatch _stopwatch;
+
+  void _resetCounterAndStopwatch(){
+    _stopwatch.stop();
+    _countDown.cancel();
+    _timerStream.cancel();
+  }
 
   void _startCounter(DateTime endTime, bool paused) {
+    _stopwatch = Stopwatch();
     _countDown = CountdownTimer(
         endTime.difference(DateTime.now()), Duration(seconds: 1),
         stopwatch: _stopwatch);
 
     _timerStream = _countDown.listen((CountdownTimer c) {
-      _timerProgressStream.add(
-          1 - (1 / _activityModel.timer.fullLength * c.remaining.inSeconds));
+      _timerProgressStream.add(1 -
+          (1 /
+              _activityModel.timer.fullLength *
+              (c.remaining.inMilliseconds / 1000).ceil()));
     });
   }
 
@@ -88,17 +98,21 @@ class TimerBloc extends BlocBase {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
 
+      _stopwatch = Stopwatch();
+
       final DateTime _endTime = _activityModel.timer.startTime.add(Duration(
           seconds:
               _activityModel.timer.fullLength - _activityModel.timer.progress));
-
       _countDown = CountdownTimer(
-          _endTime.difference(DateTime.now()), Duration(milliseconds: 500),
+          _endTime.difference(_activityModel.timer.startTime),
+          Duration(seconds: 1),
           stopwatch: _stopwatch);
 
       _timerStream = _countDown.listen((CountdownTimer c) {
-        _timerProgressStream.add(
-            1 - (1 / _activityModel.timer.fullLength * c.remaining.inSeconds));
+        _timerProgressStream.add(1 -
+            (1 /
+                _activityModel.timer.fullLength *
+                (c.remaining.inMilliseconds / 1000).ceil()));
       });
       _timerRunningStream.add(_activityModel.timer.paused);
     }
@@ -111,7 +125,7 @@ class TimerBloc extends BlocBase {
         !_activityModel.timer.paused) {
       _activityModel.timer.paused = true;
       _activityModel.timer.progress += _countDown.elapsed.inSeconds;
-      _countDown.cancel();
+      _resetCounterAndStopwatch();
       _timerRunningStream.add(!_activityModel.timer.paused);
     }
     //update();
@@ -119,12 +133,16 @@ class TimerBloc extends BlocBase {
 
   void stopTimer() {
     _activityModel.timer.paused = true;
+    _resetCounterAndStopwatch();
+    _activityModel.timer.progress = 0;
     _timerRunningStream.add(!_activityModel.timer.paused);
+    _timerProgressStream.add(0);
     //update();
   }
 
   void deleteTimer() {
     _activityModel.timer = null;
+    _resetCounterAndStopwatch();
     _timerInstantiatedStream.add(false);
   }
 
