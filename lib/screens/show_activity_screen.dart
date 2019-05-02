@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -28,6 +30,7 @@ class ShowActivityScreen extends StatelessWidget {
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Text style used for title.
   final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
@@ -184,7 +187,9 @@ class ShowActivityScreen extends StatelessWidget {
                   onPressed: () {
                     _activityBloc.playTimer();
                   },
-                  icon: const ImageIcon(AssetImage('assets/icons/play.png')),
+                  icon: _activityBloc.timerIsPlaying() ?
+                  const ImageIcon(AssetImage('assets/icons/play.png')) :
+                  const ImageIcon(AssetImage('assets/icons/pause.png')),
                 ),
               ),
               Flexible(
@@ -192,16 +197,26 @@ class ShowActivityScreen extends StatelessWidget {
                   onPressed: () {
                     _activityBloc.pauseTimer();
                   },
-                  icon: const ImageIcon(AssetImage('assets/icons/pause.png')),
-                ),
-              ),
-              Flexible(
-                child: GirafButton(
-                  onPressed: () {
-                    _activityBloc.stopTimer();
-                  },
                   icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
                 ),
+              ),
+              StreamBuilder<WeekplanMode>(
+                stream: _authBloc.mode,
+                builder: (BuildContext context,
+                    AsyncSnapshot<WeekplanMode> snapshot) {
+                  return Visibility(
+                    visible: snapshot.data == WeekplanMode.guardian,
+                    child: Flexible(
+                      child: GirafButton(
+                        onPressed: () {
+                          _activityBloc.stopTimer();
+                        },
+                        icon: const ImageIcon(AssetImage(
+                            'assets/icons/delete.png')),
+                      ),
+                    ),
+                  );
+                }
               ),
             ],
           ),

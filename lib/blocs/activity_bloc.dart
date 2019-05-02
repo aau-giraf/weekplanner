@@ -147,6 +147,11 @@ class ActivityBloc extends BlocBase {
     //update();
   }
 
+  ///method to get whether the timer is playing
+  bool timerIsPlaying(){
+    return _activityModel.timer == null ? false : !_activityModel.timer.paused;
+  }
+
   @override
   void dispose() {
     _activityModelStream.close();
