@@ -14,7 +14,7 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
-  /// The current visibility of the edit-button.
+  /// If the confirm button in popup is clickable.
   bool _clickable = true;
 
   /// Ouputs the buttons to be shown in the toolbar.
@@ -236,12 +236,15 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 key: const Key('SwitchToGuardianSubmit'),
+                // Debouncer for button, so it cannot
+                // be tapped than each 2 seconds.
                 onPressed: _clickable
                     ? () {
                         if (_clickable) {
                           _clickable = false;
                           loginFromPopUp(context, _authBloc.loggedInUsername,
                               passwordCtrl.value.text);
+                          // Timer makes it clicable again after 2 seconds.
                           Timer(const Duration(milliseconds: 2000), () {
                             _clickable = true;
                           });
