@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -162,6 +164,111 @@ class ShowActivityScreen extends StatelessWidget {
             Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
       )),
       Expanded(
+<<<<<<< HEAD
+        child: StreamBuilder<bool>(
+            stream: _activityBloc.timerIsInstantiated,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              return snapshot.data
+                  ? FittedBox(
+                      child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: Container(
+                        child: IconButton(
+                            icon: const ImageIcon(
+                                AssetImage('assets/icons/addTimer.png')),
+                            onPressed: () {
+                              
+                            }),
+                      ),
+                    ))
+                  : FittedBox(
+                      child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: StreamBuilder<double>(
+                          stream: _activityBloc.timerProgressStream,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<double> snapshot) {
+                            return Container(
+                              decoration: const ShapeDecoration(
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          color: Colors.black, width: 26))),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 50,
+                                backgroundColor: Colors.red,
+                                value: snapshot.data,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              ),
+                            );
+                          }),
+                    ));
+            }),
+      ),
+      StreamBuilder<bool>(
+          stream: _activityBloc.timerIsInstantiated,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return Visibility(
+              visible: !snapshot.data,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  child: Row(
+                    children: <Widget>[
+                      StreamBuilder<bool>(
+                          stream: _activityBloc.timerIsRunning,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<bool> snapshot) {
+                            return Flexible(
+                              child: snapshot.data
+                                  ? GirafButton(
+                                      onPressed: () {
+                                        _activityBloc.pauseTimer();
+                                      },
+                                      icon: const ImageIcon(
+                                          AssetImage('assets/icons/pause.png')))
+                                  : GirafButton(
+                                      onPressed: () {
+                                        _activityBloc.playTimer();
+                                      },
+                                      icon: const ImageIcon(
+                                          AssetImage('assets/icons/play.png')),
+                                    ),
+                            );
+                          }),
+                      Flexible(
+                        child: GirafButton(
+                          onPressed: () {
+                            _activityBloc.stopTimer();
+                          },
+                          icon: const ImageIcon(
+                              AssetImage('assets/icons/stop.png')),
+                        ),
+                      ),
+                      StreamBuilder<WeekplanMode>(
+                          stream: _authBloc.mode,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<WeekplanMode> snapshot) {
+                            return Visibility(
+                              visible: snapshot.data == WeekplanMode.guardian,
+                              child: Flexible(
+                                child: GirafButton(
+                                  onPressed: () {
+                                    _activityBloc.deleteTimer();
+                                  },
+                                  icon: const ImageIcon(
+                                      AssetImage('assets/icons/delete.png')),
+                                ),
+                              ),
+                            );
+                          }),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          })
+=======
         child: StreamBuilder<double>(
             stream: _timerBloc.timerProgressStream,
             builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
@@ -238,6 +345,7 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       )
+>>>>>>> feature_061
     ];
   }
 
@@ -286,144 +394,173 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// returns a dialog where time can be decided for an activity(timer)
-  Widget buildTimerDialog(BuildContext context) {
+  Future<Duration> buildTimerDialogAndReturnDuration(BuildContext context) async {
+    Duration durationFromTextfield;
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final bool isInPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     final TextEditingController txtController = TextEditingController();
-    return AlertDialog(
-      contentPadding: const EdgeInsets.all(0.0),
-      titlePadding: const EdgeInsets.all(0.0),
-      shape:
-          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
-      title: const Center(
-          child: GirafTitleHeader(
-        title: 'Vælg tid for aktivitet',
-      )),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const Center(child: Text('Indtast tid')),
-          const Center(
-            child: Text(
-              'Timer : Minutter : Sekunder',
-              style: TextStyle(
-                  fontSize: 10, color: Color.fromRGBO(170, 170, 170, 1)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1),
-                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                  color: Colors.white),
-              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-              child: TextField(
-                key: const Key('TimerKey'),
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                controller: txtController,
-                textDirection: TextDirection.ltr,
-                cursorColor: Colors.white,
-                decoration: const InputDecoration.collapsed(
-                  hintText: '00:00',
-                  hintStyle: TextStyle(color: Color.fromRGBO(170, 170, 170, 1)),
-                  fillColor: Colors.white,
-                ),
-                onChanged: (String input) {
-                  String placeholderText;
-                  String stringToAddd = '';
-                  if (input.length == 1) {
-                    txtController.text = '00:0' + input;
-                  } else {
-                    placeholderText = input.substring(0, input.length);
-                    placeholderText = placeholderText.replaceAll(':', '');
-                    for (int i = 0; i < placeholderText.length; i++) {
-                      if (placeholderText.substring(i, i + 1) != '0') {
-                        if (placeholderText.length - i == 2) {
-                          stringToAddd = '00:' +
-                              placeholderText.substring(
-                                  i, placeholderText.length);
-                          break;
-                        } else if (placeholderText.length < 4) {
-                          stringToAddd = '0' + placeholderText;
-                          stringToAddd = stringToAddd.replaceRange(
-                              stringToAddd.length - 2,
-                              stringToAddd.length,
-                              ':' +
-                                  stringToAddd.substring(
-                                      stringToAddd.length - 2,
-                                      stringToAddd.length));
-                          break;
-                        } else {
-                          stringToAddd = placeholderText;
-                          if (stringToAddd.length > 4) {
-                            if (stringToAddd.substring(0, 1) == '0') {
-                              stringToAddd =
-                                  stringToAddd.replaceRange(0, 1, '');
-                            } else {
-                              stringToAddd = stringToAddd.replaceRange(
-                                  stringToAddd.length - 4,
-                                  stringToAddd.length - 2,
-                                  ':' +
-                                      stringToAddd.substring(
-                                          stringToAddd.length - 4,
-                                          stringToAddd.length - 2));
-                            }
-                          }
-                          stringToAddd = stringToAddd.replaceRange(
-                              stringToAddd.length - 2,
-                              stringToAddd.length,
-                              ':' +
-                                  stringToAddd.substring(
-                                      stringToAddd.length - 2,
-                                      stringToAddd.length));
-                          break;
-                        }
-                      }
-                    }
-                    txtController.text = stringToAddd;
-                  }
-                  txtController.selection = TextSelection.collapsed(
-                      offset: txtController.text.length);
-                },
-              ),
-            ),
-          ),
-          Visibility(
-            visible: (isInPortrait && !keyboardVisible) ||
-                (isInPortrait && keyboardVisible) ||
-                (!isInPortrait && !keyboardVisible),
-            child: Row(
+    await showDialog<Center> (
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(0.0),
+            titlePadding: const EdgeInsets.all(0.0),
+            shape: Border.all(
+                color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+            title: const Center(
+                child: GirafTitleHeader(
+              title: 'Vælg tid for aktivitet',
+            )),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
-                      child: GirafButton(
-                        onPressed: () => Routes.pop(context),
-                        icon: const ImageIcon(
-                            AssetImage('assets/icons/cancel.png')),
-                      )),
+                const Center(child: Text('Indtast tid')),
+                const Center(
+                  child: Text(
+                    'Timer : Minutter : Sekunder',
+                    style: TextStyle(
+                        fontSize: 10, color: Color.fromRGBO(170, 170, 170, 1)),
+                  ),
                 ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 10, 10),
-                      child: GirafButton(
-                        onPressed: () => null,
-                        icon: const ImageIcon(
-                            AssetImage('assets/icons/accept.png')),
-                      )),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20.0)),
+                        color: Colors.white),
+                    padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                    child: TextField(
+                      key: const Key('TimerKey'),
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      controller: txtController,
+                      textDirection: TextDirection.ltr,
+                      cursorColor: Colors.white,
+                      decoration: const InputDecoration.collapsed(
+                        hintText: '00:00',
+                        hintStyle:
+                            TextStyle(color: Color.fromRGBO(170, 170, 170, 1)),
+                        fillColor: Colors.white,
+                      ),
+                      onChanged: (String input) {
+                        String placeholderText;
+                        String stringToAddd = '';
+                        if (input.length == 1) {
+                          txtController.text = '00:0' + input;
+                        } else {
+                          placeholderText = input.substring(0, input.length);
+                          placeholderText = placeholderText.replaceAll(':', '');
+                          for (int i = 0; i < placeholderText.length; i++) {
+                            if (placeholderText.substring(i, i + 1) != '0') {
+                              if (placeholderText.length - i == 2) {
+                                stringToAddd = '00:' +
+                                    placeholderText.substring(
+                                        i, placeholderText.length);
+                                break;
+                              } else if (placeholderText.length < 4) {
+                                stringToAddd = '0' + placeholderText;
+                                stringToAddd = stringToAddd.replaceRange(
+                                    stringToAddd.length - 2,
+                                    stringToAddd.length,
+                                    ':' +
+                                        stringToAddd.substring(
+                                            stringToAddd.length - 2,
+                                            stringToAddd.length));
+                                break;
+                              } else {
+                                stringToAddd = placeholderText;
+                                if (stringToAddd.length > 4) {
+                                  if (stringToAddd.substring(0, 1) == '0') {
+                                    stringToAddd =
+                                        stringToAddd.replaceRange(0, 1, '');
+                                  } else {
+                                    stringToAddd = stringToAddd.replaceRange(
+                                        stringToAddd.length - 4,
+                                        stringToAddd.length - 2,
+                                        ':' +
+                                            stringToAddd.substring(
+                                                stringToAddd.length - 4,
+                                                stringToAddd.length - 2));
+                                  }
+                                }
+                                stringToAddd = stringToAddd.replaceRange(
+                                    stringToAddd.length - 2,
+                                    stringToAddd.length,
+                                    ':' +
+                                        stringToAddd.substring(
+                                            stringToAddd.length - 2,
+                                            stringToAddd.length));
+                                break;
+                              }
+                            }
+                          }
+                          txtController.text = stringToAddd;
+                        }
+                        txtController.selection = TextSelection.collapsed(
+                            offset: txtController.text.length);
+                      },
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (isInPortrait && !keyboardVisible) ||
+                      (isInPortrait && keyboardVisible) ||
+                      (!isInPortrait && !keyboardVisible),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
+                            child: GirafButton(
+                              onPressed: () => Routes.pop(context),
+                              icon: const ImageIcon(
+                                  AssetImage('assets/icons/cancel.png')),
+                            )),
+                      ),
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 0, 10, 10),
+                            child: GirafButton(
+                              onPressed: () {
+                                durationFromTextfield =
+                                    CalculateDuration(txtController.text);
+                                Routes.pop(context);
+                              },
+                              icon: const ImageIcon(
+                                  AssetImage('assets/icons/accept.png')),
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        }).then((val) {
+      return durationFromTextfield;
+    });
+  }
+
+  Duration CalculateDuration(String durationFromTextField){
+    int hours = 0;
+    int minutes = 0;
+    int seconds = 0;
+    final List<String> parts = durationFromTextField.split(':');
+    if (parts.length > 2) {
+      hours = int.parse(parts[parts.length - 3]);
+    }
+    if (parts.length > 1) {
+      minutes = int.parse(parts[parts.length - 2]);
+    }
+    seconds = int.parse(parts[parts.length - 1]);
+    return Duration(hours: hours, minutes: minutes, seconds: seconds);
   }
 }
