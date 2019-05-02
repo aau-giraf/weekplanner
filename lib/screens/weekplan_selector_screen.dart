@@ -6,10 +6,12 @@ import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
@@ -28,6 +30,22 @@ class WeekplanSelectorScreen extends StatelessWidget {
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Vælg ugeplan',
+        appBarIcons: <AppBarIcon, VoidCallback>{
+          AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
+          AppBarIcon.settings: () {},
+          AppBarIcon.logout: () {}
+        },
+      ),
+      bottomNavigationBar: StreamBuilder<bool>(
+        stream: _weekBloc.editMode,
+        initialData: false,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.data) {
+            return buildBottomAppBar(context);
+          } else {
+            return Container(width: 0.0, height: 0.0);
+          }
+        },
       ),
       body: Column(
         children: <Widget>[
@@ -130,5 +148,65 @@ class WeekplanSelectorScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Builds the BottomAppBar when in edit mode
+  BottomAppBar buildBottomAppBar(BuildContext context) {
+    return BottomAppBar(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: <double>[
+                          1 / 3,
+                          2 / 3
+                        ],
+                        colors: <Color>[
+                          Color.fromRGBO(254, 215, 108, 1),
+                          Color.fromRGBO(253, 187, 85, 1),
+                        ])),
+                child: IconButton(
+                  key: const Key('DeleteActivtiesButton'),
+                  iconSize: 50,
+                  icon: const Icon(Icons.delete_forever),
+                  onPressed: () {
+                    // Shows dialog to confirm/cancel deletion
+                    buildShowDialog(context);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  /// Builds dialog box to confirm/cancel deletion
+  Future<Center> buildShowDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+              title: 'Bekræft',
+              description: 'Vil du slette ' +
+                  _weekBloc.getNumberOfMarkedWeekModels().toString() +
+                  ' ugeplan(er)',
+              confirmButtonText: 'Bekræft',
+              confirmButtonIcon:
+              const ImageIcon(AssetImage('assets/icons/accept.png')),
+              confirmOnPressed: () {
+                _weekBloc.deleteMarkedWeekModels();
+                _weekBloc.toggleEditMode();
+
+                // Closes the dialog box
+                Routes.pop(context);
+              });
+        });
   }
 }

@@ -20,11 +20,22 @@ class WeekplansBloc extends BlocBase {
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get weekModels => _weekModel.stream;
 
+  /// The stream that emits whether in editMode or not
+  Stream<bool> get editMode => _editMode.stream;
+
+  /// The stream that emits the marked activities
+  Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
+
   final BehaviorSubject<List<WeekModel>> _weekModel =
       BehaviorSubject<List<WeekModel>>();
 
   final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
       BehaviorSubject<List<WeekNameModel>>();
+
+  final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
+
+  final BehaviorSubject<List<WeekModel>> _markedWeekModels =
+  BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
   UsernameModel _user;
@@ -70,6 +81,54 @@ class WeekplansBloc extends BlocBase {
         _weekModel.add(weekModels);
       });
     }
+  }
+
+  /// Adds a new marked week model to the stream
+  void addMarkedWeekModel(WeekModel weekModel) {
+    final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;
+
+    localMarkedWeekModels.add(weekModel);
+    _markedWeekModels.add(localMarkedWeekModels);
+  }
+
+  /// Removes a marked week model from the stream
+  void removeMarkedWeekModel(WeekModel weekModel) {
+    final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;
+
+    localMarkedWeekModels.remove(weekModel);
+    _markedWeekModels.add(localMarkedWeekModels);
+  }
+
+  /// Clears marked week models
+  void clearMarkedWeekModels() {
+    _markedWeekModels.add(<WeekModel>[]);
+  }
+
+  /// Checks if a week model is marked
+  bool isActivityMarked(WeekModel weekModel) {
+    if (_markedWeekModels.value == null){
+      return false;
+    }
+    return _markedWeekModels.value.contains(weekModel);
+  }
+
+  /// Delete the marked week models when the trash button is clicked
+  void deleteMarkedWeekModels() {
+    clearMarkedWeekModels();
+
+    // Updates the weekplan in the database
+   // _api.week.update(user.id, week.weekYear,
+     //   week.weekNumber, week).listen((WeekModel onData) {});
+  }
+
+  /// Returns the number of marked week models
+  int getNumberOfMarkedWeekModels() {
+    return _markedWeekModels.value.length;
+  }
+
+  /// Toggles edit mode
+  void toggleEditMode() {
+    _editMode.add(!_editMode.value);
   }
 
   @override
