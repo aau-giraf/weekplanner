@@ -1,8 +1,7 @@
 import 'package:api_client/api/api.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -20,6 +19,13 @@ class AuthBloc extends BlocBase {
 
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
+  /// Reflect the current clearence level of the user
+  final BehaviorSubject<WeekplanMode> _mode =
+  BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
+
+  /// The stream that emits the current clearence level
+  Observable<WeekplanMode> get mode => _mode.stream;
+
 
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password) {
@@ -32,21 +38,25 @@ class AuthBloc extends BlocBase {
       if (status) {
         _loggedIn.add(status);
         loggedInUsername = username;
+        setMode(WeekplanMode.guardian);
       }
     });
   }
 
   /// Logs the currently logged in user out
-  void logout(BuildContext context) {
-    _api.account.logout().take(1).listen((_) {
+  void logout() {
+    _api.account.logout().listen((_) {
       _loggedIn.add(false);
     });
-
-    Routes.goHome(context);
+  }
+  /// Updates the mode of the weekpan
+  void setMode(WeekplanMode mode) {
+    _mode.add(mode);
   }
 
   @override
   void dispose() {
     _loggedIn.close();
+    _mode.close();
   }
 }

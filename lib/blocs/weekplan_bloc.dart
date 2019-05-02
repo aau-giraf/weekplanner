@@ -25,7 +25,7 @@ class WeekplanBloc extends BlocBase {
   BehaviorSubject<bool>.seeded(false);
 
   /// The stream that emits the currently chosen weekplan
-  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+  Observable<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
