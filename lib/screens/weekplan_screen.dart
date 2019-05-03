@@ -1,25 +1,25 @@
-import 'package:api_client/models/weekday_model.dart';
-import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:api_client/models/weekday_model.dart';
+import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
-import 'package:weekplanner/screens/pictogram_search_screen.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:tuple/tuple.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
 /// Color of the add buttons
@@ -128,7 +128,9 @@ class WeekplanScreen extends StatelessWidget {
                           key: const Key('CancelActivtiesButton'),
                           icon: const ImageIcon(
                               AssetImage('assets/icons/cancel.png')),
-                          onPressed: () {_buildCancelDialog(context);},
+                          onPressed: () {
+                            _buildCancelDialog(context);
+                          },
                         ),
                       ),
                       Padding(
@@ -198,7 +200,7 @@ class WeekplanScreen extends StatelessWidget {
                   ' aktivitet(er) som annuleret',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
-              const ImageIcon(AssetImage('assets/icons/accept.png')),
+                  const ImageIcon(AssetImage('assets/icons/accept.png')),
               confirmOnPressed: () {
                 weekplanBloc.cancelMarkedActivities();
                 weekplanBloc.toggleEditMode();
@@ -505,13 +507,13 @@ class WeekplanScreen extends StatelessWidget {
         color: Colors.green,
         size: MediaQuery.of(context).size.width,
       );
-    } else if (activityState == ActivityState.Canceled){
+    } else if (activityState == ActivityState.Canceled) {
       icon = Icon(
         Icons.clear,
         key: const Key('IconCanceled'),
         color: Colors.red,
         size: MediaQuery.of(context).size.width,
-        );
+      );
     } else {
       icon = Container();
     }

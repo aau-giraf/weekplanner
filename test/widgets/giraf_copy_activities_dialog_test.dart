@@ -79,7 +79,7 @@ void main() {
       'independetly', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
 
-    List<String> keys = <String>[
+    final List<String> keys = <String>[
       'Mon',
       'Tue',
       'Wed',
