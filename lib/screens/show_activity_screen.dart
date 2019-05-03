@@ -101,14 +101,12 @@ class ShowActivityScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: buildTimer(context),
-                ),
+                child: buildTimer(context),
               ),
             ),
           ),
         ),
-      )
+      ),
     ];
   }
 
@@ -154,153 +152,187 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the timer widget.
-  List<Widget> buildTimer(BuildContext overallContext) {
-    return <Widget>[
-      Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:
-            Text('Timer', style: titleTextStyle, textAlign: TextAlign.center),
-      )),
-      Expanded(
-        child: StreamBuilder<bool>(
-          stream: _timerBloc.timerIsInstantiated,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return (snapshot.hasData ? snapshot.data : false)
-                ? FittedBox(
-              child: StreamBuilder<double>(
-                stream: _timerBloc.timerProgressStream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<double> snapshot) {
-                  return Container(
-                    decoration: const ShapeDecoration(
-                        shape: CircleBorder(
-                            side: BorderSide(
-                                color: Colors.black, width: 0.5))),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.red,
+  StreamBuilder<WeekplanMode> buildTimer(BuildContext overallContext) {
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext modeContext,
+            AsyncSnapshot<WeekplanMode> modeSnapshot) {
+          return StreamBuilder<bool>(
+              stream: _timerBloc.timerIsInstantiated,
+              builder: (BuildContext timerInitcontext,
+                  AsyncSnapshot<bool> timerInitsnapshot) {
+                return Column(children: <Widget>[
+                  Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: CircularProgressIndicator(
-                          strokeWidth: 30,
-                          value: snapshot.hasData ? snapshot.data : 0.0,
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                              Colors.white),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-                : FittedBox(
-                child: Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: Container(
-                    child: IconButton(
-                        icon: const ImageIcon(
-                    AssetImage('assets/icons/addTimerHighRes.png')),
-                        onPressed: () {
-                          buildTimerDialog(overallContext);
-                        }),
-                  ),
-                ));
-          },
-        ),
-      ),
-      StreamBuilder<bool>(
-          stream: _timerBloc.timerIsInstantiated,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return Visibility(
-              visible: snapshot.hasData ? snapshot.data : false,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  child: Row(
-                    children: <Widget>[
-                      StreamBuilder<bool>(
-                          stream: _timerBloc.timerIsRunning,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<bool> snapshot) {
-                            return Flexible(
-                                child: GirafButton(
-                                    onPressed: () {
-                                      (snapshot.hasData ? snapshot.data : false)
-                                          ? _timerBloc.pauseTimer()
-                                          : _timerBloc.playTimer();
-                                    },
-                                    icon: (snapshot.hasData
-                                        ? snapshot.data : false)
-                                        ? const ImageIcon(AssetImage(
-                                        'assets/icons/pause.png'))
-                                        : const ImageIcon(AssetImage(
-                                        'assets/icons/play.png'))));
-                          }),
-                      Flexible(
-                        child: GirafButton(
-                          onPressed: () {
-                            showDialog<Center>(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return GirafConfirmDialog(
-                                    title: 'Stop Timer',
-                                    description: 'Vil du stoppe ' + 'timeren?',
-                                    confirmButtonText: 'stop',
-                                    confirmButtonIcon: const ImageIcon(
-                                        AssetImage('assets/icons/stop.png')),
-                                    confirmOnPressed: () {
-                                      _timerBloc.stopTimer();
-                                      Routes.pop(context);
-                                    },
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Timer',
+                        style: titleTextStyle, textAlign: TextAlign.center),
+                  )),
+                  Expanded(
+                      child: (timerInitsnapshot.hasData
+                              ? timerInitsnapshot.data
+                              : false)
+                          ? FittedBox(
+                              child: StreamBuilder<double>(
+                                stream: _timerBloc.timerProgressStream,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<double> snapshot) {
+                                  return Container(
+                                    decoration: const ShapeDecoration(
+                                        shape: CircleBorder(
+                                            side: BorderSide(
+                                                color: Colors.black,
+                                                width: 0.5))),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.red,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 30,
+                                          value: snapshot.hasData
+                                              ? snapshot.data
+                                              : 0.0,
+                                          valueColor:
+                                              const AlwaysStoppedAnimation<
+                                                  Color>(Colors.white),
+                                        ),
+                                      ),
+                                    ),
                                   );
-                                });
-                          },
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/stop.png')),
-                        ),
-                      ),
-                      StreamBuilder<WeekplanMode>(
-                          stream: _authBloc.mode,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<WeekplanMode> snapshot) {
-                            return Visibility(
-                              visible: snapshot.data == WeekplanMode.guardian,
-                              child: Flexible(
-                                child: GirafButton(
-                                  onPressed: () {
-                                    showDialog<Center>(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return GirafConfirmDialog(
-                                            title: 'Slet Timer',
-                                            description:
-                                            'Vil du slette ' + 'timeren?',
-                                            confirmButtonText: 'Slet',
-                                            confirmButtonIcon: const ImageIcon(
-                                                AssetImage(
-                                                    'assets/icons/delete.png')),
-                                            confirmOnPressed: () {
-                                              _timerBloc.deleteTimer();
-                                              Routes.pop(context);
-                                            },
-                                          );
-                                        });
-                                  },
-                                  icon: const ImageIcon(
-                                      AssetImage('assets/icons/delete.png')),
-                                ),
+                                },
                               ),
-                            );
-                          }),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          })
-    ];
+                            )
+                          : FittedBox(
+                              child: Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                child: StreamBuilder<WeekplanMode>(
+                                    stream: _authBloc.mode,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<WeekplanMode> snapshot) {
+                                      return Visibility(
+                                        visible: snapshot.hasData
+                                            ? snapshot.data ==
+                                                WeekplanMode.guardian
+                                            : true,
+                                        child: IconButton(
+                                            icon: const ImageIcon(AssetImage(
+                                                'assets/icons/addTimerHighRes.png')),
+                                            onPressed: () {
+                                              buildTimerDialog(overallContext);
+                                            }),
+                                      );
+                                    }),
+                              ),
+                            ))),
+                  StreamBuilder<bool>(
+                      stream: _timerBloc.timerIsInstantiated,
+                      builder:
+                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                        return Visibility(
+                          visible: snapshot.hasData ? snapshot.data : false,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              child: Row(
+                                children: <Widget>[
+                                  StreamBuilder<bool>(
+                                      stream: _timerBloc.timerIsRunning,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<bool> snapshot) {
+                                        return Flexible(
+                                            child: GirafButton(
+                                                onPressed: () {
+                                                  (snapshot.hasData
+                                                          ? snapshot.data
+                                                          : false)
+                                                      ? _timerBloc.pauseTimer()
+                                                      : _timerBloc.playTimer();
+                                                },
+                                                icon: (snapshot.hasData
+                                                        ? snapshot.data
+                                                        : false)
+                                                    ? const ImageIcon(AssetImage(
+                                                        'assets/icons/pause.png'))
+                                                    : const ImageIcon(AssetImage(
+                                                        'assets/icons/play.png'))));
+                                      }),
+                                  Flexible(
+                                    child: GirafButton(
+                                      onPressed: () {
+                                        showDialog<Center>(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return GirafConfirmDialog(
+                                                title: 'Stop Timer',
+                                                description: 'Vil du stoppe ' +
+                                                    'timeren?',
+                                                confirmButtonText: 'stop',
+                                                confirmButtonIcon:
+                                                    const ImageIcon(AssetImage(
+                                                        'assets/icons/stop.png')),
+                                                confirmOnPressed: () {
+                                                  _timerBloc.stopTimer();
+                                                  Routes.pop(context);
+                                                },
+                                              );
+                                            });
+                                      },
+                                      icon: const ImageIcon(
+                                          AssetImage('assets/icons/stop.png')),
+                                    ),
+                                  ),
+                                  StreamBuilder<WeekplanMode>(
+                                      stream: _authBloc.mode,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<WeekplanMode>
+                                              snapshot) {
+                                        return Visibility(
+                                          visible: snapshot.data ==
+                                              WeekplanMode.guardian,
+                                          child: Flexible(
+                                            child: GirafButton(
+                                              onPressed: () {
+                                                showDialog<Center>(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return GirafConfirmDialog(
+                                                        title: 'Slet Timer',
+                                                        description:
+                                                            'Vil du slette ' +
+                                                                'timeren?',
+                                                        confirmButtonText:
+                                                            'Slet',
+                                                        confirmButtonIcon:
+                                                            const ImageIcon(
+                                                                AssetImage(
+                                                                    'assets/icons/delete.png')),
+                                                        confirmOnPressed: () {
+                                                          _timerBloc
+                                                              .deleteTimer();
+                                                          Routes.pop(context);
+                                                        },
+                                                      );
+                                                    });
+                                              },
+                                              icon: const ImageIcon(AssetImage(
+                                                  'assets/icons/delete.png')),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      })
+                ]);
+              });
+        });
   }
 
   /// Builds the buttons below the activity widget.
