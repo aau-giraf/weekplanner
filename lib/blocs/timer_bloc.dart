@@ -28,7 +28,7 @@ class TimerBloc extends BlocBase {
 
   /// BehaivorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerInstantiatedStream =
-      BehaviorSubject<bool>.seeded(true);
+      BehaviorSubject<bool>.seeded(false);
 
   void load(ActivityModel activity) {
     _activityModel = activity;
@@ -152,5 +152,6 @@ class TimerBloc extends BlocBase {
   void dispose() {
     _timerProgressStream.close();
     _timerRunningStream.close();
+    _resetCounterAndStopwatch();
   }
 }

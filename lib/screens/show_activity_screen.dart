@@ -102,7 +102,7 @@ class ShowActivityScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: Card(
                 child: Column(
-                  children: buildTimer(),
+                  children: buildTimer(context),
                 ),
               ),
             ),
@@ -154,7 +154,7 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the timer widget.
-  List<Widget> buildTimer() {
+  List<Widget> buildTimer(BuildContext overallContext) {
     return <Widget>[
       Center(
           child: Padding(
@@ -166,44 +166,45 @@ class ShowActivityScreen extends StatelessWidget {
         child: StreamBuilder<bool>(
           stream: _timerBloc.timerIsInstantiated,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return !snapshot.data
+            return (snapshot.hasData ? snapshot.data : false)
                 ? FittedBox(
-                    child: Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: Container(
-                      child: IconButton(
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/addTimer.png')),
-                          onPressed: () {
-                            buildTimerDialog(context);
-                          }),
-                    ),
-                  ))
-                : FittedBox(
-                    child: StreamBuilder<Object>(
-                      stream: _timerBloc.timerProgressStream,
-                      builder: (context, snapshot) {
-                        return Container(
-                          decoration: const ShapeDecoration(
-                              shape: CircleBorder(
-                                  side: BorderSide(
-                                      color: Colors.black, width: 0.5))),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.red,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: CircularProgressIndicator(
-                                strokeWidth: 30,
-                                value: snapshot.data,
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.white),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+              child: StreamBuilder<double>(
+                stream: _timerBloc.timerProgressStream,
+                builder: (BuildContext context,
+                    AsyncSnapshot<double> snapshot) {
+                  return Container(
+                    decoration: const ShapeDecoration(
+                        shape: CircleBorder(
+                            side: BorderSide(
+                                color: Colors.black, width: 0.5))),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.red,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 30,
+                          value: snapshot.hasData ? snapshot.data : 0.0,
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                              Colors.white),
+                        ),
+                      ),
                     ),
                   );
+                },
+              ),
+            )
+                : FittedBox(
+                child: Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Container(
+                    child: IconButton(
+                        icon: const ImageIcon(
+                            AssetImage('assets/icons/addTimer.png')),
+                        onPressed: () {
+                          buildTimerDialog(overallContext);
+                        }),
+                  ),
+                ));
           },
         ),
       ),
@@ -211,7 +212,7 @@ class ShowActivityScreen extends StatelessWidget {
           stream: _timerBloc.timerIsInstantiated,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return Visibility(
-              visible: snapshot.data,
+              visible: snapshot.hasData ? snapshot.data : false,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -224,15 +225,16 @@ class ShowActivityScreen extends StatelessWidget {
                             return Flexible(
                                 child: GirafButton(
                                     onPressed: () {
-                                      snapshot.data
+                                      (snapshot.hasData ? snapshot.data : false)
                                           ? _timerBloc.pauseTimer()
                                           : _timerBloc.playTimer();
                                     },
-                                    icon: snapshot.data
+                                    icon: (snapshot.hasData
+                                        ? snapshot.data : false)
                                         ? const ImageIcon(AssetImage(
-                                            'assets/icons/pause.png'))
+                                        'assets/icons/pause.png'))
                                         : const ImageIcon(AssetImage(
-                                            'assets/icons/play.png'))));
+                                        'assets/icons/play.png'))));
                           }),
                       Flexible(
                         child: GirafButton(
@@ -240,15 +242,13 @@ class ShowActivityScreen extends StatelessWidget {
                             showDialog<Center>(
                                 context: context,
                                 barrierDismissible: false,
-                                builder: (BuildContext context){
+                                builder: (BuildContext context) {
                                   return GirafConfirmDialog(
                                     title: 'Stop Timer',
-                                    description: 'Vil du stoppe ' +
-                                        'timeren?',
+                                    description: 'Vil du stoppe ' + 'timeren?',
                                     confirmButtonText: 'stop',
                                     confirmButtonIcon: const ImageIcon(
-                                        AssetImage(
-                                            'assets/icons/stop.png')),
+                                        AssetImage('assets/icons/stop.png')),
                                     confirmOnPressed: () {
                                       _timerBloc.stopTimer();
                                       Routes.pop(context);
@@ -271,12 +271,12 @@ class ShowActivityScreen extends StatelessWidget {
                                   onPressed: () {
                                     showDialog<Center>(
                                         context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context){
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
                                           return GirafConfirmDialog(
                                             title: 'Slet Timer',
-                                            description: 'Vil du slette ' +
-                                                'timeren?',
+                                            description:
+                                            'Vil du slette ' + 'timeren?',
                                             confirmButtonText: 'Slet',
                                             confirmButtonIcon: const ImageIcon(
                                                 AssetImage(
@@ -286,7 +286,7 @@ class ShowActivityScreen extends StatelessWidget {
                                               Routes.pop(context);
                                             },
                                           );
-                                    });
+                                        });
                                   },
                                   icon: const ImageIcon(
                                       AssetImage('assets/icons/delete.png')),
