@@ -124,8 +124,8 @@ class WeekplanScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 8),
                         child: GirafButton(
-                          width: 150,
                           text: 'Annuller',
+                          key: const Key('CancelActivtiesButton'),
                           icon: const ImageIcon(
                               AssetImage('assets/icons/cancel.png')),
                           onPressed: () {_buildCancelDialog(context);},
@@ -135,8 +135,8 @@ class WeekplanScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 8),
                         child: GirafButton(
-                          width: 150,
                           text: 'Kopier',
+                          key: const Key('CopyActivtiesButton'),
                           icon: const ImageIcon(
                               AssetImage('assets/icons/copy.png')),
                           onPressed: () {
@@ -148,7 +148,6 @@ class WeekplanScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 8),
                         child: GirafButton(
-                            width: 150,
                             text: 'Slet',
                             key: const Key('DeleteActivtiesButton'),
                             icon: const ImageIcon(
