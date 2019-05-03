@@ -14,7 +14,7 @@ class GirafButton extends StatefulWidget {
     this.text,
     this.icon,
     this.width,
-    this.height = 40,
+    this.height = 40.0,
     @required this.onPressed,
     this.isEnabled = true,
     this.isEnabledStream,
@@ -34,6 +34,7 @@ class GirafButton extends StatefulWidget {
 
   /// The function to be called when the button is pressed.
   /// The function must be a void funtion with no input parameters.
+  /// If this is set to null, the button will be disabled.
   final VoidCallback onPressed;
 
   /// Determines whether the button is enabled or disabled by default. If
@@ -54,7 +55,8 @@ class GirafButton extends StatefulWidget {
 class _GirafButtonState extends State<GirafButton> {
   @override
   void initState() {
-    _isEnabled = widget.isEnabled;
+    // If onPressed callback is null, the button should be disabled.
+    _isEnabled = widget.isEnabled && widget.onPressed != null;
     _isPressed = false;
     if (widget.isEnabledStream != null) {
       _isEnabledSubscription =
@@ -139,6 +141,11 @@ class _GirafButtonState extends State<GirafButton> {
   void _handleIsEnabledStreamEvent(bool value) {
     // If a null value is emitted reset enabled state to default.
     value ??= widget.isEnabled;
+
+    // If onPressed callback is null, the button should be disabled.
+    if (widget.onPressed == null) {
+      value = false;
+    }
 
     // Only update state if the new value is different from the previous.
     if (value != _isEnabled) {
