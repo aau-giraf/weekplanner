@@ -19,11 +19,11 @@ class WeekplanBloc extends BlocBase {
 
   final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<List<ActivityModel>> _markedActivities =
-  BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+      BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
   final BehaviorSubject<UserWeekModel> _userWeek =
-  BehaviorSubject<UserWeekModel>();
+      BehaviorSubject<UserWeekModel>();
   final BehaviorSubject<bool> _activityPlaceholderVisible =
-  BehaviorSubject<bool>.seeded(false);
+      BehaviorSubject<bool>.seeded(false);
 
   /// The stream that emits the currently chosen weekplan
   Observable<UserWeekModel> get userWeek => _userWeek.stream;
@@ -97,13 +97,14 @@ class WeekplanBloc extends BlocBase {
 
     for (WeekdayModel weekday in week.days) {
       weekday.activities.removeWhere(
-              (ActivityModel item) => _markedActivities.value.contains(item));
+          (ActivityModel item) => _markedActivities.value.contains(item));
     }
 
     clearMarkedActivities();
     // Updates the weekplan in the database
-    _api.week.update(user.id, week.weekYear,
-                         week.weekNumber, week).listen((WeekModel onData) {});
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel onData) {});
   }
 
   /// Copies the marked activities to the given days
@@ -120,22 +121,20 @@ class WeekplanBloc extends BlocBase {
               pictogram: activity.pictogram,
               order: week.days[dayOfWeek].activities.length,
               isChoiceBoard: false,
-              state: ActivityState.Normal
-              );
+              state: ActivityState.Normal);
 
           week.days[dayOfWeek].activities.add(newActivity);
         }
       }
       dayOfWeek++;
     }
+    clearMarkedActivities();
 
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
-
-    clearMarkedActivities();
   }
 
   /// Toggles edit mode
@@ -170,8 +169,8 @@ class WeekplanBloc extends BlocBase {
   }
 
   /// Reorders activities between same or different days.
-  void reorderActivities(ActivityModel activity, Weekday dayFrom, Weekday dayTo,
-                         int newOrder) {
+  void reorderActivities(
+      ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
     final WeekModel week = _userWeek.value.week;
     final UsernameModel user = _userWeek.value.user;
 
@@ -185,7 +184,7 @@ class WeekplanBloc extends BlocBase {
     week.days[dayFrom.index].activities.remove(activity);
 
     activity.order = dayFrom == dayTo &&
-        week.days[dayTo.index].activities.length == newOrder - 1
+            week.days[dayTo.index].activities.length == newOrder - 1
         ? newOrder - 1
         : newOrder;
 

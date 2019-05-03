@@ -117,6 +117,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                         child: Column(
                           children: <Widget>[
                             CheckboxListTile(
+                              key: const Key('MonCheckbox'),
                               value: _checkboxDays[Weekday.Monday.index],
                               onChanged: _checkboxMonChanged,
                               title: const Text('Mandag'),
@@ -124,6 +125,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                               activeColor: checkboxColor,
                             ),
                             CheckboxListTile(
+                              key: const Key('WedCheckbox'),
                               value: _checkboxDays[Weekday.Wednesday.index],
                               onChanged: _checkboxWedChanged,
                               title: const Text('Onsdag'),
@@ -131,6 +133,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                               activeColor: checkboxColor,
                             ),
                             CheckboxListTile(
+                              key: const Key('FriCheckbox'),
                               value: _checkboxDays[Weekday.Friday.index],
                               onChanged: _checkboxFriChanged,
                               title: const Text('Fredag'),
@@ -145,6 +148,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                         child: Column(
                           children: <Widget>[
                             CheckboxListTile(
+                              key: const Key('TueCheckbox'),
                               value: _checkboxDays[Weekday.Tuesday.index],
                               onChanged: _checkboxTueChanged,
                               title: const Text('Tirsdag'),
@@ -152,6 +156,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                               activeColor: checkboxColor,
                             ),
                             CheckboxListTile(
+                              key: const Key('ThuCheckbox'),
                               value: _checkboxDays[Weekday.Thursday.index],
                               onChanged: _checkboxThuChanged,
                               title: const Text('Torsdag'),
@@ -159,6 +164,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                               activeColor: checkboxColor,
                             ),
                             CheckboxListTile(
+                              key: const Key('SatCheckbox'),
                               value: _checkboxDays[Weekday.Saturday.index],
                               onChanged: _checkboxSatChanged,
                               title: const Text('Lørdag'),
@@ -177,6 +183,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                         child: Column(
                           children: <Widget>[
                             CheckboxListTile(
+                              key: const Key('SunCheckbox'),
                               value: _checkboxDays[Weekday.Sunday.index],
                               onChanged: _checkboxSunChanged,
                               title: const Text('Søndag'),
@@ -206,7 +213,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: GirafButton(
-                      key: const Key('ConfirmDialogCancelButton'),
+                      key: const Key('DialogCancelButton'),
                       text: 'Fortryd',
                       icon: const ImageIcon(
                           AssetImage('assets/icons/cancel.png')),
@@ -221,7 +228,7 @@ class _State extends State<GirafCopyActivitiesDialog> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 5),
                     child: GirafButton(
-                      key: const Key('ConfirmDialogConfirmButton'),
+                      key: const Key('DialogConfirmButton'),
                       text: widget.confirmButtonText,
                       icon: widget.confirmButtonIcon,
                       onPressed: () {
