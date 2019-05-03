@@ -11,8 +11,8 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(WeekModel weekModel, this._activity, UsernameModel
-  girafUser,
+  ShowActivityScreen(
+      WeekModel weekModel, this._activity, UsernameModel girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
@@ -104,14 +104,7 @@ class ShowActivityScreen extends StatelessWidget {
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.width,
                               child: buildLoadPictogramImage()),
-                          snapshot.data.state == ActivityState.Completed
-                              ? Icon(
-                                  Icons.check,
-                                  key: const Key('IconComplete'),
-                                  color: Colors.green,
-                                  size: MediaQuery.of(context).size.width,
-                                )
-                              : Container()
+                          _buildActivityStateIcon(context, snapshot.data.state)
                         ],
                       );
                     }))),
@@ -162,5 +155,26 @@ class ShowActivityScreen extends StatelessWidget {
               // Key is used for testing the widget.
               key: Key(_activity.id.toString()));
         });
+  }
+
+  /// Builds card that displays the activity
+  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+    if (state == ActivityState.Completed) {
+      return Icon(
+        Icons.check,
+        key: const Key('IconComplete'),
+        color: Colors.green,
+        size: MediaQuery.of(context).size.width,
+      );
+    } else if (state == ActivityState.Canceled) {
+      return Icon(
+        Icons.cancel,
+        key: const Key('IconCanceled'),
+        color: Colors.red,
+        size: MediaQuery.of(context).size.width,
+      );
+    } else {
+      return Container();
+    }
   }
 }
