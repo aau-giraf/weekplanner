@@ -199,7 +199,7 @@ class ShowActivityScreen extends StatelessWidget {
                   child: Container(
                     child: IconButton(
                         icon: const ImageIcon(
-                            AssetImage('assets/icons/addTimer.png')),
+                    AssetImage('assets/icons/addTimerHighRes.png')),
                         onPressed: () {
                           buildTimerDialog(overallContext);
                         }),
