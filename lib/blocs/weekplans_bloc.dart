@@ -35,7 +35,7 @@ class WeekplansBloc extends BlocBase {
   final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
 
   final BehaviorSubject<List<WeekModel>> _markedWeekModels =
-  BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
+      BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
   UsernameModel _user;
@@ -84,18 +84,14 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Adds a new marked week model to the stream
-  void addMarkedWeekModel(WeekModel weekModel) {
+  void toggleMarkedWeekModel(WeekModel weekModel) {
     final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;
+    if (localMarkedWeekModels.contains(weekModel)) {
+      localMarkedWeekModels.remove(weekModel);
+    } else {
+      localMarkedWeekModels.add(weekModel);
+    }
 
-    localMarkedWeekModels.add(weekModel);
-    _markedWeekModels.add(localMarkedWeekModels);
-  }
-
-  /// Removes a marked week model from the stream
-  void removeMarkedWeekModel(WeekModel weekModel) {
-    final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;
-
-    localMarkedWeekModels.remove(weekModel);
     _markedWeekModels.add(localMarkedWeekModels);
   }
 
@@ -105,8 +101,8 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Checks if a week model is marked
-  bool isActivityMarked(WeekModel weekModel) {
-    if (_markedWeekModels.value == null){
+  bool isWeekModelMarked(WeekModel weekModel) {
+    if (_markedWeekModels.value == null) {
       return false;
     }
     return _markedWeekModels.value.contains(weekModel);
@@ -114,11 +110,20 @@ class WeekplansBloc extends BlocBase {
 
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
-    clearMarkedWeekModels();
-
+    final List<WeekModel> localWeekModels = _weekModel.value;
     // Updates the weekplan in the database
-   // _api.week.update(user.id, week.weekYear,
-     //   week.weekNumber, week).listen((WeekModel onData) {});
+    for (WeekModel weekmodel in _markedWeekModels.value) {
+      _api.week
+          .delete(_user.id, weekmodel.weekYear, weekmodel.weekNumber)
+          .listen((bool deleted) {
+            if (deleted) {
+              localWeekModels.remove(weekmodel);
+              _weekModel.add(localWeekModels);
+            }
+          });
+    }
+
+    clearMarkedWeekModels();
   }
 
   /// Returns the number of marked week models
@@ -128,6 +133,9 @@ class WeekplansBloc extends BlocBase {
 
   /// Toggles edit mode
   void toggleEditMode() {
+    if (_editMode.value) {
+      clearMarkedWeekModels();
+    }
     _editMode.add(!_editMode.value);
   }
 
