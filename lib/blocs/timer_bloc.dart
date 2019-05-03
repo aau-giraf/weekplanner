@@ -49,37 +49,33 @@ class TimerBloc extends BlocBase {
   }
 
   void initTimer() {
-    if (_activityModel.timer != null) {
-      final DateTime endTime = _activityModel.timer.startTime.add(Duration(
-          milliseconds:
-              _activityModel.timer.fullLength - _activityModel.timer.progress));
+    if (_stopwatch == null) {
+      if (_activityModel.timer != null) {
+        final DateTime endTime = _activityModel.timer.startTime.add(Duration(
+            milliseconds: _activityModel.timer.fullLength -
+                _activityModel.timer.progress));
 
-      if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
-          DateTime.now().isBefore(endTime) &&
-          !_activityModel.timer.paused) {
-        _timerRunningStream.add(true);
-        _startCounter(endTime, _activityModel.timer.paused);
-      } else if (_activityModel.timer.paused) {
-        _timerRunningStream.add(false);
-        _timerProgressStream.add(1 -
-            (1 /
-                _activityModel.timer.fullLength *
-                (_activityModel.timer.fullLength -
-                    _activityModel.timer.progress)));
+        if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
+            DateTime.now().isBefore(endTime) &&
+            !_activityModel.timer.paused) {
+          _timerRunningStream.add(true);
+          _startCounter(endTime, _activityModel.timer.paused);
+        } else if (_activityModel.timer.paused) {
+          _timerRunningStream.add(false);
+          _timerProgressStream.add(1 -
+              (1 /
+                  _activityModel.timer.fullLength *
+                  (_activityModel.timer.fullLength -
+                      _activityModel.timer.progress)));
+        }
+        _timerInstantiatedStream.add(true);
       }
-      _timerInstantiatedStream.add(true);
     }
   }
 
   CountdownTimer _countDown;
   StreamSubscription<CountdownTimer> _timerStream;
   Stopwatch _stopwatch;
-
-  void _resetCounterAndStopwatch(){
-    _stopwatch.stop();
-    _countDown.cancel();
-    _timerStream.cancel();
-  }
 
   void _startCounter(DateTime endTime, bool paused) {
     _stopwatch = Stopwatch();
@@ -89,9 +85,7 @@ class TimerBloc extends BlocBase {
 
     _timerStream = _countDown.listen((CountdownTimer c) {
       _timerProgressStream.add(1 -
-          (1 /
-              _activityModel.timer.fullLength *
-              c.remaining.inMilliseconds));
+          (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
     });
   }
 
@@ -112,9 +106,7 @@ class TimerBloc extends BlocBase {
 
       _timerStream = _countDown.listen((CountdownTimer c) {
         _timerProgressStream.add(1 -
-            (1 /
-                _activityModel.timer.fullLength *
-                c.remaining.inMilliseconds));
+            (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
       });
       _timerRunningStream.add(true);
     }
@@ -134,8 +126,8 @@ class TimerBloc extends BlocBase {
   }
 
   void stopTimer() {
-    _activityModel.timer.paused = true;
     _resetCounterAndStopwatch();
+    _activityModel.timer.paused = true;
     _activityModel.timer.progress = 0;
     _timerRunningStream.add(false);
     _timerProgressStream.add(0);
@@ -143,15 +135,26 @@ class TimerBloc extends BlocBase {
   }
 
   void deleteTimer() {
-    _activityModel.timer = null;
     _resetCounterAndStopwatch();
+    _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
+  }
+
+  void _resetCounterAndStopwatch() {
+    if (_stopwatch != null) {
+      _stopwatch.stop();
+      _countDown.cancel();
+      _timerStream.cancel();
+    }
+    _stopwatch = null;
+    _countDown = null;
+    _timerStream = null;
   }
 
   @override
   void dispose() {
+    _resetCounterAndStopwatch();
     _timerProgressStream.close();
     _timerRunningStream.close();
-    _resetCounterAndStopwatch();
   }
 }

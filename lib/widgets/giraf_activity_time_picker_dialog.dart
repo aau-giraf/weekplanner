@@ -13,18 +13,18 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   ///The activity time picker takes the activity as input, to insert a timer
   ///to the given activity.
   GirafActivityTimerPickerDialog(
-    this._activity, {
+    this._activity,
+    this._timerBloc, {
     Key key,
   }) : super(key: key) {
     _timerBloc.load(_activity);
   }
 
   final ActivityModel _activity;
-  final TimerBloc _timerBloc = TimerBloc();
+  final TimerBloc _timerBloc;
 
   @override
   Widget build(BuildContext context) {
-    _timerBloc.initTimer();
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final bool isInPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;

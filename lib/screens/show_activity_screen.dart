@@ -385,7 +385,7 @@ class ShowActivityScreen extends StatelessWidget {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return GirafActivityTimerPickerDialog(_activity);
+          return GirafActivityTimerPickerDialog(_activity, _timerBloc);
         });
   }
 }
