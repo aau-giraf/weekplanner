@@ -1,5 +1,6 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -9,13 +10,12 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 ///The duration should be inserted in the textfield, and the user can either
 ///cancel the dialog, or confirm to create the timer for the activity.
 class GirafActivityTimerPickerDialog extends StatelessWidget {
-
   ///The activity time picker takes the activity as input, to insert a timer
   ///to the given activity.
   GirafActivityTimerPickerDialog(
-  this._activity,
-      {Key key,})
-      : super(key: key) {
+    this._activity, {
+    Key key,
+  }) : super(key: key) {
     _timerBloc.load(_activity);
   }
 
@@ -28,109 +28,34 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final bool isInPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    final TextEditingController txtController = TextEditingController();
+    final TextEditingController textEditingControllerHours =
+        TextEditingController();
+    final TextEditingController textEditingControllerMinutes =
+        TextEditingController();
+    final TextEditingController textEditingControllerSeconds =
+        TextEditingController();
+
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0.0),
       titlePadding: const EdgeInsets.all(0.0),
-      shape: Border.all(
-          color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+      shape:
+          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
       title: const Center(
           child: GirafTitleHeader(
-            title: 'Vælg tid for aktivitet',
-          )),
+        title: 'Vælg tid for aktivitet',
+      )),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const Center(child: Text('Indtast tid')),
-          const Center(
-            child: Text(
-              'Timer : Minutter : Sekunder',
-              style: TextStyle(
-                  fontSize: 10, color: Color.fromRGBO(170, 170, 170, 1)),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1),
-                  borderRadius:
-                  const BorderRadius.all(Radius.circular(20.0)),
-                  color: Colors.white),
-              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
-              child: TextField(
-                key: const Key('TimerKey'),
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                controller: txtController,
-                textDirection: TextDirection.ltr,
-                cursorColor: Colors.white,
-                autofocus: true,
-                decoration: const InputDecoration.collapsed(
-                  hintText: '00:00',
-                  hintStyle:
-                  TextStyle(color: Color.fromRGBO(170, 170, 170, 1)),
-                  fillColor: Colors.white,
-                ),
-                onChanged: (String input) {
-                  String placeholderText;
-                  String stringToAddd = '';
-                  if (input.length == 1) {
-                    txtController.text = '00:0' + input;
-                  } else {
-                    placeholderText = input.substring(0, input.length);
-                    placeholderText = placeholderText.replaceAll(':', '');
-                    for (int i = 0; i < placeholderText.length; i++) {
-                      if (placeholderText.substring(i, i + 1) != '0') {
-                        if (placeholderText.length - i == 2) {
-                          stringToAddd = '00:' +
-                              placeholderText.substring(
-                                  i, placeholderText.length);
-                          break;
-                        } else if (placeholderText.length < 4) {
-                          stringToAddd = '0' + placeholderText;
-                          stringToAddd = stringToAddd.replaceRange(
-                              stringToAddd.length - 2,
-                              stringToAddd.length,
-                              ':' +
-                                  stringToAddd.substring(
-                                      stringToAddd.length - 2,
-                                      stringToAddd.length));
-                          break;
-                        } else {
-                          stringToAddd = placeholderText;
-                          if (stringToAddd.length > 4) {
-                            if (stringToAddd.substring(0, 1) == '0') {
-                              stringToAddd =
-                                  stringToAddd.replaceRange(0, 1, '');
-                            } else {
-                              stringToAddd = stringToAddd.replaceRange(
-                                  stringToAddd.length - 4,
-                                  stringToAddd.length - 2,
-                                  ':' +
-                                      stringToAddd.substring(
-                                          stringToAddd.length - 4,
-                                          stringToAddd.length - 2));
-                            }
-                          }
-                          stringToAddd = stringToAddd.replaceRange(
-                              stringToAddd.length - 2,
-                              stringToAddd.length,
-                              ':' +
-                                  stringToAddd.substring(
-                                      stringToAddd.length - 2,
-                                      stringToAddd.length));
-                          break;
-                        }
-                      }
-                    }
-                    txtController.text = stringToAddd;
-                  }
-                  txtController.selection = TextSelection.collapsed(
-                      offset: txtController.text.length);
-                },
-              ),
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: <Widget>[
+                _timerTextField('Timer', textEditingControllerHours),
+                _timerTextField('Minutter', textEditingControllerMinutes),
+                _timerTextField('Sekunder', textEditingControllerSeconds)
+              ],
             ),
           ),
           Visibility(
@@ -156,8 +81,17 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(5, 0, 10, 10),
                       child: GirafButton(
                         onPressed: () {
-                          _timerBloc.addTimer(
-                              calculateDuration(txtController.text));
+                          _timerBloc.addTimer(Duration(
+                            hours:
+                                int.tryParse(textEditingControllerHours.text) ??
+                                    0,
+                            minutes: int.tryParse(
+                                    textEditingControllerMinutes.text) ??
+                                0,
+                            seconds: int.tryParse(
+                                    textEditingControllerSeconds.text) ??
+                                0,
+                          ));
                           Routes.pop(context);
                         },
                         icon: const ImageIcon(
@@ -172,25 +106,35 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
     );
   }
 
-  ///Method for calculating duration from string
-  Duration calculateDuration(String durationFromTextField) {
-    int hours = 0;
-    int minutes = 0;
-    int seconds = 0;
-    final List<String> parts = durationFromTextField.split(':');
-    if (parts.length > 2) {
-      hours = int.parse(parts[parts.length - 3]);
-    }
-    if (parts.length > 1) {
-      minutes = int.parse(parts[parts.length - 2]);
-    }
-    seconds = int.parse(parts[parts.length - 1]);
-    return Duration(hours: hours, minutes: minutes, seconds: seconds);
-  }
-
-  ///Method to check whether the user have input something wrong in the
-  ///textfield when trying to accept
-  bool checkTextInput(String input){
-
+  Widget _timerTextField(
+      String fieldName, TextEditingController textController) {
+    return Expanded(
+      child: Column(
+        children: <Widget>[
+          Text(fieldName),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  color: Colors.white),
+              child: TextField(
+                  key: Key(fieldName + 'TextFieldKey'),
+                  controller: textController,
+                  style: TextStyle(
+                    fontSize: 50,
+                  ),
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration.collapsed(
+                    hintText: '',
+                  ),
+                  inputFormatters: [LengthLimitingTextInputFormatter(2)]),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

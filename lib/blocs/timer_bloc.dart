@@ -84,7 +84,7 @@ class TimerBloc extends BlocBase {
   void _startCounter(DateTime endTime, bool paused) {
     _stopwatch = Stopwatch();
     _countDown = CountdownTimer(
-        endTime.difference(DateTime.now()), Duration(seconds: 1),
+        endTime.difference(DateTime.now()), Duration(milliseconds: 10),
         stopwatch: _stopwatch);
 
     _timerStream = _countDown.listen((CountdownTimer c) {
@@ -107,7 +107,7 @@ class TimerBloc extends BlocBase {
               _activityModel.timer.fullLength - _activityModel.timer.progress));
       _countDown = CountdownTimer(
           _endTime.difference(_activityModel.timer.startTime),
-          Duration(seconds: 1),
+          Duration(milliseconds: 10),
           stopwatch: _stopwatch);
 
       _timerStream = _countDown.listen((CountdownTimer c) {
