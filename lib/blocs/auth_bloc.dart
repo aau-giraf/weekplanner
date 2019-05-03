@@ -85,10 +85,11 @@ class AuthBloc extends BlocBase {
                        () => reactToLoginAttemptFromPopUp(context), 2000);
 
     _api.account.login(username, password).take(1).listen((bool status) {
-      if (status){
+      if (status) {
         _loginStatus = true;
-        //Pop the popup
         Routes.pop(context);
+        setMode(WeekplanMode.guardian);
+        //Pop the popup
         }
     });
   }
