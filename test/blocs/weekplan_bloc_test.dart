@@ -282,7 +282,16 @@ void main() {
             lastEdit: null),
         days: <WeekdayModel>[
           WeekdayModel(
-              activities: <ActivityModel>[activity], day: Weekday.Monday)
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(
+              activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(
+              activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(
+              activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(
+              activities: <ActivityModel>[], day: Weekday.Friday),
+
         ],
         name: 'Week',
         weekNumber: 1,
@@ -300,6 +309,12 @@ void main() {
           WeekdayModel(
               activities: <ActivityModel>[activity], day: Weekday.Monday),
           WeekdayModel(
+              activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(
+              activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(
+              activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(
               activities: <ActivityModel>[activity], day: Weekday.Friday)
         ],
         name: 'Week',
@@ -315,7 +330,7 @@ void main() {
     weekplanBloc.addMarkedActivity(activity);
 
     weekplanBloc.userWeek.listen((UserWeekModel userWeekModel) {
-      verify(api.week.update(any, any, any, any));
+      verify(api.week.update(any, any, any, any)).called(1);
       expect(
           userWeekModel.week.days[Weekday.Friday.index].activities.length, 1);
       done();
