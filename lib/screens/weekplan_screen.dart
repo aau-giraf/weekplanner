@@ -120,48 +120,27 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        child: GirafButton(
-                          text: 'Annuller',
-                          key: const Key('CancelActivtiesButton'),
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/cancel.png')),
-                          onPressed: () {
-                            _buildCancelDialog(context);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        child: GirafButton(
-                          text: 'Kopier',
-                          key: const Key('CopyActivtiesButton'),
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/copy.png')),
-                          onPressed: () {
-                            _buildCopyDialog(context);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        child: GirafButton(
-                            text: 'Slet',
-                            key: const Key('DeleteActivtiesButton'),
-                            icon: const ImageIcon(
-                                AssetImage('assets/icons/delete.png')),
-                            onPressed: () {
-                              /// Shows dialog to confirm/cancel deletion
-                              buildRemoveDialog(context);
-                            }),
-                      ),
+                      _buildBottomAppBarButton(context, 'Annuller', const Key('CancelActivtiesButton'), 'assets/icons/cancel.png', _buildCancelDialog),
+                      _buildBottomAppBarButton(context, 'Kopier', const Key('CopyActivtiesButton'), 'assets/icons/copy.png', _buildCopyDialog),
+                      _buildBottomAppBarButton(context, 'Slet', const Key('DeleteActivtiesButton'), 'assets/icons/delete.png', _buildRemoveDialog)
                     ],
                   )))
         ]));
+  }
+
+  Padding _buildBottomAppBarButton(BuildContext context, String buttonText,
+      Key buttonKey, String assetPath, Function dialogFunction) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: GirafButton(
+        text: buttonText,
+        key: buttonKey,
+        icon: ImageIcon(AssetImage(assetPath)),
+        onPressed: () {
+          dialogFunction(context);
+        },
+      ),
+    );
   }
 
   void _copyActivities(List<bool> days, BuildContext context) {
@@ -212,7 +191,7 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Builds dialog box to confirm/cancel deletion
-  Future<Center> buildRemoveDialog(BuildContext context) {
+  Future<Center> _buildRemoveDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,
@@ -500,22 +479,26 @@ class WeekplanScreen extends StatelessWidget {
     ActivityState activityState,
   ) {
     Widget icon;
-    if (activityState == ActivityState.Completed) {
-      icon = Icon(
-        Icons.check,
-        key: const Key('IconComplete'),
-        color: Colors.green,
-        size: MediaQuery.of(context).size.width,
-      );
-    } else if (activityState == ActivityState.Canceled) {
-      icon = Icon(
-        Icons.clear,
-        key: const Key('IconCanceled'),
-        color: Colors.red,
-        size: MediaQuery.of(context).size.width,
-      );
-    } else {
-      icon = Container();
+    switch (activityState) {
+      case ActivityState.Completed:
+        icon = Icon(
+          Icons.check,
+          key: const Key('IconComplete'),
+          color: Colors.green,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      case ActivityState.Canceled:
+        icon = Icon(
+          Icons.clear,
+          key: const Key('IconCanceled'),
+          color: Colors.red,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      default:
+        icon = Container();
+        break;
     }
 
     return Card(
