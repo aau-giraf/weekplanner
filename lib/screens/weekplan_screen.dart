@@ -177,7 +177,7 @@ class WeekplanScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return GirafCopyActivitiesDialog(
             title: 'Kopier Aktiviteter',
-            description: 'Vælg hvilke dage de markeret aktiviteter skal '
+            description: 'Vælg hvilke dage de markerede aktiviteter skal '
                 'kopieres til',
             confirmButtonText: 'Kopier',
             confirmButtonIcon:
