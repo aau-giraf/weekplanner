@@ -16,6 +16,7 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -121,6 +122,7 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
     di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
+    di.registerDependency<CopyActivitiesBloc>((_) => CopyActivitiesBloc());
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {
