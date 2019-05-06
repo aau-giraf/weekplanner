@@ -21,6 +21,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -34,12 +35,13 @@ class MockAuthBlock extends AuthBloc{
   MockAuthBlock(Api api) : super(api);
 
   @override
-  void authenticate(String username, String password) {
+  void authenticateFromPopUp(String username, String password,
+                             BuildContext context) {
     if(password == 'password'){
       setMode(WeekplanMode.guardian);
+      Routes.pop(context);
     }
   }
-
 }
 
 void main() {
@@ -388,11 +390,10 @@ void main() {
       (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
         final Completer<bool> tapComplete = Completer<bool>();
-        final MockNavigatorObserver observer = MockNavigatorObserver();
+
         await tester.pumpWidget(
             MaterialApp(
-              home: WeekplanScreen(weekModel, user),
-              navigatorObservers: <NavigatorObserver>[observer],
+              home: WeekplanScreen(weekModel, user)
             )
         );
         await tester.pumpAndSettle();
@@ -417,14 +418,11 @@ void main() {
         );
         await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
-        await tester.pumpAndSettle();
+        // Waiting 1 second to let the timer used internally in
+        // the confirmation button to finish before signaling the tap is done.
+        await tester.pumpAndSettle(Duration(seconds:1));
 
         tapComplete.complete();
-
-        final VerificationResult verificationResult =
-        verify(observer.didPop(captureAny, captureAny));
-
-        expect(verificationResult.callCount, equals(1));
 
         await done.future;
       }
