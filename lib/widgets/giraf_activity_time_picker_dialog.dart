@@ -23,11 +23,11 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   final ActivityModel _activity;
   final TimerBloc _timerBloc;
 
-  final TextEditingController textEditingControllerHours =
+  final TextEditingController _textEditingControllerHours =
       TextEditingController();
-  final TextEditingController textEditingControllerMinutes =
+  final TextEditingController _textEditingControllerMinutes =
       TextEditingController();
-  final TextEditingController textEditingControllerSeconds =
+  final TextEditingController _textEditingControllerSeconds =
       TextEditingController();
 
   @override
@@ -53,11 +53,11 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Row(
               children: <Widget>[
-                _timerTextField('Timer', textEditingControllerHours, context),
+                _timerTextField('Timer', _textEditingControllerHours, context),
                 _timerTextField(
-                    'Minutter', textEditingControllerMinutes, context),
+                    'Minutter', _textEditingControllerMinutes, context),
                 _timerTextField(
-                    'Sekunder', textEditingControllerSeconds, context)
+                    'Sekunder', _textEditingControllerSeconds, context)
               ],
             ),
           ),
@@ -99,12 +99,16 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   }
 
   void _acceptInput(BuildContext context) {
-    _timerBloc.addTimer(Duration(
-      hours: int.tryParse(textEditingControllerHours.text) ?? 0,
-      minutes: int.tryParse(textEditingControllerMinutes.text) ?? 0,
-      seconds: int.tryParse(textEditingControllerSeconds.text) ?? 0,
-    ));
-    Routes.pop(context);
+    final Duration d = Duration(
+      hours: int.tryParse(_textEditingControllerHours.text) ?? 0,
+      minutes: int.tryParse(_textEditingControllerMinutes.text) ?? 0,
+      seconds: int.tryParse(_textEditingControllerSeconds.text) ?? 0,
+    );
+
+    if (d.inSeconds != 0){
+      _timerBloc.addTimer(d);
+      Routes.pop(context);
+    }
   }
 
   Widget _timerTextField(String fieldName, TextEditingController textController,
