@@ -23,17 +23,18 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   final ActivityModel _activity;
   final TimerBloc _timerBloc;
 
+  final TextEditingController textEditingControllerHours =
+      TextEditingController();
+  final TextEditingController textEditingControllerMinutes =
+      TextEditingController();
+  final TextEditingController textEditingControllerSeconds =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final bool isInPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    final TextEditingController textEditingControllerHours =
-        TextEditingController();
-    final TextEditingController textEditingControllerMinutes =
-        TextEditingController();
-    final TextEditingController textEditingControllerSeconds =
-        TextEditingController();
 
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0.0),
@@ -52,9 +53,11 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Row(
               children: <Widget>[
-                _timerTextField('Timer', textEditingControllerHours),
-                _timerTextField('Minutter', textEditingControllerMinutes),
-                _timerTextField('Sekunder', textEditingControllerSeconds)
+                _timerTextField('Timer', textEditingControllerHours, context),
+                _timerTextField(
+                    'Minutter', textEditingControllerMinutes, context),
+                _timerTextField(
+                    'Sekunder', textEditingControllerSeconds, context)
               ],
             ),
           ),
@@ -81,18 +84,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(5, 0, 10, 10),
                       child: GirafButton(
                         onPressed: () {
-                          _timerBloc.addTimer(Duration(
-                            hours:
-                                int.tryParse(textEditingControllerHours.text) ??
-                                    0,
-                            minutes: int.tryParse(
-                                    textEditingControllerMinutes.text) ??
-                                0,
-                            seconds: int.tryParse(
-                                    textEditingControllerSeconds.text) ??
-                                0,
-                          ));
-                          Routes.pop(context);
+                          _acceptInput(context);
                         },
                         icon: const ImageIcon(
                             AssetImage('assets/icons/accept.png')),
@@ -106,8 +98,17 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
     );
   }
 
-  Widget _timerTextField(
-      String fieldName, TextEditingController textController) {
+  void _acceptInput(BuildContext context) {
+    _timerBloc.addTimer(Duration(
+      hours: int.tryParse(textEditingControllerHours.text) ?? 0,
+      minutes: int.tryParse(textEditingControllerMinutes.text) ?? 0,
+      seconds: int.tryParse(textEditingControllerSeconds.text) ?? 0,
+    ));
+    Routes.pop(context);
+  }
+
+  Widget _timerTextField(String fieldName, TextEditingController textController,
+      BuildContext context) {
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -121,6 +122,9 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   color: Colors.white),
               child: TextField(
                   key: Key(fieldName + 'TextFieldKey'),
+                  onSubmitted: (String s) {
+                    _acceptInput(context);
+                  },
                   controller: textController,
                   style: TextStyle(
                     fontSize: 50,
@@ -130,7 +134,9 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   decoration: InputDecoration.collapsed(
                     hintText: '',
                   ),
-                  inputFormatters: [LengthLimitingTextInputFormatter(2)]),
+                  inputFormatters: <TextInputFormatter>[
+                    LengthLimitingTextInputFormatter(2)
+                  ]),
             ),
           ),
         ],
