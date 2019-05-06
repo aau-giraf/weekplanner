@@ -26,7 +26,7 @@ class GirafCopyActivitiesDialog extends StatefulWidget {
   /// description of the [dialogBox], displayed under the header
   final String description;
 
-  ///text on the confirm button, describing the confirmed action
+  /// text on the confirm button, describing the confirmed action
   final String confirmButtonText;
 
   ///icon on the confirm button, visualizing the confirmed action
