@@ -98,19 +98,6 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
     );
   }
 
-  void _acceptInput(BuildContext context) {
-    final Duration d = Duration(
-      hours: int.tryParse(_textEditingControllerHours.text) ?? 0,
-      minutes: int.tryParse(_textEditingControllerMinutes.text) ?? 0,
-      seconds: int.tryParse(_textEditingControllerSeconds.text) ?? 0,
-    );
-
-    if (d.inSeconds != 0){
-      _timerBloc.addTimer(d);
-      Routes.pop(context);
-    }
-  }
-
   Widget _timerTextField(String fieldName, TextEditingController textController,
       BuildContext context) {
     return Expanded(
@@ -146,5 +133,18 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _acceptInput(BuildContext context) {
+    final Duration duration = Duration(
+      hours: int.tryParse(_textEditingControllerHours.text) ?? 0,
+      minutes: int.tryParse(_textEditingControllerMinutes.text) ?? 0,
+      seconds: int.tryParse(_textEditingControllerSeconds.text) ?? 0,
+    );
+
+    if (duration.inSeconds != 0) {
+      _timerBloc.addTimer(duration);
+      Routes.pop(context);
+    }
   }
 }
