@@ -109,8 +109,8 @@ class WeekplanScreen extends StatelessWidget {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: <double>[
-                        0.33,
-                        0.66
+                        1 / 3,
+                        2 / 3
                       ],
                           colors: <Color>[
                         Color.fromRGBO(254, 215, 108, 1),
