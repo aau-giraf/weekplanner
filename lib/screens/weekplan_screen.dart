@@ -197,7 +197,7 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Bekræft',
               description: 'Vil du markere ' +
                   weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  ' aktivitet(er) som annuleret',
+                  ' aktivitet(er) som annulleret',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
