@@ -159,12 +159,15 @@ class ShowActivityScreen extends StatelessWidget {
               stream: _timerBloc.timerIsInstantiated,
               builder: (BuildContext timerInitContext,
                   AsyncSnapshot<bool> timerInitSnapshot) {
+                //if a timer is not initiated, and the app is in citizen mode,
+                //nothing is shown
                 return Visibility(
                   visible: timerInitSnapshot.data ||
                       (!timerInitSnapshot.data &&
                           modeSnapshot.data == WeekplanMode.guardian),
                   child: Card(
                     child: Column(children: <Widget>[
+                      //the title of the timer widget
                       Center(
                           child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -172,6 +175,8 @@ class ShowActivityScreen extends StatelessWidget {
                             style: titleTextStyle, textAlign: TextAlign.center),
                       )),
                       Expanded(
+                        //depending on whether a timer is initiated, different
+                        //widgets are shown.
                           child: (timerInitSnapshot.hasData
                                   ? timerInitSnapshot.data
                                   : false)
@@ -257,6 +262,8 @@ class ShowActivityScreen extends StatelessWidget {
                   builder: (BuildContext timerRunningContext,
                       AsyncSnapshot<bool> timerRunningSnapshot) {
                     return Flexible(
+                      //button has different icons and press logic depending on
+                      //whether the timer is already running.
                         child: GirafButton(
                             onPressed: () {
                               (timerRunningSnapshot.hasData
@@ -280,6 +287,7 @@ class ShowActivityScreen extends StatelessWidget {
                         context: overallContext,
                         barrierDismissible: false,
                         builder: (BuildContext context) {
+                          //a dialog is shown to confirm to stop the timer.
                           return GirafConfirmDialog(
                             title: 'Stop Timer',
                             description: 'Vil du stoppe timeren?',
@@ -297,6 +305,8 @@ class ShowActivityScreen extends StatelessWidget {
                 ),
               ),
               Visibility(
+                //the delete button is only visible when in guardian mode,
+                //since a citizen should not be able to delete the timer.
                 visible: modeSnapshot.data == WeekplanMode.guardian,
                 child: Flexible(
                   child: GirafButton(
@@ -305,6 +315,7 @@ class ShowActivityScreen extends StatelessWidget {
                           context: overallContext,
                           barrierDismissible: false,
                           builder: (BuildContext context) {
+                            //a dialog is shown to confirm to delete the timer.
                             return GirafConfirmDialog(
                               title: 'Slet Timer',
                               description: 'Vil du slette timeren?',
