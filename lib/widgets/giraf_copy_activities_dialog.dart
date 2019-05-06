@@ -20,7 +20,7 @@ class GirafCopyActivitiesDialog extends StatefulWidget {
       @required this.confirmOnPressed})
       : super(key: key);
 
-  ///title of the dialogBox, displayed in the header of the dialogBox
+  /// title of the [dialogBox], displayed in the header of the [dialogBox]
   final String title;
 
   ///description of the dialogBox, displayed under the header
