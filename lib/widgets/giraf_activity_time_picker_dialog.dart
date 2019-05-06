@@ -70,6 +70,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
                       child: GirafButton(
+                        key: const Key('TimePickerDialogCancelButton'),
                         onPressed: () => Routes.pop(context),
                         icon: const ImageIcon(
                             AssetImage('assets/icons/cancel.png')),
@@ -80,6 +81,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   child: Padding(
                       padding: const EdgeInsets.fromLTRB(5, 0, 10, 10),
                       child: GirafButton(
+                        key: const Key('TimePickerDialogAcceptButton'),
                         onPressed: () {
                           _timerBloc.addTimer(Duration(
                             hours:
