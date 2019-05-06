@@ -14,9 +14,6 @@ import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 
-import 'blocs/timer_bloc.dart';
-
-
 /// Bootstrap the project
 class Bootstrap {
   /// Register all dependencies here. Here the construction of everything that
