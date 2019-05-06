@@ -32,7 +32,7 @@ class GirafCopyActivitiesDialog extends StatefulWidget {
   /// icon on the confirm button, visualizing the confirmed action
   final ImageIcon confirmButtonIcon;
 
-  ///the method to call when the confirmation button is pressed
+  /// the method to call when the confirmation button is pressed
   final void Function(List<bool>, BuildContext) confirmOnPressed;
 
   @override
