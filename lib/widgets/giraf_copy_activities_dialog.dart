@@ -9,7 +9,7 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 /// title, a description, and two buttons and a dropdown menu. One button to
 /// cancel the action and one button to accept and perform the action.
 class GirafCopyActivitiesDialog extends StatefulWidget {
-  ///The dialog displays the title and description, with two buttons and a
+  /// The dialog displays the title and description, with two buttons and a
   /// list of checkboxes
   const GirafCopyActivitiesDialog(
       {Key key,
