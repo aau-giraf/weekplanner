@@ -120,21 +120,21 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _buildBottomAppBarButton(context, 'Annuller', const Key('CancelActivtiesButton'), 'assets/icons/cancel.png', _buildCancelDialog),
-                      _buildBottomAppBarButton(context, 'Kopier', const Key('CopyActivtiesButton'), 'assets/icons/copy.png', _buildCopyDialog),
-                      _buildBottomAppBarButton(context, 'Slet', const Key('DeleteActivtiesButton'), 'assets/icons/delete.png', _buildRemoveDialog)
+                      _buildBottomAppBarButton(context, 'Annuller', 'CancelActivtiesButton', 'assets/icons/cancel.png', _buildCancelDialog),
+                      _buildBottomAppBarButton(context, 'Kopier', 'CopyActivtiesButton', 'assets/icons/copy.png', _buildCopyDialog),
+                      _buildBottomAppBarButton(context, 'Slet', 'DeleteActivtiesButton', 'assets/icons/delete.png', _buildRemoveDialog)
                     ],
                   )))
         ]));
   }
 
   Padding _buildBottomAppBarButton(BuildContext context, String buttonText,
-      Key buttonKey, String assetPath, Function dialogFunction) {
+      String buttonKey, String assetPath, Function dialogFunction) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: GirafButton(
         text: buttonText,
-        key: buttonKey,
+        key: Key(buttonKey),
         icon: ImageIcon(AssetImage(assetPath)),
         onPressed: () {
           dialogFunction(context);

@@ -1,5 +1,7 @@
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
@@ -20,6 +22,10 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
       @required this.confirmOnPressed})
       : super(key: key);
 
+  /// Bloc to keep track of which checkboxes are marked
+  final CopyActivitiesBloc copyActivitiesBloc =
+      di.getDependency<CopyActivitiesBloc>();
+
   /// title of the [dialogBox], displayed in the header of the [dialogBox]
   final String title;
 
@@ -35,12 +41,8 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
   /// the method to call when the confirmation button is pressed
   final void Function(List<bool>, BuildContext) confirmOnPressed;
 
+  /// color of checkbox
   static const Color checkboxColor = Color(0xFFFF9D00);
-
-  final List<bool> _checkboxDays = List<bool>.filled(7, false);
-
-  void _checkboxChanged(bool value, Weekday day) =>
-      _checkboxDays[day.index] = value;
 
   @override
   Widget build(BuildContext context) {
@@ -72,62 +74,89 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
               ))
             ],
           ),
-          Container(
-            padding: const EdgeInsets.all(30.0),
-            child: Center(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 5,
-                        child: Column(
+          StreamBuilder<List<bool>>(
+              stream: copyActivitiesBloc.checkboxValues,
+              initialData: List<bool>.filled(7, false),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
+                return Container(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Row(
                           children: <Widget>[
-                            _buildCheckboxListTile(Weekday.Monday,
-                                const Key('MonCheckbox'), 'Mandag'),
-                            _buildCheckboxListTile(Weekday.Wednesday,
-                                const Key('WedCheckbox'), 'Onsdag'),
-                            _buildCheckboxListTile(Weekday.Friday,
-                                const Key('FriCheckbox'), 'Fredag')
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                children: <Widget>[
+                                  _buildCheckboxListTile(
+                                      Weekday.Monday,
+                                      const Key('MonCheckbox'),
+                                      'Mandag',
+                                      snapshot.data[Weekday.Monday.index]),
+                                  _buildCheckboxListTile(
+                                      Weekday.Wednesday,
+                                      const Key('WedCheckbox'),
+                                      'Onsdag',
+                                      snapshot.data[Weekday.Wednesday.index]),
+                                  _buildCheckboxListTile(
+                                      Weekday.Friday,
+                                      const Key('FriCheckbox'),
+                                      'Fredag',
+                                      snapshot.data[Weekday.Friday.index])
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                children: <Widget>[
+                                  _buildCheckboxListTile(
+                                      Weekday.Tuesday,
+                                      const Key('TueCheckbox'),
+                                      'Tirsdag',
+                                      snapshot.data[Weekday.Tuesday.index]),
+                                  _buildCheckboxListTile(
+                                      Weekday.Thursday,
+                                      const Key('ThuCheckbox'),
+                                      'Torsdag',
+                                      snapshot.data[Weekday.Thursday.index]),
+                                  _buildCheckboxListTile(
+                                      Weekday.Saturday,
+                                      const Key('SatCheckbox'),
+                                      'Lørdag',
+                                      snapshot.data[Weekday.Saturday.index])
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Column(
+                        Row(
                           children: <Widget>[
-                            _buildCheckboxListTile(Weekday.Tuesday,
-                                const Key('TueCheckbox'), 'Tirsdag'),
-                            _buildCheckboxListTile(Weekday.Thursday,
-                                const Key('ThuCheckbox'), 'Torsdag'),
-                            _buildCheckboxListTile(Weekday.Saturday,
-                                const Key('SatCheckbox'), 'Lørdag')
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                children: <Widget>[
+                                  _buildCheckboxListTile(
+                                      Weekday.Sunday,
+                                      const Key('SunCheckbox'),
+                                      'Søndag',
+                                      snapshot.data[Weekday.Sunday.index])
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Container(),
+                            )
                           ],
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          children: <Widget>[
-                            _buildCheckboxListTile(Weekday.Sunday,
-                                const Key('SunCheckbox'), 'Søndag')
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Container(),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+                );
+              }),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             child: Row(
@@ -157,7 +186,8 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                       text: confirmButtonText,
                       icon: confirmButtonIcon,
                       onPressed: () {
-                        confirmOnPressed(_checkboxDays, context);
+                        confirmOnPressed(
+                            copyActivitiesBloc.getCheckboxValues(), context);
                       },
                     ),
                   ),
@@ -171,11 +201,12 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
   }
 
   CheckboxListTile _buildCheckboxListTile(
-      Weekday weekday, Key checkboxKey, String checkboxTitle) {
+      Weekday weekday, Key checkboxKey, String checkboxTitle, bool value) {
     return CheckboxListTile(
       key: checkboxKey,
-      value: _checkboxDays[weekday.index],
-      onChanged: (bool value) => _checkboxChanged(value, weekday),
+      value: value,
+      onChanged: (bool value) =>
+          copyActivitiesBloc.toggleCheckboxState(weekday.index),
       title: Text(checkboxTitle),
       controlAffinity: ListTileControlAffinity.trailing,
       activeColor: checkboxColor,
