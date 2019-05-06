@@ -102,14 +102,12 @@ void main() {
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
   });
 
-  testWidgets('Complete activity button is rendered in citizen mode',
-      (WidgetTester tester) async {
-    authBloc.setMode(WeekplanMode.citizen);
+  testWidgets('ButtonBar is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
     await tester.pump();
 
-    expect(find.byKey(const Key('CompleteStateToggleButton')), findsOneWidget);
+    expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
   });
 
   testWidgets('Cancel activity button is rendered in guardian mode',

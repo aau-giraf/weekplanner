@@ -115,54 +115,66 @@ class ShowActivityScreen extends StatelessWidget {
                       );
                     }))),
       ),
-      buildButton()
+      buildButtonBar()
     ];
   }
 
   /// Builds the button that changes the state of the activity. The content
   /// of the button depends on whether it is in guardian or citizen mode.
-  Widget buildButton() {
-    return StreamBuilder<WeekplanMode>(
-      stream: _authBloc.mode,
-      builder: (BuildContext context,
-          AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
-        return StreamBuilder<ActivityModel>(
-            stream: _activityBloc.activityModelStream,
+  ButtonBar buildButtonBar() {
+    return ButtonBar(
+        // Key used for testing widget.
+        key: const Key('ButtonBarRender'),
+        alignment: MainAxisAlignment.center,
+        children: <Widget>[
+          StreamBuilder<WeekplanMode>(
+            stream: _authBloc.mode,
             builder: (BuildContext context,
-                AsyncSnapshot<ActivityModel> activitySnapshot) {
-              if (activitySnapshot.data == null) {
-                return const CircularProgressIndicator();
-              }
-              if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                return GirafButton(
-                    key: const Key('CancelStateToggleButton'),
-                    onPressed: () {
-                      _activityBloc.cancelActivity();
-                    },
-                    width: 100,
-                    icon: activitySnapshot.data.state != ActivityState.Canceled
-                        ? const ImageIcon(AssetImage('assets/icons/cancel.png'),
-                            color: Colors.red)
-                        : const ImageIcon(AssetImage('assets/icons/undo.png'),
-                            color: Colors.blue));
-              } else {
-                return GirafButton(
-                    key: const Key('CompleteStateToggleButton'),
-                    onPressed: () {
-                      _activityBloc.completeActivity();
-                    },
-                    isEnabled:
-                        activitySnapshot.data.state != ActivityState.Canceled,
-                    width: 100,
-                    icon: activitySnapshot.data.state != ActivityState.Completed
-                        ? const ImageIcon(AssetImage('assets/icons/accept.png'),
-                            color: Colors.green)
-                        : const ImageIcon(AssetImage('assets/icons/undo.png'),
-                            color: Colors.blue));
-              }
-            });
-      },
-    );
+                AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
+              return StreamBuilder<ActivityModel>(
+                  stream: _activityBloc.activityModelStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<ActivityModel> activitySnapshot) {
+                    if (activitySnapshot.data == null) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
+                      return GirafButton(
+                          key: const Key('CancelStateToggleButton'),
+                          onPressed: () {
+                            _activityBloc.cancelActivity();
+                          },
+                          width: 100,
+                          icon: activitySnapshot.data.state !=
+                                  ActivityState.Canceled
+                              ? const ImageIcon(
+                                  AssetImage('assets/icons/cancel.png'),
+                                  color: Colors.red)
+                              : const ImageIcon(
+                                  AssetImage('assets/icons/undo.png'),
+                                  color: Colors.blue));
+                    } else {
+                      return GirafButton(
+                          key: const Key('CompleteStateToggleButton'),
+                          onPressed: () {
+                            _activityBloc.completeActivity();
+                          },
+                          isEnabled: activitySnapshot.data.state !=
+                              ActivityState.Canceled,
+                          width: 100,
+                          icon: activitySnapshot.data.state !=
+                                  ActivityState.Completed
+                              ? const ImageIcon(
+                                  AssetImage('assets/icons/accept.png'),
+                                  color: Colors.green)
+                              : const ImageIcon(
+                                  AssetImage('assets/icons/undo.png'),
+                                  color: Colors.blue));
+                    }
+                  });
+            },
+          ),
+        ]);
   }
 
   /// Creates a pictogram image from the streambuilder
