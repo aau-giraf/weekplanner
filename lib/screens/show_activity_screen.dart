@@ -65,13 +65,14 @@ class ShowActivityScreen extends StatelessWidget {
         children: buildScreen(context),
       );
     }
+    final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Aktivitet',
           appBarIcons: const <AppBarIcon>[],
         ),
-        body: childContainer);
+        body: keyboardVisible ? Container() : childContainer);
   }
 
   /// Builds the activity.
@@ -266,23 +267,26 @@ class ShowActivityScreen extends StatelessWidget {
                   builder: (BuildContext timerRunningContext,
                       AsyncSnapshot<bool> timerRunningSnapshot) {
                     return Flexible(
-                        //button has different icons and press logic depending on
-                        //whether the timer is already running.
-                        child: GirafButton(
-                            onPressed: () {
-                              (timerRunningSnapshot.hasData
-                                      ? timerRunningSnapshot.data
-                                      : false)
-                                  ? _timerBloc.pauseTimer()
-                                  : _timerBloc.playTimer();
-                            },
-                            icon: (timerRunningSnapshot.hasData
-                                    ? timerRunningSnapshot.data
-                                    : false)
-                                ? const ImageIcon(
-                                    AssetImage('assets/icons/pause.png'))
-                                : const ImageIcon(
-                                    AssetImage('assets/icons/play.png'))));
+                      //button has different icons and press logic depending on
+                      //whether the timer is already running.
+                      child: GirafButton(
+                        onPressed: () {
+                          (timerRunningSnapshot.hasData
+                                  ? timerRunningSnapshot.data
+                                  : false)
+                              ? _timerBloc.pauseTimer()
+                              : _timerBloc.playTimer();
+                        },
+                        icon: (timerRunningSnapshot.hasData
+                                ? timerRunningSnapshot.data
+                                : false)
+                            ? const ImageIcon(
+                                AssetImage('assets/icons/pause.png'))
+                            : const ImageIcon(
+                                AssetImage('assets/icons/play.png'),
+                              ),
+                      ),
+                    );
                   }),
               Flexible(
                 child: GirafButton(
@@ -370,18 +374,19 @@ class ShowActivityScreen extends StatelessWidget {
                 return const CircularProgressIndicator();
               }
               return OutlineButton(
-                  key: const Key('CompleteStateToggleButton'),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  onPressed: () {
-                    _activityBloc.completeActivity();
-                  },
-                  child: snapshot.data.state != ActivityState.Completed
-                      ? const Icon(Icons.check, color: Colors.green)
-                      : const Icon(
-                          Icons.undo,
-                          color: Colors.blue,
-                        ));
+                key: const Key('CompleteStateToggleButton'),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                onPressed: () {
+                  _activityBloc.completeActivity();
+                },
+                child: snapshot.data.state != ActivityState.Completed
+                    ? const Icon(Icons.check, color: Colors.green)
+                    : const Icon(
+                        Icons.undo,
+                        color: Colors.blue,
+                      ),
+              );
             }),
       ],
     );

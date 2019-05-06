@@ -32,40 +32,34 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    final bool isInPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
-    return AlertDialog(
-      contentPadding: const EdgeInsets.all(0.0),
-      titlePadding: const EdgeInsets.all(0.0),
-      shape:
-          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
-      title: const Center(
-          child: GirafTitleHeader(
-        title: 'Vælg tid for aktivitet',
-      )),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: <Widget>[
-                _timerTextField('Timer', _textEditingControllerHours, context),
-                _timerTextField(
-                    'Minutter', _textEditingControllerMinutes, context),
-                _timerTextField(
-                    'Sekunder', _textEditingControllerSeconds, context)
-              ],
+    return SingleChildScrollView(
+      child: AlertDialog(
+        contentPadding: const EdgeInsets.all(0.0),
+        titlePadding: const EdgeInsets.all(0.0),
+        shape: Border.all(
+            color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+        title: const Center(
+            child: GirafTitleHeader(
+          title: 'Vælg tid for aktivitet',
+        )),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  _timerTextField(
+                      'Timer', _textEditingControllerHours, context),
+                  _timerTextField(
+                      'Minutter', _textEditingControllerMinutes, context),
+                  _timerTextField(
+                      'Sekunder', _textEditingControllerSeconds, context)
+                ],
+              ),
             ),
-          ),
-          Visibility(
-            visible: (isInPortrait && !keyboardVisible) ||
-                (isInPortrait && keyboardVisible) ||
-                (!isInPortrait && !keyboardVisible),
-            child: Row(
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Flexible(
@@ -94,8 +88,8 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
