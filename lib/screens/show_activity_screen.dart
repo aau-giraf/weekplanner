@@ -84,11 +84,7 @@ class ShowActivityScreen extends StatelessWidget {
             aspectRatio: 1,
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Column(
-                  children: buildActivity(context),
-                ),
-              ),
+              child: buildActivity(context),
             ),
           ),
         ),
@@ -100,9 +96,7 @@ class ShowActivityScreen extends StatelessWidget {
             aspectRatio: 1,
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Card(
-                child: buildTimer(context),
-              ),
+              child: buildTimer(context),
             ),
           ),
         ),
@@ -111,44 +105,48 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the activity widget.
-  List<Widget> buildActivity(BuildContext context) {
-    return <Widget>[
-      const Center(child: Padding(padding: EdgeInsets.all(8.0))),
-      Expanded(
-        child: FittedBox(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromRGBO(35, 35, 35, 1.0),
-                        width: 0.25)),
-                child: StreamBuilder<ActivityModel>(
-                    stream: _activityBloc.activityModelStream,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<ActivityModel> snapshot) {
-                      if (snapshot.data == null) {
-                        return const CircularProgressIndicator();
-                      }
-                      return Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                              child: buildLoadPictogramImage()),
-                          snapshot.data.state == ActivityState.Completed
-                              ? Icon(
-                                  Icons.check,
-                                  key: const Key('IconComplete'),
-                                  color: Colors.green,
-                                  size: MediaQuery.of(context).size.width,
-                                )
-                              : Container()
-                        ],
-                      );
-                    }))),
+  Card buildActivity(BuildContext context) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          const Center(child: Padding(padding: EdgeInsets.all(8.0))),
+          Expanded(
+            child: FittedBox(
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: const Color.fromRGBO(35, 35, 35, 1.0),
+                            width: 0.25)),
+                    child: StreamBuilder<ActivityModel>(
+                        stream: _activityBloc.activityModelStream,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<ActivityModel> snapshot) {
+                          if (snapshot.data == null) {
+                            return const CircularProgressIndicator();
+                          }
+                          return Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: <Widget>[
+                              SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.width,
+                                  child: buildLoadPictogramImage()),
+                              snapshot.data.state == ActivityState.Completed
+                                  ? Icon(
+                                      Icons.check,
+                                      key: const Key('IconComplete'),
+                                      color: Colors.green,
+                                      size: MediaQuery.of(context).size.width,
+                                    )
+                                  : Container()
+                            ],
+                          );
+                        }))),
+          ),
+          buildButtonBar(),
+        ],
       ),
-      buildButtonBar(),
-    ];
+    );
   }
 
   /// Builds the timer widget.
@@ -159,180 +157,177 @@ class ShowActivityScreen extends StatelessWidget {
             AsyncSnapshot<WeekplanMode> modeSnapshot) {
           return StreamBuilder<bool>(
               stream: _timerBloc.timerIsInstantiated,
-              builder: (BuildContext timerInitcontext,
-                  AsyncSnapshot<bool> timerInitsnapshot) {
-                return Column(children: <Widget>[
-                  Center(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Timer',
-                        style: titleTextStyle, textAlign: TextAlign.center),
-                  )),
-                  Expanded(
-                      child: (timerInitsnapshot.hasData
-                              ? timerInitsnapshot.data
-                              : false)
-                          ? FittedBox(
-                              child: StreamBuilder<double>(
-                                stream: _timerBloc.timerProgressStream,
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<double> snapshot) {
-                                  return Container(
-                                    decoration: const ShapeDecoration(
-                                        shape: CircleBorder(
-                                            side: BorderSide(
-                                                color: Colors.black,
-                                                width: 0.5))),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.red,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 30,
-                                          value: snapshot.hasData
-                                              ? snapshot.data
-                                              : 0.0,
-                                          valueColor:
-                                              const AlwaysStoppedAnimation<
-                                                  Color>(Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          : FittedBox(
-                              child: Padding(
-                              padding: const EdgeInsets.all(0),
-                              child: Container(
-                                child: StreamBuilder<WeekplanMode>(
-                                    stream: _authBloc.mode,
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<WeekplanMode> snapshot) {
-                                      return Visibility(
-                                        visible: snapshot.hasData
-                                            ? snapshot.data ==
-                                                WeekplanMode.guardian
-                                            : true,
-                                        child: IconButton(
-                                            icon: const ImageIcon(AssetImage(
-                                                'assets/icons/addTimerHighRes.png')),
-                                            onPressed: () {
-                                              buildTimerDialog(overallContext);
-                                            }),
-                                      );
-                                    }),
-                              ),
-                            ))),
-                  StreamBuilder<bool>(
-                      stream: _timerBloc.timerIsInstantiated,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                        return Visibility(
-                          visible: snapshot.hasData ? snapshot.data : false,
+              builder: (BuildContext timerInitContext,
+                  AsyncSnapshot<bool> timerInitSnapshot) {
+                return Visibility(
+                  visible: timerInitSnapshot.data ||
+                      (!timerInitSnapshot.data &&
+                          modeSnapshot.data == WeekplanMode.guardian),
+                  child: Card(
+                    child: Column(children: <Widget>[
+                      Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              child: Row(
-                                children: <Widget>[
-                                  StreamBuilder<bool>(
-                                      stream: _timerBloc.timerIsRunning,
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<bool> snapshot) {
-                                        return Flexible(
-                                            child: GirafButton(
-                                                onPressed: () {
-                                                  (snapshot.hasData
-                                                          ? snapshot.data
-                                                          : false)
-                                                      ? _timerBloc.pauseTimer()
-                                                      : _timerBloc.playTimer();
-                                                },
-                                                icon: (snapshot.hasData
-                                                        ? snapshot.data
-                                                        : false)
-                                                    ? const ImageIcon(AssetImage(
-                                                        'assets/icons/pause.png'))
-                                                    : const ImageIcon(AssetImage(
-                                                        'assets/icons/play.png'))));
-                                      }),
-                                  Flexible(
-                                    child: GirafButton(
-                                      onPressed: () {
-                                        showDialog<Center>(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return GirafConfirmDialog(
-                                                title: 'Stop Timer',
-                                                description: 'Vil du stoppe ' +
-                                                    'timeren?',
-                                                confirmButtonText: 'stop',
-                                                confirmButtonIcon:
-                                                    const ImageIcon(AssetImage(
-                                                        'assets/icons/stop.png')),
-                                                confirmOnPressed: () {
-                                                  _timerBloc.stopTimer();
-                                                  Routes.pop(context);
-                                                },
-                                              );
-                                            });
-                                      },
-                                      icon: const ImageIcon(
-                                          AssetImage('assets/icons/stop.png')),
-                                    ),
-                                  ),
-                                  StreamBuilder<WeekplanMode>(
-                                      stream: _authBloc.mode,
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<WeekplanMode>
-                                              snapshot) {
-                                        return Visibility(
-                                          visible: snapshot.data ==
-                                              WeekplanMode.guardian,
-                                          child: Flexible(
-                                            child: GirafButton(
-                                              onPressed: () {
-                                                showDialog<Center>(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return GirafConfirmDialog(
-                                                        title: 'Slet Timer',
-                                                        description:
-                                                            'Vil du slette ' +
-                                                                'timeren?',
-                                                        confirmButtonText:
-                                                            'Slet',
-                                                        confirmButtonIcon:
-                                                            const ImageIcon(
-                                                                AssetImage(
-                                                                    'assets/icons/delete.png')),
-                                                        confirmOnPressed: () {
-                                                          _timerBloc
-                                                              .deleteTimer();
-                                                          Routes.pop(context);
-                                                        },
-                                                      );
-                                                    });
-                                              },
-                                              icon: const ImageIcon(AssetImage(
-                                                  'assets/icons/delete.png')),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      })
-                ]);
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Timer',
+                            style: titleTextStyle, textAlign: TextAlign.center),
+                      )),
+                      Expanded(
+                          child: (timerInitSnapshot.hasData
+                                  ? timerInitSnapshot.data
+                                  : false)
+                              ? timerIsInitiatedWidget()
+                              : timerIsNotInitiatedWidget(
+                                  overallContext, modeSnapshot)),
+                      timerButtons(
+                          overallContext, timerInitSnapshot, modeSnapshot)
+                    ]),
+                  ),
+                );
               });
         });
+  }
+
+  ///The widget to show, in the case that a timer has been initiated,
+  ///showing the progression for the timer in both citizen and guardian mode.
+  Widget timerIsInitiatedWidget() {
+    return FittedBox(
+      child: StreamBuilder<double>(
+        stream: _timerBloc.timerProgressStream,
+        builder: (BuildContext timerProgressContext,
+            AsyncSnapshot<double> timerProgressSnapshot) {
+          return Container(
+            decoration: const ShapeDecoration(
+                shape: CircleBorder(
+                    side: BorderSide(color: Colors.black, width: 0.5))),
+            child: CircleAvatar(
+              backgroundColor: Colors.red,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: CircularProgressIndicator(
+                  strokeWidth: 30,
+                  value: timerProgressSnapshot.hasData
+                      ? timerProgressSnapshot.data
+                      : 0.0,
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  ///the widget to show, in the case that a timer has not been initiated
+  ///for the activity. When in guardian mode, an "addtimer" button is shown,
+  ///as citizen, nothing is shown.
+  Widget timerIsNotInitiatedWidget(
+      BuildContext overallContext, AsyncSnapshot<WeekplanMode> modeSnapshot) {
+    return (modeSnapshot.data == WeekplanMode.guardian)
+        ? FittedBox(
+            child: Padding(
+            padding: const EdgeInsets.all(0),
+            child: Container(
+                child: IconButton(
+                    icon: const ImageIcon(
+                        AssetImage('assets/icons/addTimerHighRes.png')),
+                    onPressed: () {
+                      buildTimerDialog(overallContext);
+                    })),
+          ))
+        : Container();
+  }
+
+  ///the buttons for the timer. Depending on whether the application is in
+  ///citizen or guardian mode, certain buttons are displayed.
+  ///Buttons are: Play/Pause, Stop and delete
+  Widget timerButtons(
+      BuildContext overallContext,
+      AsyncSnapshot<bool> timerInitSnapshot,
+      AsyncSnapshot<WeekplanMode> modeSnapshot) {
+    return Visibility(
+      visible: timerInitSnapshot.hasData ? timerInitSnapshot.data : false,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          child: Row(
+            children: <Widget>[
+              StreamBuilder<bool>(
+                  stream: _timerBloc.timerIsRunning,
+                  builder: (BuildContext timerRunningContext,
+                      AsyncSnapshot<bool> timerRunningSnapshot) {
+                    return Flexible(
+                        child: GirafButton(
+                            onPressed: () {
+                              (timerRunningSnapshot.hasData
+                                      ? timerRunningSnapshot.data
+                                      : false)
+                                  ? _timerBloc.pauseTimer()
+                                  : _timerBloc.playTimer();
+                            },
+                            icon: (timerRunningSnapshot.hasData
+                                    ? timerRunningSnapshot.data
+                                    : false)
+                                ? const ImageIcon(
+                                    AssetImage('assets/icons/pause.png'))
+                                : const ImageIcon(
+                                    AssetImage('assets/icons/play.png'))));
+                  }),
+              Flexible(
+                child: GirafButton(
+                  onPressed: () {
+                    showDialog<Center>(
+                        context: overallContext,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return GirafConfirmDialog(
+                            title: 'Stop Timer',
+                            description: 'Vil du stoppe timeren?',
+                            confirmButtonText: 'stop',
+                            confirmButtonIcon: const ImageIcon(
+                                AssetImage('assets/icons/stop.png')),
+                            confirmOnPressed: () {
+                              _timerBloc.stopTimer();
+                              Routes.pop(context);
+                            },
+                          );
+                        });
+                  },
+                  icon: const ImageIcon(AssetImage('assets/icons/stop.png')),
+                ),
+              ),
+              Visibility(
+                visible: modeSnapshot.data == WeekplanMode.guardian,
+                child: Flexible(
+                  child: GirafButton(
+                    onPressed: () {
+                      showDialog<Center>(
+                          context: overallContext,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return GirafConfirmDialog(
+                              title: 'Slet Timer',
+                              description: 'Vil du slette timeren?',
+                              confirmButtonText: 'Slet',
+                              confirmButtonIcon: const ImageIcon(
+                                  AssetImage('assets/icons/delete.png')),
+                              confirmOnPressed: () {
+                                _timerBloc.deleteTimer();
+                                Routes.pop(context);
+                              },
+                            );
+                          });
+                    },
+                    icon:
+                        const ImageIcon(AssetImage('assets/icons/delete.png')),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   /// Builds the buttons below the activity widget.
