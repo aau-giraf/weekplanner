@@ -23,17 +23,18 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   final ActivityModel _activity;
   final TimerBloc _timerBloc;
 
+  final TextEditingController _textEditingControllerHours =
+      TextEditingController();
+  final TextEditingController _textEditingControllerMinutes =
+      TextEditingController();
+  final TextEditingController _textEditingControllerSeconds =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
     final bool isInPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    final TextEditingController textEditingControllerHours =
-        TextEditingController();
-    final TextEditingController textEditingControllerMinutes =
-        TextEditingController();
-    final TextEditingController textEditingControllerSeconds =
-        TextEditingController();
 
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0.0),
@@ -52,9 +53,11 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Row(
               children: <Widget>[
-                _timerTextField('Timer', textEditingControllerHours),
-                _timerTextField('Minutter', textEditingControllerMinutes),
-                _timerTextField('Sekunder', textEditingControllerSeconds)
+                _timerTextField('Timer', _textEditingControllerHours, context),
+                _timerTextField(
+                    'Minutter', _textEditingControllerMinutes, context),
+                _timerTextField(
+                    'Sekunder', _textEditingControllerSeconds, context)
               ],
             ),
           ),
@@ -83,18 +86,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                       child: GirafButton(
                         key: const Key('TimePickerDialogAcceptButton'),
                         onPressed: () {
-                          _timerBloc.addTimer(Duration(
-                            hours:
-                                int.tryParse(textEditingControllerHours.text) ??
-                                    0,
-                            minutes: int.tryParse(
-                                    textEditingControllerMinutes.text) ??
-                                0,
-                            seconds: int.tryParse(
-                                    textEditingControllerSeconds.text) ??
-                                0,
-                          ));
-                          Routes.pop(context);
+                          _acceptInput(context);
                         },
                         icon: const ImageIcon(
                             AssetImage('assets/icons/accept.png')),
@@ -108,8 +100,21 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
     );
   }
 
-  Widget _timerTextField(
-      String fieldName, TextEditingController textController) {
+  void _acceptInput(BuildContext context) {
+    final Duration d = Duration(
+      hours: int.tryParse(_textEditingControllerHours.text) ?? 0,
+      minutes: int.tryParse(_textEditingControllerMinutes.text) ?? 0,
+      seconds: int.tryParse(_textEditingControllerSeconds.text) ?? 0,
+    );
+
+    if (d.inSeconds != 0){
+      _timerBloc.addTimer(d);
+      Routes.pop(context);
+    }
+  }
+
+  Widget _timerTextField(String fieldName, TextEditingController textController,
+      BuildContext context) {
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -123,6 +128,9 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   color: Colors.white),
               child: TextField(
                   key: Key(fieldName + 'TextFieldKey'),
+                  onSubmitted: (String s) {
+                    _acceptInput(context);
+                  },
                   controller: textController,
                   style: TextStyle(
                     fontSize: 50,
@@ -132,7 +140,9 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   decoration: InputDecoration.collapsed(
                     hintText: '',
                   ),
-                  inputFormatters: [LengthLimitingTextInputFormatter(2)]),
+                  inputFormatters: <TextInputFormatter>[
+                    LengthLimitingTextInputFormatter(2)
+                  ]),
             ),
           ),
         ],
