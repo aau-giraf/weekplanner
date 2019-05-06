@@ -162,9 +162,11 @@ class ShowActivityScreen extends StatelessWidget {
                 //if a timer is not initiated, and the app is in citizen mode,
                 //nothing is shown
                 return Visibility(
-                  visible: timerInitSnapshot.data ||
-                      (!timerInitSnapshot.data &&
-                          modeSnapshot.data == WeekplanMode.guardian),
+                  visible: (timerInitSnapshot.hasData && modeSnapshot.hasData)
+                      ? timerInitSnapshot.data ||
+                          (!timerInitSnapshot.data &&
+                              modeSnapshot.data == WeekplanMode.guardian)
+                      : false,
                   child: Card(
                     child: Column(children: <Widget>[
                       //the title of the timer widget
@@ -175,15 +177,15 @@ class ShowActivityScreen extends StatelessWidget {
                             style: titleTextStyle, textAlign: TextAlign.center),
                       )),
                       Expanded(
-                        //depending on whether a timer is initiated, different
-                        //widgets are shown.
+                          //depending on whether a timer is initiated, different
+                          //widgets are shown.
                           child: (timerInitSnapshot.hasData
                                   ? timerInitSnapshot.data
                                   : false)
-                              ? timerIsInitiatedWidget()
-                              : timerIsNotInitiatedWidget(
+                              ? _timerIsInitiatedWidget()
+                              : _timerIsNotInitiatedWidget(
                                   overallContext, modeSnapshot)),
-                      timerButtons(
+                      _timerButtons(
                           overallContext, timerInitSnapshot, modeSnapshot)
                     ]),
                   ),
@@ -194,7 +196,7 @@ class ShowActivityScreen extends StatelessWidget {
 
   ///The widget to show, in the case that a timer has been initiated,
   ///showing the progression for the timer in both citizen and guardian mode.
-  Widget timerIsInitiatedWidget() {
+  Widget _timerIsInitiatedWidget() {
     return FittedBox(
       child: StreamBuilder<double>(
         stream: _timerBloc.timerProgressStream,
@@ -226,9 +228,11 @@ class ShowActivityScreen extends StatelessWidget {
   ///the widget to show, in the case that a timer has not been initiated
   ///for the activity. When in guardian mode, an "addtimer" button is shown,
   ///as citizen, nothing is shown.
-  Widget timerIsNotInitiatedWidget(
+  Widget _timerIsNotInitiatedWidget(
       BuildContext overallContext, AsyncSnapshot<WeekplanMode> modeSnapshot) {
-    return (modeSnapshot.data == WeekplanMode.guardian)
+    return (modeSnapshot.hasData
+            ? (modeSnapshot.data == WeekplanMode.guardian)
+            : false)
         ? FittedBox(
             child: Padding(
             padding: const EdgeInsets.all(0),
@@ -237,7 +241,7 @@ class ShowActivityScreen extends StatelessWidget {
                     icon: const ImageIcon(
                         AssetImage('assets/icons/addTimerHighRes.png')),
                     onPressed: () {
-                      buildTimerDialog(overallContext);
+                      _buildTimerDialog(overallContext);
                     })),
           ))
         : Container();
@@ -246,7 +250,7 @@ class ShowActivityScreen extends StatelessWidget {
   ///the buttons for the timer. Depending on whether the application is in
   ///citizen or guardian mode, certain buttons are displayed.
   ///Buttons are: Play/Pause, Stop and delete
-  Widget timerButtons(
+  Widget _timerButtons(
       BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot) {
@@ -262,8 +266,8 @@ class ShowActivityScreen extends StatelessWidget {
                   builder: (BuildContext timerRunningContext,
                       AsyncSnapshot<bool> timerRunningSnapshot) {
                     return Flexible(
-                      //button has different icons and press logic depending on
-                      //whether the timer is already running.
+                        //button has different icons and press logic depending on
+                        //whether the timer is already running.
                         child: GirafButton(
                             onPressed: () {
                               (timerRunningSnapshot.hasData
@@ -342,7 +346,7 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// returns a dialog where time can be decided for an activity(timer)
-  void buildTimerDialog(BuildContext context) {
+  void _buildTimerDialog(BuildContext context) {
     showDialog<Center>(
         context: context,
         barrierDismissible: false,
