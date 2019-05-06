@@ -4,7 +4,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-///A dialog widget presented to the user to confirm an action based on
+/// A dialog widget presented to the user to confirm an action based on
 ///a list of checkboxes presented in the dialog. The dialog consists of a
 ///title, a description, and two buttons and a dropdown menu. One button to
 ///cancel the action and one button to accept and perform the action.
