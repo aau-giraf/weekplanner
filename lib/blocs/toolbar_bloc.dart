@@ -201,6 +201,9 @@ class ToolbarBloc extends BlocBase {
       icon: Image.asset('assets/icons/changeToGuardian.png'),
       tooltip: 'Skift til værge tilstand',
       onPressed: () {
+        /// Password controller for passing information from a text field
+        /// to the authenticator.
+        final TextEditingController passwordCtrl = TextEditingController();
         Alert(
             context: context,
             style: _alertStyle,
@@ -360,10 +363,6 @@ class ToolbarBloc extends BlocBase {
       onPressed: callback,
     );
   }
-
-  /// Password controller for passing information from a text field
-  /// to the authenticator.
-  final TextEditingController passwordCtrl = TextEditingController();
 
   final AlertStyle _alertStyle = AlertStyle(
     animationType: AnimationType.grow,
