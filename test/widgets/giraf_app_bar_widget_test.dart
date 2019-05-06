@@ -72,8 +72,8 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
             title: 'TestTitle',
-            appBarIcons: const <AppBarIcon>[AppBarIcon.logout,
-              AppBarIcon.changeToGuardian]));
+            appBarIcons: const <AppBarIcon, VoidCallback>{
+              AppBarIcon.logout: null}));
   }
 }
 
@@ -125,7 +125,8 @@ void main() {
 
   testWidgets('Accept button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.accept]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.accept: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -135,7 +136,8 @@ void main() {
 
   testWidgets('Add button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.add]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.add: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -145,7 +147,8 @@ void main() {
 
   testWidgets('Add timer button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.addTimer]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.addTimer: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -155,7 +158,8 @@ void main() {
 
   testWidgets('Back button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.back]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.back: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -166,7 +170,8 @@ void main() {
   testWidgets('Burger menu button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon>[AppBarIcon.burgerMenu]);
+        appBarIcons: const <AppBarIcon, VoidCallback>{
+          AppBarIcon.burgerMenu: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -176,7 +181,8 @@ void main() {
 
   testWidgets('Camera button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.camera]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.camera: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -186,7 +192,8 @@ void main() {
 
   testWidgets('Cancel button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.cancel]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.cancel: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -198,7 +205,8 @@ void main() {
       (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon>[AppBarIcon.changeToCitizen]);
+        appBarIcons: const <AppBarIcon, VoidCallback>{
+          AppBarIcon.changeToCitizen: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -210,7 +218,8 @@ void main() {
       (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
         title: 'Ugeplan',
-        appBarIcons: const <AppBarIcon>[AppBarIcon.changeToGuardian]);
+        appBarIcons: const <AppBarIcon, VoidCallback>{
+          AppBarIcon.changeToGuardian: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -220,7 +229,8 @@ void main() {
 
   testWidgets('Copy button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.copy]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.copy: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -230,7 +240,8 @@ void main() {
 
   testWidgets('Delete button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.delete]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.delete: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -240,7 +251,8 @@ void main() {
 
   testWidgets('Edit button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.edit]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.edit: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -250,7 +262,8 @@ void main() {
 
   testWidgets('Help button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.help]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.help: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -260,7 +273,8 @@ void main() {
 
   testWidgets('Home button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.home]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.home: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -270,7 +284,8 @@ void main() {
 
   testWidgets('Log out button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.logout]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.logout: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -280,7 +295,8 @@ void main() {
 
   testWidgets('Profile button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.profile]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.profile: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -290,7 +306,8 @@ void main() {
 
   testWidgets('Redo button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.redo]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.redo: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -300,7 +317,8 @@ void main() {
 
   testWidgets('Save button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.save]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.save: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -310,7 +328,8 @@ void main() {
 
   testWidgets('Search button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.search]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.search: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -320,7 +339,8 @@ void main() {
 
   testWidgets('Settings button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.settings]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.settings: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
@@ -330,7 +350,8 @@ void main() {
 
   testWidgets('Undo button is displayed', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(
-        title: 'Ugeplan', appBarIcons: const <AppBarIcon>[AppBarIcon.cancel]);
+        title: 'Ugeplan', appBarIcons: const <AppBarIcon, VoidCallback>{
+      AppBarIcon.undo: null});
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
