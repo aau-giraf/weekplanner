@@ -341,6 +341,16 @@ class ShowActivityScreen extends StatelessWidget {
     );
   }
 
+  /// returns a dialog where time can be decided for an activity(timer)
+  void buildTimerDialog(BuildContext context) {
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return GirafActivityTimerPickerDialog(_activity, _timerBloc);
+        });
+  }
+
   /// Builds the buttons below the activity widget.
   ButtonBar buildButtonBar() {
     return ButtonBar(
@@ -382,16 +392,6 @@ class ShowActivityScreen extends StatelessWidget {
               child: snapshot.data,
               // Key is used for testing the widget.
               key: Key(_activity.id.toString()));
-        });
-  }
-
-  /// returns a dialog where time can be decided for an activity(timer)
-  void buildTimerDialog(BuildContext context) {
-    showDialog<Center>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return GirafActivityTimerPickerDialog(_activity, _timerBloc);
         });
   }
 }
