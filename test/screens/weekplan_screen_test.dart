@@ -528,7 +528,7 @@ void main() {
         find.byKey(const Key('SwitchToGuardianPassword')), 'password');
     await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
-    await tester.pumpAndSettle(Duration(seconds:1));
+    await tester.pumpAndSettle(const Duration(seconds:1));
 
     tapComplete.complete();
 
