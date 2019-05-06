@@ -119,7 +119,8 @@ class ShowActivityScreen extends StatelessWidget {
     ];
   }
 
-  /// Builds the buttons below the activity widget.
+  /// Builds the button that changes the state of the activity. The content
+  /// of the button depends on whether it is in guardian or citizen mode.
   Widget buildButton() {
     return StreamBuilder<WeekplanMode>(
       stream: _authBloc.mode,
@@ -127,13 +128,38 @@ class ShowActivityScreen extends StatelessWidget {
           AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
         return StreamBuilder<ActivityModel>(
             stream: _activityBloc.activityModelStream,
-            builder:
-                (BuildContext context, AsyncSnapshot<ActivityModel> snapshot) {
-              if (snapshot.data == null) {
+            builder: (BuildContext context,
+                AsyncSnapshot<ActivityModel> activitySnapshot) {
+              if (activitySnapshot.data == null) {
                 return const CircularProgressIndicator();
               }
-              return _buildChangeActivityStateButton(
-                  snapshot.data.state, weekplanModeSnapshot.data);
+              if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
+                return GirafButton(
+                    key: const Key('CancelStateToggleButton'),
+                    onPressed: () {
+                      _activityBloc.cancelActivity();
+                    },
+                    width: 100,
+                    icon: activitySnapshot.data.state != ActivityState.Canceled
+                        ? const ImageIcon(AssetImage('assets/icons/cancel.png'),
+                            color: Colors.red)
+                        : const ImageIcon(AssetImage('assets/icons/undo.png'),
+                            color: Colors.blue));
+              } else {
+                return GirafButton(
+                    key: const Key('CompleteStateToggleButton'),
+                    onPressed: () {
+                      _activityBloc.completeActivity();
+                    },
+                    isEnabled:
+                        activitySnapshot.data.state != ActivityState.Canceled,
+                    width: 100,
+                    icon: activitySnapshot.data.state != ActivityState.Completed
+                        ? const ImageIcon(AssetImage('assets/icons/accept.png'),
+                            color: Colors.green)
+                        : const ImageIcon(AssetImage('assets/icons/undo.png'),
+                            color: Colors.blue));
+              }
             });
       },
     );
@@ -149,36 +175,6 @@ class ShowActivityScreen extends StatelessWidget {
               // Key is used for testing the widget.
               key: Key(_activity.id.toString()));
         });
-  }
-
-  GirafButton _buildChangeActivityStateButton(
-      ActivityState state, WeekplanMode mode) {
-    if (mode == WeekplanMode.guardian) {
-      return GirafButton(
-          key: const Key('CancelStateToggleButton'),
-          onPressed: () {
-            _activityBloc.cancelActivity();
-          },
-          width: 100,
-          icon: state != ActivityState.Canceled
-              ? const ImageIcon(AssetImage('assets/icons/cancel.png'),
-                  color: Colors.red)
-              : const ImageIcon(AssetImage('assets/icons/undo.png'),
-                  color: Colors.blue));
-    } else {
-      return GirafButton(
-          key: const Key('CompleteStateToggleButton'),
-          onPressed: () {
-            _activityBloc.completeActivity();
-          },
-          isEnabled: state != ActivityState.Canceled,
-          width: 100,
-          icon: state != ActivityState.Completed
-              ? const ImageIcon(AssetImage('assets/icons/accept.png'),
-                  color: Colors.green)
-              : const ImageIcon(AssetImage('assets/icons/undo.png'),
-                  color: Colors.blue));
-    }
   }
 
   /// Builds the icon that displays the activity's state

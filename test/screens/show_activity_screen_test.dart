@@ -112,13 +112,54 @@ void main() {
     expect(find.byKey(const Key('CompleteStateToggleButton')), findsOneWidget);
   });
 
-  testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
+  testWidgets('Cancel activity button is rendered in guardian mode',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('CancelStateToggleButton')), findsOneWidget);
+  });
+
+  testWidgets('Complete activity button is NOT rendered in guardian mode',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('CompleteStateToggleButton')), findsNothing);
+  });
+
+  testWidgets('Cancel activity button is NOT rendered in citizen mode',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('CancelStateToggleButton')), findsNothing);
+  });
+
+  testWidgets('Activity has checkmark icon when completed',
+      (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
+  });
+
+  testWidgets('Activity has cancel icon when canceled',
+      (WidgetTester tester) async {
+    mockActivity.state = ActivityState.Canceled;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
   });
 
   testWidgets('Activity has no checkmark when Normal',
@@ -131,7 +172,7 @@ void main() {
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
   });
 
-  testWidgets('Activity is set to completed and an activity mark is shown',
+  testWidgets('Activity is set to completed and an activity checkmark is shown',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Normal;
@@ -145,7 +186,21 @@ void main() {
     expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
   });
 
-  testWidgets('Activity is set to normal and an activity mark is not shown',
+  testWidgets('Activity is set to canceled and an activity cross is shown',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.state = ActivityState.Normal;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
+
+    await tester.pump();
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+  });
+
+  testWidgets('Activity is set to normal and no activity mark is shown',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Completed;
@@ -157,5 +212,6 @@ void main() {
 
     await tester.pump();
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
+    expect(find.byKey(const Key('IconCanceled')), findsNothing);
   });
 }
