@@ -81,7 +81,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekPlanAdder(BuildContext context, WeekModel weekplan,
       PictogramImageBloc bloc, bool inEditMode) {
-    bloc.loadPictogramById(weekplan.thumbnail.id);
     return GestureDetector(
       key: Key(weekplan.name),
       onTap: () {

@@ -1,9 +1,12 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -15,6 +18,7 @@ import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../blocs/weekplans_bloc_test.dart';
 import '../test_image.dart';
 
@@ -25,10 +29,11 @@ class MockPictogramApi extends Mock implements PictogramApi {}
 void main() {
   WeekplansBloc bloc;
   Api api;
-  MockPictogramApi pictogramApi;
   MockWeekApi weekApi;
+  MockPictogramApi pictogramApi;
   final UsernameModel mockUser =
       UsernameModel(name: 'test', role: 'test', id: 'test');
+
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
       lastEdit: null,
@@ -36,9 +41,20 @@ void main() {
       accessLevel: null,
       imageUrl: 'http://any.tld',
       imageHash: null);
-      
-  final WeekModel weekModel =
-      WeekModel(name: 'weekModel', thumbnail: pictogramModel);
+
+  final WeekModel weekModel1 = WeekModel(
+      name: 'weekModel1',
+      thumbnail: pictogramModel,
+      days: <WeekdayModel>[
+        WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
+      ]);
+
+  final WeekModel weekModel2 = WeekModel(
+      name: 'weekModel2',
+      thumbnail: pictogramModel,
+      days: <WeekdayModel>[
+        WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
+      ]);
 
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
@@ -54,18 +70,22 @@ void main() {
         (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     when(weekApi.get('test', weekNameModel.weekYear, weekNameModel.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel));
+        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.get(
             'test', weekNameModel2.weekYear, weekNameModel2.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel));
+        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel2));
+
+    when(api.pictogram.getImage(any)).thenAnswer((_) =>
+        BehaviorSubject<Image>.seeded(Image.asset('assets/icons/accept.png')));
   }
 
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
-    pictogramApi = MockPictogramApi();
     api.week = weekApi;
+    pictogramApi = MockPictogramApi();
+    api.pictogram = pictogramApi;
     bloc = WeekplansBloc(api);
 
     setupApiCalls();
@@ -77,7 +97,7 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
   });
 
-  testWidgets('renders', (WidgetTester tester) async {
+  testWidgets('Renders the screen', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
   });
@@ -132,29 +152,31 @@ void main() {
     expect(resultValue, false);
   });
 
-  testWidgets('Tap on a weekplan in edit mode marks it',
-      (WidgetTester tester) async {
-    final WeekNameModel weekNameModel =
-        WeekNameModel(name: 'name', weekNumber: 1, weekYear: 1);
-    final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
-      weekNameModel
-    ];
-    when(weekApi.getNames('test')).thenAnswer(
-        (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
-
-    when(pictogramApi.getImage(pictogramModel.id))
-        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
-
+  testWidgets('Marking and deleting one', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    expect(find.text('weekModel1'), findsOneWidget);
+
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
+    print(bloc.getNumberOfMarkedWeekModels());
 
-    await tester.tap(find.byKey(Key(weekModel.name)).first);
-    await tester.pumpAndSettle();
+    bloc.editMode.listen((bool editMode) async {
+      await tester.pump();
+      await tester.tap(find.byKey(Key(weekModel1.name)));
+      await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
+      print(bloc.getNumberOfMarkedWeekModels());
+      // await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
+      // await tester.pumpAndSettle();
+
+      // await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+      // await tester.pumpAndSettle();
+      // await tester.pump(Duration(milliseconds: 500));
+
+      // expect(find.text('weekModel1'), findsNothing);
+    });
   });
 }
