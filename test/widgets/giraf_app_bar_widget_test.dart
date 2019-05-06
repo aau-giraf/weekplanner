@@ -21,7 +21,8 @@ class MockAuth extends Mock implements AuthBloc {
   String loggedInUsername = 'Graatand';
 
   @override
-  void authenticate(String username, String password) {
+  void authenticateFromPopUp(String username, String password,
+                             BuildContext context) {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');
@@ -29,6 +30,9 @@ class MockAuth extends Mock implements AuthBloc {
     // and push the status to the stream
     if (status) {
       loggedInUsername = username;
+    }
+    else {
+      showFailureDialog(context);
     }
     _loggedIn.add(status);
   }
@@ -47,18 +51,6 @@ class MockAuth extends Mock implements AuthBloc {
         });
   }
 
-  @override
-  void authenticateFromPopUp(String username, String password,
-                             BuildContext context){
-    // Mock the API and allow these 2 users to ?login?
-    final bool status = (username == 'test' && password == 'test') ||
-        (username == 'Graatand' && password == 'password');
-
-    // If "login" failed show the failure dialog
-    if (!status) {
-      showFailureDialog(context);
-    }
-  }
 
   @override
   void logout() {
@@ -72,8 +64,10 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
             title: 'TestTitle',
-            appBarIcons: const <AppBarIcon, VoidCallback>{
-              AppBarIcon.logout: null}));
+            appBarIcons: <AppBarIcon, VoidCallback>{
+              AppBarIcon.logout: null,
+              AppBarIcon.changeToGuardian: () {},
+            }));
   }
 }
 

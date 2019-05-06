@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -237,7 +239,6 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 key: const Key('SwitchToGuardianSubmit'),
-                onPressed: () {
                   // Debouncer for button, so it cannot
                   // be tapped than each 2 seconds.
                   onPressed: _clickable
@@ -253,7 +254,6 @@ class ToolbarBloc extends BlocBase {
                     }
                   }
                   : null,
-                },
                 child: const Text(
                   'Bekræft',
                   style: TextStyle(color: Colors.white, fontSize: 20),
