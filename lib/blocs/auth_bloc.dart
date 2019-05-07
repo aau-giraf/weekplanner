@@ -82,14 +82,14 @@ class AuthBloc extends BlocBase {
     // login is false until proven otherwise
     _loginStatus = false;
     showLoadingSpinner(context, false,
-                       () => reactToLoginAttemptFromPopUp(context), 2000);
+                       () => reactToLoginAttemptFromPopUp(context), 1000);
 
     _api.account.login(username, password).take(1).listen((bool status) {
       if (status) {
         _loginStatus = true;
+        //Pop the popup
         Routes.pop(context);
         setMode(WeekplanMode.guardian);
-        //Pop the popup
         }
     });
   }
