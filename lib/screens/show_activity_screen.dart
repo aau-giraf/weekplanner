@@ -296,20 +296,13 @@ class ShowActivityScreen extends StatelessWidget {
                         icon: (timerRunningSnapshot.hasData
                                 ? timerRunningSnapshot.data
                                 : false)
-                            ? _timerBloc.pauseTimer()
-                            : _timerBloc.playTimer();
-                      },
-                      icon: (timerRunningSnapshot.hasData
-                              ? timerRunningSnapshot.data
-                              : false)
-                          ? const ImageIcon(
-                              AssetImage('assets/icons/pause.png'))
-                          : const ImageIcon(
-                              AssetImage('assets/icons/play.png')),
-                    ),
-                  );
-                },
-              ),
+                            ? const ImageIcon(
+                                AssetImage('assets/icons/pause.png'))
+                            : const ImageIcon(
+                                AssetImage('assets/icons/play.png')),
+                      ),
+                    );
+                  }),
               Flexible(
                 child: GirafButton(
                   key: const Key('TimerStopButtonKey'),
