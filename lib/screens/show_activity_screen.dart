@@ -8,6 +8,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
@@ -136,19 +137,17 @@ class ShowActivityScreen extends StatelessWidget {
               if (snapshot.data == null) {
                 return const CircularProgressIndicator();
               }
-              return OutlineButton(
+              return GirafButton(
                   key: const Key('CompleteStateToggleButton'),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
                   onPressed: () {
                     _activityBloc.completeActivity();
                   },
-                  child: snapshot.data.state != ActivityState.Completed
-                      ? const Icon(Icons.check, color: Colors.green)
-                      : const Icon(
-                          Icons.undo,
-                          color: Colors.blue,
-                        ));
+                  width: 100,
+                  icon: snapshot.data.state != ActivityState.Completed
+                      ? const ImageIcon(AssetImage('assets/icons/accept.png'),
+                          color: Colors.green)
+                      : const ImageIcon(AssetImage('assets/icons/undo.png'),
+                          color: Colors.blue));
             }),
       ],
     );
