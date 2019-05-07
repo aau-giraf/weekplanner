@@ -113,7 +113,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                     _acceptInput(context);
                   },
                   controller: textController,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 50,
                   ),
                   textAlign: TextAlign.center,
