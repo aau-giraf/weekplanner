@@ -51,6 +51,10 @@ class TimerBloc extends BlocBase {
     _timerProgressStream.add(0);
   }
 
+  CountdownTimer _countDown;
+  StreamSubscription<CountdownTimer> _timerStream;
+  Stopwatch _stopwatch;
+
   /// Method for initialising a timer in an activity.
   /// If the timer is playing the progressCircle will start immediately.
   /// Else it will be paused.
@@ -89,10 +93,6 @@ class TimerBloc extends BlocBase {
       }
     }
   }
-
-  CountdownTimer _countDown;
-  StreamSubscription<CountdownTimer> _timerStream;
-  Stopwatch _stopwatch;
 
   /// Plays the timer.
   /// The method will use the current time, the progress of the timer and
