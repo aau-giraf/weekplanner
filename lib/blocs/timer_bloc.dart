@@ -54,7 +54,7 @@ class TimerBloc extends BlocBase {
   /// Method for initialising a timer in an activity.
   /// If the timer is playing the progressCircle will start immediately.
   /// Else it will be paused.
-  void initTimer() {
+  void initTimer({int updatePeriod = 10}) {
     if (_stopwatch == null) {
       if (_activityModel.timer != null) {
         final DateTime endTime = _activityModel.timer.startTime.add(Duration(
@@ -65,7 +65,18 @@ class TimerBloc extends BlocBase {
             DateTime.now().isBefore(endTime) &&
             !_activityModel.timer.paused) {
           _timerRunningStream.add(true);
-          _startCounter(endTime, _activityModel.timer.paused);
+
+          _stopwatch = Stopwatch();
+          _countDown = CountdownTimer(endTime.difference(DateTime.now()),
+              Duration(milliseconds: updatePeriod),
+              stopwatch: _stopwatch);
+
+          _timerStream = _countDown.listen((CountdownTimer c) {
+            _timerProgressStream.add(1 -
+                (1 /
+                    _activityModel.timer.fullLength *
+                    c.remaining.inMilliseconds));
+          });
         } else if (_activityModel.timer.paused) {
           _timerRunningStream.add(false);
           _timerProgressStream.add(1 -
@@ -152,18 +163,6 @@ class TimerBloc extends BlocBase {
     _stopwatch = null;
     _countDown = null;
     _timerStream = null;
-  }
-
-  void _startCounter(DateTime endTime, bool paused, {int updatePeriod = 10}) {
-    _stopwatch = Stopwatch();
-    _countDown = CountdownTimer(endTime.difference(DateTime.now()),
-        Duration(milliseconds: updatePeriod),
-        stopwatch: _stopwatch);
-
-    _timerStream = _countDown.listen((CountdownTimer c) {
-      _timerProgressStream.add(1 -
-          (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
-    });
   }
 
   @override
