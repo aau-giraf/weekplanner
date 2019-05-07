@@ -12,24 +12,29 @@ class TimerBloc extends BlocBase {
   /// Stream for the progress of the timer.
   Observable<double> get timerProgressStream => _timerProgressStream.stream;
 
-  /// BehaivorSubject for the updated weekmodel.
+  /// BehaviorSubject for the updated weekModel.
   final BehaviorSubject<double> _timerProgressStream =
       BehaviorSubject<double>.seeded(0.0);
 
   /// stream for checking if the timer is running
   Observable<bool> get timerIsRunning => _timerRunningStream.stream;
 
-  /// BehaivorSubject for to check if timer is running.
+  /// BehaviorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerRunningStream =
       BehaviorSubject<bool>.seeded(false);
 
   /// stream for checking if the timer is running
   Observable<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
 
-  /// BehaivorSubject for to check if timer is running.
+  /// BehaviorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 
+  CountdownTimer _countDown;
+  StreamSubscription<CountdownTimer> _timerStream;
+  Stopwatch _stopwatch;
+
+  /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity) {
     _activityModel = activity;
 
@@ -38,6 +43,8 @@ class TimerBloc extends BlocBase {
         : _timerInstantiatedStream.add(false);
   }
 
+  /// Adds a timer to the activity loaded into the timerBloc.
+  /// By default the timer will be paused.
   void addTimer(Duration duration) {
     _activityModel.timer = TimerModel(
         startTime: DateTime.now(),
@@ -48,7 +55,10 @@ class TimerBloc extends BlocBase {
     _timerProgressStream.add(0);
   }
 
-  void initTimer() {
+  /// Method for initialising a timer in an activity.
+  /// If the timer is playing the progressCircle will start immediately.
+  /// Else it will be paused.
+  void initTimer({int updatePeriod = 10}) {
     if (_stopwatch == null) {
       if (_activityModel.timer != null) {
         final DateTime endTime = _activityModel.timer.startTime.add(Duration(
@@ -59,7 +69,18 @@ class TimerBloc extends BlocBase {
             DateTime.now().isBefore(endTime) &&
             !_activityModel.timer.paused) {
           _timerRunningStream.add(true);
-          _startCounter(endTime, _activityModel.timer.paused);
+
+          _stopwatch = Stopwatch();
+          _countDown = CountdownTimer(endTime.difference(DateTime.now()),
+              Duration(milliseconds: updatePeriod),
+              stopwatch: _stopwatch);
+
+          _timerStream = _countDown.listen((CountdownTimer c) {
+            _timerProgressStream.add(1 -
+                (1 /
+                    _activityModel.timer.fullLength *
+                    c.remaining.inMilliseconds));
+          });
         } else if (_activityModel.timer.paused) {
           _timerRunningStream.add(false);
           _timerProgressStream.add(1 -
@@ -73,23 +94,12 @@ class TimerBloc extends BlocBase {
     }
   }
 
-  CountdownTimer _countDown;
-  StreamSubscription<CountdownTimer> _timerStream;
-  Stopwatch _stopwatch;
-
-  void _startCounter(DateTime endTime, bool paused) {
-    _stopwatch = Stopwatch();
-    _countDown = CountdownTimer(
-        endTime.difference(DateTime.now()), Duration(milliseconds: 10),
-        stopwatch: _stopwatch);
-
-    _timerStream = _countDown.listen((CountdownTimer c) {
-      _timerProgressStream.add(1 -
-          (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
-    });
-  }
-
-  void playTimer() {
+  /// Plays the timer.
+  /// The method will use the current time, the progress of the timer and
+  /// the full length, to calculate the progress of the progress circle in
+  /// the widget.
+  /// Updates the timer in the database accordingly.
+  void playTimer({int updatePeriod = 10}) {
     if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
@@ -101,7 +111,7 @@ class TimerBloc extends BlocBase {
               _activityModel.timer.fullLength - _activityModel.timer.progress));
       _countDown = CountdownTimer(
           _endTime.difference(_activityModel.timer.startTime),
-          Duration(milliseconds: 10),
+          Duration(milliseconds: updatePeriod),
           stopwatch: _stopwatch);
 
       _timerStream = _countDown.listen((CountdownTimer c) {
@@ -109,10 +119,11 @@ class TimerBloc extends BlocBase {
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
       });
       _timerRunningStream.add(true);
+      //update();
     }
-    //update();
   }
 
+  /// Pauses the timer and updates the timer in the database accordingly.
   void pauseTimer() {
     if (_activityModel.timer != null &&
         _timerStream != null &&
@@ -121,10 +132,11 @@ class TimerBloc extends BlocBase {
       _activityModel.timer.progress += _countDown.elapsed.inMilliseconds;
       _resetCounterAndStopwatch();
       _timerRunningStream.add(false);
+      //update();
     }
-    //update();
   }
 
+  /// Stops the timer and resets it and updates is database.
   void stopTimer() {
     _resetCounterAndStopwatch();
     _activityModel.timer.paused = true;
@@ -134,10 +146,12 @@ class TimerBloc extends BlocBase {
     //update();
   }
 
+  /// Deletes the timer from the activity and updates is database.
   void deleteTimer() {
     _resetCounterAndStopwatch();
     _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
+    //update();
   }
 
   void _resetCounterAndStopwatch() {
