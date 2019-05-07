@@ -10,21 +10,21 @@ class TimerBloc extends BlocBase {
   ActivityModel _activityModel;
 
   /// Stream for the progress of the timer.
-  Stream<double> get timerProgressStream => _timerProgressStream.stream;
+  Observable<double> get timerProgressStream => _timerProgressStream.stream;
 
   /// BehaviorSubject for the updated weekModel.
   final BehaviorSubject<double> _timerProgressStream =
       BehaviorSubject<double>.seeded(0.0);
 
   /// stream for checking if the timer is running
-  Stream<bool> get timerIsRunning => _timerRunningStream.stream;
+  Observable<bool> get timerIsRunning => _timerRunningStream.stream;
 
   /// BehaviorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerRunningStream =
       BehaviorSubject<bool>.seeded(false);
 
   /// stream for checking if the timer is running
-  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  Observable<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
 
   /// BehaviorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerInstantiatedStream =
