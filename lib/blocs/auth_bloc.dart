@@ -19,11 +19,11 @@ class AuthBloc extends BlocBase {
 
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
-  /// Reflect the current clearence level of the user
+  /// Reflect the current clearance level of the user
   final BehaviorSubject<WeekplanMode> _mode =
   BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
-  /// The stream that emits the current clearence level
+  /// The stream that emits the current clearance level
   Observable<WeekplanMode> get mode => _mode.stream;
 
 
@@ -49,7 +49,7 @@ class AuthBloc extends BlocBase {
       _loggedIn.add(false);
     });
   }
-  /// Updates the mode of the weekpan
+  /// Updates the mode of the weekplan
   void setMode(WeekplanMode mode) {
     _mode.add(mode);
   }

@@ -39,7 +39,7 @@ class Bootstrap {
       return WeekplansBloc(i.getDependency<Api>());
     });
 
-    di.registerSingleton<ToolbarBloc>((_) {
+    di.registerDependency<ToolbarBloc>((_) {
       return ToolbarBloc();
     });
     di.registerDependency<ChooseCitizenBloc>((Injector i) {
