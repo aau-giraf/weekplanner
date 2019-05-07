@@ -8,6 +8,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// Screen for creating a new weekplan.
@@ -103,34 +104,35 @@ class NewWeekplanScreen extends StatelessWidget {
               ),
             ),
           ),
-          ButtonTheme(
-            minWidth: 130,
-            height: 50,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-                    child: RaisedButton(
-                      child: Text(
-                        'Vælg skabelon',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.blue,
-                      // Handle when a weekplan is made from a template
-                      onPressed: null,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 24),
-                    child: StreamBuilder<bool>(
-                      stream: _bloc.allInputsAreValidStream,
-                      builder: _buildSaveButton,
-                    ),
-                  ),
-                ]),
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              child: GirafButton(
+                text: 'Vælg skabelon',
+                width: 160,
+                // Handle when a weekplan is made from a template
+                onPressed: () {},
+                isEnabled: false,
+              ),
+            ),
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                child: GirafButton(
+                  key: const Key('NewWeekplanSaveBtnKey'),
+                  text: 'Gem ugeplan',
+                  width: 160,
+                  isEnabled: false,
+                  isEnabledStream: _bloc.allInputsAreValidStream,
+                  onPressed: () {
+                    _bloc.saveWeekplan().listen((WeekModel response) {
+                      if (response != null) {
+                        Routes.pop<WeekModel>(context, response);
+                      }
+                    });
+                  },
+                )),
+          ]),
         ]));
   }
 
@@ -148,26 +150,6 @@ class NewWeekplanScreen extends StatelessWidget {
           pictogram: snapshot.data,
           onPressed: () => _openPictogramSearch(context));
     }
-  }
-
-  Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
-    return RaisedButton(
-      key: const Key('NewWeekplanSaveBtnKey'),
-      child: const Text(
-        'Gem ugeplan',
-        style: TextStyle(color: Colors.white),
-      ),
-      color: Colors.blue,
-      onPressed: (snapshot?.data == true)
-          ? () {
-              _bloc.saveWeekplan().listen((WeekModel response) {
-                if (response != null) {
-                  Routes.pop<WeekModel>(context, response);
-                }
-              });
-            }
-          : null,
-    );
   }
 
   void _openPictogramSearch(BuildContext context) {
