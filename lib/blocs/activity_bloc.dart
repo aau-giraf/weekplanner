@@ -9,13 +9,13 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 /// Logic for activities
 class ActivityBloc extends BlocBase {
   /// Default Constructor.
-  /// Initilizes values
+  /// Initializes values
   ActivityBloc(this._api);
 
   /// Stream for updated weekmodel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
-  /// BehaivorSubject for the updated weekmodel.
+  /// BehaviorSubject for the updated weekmodel.
   final BehaviorSubject<ActivityModel> _activityModelStream =
       BehaviorSubject<ActivityModel>();
 
