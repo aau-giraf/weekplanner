@@ -1,10 +1,30 @@
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/timer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+
+ActivityModel _activityModel = ActivityModel(
+    id: 1,
+    pictogram: PictogramModel(
+        accessLevel: AccessLevel.PUBLIC,
+        id: 1,
+        imageHash: 'testHash',
+        imageUrl: 'http://any.tld',
+        lastEdit: DateTime.now(),
+        title: 'testTitle'),
+    order: 1,
+    state: ActivityState.Normal,
+    isChoiceBoard: true);
+
+MockTimerBloc _mockTimerBloc = MockTimerBloc();
 
 class MockScreen extends StatelessWidget {
   @override
@@ -28,15 +48,33 @@ class MockScreen extends StatelessWidget {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return GirafActivityTimerPickerDialog(
-              MockActivityModel(), MockTimerBloc());
+          return GirafActivityTimerPickerDialog(_activityModel, _mockTimerBloc);
         });
   }
 }
 
-class MockTimerBloc extends Mock implements TimerBloc {}
+class MockTimerBloc extends Mock implements TimerBloc {
+  @override
+  Stream<double> get timerProgressStream => _timerProgressStream.stream;
+  final BehaviorSubject<double> _timerProgressStream =
+      BehaviorSubject<double>.seeded(0.0);
 
-class MockActivityModel extends Mock implements ActivityModel {}
+  @override
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  final BehaviorSubject<bool> _timerInstantiatedStream =
+      BehaviorSubject<bool>.seeded(false);
+
+  @override
+  void addTimer(Duration duration) {
+    _activityModel.timer = TimerModel(
+        startTime: DateTime.now(),
+        progress: 0,
+        fullLength: duration.inMilliseconds,
+        paused: true);
+    _timerInstantiatedStream.add(true);
+    _timerProgressStream.add(0);
+  }
+}
 
 void main() {
   testWidgets('Test if Time Picker Dialog is shown',
@@ -47,26 +85,69 @@ void main() {
     expect(find.byType(GirafActivityTimerPickerDialog), findsOneWidget);
   });
 
+  testWidgets('Tests if all textfields are rendered',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
+    await tester.pump();
+    expect(find.byType(GirafActivityTimerPickerDialog), findsOneWidget);
+    expect(find.byKey(const Key('SekunderTextFieldKey')), findsOneWidget);
+    expect(find.byKey(const Key('MinutterTextFieldKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerTextFieldKey')), findsOneWidget);
+  });
+
+  testWidgets('Tests if both buttons are rendered',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
+    await tester.pump();
+    expect(find.byType(GirafActivityTimerPickerDialog), findsOneWidget);
+    expect(
+        find.byKey(const Key('TimePickerDialogCancelButton')), findsOneWidget);
+    expect(
+        find.byKey(const Key('TimePickerDialogAcceptButton')), findsOneWidget);
+  });
+
   testWidgets('Test if Confirm Dialog is closed when tapping X button',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: MockScreen()));
-        await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
-        await tester.pump();
-        expect(find.byType(GirafActivityTimerPickerDialog), findsOneWidget);
-        await tester.tap(find.byKey(const Key('TimePickerDialogCancelButton')));
-        await tester.pump();
-        expect(find.byType(GirafActivityTimerPickerDialog), findsNothing);
-      });
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('TimePickerDialogCancelButton')));
+    await tester.pump();
+    expect(find.byType(GirafActivityTimerPickerDialog), findsNothing);
+  });
 
   testWidgets(
       'Test if Time Picker Dialog no longer is shown after pressing accept',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: MockScreen()));
-        await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
-        await tester.pump();
-        expect(find.byType(GirafActivityTimerPickerDialog), findsOneWidget);
-        await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
-        await tester.pump();
-        expect(find.byType(GirafActivityTimerPickerDialog), findsNothing);
-      });
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('SekunderTextFieldKey')), '1');
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
+    await tester.pump();
+    expect(find.byType(GirafActivityTimerPickerDialog), findsNothing);
+  });
+
+  testWidgets('Test that input from textfields are given to the timerBloc',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MockScreen()));
+    await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('TimerTextFieldKey')), '1');
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('MinutterTextFieldKey')), '2');
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('SekunderTextFieldKey')), '3');
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
+    await tester.pump();
+    _mockTimerBloc.timerIsInstantiated.listen((bool b) {
+      expect(b, true);
+    });
+    expect(_activityModel.timer.fullLength,
+        Duration(hours: 1, minutes: 2, seconds: 3).inMilliseconds);
+  });
 }

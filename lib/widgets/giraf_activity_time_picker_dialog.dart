@@ -32,40 +32,34 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-    final bool isInPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
-    return AlertDialog(
-      contentPadding: const EdgeInsets.all(0.0),
-      titlePadding: const EdgeInsets.all(0.0),
-      shape:
-          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
-      title: const Center(
-          child: GirafTitleHeader(
-        title: 'Vælg tid for aktivitet',
-      )),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: <Widget>[
-                _timerTextField('Timer', _textEditingControllerHours, context),
-                _timerTextField(
-                    'Minutter', _textEditingControllerMinutes, context),
-                _timerTextField(
-                    'Sekunder', _textEditingControllerSeconds, context)
-              ],
+    return SingleChildScrollView(
+      child: AlertDialog(
+        contentPadding: const EdgeInsets.all(0.0),
+        titlePadding: const EdgeInsets.all(0.0),
+        shape: Border.all(
+            color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+        title: const Center(
+            child: GirafTitleHeader(
+          title: 'Vælg tid for aktivitet',
+        )),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  _timerTextField(
+                      'Timer', _textEditingControllerHours, context),
+                  _timerTextField(
+                      'Minutter', _textEditingControllerMinutes, context),
+                  _timerTextField(
+                      'Sekunder', _textEditingControllerSeconds, context)
+                ],
+              ),
             ),
-          ),
-          Visibility(
-            visible: (isInPortrait && !keyboardVisible) ||
-                (isInPortrait && keyboardVisible) ||
-                (!isInPortrait && !keyboardVisible),
-            child: Row(
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Flexible(
@@ -94,23 +88,10 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
-  }
-
-  void _acceptInput(BuildContext context) {
-    final Duration d = Duration(
-      hours: int.tryParse(_textEditingControllerHours.text) ?? 0,
-      minutes: int.tryParse(_textEditingControllerMinutes.text) ?? 0,
-      seconds: int.tryParse(_textEditingControllerSeconds.text) ?? 0,
-    );
-
-    if (d.inSeconds != 0){
-      _timerBloc.addTimer(d);
-      Routes.pop(context);
-    }
   }
 
   Widget _timerTextField(String fieldName, TextEditingController textController,
@@ -132,7 +113,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                     _acceptInput(context);
                   },
                   controller: textController,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 50,
                   ),
                   textAlign: TextAlign.center,
@@ -148,5 +129,18 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _acceptInput(BuildContext context) {
+    final Duration duration = Duration(
+      hours: int.tryParse(_textEditingControllerHours.text) ?? 0,
+      minutes: int.tryParse(_textEditingControllerMinutes.text) ?? 0,
+      seconds: int.tryParse(_textEditingControllerSeconds.text) ?? 0,
+    );
+
+    if (duration.inSeconds != 0) {
+      _timerBloc.addTimer(duration);
+      Routes.pop(context);
+    }
   }
 }
