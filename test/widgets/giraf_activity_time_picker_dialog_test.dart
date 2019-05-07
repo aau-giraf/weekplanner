@@ -55,12 +55,12 @@ class MockScreen extends StatelessWidget {
 
 class MockTimerBloc extends Mock implements TimerBloc {
   @override
-  Stream<double> get timerProgressStream => _timerProgressStream.stream;
+  Observable<double> get timerProgressStream => _timerProgressStream.stream;
   final BehaviorSubject<double> _timerProgressStream =
       BehaviorSubject<double>.seeded(0.0);
 
   @override
-  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  Observable<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 
@@ -133,21 +133,29 @@ void main() {
 
   testWidgets('Test that input from textfields are given to the timerBloc',
       (WidgetTester tester) async {
+    int hours = 1;
+    int minutes = 2;
+    int seconds = 3;
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
     await tester.pump();
-    await tester.enterText(find.byKey(const Key('TimerTextFieldKey')), '1');
+    await tester.enterText(
+        find.byKey(const Key('TimerTextFieldKey')), hours.toString());
     await tester.pump();
-    await tester.enterText(find.byKey(const Key('MinutterTextFieldKey')), '2');
+    await tester.enterText(
+        find.byKey(const Key('MinutterTextFieldKey')), minutes.toString());
     await tester.pump();
-    await tester.enterText(find.byKey(const Key('SekunderTextFieldKey')), '3');
+    await tester.enterText(
+        find.byKey(const Key('SekunderTextFieldKey')), seconds.toString());
     await tester.pump();
     await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
     await tester.pump();
     _mockTimerBloc.timerIsInstantiated.listen((bool b) {
       expect(b, true);
     });
-    expect(_activityModel.timer.fullLength,
-        Duration(hours: 1, minutes: 2, seconds: 3).inMilliseconds);
+    expect(
+        _activityModel.timer.fullLength,
+        Duration(hours: hours, minutes: minutes, seconds: seconds)
+            .inMilliseconds);
   });
 }

@@ -28,12 +28,13 @@ class ShowActivityScreen extends StatelessWidget {
     _timerBloc.load(_activity);
   }
 
+  final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
+
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
-  final TimerBloc _timerBloc = TimerBloc();
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
@@ -169,14 +170,17 @@ class ShowActivityScreen extends StatelessWidget {
                               modeSnapshot.data == WeekplanMode.guardian)
                       : false,
                   child: Card(
+                    key: const Key('OverallTimerBoxKey'),
                     child: Column(children: <Widget>[
                       //the title of the timer widget
                       Center(
+                          key: const Key('TimerTitleKey'),
                           child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Timer',
-                            style: titleTextStyle, textAlign: TextAlign.center),
-                      )),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Timer',
+                                style: titleTextStyle,
+                                textAlign: TextAlign.center),
+                          )),
                       Expanded(
                           //depending on whether a timer is initiated, different
                           //widgets are shown.
@@ -235,17 +239,20 @@ class ShowActivityScreen extends StatelessWidget {
             ? (modeSnapshot.data == WeekplanMode.guardian)
             : false)
         ? FittedBox(
+            key: const Key('TimerNotInitGuardianKey'),
             child: Padding(
-            padding: const EdgeInsets.all(0),
-            child: Container(
-                child: IconButton(
-                    icon: const ImageIcon(
-                        AssetImage('assets/icons/addTimerHighRes.png')),
-                    onPressed: () {
-                      _buildTimerDialog(overallContext);
-                    })),
-          ))
-        : Container();
+              padding: const EdgeInsets.all(0),
+              child: Container(
+                  child: IconButton(
+                      icon: const ImageIcon(
+                          AssetImage('assets/icons/addTimerHighRes.png')),
+                      onPressed: () {
+                        _buildTimerDialog(overallContext);
+                      })),
+            ))
+        : Container(
+            key: const Key('TimerNotInitCitizenKey'),
+          );
   }
 
   ///the buttons for the timer. Depending on whether the application is in
@@ -257,6 +264,7 @@ class ShowActivityScreen extends StatelessWidget {
       AsyncSnapshot<WeekplanMode> modeSnapshot) {
     return Visibility(
       visible: timerInitSnapshot.hasData ? timerInitSnapshot.data : false,
+      key: const Key('TimerOverallButtonVisibilityKey'),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
@@ -270,6 +278,11 @@ class ShowActivityScreen extends StatelessWidget {
                       //button has different icons and press logic depending on
                       //whether the timer is already running.
                       child: GirafButton(
+                        key: (timerRunningSnapshot.hasData
+                                ? timerRunningSnapshot.data
+                                : false)
+                            ? const Key('TimerPauseButtonKey')
+                            : const Key('TimerPlayButtonKey'),
                         onPressed: () {
                           (timerRunningSnapshot.hasData
                                   ? timerRunningSnapshot.data
@@ -290,6 +303,7 @@ class ShowActivityScreen extends StatelessWidget {
                   }),
               Flexible(
                 child: GirafButton(
+                  key: const Key('TimerStopButtonKey'),
                   onPressed: () {
                     showDialog<Center>(
                         context: overallContext,
@@ -297,6 +311,7 @@ class ShowActivityScreen extends StatelessWidget {
                         builder: (BuildContext context) {
                           //a dialog is shown to confirm to stop the timer.
                           return GirafConfirmDialog(
+                            key: const Key('TimerStopConfirmDialogKey'),
                             title: 'Stop Timer',
                             description: 'Vil du stoppe timeren?',
                             confirmButtonText: 'stop',
@@ -318,6 +333,7 @@ class ShowActivityScreen extends StatelessWidget {
                 visible: modeSnapshot.data == WeekplanMode.guardian,
                 child: Flexible(
                   child: GirafButton(
+                    key: const Key('TimerDeleteButtonKey'),
                     onPressed: () {
                       showDialog<Center>(
                           context: overallContext,
@@ -325,6 +341,7 @@ class ShowActivityScreen extends StatelessWidget {
                           builder: (BuildContext context) {
                             //a dialog is shown to confirm to delete the timer.
                             return GirafConfirmDialog(
+                              key: const Key('TimerDeleteConfirmDialogKey'),
                               title: 'Slet Timer',
                               description: 'Vil du slette timeren?',
                               confirmButtonText: 'Slet',
