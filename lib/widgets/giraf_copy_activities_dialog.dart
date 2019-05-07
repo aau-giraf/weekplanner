@@ -16,7 +16,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
   GirafCopyActivitiesDialog(
       {Key key,
       @required this.title,
-      this.description,
+      @required this.description,
       @required this.confirmButtonText,
       @required this.confirmButtonIcon,
       @required this.confirmOnPressed})
@@ -42,7 +42,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
   final void Function(List<bool>, BuildContext) confirmOnPressed;
 
   /// color of checkbox
-  static const Color checkboxColor = Color(0xFFFF9D00);
+  static const Color checkboxColor = Color.fromARGB(255, 255, 157, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -55,147 +55,152 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
           child: GirafTitleHeader(
         title: title,
       )),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Text(
-                  // if description is null, its replaced with empty.
-                  description ?? '',
-                  textAlign: TextAlign.center,
-                ),
-              ))
-            ],
-          ),
-          StreamBuilder<List<bool>>(
-              stream: copyActivitiesBloc.checkboxValues,
-              initialData: List<bool>.filled(7, false),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
-                return Container(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Center(
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 5,
-                              child: Column(
-                                children: <Widget>[
-                                  _buildCheckboxListTile(
-                                      Weekday.Monday,
-                                      const Key('MonCheckbox'),
-                                      'Mandag',
-                                      snapshot.data[Weekday.Monday.index]),
-                                  _buildCheckboxListTile(
-                                      Weekday.Wednesday,
-                                      const Key('WedCheckbox'),
-                                      'Onsdag',
-                                      snapshot.data[Weekday.Wednesday.index]),
-                                  _buildCheckboxListTile(
-                                      Weekday.Friday,
-                                      const Key('FriCheckbox'),
-                                      'Fredag',
-                                      snapshot.data[Weekday.Friday.index])
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Column(
-                                children: <Widget>[
-                                  _buildCheckboxListTile(
-                                      Weekday.Tuesday,
-                                      const Key('TueCheckbox'),
-                                      'Tirsdag',
-                                      snapshot.data[Weekday.Tuesday.index]),
-                                  _buildCheckboxListTile(
-                                      Weekday.Thursday,
-                                      const Key('ThuCheckbox'),
-                                      'Torsdag',
-                                      snapshot.data[Weekday.Thursday.index]),
-                                  _buildCheckboxListTile(
-                                      Weekday.Saturday,
-                                      const Key('SatCheckbox'),
-                                      'Lørdag',
-                                      snapshot.data[Weekday.Saturday.index])
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 5,
-                              child: Column(
-                                children: <Widget>[
-                                  _buildCheckboxListTile(
-                                      Weekday.Sunday,
-                                      const Key('SunCheckbox'),
-                                      'Søndag',
-                                      snapshot.data[Weekday.Sunday.index])
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Container(),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-            child: Row(
+      content: StreamBuilder<List<bool>>(
+          stream: copyActivitiesBloc.checkboxValues,
+          initialData: List<bool>.filled(7, false),
+          builder: (BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: GirafButton(
-                      key: const Key('DialogCancelButton'),
-                      text: 'Fortryd',
-                      icon: const ImageIcon(
-                          AssetImage('assets/icons/cancel.png')),
-                      onPressed: () {
-                        Routes.pop(context);
-                      },
-                    ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: Text(
+                        description,
+                        textAlign: TextAlign.center,
+                      ),
+                    ))
+                  ],
+                ),
+                _buildCheckboxes(snapshot),
+                _copyDialogButtons(context, snapshot)
+              ],
+            );
+          }),
+    );
+  }
+
+  Widget _copyDialogButtons(
+      BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Flexible(
+            fit: FlexFit.loose,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: GirafButton(
+                key: const Key('DialogCancelButton'),
+                text: 'Fortryd',
+                icon: const ImageIcon(AssetImage('assets/icons/cancel.png')),
+                onPressed: () {
+                  Routes.pop(context);
+                },
+              ),
+            ),
+          ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: GirafButton(
+                key: const Key('DialogConfirmButton'),
+                text: confirmButtonText,
+                icon: confirmButtonIcon,
+                onPressed: () {
+                  confirmOnPressed(snapshot.data, context);
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildCheckboxes(AsyncSnapshot<List<bool>> snapshot) {
+    return Container(
+      padding: const EdgeInsets.all(30.0),
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: <Widget>[
+                      _buildCheckboxListTile(
+                          Weekday.Monday,
+                          const Key('MonCheckbox'),
+                          'Mandag',
+                          snapshot.data[Weekday.Monday.index]),
+                      _buildCheckboxListTile(
+                          Weekday.Wednesday,
+                          const Key('WedCheckbox'),
+                          'Onsdag',
+                          snapshot.data[Weekday.Wednesday.index]),
+                      _buildCheckboxListTile(
+                          Weekday.Friday,
+                          const Key('FriCheckbox'),
+                          'Fredag',
+                          snapshot.data[Weekday.Friday.index])
+                    ],
                   ),
                 ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: GirafButton(
-                      key: const Key('DialogConfirmButton'),
-                      text: confirmButtonText,
-                      icon: confirmButtonIcon,
-                      onPressed: () {
-                        confirmOnPressed(
-                            copyActivitiesBloc.getCheckboxValues(), context);
-                      },
-                    ),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: <Widget>[
+                      _buildCheckboxListTile(
+                          Weekday.Tuesday,
+                          const Key('TueCheckbox'),
+                          'Tirsdag',
+                          snapshot.data[Weekday.Tuesday.index]),
+                      _buildCheckboxListTile(
+                          Weekday.Thursday,
+                          const Key('ThuCheckbox'),
+                          'Torsdag',
+                          snapshot.data[Weekday.Thursday.index]),
+                      _buildCheckboxListTile(
+                          Weekday.Saturday,
+                          const Key('SatCheckbox'),
+                          'Lørdag',
+                          snapshot.data[Weekday.Saturday.index])
+                    ],
                   ),
-                ),
+                )
               ],
             ),
-          )
-        ],
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: <Widget>[
+                      _buildCheckboxListTile(
+                          Weekday.Sunday,
+                          const Key('SunCheckbox'),
+                          'Søndag',
+                          snapshot.data[Weekday.Sunday.index])
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Container(),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

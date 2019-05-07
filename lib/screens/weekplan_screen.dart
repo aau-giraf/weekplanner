@@ -120,15 +120,31 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _buildBottomAppBarButton(context, 'Annuller', 'CancelActivtiesButton', 'assets/icons/cancel.png', _buildCancelDialog),
-                      _buildBottomAppBarButton(context, 'Kopier', 'CopyActivtiesButton', 'assets/icons/copy.png', _buildCopyDialog),
-                      _buildBottomAppBarButton(context, 'Slet', 'DeleteActivtiesButton', 'assets/icons/delete.png', _buildRemoveDialog)
+                      bottomAppBarButton(
+                          context,
+                          'Annuller',
+                          'CancelActivtiesButton',
+                          'assets/icons/cancel.png',
+                          _buildCancelDialog),
+                      bottomAppBarButton(
+                          context,
+                          'Kopier',
+                          'CopyActivtiesButton',
+                          'assets/icons/copy.png',
+                          _buildCopyDialog),
+                      bottomAppBarButton(
+                          context,
+                          'Slet',
+                          'DeleteActivtiesButton',
+                          'assets/icons/delete.png',
+                          _buildRemoveDialog)
                     ],
                   )))
         ]));
   }
 
-  Padding _buildBottomAppBarButton(BuildContext context, String buttonText,
+  /// Creates a bottom app bar button
+  Widget bottomAppBarButton(BuildContext context, String buttonText,
       String buttonKey, String assetPath, Function dialogFunction) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),

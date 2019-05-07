@@ -14,18 +14,7 @@ class WeekplanBloc extends BlocBase {
   /// Constructor that initializes _api
   WeekplanBloc(this._api);
 
-  /// The API
-  final Api _api;
-
-  final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<List<ActivityModel>> _markedActivities =
-      BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
-  final BehaviorSubject<UserWeekModel> _userWeek =
-      BehaviorSubject<UserWeekModel>();
-  final BehaviorSubject<bool> _activityPlaceholderVisible =
-      BehaviorSubject<bool>.seeded(false);
-
-  /// The stream that emits the currently chosen weekplan
+   /// The stream that emits the currently chosen weekplan
   Observable<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in editMode or not
@@ -37,6 +26,16 @@ class WeekplanBloc extends BlocBase {
   /// The current visibility of the activityPlaceholder-container.
   Stream<bool> get activityPlaceholderVisible =>
       _activityPlaceholderVisible.stream;
+
+  /// The API
+  final Api _api;
+  final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
+  final BehaviorSubject<List<ActivityModel>> _markedActivities =
+      BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+  final BehaviorSubject<UserWeekModel> _userWeek =
+      BehaviorSubject<UserWeekModel>();
+  final BehaviorSubject<bool> _activityPlaceholderVisible =
+      BehaviorSubject<bool>.seeded(false);
 
   /// Sink to set the currently chosen week
   void setWeek(WeekModel week, UsernameModel user) {
@@ -104,7 +103,9 @@ class WeekplanBloc extends BlocBase {
     // Updates the weekplan in the database
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel onData) {});
+        .listen((WeekModel newWeek) {
+          _userWeek.add(UserWeekModel(newWeek, user));
+        });
   }
 
   /// Copies the marked activities to the given days
@@ -112,22 +113,24 @@ class WeekplanBloc extends BlocBase {
     final WeekModel week = _userWeek.value.week;
     final UsernameModel user = _userWeek.value.user;
 
-    int dayOfWeek = 0;
-    for (bool day in days) {
-      if (day) {
+    for (int dayOfWeek = 0; dayOfWeek < days.length; dayOfWeek++) {
+      if (days[dayOfWeek]) {
         for (ActivityModel activity in _markedActivities.value) {
+          // Make a copy of the given activity with the state reset
+          // and make sure it is added at as the last activity of the day.
           final ActivityModel newActivity = ActivityModel(
               id: activity.id,
               pictogram: activity.pictogram,
-              order: week.days[dayOfWeek].activities.length,
+              order: _getMaxOrder(week.days[dayOfWeek].activities),
               isChoiceBoard: false,
               state: ActivityState.Normal);
 
+          // Add the copy to the specified day
           week.days[dayOfWeek].activities.add(newActivity);
         }
       }
-      dayOfWeek++;
     }
+
     clearMarkedActivities();
 
     _api.week
@@ -135,6 +138,18 @@ class WeekplanBloc extends BlocBase {
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
+  }
+
+  int _getMaxOrder(List<ActivityModel> activities)
+  {
+    int max = 0;
+
+    for (ActivityModel activity in activities) {
+      if (activity.order > max) {
+        max = activity.order;
+      }
+    }
+    return max;
   }
 
   /// Toggles edit mode
