@@ -41,24 +41,30 @@ class WeekplanSelectorScreen extends StatelessWidget {
         initialData: false,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data) {
-            return buildBottomAppBar(context);
+            return _buildBottomAppBar(context);
           } else {
             return Container(width: 0.0, height: 0.0);
           }
         },
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              child: StreamBuilder<List<WeekModel>>(
-                  initialData: const <WeekModel>[],
-                  stream: _weekBloc.weekModels,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<WeekModel>> snapshot) {
-                    if (snapshot.data == null) {
-                      return const CircularProgressIndicator();
-                    }
-                    return GridView.count(
+      body: _buildWeekplanGridview(context),
+    );
+  }
+
+  Widget _buildWeekplanGridview(BuildContext context) {
+    return StreamBuilder<List<WeekModel>>(
+        initialData: const <WeekModel>[],
+        stream: _weekBloc.weekModels,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<WeekModel>> weekplansSnapshot) {
+          if (weekplansSnapshot.data == null) {
+            return const CircularProgressIndicator();
+          } else {
+            return StreamBuilder<List<WeekModel>>(
+                stream: _weekBloc.markedWeekModels,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
+                  return GridView.count(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 10),
                       crossAxisCount: MediaQuery.of(context).orientation ==
@@ -69,125 +75,121 @@ class WeekplanSelectorScreen extends StatelessWidget {
                           MediaQuery.of(context).size.width / 100 * 1.5,
                       mainAxisSpacing:
                           MediaQuery.of(context).size.width / 100 * 1.5,
-                      children: snapshot.data.map((WeekModel weekplan) {
-                        return _buildWeekPlanSelector(context, weekplan);
-                      }).toList(),
-                    );
-                  })),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeekPlanAdder(BuildContext context, WeekModel weekplan,
-      PictogramImageBloc bloc, bool inEditMode) {
-    return GestureDetector(
-      key: Key(weekplan.name),
-      onTap: () {
-        if (inEditMode) {
-          _weekBloc.toggleMarkedWeekModel(weekplan);
-        } else {
-          Routes.push(context, WeekplanScreen(weekplan, _user));
-        }
-      },
-      child: StreamBuilder<Image>(
-          stream: bloc.image,
-          builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-            return Container(child: snapshot.data);
-          }),
-    );
-  }
-
-  Widget _buildWeekPlan(BuildContext context, WeekModel weekplan,
-      BoxConstraints constraint, bool inEditMode) {
-    return GestureDetector(
-        onTap: () {
-          if (!inEditMode) {
-            Routes.push<WeekModel>(context, NewWeekplanScreen(_user))
-                .then((WeekModel newWeek) => {_weekBloc.load(_user, true)});
-          } else {
-            return null;
+                      children:
+                          weekplansSnapshot.data.map((WeekModel weekplan) {
+                        return _buildWeekPlanSelector(context, weekplan,
+                            markedWeeksSnapshot.data.contains(weekplan));
+                      }).toList());
+                });
           }
-        },
-        child: Icon(
-          Icons.add,
-          size: constraint.maxHeight,
-        ));
+        });
   }
 
-  Widget _buildWeekPlanSelector(BuildContext context, WeekModel weekplan) {
+  Widget _buildWeekPlanSelector(
+      BuildContext context, WeekModel weekplan, bool isMarked) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
 
     if (weekplan.thumbnail != null) {
       bloc.loadPictogramById(weekplan.thumbnail.id);
     }
 
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Expanded(
-              child: InkWell(
-            child: StreamBuilder<List<WeekModel>>(
-                stream: _weekBloc.markedWeekModels,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<WeekModel>> snapshot) {
-                  if (_weekBloc.isWeekModelMarked(weekplan)) {
-                    return Container(
-                        key: const Key('isSelectedKey'),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 15)),
-                        child: _buildWeekplanCard(weekplan, bloc));
-                  } else {
-                    return _buildWeekplanCard(weekplan, bloc);
-                  }
-                }),
-          ))
-        ],
-      ),
+    if (isMarked) {
+      return Container(
+          key: const Key('isSelectedKey'),
+          decoration:
+              BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
+          child: _buildWeekplanCard(context, weekplan, bloc));
+    } else {
+      return _buildWeekplanCard(context, weekplan, bloc);
+    }
+  }
+
+  Widget _buildWeekplanCard(
+      BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
+    return StreamBuilder<bool>(
+        stream: _weekBloc.editMode,
+        builder:
+            (BuildContext context, AsyncSnapshot<bool> inEditModeSnapshot) {
+          return GestureDetector(
+            key: Key(weekplan.name),
+            onTap: () =>
+                handleOnTap(context, weekplan, inEditModeSnapshot.data),
+            child: Card(
+                child: Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraint) {
+                    if (weekplan.thumbnail != null) {
+                      return _getPictogram(weekplan, bloc);
+                    } else {
+                      return Icon(
+                        Icons.add,
+                        size: constraint.maxHeight,
+                      );
+                    }
+                  }),
+                ),
+                Expanded(child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  return AutoSizeText(
+                    weekplan.name,
+                    style: const TextStyle(fontSize: 18),
+                    maxLines: 1,
+                    minFontSize: 14,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                }))
+              ],
+            )),
+          );
+        });
+  }
+
+  /// Handles on tap on a weekplan card
+  void handleOnTap(BuildContext context, WeekModel weekplan, bool inEditMode) {
+    if (weekplan.thumbnail != null) {
+      handleOnTapWeekPlan(inEditMode, weekplan, context);
+    } else {
+      handleOnTapWeekPlanAdd(inEditMode, context);
+    }
+  }
+
+  /// Handles on tap on a add new weekplan card
+  void handleOnTapWeekPlanAdd(bool inEditMode, BuildContext context) {
+    if (!inEditMode) {
+      Routes.push<WeekModel>(context, NewWeekplanScreen(_user))
+          .then((WeekModel newWeek) => {_weekBloc.load(_user, true)});
+    }
+  }
+
+  /// Handles on tap on a weekplan card
+  void handleOnTapWeekPlan(
+      bool inEditMode, WeekModel weekplan, BuildContext context) {
+    if (inEditMode) {
+      _weekBloc.toggleMarkedWeekModel(weekplan);
+    } else {
+      Routes.push(context, WeekplanScreen(weekplan, _user));
+    }
+  }
+
+  Widget _getPictogram(WeekModel weekplan, PictogramImageBloc bloc) {
+    return StreamBuilder<Image>(
+      stream: bloc.image,
+      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+        if (snapshot.data == null) {
+          return const CircularProgressIndicator();
+        }
+        return Container(
+            child: snapshot.data, key: const Key('PictogramImage'));
+      },
     );
   }
 
-  Card _buildWeekplanCard(WeekModel weekplan, PictogramImageBloc bloc) {
-    return Card(
-        child: Column(
-      children: <Widget>[
-        Expanded(
-          flex: 4,
-          child: StreamBuilder<bool>(
-              stream: _weekBloc.editMode,
-              builder: (BuildContext context,
-                  AsyncSnapshot<bool> inEditModeSnapshot) {
-                return LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraint) {
-                  if (weekplan.thumbnail != null) {
-                    return _buildWeekPlanAdder(
-                        context, weekplan, bloc, inEditModeSnapshot.data);
-                  } else {
-                    return _buildWeekPlan(
-                        context, weekplan, constraint, inEditModeSnapshot.data);
-                  }
-                });
-              }),
-        ),
-        Expanded(child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-          return AutoSizeText(
-            weekplan.name,
-            style: const TextStyle(fontSize: 18),
-            maxLines: 1,
-            minFontSize: 14,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-          );
-        }))
-      ],
-    ));
-  }
-
   /// Builds the BottomAppBar when in edit mode
-  BottomAppBar buildBottomAppBar(BuildContext context) {
+  BottomAppBar _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
         child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -213,7 +215,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
               icon: const Icon(Icons.delete_forever),
               onPressed: () {
                 // Shows dialog to confirm/cancel deletion
-                buildShowDialog(context);
+                _buildConfirmationDialog(context);
               },
             ),
           ),
@@ -223,7 +225,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   /// Builds dialog box to confirm/cancel deletion
-  Future<Center> buildShowDialog(BuildContext context) {
+  Future<Center> _buildConfirmationDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,
