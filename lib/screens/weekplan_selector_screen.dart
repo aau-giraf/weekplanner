@@ -58,7 +58,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<List<WeekModel>> weekplansSnapshot) {
           if (weekplansSnapshot.data == null) {
-            return const CircularProgressIndicator();
+            return Container();
           } else {
             return StreamBuilder<List<WeekModel>>(
                 stream: _weekBloc.markedWeekModels,
@@ -180,7 +180,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.data == null) {
-          return const CircularProgressIndicator();
+          return FittedBox(child: const CircularProgressIndicator());
         }
         return Container(
             child: snapshot.data, key: const Key('PictogramImage'));
