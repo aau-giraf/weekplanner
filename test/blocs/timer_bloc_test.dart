@@ -195,7 +195,9 @@ void main() {
     done();
   }));
 
-  test('Testing when timer is PAUSED', async((DoneFn done) {
+  test(
+      'Testing when timer is paused, the progress is upadated and the stream shows false',
+      async((DoneFn done) {
     final ActivityModel mockActivity = ActivityModel(
         id: 1,
         pictogram: null,
@@ -226,5 +228,73 @@ void main() {
     done();
   }));
 
+  test(
+      'Testing when timer is stopped, timer status is paused, progress is '
+      'reset, and running stream is false and progress stream is 0',
+      async((DoneFn done) {
+    final ActivityModel mockActivity = ActivityModel(
+        id: 1,
+        pictogram: null,
+        order: 1,
+        state: ActivityState.Normal,
+        timer: TimerModel(
+            startTime: DateTime.now(),
+            fullLength: 100,
+            paused: false,
+            progress: 20),
+        isChoiceBoard: false);
+
+    final TimerBloc timerMock = TimerBloc();
+    timerMock.load(mockActivity);
+
+    timerMock.playTimer();
+    expect(mockActivity.timer.paused, isFalse);
+
+    timerMock.stopTimer();
+
+    Future.delayed(Duration(seconds: 1), () {
+      expect(mockActivity.timer.paused, isTrue);
+      expect(mockActivity.timer.progress, 0);
+    });
+
+    timerMock.timerIsRunning.last.then((bool b) {
+      expect(b, isFalse);
+    });
+
+    timerMock.timerProgressStream.last.then((double d) {
+      expect(d, 0);
+    });
+    done();
+  }));
+
+  test(
+      'Testing when timer is deleted, timer is null, and initiated timer '
+      'stream is false', async((DoneFn done) {
+    final ActivityModel mockActivity = ActivityModel(
+        id: 1,
+        pictogram: null,
+        order: 1,
+        state: ActivityState.Normal,
+        timer: TimerModel(
+            startTime: DateTime.now(),
+            fullLength: 100,
+            paused: false,
+            progress: 20),
+        isChoiceBoard: false);
+
+    final TimerBloc timerMock = TimerBloc();
+    timerMock.load(mockActivity);
+    timerMock.deleteTimer();
+
+    expect(mockActivity.timer, isNull);
+    timerMock.timerIsInstantiated.last.then((bool b) {
+      expect(b, isFalse);
+    });
+
+    timerMock.timerProgressStream.last.then((double d) {
+      expect(d, 0);
+    });
+    done();
+  }));
   
 }
