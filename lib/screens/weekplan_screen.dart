@@ -6,6 +6,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -52,6 +53,9 @@ class WeekplanScreen extends StatelessWidget {
         stream: authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+          if (weekModeSnapshot.data == WeekplanMode.citizen){
+            weekplanBloc.setEditMode(false);
+          }
           return Scaffold(
             appBar: GirafAppBar(
               title: 'Ugeplan',

@@ -160,6 +160,14 @@ class WeekplanBloc extends BlocBase {
     _editMode.add(!_editMode.value);
   }
 
+  /// Manually set edit mode
+  void setEditMode(bool value){
+    if (_editMode.value) {
+      clearMarkedActivities();
+    }
+    _editMode.add(value);
+  }
+
   /// Used to change the visibility of the activityPlaceholder container.
   void setActivityPlaceholderVisible(bool visibility) {
     _activityPlaceholderVisible.add(visibility);
