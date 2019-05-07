@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:api_client/api/api.dart';
-import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -224,7 +220,7 @@ void main() {
       expect(mockActivity.timer.progress, isPositive);
     });
 
-    timerMock.timerIsRunning.skip(1).listen((bool b) {
+    timerMock.timerIsRunning.last.then((bool b) {
       expect(b, isFalse);
     });
     done();
