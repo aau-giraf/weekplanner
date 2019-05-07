@@ -67,7 +67,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                   child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: Text(
-                  //if description is null, its replaced with empty.
+                  // if description is null, its replaced with empty.
                   description ?? '',
                   textAlign: TextAlign.center,
                 ),
