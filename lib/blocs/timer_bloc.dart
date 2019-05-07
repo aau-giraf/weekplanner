@@ -30,6 +30,10 @@ class TimerBloc extends BlocBase {
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 
+  CountdownTimer _countDown;
+  StreamSubscription<CountdownTimer> _timerStream;
+  Stopwatch _stopwatch;
+
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity) {
     _activityModel = activity;
@@ -50,10 +54,6 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
   }
-
-  CountdownTimer _countDown;
-  StreamSubscription<CountdownTimer> _timerStream;
-  Stopwatch _stopwatch;
 
   /// Method for initialising a timer in an activity.
   /// If the timer is playing the progressCircle will start immediately.
