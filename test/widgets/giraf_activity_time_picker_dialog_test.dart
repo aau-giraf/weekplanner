@@ -133,9 +133,9 @@ void main() {
 
   testWidgets('Test that input from textfields are given to the timerBloc',
       (WidgetTester tester) async {
-    int hours = 1;
-    int minutes = 2;
-    int seconds = 3;
+    const int hours = 1;
+    const int minutes = 2;
+    const int seconds = 3;
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
     await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
     await tester.pump();

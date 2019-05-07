@@ -17,6 +17,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import '../test_image.dart';
@@ -125,7 +126,7 @@ void main() {
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
 
-    expect(find.byType(RaisedButton), findsNWidgets(2));
+    expect(find.byType(GirafButton), findsNWidgets(2));
   });
 
   testWidgets('Error text is shown on invalid title input',

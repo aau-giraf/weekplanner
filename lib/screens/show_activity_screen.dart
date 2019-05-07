@@ -35,7 +35,6 @@ class ShowActivityScreen extends StatelessWidget {
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
-
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Text style used for title.
@@ -71,8 +70,7 @@ class ShowActivityScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Aktivitet',
-          appBarIcons: const <AppBarIcon>[],
-        ),
+            appBarIcons: const <AppBarIcon, VoidCallback>{}),
         body: keyboardVisible ? Container() : childContainer);
   }
 
@@ -133,14 +131,7 @@ class ShowActivityScreen extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.width,
                             child: buildLoadPictogramImage()),
-                        snapshot.data.state == ActivityState.Completed
-                            ? Icon(
-                                Icons.check,
-                                key: const Key('IconComplete'),
-                                color: Colors.green,
-                                size: MediaQuery.of(context).size.width,
-                              )
-                            : Container()
+                        _buildActivityStateIcon(context, snapshot.data.state)
                       ],
                     );
                   },
@@ -148,7 +139,6 @@ class ShowActivityScreen extends StatelessWidget {
               ),
             ),
           ),
-          buildButtonBar()
         ],
       ),
     );
@@ -378,35 +368,62 @@ class ShowActivityScreen extends StatelessWidget {
         });
   }
 
-  /// Builds the buttons below the activity widget.
+  /// Builds the button that changes the state of the activity. The content
+  /// of the button depends on whether it is in guardian or citizen mode.
   ButtonBar buildButtonBar() {
     return ButtonBar(
-      // Key used for testing widget.
-      key: const Key('ButtonBarRender'),
-      alignment: MainAxisAlignment.center,
-      children: <Widget>[
-        StreamBuilder<ActivityModel>(
-          stream: _activityBloc.activityModelStream,
-          builder:
-              (BuildContext context, AsyncSnapshot<ActivityModel> snapshot) {
-            if (snapshot.data == null) {
-              return const CircularProgressIndicator();
-            }
-            return OutlineButton(
-              key: const Key('CompleteStateToggleButton'),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              onPressed: () {
-                _activityBloc.completeActivity();
-              },
-              child: snapshot.data.state != ActivityState.Completed
-                  ? const Icon(Icons.check, color: Colors.green)
-                  : const Icon(Icons.undo, color: Colors.blue),
-            );
-          },
-        ),
-      ],
-    );
+        // Key used for testing widget.
+        key: const Key('ButtonBarRender'),
+        alignment: MainAxisAlignment.center,
+        children: <Widget>[
+          StreamBuilder<WeekplanMode>(
+            stream: _authBloc.mode,
+            builder: (BuildContext context,
+                AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
+              return StreamBuilder<ActivityModel>(
+                  stream: _activityBloc.activityModelStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<ActivityModel> activitySnapshot) {
+                    if (activitySnapshot.data == null) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
+                      return GirafButton(
+                          key: const Key('CancelStateToggleButton'),
+                          onPressed: () {
+                            _activityBloc.cancelActivity();
+                          },
+                          width: 100,
+                          icon: activitySnapshot.data.state !=
+                                  ActivityState.Canceled
+                              ? const ImageIcon(
+                                  AssetImage('assets/icons/cancel.png'),
+                                  color: Colors.red)
+                              : const ImageIcon(
+                                  AssetImage('assets/icons/undo.png'),
+                                  color: Colors.blue));
+                    } else {
+                      return GirafButton(
+                          key: const Key('CompleteStateToggleButton'),
+                          onPressed: () {
+                            _activityBloc.completeActivity();
+                          },
+                          isEnabled: activitySnapshot.data.state !=
+                              ActivityState.Canceled,
+                          width: 100,
+                          icon: activitySnapshot.data.state !=
+                                  ActivityState.Completed
+                              ? const ImageIcon(
+                                  AssetImage('assets/icons/accept.png'),
+                                  color: Colors.green)
+                              : const ImageIcon(
+                                  AssetImage('assets/icons/undo.png'),
+                                  color: Colors.blue));
+                    }
+                  });
+            },
+          ),
+        ]);
   }
 
   /// Creates a pictogram image from the streambuilder
@@ -420,5 +437,26 @@ class ShowActivityScreen extends StatelessWidget {
             key: Key(_activity.id.toString()));
       },
     );
+  }
+
+  /// Builds the icon that displays the activity's state
+  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+    if (state == ActivityState.Completed) {
+      return Icon(
+        Icons.check,
+        key: const Key('IconCompleted'),
+        color: Colors.green,
+        size: MediaQuery.of(context).size.width,
+      );
+    } else if (state == ActivityState.Canceled) {
+      return Icon(
+        Icons.clear,
+        key: const Key('IconCanceled'),
+        color: Colors.red,
+        size: MediaQuery.of(context).size.width,
+      );
+    } else {
+      return Container();
+    }
   }
 }
