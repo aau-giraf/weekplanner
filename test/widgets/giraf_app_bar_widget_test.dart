@@ -37,7 +37,6 @@ class MockAuth extends Mock implements AuthBloc {
     _loggedIn.add(status);
   }
 
-  @override
   //Shows the failure dialog when wrong credentials when logging in from popup.
   void showFailureDialog(BuildContext context){
     showDialog<Center>(
