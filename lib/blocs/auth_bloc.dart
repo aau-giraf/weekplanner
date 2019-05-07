@@ -5,7 +5,6 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -51,19 +50,8 @@ class AuthBloc extends BlocBase {
   /// Indicates whether the last login attempt was succesfull.
   bool _loginStatus = false;
 
-  /// Shows a dialog when incorrect login in popup.
-  void reactToLoginAttemptFromPopUp (BuildContext context) {
-    // pops the loading spinner
-    Routes.pop(context);
-
-    // shows the dialog if the last login attempt was insuccessfull
-    if (!_loginStatus) {
-      showFailureDialog(context);
-    }
-  }
-
   /// Shows a failure dialog
-  void showFailureDialog(BuildContext context){
+  void _showFailureDialog(BuildContext context){
     showDialog<Center>(
         barrierDismissible: false,
         context: context,
@@ -81,17 +69,24 @@ class AuthBloc extends BlocBase {
     // Make sure the status for the upcoming
     // login is false until proven otherwise
     _loginStatus = false;
-    showLoadingSpinner(context, false,
-                       () => reactToLoginAttemptFromPopUp(context), 1000);
 
     _api.account.login(username, password).take(1).listen((bool status) {
       if (status) {
         _loginStatus = true;
-        //Pop the popup
-        Routes.pop(context);
-        setMode(WeekplanMode.guardian);
         }
-    });
+    }).onDone(() => _evaluateLogin(context));
+  }
+
+  /// used to evaluate the login attempt when loggin in from popup.
+  void _evaluateLogin(BuildContext context)
+  {
+    if (_loginStatus){
+      Routes.pop(context);
+      setMode(WeekplanMode.guardian);
+    }
+    else {
+      _showFailureDialog(context);
+    }
   }
 
   /// Logs the currently logged in user out
