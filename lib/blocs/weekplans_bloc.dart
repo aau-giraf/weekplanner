@@ -78,6 +78,12 @@ class WeekplansBloc extends BlocBase {
           .get(_user.id, weekNameModel.weekYear, weekNameModel.weekNumber)
           .listen((WeekModel results) {
         weekModels.add(results);
+        weekModels.sort((WeekModel a, WeekModel b) {
+          if (a.name == 'Tilføj ugeplan'){
+            return -1;
+          }
+          return a.name.compareTo(b.name);
+        });
         _weekModel.add(weekModels);
       });
     }
@@ -116,11 +122,11 @@ class WeekplansBloc extends BlocBase {
       _api.week
           .delete(_user.id, weekmodel.weekYear, weekmodel.weekNumber)
           .listen((bool deleted) {
-            if (deleted) {
-              localWeekModels.remove(weekmodel);
-              _weekModel.add(localWeekModels);
-            }
-          });
+        if (deleted) {
+          localWeekModels.remove(weekmodel);
+          _weekModel.add(localWeekModels);
+        }
+      });
     }
 
     clearMarkedWeekModels();
