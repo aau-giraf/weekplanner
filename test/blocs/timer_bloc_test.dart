@@ -219,7 +219,7 @@ void main() {
     expect(mockActivity.timer.paused, isFalse);
 
     timerMock.pauseTimer();
-    Future.delayed(Duration(seconds: 1), () {
+    Future<dynamic>.delayed(Duration(seconds: 1), () {
       expect(mockActivity.timer.paused, isTrue);
       expect(mockActivity.timer.progress, isPositive);
     });
@@ -254,7 +254,7 @@ void main() {
 
     timerMock.stopTimer();
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future<dynamic>.delayed(Duration(seconds: 1), () {
       expect(mockActivity.timer.paused, isTrue);
       expect(mockActivity.timer.progress, 0);
     });
