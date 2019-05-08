@@ -13,9 +13,6 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
   
-  /// If the confirm button in popup is clickable.
-  bool _clickable = true;
-  
   final BehaviorSubject<List<IconButton>> _visibleButtons =
       BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
