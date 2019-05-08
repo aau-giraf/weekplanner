@@ -96,9 +96,9 @@ final UsernameModel mockUser = UsernameModel(id: '42', name: null, role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {
-  MockScreen(this.activity);
+  const MockScreen(this.activity);
 
-  ActivityModel activity;
+  final ActivityModel activity;
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +282,7 @@ void main() {
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
     expect(find.byKey(const Key('IconCanceled')), findsNothing);
   });
-  
+
   testWidgets('Test if timer box is shown.', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
@@ -329,7 +329,8 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('Test rendering of content of initialized timer box',
+  testWidgets(
+      'Test rendering of content of initialized timer box guardian mode',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
@@ -341,7 +342,23 @@ void main() {
     expect(find.byKey(const Key('TimerButtonRow')), findsOneWidget);
   });
 
-  testWidgets('Test rendering of content of initialized timer buttons',
+  testWidgets('Test rendering of content of initialized timer box citizen mode',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pump();
+    expect(find.byKey(const Key('AddTimerButtonKey')), findsOneWidget);
+    await _openTimePickerAndConfirm(tester);
+    authBloc.setMode(WeekplanMode.citizen);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('AddTimerButtonKey')), findsNothing);
+    expect(find.byKey(const Key('TimerTitleKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerButtonRow')), findsOneWidget);
+  });
+
+  testWidgets(
+      'Test rendering of content of initialized timer buttons guardian mode',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
@@ -350,6 +367,26 @@ void main() {
     expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
     expect(find.byKey(const Key('TimerStopButtonKey')), findsOneWidget);
     expect(find.byKey(const Key('TimerDeleteButtonKey')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('TimerPauseButtonKey')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('TimerPauseButtonKey')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
+  });
+
+  testWidgets(
+      'Test rendering of content of initialized timer buttons citizen mode',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpAndSettle();
+    await _openTimePickerAndConfirm(tester);
+    authBloc.setMode(WeekplanMode.citizen);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerStopButtonKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerDeleteButtonKey')), findsNothing);
     await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('TimerPauseButtonKey')), findsOneWidget);
