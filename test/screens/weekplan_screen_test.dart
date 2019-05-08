@@ -38,8 +38,7 @@ class MockAuthBlock extends AuthBloc {
   MockAuthBlock(Api api) : super(api);
 
   @override
-  void authenticateFromPopUp(String username, String password,
-                             BuildContext context) {
+  void authenticate(String username, String password) {
     if (password == 'password') {
       setMode(WeekplanMode.guardian);
     }
@@ -499,7 +498,7 @@ void main() {
   });
 
   testWidgets(
-      'In the switch to guardian dialog, confirming should switch mode',
+      'In the switch to guardian dialog, confirming should switch mode and pop',
       (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
     final Completer<bool> tapComplete = Completer<bool>();
@@ -528,9 +527,14 @@ void main() {
         find.byKey(const Key('SwitchToGuardianPassword')), 'password');
     await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
-    await tester.pumpAndSettle(const Duration(seconds:1));
+    await tester.pumpAndSettle();
 
     tapComplete.complete();
+
+    final VerificationResult verificationResult =
+        verify(observer.didPop(captureAny, captureAny));
+
+    expect(verificationResult.callCount, equals(1));
 
     await done.future;
   });
