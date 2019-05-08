@@ -52,9 +52,6 @@ class WeekplanScreen extends StatelessWidget {
         stream: authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen) {
-            weekplanBloc.setEditMode(false);
-          }
           return Scaffold(
             appBar: GirafAppBar(
               title: 'Ugeplan',
@@ -169,7 +166,7 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-  ///Builds the dialog box to confirm marking activities as canceled
+  /// Builds the dialog box to confirm marking activities as canceled
   Future<Center> _buildCancelDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
