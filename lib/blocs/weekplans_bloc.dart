@@ -82,7 +82,7 @@ class WeekplansBloc extends BlocBase {
           if (a.name == 'Tilføj ugeplan'){
             return -1;
           }
-          return a.name.compareTo(b.name);
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
         });
         _weekModel.add(weekModels);
       });
