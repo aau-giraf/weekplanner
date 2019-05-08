@@ -17,8 +17,8 @@ import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
@@ -52,7 +52,7 @@ class WeekplanScreen extends StatelessWidget {
         stream: authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen){
+          if (weekModeSnapshot.data == WeekplanMode.citizen) {
             weekplanBloc.setEditMode(false);
           }
           return Scaffold(
@@ -123,43 +123,27 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      bottomAppBarButton(
-                          context,
-                          'Annuller',
-                          'CancelActivtiesButton',
-                          'assets/icons/cancel.png',
-                          _buildCancelDialog),
-                      bottomAppBarButton(
-                          context,
-                          'Kopier',
-                          'CopyActivtiesButton',
-                          'assets/icons/copy.png',
-                          _buildCopyDialog),
-                      bottomAppBarButton(
-                          context,
-                          'Slet',
-                          'DeleteActivtiesButton',
-                          'assets/icons/delete.png',
-                          _buildRemoveDialog)
+                      BottomAppBarButton(
+                          context: context,
+                          buttonText: 'Annuller',
+                          buttonKey: 'CancelActivtiesButton',
+                          assetPath: 'assets/icons/cancel.png',
+                          dialogFunction: _buildCancelDialog),
+                      BottomAppBarButton(
+                          context: context,
+                          buttonText: 'Kopier',
+                          buttonKey: 'CopyActivtiesButton',
+                          assetPath: 'assets/icons/copy.png',
+                          dialogFunction: _buildCopyDialog),
+                      BottomAppBarButton(
+                          context: context,
+                          buttonText: 'Slet',
+                          buttonKey: 'DeleteActivtiesButton',
+                          assetPath: 'assets/icons/delete.png',
+                          dialogFunction: _buildRemoveDialog)
                     ],
                   )))
         ]));
-  }
-
-  /// Creates a bottom app bar button
-  Widget bottomAppBarButton(BuildContext context, String buttonText,
-      String buttonKey, String assetPath, Function dialogFunction) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: GirafButton(
-        text: buttonText,
-        key: Key(buttonKey),
-        icon: ImageIcon(AssetImage(assetPath)),
-        onPressed: () {
-          dialogFunction(context);
-        },
-      ),
-    );
   }
 
   void _copyActivities(List<bool> days, BuildContext context) {
