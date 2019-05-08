@@ -196,6 +196,7 @@ class ShowActivityScreen extends StatelessWidget {
   ///showing the progression for the timer in both citizen and guardian mode.
   Widget _timerIsInitiatedWidget() {
     return FittedBox(
+      key: const Key('TimerInitKey'),
       child: StreamBuilder<double>(
         stream: _timerBloc.timerProgressStream,
         builder: (BuildContext timerProgressContext,
@@ -237,6 +238,7 @@ class ShowActivityScreen extends StatelessWidget {
               padding: const EdgeInsets.all(0),
               child: Container(
                   child: IconButton(
+                    key: const Key('AddTimerButtonKey'),
                       icon: const ImageIcon(
                           AssetImage('assets/icons/addTimerHighRes.png')),
                       onPressed: () {
@@ -262,6 +264,7 @@ class ShowActivityScreen extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           child: Row(
+            key: const Key('TimerButtonRow'),
             children: <Widget>[
               StreamBuilder<bool>(
                   stream: _timerBloc.timerIsRunning,

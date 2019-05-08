@@ -136,6 +136,7 @@ class TimerBloc extends BlocBase {
     }
   }
 
+  
   /// Stops the timer and resets it and updates is database.
   void stopTimer() {
     _resetCounterAndStopwatch();
