@@ -3,7 +3,9 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// Screen for searching for pictograms
@@ -21,13 +23,19 @@ class PictogramSearch extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: TextField(
-                onChanged: _bloc.search,
-                decoration: InputDecoration(
-                    suffixIcon: const Icon(Icons.search),
-                    hintText: 'Søg her...',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50))),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      onChanged: _bloc.search,
+                      decoration: InputDecoration(
+                          suffixIcon: const Icon(Icons.search),
+                          hintText: 'Søg her...',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50))),
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -38,21 +46,17 @@ class PictogramSearch extends StatelessWidget {
                     initialData: const <PictogramModel>[],
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
-
-                      if(snapshot.hasData) {
-                        return  GridView.count(
+                      if (snapshot.hasData) {
+                        return GridView.count(
                           crossAxisCount: 4,
                           children: snapshot.data
-                              .map((PictogramModel pictogram) =>
-                              PictogramImage(
+                              .map((PictogramModel pictogram) => PictogramImage(
                                   pictogram: pictogram,
                                   onPressed: () =>
                                       Routes.pop(context, pictogram)))
                               .toList(),
                         );
-
-                      }
-                      else if(snapshot.hasError){
+                      } else if (snapshot.hasError) {
                         return InkWell(
                           key: const Key('timeoutWidget'),
                           child: Padding(
@@ -60,15 +64,29 @@ class PictogramSearch extends StatelessWidget {
                             child: Text(snapshot.error.toString()),
                           ),
                         );
-                      }
-                      else {
-                        return const Center(
-                            child: CircularProgressIndicator());
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
                       }
                     }),
               ),
             ),
           ],
-        ));
+		  
+        ),
+		bottomNavigationBar: BottomAppBar(
+		  color: Colors.amber,
+		  child: Row(
+			  mainAxisAlignment: MainAxisAlignment.center,
+		    children: <Widget>[
+		      GirafButton(
+                      icon: const ImageIcon(AssetImage('assets/icons/add.png')),
+                      onPressed: () =>
+                          Routes.push(context, UploadImageFromPhone()),
+                      width: 50,
+                    ),
+		    ],
+		  ),
+	  )
+		);
   }
 }

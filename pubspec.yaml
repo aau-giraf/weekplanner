@@ -12,14 +12,17 @@ dependencies:
   http: ^0.12.0+1
   injector: ^1.0.6
   api_client:
-    git:
-      url: https://github.com/aau-giraf/api_client.git
+    #git:
+      #url: https://github.com/aau-giraf/api_client.git
+    path: ../api_client
   auto_size_text: ^1.1.1
+  image_picker: ^0.6.0+2
   rflutter_alert: ^1.0.2
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
   tuple: ^1.0.2
+  image: ^2.0.7
 
 dev_dependencies:
   async_test:

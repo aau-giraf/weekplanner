@@ -6,6 +6,7 @@ import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/add_activity_bloc.dart';
@@ -69,5 +70,10 @@ class Bootstrap {
     di.registerDependency<SettingsBloc>((Injector i) {
       return SettingsBloc();
     });
+
+	di.registerSingleton((Injector i) {
+      return UploadFromGalleryBloc(i.getDependency<Api>());
+    });
+
   }
 }
