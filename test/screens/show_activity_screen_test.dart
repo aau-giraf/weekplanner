@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/week_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -288,6 +290,15 @@ void main() {
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
   });
 
+  testWidgets('Test that timer box is not shown in citizen mode.',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pump();
+    expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
+  });
+
   testWidgets('Test rendering of content of non-initialized timer box',
       (WidgetTester tester) async {
     await tester
@@ -368,5 +379,58 @@ void main() {
     await tester.pumpAndSettle();
     expect(
         find.byKey(const Key('TimerDeleteConfirmDialogKey')), findsOneWidget);
+  });
+
+  testWidgets('Test that timerbloc registers the timer initlization',
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpAndSettle();
+    final StreamSubscription<bool> listenForFalse =
+        timerBloc.timerIsInstantiated.listen((bool init) {
+      expect(init, isFalse);
+      done.complete();
+    });
+    await done.future;
+    listenForFalse.cancel();
+    await tester.pumpAndSettle();
+    await _openTimePickerAndConfirm(tester);
+    timerBloc.timerIsInstantiated.listen((bool init) {
+      expect(init, isTrue);
+    });
+  });
+
+  testWidgets(
+      'Test that timerbloc knows whether the timer is running or paused',
+      (WidgetTester tester) async {
+    final Completer<bool> checkNotRun = Completer<bool>();
+    final Completer<bool> checkRunning = Completer<bool>();
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpAndSettle();
+    await _openTimePickerAndConfirm(tester);
+    final StreamSubscription<bool> listenForRunningFalse =
+        timerBloc.timerIsRunning.listen((bool running) {
+      expect(running, isFalse);
+      checkNotRun.complete();
+    });
+    await checkNotRun.future;
+    listenForRunningFalse.cancel();
+
+    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+    await tester.pumpAndSettle();
+    final StreamSubscription<bool> listenForRunningTrue =
+        timerBloc.timerIsRunning.listen((bool running) {
+      expect(running, isTrue);
+      checkRunning.complete();
+    });
+    await checkRunning.future;
+    listenForRunningTrue.cancel();
+    await tester.tap(find.byKey(const Key('TimerPauseButtonKey')));
+    await tester.pumpAndSettle();
+    timerBloc.timerIsRunning.listen((bool running) {
+      expect(running, isFalse);
+    });
   });
 }
