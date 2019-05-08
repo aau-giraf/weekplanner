@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -15,11 +13,8 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
 
-  /// If the confirm button in popup is clickable.
-  bool _clickable = true;
-
   final BehaviorSubject<List<IconButton>> _visibleButtons =
-  BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   /// The current visibility of the edit-button.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
@@ -33,10 +28,10 @@ class ToolbarBloc extends BlocBase {
 
     // Assigns a map to icons, if icons is null.
     icons ??= <AppBarIcon, VoidCallback>{
-      AppBarIcon.settings: null,
-      AppBarIcon.logout: null
-    };
-
+        AppBarIcon.settings: null,
+        AppBarIcon.logout: null
+      };
+    
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
     }
@@ -242,21 +237,10 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 key: const Key('SwitchToGuardianSubmit'),
-                  // Debouncer for button, so it cannot
-                  // be tapped than each 2 seconds.
-                  onPressed: _clickable
-                      ? () {
-                    if (_clickable) {
-                      _clickable = false;
-                      loginFromPopUp(context, _authBloc.loggedInUsername,
-                          passwordCtrl.value.text);
-                      // Timer makes it clicable again after 2 seconds.
-                      Timer(const Duration(milliseconds: 2000), () {
-                        _clickable = true;
-                      });
-                    }
-                  }
-                  : null,
+                onPressed: () {
+                  login(_authBloc.loggedInUsername, passwordCtrl.value.text);
+                  Routes.pop(context);
+                },
                 child: const Text(
                   'Bekræft',
                   style: TextStyle(color: Colors.white, fontSize: 20),
@@ -322,7 +306,7 @@ class ToolbarBloc extends BlocBase {
                 description: 'Vil du logge ud?',
                 confirmButtonText: 'Log ud',
                 confirmButtonIcon:
-                const ImageIcon(AssetImage('assets/icons/logout.png')),
+                    const ImageIcon(AssetImage('assets/icons/logout.png')),
                 confirmOnPressed: () => _authBloc.logout(),
               );
             });
@@ -397,9 +381,9 @@ class ToolbarBloc extends BlocBase {
     ),
   );
 
-  /// Used to authenticate a user from popup.
-  void loginFromPopUp(BuildContext context, String username, String password) {
-    _authBloc.authenticateFromPopUp(username, password, context);
+  /// Used to authenticate a user.
+  void login(String username, String password) {
+    _authBloc.authenticate(username, password);
   }
 
   @override
