@@ -2,8 +2,7 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/copy_dialog_buttons_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
 /// A dialog widget presented to the user to confirm an action based on
@@ -77,55 +76,20 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                     ))
                   ],
                 ),
-                _buildCheckboxes(snapshot),
-                _copyDialogButtons(context, snapshot)
+                _buildCheckboxes(snapshot.data),
+                CopyDialogButtons(
+                    confirmButtonText: confirmButtonText,
+                    confirmButtonIcon: confirmButtonIcon,
+                    confirmOnPressed: confirmOnPressed,
+                    context: context,
+                    checkMarkValues: snapshot.data)
               ],
             );
           }),
     );
   }
 
-  Widget _copyDialogButtons(
-      BuildContext context, AsyncSnapshot<List<bool>> snapshot) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Flexible(
-            fit: FlexFit.loose,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: GirafButton(
-                key: const Key('DialogCancelButton'),
-                text: 'Fortryd',
-                icon: const ImageIcon(AssetImage('assets/icons/cancel.png')),
-                onPressed: () {
-                  Routes.pop(context);
-                },
-              ),
-            ),
-          ),
-          Flexible(
-            fit: FlexFit.loose,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: GirafButton(
-                key: const Key('DialogConfirmButton'),
-                text: confirmButtonText,
-                icon: confirmButtonIcon,
-                onPressed: () {
-                  confirmOnPressed(snapshot.data, context);
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container _buildCheckboxes(AsyncSnapshot<List<bool>> snapshot) {
+  Container _buildCheckboxes(List<bool> checkMarkValues) {
     return Container(
       padding: const EdgeInsets.all(30.0),
       child: Center(
@@ -141,17 +105,17 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                           Weekday.Monday,
                           const Key('MonCheckbox'),
                           'Mandag',
-                          snapshot.data[Weekday.Monday.index]),
+                          checkMarkValues[Weekday.Monday.index]),
                       _buildCheckboxListTile(
                           Weekday.Wednesday,
                           const Key('WedCheckbox'),
                           'Onsdag',
-                          snapshot.data[Weekday.Wednesday.index]),
+                          checkMarkValues[Weekday.Wednesday.index]),
                       _buildCheckboxListTile(
                           Weekday.Friday,
                           const Key('FriCheckbox'),
                           'Fredag',
-                          snapshot.data[Weekday.Friday.index])
+                          checkMarkValues[Weekday.Friday.index])
                     ],
                   ),
                 ),
@@ -163,17 +127,17 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                           Weekday.Tuesday,
                           const Key('TueCheckbox'),
                           'Tirsdag',
-                          snapshot.data[Weekday.Tuesday.index]),
+                          checkMarkValues[Weekday.Tuesday.index]),
                       _buildCheckboxListTile(
                           Weekday.Thursday,
                           const Key('ThuCheckbox'),
                           'Torsdag',
-                          snapshot.data[Weekday.Thursday.index]),
+                          checkMarkValues[Weekday.Thursday.index]),
                       _buildCheckboxListTile(
                           Weekday.Saturday,
                           const Key('SatCheckbox'),
                           'Lørdag',
-                          snapshot.data[Weekday.Saturday.index])
+                          checkMarkValues[Weekday.Saturday.index])
                     ],
                   ),
                 )
@@ -189,7 +153,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                           Weekday.Sunday,
                           const Key('SunCheckbox'),
                           'Søndag',
-                          snapshot.data[Weekday.Sunday.index])
+                          checkMarkValues[Weekday.Sunday.index])
                     ],
                   ),
                 ),
