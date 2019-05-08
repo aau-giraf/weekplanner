@@ -28,12 +28,11 @@ class ShowActivityScreen extends StatelessWidget {
     _timerBloc.load(_activity);
   }
 
-  final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
-
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
+  final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
@@ -69,7 +68,7 @@ class ShowActivityScreen extends StatelessWidget {
 
     return Scaffold(
         appBar: GirafAppBar(
-          title: 'Aktivitet',
+            title: 'Aktivitet',
             appBarIcons: const <AppBarIcon, VoidCallback>{}),
         body: keyboardVisible ? Container() : childContainer);
   }
@@ -139,6 +138,7 @@ class ShowActivityScreen extends StatelessWidget {
               ),
             ),
           ),
+          buildButtonBar()
         ],
       ),
     );

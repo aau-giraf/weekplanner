@@ -24,7 +24,7 @@ void main() {
 
     timerMock.load(mockActivity);
 
-    timerMock.timerIsInstantiated.listen((bool b) {
+    timerMock.timerIsInstantiated.last.then((bool b) {
       expect(b, isFalse);
     });
     done();
@@ -45,7 +45,7 @@ void main() {
 
     timerMock.load(mockActivity);
 
-    timerMock.timerIsInstantiated.listen((bool b) {
+    timerMock.timerIsInstantiated.last.then((bool b) {
       expect(b, isTrue);
     });
     done();
@@ -66,13 +66,14 @@ void main() {
 
     timerMock.addTimer(Duration(seconds: 100));
 
-    timerMock.timerIsInstantiated.listen((bool b) {
-      expect(mockActivity.timer, isNotNull);
-      expect(mockActivity.timer.progress, 0);
-      expect(
-          mockActivity.timer.fullLength, Duration(seconds: 100).inMilliseconds);
-      expect(mockActivity.timer.paused, true);
-      expect(mockActivity.timer.startTime, isNotNull);
+    expect(mockActivity.timer, isNotNull);
+    expect(mockActivity.timer.progress, 0);
+    expect(
+        mockActivity.timer.fullLength, Duration(seconds: 100).inMilliseconds);
+    expect(mockActivity.timer.paused, true);
+    expect(mockActivity.timer.startTime, isNotNull);
+
+    timerMock.timerIsInstantiated.last.then((bool b) {
       expect(b, isTrue);
     });
     done();
@@ -95,10 +96,10 @@ void main() {
     timerMock.load(mockActivity);
     timerMock.initTimer();
 
-    timerMock.timerIsRunning.listen((bool b) {
+    timerMock.timerIsRunning.last.then((bool b) {
       expect(b, isTrue);
     });
-    timerMock.timerIsInstantiated.listen((bool b) {
+    timerMock.timerIsInstantiated.last.then((bool b) {
       expect(b, isTrue);
     });
     done();
@@ -122,14 +123,14 @@ void main() {
     timerMock.load(mockActivity);
     timerMock.initTimer();
 
-    timerMock.timerIsRunning.listen((bool b) {
+    timerMock.timerIsRunning.last.then((bool b) {
       expect(b, isFalse);
     });
-    timerMock.timerIsInstantiated.listen((bool b) {
+    timerMock.timerIsInstantiated.last.then((bool b) {
       expect(b, isTrue);
     });
 
-    timerMock.timerProgressStream.listen((double d) {
+    timerMock.timerProgressStream.last.then((double d) {
       expect(
           d,
           1 -
@@ -160,11 +161,11 @@ void main() {
     timerMock.playTimer(updatePeriod: 1);
 
     expect(mockActivity.timer.paused, isFalse);
-    timerMock.timerIsInstantiated.listen((bool b) {
+    timerMock.timerIsInstantiated.last.then((bool b) {
       expect(b, isTrue);
     });
 
-    timerMock.timerProgressStream.skip(1).listen((double d) {
+    timerMock.timerProgressStream.last.then((double d) {
       expect(d, isPositive);
     });
     done();
@@ -189,14 +190,15 @@ void main() {
     timerMock.playTimer();
     expect(mockActivity.timer.paused, isFalse);
 
-    timerMock.timerProgressStream.skip(1).listen((double d) {
+    timerMock.timerProgressStream.last.then((double d) {
       expect(d, isPositive);
     });
     done();
   }));
 
   test(
-      'Testing when timer is paused, the progress is upadated and the stream shows false',
+      'Testing when timer is paused, the progress is '
+          'upadated and the stream shows false',
       async((DoneFn done) {
     final ActivityModel mockActivity = ActivityModel(
         id: 1,
@@ -296,5 +298,4 @@ void main() {
     });
     done();
   }));
-  
 }

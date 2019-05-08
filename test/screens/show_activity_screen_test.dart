@@ -282,7 +282,7 @@ void main() {
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
     expect(find.byKey(const Key('IconCanceled')), findsNothing);
   });
-
+  
   testWidgets('Test if timer box is shown.', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
