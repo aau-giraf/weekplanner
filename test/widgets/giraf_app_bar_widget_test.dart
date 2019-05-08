@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +10,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 class MockAuth extends Mock implements AuthBloc {
   @override
@@ -21,7 +21,8 @@ class MockAuth extends Mock implements AuthBloc {
   String loggedInUsername = 'Graatand';
 
   @override
-  void authenticate(String username, String password) {
+  void authenticateFromPopUp(String username, String password,
+                             BuildContext context) {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');
@@ -30,8 +31,25 @@ class MockAuth extends Mock implements AuthBloc {
     if (status) {
       loggedInUsername = username;
     }
+    else {
+      showFailureDialog(context);
+    }
     _loggedIn.add(status);
   }
+
+  //Shows the failure dialog when wrong credentials when logging in from popup.
+  void showFailureDialog(BuildContext context){
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+              title: 'Fejl',
+              description: 'Forkert adgangskode',
+              key: Key('WrongUsernameOrPasswordDialog'));
+        });
+  }
+
 
   @override
   void logout() {
@@ -45,13 +63,19 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
             title: 'TestTitle',
-            appBarIcons: const <AppBarIcon, VoidCallback>{
-              AppBarIcon.logout: null}));
+            appBarIcons: <AppBarIcon, VoidCallback>{
+              AppBarIcon.logout: null,
+              AppBarIcon.changeToGuardian: () {},
+            }));
   }
 }
 
 /// Used to retrieve the visibility widget wrapping the editbutton
 const String keyOfVisibilityForEdit = 'visibilityEditBtn';
+const String keyOfWrongUsernameOrPassword = 'WrongUsernameOrPasswordDialog';
+const String keyOfChangeToGuardian = 'IconChangeToGuardian';
+const String keyOfPasswordField = 'SwitchToGuardianPassword';
+const String keyOfConfirmButton = 'SwitchToGuardianSubmit';
 
 void main() {
   ToolbarBloc bloc;
@@ -356,5 +380,42 @@ void main() {
       }
     });
     await done.future;
+  });
+
+  testWidgets('Dialog should not be visible', (WidgetTester tester) async {
+    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
+        'password');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
+        findsNothing);
+  });
+
+
+  testWidgets('Dialog should be visible', (WidgetTester tester) async {
+    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
+        'wrongpassword');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
+        findsOneWidget);
   });
 }
