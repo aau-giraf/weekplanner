@@ -169,7 +169,7 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-  ///Builds the dialog box to confirm marking activities as canceled
+  /// Builds the dialog box to confirm marking activities as canceled
   Future<Center> _buildCancelDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
