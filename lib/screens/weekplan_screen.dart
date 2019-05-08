@@ -50,6 +50,9 @@ class WeekplanScreen extends StatelessWidget {
         stream: authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+          if (weekModeSnapshot.data == WeekplanMode.citizen){
+            weekplanBloc.setEditMode(false);
+          }
           return Scaffold(
             appBar: GirafAppBar(
               title: 'Ugeplan',
