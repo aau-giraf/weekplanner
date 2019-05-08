@@ -15,6 +15,7 @@ import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -117,6 +118,7 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
     di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
+    di.registerDependency<TimerBloc>((_) => TimerBloc());
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {

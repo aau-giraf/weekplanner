@@ -272,24 +272,4 @@ void main() {
         await tester.pump();
         expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
       });
-
-  testWidgets('Test if timer box is not shown in citizen mode.',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: MockScreen()));
-        await tester.pump();
-        authBloc.logout();
-        await tester.pumpAndSettle();
-
-        timerBloc.timerIsInstantiated.listen((bool b) {
-          expect(b, false);
-        });
-        authBloc.loggedIn.listen((bool b){
-          expect(b, false);
-        });
-        authBloc.mode.listen((WeekplanMode b){
-          expect(b, WeekplanMode.citizen);
-        });
-        expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
-
-      });
 }
