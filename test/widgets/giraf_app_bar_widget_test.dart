@@ -10,7 +10,6 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 class MockAuth extends Mock implements AuthBloc {
   @override
@@ -19,35 +18,6 @@ class MockAuth extends Mock implements AuthBloc {
 
   @override
   String loggedInUsername = 'Graatand';
-
-  @override
-  void authenticateFromPopUp(String username, String password) {
-    // Mock the API and allow these 2 users to ?login?
-    final bool status = (username == 'test' && password == 'test') ||
-        (username == 'Graatand' && password == 'password');
-    // If there is a successful login, remove the loading spinner,
-    // and push the status to the stream
-    if (status) {
-      loggedInUsername = username;
-    }
-    else {
-      //showFailureDialog(context);
-    }
-    _loggedIn.add(status);
-  }
-
-  //Shows the failure dialog when wrong credentials when logging in from popup.
-  void showFailureDialog(BuildContext context){
-    showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return const GirafNotifyDialog(
-              title: 'Fejl',
-              description: 'Forkert adgangskode',
-              key: Key('WrongUsernameOrPasswordDialog'));
-        });
-  }
 
 
   @override
@@ -379,42 +349,5 @@ void main() {
       }
     });
     await done.future;
-  });
-
-  testWidgets('Dialog should not be visible', (WidgetTester tester) async {
-    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
-        'password');
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
-        findsNothing);
-  });
-
-
-  testWidgets('Dialog should be visible', (WidgetTester tester) async {
-    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key(keyOfChangeToGuardian)));
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byKey(const Key(keyOfPasswordField)),
-        'wrongpassword');
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key(keyOfConfirmButton)));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    expect(find.byKey(const Key(keyOfWrongUsernameOrPassword)),
-        findsOneWidget);
   });
 }

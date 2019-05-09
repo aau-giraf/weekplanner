@@ -37,10 +37,22 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 class MockAuthBlock extends AuthBloc {
   MockAuthBlock(Api api) : super(api);
 
+
+  /// Stream that streams status of last login attemp from popup.
+  @override
+  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+
+  final BehaviorSubject<bool> _loginAttempt =
+  BehaviorSubject<bool>.seeded(false);
+
   @override
   void authenticateFromPopUp(String username, String password) {
     if (password == 'password') {
+      _loginAttempt.add(true);
       setMode(WeekplanMode.guardian);
+    }
+    else {
+      _loginAttempt.add(false);
     }
   }
 }
@@ -498,7 +510,7 @@ void main() {
   });
 
   testWidgets(
-      'In the switch to guardian dialog, confirming should switch mode',
+      'In the switch to guardian dialog, confirming should switch mode and pop',
       (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
     final Completer<bool> tapComplete = Completer<bool>();
@@ -527,9 +539,14 @@ void main() {
         find.byKey(const Key('SwitchToGuardianPassword')), 'password');
     await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
-    await tester.pumpAndSettle(const Duration(seconds:1));
+    await tester.pumpAndSettle();
 
     tapComplete.complete();
+
+    final VerificationResult verificationResult =
+    verify(observer.didPop(any, any));
+
+    expect(verificationResult.callCount, equals(2));
 
     await done.future;
   });
@@ -543,4 +560,50 @@ void main() {
 
     expect(find.byKey(const Key('DragTarget')), findsNothing);
   });
+
+  testWidgets(
+      'In the switch to guardian dialog, wrong credentials should show '
+          'error dialog and not change mode',
+          (WidgetTester tester) async {
+        final Completer<bool> done = Completer<bool>();
+        final Completer<bool> tapComplete = Completer<bool>();
+        final MockNavigatorObserver observer = MockNavigatorObserver();
+        await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(weekModel, user),
+          navigatorObservers: <NavigatorObserver>[observer],
+        ));
+        await tester.pumpAndSettle();
+
+        // We need to skip 2 this time, first skip the seeded value
+        // second skip the switch to citizen mode (which is part of the arrange
+        // step for this test)
+        authBloc.mode.skip(2).listen((WeekplanMode mode) async {
+          await tapComplete.future;
+          expect(WeekplanMode.citizen, equals(mode));
+          done.complete();
+        });
+
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('SwitchToGuardianPassword')), 'abc');
+        await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+        await tester.pumpAndSettle();
+
+        tapComplete.complete();
+
+        final VerificationResult verificationResult =
+        verify(observer.didPop(any, any));
+
+        //Should be 1, popping the loading spinner
+        expect(verificationResult.callCount, equals(1));
+        expect(find.byKey(const Key('WrongUsernameOrPasswordDialog')),
+            findsOneWidget);
+
+        await done.future;
+      });
 }
