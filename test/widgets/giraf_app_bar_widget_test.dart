@@ -21,8 +21,7 @@ class MockAuth extends Mock implements AuthBloc {
   String loggedInUsername = 'Graatand';
 
   @override
-  void authenticateFromPopUp(String username, String password,
-                             BuildContext context) {
+  void authenticateFromPopUp(String username, String password) {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');
@@ -32,7 +31,7 @@ class MockAuth extends Mock implements AuthBloc {
       loggedInUsername = username;
     }
     else {
-      showFailureDialog(context);
+      //showFailureDialog(context);
     }
     _loggedIn.add(status);
   }

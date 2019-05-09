@@ -38,8 +38,7 @@ class MockAuthBlock extends AuthBloc {
   MockAuthBlock(Api api) : super(api);
 
   @override
-  void authenticateFromPopUp(String username, String password,
-                             BuildContext context) {
+  void authenticateFromPopUp(String username, String password) {
     if (password == 'password') {
       setMode(WeekplanMode.guardian);
     }

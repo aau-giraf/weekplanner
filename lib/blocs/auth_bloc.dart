@@ -1,10 +1,7 @@
 import 'package:api_client/api/api.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -31,6 +28,12 @@ class AuthBloc extends BlocBase {
   Observable<WeekplanMode> get mode => _mode.stream;
 
 
+  /// Stream that streams status of last login attemp from popup.
+  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+
+  final BehaviorSubject<bool> _loginAttempt =
+  BehaviorSubject<bool>.seeded(false);
+
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password) {
     // Show the Loading Spinner, with a callback of 2 seconds.
@@ -47,46 +50,16 @@ class AuthBloc extends BlocBase {
     });
   }
 
-  /// Indicates whether the last login attempt was succesfull.
-  bool _loginStatus = false;
-
-  /// Shows a failure dialog
-  void _showFailureDialog(BuildContext context){
-    showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return const GirafNotifyDialog(
-              title: 'Fejl',
-              description: 'Forkert adgangskode',
-              key: Key('WrongUsernameOrPasswordDialog'));
-        });
-  }
-
   /// Authenticates the user only by password when signing-in from PopUp.
-  void authenticateFromPopUp(String username, String password,
-                             BuildContext context) {
+  void authenticateFromPopUp(String username, String password) {
     // Make sure the status for the upcoming
     // login is false until proven otherwise
-    _loginStatus = false;
-
     _api.account.login(username, password).take(1).listen((bool status) {
       if (status) {
-        _loginStatus = true;
+          _loginAttempt.add(status);
+          setMode(WeekplanMode.guardian);
         }
-    }).onDone(() => _evaluateLogin(context));
-  }
-
-  /// used to evaluate the login attempt when loggin in from popup.
-  void _evaluateLogin(BuildContext context)
-  {
-    if (_loginStatus){
-      Routes.pop(context);
-      setMode(WeekplanMode.guardian);
-    }
-    else {
-      _showFailureDialog(context);
-    }
+    });
   }
 
   /// Logs the currently logged in user out
@@ -104,5 +77,6 @@ class AuthBloc extends BlocBase {
   void dispose() {
     _loggedIn.close();
     _mode.close();
+    _loginAttempt.close();
   }
 }

@@ -11,6 +11,8 @@ import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
@@ -397,9 +399,40 @@ class ToolbarBloc extends BlocBase {
     ),
   );
 
+  /// Status of last login attempt from popup
+  bool loginStatus = false;
+
+  /// Holds the current context
+  BuildContext currentContext;
+
   /// Used to authenticate a user from popup.
   void loginFromPopUp(BuildContext context, String username, String password) {
-    _authBloc.authenticateFromPopUp(username, password, context);
+    showLoadingSpinner(context, false, _showFailureDialog, 2000);
+    loginStatus = false;
+    currentContext = context;
+    _authBloc.authenticateFromPopUp(username, password);
+    _authBloc.loginAttempt.skip(1).listen((bool snapshot) {
+      loginStatus = snapshot;
+      if (snapshot) {
+        Routes.pop(context);
+      }
+    });
+  }
+
+  /// Shows a failure dialog
+  void _showFailureDialog(){
+    if (!loginStatus) {
+      Routes.pop(currentContext);
+      showDialog<Center>(
+          barrierDismissible: false,
+          context: currentContext,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl',
+                description: 'Forkert adgangskode',
+                key: Key('WrongUsernameOrPasswordDialog'));
+          });
+    }
   }
 
   @override
