@@ -289,7 +289,7 @@ class WeekplanScreen extends StatelessWidget {
         weekplanBloc.addMarkedActivity(activities[index]);
       }
     } else {
-      Routes.push(context, ShowActivityScreen(_week, activities[index], _user));
+      Routes.push(context, ShowActivityScreen(activities[index], _user));
     }
   }
 
