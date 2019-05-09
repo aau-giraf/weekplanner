@@ -140,7 +140,7 @@ void main() {
     api.week = weekApi;
     authBloc = AuthBloc(api);
     bloc = ActivityBloc(api);
-    timerBloc = TimerBloc();
+    timerBloc = TimerBloc(api);
 
     setupApiCalls();
 

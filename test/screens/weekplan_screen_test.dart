@@ -118,7 +118,7 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
     di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
-    di.registerDependency<TimerBloc>((_) => TimerBloc());
+    di.registerDependency<TimerBloc>((_) => TimerBloc(api));
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {
