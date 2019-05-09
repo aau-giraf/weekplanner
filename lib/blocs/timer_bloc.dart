@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:api_client/api/api.dart';
 import 'package:api_client/models/timer_model.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -7,7 +9,12 @@ import 'package:api_client/models/activity_model.dart';
 
 /// Logic for activities
 class TimerBloc extends BlocBase {
+  TimerBloc(this._api);
+
+  final Api _api;
+
   ActivityModel _activityModel;
+  UsernameModel _user;
 
   /// Stream for the progress of the timer.
   Observable<double> get timerProgressStream => _timerProgressStream.stream;
@@ -35,8 +42,12 @@ class TimerBloc extends BlocBase {
   Stopwatch _stopwatch;
 
   /// Loads the activity that should be used in the timerBloc
-  void load(ActivityModel activity) {
+  void load(ActivityModel activity, {UsernameModel user}) {
     _activityModel = activity;
+
+    if (user != null) {
+      _user = user;
+    }
 
     _activityModel.timer != null
         ? _timerInstantiatedStream.add(true)
@@ -120,6 +131,9 @@ class TimerBloc extends BlocBase {
       });
       _timerRunningStream.add(true);
       //update();
+      _api.activity
+          .update(_activityModel, _user.id)
+          .listen((ActivityModel activity) {});
     }
   }
 
@@ -133,10 +147,12 @@ class TimerBloc extends BlocBase {
       _resetCounterAndStopwatch();
       _timerRunningStream.add(false);
       //update();
+      _api.activity
+          .update(_activityModel, _user.id)
+          .listen((ActivityModel activity) {});
     }
   }
 
-  
   /// Stops the timer and resets it and updates is database.
   void stopTimer() {
     _resetCounterAndStopwatch();
@@ -145,6 +161,9 @@ class TimerBloc extends BlocBase {
     _timerRunningStream.add(false);
     _timerProgressStream.add(0);
     //update();
+    _api.activity
+        .update(_activityModel, _user.id)
+        .listen((ActivityModel activity) {});
   }
 
   /// Deletes the timer from the activity and updates is database.
@@ -153,6 +172,9 @@ class TimerBloc extends BlocBase {
     _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
     //update();
+    _api.activity
+        .update(_activityModel, _user.id)
+        .listen((ActivityModel activity) {});
   }
 
   void _resetCounterAndStopwatch() {

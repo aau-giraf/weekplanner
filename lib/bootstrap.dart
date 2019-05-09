@@ -70,8 +70,8 @@ class Bootstrap {
       return SettingsBloc();
     });
 
-    di.registerDependency<TimerBloc>((_) {
-      return TimerBloc();
+    di.registerDependency<TimerBloc>((Injector i) {
+      return TimerBloc(i.getDependency<Api>());
     });
   }
 }

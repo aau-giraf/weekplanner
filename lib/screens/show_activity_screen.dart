@@ -25,7 +25,7 @@ class ShowActivityScreen extends StatelessWidget {
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(weekModel, _activity, girafUser);
-    _timerBloc.load(_activity);
+    _timerBloc.load(_activity, user: girafUser);
   }
 
   final ActivityModel _activity;
