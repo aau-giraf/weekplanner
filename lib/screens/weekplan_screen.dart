@@ -135,19 +135,16 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       BottomAppBarButton(
-                          context: context,
                           buttonText: 'Annuller',
                           buttonKey: 'CancelActivtiesButton',
                           assetPath: 'assets/icons/cancel.png',
                           dialogFunction: _buildCancelDialog),
                       BottomAppBarButton(
-                          context: context,
                           buttonText: 'Kopier',
                           buttonKey: 'CopyActivtiesButton',
                           assetPath: 'assets/icons/copy.png',
                           dialogFunction: _buildCopyDialog),
                       BottomAppBarButton(
-                          context: context,
                           buttonText: 'Slet',
                           buttonKey: 'DeleteActivtiesButton',
                           assetPath: 'assets/icons/delete.png',

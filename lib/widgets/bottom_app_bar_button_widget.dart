@@ -7,15 +7,11 @@ class BottomAppBarButton extends StatelessWidget {
   /// Constrtuctor to get required information.
   const BottomAppBarButton({
     Key key,
-    @required this.context,
     @required this.buttonText,
     @required this.buttonKey,
     @required this.assetPath,
     @required this.dialogFunction,
   }) : super(key: key);
-
-  ///
-  final BuildContext context;
 
   /// Text to be dispayed on the button.
   final String buttonText;

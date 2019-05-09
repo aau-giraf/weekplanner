@@ -81,7 +81,6 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
                     confirmButtonText: confirmButtonText,
                     confirmButtonIcon: confirmButtonIcon,
                     confirmOnPressed: confirmOnPressed,
-                    context: context,
                     checkMarkValues: snapshot.data)
               ],
             );
@@ -93,78 +92,47 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(30.0),
       child: Center(
-        child: Column(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    children: <Widget>[
-                      _buildCheckboxListTile(
-                          Weekday.Monday,
-                          const Key('MonCheckbox'),
-                          'Mandag',
-                          checkMarkValues[Weekday.Monday.index]),
-                      _buildCheckboxListTile(
-                          Weekday.Wednesday,
-                          const Key('WedCheckbox'),
-                          'Onsdag',
-                          checkMarkValues[Weekday.Wednesday.index]),
-                      _buildCheckboxListTile(
-                          Weekday.Friday,
-                          const Key('FriCheckbox'),
-                          'Fredag',
-                          checkMarkValues[Weekday.Friday.index])
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    children: <Widget>[
-                      _buildCheckboxListTile(
-                          Weekday.Tuesday,
-                          const Key('TueCheckbox'),
-                          'Tirsdag',
-                          checkMarkValues[Weekday.Tuesday.index]),
-                      _buildCheckboxListTile(
-                          Weekday.Thursday,
-                          const Key('ThuCheckbox'),
-                          'Torsdag',
-                          checkMarkValues[Weekday.Thursday.index]),
-                      _buildCheckboxListTile(
-                          Weekday.Saturday,
-                          const Key('SatCheckbox'),
-                          'Lørdag',
-                          checkMarkValues[Weekday.Saturday.index])
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 5,
-                  child: Column(
-                    children: <Widget>[
-                      _buildCheckboxListTile(
-                          Weekday.Sunday,
-                          const Key('SunCheckbox'),
-                          'Søndag',
-                          checkMarkValues[Weekday.Sunday.index])
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Container(),
-                )
-              ],
-            )
+            _buildLeftCheckboxRow(checkMarkValues),
+            _buildRightCheckboxRow(checkMarkValues)
           ],
         ),
+      ),
+    );
+  }
+
+  Expanded _buildLeftCheckboxRow(List<bool> checkMarkValues) {
+    return Expanded(
+      flex: 5,
+      child: Column(
+        children: <Widget>[
+          _buildCheckboxListTile(Weekday.Monday, const Key('MonCheckbox'),
+              'Mandag', checkMarkValues[Weekday.Monday.index]),
+          _buildCheckboxListTile(Weekday.Wednesday, const Key('WedCheckbox'),
+              'Onsdag', checkMarkValues[Weekday.Wednesday.index]),
+          _buildCheckboxListTile(Weekday.Friday, const Key('FriCheckbox'),
+              'Fredag', checkMarkValues[Weekday.Friday.index]),
+          _buildCheckboxListTile(Weekday.Sunday, const Key('SunCheckbox'),
+              'Søndag', checkMarkValues[Weekday.Sunday.index])
+        ],
+      ),
+    );
+  }
+
+  Expanded _buildRightCheckboxRow(List<bool> checkMarkValues) {
+    return Expanded(
+      flex: 5,
+      child: Column(
+        children: <Widget>[
+          _buildCheckboxListTile(Weekday.Tuesday, const Key('TueCheckbox'),
+              'Tirsdag', checkMarkValues[Weekday.Tuesday.index]),
+          _buildCheckboxListTile(Weekday.Thursday, const Key('ThuCheckbox'),
+              'Torsdag', checkMarkValues[Weekday.Thursday.index]),
+          _buildCheckboxListTile(Weekday.Saturday, const Key('SatCheckbox'),
+              'Lørdag', checkMarkValues[Weekday.Saturday.index])
+        ],
       ),
     );
   }

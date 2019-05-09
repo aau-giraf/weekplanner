@@ -11,7 +11,6 @@ class CopyDialogButtons extends StatelessWidget {
     @required this.confirmButtonText,
     @required this.confirmButtonIcon,
     @required this.confirmOnPressed,
-    @required this.context,
     @required this.checkMarkValues,
   }) : super(key: key);
 
@@ -23,9 +22,6 @@ class CopyDialogButtons extends StatelessWidget {
 
   /// Function to be called when the button is pressed. 
   final void Function(List<bool>, BuildContext) confirmOnPressed;
-  
-  /// The current context. 
-  final BuildContext context;
 
   /// A list containing check mark values
   final List<bool> checkMarkValues;
