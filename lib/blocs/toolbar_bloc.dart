@@ -402,6 +402,8 @@ class ToolbarBloc extends BlocBase {
   /// Status of last login attempt from popup
   bool loginStatus = false;
 
+  bool _popCalled = false;
+
   /// Holds the current context
   BuildContext currentContext;
 
@@ -413,8 +415,10 @@ class ToolbarBloc extends BlocBase {
     _authBloc.authenticateFromPopUp(username, password);
     _authBloc.loginAttempt.skip(1).listen((bool snapshot) {
       loginStatus = snapshot;
-      if (snapshot) {
+      while (snapshot && !_popCalled) {
         Routes.pop(context);
+        Routes.pop(context);
+        _popCalled = true;
       }
     });
   }
