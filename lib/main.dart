@@ -33,7 +33,7 @@ bool lastState = false;
 bool first = true;
 void _runApp() {
   runApp(MaterialApp(
-      title: 'Weekplanner',
+      tolitle: 'Weekplanner',
       theme: ThemeData(fontFamily: 'Quicksand'),
       home: StreamBuilder<bool>(
           initialData: false,
