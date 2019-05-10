@@ -3,7 +3,6 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:async_test/async_test.dart';
@@ -13,20 +12,14 @@ import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
 
-import '../widgets/giraf_activity_time_picker_dialog_test.dart';
-
 class MockWeekApi extends Mock implements WeekApi {}
 
 class MockActivityApi extends Mock implements ActivityApi {
-
   @override
   Observable<ActivityModel> update(ActivityModel activity, String userId) {
     return BehaviorSubject<ActivityModel>.seeded(activity);
   }
-
 }
-
-class MockApi extends Mock implements Api {}
 
 void main() {
   Api api;
@@ -36,20 +29,11 @@ void main() {
   final UsernameModel mockUser =
       UsernameModel(name: 'test', role: 'test', id: 'test');
 
-  void setupApiCalls() {
-    //when(mockActivityApi.update(activityModel, mockUser.id)).thenAnswer(
-    //    (_) => BehaviorSubject<ActivityModel>.seeded(
-    //        ActivityModel(state: null, pictogram: null,
-    //            order: 1, isChoiceBoard: null, id: 5)));
-  }
-
   setUp(() {
     api = Api('any');
     mockActivityApi = MockActivityApi();
     api.activity = mockActivityApi;
     timerMock = TimerBloc(api);
-
-    setupApiCalls();
 
     di.clearAll();
     di.registerDependency<TimerBloc>((_) => timerMock);
@@ -115,7 +99,7 @@ void main() {
     timerMock.timerIsInstantiated.skip(1).listen((bool b) {
       expect(b, isTrue);
     });
-      done();
+    done();
   }));
 
   test('Testing timer starts running if its already set', async((DoneFn done) {
@@ -161,13 +145,6 @@ void main() {
     timerMock.load(activityModel, user: mockUser);
     timerMock.initTimer();
 
-    //timerMock.timerIsRunning.listen((bool b) {
-    //  expect(b, isFalse);
-    //});
-    //timerMock.timerIsInstantiated.listen((bool b) {
-    //  expect(b, isTrue);
-    //});
-
     timerMock.timerProgressStream.listen((double d) {
       expect(
           d,
@@ -176,7 +153,7 @@ void main() {
                   activityModel.timer.fullLength *
                   (activityModel.timer.fullLength -
                       activityModel.timer.progress)));
-    done();
+      done();
     });
   }));
 
@@ -195,9 +172,6 @@ void main() {
         isChoiceBoard: false);
 
     timerMock.load(activityModel, user: mockUser);
-    timerMock.timerIsInstantiated.skip(1).listen((bool b) {
-      expect(b, isTrue);
-    });
 
     timerMock.timerProgressStream.skip(1).listen((double d) {
       expect(d, isPositive);
@@ -226,7 +200,6 @@ void main() {
 
     timerMock.load(activityModel, user: mockUser);
     timerMock.playTimer();
-    expect(activityModel.timer.paused, isFalse);
 
     timerMock.timerProgressStream.skip(1).listen((double d) {
       expect(d, isPositive);
@@ -283,10 +256,7 @@ void main() {
         isChoiceBoard: false);
 
     timerMock.load(activityModel, user: mockUser);
-
     timerMock.playTimer();
-    expect(activityModel.timer.paused, isFalse);
-
     timerMock.stopTimer();
 
     Future<dynamic>.delayed(Duration(seconds: 1), () {
