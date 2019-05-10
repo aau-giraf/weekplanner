@@ -2,6 +2,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
@@ -93,9 +94,8 @@ void main() {
         order: null,
         state: null);
 
-    
-
-    weekplanBloc.markedActivities.skip(1)
+    weekplanBloc.markedActivities
+        .skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(markedActivitiesList.length, 1);
       done();
@@ -105,8 +105,8 @@ void main() {
     weekplanBloc.addMarkedActivity(activityModel);
   }));
 
-  test('Removes an activity to a list of marked activities', 
-  async((DoneFn done) {
+  test('Removes an activity to a list of marked activities',
+      async((DoneFn done) {
     final ActivityModel firstActivityModel = ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -137,10 +137,11 @@ void main() {
     weekplanBloc.addMarkedActivity(firstActivityModel);
     weekplanBloc.addMarkedActivity(secondActivityModel);
 
-    weekplanBloc.markedActivities.skip(1)
+    weekplanBloc.markedActivities
+        .skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
-          expect(markedActivitiesList.length, 1);
-          done();
+      expect(markedActivitiesList.length, 1);
+      done();
     });
 
     // Delete a marked activity
@@ -171,8 +172,8 @@ void main() {
     weekplanBloc.clearMarkedActivities();
   }));
 
-  test('Checks if the activity is in the list of marked activities', 
-  async((DoneFn done) {
+  test('Checks if the activity is in the list of marked activities',
+      async((DoneFn done) {
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
             accessLevel: null,
@@ -186,7 +187,8 @@ void main() {
         order: null,
         state: null);
 
-    weekplanBloc.markedActivities.skip(1)
+    weekplanBloc.markedActivities
+        .skip(1)
         .listen((List<ActivityModel> markedActivitiesList) {
       expect(weekplanBloc.isActivityMarked(activity), true);
       done();
@@ -205,8 +207,8 @@ void main() {
     weekplanBloc.toggleEditMode();
   }));
 
-  test('Checks if marked activities are deleted from a users weekplan', 
-  async((DoneFn done) {
+  test('Checks if marked activities are deleted from a users weekplan',
+      async((DoneFn done) {
     final UsernameModel user =
         UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
 
@@ -243,7 +245,7 @@ void main() {
 
     weekplanBloc.addMarkedActivity(activity);
 
-    weekplanBloc.userWeek.listen((UserWeekModel userWeekModel) {
+    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeekModel) {
       verify(api.week.update(any, any, any, any));
       expect(userWeekModel.week.days[Weekday.Monday.index].activities,
           <ActivityModel>[]);
@@ -251,6 +253,172 @@ void main() {
     });
 
     weekplanBloc.deleteMarkedActivities();
+  }));
+
+  test('Checks if marked activities are copied to a new day',
+      async((DoneFn done) {
+    final UsernameModel user =
+        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+
+    final ActivityModel activity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: null);
+
+    final WeekModel weekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    final WeekModel newWeekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Friday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(newWeekModel);
+    });
+
+    weekplanBloc.setWeek(weekModel, user);
+
+    weekplanBloc.addMarkedActivity(activity);
+
+    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeekModel) {
+      verify(api.week.update(any, any, any, any));
+      expect(
+          userWeekModel.week.days[Weekday.Friday.index].activities.length, 1);
+      done();
+    });
+    // Copy to Friday
+    weekplanBloc.copyMarkedActivities(
+        <bool>[false, false, false, false, true, false, false]);
+  }));
+
+  test('Checks if marked activities are marked as cancel', async((DoneFn done) {
+    final UsernameModel user =
+        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+
+    final ActivityModel activity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: ActivityState.Normal);
+
+    final ActivityModel newActivity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: ActivityState.Canceled);
+
+    final WeekModel weekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    final WeekModel newWeekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[newActivity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(newWeekModel);
+    });
+
+    weekplanBloc.setWeek(weekModel, user);
+
+    weekplanBloc.addMarkedActivity(activity);
+
+    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeekModel) {
+      verify(api.week.update(any, any, any, any));
+      expect(
+          userWeekModel.week.days[Weekday.Monday.index].activities.first.state,
+          ActivityState.Canceled);
+      done();
+    });
+    weekplanBloc.cancelMarkedActivities();
   }));
 
   test('Checks if the edit mode toggles from true', async((DoneFn done) {

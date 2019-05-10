@@ -1,24 +1,26 @@
-import 'package:api_client/models/weekday_model.dart';
-import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:api_client/models/weekday_model.dart';
+import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
-import 'package:weekplanner/screens/pictogram_search_screen.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:tuple/tuple.dart';
+import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
 /// Color of the add buttons
 const Color buttonColor = Color(0xA0FFFFFF);
@@ -111,40 +113,96 @@ class WeekplanScreen extends StatelessWidget {
   BottomAppBar buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
         child: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: <double>[
-                  1 / 3,
-                  2 / 3
-                ],
-                    colors: <Color>[
-                  Color.fromRGBO(254, 215, 108, 1),
-                  Color.fromRGBO(253, 187, 85, 1),
-                ])),
-            child: IconButton(
-              key: const Key('DeleteActivtiesButton'),
-              iconSize: 50,
-              icon: const Icon(Icons.delete_forever),
-              onPressed: () {
-                // Shows dialog to confirm/cancel deletion
-                buildShowDialog(context);
-              },
-            ),
-          ),
-        ),
-      ],
-    ));
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+          Expanded(
+              child: Container(
+                  decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: <double>[
+                        1 / 3,
+                        2 / 3
+                      ],
+                          colors: <Color>[
+                        Color.fromRGBO(254, 215, 108, 1),
+                        Color.fromRGBO(253, 187, 85, 1),
+                      ])),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      BottomAppBarButton(
+                          buttonText: 'Annuller',
+                          buttonKey: 'CancelActivtiesButton',
+                          assetPath: 'assets/icons/cancel.png',
+                          dialogFunction: _buildCancelDialog),
+                      BottomAppBarButton(
+                          buttonText: 'Kopier',
+                          buttonKey: 'CopyActivtiesButton',
+                          assetPath: 'assets/icons/copy.png',
+                          dialogFunction: _buildCopyDialog),
+                      BottomAppBarButton(
+                          buttonText: 'Slet',
+                          buttonKey: 'DeleteActivtiesButton',
+                          assetPath: 'assets/icons/delete.png',
+                          dialogFunction: _buildRemoveDialog)
+                    ],
+                  )))
+        ]));
+  }
+
+  void _copyActivities(List<bool> days, BuildContext context) {
+    weekplanBloc.copyMarkedActivities(days);
+    Routes.pop(context);
+    weekplanBloc.toggleEditMode();
+  }
+
+  Future<Center> _buildCopyDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafCopyActivitiesDialog(
+            title: 'Kopier aktiviteter',
+            description: 'Vælg hvilke dage de markerede aktiviteter skal '
+                'kopieres til',
+            confirmButtonText: 'Kopier',
+            confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/accept.png')),
+            confirmOnPressed: _copyActivities,
+          );
+        });
+  }
+
+  /// Builds the dialog box to confirm marking activities as canceled
+  Future<Center> _buildCancelDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+              title: 'Bekræft',
+              description: 'Vil du markere ' +
+                  weekplanBloc.getNumberOfMarkedActivities().toString() +
+                  ' aktivitet(er) som annulleret',
+              confirmButtonText: 'Bekræft',
+              confirmButtonIcon:
+                  const ImageIcon(AssetImage('assets/icons/accept.png')),
+              confirmOnPressed: () {
+                weekplanBloc.cancelMarkedActivities();
+                weekplanBloc.toggleEditMode();
+
+                // Closes the dialog box
+                Routes.pop(context);
+              });
+        });
   }
 
   /// Builds dialog box to confirm/cancel deletion
-  Future<Center> buildShowDialog(BuildContext context) {
+  Future<Center> _buildRemoveDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,
@@ -446,14 +504,28 @@ class WeekplanScreen extends StatelessWidget {
     int index,
     ActivityState activityState,
   ) {
-    final Widget icon = activityState == ActivityState.Completed
-        ? Icon(
-            Icons.check,
-            key: const Key('IconComplete'),
-            color: Colors.green,
-            size: MediaQuery.of(context).size.width,
-          )
-        : Container();
+    Widget icon;
+    switch (activityState) {
+      case ActivityState.Completed:
+        icon = Icon(
+          Icons.check,
+          key: const Key('IconComplete'),
+          color: Colors.green,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      case ActivityState.Canceled:
+        icon = Icon(
+          Icons.clear,
+          key: const Key('IconCanceled'),
+          color: Colors.red,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      default:
+        icon = Container();
+        break;
+    }
 
     return Card(
         margin: const EdgeInsets.all(20),
