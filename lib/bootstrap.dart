@@ -71,7 +71,7 @@ class Bootstrap {
       return SettingsBloc();
     });
 
-	di.registerSingleton((Injector i) {
+	di.registerDependency((Injector i) {
       return UploadFromGalleryBloc(i.getDependency<Api>());
     });
 

@@ -7,10 +7,24 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Screen for uploading a [PictogramModel] to the server
-class UploadImageFromPhone extends StatelessWidget {
-  final UploadFromGalleryBloc _uploadFromGallery =
-      di.getDependency<UploadFromGalleryBloc>();
+class UploadImageFromPhone extends StatefulWidget {
+  /// Default constructor
+  UploadImageFromPhone({Key key}) : super(key: key);
 
+  @override
+  _UploadImageFromPhone createState() => _UploadImageFromPhone();
+}
+
+class _UploadImageFromPhone extends State<UploadImageFromPhone> {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _uploadFromGallery = di.getDependency<UploadFromGalleryBloc>();
+    });
+  }
+
+  UploadFromGalleryBloc _uploadFromGallery;
   final BorderRadius _imageBorder = BorderRadius.circular(25);
 
   @override
@@ -20,7 +34,9 @@ class UploadImageFromPhone extends StatelessWidget {
       body: StreamBuilder<bool>(
           stream: _uploadFromGallery.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return snapshot.data ? const LoadingSpinnerWidget() : _buildBody();
+            return snapshot.hasData && snapshot.data
+                ? const LoadingSpinnerWidget()
+                : _buildBody();
           }),
     );
   }
@@ -61,7 +77,7 @@ class UploadImageFromPhone extends StatelessWidget {
                   onChanged: (String newValue) {
                     _uploadFromGallery.setAccessLevel(newValue);
                   },
-                  items: <String>['Public', 'Protected', 'Private']
+                  items: <String>['Public', 'Private']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -74,6 +90,7 @@ class UploadImageFromPhone extends StatelessWidget {
         GirafButton(
           icon: const ImageIcon(AssetImage('assets/icons/save.png')),
           onPressed: _uploadFromGallery.createPictogram,
+          isEnabledStream: _uploadFromGallery.isInputValid,
         ),
       ],
     );
@@ -104,13 +121,12 @@ class UploadImageFromPhone extends StatelessWidget {
       child: StreamBuilder<File>(
         stream: _uploadFromGallery.file,
         builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-            snapshot.hasData
+            snapshot.data != null
                 ? _displayImage(snapshot.data)
                 : const Icon(Icons.add_to_photos),
       ),
     ));
   }
-
 
   Widget _buildDefaultText() => const Padding(
       padding: EdgeInsets.only(
@@ -127,5 +143,11 @@ class UploadImageFromPhone extends StatelessWidget {
       child: Image.file(image),
       decoration: BoxDecoration(borderRadius: _imageBorder),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _uploadFromGallery.dispose();
   }
 }

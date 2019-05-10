@@ -18,15 +18,23 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Publishes the image file, while it is nut null
   Observable<File> get file => _file.stream.where((File f) => f != null);
-  /// Publishes   while waiting for the pictogram to be uploaded
+
+  /// Publishes true while waiting for the pictogram to be uploaded
   Observable<bool> get isUploading => _isUploading.stream;
-  ///
+
+  /// Publishes the accessLevel for the pictogram
   Observable<String> get accessLevel => _accessString.stream;
+
+  /// Publishes if the input fields are filled
+  Observable<bool> get isInputValid => _isInputValid.stream;
+  final BehaviorSubject<bool> _isInputValid =
+      BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<File> _file = BehaviorSubject<File>();
   final BehaviorSubject<String> _accessString =
       BehaviorSubject<String>.seeded('Public');
   final BehaviorSubject<bool> _isUploading =
       BehaviorSubject<bool>.seeded(false);
+
   AccessLevel _accessLevel = AccessLevel.PUBLIC;
 
   /// pushes an imagePicker screen, then sets the pictogram image,
@@ -35,8 +43,18 @@ class UploadFromGalleryBloc extends BlocBase {
     ImagePicker.pickImage(source: ImageSource.gallery).then((File f) {
       if (f != null) {
         _publishImage(f);
+        _checkInput();
       }
     });
+  }
+
+  /// Checks if the input fieds are filled out
+  void _checkInput() {
+    if (_file.value != null && _pictogramName != '') {
+      _isInputValid.add(true);
+    } else {
+      _isInputValid.add(false);
+    }
   }
 
   /// set accessLevel for the pictogram
@@ -58,7 +76,10 @@ class UploadFromGalleryBloc extends BlocBase {
   }
 
   /// sets the pictogram name
-  void setPictogramName(String newName) => _pictogramName = newName;
+  void setPictogramName(String newName) {
+    _pictogramName = newName;
+    _checkInput();
+  }
 
   void _publishImage(File file) {
     _file.add(file);
@@ -84,7 +105,6 @@ class UploadFromGalleryBloc extends BlocBase {
       _isUploading.add(false);
     }, onError: (Object error) {
       // TODO handle error
-      print(error);
       _isUploading.add(false);
     });
   }
@@ -92,5 +112,8 @@ class UploadFromGalleryBloc extends BlocBase {
   @override
   void dispose() {
     _file.close();
+	_accessString.close();
+	_isInputValid.close();
+	_isUploading.close();
   }
 }
