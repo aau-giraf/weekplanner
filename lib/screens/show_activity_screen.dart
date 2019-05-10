@@ -18,12 +18,13 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(this._activity, UsernameModel girafUser, {Key key})
+  ShowActivityScreen(this._activity, this._girafUser, {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
-    _activityBloc.load(_activity, girafUser);
+    _activityBloc.load(_activity, _girafUser);
   }
 
+  final UsernameModel _girafUser;
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
@@ -38,7 +39,7 @@ class ShowActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
-    _timerBloc.load(_activity);
+    _timerBloc.load(_activity, user: _girafUser);
     _timerBloc.initTimer();
 
     ///Used to check if the keyboard is visible
