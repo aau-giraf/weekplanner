@@ -61,9 +61,6 @@ class UploadFromGalleryBloc extends BlocBase {
   void setAccessLevel(String access) {
     _accessString.add(access);
     switch (access) {
-      case 'Public':
-        _accessLevel = AccessLevel.PUBLIC;
-        break;
       case 'Protected':
         _accessLevel = AccessLevel.PROTECTED;
         break;
