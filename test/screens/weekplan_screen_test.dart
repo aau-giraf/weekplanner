@@ -586,7 +586,11 @@ void main() {
     final VerificationResult verificationResult =
     verify(observer.didPop(any, any));
 
+    // Should pop twice, first for the loading spinner, second for the popup.
     expect(verificationResult.callCount, 2);
+
+    expect(find.byKey(const Key('WrongPasswordDialog')),
+        findsNothing);
 
     await done.future;
   });
@@ -759,7 +763,7 @@ void main() {
         // Only thing that should be popped is the loading spinner.
         verify(observer.didPop(any, any)).called(1);
 
-        expect(find.byKey(const Key('WrongUsernameOrPasswordDialog')),
+        expect(find.byKey(const Key('WrongPasswordDialog')),
             findsOneWidget);
 
         await done.future;
