@@ -1,3 +1,4 @@
+import 'package:api_client/api/activity_api.dart';
 import 'dart:async';
 
 import 'package:api_client/api/week_api.dart';
@@ -132,12 +133,16 @@ void main() {
     when(weekApi.update(
             mockUser.id, mockWeek.weekYear, mockWeek.weekNumber, mockWeek))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
+    when(activityApi.update(mockActivity, mockUser.id))
+        .thenAnswer((_) => BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
     api.week = weekApi;
+    activityApi = MockActivityApi();
+    api.activity = activityApi;
     authBloc = AuthBloc(api);
     bloc = ActivityBloc(api);
     timerBloc = TimerBloc(api);
@@ -154,19 +159,19 @@ void main() {
 
   testWidgets('renders', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Activity pictogram is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump(Duration.zero);
 
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
@@ -174,7 +179,7 @@ void main() {
 
   testWidgets('ButtonBar is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
@@ -184,7 +189,7 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsOneWidget);
@@ -194,7 +199,7 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('CompleteStateToggleButton')), findsNothing);
@@ -204,7 +209,7 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsNothing);
@@ -214,7 +219,7 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
@@ -224,7 +229,7 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
@@ -234,7 +239,7 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
@@ -245,7 +250,7 @@ void main() {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -259,7 +264,7 @@ void main() {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
@@ -273,7 +278,7 @@ void main() {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockWeek, mockActivity, mockUser)));
+        home: ShowActivityScreen(mockActivity, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
