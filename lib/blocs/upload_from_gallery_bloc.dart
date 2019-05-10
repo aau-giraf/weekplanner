@@ -102,10 +102,10 @@ class UploadFromGalleryBloc extends BlocBase {
         .flatMap((PictogramModel pictogram) {
       return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
     }).listen((PictogramModel pictogram) {
-      //TODO resulting pictogram
+      //Optinal: add resulting pictogram
       _isUploading.add(false);
     }, onError: (Object error) {
-      // TODO handle error
+      // Optinal: add error handling
       _isUploading.add(false);
     });
   }
