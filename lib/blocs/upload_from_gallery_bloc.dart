@@ -86,7 +86,8 @@ class UploadFromGalleryBloc extends BlocBase {
   }
 
   Uint8List _encodePng(File file) {
-    return encodePng(copyResize(decodeImage(file.readAsBytesSync()), 512));
+    return encodePng(copyResize(decodeImage(file.readAsBytesSync()),
+        512)); // 512 choosenas a reasonable input size.
   }
 
   /// Creates a [PictogramModel]
@@ -112,8 +113,8 @@ class UploadFromGalleryBloc extends BlocBase {
   @override
   void dispose() {
     _file.close();
-	_accessString.close();
-	_isInputValid.close();
-	_isUploading.close();
+    _accessString.close();
+    _isInputValid.close();
+    _isUploading.close();
   }
 }
