@@ -106,42 +106,36 @@ class ShowActivityScreen extends StatelessWidget {
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
     return Card(
-      child: Column(
-        children: <Widget>[
-          const Center(child: Padding(padding: EdgeInsets.all(8.0))),
-          Expanded(
-            child: FittedBox(
-              child: Container(
+        child: Column(children: <Widget>[
+      const Center(child: Padding(padding: EdgeInsets.all(8.0))),
+      Expanded(
+        child: FittedBox(
+            child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(
                         color: const Color.fromRGBO(35, 35, 35, 1.0),
                         width: 0.25)),
                 child: StreamBuilder<ActivityModel>(
-                  stream: _activityBloc.activityModelStream,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<ActivityModel> snapshot) {
-                    if (snapshot.data == null) {
-                      return const CircularProgressIndicator();
-                    }
-                    return Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: <Widget>[
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width,
-                            child: buildLoadPictogramImage()),
-                        _buildActivityStateIcon(context, snapshot.data.state)
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          buildButtonBar()
-        ],
+                    stream: _activityBloc.activityModelStream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<ActivityModel> snapshot) {
+                      if (snapshot.data == null) {
+                        return const CircularProgressIndicator();
+                      }
+                      return Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
+                              child: buildLoadPictogramImage()),
+                          _buildActivityStateIcon(context, snapshot.data.state)
+                        ],
+                      );
+                    }))),
       ),
-    );
+      buildButtonBar()
+    ]));
   }
 
   /// Builds the timer widget.
@@ -238,7 +232,7 @@ class ShowActivityScreen extends StatelessWidget {
               padding: const EdgeInsets.all(0),
               child: Container(
                   child: IconButton(
-                    key: const Key('AddTimerButtonKey'),
+                      key: const Key('AddTimerButtonKey'),
                       icon: const ImageIcon(
                           AssetImage('assets/icons/addTimerHighRes.png')),
                       onPressed: () {
