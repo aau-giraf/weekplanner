@@ -1,6 +1,5 @@
-import 'package:api_client/api/activity_api.dart';
 import 'dart:async';
-
+import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -61,6 +60,14 @@ class MockAuth extends Mock implements AuthBloc {
   }
 }
 
+class MockActivityApi extends Mock implements ActivityApi {
+  @override
+  Observable<ActivityModel> update(ActivityModel activity, String userId) {
+    return BehaviorSubject<ActivityModel>.seeded(activity);
+  }
+}
+
+
 final WeekModel mockWeek = WeekModel(
     weekYear: 2018,
     weekNumber: 21,
@@ -103,7 +110,7 @@ class MockScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShowActivityScreen(mockWeek, activity, mockUser);
+    return ShowActivityScreen(activity, mockUser);
   }
 }
 
@@ -122,6 +129,7 @@ ActivityModel makeNewActivityModel() {
           lastEdit: null));
 }
 
+
 void main() {
   ActivityBloc bloc;
   Api api;
@@ -133,20 +141,17 @@ void main() {
     when(weekApi.update(
             mockUser.id, mockWeek.weekYear, mockWeek.weekNumber, mockWeek))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
-    when(activityApi.update(mockActivity, mockUser.id))
-        .thenAnswer((_) => BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
     api.week = weekApi;
-    activityApi = MockActivityApi();
-    api.activity = activityApi;
     authBloc = AuthBloc(api);
     bloc = ActivityBloc(api);
     timerBloc = TimerBloc(api);
-
+    timerBloc.load(mockActivity,
+        user: UsernameModel(id: '10', name: 'Test', role: ''));
     setupApiCalls();
 
     di.clearAll();
@@ -254,8 +259,7 @@ void main() {
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
-
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
   });
 

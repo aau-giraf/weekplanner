@@ -14,11 +14,13 @@ import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:tuple/tuple.dart';
+import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
 /// Color of the add buttons
 const Color buttonColor = Color(0xA0FFFFFF);
@@ -173,6 +175,30 @@ class WeekplanScreen extends StatelessWidget {
           );
         });
   }
+  /// Builds dialog box to confirm/cancel deletion
+  Future<Center> _buildRemoveDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+              title: 'Bekræft',
+              description: 'Vil du slette ' +
+                  _weekplanBloc.getNumberOfMarkedActivities().toString() +
+                  ' aktivitet(er)',
+              confirmButtonText: 'Bekræft',
+              confirmButtonIcon:
+              const ImageIcon(AssetImage('assets/icons/accept.png')),
+              confirmOnPressed: () {
+                _weekplanBloc.deleteMarkedActivities();
+                _weekplanBloc.toggleEditMode();
+
+                // Closes the dialog box
+                Routes.pop(context);
+              });
+        });
+  }
+
 
   /// Builds the dialog box to confirm marking activities as canceled
   Future<Center> _buildCancelDialog(BuildContext context) {
