@@ -71,22 +71,19 @@ class PictogramSearch extends StatelessWidget {
               ),
             ),
           ],
-		  
         ),
-		bottomNavigationBar: BottomAppBar(
-		  color: Colors.amber,
-		  child: Row(
-			  mainAxisAlignment: MainAxisAlignment.center,
-		    children: <Widget>[
-		      GirafButton(
-                      icon: const ImageIcon(AssetImage('assets/icons/add.png')),
-                      onPressed: () =>
-                          Routes.push(context, UploadImageFromPhone()),
-                      width: 50,
-                    ),
-		    ],
-		  ),
-	  )
-		);
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.amber,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GirafButton(
+                icon: const ImageIcon(AssetImage('assets/icons/add.png')),
+                onPressed: () => Routes.push(context, UploadImageFromPhone()),
+                width: 50,
+              ),
+            ],
+          ),
+        ));
   }
 }

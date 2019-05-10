@@ -16,7 +16,6 @@ import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 
-
 /// Bootstrap the project
 class Bootstrap {
   /// Register all dependencies here. Here the construction of everything that
@@ -59,7 +58,7 @@ class Bootstrap {
     di.registerSingleton<NewWeekplanBloc>((Injector i) {
       return NewWeekplanBloc(i.getDependency<Api>());
     });
-    
+
     di.registerDependency<AddActivityBloc>((_) {
       return AddActivityBloc();
     });
@@ -72,7 +71,7 @@ class Bootstrap {
       return SettingsBloc();
     });
 
-	di.registerDependency((Injector i) {
+    di.registerDependency((Injector i) {
       return UploadFromGalleryBloc(i.getDependency<Api>());
     });
 

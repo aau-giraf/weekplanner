@@ -52,7 +52,7 @@ class WeekplanScreen extends StatelessWidget {
         stream: authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen){
+          if (weekModeSnapshot.data == WeekplanMode.citizen) {
             weekplanBloc.setEditMode(false);
           }
           return Scaffold(
@@ -86,23 +86,23 @@ class WeekplanScreen extends StatelessWidget {
             bottomNavigationBar: StreamBuilder<WeekplanMode>(
               stream: authBloc.mode,
               initialData: WeekplanMode.guardian,
-              builder: (BuildContext context,
-                  AsyncSnapshot<WeekplanMode> snapshot) {
-                  return Visibility(
-                    visible: snapshot.data == WeekplanMode.guardian,
-                    child: StreamBuilder<bool>(
-                      stream: weekplanBloc.editMode,
-                      initialData: false,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<bool> snapshot) {
-                        if (snapshot.data) {
-                          return buildBottomAppBar(context);
-                        } else {
-                          return Container(width: 0.0, height: 0.0);
-                        }
-                      },
-                    ),
-                  );
+              builder:
+                  (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
+                return Visibility(
+                  visible: snapshot.data == WeekplanMode.guardian,
+                  child: StreamBuilder<bool>(
+                    stream: weekplanBloc.editMode,
+                    initialData: false,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      if (snapshot.data) {
+                        return buildBottomAppBar(context);
+                      } else {
+                        return Container(width: 0.0, height: 0.0);
+                      }
+                    },
+                  ),
+                );
               },
             ),
           );
@@ -448,35 +448,34 @@ class WeekplanScreen extends StatelessWidget {
         alignment: AlignmentDirectional.center,
         children: <Widget>[
           StreamBuilder<WeekplanMode>(
-            stream: authBloc.mode,
-            initialData: WeekplanMode.guardian,
-            builder: (BuildContext context,
-                AsyncSnapshot<WeekplanMode> snapshot) {
-              return SizedBox(
-                  height: MediaQuery.of(context).size.width,
-                  width: MediaQuery.of(context).size.width,
-                  child: FittedBox(
-                    child: GestureDetector(
-                      key: Key(weekday.day.index.toString() +
-                          weekday.activities[index].id.toString()),
-                      onTap: () {
-                        if(snapshot.data == WeekplanMode.guardian) {
-                          handleOnTapActivity(inEditMode, isMarked,
-                              weekday.activities, index, context);
-                        }else{
-                          handleOnTapActivity(false, false,
-                              weekday.activities, index, context);
-                        }
-                      },
-                      child: (snapshot.data == WeekplanMode.guardian) ?
-                          buildIsMarked(
-                          isMarked, context, weekday.activities, index) :
-                          buildIsMarked(
-                          false, context, weekday.activities, index),
-                    ),
-                  ));
-            }
-          ),
+              stream: authBloc.mode,
+              initialData: WeekplanMode.guardian,
+              builder:
+                  (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
+                return SizedBox(
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width,
+                    child: FittedBox(
+                      child: GestureDetector(
+                        key: Key(weekday.day.index.toString() +
+                            weekday.activities[index].id.toString()),
+                        onTap: () {
+                          if (snapshot.data == WeekplanMode.guardian) {
+                            handleOnTapActivity(inEditMode, isMarked,
+                                weekday.activities, index, context);
+                          } else {
+                            handleOnTapActivity(false, false,
+                                weekday.activities, index, context);
+                          }
+                        },
+                        child: (snapshot.data == WeekplanMode.guardian)
+                            ? buildIsMarked(
+                                isMarked, context, weekday.activities, index)
+                            : buildIsMarked(
+                                false, context, weekday.activities, index),
+                      ),
+                    ));
+              }),
         ],
       ),
     );

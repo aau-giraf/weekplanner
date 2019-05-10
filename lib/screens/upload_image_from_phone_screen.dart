@@ -7,24 +7,13 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Screen for uploading a [PictogramModel] to the server
-class UploadImageFromPhone extends StatefulWidget {
+class UploadImageFromPhone extends StatelessWidget {
   /// Default constructor
   UploadImageFromPhone({Key key}) : super(key: key);
 
-  @override
-  _UploadImageFromPhone createState() => _UploadImageFromPhone();
-}
+  final UploadFromGalleryBloc _uploadFromGallery =
+      di.getDependency<UploadFromGalleryBloc>();
 
-class _UploadImageFromPhone extends State<UploadImageFromPhone> {
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _uploadFromGallery = di.getDependency<UploadFromGalleryBloc>();
-    });
-  }
-
-  UploadFromGalleryBloc _uploadFromGallery;
   final BorderRadius _imageBorder = BorderRadius.circular(25);
 
   @override
@@ -71,7 +60,7 @@ class _UploadImageFromPhone extends State<UploadImageFromPhone> {
           padding: const EdgeInsets.only(left: 20),
           child: StreamBuilder<String>(
               stream: _uploadFromGallery.accessLevel,
-              builder: (context, snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 return DropdownButton<String>(
                   value: snapshot.data,
                   onChanged: (String newValue) {
@@ -128,26 +117,22 @@ class _UploadImageFromPhone extends State<UploadImageFromPhone> {
     ));
   }
 
-  Widget _buildDefaultText() => const Padding(
-      padding: EdgeInsets.only(
-        bottom: 10,
-      ),
-      child: Text(
-        'Tryk for at vælge et billed fra gallariet',
-        style: TextStyle(color: Colors.black, fontSize: 25),
-        textAlign: TextAlign.center,
-      ));
+  Widget _buildDefaultText() {
+    return const Padding(
+        padding: EdgeInsets.only(
+          bottom: 10,
+        ),
+        child: Text(
+          'Tryk for at vælge et billed fra gallariet',
+          style: TextStyle(color: Colors.black, fontSize: 25),
+          textAlign: TextAlign.center,
+        ));
+  }
 
   Widget _displayImage(File image) {
     return Container(
       child: Image.file(image),
       decoration: BoxDecoration(borderRadius: _imageBorder),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _uploadFromGallery.dispose();
   }
 }
