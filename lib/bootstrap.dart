@@ -2,6 +2,7 @@ import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -39,7 +40,7 @@ class Bootstrap {
       return WeekplansBloc(i.getDependency<Api>());
     });
 
-    di.registerSingleton<ToolbarBloc>((_) {
+    di.registerDependency<ToolbarBloc>((_) {
       return ToolbarBloc();
     });
     di.registerDependency<ChooseCitizenBloc>((Injector i) {
@@ -68,6 +69,10 @@ class Bootstrap {
 
     di.registerDependency<SettingsBloc>((Injector i) {
       return SettingsBloc();
+    });
+
+    di.registerDependency<CopyActivitiesBloc>((_) {
+      return CopyActivitiesBloc();
     });
   }
 }
