@@ -59,14 +59,14 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Ugeplan',
               appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
                   ? <AppBarIcon, VoidCallback>{
-                AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                AppBarIcon.changeToCitizen: () {},
-                AppBarIcon.settings: () {},
-                AppBarIcon.logout: () {}
-              }
+                      AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
+                      AppBarIcon.changeToCitizen: () {},
+                      AppBarIcon.settings: () {},
+                      AppBarIcon.logout: () {}
+                    }
                   : <AppBarIcon, VoidCallback>{
-                AppBarIcon.changeToGuardian: () {}
-              },
+                      AppBarIcon.changeToGuardian: () {}
+                    },
             ),
             body: StreamBuilder<UserWeekModel>(
               stream: _weekplanBloc.userWeek,
@@ -115,42 +115,42 @@ class WeekplanScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                  child: Container(
-                      decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: <double>[
-                                1 / 3,
-                                2 / 3
-                              ],
-                              colors: <Color>[
-                                Color.fromRGBO(254, 215, 108, 1),
-                                Color.fromRGBO(253, 187, 85, 1),
-                              ])),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          BottomAppBarButton(
-                              buttonText: 'Annuller',
-                              buttonKey: 'CancelActivtiesButton',
-                              assetPath: 'assets/icons/cancel.png',
-                              dialogFunction: _buildCancelDialog),
-                          BottomAppBarButton(
-                              buttonText: 'Kopier',
-                              buttonKey: 'CopyActivtiesButton',
-                              assetPath: 'assets/icons/copy.png',
-                              dialogFunction: _buildCopyDialog),
-                          BottomAppBarButton(
-                              buttonText: 'Slet',
-                              buttonKey: 'DeleteActivtiesButton',
-                              assetPath: 'assets/icons/delete.png',
-                              dialogFunction: _buildRemoveDialog)
-                        ],
-                      )))
-            ]));
+          Expanded(
+              child: Container(
+                  decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: <double>[
+                        1 / 3,
+                        2 / 3
+                      ],
+                          colors: <Color>[
+                        Color.fromRGBO(254, 215, 108, 1),
+                        Color.fromRGBO(253, 187, 85, 1),
+                      ])),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      BottomAppBarButton(
+                          buttonText: 'Annuller',
+                          buttonKey: 'CancelActivtiesButton',
+                          assetPath: 'assets/icons/cancel.png',
+                          dialogFunction: _buildCancelDialog),
+                      BottomAppBarButton(
+                          buttonText: 'Kopier',
+                          buttonKey: 'CopyActivtiesButton',
+                          assetPath: 'assets/icons/copy.png',
+                          dialogFunction: _buildCopyDialog),
+                      BottomAppBarButton(
+                          buttonText: 'Slet',
+                          buttonKey: 'DeleteActivtiesButton',
+                          assetPath: 'assets/icons/delete.png',
+                          dialogFunction: _buildRemoveDialog)
+                    ],
+                  )))
+        ]));
   }
 
   void _copyActivities(List<bool> days, BuildContext context) {
@@ -170,7 +170,7 @@ class WeekplanScreen extends StatelessWidget {
                 'kopieres til',
             confirmButtonText: 'Kopier',
             confirmButtonIcon:
-            const ImageIcon(AssetImage('assets/icons/accept.png')),
+                const ImageIcon(AssetImage('assets/icons/accept.png')),
             confirmOnPressed: _copyActivities,
           );
         });
@@ -189,7 +189,7 @@ class WeekplanScreen extends StatelessWidget {
                   ' aktivitet(er) som annulleret',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
-              const ImageIcon(AssetImage('assets/icons/accept.png')),
+                  const ImageIcon(AssetImage('assets/icons/accept.png')),
               confirmOnPressed: () {
                 _weekplanBloc.cancelMarkedActivities();
                 _weekplanBloc.toggleEditMode();
@@ -213,7 +213,7 @@ class WeekplanScreen extends StatelessWidget {
                   ' aktivitet(er)',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
-              const ImageIcon(AssetImage('assets/icons/accept.png')),
+                  const ImageIcon(AssetImage('assets/icons/accept.png')),
               confirmOnPressed: () {
                 _weekplanBloc.deleteMarkedActivities();
                 _weekplanBloc.toggleEditMode();
@@ -266,7 +266,7 @@ class WeekplanScreen extends StatelessWidget {
                           color: buttonColor,
                           onPressed: () async {
                             final PictogramModel newActivity =
-                            await Routes.push(context, PictogramSearch());
+                                await Routes.push(context, PictogramSearch());
                             if (newActivity != null) {
                               _weekplanBloc.addActivity(
                                   ActivityModel(
@@ -358,7 +358,7 @@ class WeekplanScreen extends StatelessWidget {
           key: const Key('isSelectedKey'),
           margin: const EdgeInsets.all(20),
           decoration:
-          BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
+              BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
           child: _buildActivityCard(
             context,
             activities,
@@ -441,7 +441,7 @@ class WeekplanScreen extends StatelessWidget {
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final bool isMarked =
-    _weekplanBloc.isActivityMarked(weekday.activities[index]);
+        _weekplanBloc.isActivityMarked(weekday.activities[index]);
 
     return FittedBox(
       child: Stack(
@@ -470,9 +470,9 @@ class WeekplanScreen extends StatelessWidget {
                         },
                         child: (snapshot.data == WeekplanMode.guardian)
                             ? buildIsMarked(
-                            isMarked, context, weekday.activities, index)
+                                isMarked, context, weekday.activities, index)
                             : buildIsMarked(
-                            false, context, weekday.activities, index),
+                                false, context, weekday.activities, index),
                       ),
                     ));
               }),
@@ -498,11 +498,11 @@ class WeekplanScreen extends StatelessWidget {
 
   /// Builds card that displays the activity
   Card _buildActivityCard(
-      BuildContext context,
-      List<ActivityModel> activities,
-      int index,
-      ActivityState activityState,
-      ) {
+    BuildContext context,
+    List<ActivityModel> activities,
+    int index,
+    ActivityState activityState,
+  ) {
     Widget icon;
     switch (activityState) {
       case ActivityState.Completed:
