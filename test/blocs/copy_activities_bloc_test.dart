@@ -6,19 +6,19 @@ import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 void main() {
   CopyActivitiesBloc copyActivitiesBloc;
 
-  setUp((){
+  setUp(() {
     copyActivitiesBloc = CopyActivitiesBloc();
   });
 
   test('Checkbox values stream is seeded with false values',
       async((DoneFn done) {
-        copyActivitiesBloc.checkboxValues.listen((List<bool> checkmarkList) {
-          expect(checkmarkList.every((bool value) {
-            return value == false;
-          }), isTrue);
-          done();
-        });
-      }));
+    copyActivitiesBloc.checkboxValues.listen((List<bool> checkmarkList) {
+      expect(checkmarkList.every((bool value) {
+        return value == false;
+      }), isTrue);
+      done();
+    });
+  }));
 
   test('The selected checkmark changes value', async((DoneFn done) {
     copyActivitiesBloc.checkboxValues
