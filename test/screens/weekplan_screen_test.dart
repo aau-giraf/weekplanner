@@ -50,10 +50,37 @@ class MockAuthBlock extends AuthBloc {
       _loginAttempt.add(true);
       setMode(WeekplanMode.guardian);
     }
-    else {
-      _loginAttempt.add(false);
+  }
+}
+
+
+class MockAuthBlocSetMode extends AuthBloc {
+  MockAuthBlocSetMode(Api api) : super(api);
+
+  // Used as a way to detect during testing, if setMode to Guardian is called.
+  bool switchedToGuardian = false;
+
+  @override
+  void setMode(WeekplanMode mode) {
+    if (mode == WeekplanMode.guardian){
+      switchedToGuardian = true;
     }
   }
+
+  @override
+  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+
+  final BehaviorSubject<bool> _loginAttempt =
+  BehaviorSubject<bool>.seeded(false);
+
+  @override
+  void authenticateFromPopUp(String username, String password) {
+    if (password == 'password') {
+      _loginAttempt.add(true);
+      setMode(WeekplanMode.guardian);
+    }
+  }
+
 }
 
 void main() {
@@ -112,7 +139,7 @@ void main() {
     api.week = weekApi;
     bloc = WeekplanBloc(api);
     authBloc = MockAuthBlock(api);
-    authBloc.setMode(WeekplanMode.guardian);
+    //authBloc.setMode(WeekplanMode.guardian);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
@@ -539,7 +566,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds:2));
 
     tapComplete.complete();
 
@@ -565,6 +592,10 @@ void main() {
       'In the switch to guardian dialog, wrong credentials should show '
           'error dialog and not change mode',
           (WidgetTester tester) async {
+        // Remove the normally used AuthBloc and replace with another
+        final MockAuthBlocSetMode authBlocSetMode = MockAuthBlocSetMode(api);
+        di.registerDependency<AuthBloc>((_) => authBlocSetMode, override: true);
+
         final Completer<bool> done = Completer<bool>();
         final Completer<bool> tapComplete = Completer<bool>();
         final MockNavigatorObserver observer = MockNavigatorObserver();
@@ -574,18 +605,16 @@ void main() {
         ));
         await tester.pumpAndSettle();
 
-        // Skip 2 this time, first skip the seeded value
-        // second skip the switch to citizen mode (which is part of the arrange
-        // step for this test)
-        authBloc.mode.skip(1).listen((WeekplanMode mode) async {
+        /*authBlocSetMode.loginAttempt.skip(1).listen((bool attempt) async {
           await tapComplete.future;
-          // This is not working. Need to assert that we do
-          // not change to guardian mode.
-          //expect(null, equals(mode));
+          // if mode were switched to Guardian, the test should fail
+          if (authBlocSetMode.switchedToGuardian){
+            fail('Error: Switched to Guardian on failed login');
+          }
           done.complete();
-        });
+        });*/
 
-        authBloc.setMode(WeekplanMode.citizen);
+        authBlocSetMode.setMode(WeekplanMode.citizen);
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
         await tester.pumpAndSettle();
