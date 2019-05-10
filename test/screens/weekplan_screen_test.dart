@@ -3,8 +3,10 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -25,7 +28,10 @@ import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+
 import '../test_image.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -80,7 +86,6 @@ class MockAuthBlocSetMode extends AuthBloc {
       setMode(WeekplanMode.guardian);
     }
   }
-
 }
 
 void main() {
@@ -155,6 +160,7 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<WeekplanBloc>((_) => bloc);
     di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
+    di.registerDependency<CopyActivitiesBloc>((_) => CopyActivitiesBloc());
   });
 
   testWidgets('The screen renders', (WidgetTester tester) async {
@@ -202,7 +208,16 @@ void main() {
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
-  testWidgets('Activity has no checkmark when Normal',
+  testWidgets('Activity has cancel icon when canceled',
+      (WidgetTester tester) async {
+    getActivity(Weekday.Monday).state = ActivityState.Canceled;
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+  });
+
+  testWidgets('Activity has no icon overlay when Normal',
       (WidgetTester tester) async {
     getActivity(Weekday.Monday).state = ActivityState.Normal;
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
@@ -563,6 +578,7 @@ void main() {
 
     await tester.enterText(
         find.byKey(const Key('SwitchToGuardianPassword')), 'password');
+
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
@@ -586,6 +602,129 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('DragTarget')), findsNothing);
+  });
+  testWidgets('Bottom app is shown after clicking edit button',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BottomAppBar), findsOneWidget);
+  });
+
+  testWidgets('Edit buttons are shown after clicking edit button',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GirafButton), findsNWidgets(3));
+  });
+
+  testWidgets('Does not cancel activties when click on cancel in dialog',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpAndSettle();
+
+    final Key selectedPictogram = Key(Weekday.Tuesday.index.toString() +
+        getActivity(Weekday.Tuesday).id.toString());
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(selectedPictogram));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('CancelActivtiesButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsNothing);
+  });
+
+  testWidgets('Cancels activties when click on confirm in dialog',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpAndSettle();
+
+    final Key selectedPictogram = Key(Weekday.Tuesday.index.toString() +
+        getActivity(Weekday.Tuesday).id.toString());
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(selectedPictogram));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('CancelActivtiesButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+  });
+
+  testWidgets('Copies activties when click on confirm in dialog',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpAndSettle();
+
+    final Key selectedPictogram = Key(Weekday.Thursday.index.toString() +
+        getActivity(Weekday.Thursday).id.toString());
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(selectedPictogram));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('CopyActivtiesButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GirafCopyActivitiesDialog), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('WedCheckbox')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('DialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(weekModel.days[Weekday.Wednesday.index].activities.length, 2);
+  });
+
+  testWidgets('Does not cancel activties when click on cancel in dialog',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
+    await tester.pumpAndSettle();
+
+    final Key selectedPictogram = Key(Weekday.Tuesday.index.toString() +
+        getActivity(Weekday.Tuesday).id.toString());
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(selectedPictogram));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('CopyActivtiesButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GirafCopyActivitiesDialog), findsOneWidget);
+    await tester.tap(find.byKey(const Key('FriCheckbox')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('DialogCancelButton')));
+    await tester.pumpAndSettle();
+
+    expect(weekModel.days[Weekday.Friday.index].activities.length, 1);
   });
 
   testWidgets(
@@ -629,7 +768,7 @@ void main() {
 
         // Only thing that should be popped is the loading spinner.
         verify(observer.didPop(any, any)).called(1);
-        
+
         expect(find.byKey(const Key('WrongUsernameOrPasswordDialog')),
             findsOneWidget);
 
