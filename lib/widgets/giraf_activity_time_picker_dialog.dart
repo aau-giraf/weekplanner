@@ -118,7 +118,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration.collapsed(
+                  decoration: const InputDecoration.collapsed(
                     hintText: '',
                   ),
                   inputFormatters: <TextInputFormatter>[
