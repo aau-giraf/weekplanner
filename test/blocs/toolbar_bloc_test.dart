@@ -53,6 +53,5 @@ void main() {
     });
 
     bloc.updateIcons(icons, null);
-
   }));
 }
