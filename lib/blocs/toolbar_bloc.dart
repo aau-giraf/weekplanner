@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -400,23 +399,27 @@ class ToolbarBloc extends BlocBase {
   );
 
   /// Status of last login attempt from popup
-  bool loginStatus = false;
+  bool _loginStatus = false;
 
+  /// Indicates if the popup have been popped in this instance of the screen.
   bool _popCalled = false;
 
   /// Holds the current context
-  BuildContext currentContext;
+  BuildContext _currentContext;
 
   /// Used to authenticate a user from popup.
   void loginFromPopUp(BuildContext context, String username, String password) {
     showLoadingSpinner(context, false, _showFailureDialog, 2000);
-    loginStatus = false;
-    currentContext = context;
+    _loginStatus = false;
+    _currentContext = context;
     _authBloc.authenticateFromPopUp(username, password);
+    // Skip 1, since we should skip the seeded value.
     _authBloc.loginAttempt.skip(1).listen((bool snapshot) {
-      loginStatus = snapshot;
-      while (snapshot && !_popCalled) {
+      _loginStatus = snapshot;
+      if (snapshot && !_popCalled) {
+        // Pop the loading spinner
         Routes.pop(context);
+        // Pop the pop up.
         Routes.pop(context);
         _popCalled = true;
       }
@@ -425,11 +428,12 @@ class ToolbarBloc extends BlocBase {
 
   /// Shows a failure dialog
   void _showFailureDialog(){
-    if (!loginStatus) {
-      Routes.pop(currentContext);
+    if (!_loginStatus) {
+      //Pop the loading spinner.
+      Routes.pop(_currentContext);
       showDialog<Center>(
           barrierDismissible: false,
-          context: currentContext,
+          context: _currentContext,
           builder: (BuildContext context) {
             return const GirafNotifyDialog(
                 title: 'Fejl',
