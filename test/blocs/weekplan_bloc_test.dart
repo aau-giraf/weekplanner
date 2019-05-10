@@ -243,8 +243,7 @@ void main() {
 
     weekplanBloc.addMarkedActivity(activity);
 
-    weekplanBloc.userWeek.listen((UserWeekModel userWeekModel) {
-      verify(api.week.update(any, any, any, any));
+    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeekModel) {
       expect(userWeekModel.week.days[Weekday.Monday.index].activities,
           <ActivityModel>[]);
       done();

@@ -38,6 +38,7 @@ class ShowActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
+    _timerBloc.load(_activity);
     _timerBloc.initTimer();
 
     ///Used to check if the keyboard is visible

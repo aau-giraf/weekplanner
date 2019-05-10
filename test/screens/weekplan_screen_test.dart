@@ -67,7 +67,8 @@ void main() {
         pictogram: pictogramModel,
         isChoiceBoard: true,
         state: null,
-        order: 1);
+        order: 1,
+    );
   }
 
   final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
@@ -415,6 +416,7 @@ void main() {
       home: WeekplanScreen(weekModel, user),
       navigatorObservers: <NavigatorObserver>[mockObserver],
     ));
+
     await tester.pump();
 
     await tester.tap(find.byKey(Key(Weekday.Tuesday.index.toString() +
