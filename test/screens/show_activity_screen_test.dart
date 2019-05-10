@@ -26,6 +26,8 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+
+
 class MockAuth extends Mock implements AuthBloc {
   @override
   Observable<bool> get loggedIn => _loggedIn.stream;
@@ -147,6 +149,7 @@ void main() {
     api = Api('any');
     weekApi = MockWeekApi();
     api.week = weekApi;
+    api.activity = MockActivityApi();
     authBloc = AuthBloc(api);
     bloc = ActivityBloc(api);
     timerBloc = TimerBloc(api);
