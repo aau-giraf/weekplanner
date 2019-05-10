@@ -63,9 +63,7 @@ class PictogramImageBloc extends BlocBase {
           } finally {
             lock.release();
           }
-        }, onError: (Object error) {
-          print("shit");
-        });
+        },);
       }
     } finally {
       lock.release();
