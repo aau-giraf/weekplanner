@@ -64,6 +64,9 @@ class TimerBloc extends BlocBase {
         paused: true);
     _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
+    _api.activity
+        .update(_activityModel, _user.id)
+        .listen((ActivityModel activity) {});
   }
 
   /// Method for initialising a timer in an activity.
@@ -130,7 +133,7 @@ class TimerBloc extends BlocBase {
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
       });
       _timerRunningStream.add(true);
-      //update();
+
       _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {});
@@ -146,7 +149,7 @@ class TimerBloc extends BlocBase {
       _activityModel.timer.progress += _countDown.elapsed.inMilliseconds;
       _resetCounterAndStopwatch();
       _timerRunningStream.add(false);
-      //update();
+
       _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {});
@@ -160,7 +163,7 @@ class TimerBloc extends BlocBase {
     _activityModel.timer.progress = 0;
     _timerRunningStream.add(false);
     _timerProgressStream.add(0);
-    //update();
+
     _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {});
@@ -171,7 +174,7 @@ class TimerBloc extends BlocBase {
     _resetCounterAndStopwatch();
     _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
-    //update();
+
     _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {});
