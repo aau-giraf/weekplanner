@@ -21,9 +21,9 @@ class PictogramImageBloc extends BlocBase {
 
   final Api _api;
 
-  static Map<int, Image> _cache = <int, Image>{};
-  static Queue<int> _cacheQueue = Queue<int>();
-  static int _cacheMaxSize = 100;
+  static final Map<int, Image> _cache = <int, Image>{};
+  static final Queue<int> _cacheQueue = Queue<int>();
+  static const int _cacheMaxSize = 100;
 
   /// Lock for adding pictograms to cache
   static Mutex lock = Mutex();
@@ -36,12 +36,12 @@ class PictogramImageBloc extends BlocBase {
   }
 
   /// Initialize loading of a specific [PictogramModel] from its [id].
-  void loadPictogramById(int id) async {
+  Future<bool> loadPictogramById(int id) async {
     await lock.acquire();
     try {
       if (_cache.containsKey(id)) {
         // Renew queue position
-        _cacheQueue.removeWhere((x) => x == id);
+        _cacheQueue.removeWhere((int x) => x == id);
         _cacheQueue.add(id);
 
         _image.add(_cache[id]);
@@ -49,25 +49,28 @@ class PictogramImageBloc extends BlocBase {
         Observable<Image>.retry(() {
           return _api.pictogram.getImage(id);
         }, 3)
-            .listen((Image image) async {
-          _image.add(image);
+            .listen(
+          (Image image) async {
+            _image.add(image);
 
-          await lock.acquire();
-          try {
-            _cache.putIfAbsent(id, () => image);
-            _cacheQueue.add(id);
+            await lock.acquire();
+            try {
+              _cache.putIfAbsent(id, () => image);
+              _cacheQueue.add(id);
 
-            while (_cacheQueue.length > _cacheMaxSize) {
-              _cache.remove(_cacheQueue.removeFirst());
+              while (_cacheQueue.length > _cacheMaxSize) {
+                _cache.remove(_cacheQueue.removeFirst());
+              }
+            } finally {
+              lock.release();
             }
-          } finally {
-            lock.release();
-          }
-        },);
+          },
+        );
       }
     } finally {
       lock.release();
     }
+    return true;
   }
 
   @override
