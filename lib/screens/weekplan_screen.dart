@@ -8,7 +8,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';handle
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
@@ -37,30 +37,29 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="week">Week that should be shown on the weekplan</param>
   /// <param name="user">owner of the weekplan</param>
   WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
-    weekplanBloc.setWeek(_week, _user);
+    _weekplanBloc.setWeek(_week, _user);
   }
 
-  /// The WeekplanBloc that contains the currently chosen weekplan
-  final WeekplanBloc weekplanBloc = di.getDependency<WeekplanBloc>();
-  final AuthBloc authBloc = di.getDependency<AuthBloc>();
+  final WeekplanBloc _weekplanBloc = di.getDependency<WeekplanBloc>();
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekplanMode>(
-        stream: authBloc.mode,
+        stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen) {
-            weekplanBloc.setEditMode(false);
+          if (weekModeSnapshot.data == WeekplanMode.citizen) {            
+            _weekplanBloc.setEditMode(false);
           }
           return Scaffold(
             appBar: GirafAppBar(
               title: 'Ugeplan',
               appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
                   ? <AppBarIcon, VoidCallback>{
-                      AppBarIcon.edit: () => weekplanBloc.toggleEditMode(),
+                      AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                       AppBarIcon.changeToCitizen: () {},
                       AppBarIcon.settings: () {},
                       AppBarIcon.logout: () {}
@@ -70,7 +69,7 @@ class WeekplanScreen extends StatelessWidget {
                     },
             ),
             body: StreamBuilder<UserWeekModel>(
-              stream: weekplanBloc.userWeek,
+              stream: _weekplanBloc.userWeek,
               initialData: null,
               builder: (BuildContext context,
                   AsyncSnapshot<UserWeekModel> snapshot) {
@@ -84,14 +83,14 @@ class WeekplanScreen extends StatelessWidget {
               },
             ),
             bottomNavigationBar: StreamBuilder<WeekplanMode>(
-              stream: authBloc.mode,
+              stream: _authBloc.mode,
               initialData: WeekplanMode.guardian,
               builder:
                   (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
                 return Visibility(
                   visible: snapshot.data == WeekplanMode.guardian,
                   child: StreamBuilder<bool>(
-                    stream: weekplanBloc.editMode,
+                    stream: _weekplanBloc.editMode,
                     initialData: false,
                     builder:
                         (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -155,9 +154,9 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   void _copyActivities(List<bool> days, BuildContext context) {
-    weekplanBloc.copyMarkedActivities(days);
+    _weekplanBloc.copyMarkedActivities(days);
     Routes.pop(context);
-    weekplanBloc.toggleEditMode();
+    _weekplanBloc.toggleEditMode();
   }
 
   Future<Center> _buildCopyDialog(BuildContext context) {
@@ -186,14 +185,14 @@ class WeekplanScreen extends StatelessWidget {
           return GirafConfirmDialog(
               title: 'Bekræft',
               description: 'Vil du markere ' +
-                  weekplanBloc.getNumberOfMarkedActivities().toString() +
+                  _weekplanBloc.getNumberOfMarkedActivities().toString() +
                   ' aktivitet(er) som annulleret',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
               confirmOnPressed: () {
-                weekplanBloc.cancelMarkedActivities();
-                weekplanBloc.toggleEditMode();
+                _weekplanBloc.cancelMarkedActivities();
+                _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
                 Routes.pop(context);
@@ -210,14 +209,14 @@ class WeekplanScreen extends StatelessWidget {
           return GirafConfirmDialog(
               title: 'Bekræft',
               description: 'Vil du slette ' +
-                  weekplanBloc.getNumberOfMarkedActivities().toString() +
+                  _weekplanBloc.getNumberOfMarkedActivities().toString() +
                   ' aktivitet(er)',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
               confirmOnPressed: () {
-                weekplanBloc.deleteMarkedActivities();
-                weekplanBloc.toggleEditMode();
+                _weekplanBloc.deleteMarkedActivities();
+                _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
                 Routes.pop(context);
@@ -256,7 +255,7 @@ class WeekplanScreen extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: StreamBuilder<WeekplanMode>(
-                  stream: authBloc.mode,
+                  stream: _authBloc.mode,
                   builder: (BuildContext context,
                       AsyncSnapshot<WeekplanMode> snapshot) {
                     return Visibility(
@@ -269,7 +268,7 @@ class WeekplanScreen extends StatelessWidget {
                             final PictogramModel newActivity =
                                 await Routes.push(context, PictogramSearch());
                             if (newActivity != null) {
-                              weekplanBloc.addActivity(
+                              _weekplanBloc.addActivity(
                                   ActivityModel(
                                       id: newActivity.id,
                                       pictogram: newActivity,
@@ -292,12 +291,12 @@ class WeekplanScreen extends StatelessWidget {
   StreamBuilder<List<ActivityModel>> buildDayActivities(
       List<ActivityModel> activities, WeekdayModel weekday) {
     return StreamBuilder<List<ActivityModel>>(
-        stream: weekplanBloc.markedActivities,
+        stream: _weekplanBloc.markedActivities,
         builder: (BuildContext context,
             AsyncSnapshot<List<ActivityModel>> markedActivities) {
           return StreamBuilder<bool>(
               initialData: false,
-              stream: weekplanBloc.editMode,
+              stream: _weekplanBloc.editMode,
               builder:
                   (BuildContext context, AsyncSnapshot<bool> editModeSnapshot) {
                 return Expanded(
@@ -305,7 +304,7 @@ class WeekplanScreen extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       if (index == weekday.activities.length) {
                         return StreamBuilder<bool>(
-                            stream: weekplanBloc.activityPlaceholderVisible,
+                            stream: _weekplanBloc.activityPlaceholderVisible,
                             initialData: false,
                             builder: (BuildContext context,
                                 AsyncSnapshot<bool> snapshot) {
@@ -317,7 +316,7 @@ class WeekplanScreen extends StatelessWidget {
                             });
                       } else {
                         return StreamBuilder<WeekplanMode>(
-                            stream: authBloc.mode,
+                            stream: _authBloc.mode,
                             initialData: WeekplanMode.guardian,
                             builder: (BuildContext context,
                                 AsyncSnapshot<WeekplanMode> snapshot) {
@@ -342,12 +341,12 @@ class WeekplanScreen extends StatelessWidget {
       List<ActivityModel> activities, int index, BuildContext context) {
     if (inEditMode) {
       if (isMarked) {
-        weekplanBloc.removeMarkedActivity(activities[index]);
+        _weekplanBloc.removeMarkedActivity(activities[index]);
       } else {
-        weekplanBloc.addMarkedActivity(activities[index]);
+        _weekplanBloc.addMarkedActivity(activities[index]);
       }
     } else {
-      Routes.push(context, ShowActivityScreen(_week, activities[index], _user));
+      Routes.push(context, ShowActivityScreen(activities[index], _user));
     }
   }
 
@@ -393,7 +392,7 @@ class WeekplanScreen extends StatelessWidget {
         return true;
       },
       onAccept: (Tuple2<ActivityModel, Weekday> data) {
-        weekplanBloc.reorderActivities(
+        _weekplanBloc.reorderActivities(
             data.item1, data.item2, weekday.day, dropTargetIndex);
       },
     );
@@ -415,11 +414,12 @@ class WeekplanScreen extends StatelessWidget {
           childWhenDragging: Opacity(
               opacity: 0.5,
               child: _pictogramIconStack(context, index, weekday, inEditMode)),
-          onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
+          onDragStarted: () =>
+              _weekplanBloc.setActivityPlaceholderVisible(true),
           onDragCompleted: () =>
-              weekplanBloc.setActivityPlaceholderVisible(false),
+              _weekplanBloc.setActivityPlaceholderVisible(false),
           onDragEnd: (DraggableDetails details) =>
-              weekplanBloc.setActivityPlaceholderVisible(false),
+              _weekplanBloc.setActivityPlaceholderVisible(false),
           feedback: Container(
               height: 150,
               width: 150,
@@ -431,7 +431,7 @@ class WeekplanScreen extends StatelessWidget {
         return true;
       },
       onAccept: (Tuple2<ActivityModel, Weekday> data) {
-        weekplanBloc.reorderActivities(
+        _weekplanBloc.reorderActivities(
             data.item1, data.item2, weekday.day, index);
       },
     );
@@ -441,14 +441,14 @@ class WeekplanScreen extends StatelessWidget {
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final bool isMarked =
-        weekplanBloc.isActivityMarked(weekday.activities[index]);
+        _weekplanBloc.isActivityMarked(weekday.activities[index]);
 
     return FittedBox(
       child: Stack(
         alignment: AlignmentDirectional.center,
         children: <Widget>[
           StreamBuilder<WeekplanMode>(
-              stream: authBloc.mode,
+              stream: _authBloc.mode,
               initialData: WeekplanMode.guardian,
               builder:
                   (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
