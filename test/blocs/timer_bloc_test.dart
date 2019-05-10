@@ -177,45 +177,8 @@ void main() {
     });
   }));
 
-  test('Testing if timer play un-paused stream, and the progress is streamed',
-      async((DoneFn done) {
-    Api api = Api('any');
-    api.activity = mockActivityApi;
-    TimerBloc mock1 = TimerBloc(api);
-
-    di.clearAll();
-    di.registerDependency<TimerBloc>((_) => mock1);
-
-    activityModel = ActivityModel(
-        id: 1,
-        pictogram: null,
-        order: 1,
-        state: ActivityState.Normal,
-        timer: TimerModel(
-            startTime: DateTime.now(),
-            fullLength: 100,
-            paused: true,
-            progress: 0),
-        isChoiceBoard: false);
-
-    mock1.load(activityModel, user: mockUser);
-
-    mock1.timerProgressStream.skip(1).listen((double d) {
-      expect(d, isPositive);
-      done();
-    });
-
-    mock1.playTimer(updatePeriod: 1);
-  }));
-
   test('Testing when timer is played the progress is streamed',
       async((DoneFn done) {
-    Api api = Api('any');
-    api.activity = mockActivityApi;
-    TimerBloc mock1 = TimerBloc(api);
-
-    di.clearAll();
-    di.registerDependency<TimerBloc>((_) => mock1);
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,
@@ -228,14 +191,18 @@ void main() {
             progress: 0),
         isChoiceBoard: false);
 
-    mock1.load(activityModel, user: mockUser);
+    timerMock.load(activityModel, user: mockUser);
 
-    mock1.timerProgressStream.skip(1).listen((double d) {
-      expect(d, isPositive);
-      done();
+    int i = 0;
+    timerMock.timerProgressStream.skip(1).listen((double d) {
+      i += 1;
+      if (i == 5) {
+        expect(d, isPositive);
+        done();
+      }
     });
 
-    mock1.playTimer();
+    timerMock.playTimer();
   }));
 
   test(
