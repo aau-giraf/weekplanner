@@ -70,10 +70,10 @@ void main() {
 
     timerMock.timerIsInstantiated.skip(1).listen((bool b) {
       expect(b, isTrue);
+      done();
     });
-    timerMock.load(activityModel, user: mockUser);
 
-    done();
+    timerMock.load(activityModel, user: mockUser);
   }));
 
   test('Testing when timer is added the timerInstantiated streams true',
@@ -88,6 +88,12 @@ void main() {
 
     timerMock.load(activityModel, user: mockUser);
     const Duration duration = Duration(seconds: 100);
+
+    timerMock.timerIsInstantiated.skip(1).listen((bool b) {
+      expect(b, isTrue);
+      done();
+    });
+
     timerMock.addTimer(duration);
 
     expect(activityModel.timer, isNotNull);
@@ -95,11 +101,6 @@ void main() {
     expect(activityModel.timer.fullLength, duration.inMilliseconds);
     expect(activityModel.timer.paused, true);
     expect(activityModel.timer.startTime, isNotNull);
-
-    timerMock.timerIsInstantiated.skip(1).listen((bool b) {
-      expect(b, isTrue);
-    });
-    done();
   }));
 
   test('Testing timer starts running if its already set', async((DoneFn done) {
@@ -115,17 +116,36 @@ void main() {
             progress: 1),
         isChoiceBoard: false);
 
-    timerMock.timerIsInstantiated.skip(1).listen((bool b) {
+    timerMock.timerIsInstantiated.skip(2).listen((bool b) {
       expect(b, isTrue);
-    });
-    timerMock.timerIsRunning.skip(1).listen((bool b) {
-      expect(b, isTrue);
+      done();
     });
 
     timerMock.load(activityModel, user: mockUser);
     timerMock.initTimer();
+  }));
 
-    done();
+  test('Testing timer is instantiated when timer is not paused',
+      async((DoneFn done) {
+    activityModel = ActivityModel(
+        id: 1,
+        pictogram: null,
+        order: 1,
+        state: ActivityState.Normal,
+        timer: TimerModel(
+            startTime: DateTime.now(),
+            fullLength: 1000,
+            paused: false,
+            progress: 1),
+        isChoiceBoard: false);
+
+    timerMock.timerIsRunning.skip(1).listen((bool b) {
+      expect(b, isTrue);
+      done();
+    });
+
+    timerMock.load(activityModel, user: mockUser);
+    timerMock.initTimer();
   }));
 
   test('Testing if timer is paused the progress is updated',
@@ -159,6 +179,13 @@ void main() {
 
   test('Testing if timer play un-paused stream, and the progress is streamed',
       async((DoneFn done) {
+    Api api = Api('any');
+    api.activity = mockActivityApi;
+    TimerBloc mock1 = TimerBloc(api);
+
+    di.clearAll();
+    di.registerDependency<TimerBloc>((_) => mock1);
+
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,
@@ -171,21 +198,24 @@ void main() {
             progress: 0),
         isChoiceBoard: false);
 
-    timerMock.load(activityModel, user: mockUser);
+    mock1.load(activityModel, user: mockUser);
 
-    timerMock.timerProgressStream.skip(1).listen((double d) {
+    mock1.timerProgressStream.skip(1).listen((double d) {
       expect(d, isPositive);
+      done();
     });
 
-    timerMock.playTimer(updatePeriod: 1);
-
-    expect(activityModel.timer.paused, isFalse);
-
-    done();
+    mock1.playTimer(updatePeriod: 1);
   }));
 
   test('Testing when timer is played the progress is streamed',
       async((DoneFn done) {
+    Api api = Api('any');
+    api.activity = mockActivityApi;
+    TimerBloc mock1 = TimerBloc(api);
+
+    di.clearAll();
+    di.registerDependency<TimerBloc>((_) => mock1);
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,
@@ -198,13 +228,14 @@ void main() {
             progress: 0),
         isChoiceBoard: false);
 
-    timerMock.load(activityModel, user: mockUser);
-    timerMock.playTimer();
+    mock1.load(activityModel, user: mockUser);
 
-    timerMock.timerProgressStream.skip(1).listen((double d) {
+    mock1.timerProgressStream.skip(1).listen((double d) {
       expect(d, isPositive);
+      done();
     });
-    done();
+
+    mock1.playTimer();
   }));
 
   test(
@@ -227,16 +258,17 @@ void main() {
     timerMock.playTimer();
     expect(activityModel.timer.paused, isFalse);
 
-    timerMock.pauseTimer();
     Future<dynamic>.delayed(const Duration(seconds: 1), () {
       expect(activityModel.timer.paused, isTrue);
       expect(activityModel.timer.progress, isPositive);
     });
 
-    timerMock.timerIsRunning.listen((bool b) {
+    timerMock.timerIsRunning.skip(1).listen((bool b) {
       expect(b, isFalse);
+      done();
     });
-    done();
+
+    timerMock.pauseTimer();
   }));
 
   test(
@@ -270,8 +302,8 @@ void main() {
 
     timerMock.timerProgressStream.listen((double d) {
       expect(d, 0);
+      done();
     });
-    done();
   }));
 
   test(
@@ -299,7 +331,7 @@ void main() {
 
     timerMock.timerProgressStream.listen((double d) {
       expect(d, 0);
+      done();
     });
-    done();
   }));
 }
