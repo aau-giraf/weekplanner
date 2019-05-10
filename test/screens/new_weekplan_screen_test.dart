@@ -90,6 +90,7 @@ void main() {
 
     when(api.week.update(any, any, any, any))
         .thenAnswer((_) => Observable<WeekModel>.just(mockWeek));
+
     di.clearAll();
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
