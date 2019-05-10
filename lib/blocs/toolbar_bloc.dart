@@ -435,7 +435,7 @@ class ToolbarBloc extends BlocBase {
             return const GirafNotifyDialog(
                 title: 'Fejl',
                 description: 'Forkert adgangskode',
-                key: Key('WrongUsernameOrPasswordDialog'));
+                key: Key('WrongPasswordDialog'));
           });
     }
   }
