@@ -15,6 +15,8 @@ import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 
+import 'blocs/copy_activities_bloc.dart';
+
 /// Bootstrap the project
 class Bootstrap {
   /// Register all dependencies here. Here the construction of everything that
@@ -68,6 +70,10 @@ class Bootstrap {
 
     di.registerDependency<SettingsBloc>((Injector i) {
       return SettingsBloc();
+    });
+
+    di.registerDependency<CopyActivitiesBloc>((_) {
+      return CopyActivitiesBloc();
     });
 
     di.registerDependency<TimerBloc>((Injector i) {
