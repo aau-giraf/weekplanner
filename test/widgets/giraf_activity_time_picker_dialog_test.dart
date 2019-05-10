@@ -155,7 +155,7 @@ void main() {
     });
     expect(
         _activityModel.timer.fullLength,
-        Duration(hours: hours, minutes: minutes, seconds: seconds)
+        const Duration(hours: hours, minutes: minutes, seconds: seconds)
             .inMilliseconds);
   });
 }
