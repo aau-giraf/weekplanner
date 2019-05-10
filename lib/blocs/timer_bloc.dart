@@ -108,6 +108,8 @@ class TimerBloc extends BlocBase {
                   _activityModel.timer.fullLength *
                   (_activityModel.timer.fullLength -
                       _activityModel.timer.progress)));
+        } else {
+          _timerProgressStream.add(1);
         }
         _timerInstantiatedStream.add(true);
       }
