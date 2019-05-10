@@ -527,14 +527,28 @@ class WeekplanScreen extends StatelessWidget {
     int index,
     ActivityState activityState,
   ) {
-    final Widget icon = activityState == ActivityState.Completed
-        ? Icon(
-            Icons.check,
-            key: const Key('IconComplete'),
-            color: Colors.green,
-            size: MediaQuery.of(context).size.width,
-          )
-        : Container();
+    Widget icon;
+    switch (activityState) {
+      case ActivityState.Completed:
+        icon = Icon(
+          Icons.check,
+          key: const Key('IconComplete'),
+          color: Colors.green,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      case ActivityState.Canceled:
+        icon = Icon(
+          Icons.clear,
+          key: const Key('IconCanceled'),
+          color: Colors.red,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      default:
+        icon = Container();
+        break;
+    }
 
     return Card(
         margin: const EdgeInsets.all(20),
