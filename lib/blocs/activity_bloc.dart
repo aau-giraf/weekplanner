@@ -11,10 +11,10 @@ class ActivityBloc extends BlocBase {
   /// Initializes values
   ActivityBloc(this._api);
 
-  /// Stream for updated weekmodel.
+  /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
-  /// BehaviorSubject for the updated weekmodel.
+  /// BehaviorSubject for the updated ActivityModel.
   final BehaviorSubject<ActivityModel> _activityModelStream =
       BehaviorSubject<ActivityModel>();
 
@@ -22,7 +22,7 @@ class ActivityBloc extends BlocBase {
   ActivityModel _activityModel;
   UsernameModel _user;
 
-  /// Loads the WeekModel, ActivityModel and the GirafUser.
+  /// Loads the ActivityModel and the GirafUser.
   void load(ActivityModel activityModel, UsernameModel user) {
     _activityModel = activityModel;
     _user = user;
@@ -47,7 +47,7 @@ class ActivityBloc extends BlocBase {
     update();
   }
 
-  /// Update the weekmodel with the new state.
+  /// Update the Activity with the new state.
   void update() {
     _api.activity
         .update(_activityModel, _user.id)
