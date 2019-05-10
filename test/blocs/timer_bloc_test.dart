@@ -87,7 +87,7 @@ void main() {
         isChoiceBoard: false);
 
     timerMock.load(activityModel, user: mockUser);
-    final Duration duration = Duration(seconds: 100);
+    const Duration duration = Duration(seconds: 100);
     timerMock.addTimer(duration);
 
     expect(activityModel.timer, isNotNull);
@@ -228,7 +228,7 @@ void main() {
     expect(activityModel.timer.paused, isFalse);
 
     timerMock.pauseTimer();
-    Future<dynamic>.delayed(Duration(seconds: 1), () {
+    Future<dynamic>.delayed(const Duration(seconds: 1), () {
       expect(activityModel.timer.paused, isTrue);
       expect(activityModel.timer.progress, isPositive);
     });
@@ -259,7 +259,7 @@ void main() {
     timerMock.playTimer();
     timerMock.stopTimer();
 
-    Future<dynamic>.delayed(Duration(seconds: 1), () {
+    Future<dynamic>.delayed(const Duration(seconds: 1), () {
       expect(activityModel.timer.paused, isTrue);
       expect(activityModel.timer.progress, 0);
     });
