@@ -301,7 +301,7 @@ class ShowActivityScreen extends StatelessWidget {
                             key: const Key('TimerStopConfirmDialogKey'),
                             title: 'Stop Timer',
                             description: 'Vil du stoppe timeren?',
-                            confirmButtonText: 'stop',
+                            confirmButtonText: 'Stop',
                             confirmButtonIcon: const ImageIcon(
                                 AssetImage('assets/icons/stop.png')),
                             confirmOnPressed: () {
@@ -329,7 +329,7 @@ class ShowActivityScreen extends StatelessWidget {
                             //a dialog is shown to confirm to delete the timer.
                             return GirafConfirmDialog(
                               key: const Key('TimerDeleteConfirmDialogKey'),
-                              title: 'Slet Timer',
+                              title: 'Slet timer',
                               description: 'Vil du slette timeren?',
                               confirmButtonText: 'Slet',
                               confirmButtonIcon: const ImageIcon(
