@@ -14,8 +14,7 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
-
-import 'blocs/copy_activities_bloc.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 
 /// Bootstrap the project
 class Bootstrap {

@@ -93,7 +93,7 @@ class ShowActivityScreen extends StatelessWidget {
             aspectRatio: 1,
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: buildTimer(context),
+              child: _buildTimer(context),
             ),
           ),
         ),
@@ -137,7 +137,7 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the timer widget.
-  StreamBuilder<WeekplanMode> buildTimer(BuildContext overallContext) {
+  StreamBuilder<WeekplanMode> _buildTimer(BuildContext overallContext) {
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
         builder: (BuildContext modeContext,

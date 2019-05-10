@@ -49,12 +49,12 @@ void main() {
         timer: null,
         isChoiceBoard: false);
 
-    timerMock.load(activityModel, user: mockUser);
-
-    timerMock.timerIsInstantiated.listen((bool b) {
+    timerMock.timerIsInstantiated.skip(1).listen((bool b) {
       expect(b, isFalse);
+      done();
     });
-    done();
+
+    timerMock.load(activityModel, user: mockUser);
   }));
 
   test('Testing if timer is not added to an acitivty with a timer already',
