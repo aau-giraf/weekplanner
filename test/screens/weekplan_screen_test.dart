@@ -142,7 +142,6 @@ void main() {
     api.week = weekApi;
     bloc = WeekplanBloc(api);
     authBloc = MockAuthBlock(api);
-    //authBloc.setMode(WeekplanMode.guardian);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
