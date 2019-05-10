@@ -6,7 +6,7 @@ import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 void main() {
   CopyActivitiesBloc copyActivitiesBloc;
 
-  setUp(() {
+  setUp((){
     copyActivitiesBloc = CopyActivitiesBloc();
   });
 
