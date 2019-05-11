@@ -117,7 +117,8 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                     fontSize: 50,
                   ),
                   textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
+                  keyboardType: const TextInputType.numberWithOptions(
+                      signed: false, decimal: false),
                   decoration: const InputDecoration.collapsed(
                     hintText: '',
                   ),
@@ -132,13 +133,18 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   }
 
   void _acceptInput(BuildContext context) {
+    final int hours = int.tryParse(_textEditingControllerHours.text) ?? 0;
+    final int minutes = int.tryParse(_textEditingControllerMinutes.text) ?? 0;
+    final int seconds = int.tryParse(_textEditingControllerSeconds.text) ?? 0;
+
     final Duration duration = Duration(
-      hours: int.tryParse(_textEditingControllerHours.text) ?? 0,
-      minutes: int.tryParse(_textEditingControllerMinutes.text) ?? 0,
-      seconds: int.tryParse(_textEditingControllerSeconds.text) ?? 0,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
     );
 
-    if (duration.inSeconds != 0) {
+    if (duration.inSeconds != 0 && hours >= 0 && minutes >= 0 && seconds >= 0)
+    {
       _timerBloc.addTimer(duration);
       Routes.pop(context);
     }
