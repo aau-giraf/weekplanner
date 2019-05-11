@@ -100,8 +100,8 @@ class ShowActivityScreen extends StatelessWidget {
               stream: _timerBloc.timerIsInstantiated,
               builder: (BuildContext timerInitContext,
                   AsyncSnapshot<bool> timerInitSnapshot) {
-                //if a timer is not initiated, and the app is in citizen mode,
-                //nothing is shown
+                // If a timer is not initiated, and the app is in citizen mode,
+                // nothing is shown
                 return Visibility(
                   visible: (timerInitSnapshot.hasData && modeSnapshot.hasData)
                       ? timerInitSnapshot.data ||
@@ -118,7 +118,7 @@ class ShowActivityScreen extends StatelessWidget {
                           child: Card(
                             key: const Key('OverallTimerBoxKey'),
                             child: Column(children: <Widget>[
-                              //the title of the timer widget
+                              // The title of the timer widget
                               Center(
                                   key: const Key('TimerTitleKey'),
                                   child: Padding(
@@ -128,7 +128,7 @@ class ShowActivityScreen extends StatelessWidget {
                                         textAlign: TextAlign.center),
                                   )),
                               Expanded(
-                                  //depending on whether a timer is initiated,
+                                  // Depending on whether a timer is initiated,
                                   // different widgets are shown.
                                   child: (timerInitSnapshot.hasData
                                           ? timerInitSnapshot.data
@@ -184,8 +184,8 @@ class ShowActivityScreen extends StatelessWidget {
     ]));
   }
 
-  ///The widget to show, in the case that a timer has been initiated,
-  ///showing the progression for the timer in both citizen and guardian mode.
+  /// The widget to show, in the case that a timer has been initiated,
+  /// showing the progression for the timer in both citizen and guardian mode.
   Widget _timerIsInitiatedWidget() {
     return FittedBox(
       key: const Key('TimerInitKey'),
@@ -216,9 +216,9 @@ class ShowActivityScreen extends StatelessWidget {
     );
   }
 
-  ///the widget to show, in the case that a timer has not been initiated
-  ///for the activity. When in guardian mode, an "addtimer" button is shown,
-  ///as citizen, nothing is shown.
+  /// The widget to show, in the case that a timer has not been initiated
+  /// for the activity. When in guardian mode, an "addTimer" button is shown,
+  /// as citizen, nothing is shown.
   Widget _timerIsNotInitiatedWidget(
       BuildContext overallContext, AsyncSnapshot<WeekplanMode> modeSnapshot) {
     return (modeSnapshot.hasData
@@ -242,9 +242,9 @@ class ShowActivityScreen extends StatelessWidget {
           );
   }
 
-  ///the buttons for the timer. Depending on whether the application is in
-  ///citizen or guardian mode, certain buttons are displayed.
-  ///Buttons are: Play/Pause, Stop and delete
+  /// The buttons for the timer. Depending on whether the application is in
+  /// citizen or guardian mode, certain buttons are displayed.
+  /// Buttons are: Play/Pause, Stop and Delete
   Widget _timerButtons(
       BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
@@ -263,8 +263,8 @@ class ShowActivityScreen extends StatelessWidget {
                   builder: (BuildContext timerRunningContext,
                       AsyncSnapshot<bool> timerRunningSnapshot) {
                     return Flexible(
-                      //button has different icons and press logic depending on
-                      //whether the timer is already running.
+                      // Button has different icons and press logic depending on
+                      // whether the timer is already running.
                       child: GirafButton(
                         key: (timerRunningSnapshot.hasData
                                 ? timerRunningSnapshot.data
@@ -296,7 +296,7 @@ class ShowActivityScreen extends StatelessWidget {
                         context: overallContext,
                         barrierDismissible: false,
                         builder: (BuildContext context) {
-                          //a dialog is shown to confirm to stop the timer.
+                          // A confirmation dialog is shown to stop the timer.
                           return GirafConfirmDialog(
                             key: const Key('TimerStopConfirmDialogKey'),
                             title: 'Stop Timer',
@@ -315,8 +315,8 @@ class ShowActivityScreen extends StatelessWidget {
                 ),
               ),
               Visibility(
-                //the delete button is only visible when in guardian mode,
-                //since a citizen should not be able to delete the timer.
+                // The delete button is only visible when in guardian mode,
+                // since a citizen should not be able to delete the timer.
                 visible: modeSnapshot.data == WeekplanMode.guardian,
                 child: Flexible(
                   child: GirafButton(
@@ -326,7 +326,8 @@ class ShowActivityScreen extends StatelessWidget {
                           context: overallContext,
                           barrierDismissible: false,
                           builder: (BuildContext context) {
-                            //a dialog is shown to confirm to delete the timer.
+                            // A confirmation dialog is
+                            // shown to delete the timer.
                             return GirafConfirmDialog(
                               key: const Key('TimerDeleteConfirmDialogKey'),
                               title: 'Slet timer',
@@ -353,7 +354,7 @@ class ShowActivityScreen extends StatelessWidget {
     );
   }
 
-  /// returns a dialog where time can be decided for an activity(timer)
+  /// Returns a dialog where time can be decided for an activity(timer)
   void _buildTimerDialog(BuildContext context) {
     showDialog<Center>(
         context: context,
