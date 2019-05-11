@@ -86,19 +86,67 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       ),
-      Expanded(
-        flex: 4,
-        child: Center(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: _buildTimer(context),
-            ),
-          ),
-        ),
-      ),
+      _buildTimer(context),
     ];
+  }
+
+  /// Builds the timer widget.
+  StreamBuilder<WeekplanMode> _buildTimer(BuildContext overallContext) {
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext modeContext,
+            AsyncSnapshot<WeekplanMode> modeSnapshot) {
+          return StreamBuilder<bool>(
+              stream: _timerBloc.timerIsInstantiated,
+              builder: (BuildContext timerInitContext,
+                  AsyncSnapshot<bool> timerInitSnapshot) {
+                //if a timer is not initiated, and the app is in citizen mode,
+                //nothing is shown
+                return Visibility(
+                  visible: (timerInitSnapshot.hasData && modeSnapshot.hasData)
+                      ? timerInitSnapshot.data ||
+                          (!timerInitSnapshot.data &&
+                              modeSnapshot.data == WeekplanMode.guardian)
+                      : false,
+                  child: Expanded(
+                    flex: 4,
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Card(
+                            key: const Key('OverallTimerBoxKey'),
+                            child: Column(children: <Widget>[
+                              //the title of the timer widget
+                              Center(
+                                  key: const Key('TimerTitleKey'),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Timer',
+                                        style: titleTextStyle,
+                                        textAlign: TextAlign.center),
+                                  )),
+                              Expanded(
+                                  //depending on whether a timer is initiated,
+                                  // different widgets are shown.
+                                  child: (timerInitSnapshot.hasData
+                                          ? timerInitSnapshot.data
+                                          : false)
+                                      ? _timerIsInitiatedWidget()
+                                      : _timerIsNotInitiatedWidget(
+                                          overallContext, modeSnapshot)),
+                              _timerButtons(overallContext, timerInitSnapshot,
+                                  modeSnapshot)
+                            ]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              });
+        });
   }
 
   /// Builds the activity widget.
@@ -134,54 +182,6 @@ class ShowActivityScreen extends StatelessWidget {
       ),
       buildButtonBar()
     ]));
-  }
-
-  /// Builds the timer widget.
-  StreamBuilder<WeekplanMode> _buildTimer(BuildContext overallContext) {
-    return StreamBuilder<WeekplanMode>(
-        stream: _authBloc.mode,
-        builder: (BuildContext modeContext,
-            AsyncSnapshot<WeekplanMode> modeSnapshot) {
-          return StreamBuilder<bool>(
-              stream: _timerBloc.timerIsInstantiated,
-              builder: (BuildContext timerInitContext,
-                  AsyncSnapshot<bool> timerInitSnapshot) {
-                //if a timer is not initiated, and the app is in citizen mode,
-                //nothing is shown
-                return Visibility(
-                  visible: (timerInitSnapshot.hasData && modeSnapshot.hasData)
-                      ? timerInitSnapshot.data ||
-                          (!timerInitSnapshot.data &&
-                              modeSnapshot.data == WeekplanMode.guardian)
-                      : false,
-                  child: Card(
-                    key: const Key('OverallTimerBoxKey'),
-                    child: Column(children: <Widget>[
-                      //the title of the timer widget
-                      Center(
-                          key: const Key('TimerTitleKey'),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Timer',
-                                style: titleTextStyle,
-                                textAlign: TextAlign.center),
-                          )),
-                      Expanded(
-                          //depending on whether a timer is initiated, different
-                          //widgets are shown.
-                          child: (timerInitSnapshot.hasData
-                                  ? timerInitSnapshot.data
-                                  : false)
-                              ? _timerIsInitiatedWidget()
-                              : _timerIsNotInitiatedWidget(
-                                  overallContext, modeSnapshot)),
-                      _timerButtons(
-                          overallContext, timerInitSnapshot, modeSnapshot)
-                    ]),
-                  ),
-                );
-              });
-        });
   }
 
   ///The widget to show, in the case that a timer has been initiated,

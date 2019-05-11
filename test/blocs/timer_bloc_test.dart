@@ -91,16 +91,15 @@ void main() {
 
     timerMock.timerIsInstantiated.skip(1).listen((bool b) {
       expect(b, isTrue);
+      expect(activityModel.timer, isNotNull);
+      expect(activityModel.timer.progress, 0);
+      expect(activityModel.timer.fullLength, duration.inMilliseconds);
+      expect(activityModel.timer.paused, true);
+      expect(activityModel.timer.startTime, isNotNull);
       done();
     });
 
     timerMock.addTimer(duration);
-
-    expect(activityModel.timer, isNotNull);
-    expect(activityModel.timer.progress, 0);
-    expect(activityModel.timer.fullLength, duration.inMilliseconds);
-    expect(activityModel.timer.paused, true);
-    expect(activityModel.timer.startTime, isNotNull);
   }));
 
   test('Testing timer starts running if its already set', async((DoneFn done) {
@@ -162,10 +161,7 @@ void main() {
             progress: 1),
         isChoiceBoard: false);
 
-    timerMock.load(activityModel, user: mockUser);
-    timerMock.initTimer();
-
-    timerMock.timerProgressStream.listen((double d) {
+    timerMock.timerProgressStream.skip(1).listen((double d) {
       expect(
           d,
           1 -
@@ -175,6 +171,9 @@ void main() {
                       activityModel.timer.progress)));
       done();
     });
+
+    timerMock.load(activityModel, user: mockUser);
+    timerMock.initTimer();
   }));
 
   test('Testing when timer is played the progress is streamed',
