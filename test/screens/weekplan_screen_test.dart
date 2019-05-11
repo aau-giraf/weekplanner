@@ -19,6 +19,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -116,6 +117,7 @@ void main() {
     });
 
     di.clearAll();
+    di.registerDependency<TimerBloc>((_) => TimerBloc(api));
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
     di.registerDependency<AuthBloc>((_) => authBloc);
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));

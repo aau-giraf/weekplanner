@@ -2,11 +2,11 @@ import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
-import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplans_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/add_activity_bloc.dart';
@@ -14,7 +14,7 @@ import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
-
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 
 /// Bootstrap the project
 class Bootstrap {
@@ -73,6 +73,10 @@ class Bootstrap {
 
     di.registerDependency<CopyActivitiesBloc>((_) {
       return CopyActivitiesBloc();
+    });
+
+    di.registerDependency<TimerBloc>((Injector i) {
+      return TimerBloc(i.getDependency<Api>());
     });
   }
 }
