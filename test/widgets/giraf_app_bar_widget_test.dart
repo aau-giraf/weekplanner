@@ -39,13 +39,6 @@ class MockScreen extends StatelessWidget {
   }
 }
 
-/// Used to retrieve the visibility widget wrapping the editbutton
-const String keyOfVisibilityForEdit = 'visibilityEditBtn';
-const String keyOfWrongUsernameOrPassword = 'WrongUsernameOrPasswordDialog';
-const String keyOfChangeToGuardian = 'IconChangeToGuardian';
-const String keyOfPasswordField = 'SwitchToGuardianPassword';
-const String keyOfConfirmButton = 'SwitchToGuardianSubmit';
-
 void main() {
   ToolbarBloc bloc;
   MockAuth authBloc;

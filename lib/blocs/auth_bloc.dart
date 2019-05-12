@@ -54,7 +54,7 @@ class AuthBloc extends BlocBase {
   void authenticateFromPopUp(String username, String password) {
     // Make sure the status for the upcoming
     // login is false until proven otherwise
-    _api.account.login(username, password).take(1).listen((bool status) {
+    _api.account.login(username, password).listen((bool status) {
       if (status) {
           _loginAttempt.add(status);
           setMode(WeekplanMode.guardian);
