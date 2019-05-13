@@ -105,16 +105,6 @@ class NewWeekplanScreen extends StatelessWidget {
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            /* Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              child: GirafButton(
-                text: 'Vælg skabelon',
-                width: 160,
-                // Handle when a weekplan is made from a template
-                onPressed: () {},
-                isEnabled: false,
-              ),
-            ), */
             Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
