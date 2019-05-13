@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -19,6 +18,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -42,9 +42,46 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 class MockAuthBlock extends AuthBloc {
   MockAuthBlock(Api api) : super(api);
 
+  /// Stream that streams status of last login attemp from popup.
   @override
-  void authenticate(String username, String password) {
+  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+
+  final BehaviorSubject<bool> _loginAttempt =
+  BehaviorSubject<bool>.seeded(false);
+
+  @override
+  void authenticateFromPopUp(String username, String password) {
     if (password == 'password') {
+      _loginAttempt.add(true);
+      setMode(WeekplanMode.guardian);
+    }
+  }
+}
+
+
+class MockAuthBlocSetMode extends AuthBloc {
+  MockAuthBlocSetMode(Api api) : super(api);
+
+  // Used as a way to detect during testing, if setMode to Guardian is called.
+  bool switchedToGuardian = false;
+
+  @override
+  void setMode(WeekplanMode mode) {
+    if (mode == WeekplanMode.guardian){
+      switchedToGuardian = true;
+    }
+  }
+
+  @override
+  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+
+  final BehaviorSubject<bool> _loginAttempt =
+  BehaviorSubject<bool>.seeded(false);
+
+  @override
+  void authenticateFromPopUp(String username, String password) {
+    if (password == 'password') {
+      _loginAttempt.add(true);
       setMode(WeekplanMode.guardian);
     }
   }
@@ -106,7 +143,6 @@ void main() {
     api.week = weekApi;
     bloc = WeekplanBloc(api);
     authBloc = MockAuthBlock(api);
-    authBloc.setMode(WeekplanMode.guardian);
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
@@ -116,6 +152,7 @@ void main() {
     });
 
     di.clearAll();
+    di.registerDependency<TimerBloc>((_) => TimerBloc(api));
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
     di.registerDependency<AuthBloc>((_) => authBloc);
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
@@ -540,16 +577,22 @@ void main() {
 
     await tester.enterText(
         find.byKey(const Key('SwitchToGuardianPassword')), 'password');
-    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+    await tester.pumpAndSettle(const Duration(seconds:2));
 
     tapComplete.complete();
 
     final VerificationResult verificationResult =
-        verify(observer.didPop(captureAny, captureAny));
+    verify(observer.didPop(any, any));
 
-    expect(verificationResult.callCount, equals(1));
+    // Should pop twice, first for the loading spinner, second for the popup.
+    expect(verificationResult.callCount, 2);
+
+    expect(find.byKey(const Key('WrongPasswordDialog')),
+        findsNothing);
 
     await done.future;
   });
@@ -686,4 +729,45 @@ void main() {
 
     expect(weekModel.days[Weekday.Friday.index].activities.length, 1);
   });
+
+  testWidgets(
+      'In the switch to guardian dialog, wrong credentials should show '
+          'error dialog and not change mode',
+          (WidgetTester tester) async {
+        final Completer<bool> done = Completer<bool>();
+        final Completer<bool> tapComplete = Completer<bool>();
+        final MockNavigatorObserver observer = MockNavigatorObserver();
+        await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(weekModel, user),
+          navigatorObservers: <NavigatorObserver>[observer],
+        ));
+        await tester.pumpAndSettle();
+
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('SwitchToGuardianPassword')), 'abc');
+        await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+        await tester.pumpAndSettle();
+        tapComplete.complete();
+
+        authBloc.mode.listen((WeekplanMode attempt) async {
+          await tapComplete.future;
+          // Expect that the mode is still citizen.
+          expect(WeekplanMode.citizen, equals(WeekplanMode.citizen));
+          done.complete();
+        });
+
+        // Only thing that should be popped is the loading spinner.
+        verify(observer.didPop(any, any)).called(1);
+
+        expect(find.byKey(const Key('WrongPasswordDialog')),
+            findsOneWidget);
+
+        await done.future;
+      });
 }

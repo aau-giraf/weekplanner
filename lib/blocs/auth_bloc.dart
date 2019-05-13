@@ -19,7 +19,8 @@ class AuthBloc extends BlocBase {
 
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
-  /// Reflect the current clearance level of the user
+
+  /// Reflect the current clearence level of the user
   final BehaviorSubject<WeekplanMode> _mode =
   BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
@@ -27,11 +28,17 @@ class AuthBloc extends BlocBase {
   Observable<WeekplanMode> get mode => _mode.stream;
 
 
+  /// Stream that streams status of last login attemp from popup.
+  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+
+  final BehaviorSubject<bool> _loginAttempt =
+  BehaviorSubject<bool>.seeded(false);
+
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password) {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
-    _api.account.login(username, password).take(1).listen((bool status) {
+    _api.account.login(username, password).listen((bool status) {
       // Set the status
       // If there is a successful login, remove the loading spinner,
       // and push the status to the stream
@@ -40,6 +47,16 @@ class AuthBloc extends BlocBase {
         loggedInUsername = username;
         setMode(WeekplanMode.guardian);
       }
+    });
+  }
+
+  /// Authenticates the user only by password when signing-in from PopUp.
+  void authenticateFromPopUp(String username, String password) {
+    _api.account.login(username, password).listen((bool status) {
+      if (status) {
+          _loginAttempt.add(status);
+          setMode(WeekplanMode.guardian);
+        }
     });
   }
 
@@ -58,5 +75,6 @@ class AuthBloc extends BlocBase {
   void dispose() {
     _loggedIn.close();
     _mode.close();
+    _loginAttempt.close();
   }
 }
