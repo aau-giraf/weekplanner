@@ -31,7 +31,7 @@ class AuthBloc extends BlocBase {
   void authenticate(String username, String password) {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
-    _api.account.login(username, password).take(1).listen((bool status) {
+    _api.account.login(username, password).listen((bool status) {
       // Set the status
       // If there is a successful login, remove the loading spinner,
       // and push the status to the stream
