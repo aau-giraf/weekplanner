@@ -67,7 +67,7 @@ void main() {
     expect(find.text('Ugeplan'), findsOneWidget);
   });
 
-  testWidgets('Display icon when given no icons to display',
+  testWidgets('Display default icon when given no icons to display',
       (WidgetTester tester) async {
     final GirafAppBar girafAppBar =
         GirafAppBar(title: 'Ugeplan', appBarIcons: null);
