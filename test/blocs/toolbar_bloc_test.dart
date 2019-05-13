@@ -19,10 +19,10 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => bloc);
   });
 
-  test('Should insert standard icons when none are defined',
+  test('Should insert log out icon when none are defined',
       async((DoneFn done) {
     bloc.visibleButtons.skip(1).listen((List<IconButton> response) {
-      expect(response.length, 2);
+      expect(response.length, 1);
       done();
     });
     bloc.updateIcons(null, null);

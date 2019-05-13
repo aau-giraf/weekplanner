@@ -34,7 +34,6 @@ class ToolbarBloc extends BlocBase {
 
     // Assigns a map to icons, if icons is null.
     icons ??= <AppBarIcon, VoidCallback>{
-      AppBarIcon.settings: () {},
       AppBarIcon.logout: () {}
     };
     
