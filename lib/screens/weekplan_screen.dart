@@ -37,7 +37,7 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="week">Week that should be shown on the weekplan</param>
   /// <param name="user">owner of the weekplan</param>
   WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
-    _weekplanBloc.setWeek(_week, _user);
+    _weekplanBloc.loadWeek(_week, _user);
   }
 
   final WeekplanBloc _weekplanBloc = di.getDependency<WeekplanBloc>();
