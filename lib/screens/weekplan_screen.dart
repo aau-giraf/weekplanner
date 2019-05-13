@@ -170,7 +170,7 @@ class WeekplanScreen extends StatelessWidget {
                 'kopieres til',
             confirmButtonText: 'Kopier',
             confirmButtonIcon:
-                const ImageIcon(AssetImage('assets/icons/accept.png')),
+                const ImageIcon(AssetImage('assets/icons/copy.png')),
             confirmOnPressed: _copyActivities,
           );
         });
@@ -183,7 +183,7 @@ class WeekplanScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return GirafConfirmDialog(
-              title: 'Bekræft',
+              title: 'Annuller aktiviteter',
               description: 'Vil du markere ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
                   ' aktivitet(er) som annulleret',
@@ -207,13 +207,13 @@ class WeekplanScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return GirafConfirmDialog(
-              title: 'Bekræft',
+              title: 'Slet aktiviteter',
               description: 'Vil du slette ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
                   ' aktivitet(er)',
-              confirmButtonText: 'Bekræft',
+              confirmButtonText: 'Slet',
               confirmButtonIcon:
-                  const ImageIcon(AssetImage('assets/icons/accept.png')),
+                  const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: () {
                 _weekplanBloc.deleteMarkedActivities();
                 _weekplanBloc.toggleEditMode();
