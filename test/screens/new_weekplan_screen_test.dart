@@ -126,7 +126,7 @@ void main() {
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
 
-    expect(find.byType(GirafButton), findsNWidgets(2));
+    expect(find.byType(GirafButton), findsNWidgets(1));
   });
 
   testWidgets('Error text is shown on invalid title input',
