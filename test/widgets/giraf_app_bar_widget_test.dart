@@ -67,7 +67,7 @@ void main() {
     expect(find.text('Ugeplan'), findsOneWidget);
   });
 
-  testWidgets('Display default icons when given no icons to display',
+  testWidgets('Display default icon when given no icons to display',
       (WidgetTester tester) async {
     final GirafAppBar girafAppBar =
         GirafAppBar(title: 'Ugeplan', appBarIcons: null);
@@ -75,7 +75,6 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
     expect(find.byTooltip('Log ud'), findsOneWidget);
-    expect(find.byTooltip('Indstillinger'), findsOneWidget);
   });
 
   testWidgets('Accept button is displayed', (WidgetTester tester) async {

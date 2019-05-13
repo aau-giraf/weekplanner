@@ -32,7 +32,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
         title: 'Vælg ugeplan',
         appBarIcons: <AppBarIcon, VoidCallback>{
           AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-          AppBarIcon.settings: () {},
           AppBarIcon.logout: () {}
         },
       ),
