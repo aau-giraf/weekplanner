@@ -123,7 +123,7 @@ class UploadImageFromPhone extends StatelessWidget {
           bottom: 10,
         ),
         child: Text(
-          'Tryk for at vælge et billed fra gallariet',
+          'Vælg billede fra galleri',
           style: TextStyle(color: Colors.black, fontSize: 25),
           textAlign: TextAlign.center,
         ));
