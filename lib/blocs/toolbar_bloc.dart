@@ -411,7 +411,7 @@ class ToolbarBloc extends BlocBase {
     _currentContext = context;
     _authBloc.authenticateFromPopUp(username, password);
     // Skip 1, since we should skip the seeded value.
-    _authBloc.loginAttempt.listen((bool snapshot) {
+    _authBloc.loginAttempt.skip(1).listen((bool snapshot) {
       _loginStatus = snapshot;
       if (snapshot && !_popCalled) {
         // Pop the loading spinner
