@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-import 'giraf_notify_dialog.dart';
 
 /// The acitivty time picker dialog is a dialog, asking for a duration input.
 /// The duration should be inserted in the textfield, and the user can either
