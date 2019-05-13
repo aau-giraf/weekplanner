@@ -231,13 +231,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return GirafConfirmDialog(
-              title: 'Bekræft',
+              title: 'Slet ugeplaner',
               description: 'Vil du slette ' +
                   _weekBloc.getNumberOfMarkedWeekModels().toString() +
                   ' ugeplan(er)',
-              confirmButtonText: 'Bekræft',
+              confirmButtonText: 'Slet',
               confirmButtonIcon:
-                  const ImageIcon(AssetImage('assets/icons/accept.png')),
+                  const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: () {
                 _weekBloc.deleteMarkedWeekModels();
                 _weekBloc.toggleEditMode();
