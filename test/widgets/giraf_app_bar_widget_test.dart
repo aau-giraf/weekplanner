@@ -74,7 +74,7 @@ void main() {
 
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
-    expect(find.byTooltip('Indstillinger'), findsOneWidget);
+    expect(find.byTooltip('Log ud'), findsOneWidget);
   });
 
   testWidgets('Accept button is displayed', (WidgetTester tester) async {
