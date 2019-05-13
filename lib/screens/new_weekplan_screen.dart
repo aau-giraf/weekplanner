@@ -105,7 +105,7 @@ class NewWeekplanScreen extends StatelessWidget {
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            Padding(
+            /* Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               child: GirafButton(
                 text: 'Vælg skabelon',
@@ -114,7 +114,7 @@ class NewWeekplanScreen extends StatelessWidget {
                 onPressed: () {},
                 isEnabled: false,
               ),
-            ),
+            ), */
             Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
