@@ -19,13 +19,20 @@ class AuthBloc extends BlocBase {
 
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
-  /// Reflect the current clearance level of the user
+
+  /// Reflect the current clearence level of the user
   final BehaviorSubject<WeekplanMode> _mode =
   BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
   /// The stream that emits the current clearance level
   Observable<WeekplanMode> get mode => _mode.stream;
 
+
+  /// Stream that streams status of last login attemp from popup.
+  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+
+  final BehaviorSubject<bool> _loginAttempt =
+  BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password) {
@@ -40,6 +47,16 @@ class AuthBloc extends BlocBase {
         loggedInUsername = username;
         setMode(WeekplanMode.guardian);
       }
+    });
+  }
+
+  /// Authenticates the user only by password when signing-in from PopUp.
+  void authenticateFromPopUp(String username, String password) {
+    _api.account.login(username, password).listen((bool status) {
+      if (status) {
+          _loginAttempt.add(status);
+          setMode(WeekplanMode.guardian);
+        }
     });
   }
 
@@ -58,5 +75,6 @@ class AuthBloc extends BlocBase {
   void dispose() {
     _loggedIn.close();
     _mode.close();
+    _loginAttempt.close();
   }
 }

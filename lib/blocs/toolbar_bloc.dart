@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart';
@@ -9,10 +10,15 @@ import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
-  
+
+  /// If the confirm button in popup is clickable.
+  bool _clickable = true;
+
   final BehaviorSubject<List<IconButton>> _visibleButtons =
       BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
@@ -210,7 +216,9 @@ class ToolbarBloc extends BlocBase {
                 RichText(
                   text: TextSpan(
                     text: 'Logget ind som ',
-                    style: DefaultTextStyle.of(context).style,
+                    style: DefaultTextStyle
+                        .of(context)
+                        .style,
                     children: <TextSpan>[
                       TextSpan(
                           text: _authBloc.loggedInUsername,
@@ -232,10 +240,21 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 key: const Key('SwitchToGuardianSubmit'),
-                onPressed: () {
-                  login(_authBloc.loggedInUsername, passwordCtrl.value.text);
-                  Routes.pop(context);
-                },
+                  // Debouncer for button, so it cannot
+                  // be tapped than each 2 seconds.
+                  onPressed: _clickable
+                      ? () {
+                    if (_clickable) {
+                      _clickable = false;
+                      loginFromPopUp(context, _authBloc.loggedInUsername,
+                          passwordCtrl.value.text);
+                      // Timer makes it clicable again after 2 seconds.
+                      Timer(const Duration(milliseconds: 2000), () {
+                        _clickable = true;
+                      });
+                    }
+                  }
+                  : null,
                 child: const Text(
                   'Bekræft',
                   style: TextStyle(color: Colors.white, fontSize: 20),
@@ -376,9 +395,49 @@ class ToolbarBloc extends BlocBase {
     ),
   );
 
-  /// Used to authenticate a user.
-  void login(String username, String password) {
-    _authBloc.authenticate(username, password);
+  /// Status of last login attempt from popup
+  bool _loginStatus = false;
+
+  /// Indicates if the popup have been popped in this instance of the screen.
+  bool _popCalled = false;
+
+  /// Holds the current context
+  BuildContext _currentContext;
+
+  /// Used to authenticate a user from popup.
+  void loginFromPopUp(BuildContext context, String username, String password) {
+    showLoadingSpinner(context, false, _showFailureDialog, 2000);
+    _loginStatus = false;
+    _currentContext = context;
+    _authBloc.authenticateFromPopUp(username, password);
+    // Skip 1, since we should skip the seeded value.
+    _authBloc.loginAttempt.listen((bool snapshot) {
+      _loginStatus = snapshot;
+      if (snapshot && !_popCalled) {
+        // Pop the loading spinner
+        Routes.pop(context);
+        // Pop the pop up.
+        Routes.pop(context);
+        _popCalled = true;
+      }
+    });
+  }
+
+  /// Shows a failure dialog
+  void _showFailureDialog(){
+    if (!_loginStatus) {
+      //Pop the loading spinner.
+      Routes.pop(_currentContext);
+      showDialog<Center>(
+          barrierDismissible: false,
+          context: _currentContext,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl',
+                description: 'Forkert adgangskode',
+                key: Key('WrongPasswordDialog'));
+          });
+    }
   }
 
   @override

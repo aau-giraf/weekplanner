@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,18 +19,6 @@ class MockAuth extends Mock implements AuthBloc {
   @override
   String loggedInUsername = 'Graatand';
 
-  @override
-  void authenticate(String username, String password) {
-    // Mock the API and allow these 2 users to ?login?
-    final bool status = (username == 'test' && password == 'test') ||
-        (username == 'Graatand' && password == 'password');
-    // If there is a successful login, remove the loading spinner,
-    // and push the status to the stream
-    if (status) {
-      loggedInUsername = username;
-    }
-    _loggedIn.add(status);
-  }
 
   @override
   void logout() {
@@ -45,13 +32,12 @@ class MockScreen extends StatelessWidget {
     return Scaffold(
         appBar: GirafAppBar(
             title: 'TestTitle',
-            appBarIcons: const <AppBarIcon, VoidCallback>{
-              AppBarIcon.logout: null}));
+            appBarIcons: <AppBarIcon, VoidCallback>{
+              AppBarIcon.logout: null,
+              AppBarIcon.changeToGuardian: () {},
+            }));
   }
 }
-
-/// Used to retrieve the visibility widget wrapping the editbutton
-const String keyOfVisibilityForEdit = 'visibilityEditBtn';
 
 void main() {
   ToolbarBloc bloc;
