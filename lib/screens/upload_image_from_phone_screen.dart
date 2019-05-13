@@ -19,7 +19,7 @@ class UploadImageFromPhone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(title: 'Tilføj fra Galleri'),
+      appBar: GirafAppBar(title: 'Tilføj fra galleri'),
       body: StreamBuilder<bool>(
           stream: _uploadFromGallery.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
