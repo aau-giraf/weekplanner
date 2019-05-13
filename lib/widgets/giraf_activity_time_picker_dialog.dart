@@ -6,6 +6,8 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
+import 'giraf_notify_dialog.dart';
+
 /// The acitivty time picker dialog is a dialog, asking for a duration input.
 /// The duration should be inserted in the textfield, and the user can either
 /// cancel the dialog, or confirm to create the timer for the activity.
@@ -143,10 +145,27 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
       seconds: seconds,
     );
 
-    if (duration.inSeconds != 0 && hours >= 0 && minutes >= 0 && seconds >= 0)
-    {
+    if (duration.inSeconds != 0 && hours >= 0 && minutes >= 0 && seconds >= 0) {
       _timerBloc.addTimer(duration);
       Routes.pop(context);
+    } else {
+      showDialog<Center>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return GirafNotifyDialog(
+                key: const Key('TimerWrongInputKey'),
+                title: 'Forkert input',
+                description: (duration.inSeconds == 0 &&
+                            (_textEditingControllerHours.text != '' &&
+                                _textEditingControllerHours.text != '0') ||
+                        (_textEditingControllerMinutes.text != '' &&
+                            _textEditingControllerMinutes.text != '0') ||
+                        (_textEditingControllerSeconds.text != '' &&
+                            _textEditingControllerSeconds.text != '0'))
+                    ? 'Teksttfelterne må kun indholde tal'
+                    : 'Den indtastede tid må ikke være 0');
+          });
     }
   }
 }
