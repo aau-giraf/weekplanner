@@ -60,7 +60,7 @@ class MockScreen extends StatelessWidget {
 class MockScreenForErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ToolbarBloc bloc = di.getDependency<ToolbarBloc>();
+    final ToolbarBloc bloc = di.getDependency<ToolbarBloc>();
     return Scaffold(
       body: GirafButton(
         key: const Key('IconChangeToGuardian'),
