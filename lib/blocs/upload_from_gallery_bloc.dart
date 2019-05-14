@@ -25,8 +25,14 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Publishes the accessLevel for the pictogram
   Observable<String> get accessLevel => _accessString.stream;
 
+  /// The latest uploaded pictogram
+  Observable<PictogramModel> get pictogram => _pictogram.stream;
+
   /// Publishes if the input fields are filled
   Observable<bool> get isInputValid => _isInputValid.stream;
+
+  final PublishSubject<PictogramModel> _pictogram =
+      PublishSubject<PictogramModel>();
   final BehaviorSubject<bool> _isInputValid =
       BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<File> _file = BehaviorSubject<File>();
@@ -101,6 +107,7 @@ class UploadFromGalleryBloc extends BlocBase {
     }).listen((PictogramModel pictogram) {
       // TODO(scarress):  add proper succeses handling, https://github.com/aau-giraf/weekplanner/issues/245
       _isUploading.add(false);
+      _pictogram.add(pictogram);
     }, onError: (Object error) {
       // TODO(scarress):  add error handling, https://github.com/aau-giraf/weekplanner/issues/245
       _isUploading.add(false);

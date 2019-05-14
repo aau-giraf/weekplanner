@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
@@ -19,6 +21,9 @@ class UploadImageFromPhone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _uploadFromGallery.pictogram.listen((PictogramModel p) {
+      Routes.pop(context, p);
+    });
     return Scaffold(
       appBar: GirafAppBar(title: 'Tilføj fra galleri'),
       body: StreamBuilder<bool>(
@@ -89,7 +94,7 @@ class UploadImageFromPhone extends StatelessWidget {
           width: 250,
           height: 50,
           child: GirafButton(
-			  icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+            icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem billede',
             onPressed: _uploadFromGallery.createPictogram,
             isEnabledStream: _uploadFromGallery.isInputValid,
@@ -164,8 +169,9 @@ class UploadImageFromPhone extends StatelessWidget {
   Widget _displayImage(File image) {
     return Container(
       child: Image.file(image),
-      decoration:
-          BoxDecoration(borderRadius: _imageBorder, ),
+      decoration: BoxDecoration(
+        borderRadius: _imageBorder,
+      ),
     );
   }
 }
