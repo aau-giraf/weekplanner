@@ -204,66 +204,71 @@ class ToolbarBloc extends BlocBase {
       icon: Image.asset('assets/icons/changeToGuardian.png'),
       tooltip: 'Skift til værge tilstand',
       onPressed: () {
-        /// Password controller for passing information from a text field
-        /// to the authenticator.
-        final TextEditingController passwordCtrl = TextEditingController();
-        Alert(
-            context: context,
-            style: _alertStyle,
-            title: 'Skift til værge',
-            content: Column(
-              children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    text: 'Logget ind som ',
-                    style: DefaultTextStyle
-                        .of(context)
-                        .style,
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: _authBloc.loggedInUsername,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-                TextField(
-                  key: const Key('SwitchToGuardianPassword'),
-                  controller: passwordCtrl,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    icon: const Icon(Icons.lock),
-                    labelText: 'Adgangskode',
-                  ),
-                ),
-              ],
-            ),
-            buttons: <DialogButton>[
-              DialogButton(
-                key: const Key('SwitchToGuardianSubmit'),
-                  // Debouncer for button, so it cannot
-                  // be tapped than each 2 seconds.
-                  onPressed: _clickable
-                      ? () {
-                    if (_clickable) {
-                      _clickable = false;
-                      loginFromPopUp(context, _authBloc.loggedInUsername,
-                          passwordCtrl.value.text);
-                      // Timer makes it clicable again after 2 seconds.
-                      Timer(const Duration(milliseconds: 2000), () {
-                        _clickable = true;
-                      });
-                    }
-                  }
-                  : null,
-                child: const Text(
-                  'Bekræft',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                color: const Color.fromRGBO(255, 157, 0, 100),
-              )
-            ]).show();
+        createPopupDialog(context).show();
       },
     );
+  }
+
+  /// Return the dialog of the popup.
+  Alert createPopupDialog(BuildContext context){
+    /// Password controller for passing information from a text field
+    /// to the authenticator.
+    final TextEditingController passwordCtrl = TextEditingController();
+    return Alert(
+        context: context,
+        style: _alertStyle,
+        title: 'Skift til værge',
+        content: Column(
+          children: <Widget>[
+            RichText(
+              text: TextSpan(
+                text: 'Logget ind som ',
+                style: DefaultTextStyle
+                    .of(context)
+                    .style,
+                children: <TextSpan>[
+                  TextSpan(
+                      text: _authBloc.loggedInUsername,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            TextField(
+              key: const Key('SwitchToGuardianPassword'),
+              controller: passwordCtrl,
+              obscureText: true,
+              decoration: InputDecoration(
+                icon: const Icon(Icons.lock),
+                labelText: 'Adgangskode',
+              ),
+            ),
+          ],
+        ),
+        buttons: <DialogButton>[
+          DialogButton(
+            key: const Key('SwitchToGuardianSubmit'),
+            // Debouncer for button, so it cannot
+            // be tapped than each 2 seconds.
+            onPressed: _clickable
+                ? () {
+              if (_clickable) {
+                _clickable = false;
+                loginFromPopUp(context, _authBloc.loggedInUsername,
+                    passwordCtrl.value.text);
+                // Timer makes it clicable again after 2 seconds.
+                Timer(const Duration(milliseconds: 2000), () {
+                  _clickable = true;
+                });
+              }
+            }
+                : null,
+            child: const Text(
+              'Bekræft',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            color: const Color.fromRGBO(255, 157, 0, 100),
+          )
+        ]);
   }
 
   IconButton _createIconCopy(VoidCallback callback) {

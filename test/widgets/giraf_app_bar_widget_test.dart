@@ -11,6 +11,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Mocked authbloc by the use of Mockito
@@ -56,6 +57,21 @@ class MockScreen extends StatelessWidget {
 }
 
 
+class MockScreenForErrorDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ToolbarBloc bloc = di.getDependency<ToolbarBloc>();
+    return Scaffold(
+      body: GirafButton(
+        key: const Key('IconChangeToGuardian'),
+        onPressed: () {
+            bloc.createPopupDialog(context).show();
+        },
+      )
+    );
+  }
+}
+
 void main() {
   ToolbarBloc bloc;
   MockAuth authBloc;
@@ -79,11 +95,10 @@ void main() {
 
   testWidgets('Wrong credentials should show error dialog',
           (WidgetTester tester) async {
-
     // we have to use a diffent authbloc, where everything is not overridden.
     di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
-    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
+    await tester.pumpWidget(MaterialApp(home: MockScreenForErrorDialog()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
@@ -91,8 +106,8 @@ void main() {
 
     await tester.enterText(
         find.byKey(const Key('SwitchToGuardianPassword')), 'abc');
-    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
 
+    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('WrongPasswordDialog')),
@@ -105,7 +120,8 @@ void main() {
 
     di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
-    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
+    await tester.pumpWidget(makeTestableWidget(
+        child: MockScreenForErrorDialog()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
