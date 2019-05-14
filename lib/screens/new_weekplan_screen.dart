@@ -121,7 +121,6 @@ class NewWeekplanScreen extends StatelessWidget {
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   key: const Key('NewWeekplanSaveBtnKey'),
                   text: 'Gem ugeplan',
-                  width: 200,
                   isEnabled: false,
                   isEnabledStream: _bloc.allInputsAreValidStream,
                   onPressed: () {
