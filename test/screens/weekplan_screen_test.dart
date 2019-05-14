@@ -42,50 +42,11 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 class MockAuthBlock extends AuthBloc {
   MockAuthBlock(Api api) : super(api);
 
-  /// Stream that streams status of last login attemp from popup.
-  @override
-  Observable<bool> get loginAttempt =>_loginAttempt.stream;
-
-  final BehaviorSubject<bool> _loginAttempt =
-  BehaviorSubject<bool>.seeded(false);
-
   @override
   void authenticateFromPopUp(String username, String password) {
     if (password == 'password') {
-      _loginAttempt.add(true);
+      setAttempt(true);
       setMode(WeekplanMode.guardian);
-    }
-  }
-}
-
-
-class MockAuthBlocSetMode extends AuthBloc {
-  MockAuthBlocSetMode(Api api) : super(api);
-
-  // Used as a way to detect during testing, if setMode to Guardian is called.
-  bool switchedToGuardian = false;
-
-  @override
-  void setMode(WeekplanMode mode) {
-    if (mode == WeekplanMode.guardian){
-      switchedToGuardian = true;
-    }
-  }
-
-  @override
-  Observable<bool> get loginAttempt =>_loginAttempt.stream;
-
-  final BehaviorSubject<bool> _loginAttempt =
-  BehaviorSubject<bool>.seeded(true);
-
-  @override
-  void authenticateFromPopUp(String username, String password) {
-      _loginAttempt.add(true);
-      _loginAttempt.add(true);
-      _loginAttempt.add(true);
-      _loginAttempt.add(true);
-      setMode(WeekplanMode.guardian);
-    if (password == 'password') {
     }
   }
 }
@@ -613,7 +574,6 @@ void main() {
       done.complete();
     });
 
-
     authBloc.setMode(WeekplanMode.citizen);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
@@ -624,17 +584,14 @@ void main() {
 
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+    //authBloc.setAttempt(true);
+    await tester.pumpAndSettle(const Duration(seconds:2));
 
-    await tester.pumpAndSettle();
 
     tapComplete.complete();
 
-
-    final VerificationResult verificationResult =
-    verify(observer.didPop(any, any));
-
     // Should pop twice, first for the loading spinner, second for the popup.
-    expect(verificationResult.callCount, 2);
+    verify(observer.didPop(any, any)).called(2);
 
     expect(find.byKey(const Key('WrongPasswordDialog')),
         findsNothing);
