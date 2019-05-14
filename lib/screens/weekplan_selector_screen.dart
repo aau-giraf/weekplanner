@@ -4,7 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/weekplans_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
@@ -29,10 +29,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GirafAppBar(
-        title: 'Vælg ugeplan',
+        title: _user.name,
         appBarIcons: <AppBarIcon, VoidCallback>{
           AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-          AppBarIcon.settings: () {},
           AppBarIcon.logout: () {}
         },
       ),
@@ -231,13 +230,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return GirafConfirmDialog(
-              title: 'Bekræft',
+              title: 'Slet ugeplaner',
               description: 'Vil du slette ' +
                   _weekBloc.getNumberOfMarkedWeekModels().toString() +
                   ' ugeplan(er)',
-              confirmButtonText: 'Bekræft',
+              confirmButtonText: 'Slet',
               confirmButtonIcon:
-                  const ImageIcon(AssetImage('assets/icons/accept.png')),
+                  const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: () {
                 _weekBloc.deleteMarkedWeekModels();
                 _weekBloc.toggleEditMode();

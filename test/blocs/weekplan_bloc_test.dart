@@ -36,31 +36,37 @@ void main() {
   WeekplanBloc weekplanBloc;
   Api api;
 
-  final WeekModel week = WeekModel(
-      thumbnail: PictogramModel(
-          imageUrl: null,
-          imageHash: null,
-          accessLevel: null,
-          title: null,
-          id: null,
-          lastEdit: null),
-      days: <WeekdayModel>[
-        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
-        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
-      ],
-      name: 'Week',
-      weekNumber: 1,
-      weekYear: 2019);
+  WeekModel week;
 
   final UsernameModel user =
       UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
 
   setUp(() {
+    week = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
     api = Api('any');
 
     api.user = MockUserApi();
     api.week = MockWeekApi();
-    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+    when(api.week.update(any, any, any, any)).thenAnswer((Invocation inv) {
+      return Observable<WeekModel>.just(inv.positionalArguments[3]);
+    });
+
+    when(api.week.get(any, any, any)).thenAnswer((Invocation inv) {
       return Observable<WeekModel>.just(week);
     });
 
@@ -68,15 +74,14 @@ void main() {
   });
 
   test('Loads a weekplan for the weekplan view', async((DoneFn done) {
-    final WeekModel week = WeekModel(name: 'test week');
-
     weekplanBloc.userWeek.listen((UserWeekModel response) {
       expect(response, isNotNull);
       expect(response.week, equals(week));
+      verify(api.week.get(user.id, week.weekYear, week.weekNumber));
       done();
     });
 
-    weekplanBloc.setWeek(week, null);
+    weekplanBloc.loadWeek(week, user);
   }));
 
   test('Adds an activity to a list of marked activities', async((DoneFn done) {
@@ -241,18 +246,20 @@ void main() {
         weekNumber: 1,
         weekYear: 2019);
 
-    weekplanBloc.setWeek(weekModel, user);
-
-    weekplanBloc.addMarkedActivity(activity);
-
-    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeekModel) {
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addMarkedActivity(activity);
+      return weekplanBloc.userWeek.take(1);
+    }).flatMap((_) {
+      weekplanBloc.deleteMarkedActivities();
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeekModel) {
       verify(api.week.update(any, any, any, any));
       expect(userWeekModel.week.days[Weekday.Monday.index].activities,
           <ActivityModel>[]);
       done();
     });
 
-    weekplanBloc.deleteMarkedActivities();
+    weekplanBloc.loadWeek(weekModel, user);
   }));
 
   test('Checks if marked activities are copied to a new day',
@@ -273,7 +280,7 @@ void main() {
         order: null,
         state: null);
 
-    final WeekModel weekModel = WeekModel(
+    week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
@@ -318,19 +325,24 @@ void main() {
       return Observable<WeekModel>.just(newWeekModel);
     });
 
-    weekplanBloc.setWeek(weekModel, user);
-
-    weekplanBloc.addMarkedActivity(activity);
-
-    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeekModel) {
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addMarkedActivity(activity);
+      return weekplanBloc.userWeek.take(1);
+    }).flatMap((_) {
+      // Copy to Friday
+      weekplanBloc.copyMarkedActivities(
+          <bool>[false, false, false, false, true, false, false]);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeekModel) {
       verify(api.week.update(any, any, any, any));
       expect(
           userWeekModel.week.days[Weekday.Friday.index].activities.length, 1);
       done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
     });
-    // Copy to Friday
-    weekplanBloc.copyMarkedActivities(
-        <bool>[false, false, false, false, true, false, false]);
+
+    weekplanBloc.loadWeek(week, user);
   }));
 
   test('Checks if marked activities are marked as cancel', async((DoneFn done) {
@@ -363,7 +375,7 @@ void main() {
         order: null,
         state: ActivityState.Canceled);
 
-    final WeekModel weekModel = WeekModel(
+    week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
@@ -407,18 +419,23 @@ void main() {
       return Observable<WeekModel>.just(newWeekModel);
     });
 
-    weekplanBloc.setWeek(weekModel, user);
-
-    weekplanBloc.addMarkedActivity(activity);
-
-    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeekModel) {
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addMarkedActivity(activity);
+      return weekplanBloc.userWeek.take(1);
+    }).flatMap((_) {
+      weekplanBloc.cancelMarkedActivities();
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeekModel) {
       verify(api.week.update(any, any, any, any));
       expect(
           userWeekModel.week.days[Weekday.Monday.index].activities.first.state,
           ActivityState.Canceled);
       done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
     });
-    weekplanBloc.cancelMarkedActivities();
+
+    weekplanBloc.loadWeek(week, user);
   }));
 
   test('Checks if the edit mode toggles from true', async((DoneFn done) {
@@ -444,23 +461,25 @@ void main() {
         id: null,
         pictogram: null);
 
-    weekplanBloc.userWeek.skip(1).listen((UserWeekModel userWeek) {
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addActivity(activity, 0);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeek) {
       verify(api.week.update(any, any, any, any));
       expect(userWeek.week, week);
       expect(userWeek.user, user);
       expect(userWeek.week.days.first.activities.length, 1);
       expect(userWeek.week.days.first.activities.first, activity);
       done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
     });
 
-    // Used by the addActivity
-    weekplanBloc.setWeek(week, user);
-
-    weekplanBloc.addActivity(activity, 0);
+    weekplanBloc.loadWeek(week, user);
   }));
 
   test('Reorder activity from monday to tuesday', async((DoneFn done) {
-    final WeekModel week = WeekModel(
+    week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
@@ -482,22 +501,25 @@ void main() {
     week.days[1].activities.add(ActivityModel(
         id: 2, pictogram: null, order: 0, state: null, isChoiceBoard: false));
 
-    weekplanBloc.setWeek(week, user);
-
-    weekplanBloc.userWeek.skip(1).listen((UserWeekModel response) {
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.reorderActivities(
+          modelToMove, Weekday.Monday, Weekday.Tuesday, 1);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel response) {
       expect(response.week.days[1].activities[0].id, 2);
       expect(response.week.days[1].activities[1].id, modelToMove.id);
       expect(response.week.days[0].activities.length, 0);
       expect(response.week.days[1].activities.length, 2);
       done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
     });
 
-    weekplanBloc.reorderActivities(
-        modelToMove, Weekday.Monday, Weekday.Tuesday, 1);
+    weekplanBloc.loadWeek(week, user);
   }));
 
   test('Reorder activity from monday to monday', async((DoneFn done) {
-    final WeekModel testWeek = WeekModel(
+    week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
             imageHash: null,
@@ -515,25 +537,32 @@ void main() {
 
     final ActivityModel modelToMove = ActivityModel(
         id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
-    testWeek.days[0].activities.add(modelToMove);
-    testWeek.days[0].activities.add(ActivityModel(
+
+    week.days[0].activities.add(modelToMove);
+
+    week.days[0].activities.add(ActivityModel(
         id: 2, pictogram: null, order: 1, state: null, isChoiceBoard: false));
-    testWeek.days[0].activities.add(ActivityModel(
+
+    week.days[0].activities.add(ActivityModel(
         id: 3, pictogram: null, order: 2, state: null, isChoiceBoard: false));
 
-    weekplanBloc.setWeek(testWeek, user);
-
-    weekplanBloc.userWeek.skip(1).listen((UserWeekModel response) {
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.reorderActivities(
+          modelToMove, Weekday.Monday, Weekday.Monday, 2);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel response) {
       expect(response.week.days[0].activities[0].id, 2);
       expect(response.week.days[0].activities[0].order, 0);
       expect(response.week.days[0].activities[1].id, 3);
       expect(response.week.days[0].activities[1].order, 1);
       expect(response.week.days[0].activities[2].id, 1);
       expect(response.week.days[0].activities[2].order, 2);
+
       done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
     });
 
-    weekplanBloc.reorderActivities(
-        modelToMove, Weekday.Monday, Weekday.Monday, 2);
+    weekplanBloc.loadWeek(week, user);
   }));
 }

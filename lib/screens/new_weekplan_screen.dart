@@ -21,11 +21,10 @@ class NewWeekplanScreen extends StatelessWidget {
   }
 
   final NewWeekplanBloc _bloc;
+  final TextStyle _style = const TextStyle(fontSize: 20);
 
   @override
   Widget build(BuildContext context) {
-    const TextStyle _style = TextStyle(fontSize: 20);
-
     return Scaffold(
         appBar: GirafAppBar(title: 'Ny ugeplan'),
         body: ListView(children: <Widget>[
@@ -106,22 +105,12 @@ class NewWeekplanScreen extends StatelessWidget {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              child: GirafButton(
-                text: 'Vælg skabelon',
-                width: 160,
-                // Handle when a weekplan is made from a template
-                onPressed: () {},
-                isEnabled: false,
-              ),
-            ),
-            Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                 child: GirafButton(
+                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   key: const Key('NewWeekplanSaveBtnKey'),
                   text: 'Gem ugeplan',
-                  width: 160,
                   isEnabled: false,
                   isEnabledStream: _bloc.allInputsAreValidStream,
                   onPressed: () {
@@ -142,7 +131,15 @@ class NewWeekplanScreen extends StatelessWidget {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context),
         child: Card(
-          child: FittedBox(fit: BoxFit.contain, child: const Icon(Icons.image)),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Text('Vælg billede til ugeplan', style: _style),
+              ),
+              Expanded(child: Image.asset('assets/icons/galleryBig.png')),
+            ],
+          ),
         ),
       );
     } else {

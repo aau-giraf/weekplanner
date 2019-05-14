@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,10 +8,13 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
+/// Mocked authbloc by the use of Mockito
 class MockAuth extends Mock implements AuthBloc {
   @override
   Observable<bool> get loggedIn => _loggedIn.stream;
@@ -23,6 +27,19 @@ class MockAuth extends Mock implements AuthBloc {
   @override
   void logout() {
     _loggedIn.add(false);
+  }
+}
+
+/// Mockec authbloc without the use of Mockito
+class MockAuthBloc extends AuthBloc {
+  MockAuthBloc(Api api) : super(api);
+
+  @override
+  void authenticateFromPopUp(String username, String password) {
+    if (password == 'password') {
+      setAttempt(true);
+      setMode(WeekplanMode.guardian);
+    }
   }
 }
 
@@ -39,9 +56,26 @@ class MockScreen extends StatelessWidget {
   }
 }
 
+
+class MockScreenForErrorDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final ToolbarBloc bloc = di.getDependency<ToolbarBloc>();
+    return Scaffold(
+      body: GirafButton(
+        key: const Key('IconChangeToGuardian'),
+        onPressed: () {
+            bloc.createPopupDialog(context).show();
+        },
+      )
+    );
+  }
+}
+
 void main() {
   ToolbarBloc bloc;
   MockAuth authBloc;
+  final Api api = Api('any');
 
   setUp(() {
     di.clearAll();
@@ -59,6 +93,70 @@ void main() {
     );
   }
 
+  void setupAlternativeDependencies() {
+    di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
+  }
+
+
+  testWidgets('Elements on dialog should be visible',
+          (WidgetTester tester) async {
+    // we have to use a diffent authbloc, where everything is not overridden
+    setupAlternativeDependencies();
+    await tester.pumpWidget(MaterialApp(home: MockScreenForErrorDialog()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('SwitchToGuardianPassword')),
+           findsOneWidget);
+
+    expect(find.byKey(const Key('SwitchToGuardianSubmit')), findsOneWidget);
+  });
+
+  testWidgets('Wrong credentials should show error dialog',
+          (WidgetTester tester) async {
+    // we have to use a diffent authbloc, where everything is not overridden
+    setupAlternativeDependencies();
+    await tester.pumpWidget(MaterialApp(home: MockScreenForErrorDialog()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('SwitchToGuardianPassword')), 'abc');
+
+    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('WrongPasswordDialog')),
+        findsOneWidget);
+
+  });
+
+  testWidgets('Right credentials should not show error dialog',
+          (WidgetTester tester) async {
+    setupAlternativeDependencies();
+    await tester.pumpWidget(makeTestableWidget(
+        child: MockScreenForErrorDialog()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('SwitchToGuardianPassword')), 'password');
+    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+    await tester.pumpAndSettle(const Duration(seconds:2));
+
+    expect(find.byKey(const Key('WrongPasswordDialog')),
+        findsNothing);
+
+  });
+
   testWidgets('Has toolbar with title', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(title: 'Ugeplan');
 
@@ -67,7 +165,7 @@ void main() {
     expect(find.text('Ugeplan'), findsOneWidget);
   });
 
-  testWidgets('Display default icons when given no icons to display',
+  testWidgets('Display default icon when given no icons to display',
       (WidgetTester tester) async {
     final GirafAppBar girafAppBar =
         GirafAppBar(title: 'Ugeplan', appBarIcons: null);
@@ -75,7 +173,6 @@ void main() {
     await tester.pumpWidget(makeTestableWidget(child: girafAppBar));
     await tester.pump();
     expect(find.byTooltip('Log ud'), findsOneWidget);
-    expect(find.byTooltip('Indstillinger'), findsOneWidget);
   });
 
   testWidgets('Accept button is displayed', (WidgetTester tester) async {
