@@ -66,6 +66,8 @@ class WeekplanScreen extends StatelessWidget {
                   : <AppBarIcon, VoidCallback>{
                       AppBarIcon.changeToGuardian: () {}
                     },
+              isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
+              
             ),
             body: StreamBuilder<UserWeekModel>(
               stream: _weekplanBloc.userWeek,
