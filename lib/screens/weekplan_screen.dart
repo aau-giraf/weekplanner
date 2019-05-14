@@ -51,13 +51,12 @@ class WeekplanScreen extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen) {            
+          if (weekModeSnapshot.data == WeekplanMode.citizen) {
             _weekplanBloc.setEditMode(false);
           }
           return WillPopScope(
-            onWillPop: (weekModeSnapshot.data == WeekplanMode.guardian)
-              ? () async => true
-              : () async => false,
+            onWillPop: () async =>
+                weekModeSnapshot.data == WeekplanMode.guardian,
             child: Scaffold(
               appBar: GirafAppBar(
                 title: _user.name + ' - ' + _week.name,
