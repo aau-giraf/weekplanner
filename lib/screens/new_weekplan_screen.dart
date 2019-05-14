@@ -143,11 +143,11 @@ class NewWeekplanScreen extends StatelessWidget {
         child: Card(
           child: Column(
             children: <Widget>[
-              Text('Vælg billede til ugeplan',
-                  style: _style),
-              Expanded(
-                  child: FittedBox(
-                      fit: BoxFit.fill, child: const Icon(Icons.image))),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Text('Vælg billede til ugeplan', style: _style),
+              ),
+              Expanded(child: Image.asset('assets/icons/galleryBig.png')),
             ],
           ),
         ),
