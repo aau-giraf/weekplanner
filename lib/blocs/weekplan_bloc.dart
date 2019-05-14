@@ -14,7 +14,7 @@ class WeekplanBloc extends BlocBase {
   /// Constructor that initializes _api
   WeekplanBloc(this._api);
 
-   /// The stream that emits the currently chosen weekplan
+  /// The stream that emits the currently chosen weekplan
   Observable<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in editMode or not
@@ -38,8 +38,12 @@ class WeekplanBloc extends BlocBase {
       BehaviorSubject<bool>.seeded(false);
 
   /// Sink to set the currently chosen week
-  void setWeek(WeekModel week, UsernameModel user) {
-    _userWeek.add(UserWeekModel(week, user));
+  void loadWeek(WeekModel week, UsernameModel user) {
+    _api.week
+        .get(user.id, week.weekYear, week.weekNumber)
+        .listen((WeekModel loadedWeek) {
+      _userWeek.add(UserWeekModel(loadedWeek, user));
+    });
   }
 
   /// Adds a new marked activity to the stream
@@ -104,8 +108,8 @@ class WeekplanBloc extends BlocBase {
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
-          _userWeek.add(UserWeekModel(newWeek, user));
-        });
+      _userWeek.add(UserWeekModel(newWeek, user));
+    });
   }
 
   /// Copies the marked activities to the given days
@@ -140,8 +144,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  int _getMaxOrder(List<ActivityModel> activities)
-  {
+  int _getMaxOrder(List<ActivityModel> activities) {
     int max = 0;
 
     for (ActivityModel activity in activities) {
@@ -161,7 +164,7 @@ class WeekplanBloc extends BlocBase {
   }
 
   /// Manually set edit mode
-  void setEditMode(bool value){
+  void setEditMode(bool value) {
     if (_editMode.value) {
       clearMarkedActivities();
     }
