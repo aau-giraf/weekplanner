@@ -13,6 +13,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
+/// Mocked authbloc by the use of Mockito
 class MockAuth extends Mock implements AuthBloc {
   @override
   Observable<bool> get loggedIn => _loggedIn.stream;
@@ -28,6 +29,7 @@ class MockAuth extends Mock implements AuthBloc {
   }
 }
 
+/// Mockec authbloc without the use of Mockito
 class MockAuthBloc extends AuthBloc {
   MockAuthBloc(Api api) : super(api);
 
