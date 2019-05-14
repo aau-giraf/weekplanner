@@ -51,58 +51,62 @@ class WeekplanScreen extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen) {            
+          if (weekModeSnapshot.data == WeekplanMode.citizen) {
             _weekplanBloc.setEditMode(false);
           }
-          return Scaffold(
-            appBar: GirafAppBar(
-              title: _user.name + ' - ' + _week.name,
-              appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
-                  ? <AppBarIcon, VoidCallback>{
-                      AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                      AppBarIcon.changeToCitizen: () {},
-                      AppBarIcon.logout: () {}
-                    }
-                  : <AppBarIcon, VoidCallback>{
-                      AppBarIcon.changeToGuardian: () {}
-                    },
-              isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
-            ),
-            body: StreamBuilder<UserWeekModel>(
-              stream: _weekplanBloc.userWeek,
-              initialData: null,
-              builder: (BuildContext context,
-                  AsyncSnapshot<UserWeekModel> snapshot) {
-                if (snapshot.hasData) {
-                  return _buildWeeks(snapshot.data.week, context);
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-            bottomNavigationBar: StreamBuilder<WeekplanMode>(
-              stream: _authBloc.mode,
-              initialData: WeekplanMode.guardian,
-              builder:
-                  (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
-                return Visibility(
-                  visible: snapshot.data == WeekplanMode.guardian,
-                  child: StreamBuilder<bool>(
-                    stream: _weekplanBloc.editMode,
-                    initialData: false,
-                    builder:
-                        (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                      if (snapshot.data) {
-                        return buildBottomAppBar(context);
-                      } else {
-                        return Container(width: 0.0, height: 0.0);
+          return WillPopScope(
+            onWillPop: () async =>
+                weekModeSnapshot.data == WeekplanMode.guardian,
+            child: Scaffold(
+              appBar: GirafAppBar(
+                title: _user.name + ' - ' + _week.name,
+                appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
+                    ? <AppBarIcon, VoidCallback>{
+                        AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
+                        AppBarIcon.changeToCitizen: () {},
+                        AppBarIcon.logout: () {}
                       }
-                    },
-                  ),
-                );
-              },
+                    : <AppBarIcon, VoidCallback>{
+                        AppBarIcon.changeToGuardian: () {}
+                      },
+                isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
+              ),
+              body: StreamBuilder<UserWeekModel>(
+                stream: _weekplanBloc.userWeek,
+                initialData: null,
+                builder: (BuildContext context,
+                    AsyncSnapshot<UserWeekModel> snapshot) {
+                  if (snapshot.hasData) {
+                    return _buildWeeks(snapshot.data.week, context);
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+              bottomNavigationBar: StreamBuilder<WeekplanMode>(
+                stream: _authBloc.mode,
+                initialData: WeekplanMode.guardian,
+                builder: (BuildContext context,
+                    AsyncSnapshot<WeekplanMode> snapshot) {
+                  return Visibility(
+                    visible: snapshot.data == WeekplanMode.guardian,
+                    child: StreamBuilder<bool>(
+                      stream: _weekplanBloc.editMode,
+                      initialData: false,
+                      builder:
+                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                        if (snapshot.data) {
+                          return buildBottomAppBar(context);
+                        } else {
+                          return Container(width: 0.0, height: 0.0);
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           );
         });
