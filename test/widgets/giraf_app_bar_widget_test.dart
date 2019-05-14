@@ -93,11 +93,32 @@ void main() {
     );
   }
 
-  testWidgets('Wrong credentials should show error dialog',
-          (WidgetTester tester) async {
-    // we have to use a diffent authbloc, where everything is not overridden.
+  void setupAlternativeDependencies() {
     di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
+  }
+
+
+  testWidgets('Elements on dialog should be visible',
+          (WidgetTester tester) async {
+    // we have to use a diffent authbloc, where everything is not overridden
+    setupAlternativeDependencies();
+    await tester.pumpWidget(MaterialApp(home: MockScreenForErrorDialog()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('SwitchToGuardianPassword')),
+           findsOneWidget);
+
+    expect(find.byKey(const Key('SwitchToGuardianSubmit')), findsOneWidget);
+  });
+
+  testWidgets('Wrong credentials should show error dialog',
+          (WidgetTester tester) async {
+    // we have to use a diffent authbloc, where everything is not overridden
+    setupAlternativeDependencies();
     await tester.pumpWidget(MaterialApp(home: MockScreenForErrorDialog()));
     await tester.pumpAndSettle();
 
@@ -117,9 +138,7 @@ void main() {
 
   testWidgets('Right credentials should not show error dialog',
           (WidgetTester tester) async {
-
-    di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
+    setupAlternativeDependencies();
     await tester.pumpWidget(makeTestableWidget(
         child: MockScreenForErrorDialog()));
     await tester.pumpAndSettle();
