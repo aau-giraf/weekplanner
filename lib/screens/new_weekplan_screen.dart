@@ -118,9 +118,10 @@ class NewWeekplanScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                 child: GirafButton(
+                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   key: const Key('NewWeekplanSaveBtnKey'),
                   text: 'Gem ugeplan',
-                  width: 160,
+                  width: 200,
                   isEnabled: false,
                   isEnabledStream: _bloc.allInputsAreValidStream,
                   onPressed: () {
