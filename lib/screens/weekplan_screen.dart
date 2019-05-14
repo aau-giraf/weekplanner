@@ -51,7 +51,7 @@ class WeekplanScreen extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen) {
+          if (weekModeSnapshot.data == WeekplanMode.citizen) {            
             _weekplanBloc.setEditMode(false);
           }
           return Scaffold(
