@@ -389,7 +389,6 @@ class ShowActivityScreen extends StatelessWidget {
                           onPressed: () {
                             _activityBloc.cancelActivity();
                           },
-                          width: 130,
                           text: activitySnapshot.data.state != 
                                   ActivityState.Canceled
                               ? 'Aflys'
