@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,6 +8,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -26,6 +28,18 @@ class MockAuth extends Mock implements AuthBloc {
   }
 }
 
+class MockAuthBloc extends AuthBloc {
+  MockAuthBloc(Api api) : super(api);
+
+  @override
+  void authenticateFromPopUp(String username, String password) {
+    if (password == 'password') {
+      setAttempt(true);
+      setMode(WeekplanMode.guardian);
+    }
+  }
+}
+
 class MockScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,9 +53,11 @@ class MockScreen extends StatelessWidget {
   }
 }
 
+
 void main() {
   ToolbarBloc bloc;
   MockAuth authBloc;
+  Api api = Api('any');
 
   setUp(() {
     di.clearAll();
@@ -58,6 +74,51 @@ void main() {
       home: child,
     );
   }
+
+  testWidgets('Wrong credentials should show error dialog',
+          (WidgetTester tester) async {
+
+    // we have to use a diffent authbloc, where everything is not overridden.
+    di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
+    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('SwitchToGuardianPassword')), 'abc');
+    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('WrongPasswordDialog')),
+        findsOneWidget);
+
+  });
+
+  testWidgets('Right credentials should not show error dialog',
+          (WidgetTester tester) async {
+
+    di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
+    await tester.pumpWidget(makeTestableWidget(child: MockScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+        find.byKey(const Key('SwitchToGuardianPassword')), 'password');
+    await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+    await tester.pumpAndSettle(const Duration(seconds:2));
+
+    expect(find.byKey(const Key('WrongPasswordDialog')),
+        findsNothing);
+
+  });
 
   testWidgets('Has toolbar with title', (WidgetTester tester) async {
     final GirafAppBar girafAppBar = GirafAppBar(title: 'Ugeplan');
