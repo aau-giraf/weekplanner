@@ -159,26 +159,6 @@ void main() {
             .inMilliseconds);
   });
 
-
-  testWidgets(
-      'Test that wrong input on textfields prompts a notify dialog'
-          'with correct message', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: MockScreen()));
-    await tester.tap(find.byKey(const Key('TimePickerOpenButton')));
-    await tester.pump();
-    await tester.enterText(find.byKey(const Key('TimerTextFieldKey')), 'ab');
-    await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('MinutterTextFieldKey')), 'cd');
-    await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('SekunderTextFieldKey')), 'ef');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
-    await tester.pumpAndSettle();
-    expect(find.text('Teksttfelterne må kun indholde tal'), findsOneWidget);
-  });
-
   testWidgets(
       'Test that wrong 0 time input on textfields prompts a notify dialog'
           'with correct message', (WidgetTester tester) async {
@@ -195,7 +175,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
     await tester.pump();
-    expect(find.text('Den indtastede tid må ikke være 0'), findsOneWidget);
+    expect(find.text('Den valgte tid må ikke være 0'), findsOneWidget);
   });
 
   testWidgets(
@@ -206,6 +186,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.byKey(const Key('TimePickerDialogAcceptButton')));
     await tester.pump();
-    expect(find.text('Den indtastede tid må ikke være 0'), findsOneWidget);
+    expect(find.text('Den valgte tid må ikke være 0'), findsOneWidget);
   });
 }
