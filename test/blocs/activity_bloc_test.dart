@@ -1,3 +1,4 @@
+import 'package:api_client/api/activity_api.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -14,10 +15,13 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+class MockActivityApi extends Mock implements ActivityApi {}
+
 void main() {
   ActivityBloc bloc;
   Api api;
   MockWeekApi weekApi;
+  MockActivityApi activityApi;
 
   final UsernameModel mockUser =
       UsernameModel(id: '50', name: null, role: null);
@@ -49,12 +53,16 @@ void main() {
     when(weekApi.update(mockUser.id, mockWeekModel.weekYear,
             mockWeekModel.weekNumber, mockWeekModel))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeekModel));
+    when(activityApi.update(mockActivity, mockUser.id))
+        .thenAnswer((_) => BehaviorSubject<ActivityModel>.seeded(mockActivity));
   }
 
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
     api.week = weekApi;
+    activityApi = MockActivityApi();
+    api.activity = activityApi;
     bloc = ActivityBloc(api);
 
     setupApiCalls();
@@ -63,8 +71,8 @@ void main() {
   test('Should set activity to completed', async((DoneFn done) {
     final ActivityModel localActivity = mockActivity;
 
-    bloc.load(mockWeekModel, localActivity, mockUser);
-    bloc.completeActivity(mockWeekModel.days.first);
+    bloc.load(localActivity, mockUser);
+    bloc.completeActivity();
 
     expect(localActivity.state, equals(ActivityState.Completed));
     done();
@@ -73,7 +81,7 @@ void main() {
   test('Should set activity to cancelled', async((DoneFn done) {
     final ActivityModel localActivity = mockActivity;
 
-    bloc.load(mockWeekModel, localActivity, mockUser);
+    bloc.load(localActivity, mockUser);
     bloc.cancelActivity();
 
     expect(localActivity.state, equals(ActivityState.Canceled));

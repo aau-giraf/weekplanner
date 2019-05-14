@@ -1,50 +1,40 @@
-import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/username_model.dart';
-import 'package:api_client/models/week_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 
 /// Logic for activities
 class ActivityBloc extends BlocBase {
   /// Default Constructor.
-  /// Initilizes values
+  /// Initializes values
   ActivityBloc(this._api);
 
-  /// Stream for updated weekmodel.
+  /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
-  /// BehaivorSubject for the updated weekmodel.
+  /// BehaviorSubject for the updated ActivityModel.
   final BehaviorSubject<ActivityModel> _activityModelStream =
       BehaviorSubject<ActivityModel>();
 
   final Api _api;
   ActivityModel _activityModel;
-  WeekModel _weekModel;
   UsernameModel _user;
 
-  /// Loads the WeekModel, ActivityModel and the GirafUser.
-  void load(
-      WeekModel weekModel, ActivityModel activityModel, UsernameModel user) {
+  /// Loads the ActivityModel and the GirafUser.
+  void load(ActivityModel activityModel, UsernameModel user) {
     _activityModel = activityModel;
-    _weekModel = weekModel;
     _user = user;
     _activityModelStream.add(activityModel);
   }
 
   /// Mark the selected activity as complete. Toggle function, if activity is
   /// Completed, it will become Normal
-  void completeActivity(WeekdayModel weekday) {
-    if (_activityModel.state != ActivityState.Completed) {
-      _activityModel.state = ActivityState.Completed;
-    } else {
-      _activityModel.state = ActivityState.Active;
-    }
-
-    _weekModel.days[weekday.day.index] = weekday;
-
+  void completeActivity() {
+    _activityModel.state = _activityModel.state == ActivityState.Completed
+        ? ActivityState.Normal
+        : ActivityState.Completed;
     update();
   }
 
@@ -57,15 +47,13 @@ class ActivityBloc extends BlocBase {
     update();
   }
 
-  /// Update the weekmodel with the new state.
+  /// Update the Activity with the new state.
   void update() {
-    _api.week
-        .update(
-            _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel)
-        .listen((WeekModel weekModel) {
-      // A better endpoint would be needed to add the result from the API.
-      _activityModelStream.add(_activityModel);
-      _weekModel = weekModel;
+    _api.activity
+        .update(_activityModel, _user.id)
+        .listen((ActivityModel activityModel) {
+      _activityModelStream.add(activityModel);
+      _activityModel = activityModel;
     });
   }
 

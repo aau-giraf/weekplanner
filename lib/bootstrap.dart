@@ -6,14 +6,16 @@ import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/blocs/weekplans_bloc.dart';
+import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/add_activity_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
-
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 
 /// Bootstrap the project
 class Bootstrap {
@@ -39,7 +41,7 @@ class Bootstrap {
       return WeekplansBloc(i.getDependency<Api>());
     });
 
-    di.registerSingleton<ToolbarBloc>((_) {
+    di.registerDependency<ToolbarBloc>((_) {
       return ToolbarBloc();
     });
     di.registerDependency<ChooseCitizenBloc>((Injector i) {
@@ -57,7 +59,7 @@ class Bootstrap {
     di.registerSingleton<NewWeekplanBloc>((Injector i) {
       return NewWeekplanBloc(i.getDependency<Api>());
     });
-    
+
     di.registerDependency<AddActivityBloc>((_) {
       return AddActivityBloc();
     });
@@ -68,6 +70,18 @@ class Bootstrap {
 
     di.registerDependency<SettingsBloc>((Injector i) {
       return SettingsBloc();
+    });
+
+    di.registerDependency((Injector i) {
+      return UploadFromGalleryBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency<CopyActivitiesBloc>((_) {
+      return CopyActivitiesBloc();
+    });
+
+    di.registerDependency<TimerBloc>((Injector i) {
+      return TimerBloc(i.getDependency<Api>());
     });
   }
 }

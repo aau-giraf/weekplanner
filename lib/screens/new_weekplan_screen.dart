@@ -8,6 +8,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// Screen for creating a new weekplan.
@@ -20,11 +21,10 @@ class NewWeekplanScreen extends StatelessWidget {
   }
 
   final NewWeekplanBloc _bloc;
+  final TextStyle _style = const TextStyle(fontSize: 20);
 
   @override
   Widget build(BuildContext context) {
-    const TextStyle _style = TextStyle(fontSize: 20);
-
     return Scaffold(
         appBar: GirafAppBar(title: 'Ny ugeplan'),
         body: ListView(children: <Widget>[
@@ -103,34 +103,25 @@ class NewWeekplanScreen extends StatelessWidget {
               ),
             ),
           ),
-          ButtonTheme(
-            minWidth: 130,
-            height: 50,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-                    child: RaisedButton(
-                      child: Text(
-                        'Vælg skabelon',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      color: Colors.blue,
-                      // Handle when a weekplan is made from a template
-                      onPressed: null,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 24),
-                    child: StreamBuilder<bool>(
-                      stream: _bloc.allInputsAreValidStream,
-                      builder: _buildSaveButton,
-                    ),
-                  ),
-                ]),
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                child: GirafButton(
+                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+                  key: const Key('NewWeekplanSaveBtnKey'),
+                  text: 'Gem ugeplan',
+                  isEnabled: false,
+                  isEnabledStream: _bloc.allInputsAreValidStream,
+                  onPressed: () {
+                    _bloc.saveWeekplan().listen((WeekModel response) {
+                      if (response != null) {
+                        Routes.pop<WeekModel>(context, response);
+                      }
+                    });
+                  },
+                )),
+          ]),
         ]));
   }
 
@@ -140,7 +131,15 @@ class NewWeekplanScreen extends StatelessWidget {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context),
         child: Card(
-          child: FittedBox(fit: BoxFit.contain, child: const Icon(Icons.image)),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Text('Vælg billede til ugeplan', style: _style),
+              ),
+              Expanded(child: Image.asset('assets/icons/galleryBig.png')),
+            ],
+          ),
         ),
       );
     } else {
@@ -148,26 +147,6 @@ class NewWeekplanScreen extends StatelessWidget {
           pictogram: snapshot.data,
           onPressed: () => _openPictogramSearch(context));
     }
-  }
-
-  Widget _buildSaveButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
-    return RaisedButton(
-      key: const Key('NewWeekplanSaveBtnKey'),
-      child: const Text(
-        'Gem ugeplan',
-        style: TextStyle(color: Colors.white),
-      ),
-      color: Colors.blue,
-      onPressed: (snapshot?.data == true)
-          ? () {
-              _bloc.saveWeekplan().listen((WeekModel response) {
-                if (response != null) {
-                  Routes.pop<WeekModel>(context, response);
-                }
-              });
-            }
-          : null,
-    );
   }
 
   void _openPictogramSearch(BuildContext context) {

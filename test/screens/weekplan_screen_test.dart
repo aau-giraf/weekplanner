@@ -1,529 +1,568 @@
-import 'dart:async';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/api/user_api.dart';
+import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:weekplanner/blocs/activity_bloc.dart';
-import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
-import 'package:weekplanner/di.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/models/user_week_model.dart';
-import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
-import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:weekplanner/screens/show_activity_screen.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
-import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
-import '../blocs/pictogram_bloc_test.dart';
-import '../blocs/weekplan_bloc_test.dart';
-import '../test_image.dart';
 
-class MockWeekPlanBloc extends Mock implements WeekplanBloc {
-  final BehaviorSubject<UserWeekModel> _userWeek =
-      BehaviorSubject<UserWeekModel>();
+class MockWeekApi extends Mock implements WeekApi {}
 
-  /// The stream that emits the currently chosen weekplan
+class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<UserWeekModel> get userWeek => _userWeek.stream;
-
-  @override
-  void loadWeek(WeekModel week, UsernameModel user) {
-    _userWeek.add(UserWeekModel(week, user));
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(GirafUserModel(
+        id: '1',
+        department: 3,
+        role: Role.Guardian,
+        roleName: 'Guardian',
+        screenName: 'Kurt',
+        username: 'SpaceLord69'));
   }
-
-  @override
-  void addActivity(ActivityModel activity, int day) {
-    final WeekModel week = _userWeek.value.week;
-    final UsernameModel user = _userWeek.value.user;
-    week.days[day].activities.add(activity);
-    loadWeek(week, user);
-  }
-
-  @override
-  void reorderActivities(
-      ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
-    final WeekModel week = _userWeek.value.week;
-    final UsernameModel user = _userWeek.value.user;
-
-    // Removed from dayFrom, the day the pictogram is dragged from
-    int dayLength = week.days[dayFrom.index].activities.length;
-
-    for (int i = activity.order + 1; i < dayLength; i++) {
-      week.days[dayFrom.index].activities[i].order -= 1;
-    }
-
-    week.days[dayFrom.index].activities.remove(activity);
-
-    activity.order = dayFrom == dayTo &&
-            week.days[dayTo.index].activities.length == newOrder - 1
-        ? newOrder - 1
-        : newOrder;
-
-    // Inserts into dayTo, the day that the pictogram is inserted to
-    dayLength = week.days[dayTo.index].activities.length;
-
-    for (int i = activity.order; i < dayLength; i++) {
-      week.days[dayTo.index].activities[i].order += 1;
-    }
-
-    week.days[dayTo.index].activities.insert(activity.order, activity);
-
-    _userWeek.add(UserWeekModel(week, user));
-  }
-
-  final BehaviorSubject<bool> _activityPlaceholderVisible =
-      BehaviorSubject<bool>.seeded(false);
-
-  @override
-  Stream<bool> get activityPlaceholderVisible =>
-      _activityPlaceholderVisible.stream;
-
-  /// Used to change the visibility of the activityPlaceholder container.
-  @override
-  void setActivityPlaceholderVisible(bool visibility) {
-    _activityPlaceholderVisible.add(visibility);
-  }
-}
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-class MockAuthBlock extends AuthBloc{
-  MockAuthBlock(Api api) : super(api);
-
-  @override
-  void authenticate(String username, String password) {
-    if(password == 'password'){
-      setMode(WeekplanMode.guardian);
-    }
-  }
-
 }
 
 void main() {
-  WeekplanBloc bloc;
+  WeekplanBloc weekplanBloc;
   Api api;
-  AuthBloc authBloc;
-  MockWeekApi weekApi;
-  MockPictogramApi pictogramApi;
 
-  final PictogramModel pictogramModel = PictogramModel(
-      id: 1,
-      lastEdit: null,
-      title: null,
-      accessLevel: null,
-      imageUrl: 'http://any.tld',
-      imageHash: null);
-
-  final ActivityModel activity = ActivityModel(
-      id: 1,
-      pictogram: pictogramModel,
-      isChoiceBoard: true,
-      state: ActivityState.Completed,
-      order: 1);
-
-  final WeekModel weekModel = WeekModel(name: 'test', days: <WeekdayModel>[
-    WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Friday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Saturday, activities: <ActivityModel>[activity]),
-    WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[activity]),
-  ]);
+  WeekModel week;
 
   final UsernameModel user =
-      UsernameModel(name: 'test', id: 'test', role: 'test');
+      UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
 
   setUp(() {
+    week = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
     api = Api('any');
-    weekApi = MockWeekApi();
-    pictogramApi = MockPictogramApi();
-    api.pictogram = pictogramApi;
-    api.week = weekApi;
-    bloc = MockWeekPlanBloc();
-    authBloc = MockAuthBlock(api);
 
-    when(pictogramApi.getImage(pictogramModel.id))
-        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
-
-    di.clearAll();
-    di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
-    di.registerDependency<AuthBloc>((_) => authBloc);
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<WeekplanBloc>((_) => bloc);
-    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
-  });
-
-  testWidgets('The screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-  });
-
-  testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-
-    expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
-        findsOneWidget);
-  });
-
-  testWidgets('Has all days of the week', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-
-    const List<String> days = <String>[
-      'Mandag',
-      'Tirsdag',
-      'Onsdag',
-      'Torsdag',
-      'Fredag',
-      'Lørdag',
-      'Søndag'
-    ];
-
-    for (String day in days) {
-      expect(find.text(day), findsOneWidget);
-    }
-  });
-
-  testWidgets('pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-    await tester.pump();
-
-    expect(find.byKey(const Key('PictogramImage')), findsNWidgets(7));
-  });
-
-  testWidgets('Activity has checkmark when done', (WidgetTester tester) async {
-    activity.state = ActivityState.Completed;
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-
-    expect(find.byKey(const Key('IconComplete')), findsNWidgets(7));
-  });
-
-  testWidgets('Activity has no checkmark when Normal',
-      (WidgetTester tester) async {
-    activity.state = ActivityState.Normal;
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-
-    expect(find.byKey(const Key('IconComplete')), findsNothing);
-  });
-
-  testWidgets('Every add activitybutton is build', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
-  });
-
-  testWidgets('When in guardian mode I should see more than just switch mode',
-      (WidgetTester tester) async {
-    final Completer<bool> done = Completer<bool>();
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-
-    authBloc.mode.skip(1).listen((_) async {
-      await tester.pump();
-
-      final GirafAppBar widget = find
-          .byType(GirafAppBar)
-          .evaluate()
-          .first
-          .widget;
-
-      if (widget != null) {
-        expect(widget.appBarIcons.length, greaterThan(1));
-        expect(widget.appBarIcons.contains(AppBarIcon.changeToCitizen), isTrue);
-      } else {
-        fail('Could not find GirafAppBar');
-      }
-
-      done.complete();
+    api.user = MockUserApi();
+    api.week = MockWeekApi();
+    when(api.week.update(any, any, any, any)).thenAnswer((Invocation inv) {
+      return Observable<WeekModel>.just(inv.positionalArguments[3]);
     });
 
-    authBloc.setMode(WeekplanMode.guardian);
-    await done.future;
-  });
-
-  testWidgets('When in citizens mode I should only see switch mode icon',
-      (WidgetTester tester) async {
-    final Completer<bool> done = Completer<bool>();
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
-
-    authBloc.mode.skip(1).listen((_) async {
-      await tester.pump();
-
-      final GirafAppBar widget = find
-          .byType(GirafAppBar)
-          .evaluate()
-          .first
-          .widget;
-
-      if (widget != null) {
-        expect(widget.appBarIcons.length, equals(1));
-        expect(widget.appBarIcons.contains(AppBarIcon.changeToGuardian),
-            isTrue
-        );
-      } else {
-        fail('Could not find GirafAppBar');
-      }
-
-      done.complete();
+    when(api.week.get(any, any, any)).thenAnswer((Invocation inv) {
+      return Observable<WeekModel>.just(week);
     });
 
-    authBloc.setMode(WeekplanMode.citizen);
-    await done.future;
+    weekplanBloc = WeekplanBloc(api);
   });
 
-  testWidgets(
-      'When switching to citizens mode the add activityButton should disappear'
-      ,
-          (WidgetTester tester) async {
-    final Completer<bool> done = Completer<bool>();
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-
-    await tester.pumpAndSettle();
-
-    // Ensure the buttons are present before the switch
-    expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(7));
-
-    authBloc.mode.skip(1).listen((_) async {
-      await tester.pump();
-      // Ensure the buttons are not present after the switch
-      expect(find.byKey(const Key('AddActivityButton')), findsNWidgets(0));
-      done.complete();
+  test('Loads a weekplan for the weekplan view', async((DoneFn done) {
+    weekplanBloc.userWeek.listen((UserWeekModel response) {
+      expect(response, isNotNull);
+      expect(response.week, equals(week));
+      verify(api.week.get(user.id, week.weekYear, week.weekNumber));
+      done();
     });
 
-    authBloc.setMode(WeekplanMode.citizen);
-    await done.future;
-  });
+    weekplanBloc.loadWeek(week, user);
+  }));
 
-  testWidgets('Every drag target is build', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
+  test('Adds an activity to a list of marked activities', async((DoneFn done) {
+    // Create an ActivityModel, to add to the list of marked activites.
+    final ActivityModel activityModel = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test'),
+        id: 1,
+        isChoiceBoard: null,
+        order: null,
+        state: null);
 
-    expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
-  });
+    weekplanBloc.markedActivities
+        .skip(1)
+        .listen((List<ActivityModel> markedActivitiesList) {
+      expect(markedActivitiesList.length, 1);
+      done();
+    });
 
-  testWidgets('Every drag target is build', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
+    // Add the ActivityModel to the list of marked activities.
+    weekplanBloc.addMarkedActivity(activityModel);
+  }));
 
-    expect(find.byKey(const Key('GreyDragVisibleKey')), findsNWidgets(7));
-  });
+  test('Removes an activity to a list of marked activities',
+      async((DoneFn done) {
+    final ActivityModel firstActivityModel = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test'),
+        id: 1,
+        isChoiceBoard: null,
+        order: null,
+        state: null);
 
-  testWidgets('Every drag target placeholder is build',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(weekModel, user)));
-    await tester.pump();
+    final ActivityModel secondActivityModel = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: null);
 
-    bloc.setActivityPlaceholderVisible(true);
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(7));
+    // Add marked activities to the list to prepare for the removal
+    weekplanBloc.addMarkedActivity(firstActivityModel);
+    weekplanBloc.addMarkedActivity(secondActivityModel);
 
-    bloc.setActivityPlaceholderVisible(false);
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('DragTargetPlaceholder')), findsNWidgets(0));
-  });
+    weekplanBloc.markedActivities
+        .skip(1)
+        .listen((List<ActivityModel> markedActivitiesList) {
+      expect(markedActivitiesList.length, 1);
+      done();
+    });
 
-  testWidgets(
-      'Check if ShowActivityScreen is pushed when a pictogram is tapped',
-      (WidgetTester tester) async {
-    final MockNavigatorObserver mockObserver = MockNavigatorObserver();
+    // Delete a marked activity
+    weekplanBloc.removeMarkedActivity(secondActivityModel);
+  }));
 
-    await tester.pumpWidget(MaterialApp(
-      home: WeekplanScreen(weekModel, user),
-      navigatorObservers: <NavigatorObserver>[mockObserver],
-    ));
-    await tester.pump();
+  test('Clears list of marked activities', async((DoneFn done) {
+    weekplanBloc.addMarkedActivity(ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test'),
+        id: 123,
+        isChoiceBoard: null,
+        order: null,
+        state: null));
 
-    await tester.tap(find
-        .byKey(Key(Weekday.Tuesday.index.toString() + activity.id.toString())));
-    await tester.pumpAndSettle();
+    weekplanBloc.markedActivities
+        .skip(1)
+        .listen((List<ActivityModel> markedActivitiesList) {
+      expect(markedActivitiesList.length, 0);
+      done();
+    });
 
-    verify(mockObserver.didPush(any, any));
+    weekplanBloc.clearMarkedActivities();
+  }));
 
-    expect(find.byType(ShowActivityScreen), findsOneWidget);
-  });
+  test('Checks if the activity is in the list of marked activities',
+      async((DoneFn done) {
+    final ActivityModel activity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: null);
 
-  testWidgets(
-      'As a guardian tapping the switch to citizen a dialog should appear',
-          (WidgetTester tester) async {
-            await tester.pumpWidget(
-                MaterialApp(
-                    home: WeekplanScreen(weekModel, user),
-                )
-            );
-            await tester.pumpAndSettle();
-            await tester.tap(find.byKey(const Key('IconChangeToCitizen')));
-            await tester.pumpAndSettle();
-            final Finder dialog = find.byType(GirafConfirmDialog);
-            final GirafConfirmDialog dialogWidget = dialog
-                .evaluate().first.widget;
+    weekplanBloc.markedActivities
+        .skip(1)
+        .listen((List<ActivityModel> markedActivitiesList) {
+      expect(weekplanBloc.isActivityMarked(activity), true);
+      done();
+    });
 
-            expect(dialog, findsOneWidget);
-            expect(dialogWidget.title, equals('Skift til borger'));
-            expect(
-                dialogWidget.description,
-                equals('Vil du skifte til borger tilstand?')
-            );
-            expect(dialogWidget.confirmButtonText, equals('Skift'));
-            expect(
-                dialogWidget.confirmButtonIcon,
-                equals(const ImageIcon(
-                    AssetImage('assets/icons/changeToCitizen.png')
-                  )
-                )
-            );
-          });
+    weekplanBloc.addMarkedActivity(activity);
+  }));
 
-  testWidgets(
-    'In the switch to citizen dialog, confirming should switch mode and pop',
-      (WidgetTester tester) async {
-        final Completer<bool> done = Completer<bool>();
-        final Completer<bool> tapComplete = Completer<bool>();
-        final MockNavigatorObserver observer = MockNavigatorObserver();
-        await tester.pumpWidget(
-            MaterialApp(
-              home: WeekplanScreen(weekModel, user),
-              navigatorObservers: <NavigatorObserver>[observer],
-            )
-        );
-        await tester.pumpAndSettle();
-        authBloc.mode.skip(1).listen((WeekplanMode mode) async {
-          await tapComplete.future;
-          expect(WeekplanMode.citizen, equals(mode));
-          done.complete();
-        });
-        await tester.tap(find.byKey(const Key('IconChangeToCitizen')));
-        await tester.pumpAndSettle();
+  test('Checks if the edit mode toggles from false', async((DoneFn done) {
+    /// Editmode stream initial value is false.
+    weekplanBloc.editMode.skip(1).listen((bool toggle) {
+      expect(toggle, true);
+      done();
+    });
 
-        await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
-        await tester.pumpAndSettle();
+    weekplanBloc.toggleEditMode();
+  }));
 
-        tapComplete.complete();
+  test('Checks if marked activities are deleted from a users weekplan',
+      async((DoneFn done) {
+    final UsernameModel user =
+        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
 
-        final VerificationResult verificationResult =
-          verify(observer.didPop(any, any));
+    final ActivityModel activity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: null);
 
-        expect(verificationResult.callCount, equals(1));
+    final WeekModel weekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
 
-        await done.future;
-      }
-  );
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addMarkedActivity(activity);
+      return weekplanBloc.userWeek.take(1);
+    }).flatMap((_) {
+      weekplanBloc.deleteMarkedActivities();
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeekModel) {
+      verify(api.week.update(any, any, any, any));
+      expect(userWeekModel.week.days[Weekday.Monday.index].activities,
+          <ActivityModel>[]);
+      done();
+    });
 
-  testWidgets(
-    'As a citizen tapping the switch to gaurdian a dialog should appear',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-            MaterialApp(
-              home: WeekplanScreen(weekModel, user),
-            )
-        );
-        await tester.pumpAndSettle();
-        authBloc.setMode(WeekplanMode.citizen);
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
-        await tester.pumpAndSettle();
-        final Finder dialog = find.byType(AlertDialog);
-        final Finder passField =
-          find.byKey(const Key('SwitchToGuardianPassword'));
+    weekplanBloc.loadWeek(weekModel, user);
+  }));
 
-        expect(dialog, findsOneWidget);
-        expect(passField, findsOneWidget);
-      }
-  );
+  test('Checks if marked activities are copied to a new day',
+      async((DoneFn done) {
+    final UsernameModel user =
+        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
 
-  testWidgets(
-      'In the switch to guardian dialog, confirming should switch mode and pop',
-      (WidgetTester tester) async {
-        final Completer<bool> done = Completer<bool>();
-        final Completer<bool> tapComplete = Completer<bool>();
-        final MockNavigatorObserver observer = MockNavigatorObserver();
-        await tester.pumpWidget(
-            MaterialApp(
-              home: WeekplanScreen(weekModel, user),
-              navigatorObservers: <NavigatorObserver>[observer],
-            )
-        );
-        await tester.pumpAndSettle();
+    final ActivityModel activity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: null);
 
-        // We need to skip 2 this time, first skip the seeded value
-        // second skip the switch to citizen mode (which is part of the arrange
-        // step for this test)
-        authBloc.mode.skip(2).listen((WeekplanMode mode) async {
-          await tapComplete.future;
-          expect(WeekplanMode.guardian, equals(mode));
-          done.complete();
-        });
+    week = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
 
-        authBloc.setMode(WeekplanMode.citizen);
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
-        await tester.pumpAndSettle();
+    final WeekModel newWeekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Friday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
 
-        await tester.enterText(
-            find.byKey(const Key('SwitchToGuardianPassword')),
-            'password'
-        );
-        await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(newWeekModel);
+    });
 
-        await tester.pumpAndSettle();
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addMarkedActivity(activity);
+      return weekplanBloc.userWeek.take(1);
+    }).flatMap((_) {
+      // Copy to Friday
+      weekplanBloc.copyMarkedActivities(
+          <bool>[false, false, false, false, true, false, false]);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeekModel) {
+      verify(api.week.update(any, any, any, any));
+      expect(
+          userWeekModel.week.days[Weekday.Friday.index].activities.length, 1);
+      done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
+    });
 
-        tapComplete.complete();
+    weekplanBloc.loadWeek(week, user);
+  }));
 
-        final VerificationResult verificationResult =
-        verify(observer.didPop(captureAny, captureAny));
+  test('Checks if marked activities are marked as cancel', async((DoneFn done) {
+    final UsernameModel user =
+        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
 
-        expect(verificationResult.callCount, equals(1));
+    final ActivityModel activity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: ActivityState.Normal);
 
-        await done.future;
-      }
-  );
+    final ActivityModel newActivity = ActivityModel(
+        pictogram: PictogramModel(
+            accessLevel: null,
+            id: null,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null,
+            title: 'test123'),
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: ActivityState.Canceled);
 
-  testWidgets('As a gaurdian I should be able to drag-n-drop activities',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(
-            MaterialApp(
-                home: WeekplanScreen(weekModel, user)
-            )
-        );
-        await tester.pumpAndSettle();
-        authBloc.setMode(WeekplanMode.guardian);
-        await tester.pumpAndSettle();
+    week = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
 
-        expect(find.byKey(const Key('DragTarget')), findsNWidgets(7));
-      }
-  );
+    final WeekModel newWeekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[newActivity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
 
-  testWidgets('As a citizen I should not be able to drag-n-drop activities',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-            MaterialApp(
-              home: WeekplanScreen(weekModel, user)
-            )
-        );
-        await tester.pumpAndSettle();
-        authBloc.setMode(WeekplanMode.citizen);
-        await tester.pumpAndSettle();
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(newWeekModel);
+    });
 
-        expect(find.byKey(const Key('DragTarget')), findsNothing);
-      }
-  );
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addMarkedActivity(activity);
+      return weekplanBloc.userWeek.take(1);
+    }).flatMap((_) {
+      weekplanBloc.cancelMarkedActivities();
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeekModel) {
+      verify(api.week.update(any, any, any, any));
+      expect(
+          userWeekModel.week.days[Weekday.Monday.index].activities.first.state,
+          ActivityState.Canceled);
+      done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
+    });
+
+    weekplanBloc.loadWeek(week, user);
+  }));
+
+  test('Checks if the edit mode toggles from true', async((DoneFn done) {
+    /// Edit mode stream initial value is false.
+    weekplanBloc.toggleEditMode();
+
+    weekplanBloc.editMode.skip(1).listen((bool toggle) {
+      expect(toggle, false);
+      done();
+    });
+
+    weekplanBloc.toggleEditMode();
+  }));
+
+  test('Adds an activity to a given weekplan', async((DoneFn done) {
+    final UsernameModel user =
+        UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+
+    final ActivityModel activity = ActivityModel(
+        order: null,
+        isChoiceBoard: null,
+        state: null,
+        id: null,
+        pictogram: null);
+
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addActivity(activity, 0);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeek) {
+      verify(api.week.update(any, any, any, any));
+      expect(userWeek.week, week);
+      expect(userWeek.user, user);
+      expect(userWeek.week.days.first.activities.length, 1);
+      expect(userWeek.week.days.first.activities.first, activity);
+      done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
+    });
+
+    weekplanBloc.loadWeek(week, user);
+  }));
+
+  test('Reorder activity from monday to tuesday', async((DoneFn done) {
+    week = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    final ActivityModel modelToMove = ActivityModel(
+        id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
+    week.days[0].activities.add(modelToMove);
+    week.days[1].activities.add(ActivityModel(
+        id: 2, pictogram: null, order: 0, state: null, isChoiceBoard: false));
+
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.reorderActivities(
+          modelToMove, Weekday.Monday, Weekday.Tuesday, 1);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel response) {
+      expect(response.week.days[1].activities[0].id, 2);
+      expect(response.week.days[1].activities[1].id, modelToMove.id);
+      expect(response.week.days[0].activities.length, 0);
+      expect(response.week.days[1].activities.length, 2);
+      done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
+    });
+
+    weekplanBloc.loadWeek(week, user);
+  }));
+
+  test('Reorder activity from monday to monday', async((DoneFn done) {
+    week = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    final ActivityModel modelToMove = ActivityModel(
+        id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
+
+    week.days[0].activities.add(modelToMove);
+
+    week.days[0].activities.add(ActivityModel(
+        id: 2, pictogram: null, order: 1, state: null, isChoiceBoard: false));
+
+    week.days[0].activities.add(ActivityModel(
+        id: 3, pictogram: null, order: 2, state: null, isChoiceBoard: false));
+
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.reorderActivities(
+          modelToMove, Weekday.Monday, Weekday.Monday, 2);
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel response) {
+      expect(response.week.days[0].activities[0].id, 2);
+      expect(response.week.days[0].activities[0].order, 0);
+      expect(response.week.days[0].activities[1].id, 3);
+      expect(response.week.days[0].activities[1].order, 1);
+      expect(response.week.days[0].activities[2].id, 1);
+      expect(response.week.days[0].activities[2].order, 2);
+
+      done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
+    });
+
+    weekplanBloc.loadWeek(week, user);
+  }));
 }

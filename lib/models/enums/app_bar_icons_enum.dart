@@ -61,5 +61,8 @@ enum AppBarIcon {
   settings,
 
   /// Icon for undoing action
-  undo
+  undo,
+
+  /// Icon for opening the gallery
+  gallery,
 }
