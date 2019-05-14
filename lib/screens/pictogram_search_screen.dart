@@ -78,7 +78,7 @@ class PictogramSearch extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GirafButton(
-                icon: const ImageIcon(AssetImage('assets/icons/add.png')),
+                icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                 onPressed: () => Routes.push(context, UploadImageFromPhone()),
                 width: 50,
               ),

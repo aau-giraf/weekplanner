@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -107,7 +108,7 @@ class UploadImageFromPhone extends StatelessWidget {
                 width: 4,
                 color: Colors.black,
               ),
-              color: Colors.black,
+              color: Colors.white70,
               borderRadius: _imageBorder),
           child: _getAndDisplayPicture(),
         ),
@@ -134,14 +135,14 @@ class UploadImageFromPhone extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-         Image.asset(
+        Image.asset(
           'assets/icons/gallery.png',
-          color: Colors.white,
-		  scale: .75,
+          color: Colors.black,
+          scale: .75,
         ),
         const Text(
-          'Tryk for at tilføje billede',
-          style: TextStyle(color: Colors.white, fontSize: 25),
+          'Tryk for at vælge billede',
+          style: TextStyle(color: Colors.black, fontSize: 25),
         )
       ],
     );
@@ -162,7 +163,8 @@ class UploadImageFromPhone extends StatelessWidget {
   Widget _displayImage(File image) {
     return Container(
       child: Image.file(image),
-      decoration: BoxDecoration(borderRadius: _imageBorder),
+      decoration:
+          BoxDecoration(borderRadius: _imageBorder, ),
     );
   }
 }
