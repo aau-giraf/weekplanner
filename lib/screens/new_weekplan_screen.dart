@@ -21,11 +21,10 @@ class NewWeekplanScreen extends StatelessWidget {
   }
 
   final NewWeekplanBloc _bloc;
+  final TextStyle _style = TextStyle(fontSize: 20);
 
   @override
   Widget build(BuildContext context) {
-    const TextStyle _style = TextStyle(fontSize: 20);
-
     return Scaffold(
         appBar: GirafAppBar(title: 'Ny ugeplan'),
         body: ListView(children: <Widget>[
@@ -142,7 +141,15 @@ class NewWeekplanScreen extends StatelessWidget {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context),
         child: Card(
-          child: FittedBox(fit: BoxFit.contain, child: const Icon(Icons.image)),
+          child: Column(
+            children: <Widget>[
+              Text('Vælg billede til ugeplan',
+                  style: _style),
+              Expanded(
+                  child: FittedBox(
+                      fit: BoxFit.fill, child: const Icon(Icons.image))),
+            ],
+          ),
         ),
       );
     } else {
