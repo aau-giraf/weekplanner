@@ -155,7 +155,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
           builder: (BuildContext context) {
             return GirafNotifyDialog(
                 key: const Key('TimerWrongInputKey'),
-                title: 'Forkert input',
+                title: 'Ugyldigt input',
                 description: (duration.inSeconds == 0 &&
                             (_textEditingControllerHours.text != '' &&
                                 _textEditingControllerHours.text != '0') ||
