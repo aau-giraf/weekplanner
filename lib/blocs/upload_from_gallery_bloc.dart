@@ -50,7 +50,7 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null && _pictogramName != '') {
+    if (_file.value != null && _pictogramName.isNotEmpty) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
