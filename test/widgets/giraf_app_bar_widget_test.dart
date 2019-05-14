@@ -59,7 +59,7 @@ class MockScreen extends StatelessWidget {
 void main() {
   ToolbarBloc bloc;
   MockAuth authBloc;
-  Api api = Api('any');
+  final Api api = Api('any');
 
   setUp(() {
     di.clearAll();
