@@ -89,6 +89,7 @@ class UploadImageFromPhone extends StatelessWidget {
           width: 250,
           height: 50,
           child: GirafButton(
+			  icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
             text: 'Gem billede',
             onPressed: _uploadFromGallery.createPictogram,
             isEnabledStream: _uploadFromGallery.isInputValid,

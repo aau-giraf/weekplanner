@@ -75,12 +75,12 @@ class PictogramSearch extends StatelessWidget {
         bottomNavigationBar: BottomAppBar(
           color: Colors.amber,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+			  mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GirafButton(
                 icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+				text: 'Tilføj fra galleri',
                 onPressed: () => Routes.push(context, UploadImageFromPhone()),
-                width: 50,
               ),
             ],
           ),
