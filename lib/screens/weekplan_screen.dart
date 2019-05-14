@@ -56,7 +56,7 @@ class WeekplanScreen extends StatelessWidget {
           }
           return Scaffold(
             appBar: GirafAppBar(
-              title: 'Ugeplan',
+              title: _user.name + ' - ' + _week.name,
               appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
                   ? <AppBarIcon, VoidCallback>{
                       AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
