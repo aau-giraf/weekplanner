@@ -27,7 +27,6 @@ class AuthBloc extends BlocBase {
   /// The stream that emits the current clearance level
   Observable<WeekplanMode> get mode => _mode.stream;
 
-
   /// Stream that streams status of last login attemp from popup.
   Observable<bool> get loginAttempt =>_loginAttempt.stream;
 
@@ -69,6 +68,11 @@ class AuthBloc extends BlocBase {
   /// Updates the mode of the weekplan
   void setMode(WeekplanMode mode) {
     _mode.add(mode);
+  }
+
+  /// Set status of last login attempt
+  void setAttempt(bool attempt){
+    _loginAttempt.add(attempt);
   }
 
   @override
