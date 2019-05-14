@@ -29,7 +29,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     toolbarBloc.updateIcons(appBarIcons, context);
     return AppBar(
-        title: Text(title),
+        title: Text(title, overflow: TextOverflow.clip),
         flexibleSpace: const GirafTitleHeader(),
         actions: <Widget>[
           StreamBuilder<List<IconButton>>(
