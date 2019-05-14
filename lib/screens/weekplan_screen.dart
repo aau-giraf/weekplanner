@@ -51,7 +51,7 @@ class WeekplanScreen extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.data == WeekplanMode.citizen) {
+          if (weekModeSnapshot.data == WeekplanMode.citizen) {            
             _weekplanBloc.setEditMode(false);
           }
           return WillPopScope(
@@ -341,7 +341,7 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-  /// Handles tap on a activity
+  /// Handles tap on an activity
   void handleOnTapActivity(bool inEditMode, bool isMarked,
       List<ActivityModel> activities, int index, BuildContext context) {
     if (inEditMode) {
@@ -351,11 +351,12 @@ class WeekplanScreen extends StatelessWidget {
         _weekplanBloc.addMarkedActivity(activities[index]);
       }
     } else {
-      Routes.push(context, ShowActivityScreen(activities[index], _user));
+      Routes.push(context, ShowActivityScreen(activities[index], _user))
+          .then((Object object) => _weekplanBloc.loadWeek(_week, _user));
     }
   }
 
-  /// Builds activity card with a complete if is marked
+  /// Builds activity card with a status icon if it is marked
   StatelessWidget buildIsMarked(bool isMarked, BuildContext context,
       List<ActivityModel> activities, int index) {
     if (isMarked) {
@@ -442,7 +443,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  // Returning a widget that stacks a pictogram and an accept icon
+  // Returning a widget that stacks a pictogram and an status icon
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final bool isMarked =
