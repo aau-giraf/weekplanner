@@ -409,6 +409,7 @@ class ToolbarBloc extends BlocBase {
     showLoadingSpinner(context, false, _showFailureDialog, 2000);
     _loginStatus = false;
     _currentContext = context;
+
     // Skip 1, since we should skip the seeded value.
     _authBloc.loginAttempt.skip(1).listen((bool snapshot) {
       _loginStatus = snapshot;
@@ -420,6 +421,7 @@ class ToolbarBloc extends BlocBase {
         _popCalled = true;
       }
     });
+
     _authBloc.authenticateFromPopUp(username, password);
   }
 

@@ -584,10 +584,9 @@ void main() {
 
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
-   
+
     await tester.pumpAndSettle(const Duration(seconds:2));
-
-
+    
     tapComplete.complete();
 
     // Should pop twice, first for the loading spinner, second for the popup.
