@@ -21,7 +21,7 @@ class NewWeekplanScreen extends StatelessWidget {
   }
 
   final NewWeekplanBloc _bloc;
-  final TextStyle _style = TextStyle(fontSize: 20);
+  final TextStyle _style = const TextStyle(fontSize: 20);
 
   @override
   Widget build(BuildContext context) {
