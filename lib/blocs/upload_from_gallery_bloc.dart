@@ -31,7 +31,7 @@ class UploadFromGalleryBloc extends BlocBase {
       BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<File> _file = BehaviorSubject<File>();
   final BehaviorSubject<String> _accessString =
-      BehaviorSubject<String>.seeded('Public');
+      BehaviorSubject<String>.seeded('Offentlig');
   final BehaviorSubject<bool> _isUploading =
       BehaviorSubject<bool>.seeded(false);
 
@@ -61,10 +61,10 @@ class UploadFromGalleryBloc extends BlocBase {
   void setAccessLevel(String access) {
     _accessString.add(access);
     switch (access) {
-      case 'Protected':
+      case 'Beskyttet':
         _accessLevel = AccessLevel.PROTECTED;
         break;
-      case 'Private':
+      case 'Privat':
         _accessLevel = AccessLevel.PRIVATE;
         break;
       default:

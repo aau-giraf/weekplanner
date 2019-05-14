@@ -44,42 +44,54 @@ class UploadImageFromPhone extends StatelessWidget {
     );
   }
 
-  Row _buildInputField() {
-    return Row(
+  Column _buildInputField() {
+    return Column(
       children: <Widget>[
-        Expanded(
-          child: TextField(
-            onChanged: _uploadFromGallery.setPictogramName,
-            decoration: InputDecoration(
-                hintText: 'Piktogram navn',
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50))),
-          ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: TextField(
+                onChanged: _uploadFromGallery.setPictogramName,
+                decoration: InputDecoration(
+                    hintText: 'Piktogram navn',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50))),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20),
+              child: StreamBuilder<String>(
+                  stream: _uploadFromGallery.accessLevel,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    return DropdownButton<String>(
+                      value: snapshot.data,
+                      onChanged: (String newValue) {
+                        _uploadFromGallery.setAccessLevel(newValue);
+                      },
+                      items: <String>['Offentlig', 'Privat']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    );
+                  }),
+            ),
+          ],
         ),
         Container(
-          padding: const EdgeInsets.only(left: 20),
-          child: StreamBuilder<String>(
-              stream: _uploadFromGallery.accessLevel,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                return DropdownButton<String>(
-                  value: snapshot.data,
-                  onChanged: (String newValue) {
-                    _uploadFromGallery.setAccessLevel(newValue);
-                  },
-                  items: <String>['Public', 'Private']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                );
-              }),
+          height: 15,
         ),
-        GirafButton(
-          icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-          onPressed: _uploadFromGallery.createPictogram,
-          isEnabledStream: _uploadFromGallery.isInputValid,
+        Container(
+          width: 250,
+          height: 50,
+          child: GirafButton(
+            text: 'Gem billede',
+            onPressed: _uploadFromGallery.createPictogram,
+            isEnabledStream: _uploadFromGallery.isInputValid,
+          ),
         ),
       ],
     );
@@ -105,16 +117,34 @@ class UploadImageFromPhone extends StatelessWidget {
 
   Widget _getAndDisplayPicture() {
     return Container(
-        child: FlatButton(
-      onPressed: _uploadFromGallery.chooseImageFromGallery,
-      child: StreamBuilder<File>(
-        stream: _uploadFromGallery.file,
-        builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-            snapshot.data != null
-                ? _displayImage(snapshot.data)
-                : const Icon(Icons.add_to_photos),
+      child: FlatButton(
+        onPressed: _uploadFromGallery.chooseImageFromGallery,
+        child: StreamBuilder<File>(
+            stream: _uploadFromGallery.file,
+            builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+                snapshot.data != null
+                    ? _displayImage(snapshot.data)
+                    : _displayIfNoImage()),
       ),
-    ));
+    );
+  }
+
+  Column _displayIfNoImage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+         Image.asset(
+          'assets/icons/gallery.png',
+          color: Colors.white,
+		  scale: .75,
+        ),
+        const Text(
+          'Tryk for at tilføje billede',
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        )
+      ],
+    );
   }
 
   Widget _buildDefaultText() {

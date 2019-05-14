@@ -15,7 +15,6 @@ import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
-
   /// If the confirm button in popup is clickable.
   bool _clickable = true;
 
@@ -37,7 +36,7 @@ class ToolbarBloc extends BlocBase {
       AppBarIcon.settings: () {},
       AppBarIcon.logout: () {}
     };
-    
+
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
     }
@@ -112,6 +111,9 @@ class ToolbarBloc extends BlocBase {
       case AppBarIcon.undo:
         _iconsToAdd.add(_createIconUndo(callback));
         break;
+      case AppBarIcon.gallery:
+        _iconsToAdd.add(_createIconGallery(callback));
+        break;
       default:
         throw Exception('IconButton not implemented');
         break;
@@ -174,6 +176,14 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
+  IconButton _createIconGallery(VoidCallback callback) {
+    return IconButton(
+      icon: Image.asset('assets/icons/gallery.png'),
+      tooltip: 'Tilføj fra galleri',
+      onPressed: callback,
+    );
+  }
+
   IconButton _createIconChangeToCitizen(BuildContext context) {
     return IconButton(
         key: const Key('IconChangeToCitizen'),
@@ -216,9 +226,7 @@ class ToolbarBloc extends BlocBase {
                 RichText(
                   text: TextSpan(
                     text: 'Logget ind som ',
-                    style: DefaultTextStyle
-                        .of(context)
-                        .style,
+                    style: DefaultTextStyle.of(context).style,
                     children: <TextSpan>[
                       TextSpan(
                           text: _authBloc.loggedInUsername,
@@ -240,21 +248,21 @@ class ToolbarBloc extends BlocBase {
             buttons: <DialogButton>[
               DialogButton(
                 key: const Key('SwitchToGuardianSubmit'),
-                  // Debouncer for button, so it cannot
-                  // be tapped than each 2 seconds.
-                  onPressed: _clickable
-                      ? () {
-                    if (_clickable) {
-                      _clickable = false;
-                      loginFromPopUp(context, _authBloc.loggedInUsername,
-                          passwordCtrl.value.text);
-                      // Timer makes it clicable again after 2 seconds.
-                      Timer(const Duration(milliseconds: 2000), () {
-                        _clickable = true;
-                      });
-                    }
-                  }
-                  : null,
+                // Debouncer for button, so it cannot
+                // be tapped than each 2 seconds.
+                onPressed: _clickable
+                    ? () {
+                        if (_clickable) {
+                          _clickable = false;
+                          loginFromPopUp(context, _authBloc.loggedInUsername,
+                              passwordCtrl.value.text);
+                          // Timer makes it clicable again after 2 seconds.
+                          Timer(const Duration(milliseconds: 2000), () {
+                            _clickable = true;
+                          });
+                        }
+                      }
+                    : null,
                 child: const Text(
                   'Bekræft',
                   style: TextStyle(color: Colors.white, fontSize: 20),
@@ -424,7 +432,7 @@ class ToolbarBloc extends BlocBase {
   }
 
   /// Shows a failure dialog
-  void _showFailureDialog(){
+  void _showFailureDialog() {
     if (!_loginStatus) {
       //Pop the loading spinner.
       Routes.pop(_currentContext);
