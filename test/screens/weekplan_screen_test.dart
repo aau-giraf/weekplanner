@@ -515,7 +515,37 @@ void main() {
 
   testWidgets(
       'In the switch to guardian dialog, wrong credentials should show '
-          'error dialog and not change mode',
+          'error dialog and pop loadingspinner',
+          (WidgetTester tester) async {
+        final MockNavigatorObserver observer = MockNavigatorObserver();
+        await tester.pumpWidget(MaterialApp(
+          home: WeekplanScreen(weekModel, user),
+          navigatorObservers: <NavigatorObserver>[observer],
+        ));
+        await tester.pumpAndSettle();
+
+        authBloc.setMode(WeekplanMode.citizen);
+
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.byKey(const Key('SwitchToGuardianPassword')), 'abc');
+        await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
+
+        await tester.pumpAndSettle();
+
+        // Only thing that should be popped is the loading spinner.
+        verify(observer.didPop(any, any)).called(1);
+
+        expect(find.byKey(const Key('WrongPasswordDialog')),
+            findsOneWidget);
+      });
+
+  testWidgets(
+      'In the switch to guardian dialog, wrong credentials should show '
+          'not change mode and pop loadingspinner',
           (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
         final Completer<bool> tapComplete = Completer<bool>();
@@ -527,6 +557,7 @@ void main() {
         await tester.pumpAndSettle();
 
         authBloc.setMode(WeekplanMode.citizen);
+
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
         await tester.pumpAndSettle();
@@ -547,9 +578,6 @@ void main() {
 
         // Only thing that should be popped is the loading spinner.
         verify(observer.didPop(any, any)).called(1);
-
-        expect(find.byKey(const Key('WrongPasswordDialog')),
-            findsOneWidget);
 
         await done.future;
       });
