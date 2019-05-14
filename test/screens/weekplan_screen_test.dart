@@ -514,37 +514,7 @@ void main() {
   });
 
   testWidgets(
-      'In the switch to guardian dialog, wrong credentials should show '
-          'error dialog and pop loadingspinner',
-          (WidgetTester tester) async {
-        final MockNavigatorObserver observer = MockNavigatorObserver();
-        await tester.pumpWidget(MaterialApp(
-          home: WeekplanScreen(weekModel, user),
-          navigatorObservers: <NavigatorObserver>[observer],
-        ));
-        await tester.pumpAndSettle();
-
-        authBloc.setMode(WeekplanMode.citizen);
-
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const Key('IconChangeToGuardian')));
-        await tester.pumpAndSettle();
-
-        await tester.enterText(
-            find.byKey(const Key('SwitchToGuardianPassword')), 'abc');
-        await tester.tap(find.byKey(const Key('SwitchToGuardianSubmit')));
-
-        await tester.pumpAndSettle();
-
-        // Only thing that should be popped is the loading spinner.
-        verify(observer.didPop(any, any)).called(1);
-
-        expect(find.byKey(const Key('WrongPasswordDialog')),
-            findsOneWidget);
-      });
-
-  testWidgets(
-      'In the switch to guardian dialog, wrong credentials should show '
+      'In the switch to guardian dialog, wrong credentials should '
           'not change mode and pop loadingspinner',
           (WidgetTester tester) async {
         final Completer<bool> done = Completer<bool>();
@@ -619,9 +589,6 @@ void main() {
 
     // Should pop twice, first for the loading spinner, second for the popup.
     verify(observer.didPop(any, any)).called(2);
-
-    expect(find.byKey(const Key('WrongPasswordDialog')),
-        findsNothing);
 
     await done.future;
   });
