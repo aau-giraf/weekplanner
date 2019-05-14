@@ -135,7 +135,7 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       BottomAppBarButton(
-                          buttonText: 'Annuller',
+                          buttonText: 'Aflys',
                           buttonKey: 'CancelActivtiesButton',
                           assetPath: 'assets/icons/cancel.png',
                           dialogFunction: _buildCancelDialog),
@@ -184,10 +184,10 @@ class WeekplanScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return GirafConfirmDialog(
-              title: 'Annuller aktiviteter',
+              title: 'Aflys aktiviteter',
               description: 'Vil du markere ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  ' aktivitet(er) som annulleret',
+                  ' aktivitet(er) som aflyst',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
