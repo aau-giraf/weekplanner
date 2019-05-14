@@ -15,7 +15,6 @@ import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
-
   /// If the confirm button in popup is clickable.
   bool _clickable = true;
 
@@ -34,10 +33,9 @@ class ToolbarBloc extends BlocBase {
 
     // Assigns a map to icons, if icons is null.
     icons ??= <AppBarIcon, VoidCallback>{
-      AppBarIcon.settings: () {},
       AppBarIcon.logout: () {}
     };
-    
+
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
     }
@@ -112,6 +110,9 @@ class ToolbarBloc extends BlocBase {
       case AppBarIcon.undo:
         _iconsToAdd.add(_createIconUndo(callback));
         break;
+      case AppBarIcon.gallery:
+        _iconsToAdd.add(_createIconGallery(callback));
+        break;
       default:
         throw Exception('IconButton not implemented');
         break;
@@ -170,6 +171,14 @@ class ToolbarBloc extends BlocBase {
     return IconButton(
       icon: Image.asset('assets/icons/cancel.png'),
       tooltip: 'Fortryd',
+      onPressed: callback,
+    );
+  }
+
+  IconButton _createIconGallery(VoidCallback callback) {
+    return IconButton(
+      icon: Image.asset('assets/icons/gallery.png'),
+      tooltip: 'Tilføj fra galleri',
       onPressed: callback,
     );
   }
@@ -431,7 +440,7 @@ class ToolbarBloc extends BlocBase {
   }
 
   /// Shows a failure dialog
-  void _showFailureDialog(){
+  void _showFailureDialog() {
     if (!_loginStatus) {
       //Pop the loading spinner.
       Routes.pop(_currentContext);

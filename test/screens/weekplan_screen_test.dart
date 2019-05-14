@@ -111,6 +111,10 @@ void main() {
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
+    when(api.week.get(any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(weekModel);
+    });
+
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
       return Observable<WeekModel>.just(weekModel);
     });
