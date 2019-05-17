@@ -90,7 +90,7 @@ class UploadFromGalleryBloc extends BlocBase {
 
   Uint8List _encodePng(File file) {
     return encodePng(copyResize(decodeImage(file.readAsBytesSync()),
-        512)); // 512 bytes chosen as a reasonable input size.
+        width: 512)); // 512 bytes chosen as a reasonable input size.
   }
 
   /// Creates a [PictogramModel]
