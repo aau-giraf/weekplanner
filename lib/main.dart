@@ -11,7 +11,7 @@ import 'package:weekplanner/screens/choose_citizen_screen.dart';
 void main() {
   // Register all dependencies for injector
   Bootstrap.register();
-
+  WidgetsFlutterBinding.ensureInitialized();
   if (_isInDebugMode) {
     // If in DEBUG mode
     environment.setFile('assets/environments.json').whenComplete(() {

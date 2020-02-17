@@ -12,7 +12,7 @@ class Routes {
   /// Pop the top-most route off the navigator that most tightly encloses the
   /// given context.
   static bool pop<T extends Object>(BuildContext context, [T result]) {
-    return Navigator.of(context).pop<T>(result);
+    Navigator.of(context).pop<T>(result);
   }
 
   /// Go home is used to pop everything until the navigator is on the
