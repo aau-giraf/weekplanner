@@ -67,15 +67,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 10),
                       crossAxisCount: MediaQuery.of(context).orientation ==
-                              Orientation.landscape
+                          Orientation.landscape
                           ? 4
                           : 3,
                       crossAxisSpacing:
-                          MediaQuery.of(context).size.width / 100 * 1.5,
+                      MediaQuery.of(context).size.width / 100 * 1.5,
                       mainAxisSpacing:
-                          MediaQuery.of(context).size.width / 100 * 1.5,
+                      MediaQuery.of(context).size.width / 100 * 1.5,
                       children:
-                          weekplansSnapshot.data.map((WeekModel weekplan) {
+                      weekplansSnapshot.data.map((WeekModel weekplan) {
                         return _buildWeekPlanSelector(context, weekplan,
                             markedWeeksSnapshot.data.contains(weekplan));
                       }).toList());
@@ -96,7 +96,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       return Container(
           key: const Key('isSelectedKey'),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
+          BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
           child: _buildWeekplanCard(context, weekplan, bloc));
     } else {
       return _buildWeekplanCard(context, weekplan, bloc);
@@ -115,34 +115,48 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 handleOnTap(context, weekplan, inEditModeSnapshot.data),
             child: Card(
                 child: Column(
-              children: <Widget>[
-                Expanded(
-                  flex: 4,
-                  child: LayoutBuilder(builder:
-                      (BuildContext context, BoxConstraints constraint) {
-                    if (weekplan.thumbnail != null) {
-                      return _getPictogram(weekplan, bloc);
-                    } else {
-                      return Icon(
-                        Icons.add,
-                        size: constraint.maxHeight,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraint) {
+                        if (weekplan.thumbnail != null) {
+                          return _getPictogram(weekplan, bloc);
+                        } else {
+                          return Icon(
+                            Icons.add,
+                            size: constraint.maxHeight,
+                          );
+                        }
+                      }),
+                    ),
+                    Expanded(child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return AutoSizeText(
+                        weekplan.name,
+                        style: const TextStyle(fontSize: 18),
+                        maxLines: 1,
+                        minFontSize: 14,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       );
-                    }
-                  }),
-                ),
-                Expanded(child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  return AutoSizeText(
-                    weekplan.name,
-                    style: const TextStyle(fontSize: 18),
-                    maxLines: 1,
-                    minFontSize: 14,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  );
-                }))
-              ],
-            )),
+                    })),
+                    Expanded(child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      if (weekplan.weekNumber == null) {
+                        return AutoSizeText('');
+                      }
+                      return AutoSizeText(
+                        'Uge: ${weekplan.weekNumber} År: ${weekplan.weekYear}',
+                        style: const TextStyle(fontSize: 18),
+                        maxLines: 1,
+                        minFontSize: 14,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    })),
+                  ],
+                )),
           );
         });
   }
@@ -191,36 +205,36 @@ class WeekplanSelectorScreen extends StatelessWidget {
   BottomAppBar _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
         child: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: <double>[
-                  1 / 3,
-                  2 / 3
-                ],
-                    colors: <Color>[
-                  Color.fromRGBO(254, 215, 108, 1),
-                  Color.fromRGBO(253, 187, 85, 1),
-                ])),
-            child: IconButton(
-              key: const Key('DeleteActivtiesButton'),
-              iconSize: 50,
-              icon: const Icon(Icons.delete_forever),
-              onPressed: () {
-                // Shows dialog to confirm/cancel deletion
-                _buildConfirmationDialog(context);
-              },
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: <double>[
+                          1 / 3,
+                          2 / 3
+                        ],
+                        colors: <Color>[
+                          Color.fromRGBO(254, 215, 108, 1),
+                          Color.fromRGBO(253, 187, 85, 1),
+                        ])),
+                child: IconButton(
+                  key: const Key('DeleteActivtiesButton'),
+                  iconSize: 50,
+                  icon: const Icon(Icons.delete_forever),
+                  onPressed: () {
+                    // Shows dialog to confirm/cancel deletion
+                    _buildConfirmationDialog(context);
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-      ],
-    ));
+          ],
+        ));
   }
 
   /// Builds dialog box to confirm/cancel deletion
@@ -236,7 +250,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   ' ugeplan(er)',
               confirmButtonText: 'Slet',
               confirmButtonIcon:
-                  const ImageIcon(AssetImage('assets/icons/delete.png')),
+              const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: () {
                 _weekBloc.deleteMarkedWeekModels();
                 _weekBloc.toggleEditMode();
