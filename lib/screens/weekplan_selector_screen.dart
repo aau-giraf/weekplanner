@@ -147,7 +147,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     return AutoSizeText('');
                   }
                   return AutoSizeText(
-                    'Uge: ${weekplan.weekNumber} År: ${weekplan.weekYear}',
+                    'Uge: ${weekplan.weekNumber}      År: ${weekplan.weekYear}',
                     style: const TextStyle(fontSize: 18),
                     maxLines: 1,
                     minFontSize: 14,
