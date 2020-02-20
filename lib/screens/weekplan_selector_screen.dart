@@ -151,6 +151,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 18),
                     maxLines: 1,
                     minFontSize: 14,
+                    key: const Key('weekYear'),
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                   );
