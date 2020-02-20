@@ -10,6 +10,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
@@ -208,15 +209,23 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   Color.fromRGBO(254, 215, 108, 1),
                   Color.fromRGBO(253, 187, 85, 1),
                 ])),
-            child: IconButton(
-              key: const Key('DeleteActivtiesButton'),
-              iconSize: 50,
-              icon: const Icon(Icons.delete_forever),
-              onPressed: () {
-                // Shows dialog to confirm/cancel deletion
-                _buildConfirmationDialog(context);
-              },
-            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                BottomAppBarButton(
+                  buttonText: 'Redigér',
+                  buttonKey: 'EditActivtiesButton',
+                  assetPath: 'assets/icons/edit.png',
+                  dialogFunction: _buildDeletionDialog),
+                BottomAppBarButton(
+                    buttonText: 'Slet',
+                    buttonKey: 'DeleteActivtiesButton',
+                    assetPath: 'assets/icons/delete.png',
+                    dialogFunction: _buildDeletionDialog)
+              ],
+
+              )
           ),
         ),
       ],
@@ -224,7 +233,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   /// Builds dialog box to confirm/cancel deletion
-  Future<Center> _buildConfirmationDialog(BuildContext context) {
+  Future<Center> _buildDeletionDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,
@@ -244,6 +253,18 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 // Closes the dialog box
                 Routes.pop(context);
               });
+        });
+  }
+
+  /// Builds dialog box to confirm/cancel
+  Future<Center> _buildEditDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          if (_weekBloc.getNumberOfMarkedWeekModels() != 1) {
+
+          }
         });
   }
 }
