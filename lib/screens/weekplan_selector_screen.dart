@@ -8,11 +8,13 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 /// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
@@ -217,7 +219,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   buttonText: 'Redigér',
                   buttonKey: 'EditActivtiesButton',
                   assetPath: 'assets/icons/edit.png',
-                  dialogFunction: _buildDeletionDialog),
+                  dialogFunction: _buildEditDialog),
                 BottomAppBarButton(
                     buttonText: 'Slet',
                     buttonKey: 'DeleteActivtiesButton',
@@ -262,8 +264,21 @@ class WeekplanSelectorScreen extends StatelessWidget {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          if (_weekBloc.getNumberOfMarkedWeekModels() != 1) {
-
+          if (_weekBloc.getNumberOfMarkedWeekModels() == 1) {
+//            Routes.push(context, ); //TODO: push to editWeekplan screen
+            return GirafNotifyDialog(
+                title: 'Redigering succesfuld',
+                description: 'Billede og navn ændret'
+              //TODO: angivi hvad der er blevet redigeret
+            );
+          }
+          else {
+            return GirafNotifyDialog(
+                title: 'Ulovlig handling',
+                description: 'Du kan ikke redigere '
+                    + _weekBloc.getNumberOfMarkedWeekModels().toString()
+                    + ' ugeplan(er)'
+            );
           }
         });
   }
