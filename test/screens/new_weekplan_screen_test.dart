@@ -30,7 +30,12 @@ class MockNewWeekplanBloc extends NewWeekplanBloc {
 
   @override
   Observable<WeekModel> saveWeekplan() {
-    return api.week.update(any, any, any, any);
+    return api.week.update(
+        '123',
+        mockWeek.weekYear ,
+        mockWeek.weekNumber,
+        mockWeek
+    );
   }
 
   @override
@@ -88,8 +93,9 @@ void main() {
     when(api.pictogram.getImage(mockPictogram.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
-    when(api.week.update(any, any, any, any))
-        .thenAnswer((_) => Observable<WeekModel>.just(mockWeek));
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(mockWeek);
+    });
 
     di.clearAll();
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
@@ -211,7 +217,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
 
-    verify(api.week.update(any, any, any, any));
     mockBloc.saveWeekplan().listen((WeekModel response) async {
       expect(response, mockWeek);
     });
