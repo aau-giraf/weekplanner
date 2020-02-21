@@ -3,8 +3,18 @@
 //
 
 #import "GeneratedPluginRegistrant.h"
-#import <image_picker/ImagePickerPlugin.h>
-#import <shared_preferences/SharedPreferencesPlugin.h>
+
+#if __has_include(<image_picker/FLTImagePickerPlugin.h>)
+#import <image_picker/FLTImagePickerPlugin.h>
+#else
+@import image_picker;
+#endif
+
+#if __has_include(<shared_preferences/FLTSharedPreferencesPlugin.h>)
+#import <shared_preferences/FLTSharedPreferencesPlugin.h>
+#else
+@import shared_preferences;
+#endif
 
 @implementation GeneratedPluginRegistrant
 
