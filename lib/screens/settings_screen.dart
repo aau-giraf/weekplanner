@@ -12,23 +12,18 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(title: 'Settings'),
+      appBar: GirafAppBar(title: 'Indstillinger'),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Expanded(
-              child: _buildThemeSection(),
-            ),
-            Expanded(
               child: _buildOrientationSection(),
-            ),
-            Expanded(
-              child: _buildUgeplanSection(),
             ),
           ]),
     );
   }
+
 
   Widget _buildThemeSection() {
     return ListView(children: <Widget>[
@@ -75,27 +70,17 @@ class SettingsScreen extends StatelessWidget {
     ]);
   }
 
+
   Widget _buildOrientationSection() {
     return ListView(children: <Widget>[
-      const Text('Orientering'),
+      const Text('Ugeplan visning'),
       ExpansionTile(
         key: const PageStorageKey<int>(3),
-        title: const Text('Antal aktiviteter'),
-        children: const <Widget>[Text('Tema 1'), Text('Tema 2')],
-      ),
-    ]);
-  }
-
-  Widget _buildUgeplanSection() {
-    return ListView(children: <Widget>[
-      const Text('Ugeplan'),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Antal Dage vist i kalender'),
+        title: const Text('Antal dage der skal vises ad gangen'),
         children: <Widget>[
-          Row(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               RaisedButton(
                 child: Text('1'),
@@ -127,10 +112,6 @@ class SettingsScreen extends StatelessWidget {
               ),
             ],
           ),
-              RaisedButton(
-              child: Text('Gem'),
-              onPressed: () {  },
-              ),
         ],
       ),
     ]);
