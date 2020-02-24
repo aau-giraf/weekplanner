@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:flutter/services.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -140,6 +141,11 @@ class TimerBloc extends BlocBase {
       _timerStream = _countDown.listen((CountdownTimer c) {
         _timerProgressStream.add(1 -
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
+
+        // Plays ding sound when activity ends.
+        if (c.remaining.inMilliseconds == _activityModel.timer.fullLength) {
+          SystemSound.play(SystemSoundType.click);
+        }
       });
       _timerRunningStream.add(true);
 
@@ -174,6 +180,9 @@ class TimerBloc extends BlocBase {
     _timerRunningStream.add(false);
     _timerProgressStream.add(0);
 
+    // Plays stop sound.
+    SystemSound.play(SystemSoundType.click);
+
     _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {});
@@ -191,7 +200,7 @@ class TimerBloc extends BlocBase {
   }
 
   void _resetCounterAndStopwatch() {
-    // Stops any timers and cancels all listners
+    // Stops any timers and cancels all listeners
     if (_stopwatch != null) {
       _stopwatch.stop();
       _countDown.cancel();
