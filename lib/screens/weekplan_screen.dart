@@ -17,6 +17,7 @@ import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -64,7 +65,8 @@ class WeekplanScreen extends StatelessWidget {
                     ? <AppBarIcon, VoidCallback>{
                         AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                         AppBarIcon.changeToCitizen: () {},
-                        AppBarIcon.logout: () {}
+                        AppBarIcon.logout: () {},
+                        AppBarIcon.settings: () {}
                       }
                     : <AppBarIcon, VoidCallback>{
                         AppBarIcon.changeToGuardian: () {}
@@ -239,11 +241,16 @@ class WeekplanScreen extends StatelessWidget {
       0xFFFFFFFF
     ];
     final List<Widget> weekDays = <Widget>[];
-    for (int i = 0; i < weekModel.days.length; i++) {
+    final _weekday = DateTime.now().weekday.toInt();
+    int _weekdayCounter = _weekday - 1;
+    for (int i = _weekday; i < SettingsScreen.days_displayed + _weekday; i++) {
       weekDays.add(Expanded(
           child: Card(
-              color: Color(weekColors[i]),
-              child: _day(weekModel.days[i], context))));
+              color: Color(weekColors[_weekdayCounter]),
+              child: _day(weekModel.days[_weekdayCounter], context))));
+      if(_weekdayCounter == 6) {_weekdayCounter = 0;}
+      else { _weekdayCounter += 1; }
+
     }
     return Row(children: weekDays);
   }

@@ -7,6 +7,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  static int days_displayed = 7;
 
   @override
   Widget build(BuildContext context) {
@@ -90,16 +91,46 @@ class SettingsScreen extends StatelessWidget {
       const Text('Ugeplan'),
       ExpansionTile(
         key: const PageStorageKey<int>(3),
-        title: const Text('Antal aktiviteter'),
+        title: const Text('Antal Dage vist i kalender'),
         children: <Widget>[
-          RaisedButton(
-            child: const Text('Tema 1'),
-            onPressed: () {},
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+            children: <Widget>[
+              RaisedButton(
+                child: Text('1'),
+                onPressed: () { days_displayed = 1; },
+              ),
+              RaisedButton(
+                child: Text('2'),
+                onPressed: () { days_displayed = 2; },
+              ),
+              RaisedButton(
+                child: Text('3'),
+                onPressed: () { days_displayed = 3; },
+              ),
+              RaisedButton(
+                child: Text('4'),
+                onPressed: () { days_displayed = 4; },
+              ),
+              RaisedButton(
+                child: Text('5'),
+                onPressed: () { days_displayed = 5; },
+              ),
+              RaisedButton(
+                child: Text('6'),
+                onPressed: () { days_displayed = 6; },
+              ),
+              RaisedButton(
+                child: Text('7'),
+                onPressed: () { days_displayed = 7; },
+              ),
+            ],
           ),
-          RaisedButton(
-            child: const Text('Tema 2'),
-            onPressed: () {},
-          ),
+              RaisedButton(
+              child: Text('Gem'),
+              onPressed: () {  },
+              ),
         ],
       ),
     ]);
