@@ -50,9 +50,7 @@ class TimerBloc extends BlocBase {
       _user = user;
     }
 
-    _activityModel.timer != null
-        ? _timerInstantiatedStream.add(true)
-        : _timerInstantiatedStream.add(false);
+    _timerInstantiatedStream.add(_activityModel.timer != null);
   }
 
   /// Adds a timer to the activity loaded into the timerBloc.
