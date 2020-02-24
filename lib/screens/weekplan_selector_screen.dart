@@ -141,21 +141,21 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   );
                 })),
-                Expanded(child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  if (weekplan.weekNumber == null) {
-                    return AutoSizeText('');
-                  }
-                  return AutoSizeText(
-                    'Uge: ${weekplan.weekNumber}      År: ${weekplan.weekYear}',
-                    style: const TextStyle(fontSize: 18),
-                    maxLines: 1,
-                    minFontSize: 14,
-                    key: const Key('weekYear'),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  );
-                })),
+                Container(
+                  child: weekplan.weekNumber == null
+                      ? null
+                      : Expanded(child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                          return AutoSizeText(
+                            'Uge: ${weekplan.weekNumber}      År: ${weekplan.weekYear}',
+                            style: const TextStyle(fontSize: 18),
+                            maxLines: 1,
+                            minFontSize: 14,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        })),
+                )
               ],
             )),
           );
