@@ -18,7 +18,7 @@ class SettingsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Expanded(
-              child: _buildOrientationSection(),
+              child: _buildViewSection(),
             ),
           ]),
     );
@@ -71,7 +71,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
 
-  Widget _buildOrientationSection() {
+  Widget _buildViewSection() {
     return ListView(children: <Widget>[
       const Text('Ugeplan visning'),
       ExpansionTile(
