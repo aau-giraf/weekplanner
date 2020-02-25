@@ -431,7 +431,7 @@ class ShowActivityScreen extends StatelessWidget {
       stream: _pictoImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         return FittedBox(
-            child: snapshot.data,
+            child: Container(child: snapshot.data),
             // Key is used for testing the widget.
             key: Key(_activity.id.toString()));
       },
