@@ -8,11 +8,13 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
@@ -199,39 +201,43 @@ class WeekplanSelectorScreen extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Container(
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: <double>[
-                  1 / 3,
-                  2 / 3
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: <double>[
+                    1 / 3,
+                    2 / 3
+                  ],
+                      colors: <Color>[
+                    Color.fromRGBO(254, 215, 108, 1),
+                    Color.fromRGBO(253, 187, 85, 1),
+                  ])),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GirafButton(
+                      text: 'Redigér',
+                      icon: const ImageIcon(AssetImage('assets/icons/edit.png')) ,
+                      isEnabled: false,
+                      isEnabledStream: _weekBloc.editingIsValidStream(),
+                      onPressed: () => _pushEditWeekPlan(context)),
+                  BottomAppBarButton(
+                      buttonText: 'Slet',
+                      buttonKey: 'DeleteActivtiesButton',
+                      assetPath: 'assets/icons/delete.png',
+                      dialogFunction: _buildDeletionDialog),
                 ],
-                    colors: <Color>[
-                  Color.fromRGBO(254, 215, 108, 1),
-                  Color.fromRGBO(253, 187, 85, 1),
-                ])),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                BottomAppBarButton(
-                  buttonText: 'Redigér',
-                  buttonKey: 'EditActivtiesButton',
-                  assetPath: 'assets/icons/edit.png',
-                  dialogFunction: _buildEditDialog),
-                BottomAppBarButton(
-                    buttonText: 'Slet',
-                    buttonKey: 'DeleteActivtiesButton',
-                    assetPath: 'assets/icons/delete.png',
-                    dialogFunction: _buildDeletionDialog)
-              ],
-
-              )
-          ),
+              )),
         ),
       ],
     ));
+  }
+
+
+  void _pushEditWeekPlan(BuildContext context){
+    Routes.push(context, EditWeekPlanScreen());
   }
 
   /// Builds dialog box to confirm/cancel deletion
@@ -255,31 +261,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 // Closes the dialog box
                 Routes.pop(context);
               });
-        });
-  }
-
-  /// Builds dialog box to confirm/cancel
-  Future<Center> _buildEditDialog(BuildContext context) {
-    return showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          if (_weekBloc.getNumberOfMarkedWeekModels() == 1) {
-//            Routes.push(context, ); //TODO: push to editWeekplan screen
-            return GirafNotifyDialog(
-                title: 'Redigering succesfuld',
-                description: 'Billede og navn ændret'
-              //TODO: angivi hvad der er blevet redigeret
-            );
-          }
-          else {
-            return GirafNotifyDialog(
-                title: 'Ulovlig handling',
-                description: 'Du kan ikke redigere '
-                    + _weekBloc.getNumberOfMarkedWeekModels().toString()
-                    + ' ugeplan(er)'
-            );
-          }
         });
   }
 }

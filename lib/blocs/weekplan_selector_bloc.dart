@@ -144,6 +144,9 @@ class WeekplansBloc extends BlocBase {
     }
     _editMode.add(!_editMode.value);
   }
+  Observable<bool> editingIsValidStream() {
+      return _markedWeekModels.map((event) => _markedWeekModels.value.length == 1);
+  }
 
   @override
   void dispose() {
