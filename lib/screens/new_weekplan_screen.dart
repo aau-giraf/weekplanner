@@ -25,7 +25,7 @@ class NewWeekplanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GirafButton saveButton = GirafButton(
+    final GirafButton saveButton = GirafButton(
       icon: const ImageIcon(AssetImage('assets/icons/save.png')),
       key: const Key('NewWeekplanSaveBtnKey'),
       text: 'Gem ugeplan',

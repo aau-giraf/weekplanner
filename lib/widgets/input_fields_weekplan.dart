@@ -9,6 +9,8 @@ import 'package:weekplanner/routes.dart';
 import 'giraf_button_widget.dart';
 
 class InputFieldsWeekPlan extends StatefulWidget {
+  /// Class created for keeping the input fields for the new and
+  /// edit week plan screen consisten-t
   InputFieldsWeekPlan(this._bloc, this._style, this._button);
   NewWeekplanBloc _bloc;
   TextStyle _style;
