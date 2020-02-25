@@ -56,31 +56,31 @@ class SettingsScreen extends StatelessWidget {
               }).toList());
         },
       ),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Farver på ugeplan'),
-        children: const <Widget>[Text('Tema 1'), Text('Tema 2')],
+      const ExpansionTile(
+        key: PageStorageKey<int>(3),
+        title: Text('Farver på ugeplan'),
+        children: <Widget>[Text('Tema 1'), Text('Tema 2')],
       ),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Tegn for udførelse'),
-        children: const <Widget>[Text('Tema 1'), Text('Tema 2')],
+      const ExpansionTile(
+        key: PageStorageKey<int>(3),
+        title: Text('Tegn for udførelse'),
+        children: <Widget>[Text('Tema 1'), Text('Tema 2')],
       ),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Grå skala'),
-        children: const <Widget>[Text('Tema 1'), Text('Tema 2')],
+      const ExpansionTile(
+        key: PageStorageKey<int>(3),
+        title: Text('Grå skala'),
+        children: <Widget>[Text('Tema 1'), Text('Tema 2')],
       ),
     ]);
   }
 
   Widget _buildOrientationSection() {
-    return ListView(children: <Widget>[
-      const Text('Orientering'),
+    return ListView(children: const <Widget>[
+      Text('Orientering'),
       ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Antal aktiviteter'),
-        children: const <Widget>[Text('Tema 1'), Text('Tema 2')],
+        key: PageStorageKey<int>(3),
+        title: Text('Antal aktiviteter'),
+        children: <Widget>[Text('Tema 1'), Text('Tema 2')],
       ),
     ]);
   }

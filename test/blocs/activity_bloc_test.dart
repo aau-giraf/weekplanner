@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:test_api/test_api.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -23,8 +23,8 @@ void main() {
   MockWeekApi weekApi;
   MockActivityApi activityApi;
 
-  final UsernameModel mockUser =
-      UsernameModel(id: '50', name: null, role: null);
+  final UsernameModel mockUser = 
+    UsernameModel(id: '50', name: null, role: null);
 
   final ActivityModel mockActivity = ActivityModel(
       id: 1,

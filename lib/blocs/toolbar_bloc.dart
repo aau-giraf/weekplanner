@@ -246,8 +246,8 @@ class ToolbarBloc extends BlocBase {
               key: const Key('SwitchToGuardianPassword'),
               controller: passwordCtrl,
               obscureText: true,
-              decoration: InputDecoration(
-                icon: const Icon(Icons.lock),
+              decoration: const InputDecoration(
+                icon: Icon(Icons.lock),
                 labelText: 'Adgangskode',
               ),
             ),

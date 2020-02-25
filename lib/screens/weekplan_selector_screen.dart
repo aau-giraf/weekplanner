@@ -196,7 +196,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.data == null) {
-          return FittedBox(child: const CircularProgressIndicator());
+          return const FittedBox(child: CircularProgressIndicator());
         }
         return Container(
             child: snapshot.data, key: const Key('PictogramImage'));
@@ -213,8 +213,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Container(
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: <double>[
