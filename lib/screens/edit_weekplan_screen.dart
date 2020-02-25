@@ -12,6 +12,7 @@ class EditWeekPlanState extends State<EditWeekPlanScreen> {
     ///Used to check if the keyboard is visible
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
+    //TODO: steal from the screen new_weekplan_screen
     return Scaffold (                   // Add from here...
       body: Text('Hello'),
       appBar: AppBar(
