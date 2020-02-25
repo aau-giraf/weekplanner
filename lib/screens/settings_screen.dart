@@ -76,38 +76,46 @@ class SettingsScreen extends StatelessWidget {
       const Text('Ugeplan visning'),
       ExpansionTile(
         key: const PageStorageKey<int>(3),
-        title: const Text('Antal dage der skal vises ad gangen'),
+        title: const Text('Vælg visning'),
         children: <Widget>[
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               RaisedButton(
-                child: Text('1'),
+                child: Text('Vis Man-Fre'),
                 onPressed: () { days_displayed = 1; },
               ),
               RaisedButton(
-                child: Text('2'),
+                child: Text('Vis Man-Søn'),
                 onPressed: () { days_displayed = 2; },
               ),
               RaisedButton(
-                child: Text('3'),
+                child: Text('Vis kun nuværende dag'),
                 onPressed: () { days_displayed = 3; },
               ),
               RaisedButton(
-                child: Text('4'),
+                child: Text('Vis 2 dage frem'),
                 onPressed: () { days_displayed = 4; },
               ),
               RaisedButton(
-                child: Text('5'),
+                child: Text('Vis 3 dage frem'),
                 onPressed: () { days_displayed = 5; },
               ),
               RaisedButton(
-                child: Text('6'),
+                child: Text('Vis 4 dage frem'),
                 onPressed: () { days_displayed = 6; },
               ),
               RaisedButton(
-                child: Text('7'),
+                child: Text('Vis 5 dage frem'),
+                onPressed: () { days_displayed = 7; },
+              ),
+              RaisedButton(
+                child: Text('Vis 6 dage frem'),
+                onPressed: () { days_displayed = 7; },
+              ),
+              RaisedButton(
+                child: Text('Vis 7 dage frem'),
                 onPressed: () { days_displayed = 7; },
               ),
             ],
