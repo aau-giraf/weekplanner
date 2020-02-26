@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
@@ -101,9 +102,6 @@ class TimerBloc extends BlocBase {
                     _activityModel.timer.fullLength *
                     c.remaining.inMilliseconds));
           });
-        } else if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
-            DateTime.now().isAfter(endTime)) {
-          SystemSound.play(SystemSoundType.click);
         } else if (_activityModel.timer.paused) {
 
           _timerRunningStream.add(false);
@@ -147,8 +145,16 @@ class TimerBloc extends BlocBase {
       _timerStream = _countDown.listen((CountdownTimer c) {
         _timerProgressStream.add(1 -
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
+
+        if (DateTime.now().isAfter(_endTime)) {
+          SystemSound.play(SystemSoundType.click);
+        }
       });
       _timerRunningStream.add(true);
+
+      if (DateTime.now().isAfter(_endTime)) {
+        SystemSound.play(SystemSoundType.click);
+      }
 
       _api.activity
           .update(_activityModel, _user.id)
