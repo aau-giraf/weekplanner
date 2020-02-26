@@ -95,10 +95,6 @@ class TimerBloc extends BlocBase {
               Duration(milliseconds: updatePeriod),
               stopwatch: _stopwatch);
 
-          if (!_countDown.isRunning){
-            SystemSound.play(SystemSoundType.click);
-          }
-
           _timerStream = _countDown.listen((CountdownTimer c) {
             _timerProgressStream.add(1 -
                 (1 /
@@ -107,14 +103,15 @@ class TimerBloc extends BlocBase {
           });
         } else if (_activityModel.timer.paused) {
 
-          SystemSound.play(SystemSoundType.click);
-
           _timerRunningStream.add(false);
           _timerProgressStream.add(1 -
               (1 /
                   _activityModel.timer.fullLength *
                   (_activityModel.timer.fullLength -
                       _activityModel.timer.progress)));
+        } else if (!_activityModel.timer.paused &&
+            DateTime.now().isAfter(endTime)) {
+          SystemSound.play(SystemSoundType.click);
         } else {
           _timerProgressStream.add(1);
         }
