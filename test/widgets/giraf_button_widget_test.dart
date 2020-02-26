@@ -6,7 +6,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:flutter/material.dart';
 
 
-const ImageIcon myIcon = ImageIcon(AssetImage('assets/icons/accept.png'));
+const ImageIcon acceptIcon = ImageIcon(AssetImage('assets/icons/accept.png'));
 
 class MockScreen extends StatelessWidget {
   final BehaviorSubject<bool> isPressed = BehaviorSubject<bool>.seeded(false);
@@ -23,7 +23,7 @@ class MockScreen extends StatelessWidget {
             onPressed: () {
               isPressed.add(true);
             },
-            icon: myIcon,
+            icon: acceptIcon,
             isEnabledStream: btnEnabled,
           ),
         ],
@@ -47,7 +47,7 @@ void main() {
   testWidgets('GirafButton has an icon', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: MockScreen()));
 
-    expect(find.byWidget(myIcon), findsOneWidget);
+    expect(find.byWidget(acceptIcon), findsOneWidget);
   });
 
   testWidgets(
