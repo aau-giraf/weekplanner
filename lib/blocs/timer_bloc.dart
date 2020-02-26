@@ -147,7 +147,7 @@ class TimerBloc extends BlocBase {
         _timerProgressStream.add(1 -
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
 
-        if (DateTime.now().isAfter(_endTime)) {
+        if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
           SystemSound.play(SystemSoundType.click);
           
           //audioPlayer.play("SomeULR");
