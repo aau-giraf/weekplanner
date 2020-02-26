@@ -101,6 +101,9 @@ class TimerBloc extends BlocBase {
                     _activityModel.timer.fullLength *
                     c.remaining.inMilliseconds));
           });
+        } else if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
+            DateTime.now().isAfter(endTime)) {
+          SystemSound.play(SystemSoundType.click);
         } else if (_activityModel.timer.paused) {
 
           _timerRunningStream.add(false);
