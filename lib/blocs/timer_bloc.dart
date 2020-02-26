@@ -100,11 +100,6 @@ class TimerBloc extends BlocBase {
                 (1 /
                     _activityModel.timer.fullLength *
                     c.remaining.inMilliseconds));
-
-            // Plays ding sound when activity ends.
-            if (c.remaining.inMilliseconds >= _activityModel.timer.fullLength) {
-              SystemSound.play(SystemSoundType.click);
-            }
           });
         } else if (_activityModel.timer.paused) {
 
@@ -116,6 +111,8 @@ class TimerBloc extends BlocBase {
                       _activityModel.timer.progress)));
         } else {
           _timerProgressStream.add(1);
+
+          SystemSound.play(SystemSoundType.click);
         }
         _timerInstantiatedStream.add(true);
       }
