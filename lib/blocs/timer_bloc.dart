@@ -156,10 +156,6 @@ class TimerBloc extends BlocBase {
       });
       _timerRunningStream.add(true);
 
-      if (DateTime.now().isAfter(_endTime)) {
-        SystemSound.play(SystemSoundType.click);
-      }
-
       _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {});
