@@ -111,8 +111,6 @@ class TimerBloc extends BlocBase {
                       _activityModel.timer.progress)));
         } else {
           _timerProgressStream.add(1);
-
-          SystemSound.play(SystemSoundType.click);
         }
         _timerInstantiatedStream.add(true);
       }
@@ -140,14 +138,13 @@ class TimerBloc extends BlocBase {
           Duration(milliseconds: updatePeriod),
           stopwatch: _stopwatch);
 
+      if (_countDown.remaining <= 0){
+        SystemSound.play(SystemSoundType.click);
+      }
+
       _timerStream = _countDown.listen((CountdownTimer c) {
         _timerProgressStream.add(1 -
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
-
-        // Plays ding sound when activity ends.
-        if (c.remaining.inMilliseconds >= _activityModel.timer.fullLength) {
-          SystemSound.play(SystemSoundType.click);
-        }
       });
       _timerRunningStream.add(true);
 
