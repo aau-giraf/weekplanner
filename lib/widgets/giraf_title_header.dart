@@ -25,8 +25,8 @@ class GirafTitleHeader extends StatelessWidget implements PreferredSizeWidget {
                 textAlign: TextAlign.center,
               )),
             ),
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: <double>[

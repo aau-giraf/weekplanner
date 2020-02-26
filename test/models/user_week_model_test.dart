@@ -1,7 +1,7 @@
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
-import 'package:test_api/test_api.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
 void main() {

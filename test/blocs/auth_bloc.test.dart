@@ -1,6 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:async_test/async_test.dart';
-import 'package:test_api/test_api.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
