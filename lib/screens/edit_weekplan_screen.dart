@@ -20,7 +20,6 @@ class EditWeekPlanScreen extends StatelessWidget {
 
   final WeekModel weekModel;
   final EditWeekplanBloc _bloc;
-  final TextStyle _style = const TextStyle(fontSize: 20);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,11 @@ class EditWeekPlanScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: GirafAppBar(title: 'Rediger ugeplan'),
-      body: InputFieldsWeekPlan(_bloc, _style, editButton),
+      body: InputFieldsWeekPlan(
+        bloc: _bloc,
+        button: editButton,
+        weekModel: weekModel,
+      ),
     );
   }
 }

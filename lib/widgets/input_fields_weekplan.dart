@@ -1,4 +1,5 @@
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
@@ -11,10 +12,16 @@ import 'giraf_button_widget.dart';
 class InputFieldsWeekPlan extends StatefulWidget {
   /// Class created for keeping the input fields for the new and
   /// edit week plan screen consisten-t
-  InputFieldsWeekPlan(this._bloc, this._style, this._button);
-  NewWeekplanBloc _bloc;
-  TextStyle _style;
-  GirafButton _button;
+  InputFieldsWeekPlan({
+    @required this.bloc,
+    @required this.button,
+    this.weekModel
+  });
+  NewWeekplanBloc bloc;
+  GirafButton button;
+  WeekModel weekModel;
+
+  final TextStyle _style = const TextStyle(fontSize: 20);
 
   @override
   InputFieldsWeekPlanState createState() => InputFieldsWeekPlanState();
@@ -33,7 +40,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
             Padding(
                 padding:
                 const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                child: widget._button,
+                child: widget.button,
             ),
           ])
         ]
@@ -44,12 +51,15 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: StreamBuilder<bool>(
-            stream: widget._bloc.validTitleStream,
+            stream: widget.bloc.validTitleStream,
             builder:
                 (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextField(
+              return TextFormField(
                 key: const Key('NewWeekplanTitleField'),
-                onChanged: widget._bloc.onTitleChanged.add,
+                onChanged: widget.bloc.onTitleChanged.add,
+                initialValue: widget.weekModel == null
+                  ? ''
+                  : widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -73,11 +83,14 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: StreamBuilder<bool>(
-            stream: widget._bloc.validYearStream,
+            stream: widget.bloc.validYearStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextField(
+              return TextFormField(
                 keyboardType: TextInputType.number,
-                onChanged: widget._bloc.onYearChanged.add,
+                onChanged: widget.bloc.onYearChanged.add,
+                initialValue: widget.weekModel == null
+                    ? ''
+                    : widget.weekModel.weekYear.toString(),
                 style: widget._style,
                 decoration: InputDecoration(
                     labelText: 'År',
@@ -95,12 +108,15 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: StreamBuilder<bool>(
-            stream: widget._bloc.validWeekNumberStream,
+            stream: widget.bloc.validWeekNumberStream,
             builder:
                 (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextField(
+              return TextFormField(
                 keyboardType: TextInputType.number,
-                onChanged: widget._bloc.onWeekNumberChanged.add,
+                onChanged: widget.bloc.onWeekNumberChanged.add,
+                initialValue: widget.weekModel == null
+                    ? ''
+                    : widget.weekModel.weekNumber.toString(),
                 style: widget._style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
@@ -122,7 +138,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         width: 200,
         height: 200,
         child: StreamBuilder<PictogramModel>(
-          stream: widget._bloc.thumbnailStream,
+          stream: widget.bloc.thumbnailStream,
           builder: _buildThumbnail,
         ),
       ),
@@ -132,7 +148,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   Widget _buildThumbnail(BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
     if (snapshot?.data == null) {
       return GestureDetector(
-        onTap: () => _openPictogramSearch(context, widget._bloc),
+        onTap: () => _openPictogramSearch(context, widget.bloc),
         child: Card(
           child: Column(
             children: <Widget>[
@@ -148,7 +164,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     } else {
       return PictogramImage(
           pictogram: snapshot.data,
-          onPressed: () => _openPictogramSearch(context, widget._bloc));
+          onPressed: () => _openPictogramSearch(context, widget.bloc));
     }
   }
 
