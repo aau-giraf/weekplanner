@@ -106,6 +106,8 @@ class NewWeekplanBloc extends BlocBase {
           WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
         ]);
 
+    //TODO: problemet ligger faktisk her i, at de ikke har en rigtigt primary key,
+    // men i stedet så er user_id + weekYear + weekNumber primary key.
     return _api.week.update(
         _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
   }

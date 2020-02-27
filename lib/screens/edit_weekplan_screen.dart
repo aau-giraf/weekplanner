@@ -29,6 +29,7 @@ class EditWeekPlanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () { //TODO: lav så denne knap opdaterer og ikek bare gemmer en ny.
+        // Gå ind i edit_weekplan_bloc og få denne metode oprettet,
         _bloc.saveWeekplan().listen((WeekModel response) {
           if (response != null) {
             Routes.pop<WeekModel>(context, response);
