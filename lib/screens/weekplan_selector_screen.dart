@@ -253,9 +253,14 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
 
-  void _pushEditWeekPlan(BuildContext context){ //Todo: denne metode skal nok også opdateres, så vi får smidt det rigtige object med ind som skal ændres
-    Routes.push<WeekModel>(context, EditWeekPlanScreen(_user))
-        .then((WeekModel newWeek) => _weekBloc.load(_user, true));
+  void _pushEditWeekPlan(BuildContext context){
+      Routes.push<WeekModel>(context,
+          EditWeekPlanScreen
+            (user: _user,
+            weekModel: _weekBloc.getMarkedWeekModels()[0],)
+      ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
+
+      _weekBloc.clearMarkedWeekModels();
   }
 
   /// Builds dialog box to confirm/cancel deletion

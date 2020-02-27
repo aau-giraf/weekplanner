@@ -79,7 +79,7 @@ class WeekplansBloc extends BlocBase {
           .listen((WeekModel results) {
         weekModels.add(results);
         weekModels.sort((WeekModel a, WeekModel b) {
-          if (a.name == 'Tilføj ugeplan'){
+          if (a.name == 'Tilføj ugeplan') {
             return -1;
           }
           return a.name.toLowerCase().compareTo(b.name.toLowerCase());
@@ -137,6 +137,11 @@ class WeekplansBloc extends BlocBase {
     return _markedWeekModels.value.length;
   }
 
+  /// Returns as list of the marked week models
+  List<WeekModel> getMarkedWeekModels() {
+    return _markedWeekModels.value;
+  }
+
   /// Toggles edit mode
   void toggleEditMode() {
     if (_editMode.value) {
@@ -144,8 +149,10 @@ class WeekplansBloc extends BlocBase {
     }
     _editMode.add(!_editMode.value);
   }
+
   Observable<bool> editingIsValidStream() {
-      return _markedWeekModels.map((event) => _markedWeekModels.value.length == 1);
+    return _markedWeekModels
+        .map((event) => _markedWeekModels.value.length == 1);
   }
 
   @override
