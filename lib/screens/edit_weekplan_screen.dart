@@ -29,7 +29,7 @@ class EditWeekPlanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () { //TODO: lav så denne knap opdaterer og ikek bare gemmer en ny.
-        _bloc.editWeekModel(weekModel).listen((WeekModel response) {
+        _bloc.editWeekPlan(weekModel).listen((WeekModel response) {
           if (response != null) {
             Routes.pop<WeekModel>(context, response);
           }

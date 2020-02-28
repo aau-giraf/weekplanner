@@ -116,25 +116,14 @@ class NewWeekplanBloc extends BlocBase {
         weekUser.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
   }
 
-  Observable<WeekModel> editWeekModel(WeekModel weekModel) {
-
+  Observable<WeekModel> editWeekPlan(WeekModel weekModel) {
     weekModel.thumbnail = _thumbnailController.value;
     weekModel.name = _titleController.value;
     weekModel.weekYear = int.parse(_yearController.value);
     weekModel.weekNumber = int.parse(_weekNumberController.value);
-    weekModel.days = <WeekdayModel>[
-      WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
-      WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[]),
-      WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[]),
-      WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[]),
-      WeekdayModel(day: Weekday.Friday, activities: <ActivityModel>[]),
-      WeekdayModel(day: Weekday.Saturday, activities: <ActivityModel>[]),
-      WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
-    ];
 
     return weekApi.week.update(weekUser.id, weekModel.weekYear,
         weekModel.weekNumber, weekModel);
-
   }
 
   /// Resets the bloc to its default values.
