@@ -18,13 +18,30 @@ class EditWeekplanBloc extends NewWeekplanBloc {
       super.onThumbnailChanged.add(weekModel.thumbnail);
   }
 
-  Observable<WeekModel> editWeekPlan(WeekModel weekModel) {
-    weekModel.thumbnail = super.thumbnailController.value;
-    weekModel.name = super.titleController.value;
-    weekModel.weekYear = int.parse(super.yearController.value);
-    weekModel.weekNumber = int.parse(super.weekNoController.value);
+  /// This method allows one to edit
+  Observable<WeekModel> editWeekPlan(WeekModel oldWeekModel) {
 
-    return weekApi.week.update(super.weekUser.id, weekModel.weekYear,
-        weekModel.weekNumber, weekModel);
+    // Here we delete the old week plan (we had to do this because of the way
+    // the keys work for the put method does not allow us to change week year
+    // and week number
+    final WeekModel newWeekModel = WeekModel();
+
+    // We copy the activities from the old week model.
+    newWeekModel.days = oldWeekModel.days;
+
+    // Getting the values from the input fields
+    newWeekModel.thumbnail = super.thumbnailController.value;
+    newWeekModel.name = super.titleController.value;
+    newWeekModel.weekYear = int.parse(super.yearController.value);
+    newWeekModel.weekNumber = int.parse(super.weekNoController.value);
+
+    // TODO: we need to grap the list of all weekModels from
+    //  weekplan_selector_bloc, and delete our current week model
+    //  from it see deleteMarkedWeekModels()
+    weekApi.week.delete(super.weekUser.id, oldWeekModel.weekYear,
+        oldWeekModel.weekNumber);
+
+    return weekApi.week.update(super.weekUser.id, newWeekModel.weekYear,
+        newWeekModel.weekNumber, newWeekModel);
   }
 }
