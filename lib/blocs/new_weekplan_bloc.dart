@@ -6,6 +6,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -18,10 +19,15 @@ class NewWeekplanBloc extends BlocBase {
   /// 
   /// It is important that the bloc is initialized before use!
   /// This is done with the method [initialize].
-  NewWeekplanBloc(this._api);
+  NewWeekplanBloc(this.weekApi);
 
-  final Api _api;
-  UsernameModel _user;
+  @protected
+  /// This is used to access the weekModel in the database
+  final Api weekApi;
+
+  @protected
+  /// This field is used to get the userId. Accessed in [edit_weekplan_bloc].
+  UsernameModel weekUser;
 
   final BehaviorSubject<String> _titleController = BehaviorSubject<String>();
   final BehaviorSubject<String> _yearController = BehaviorSubject<String>();
@@ -74,15 +80,15 @@ class NewWeekplanBloc extends BlocBase {
   /// was used. Switches user to the one provided.
   /// This method should always be called before using the bloc.
   void initialize(UsernameModel user) {
-    if (_user != null) {
+    if (weekUser != null) {
       resetBloc();
     }
-    _user = user;
+    weekUser = user;
   }
 
   /// Saves the entered information to the database.
   Observable<WeekModel> saveWeekplan() {
-    if (_user == null) {
+    if (weekUser == null) {
       return null;
     }
 
@@ -106,14 +112,35 @@ class NewWeekplanBloc extends BlocBase {
           WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
         ]);
 
-    return _api.week.update(
-        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    return weekApi.week.update(
+        weekUser.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+  }
+
+  Observable<WeekModel> editWeekModel(WeekModel weekModel) {
+
+    weekModel.thumbnail = _thumbnailController.value;
+    weekModel.name = _titleController.value;
+    weekModel.weekYear = int.parse(_yearController.value);
+    weekModel.weekNumber = int.parse(_weekNumberController.value);
+    weekModel.days = <WeekdayModel>[
+      WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
+      WeekdayModel(day: Weekday.Tuesday, activities: <ActivityModel>[]),
+      WeekdayModel(day: Weekday.Wednesday, activities: <ActivityModel>[]),
+      WeekdayModel(day: Weekday.Thursday, activities: <ActivityModel>[]),
+      WeekdayModel(day: Weekday.Friday, activities: <ActivityModel>[]),
+      WeekdayModel(day: Weekday.Saturday, activities: <ActivityModel>[]),
+      WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
+    ];
+
+    return weekApi.week.update(weekUser.id, weekModel.weekYear,
+        weekModel.weekNumber, weekModel);
+
   }
 
   /// Resets the bloc to its default values.
   /// The bloc should be reset after each use.
   void resetBloc() {
-    _user = null;
+    weekUser = null;
     _titleController.sink.add(null);
     _yearController.sink.add(null);
     _weekNumberController.sink.add(null);
