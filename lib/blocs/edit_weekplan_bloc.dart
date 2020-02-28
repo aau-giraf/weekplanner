@@ -11,7 +11,7 @@ class EditWeekplanBloc extends NewWeekplanBloc {
   /// This method should always be called before using the bloc
   void initializeEditBloc(UsernameModel user, WeekModel weekModel) {
       super.initialize(user);
-
+      // We just take the values out of the week model and put into our sink
       super.onTitleChanged.add(weekModel.name);
       super.onYearChanged.add(weekModel.weekYear.toString());
       super.onWeekNumberChanged.add(weekModel.weekNumber.toString());
