@@ -18,5 +18,13 @@ class EditWeekplanBloc extends NewWeekplanBloc {
       super.onThumbnailChanged.add(weekModel.thumbnail);
   }
 
+  Observable<WeekModel> editWeekPlan(WeekModel weekModel) {
+    weekModel.thumbnail = super.thumbnailController.value;
+    weekModel.name = super.titleController.value;
+    weekModel.weekYear = int.parse(super.yearController.value);
+    weekModel.weekNumber = int.parse(super.weekNoController.value);
 
+    return weekApi.week.update(super.weekUser.id, weekModel.weekYear,
+        weekModel.weekNumber, weekModel);
+  }
 }
