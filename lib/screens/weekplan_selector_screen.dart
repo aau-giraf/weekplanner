@@ -254,10 +254,17 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
 
   void _pushEditWeekPlan(BuildContext context){
+      /*StreamBuilder<List<WeekModel>> builder = StreamBuilder(
+        stream: _weekBloc.weekModels,
+        builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
+          return snapshot;
+        },
+      );*/
       Routes.push<WeekModel>(context,
-          EditWeekPlanScreen
-            (user: _user,
-            weekModel: _weekBloc.getMarkedWeekModels()[0],)
+          EditWeekPlanScreen(
+            user: _user,
+            weekModel: _weekBloc.getMarkedWeekModels()[0],
+          ),
       ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
       _weekBloc.toggleEditMode();
       _weekBloc.clearMarkedWeekModels();
