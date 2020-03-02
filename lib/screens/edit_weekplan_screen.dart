@@ -3,8 +3,10 @@ import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
@@ -13,12 +15,20 @@ import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 class EditWeekPlanScreen extends StatelessWidget {
   /// Screen for editing a weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
-  EditWeekPlanScreen({@required UsernameModel user, @required this.weekModel})
+  EditWeekPlanScreen({
+    @required UsernameModel user,
+    @required this.weekModel,
+    @required this.selectorBloc,
+  })
       : _bloc = di.getDependency<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
 
+  /// The current week model that should be edited
   final WeekModel weekModel;
+  ///
+  final WeekplansBloc selectorBloc;
+
   final EditWeekplanBloc _bloc;
 
   @override
@@ -29,7 +39,7 @@ class EditWeekPlanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () {
-        _bloc.editWeekPlan(weekModel).listen((WeekModel response) {
+        _bloc.editWeekPlan(weekModel, selectorBloc).listen((WeekModel response){
           if (response != null) {
             Routes.pop<WeekModel>(context, response);
           }

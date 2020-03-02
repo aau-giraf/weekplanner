@@ -3,6 +3,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
 class EditWeekplanBloc extends NewWeekplanBloc {
   /// This class is an extension of NewWeekplan bloc
@@ -19,11 +20,12 @@ class EditWeekplanBloc extends NewWeekplanBloc {
   }
 
   /// This method allows one to edit
-  Observable<WeekModel> editWeekPlan(WeekModel oldWeekModel) {
+  Observable<WeekModel> editWeekPlan(
+      WeekModel oldWeekModel,
+      WeekplansBloc selectorBloc
+      ) {
 
-    // Here we delete the old week plan (we had to do this because of the way
-    // the keys work for the put method does not allow us to change week year
-    // and week number
+
     final WeekModel newWeekModel = WeekModel();
 
     // We copy the activities from the old week model.
@@ -35,11 +37,10 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     newWeekModel.weekYear = int.parse(super.yearController.value);
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
 
-    // TODO: we need to grap the list of all weekModels from
-    //  weekplan_selector_bloc, and delete our current week model
-    //  from it see deleteMarkedWeekModels()
-    weekApi.week.delete(super.weekUser.id, oldWeekModel.weekYear,
-        oldWeekModel.weekNumber);
+    // Here we delete the old week plan (we had to do this because of the way
+    // the keys work for the put method does not allow us to change week year
+    // and week number
+    selectorBloc.deleteWeekModel(oldWeekModel);
 
     return weekApi.week.update(super.weekUser.id, newWeekModel.weekYear,
         newWeekModel.weekNumber, newWeekModel);
