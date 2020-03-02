@@ -40,7 +40,10 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     // Here we delete the old week plan (we had to do this because of the way
     // the keys work for the put method does not allow us to change week year
     // and week number
-    selectorBloc.deleteWeekModel(oldWeekModel);
+    if(oldWeekModel.weekYear != newWeekModel.weekYear
+        || oldWeekModel.weekNumber != oldWeekModel.weekNumber) {
+      selectorBloc.deleteWeekModel(oldWeekModel);
+    }
 
     return weekApi.week.update(super.weekUser.id, newWeekModel.weekYear,
         newWeekModel.weekNumber, newWeekModel);

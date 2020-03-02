@@ -152,6 +152,7 @@ class WeekplansBloc extends BlocBase {
     return _markedWeekModels.value.length;
   }
 
+  //TODO: we should probably not have this method as it maybe breaks bloc
   /// Returns all the marked week models.
   List<WeekModel> getMarkedWeekModels() {
     return _markedWeekModels.value;
