@@ -11,21 +11,17 @@ class EditWeekplanBloc extends NewWeekplanBloc {
 
   /// This method should always be called before using the bloc
   void initializeEditBloc(UsernameModel user, WeekModel weekModel) {
-      super.initialize(user);
-      // We just take the values out of the week model and put into our sink
-      super.onTitleChanged.add(weekModel.name);
-      super.onYearChanged.add(weekModel.weekYear.toString());
-      super.onWeekNumberChanged.add(weekModel.weekNumber.toString());
-      super.onThumbnailChanged.add(weekModel.thumbnail);
+    super.initialize(user);
+    // We just take the values out of the week model and put into our sink
+    super.onTitleChanged.add(weekModel.name);
+    super.onYearChanged.add(weekModel.weekYear.toString());
+    super.onWeekNumberChanged.add(weekModel.weekNumber.toString());
+    super.onThumbnailChanged.add(weekModel.thumbnail);
   }
 
   /// This method allows one to edit
   Observable<WeekModel> editWeekPlan(
-      WeekModel oldWeekModel,
-      WeekplansBloc selectorBloc
-      ) {
-
-
+      WeekModel oldWeekModel, WeekplansBloc selectorBloc) {
     final WeekModel newWeekModel = WeekModel();
 
     // We copy the activities from the old week model.
@@ -40,8 +36,8 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     // Here we delete the old week plan (we had to do this because of the way
     // the keys work for the put method does not allow us to change week year
     // and week number
-    if(oldWeekModel.weekYear != newWeekModel.weekYear
-        || oldWeekModel.weekNumber != newWeekModel.weekNumber) {
+    if (oldWeekModel.weekYear != newWeekModel.weekYear ||
+        oldWeekModel.weekNumber != newWeekModel.weekNumber) {
       selectorBloc.deleteWeekModel(oldWeekModel);
     }
 

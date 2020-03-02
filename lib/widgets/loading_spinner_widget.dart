@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// Callback is optional and gives functionality that allows a
@@ -25,7 +26,7 @@ void showLoadingSpinner(BuildContext context, bool dismissible,
 
 /// The Giraf standardized loading spinner used throughout the application
 class LoadingSpinnerWidget extends StatelessWidget {
-	/// Default constructor
+  /// Default constructor
   const LoadingSpinnerWidget({
     Key key,
   }) : super(key: key);
@@ -36,8 +37,8 @@ class LoadingSpinnerWidget extends StatelessWidget {
       child: Transform.scale(
           scale: 2,
           child: const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-                Color.fromRGBO(255, 157, 0, 0.8)),
+            valueColor:
+                AlwaysStoppedAnimation<Color>(Color.fromRGBO(255, 157, 0, 0.8)),
           )),
     );
   }

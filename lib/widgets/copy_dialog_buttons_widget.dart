@@ -4,7 +4,6 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Class to build CopyDialogButtons
 class CopyDialogButtons extends StatelessWidget {
-  
   /// Constructor to get required information
   const CopyDialogButtons({
     Key key,
@@ -14,13 +13,13 @@ class CopyDialogButtons extends StatelessWidget {
     @required this.checkMarkValues,
   }) : super(key: key);
 
-  /// Text to be displayed on the confirm button. 
+  /// Text to be displayed on the confirm button.
   final String confirmButtonText;
-  
-  /// Path to the confirm ImageIcon. 
+
+  /// Path to the confirm ImageIcon.
   final ImageIcon confirmButtonIcon;
 
-  /// Function to be called when the button is pressed. 
+  /// Function to be called when the button is pressed.
   final void Function(List<bool>, BuildContext) confirmOnPressed;
 
   /// A list containing check mark values

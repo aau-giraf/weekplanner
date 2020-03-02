@@ -14,10 +14,10 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   /// The activity time picker takes the activity as input, to insert a timer
   /// to the given activity.
   GirafActivityTimerPickerDialog(
-      this._activity,
-      this._timerBloc, {
-        Key key,
-      }) : super(key: key) {
+    this._activity,
+    this._timerBloc, {
+    Key key,
+  }) : super(key: key) {
     _timerBloc.load(_activity);
   }
 
@@ -25,11 +25,11 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
   final TimerBloc _timerBloc;
 
   final TextEditingController _textEditingControllerHours =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _textEditingControllerMinutes =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _textEditingControllerSeconds =
-  TextEditingController();
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +41,8 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
             color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
         title: const Center(
             child: GirafTitleHeader(
-              title: 'Vælg tid for aktivitet',
-            )),
+          title: 'Vælg tid for aktivitet',
+        )),
         content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,

@@ -152,7 +152,8 @@ class WeekplansBloc extends BlocBase {
     return _markedWeekModels.value.length;
   }
 
-  //TODO: we should probably not have this method as it maybe breaks bloc
+  //TODO(eneder17): we should probably not have this method as it maybe breaks
+  // bloc pattern
   /// Returns all the marked week models.
   List<WeekModel> getMarkedWeekModels() {
     return _markedWeekModels.value;
@@ -166,9 +167,9 @@ class WeekplansBloc extends BlocBase {
     _editMode.add(!_editMode.value);
   }
 
+  /// This stream checks that you have only marked one week model
   Observable<bool> editingIsValidStream() {
-    return _markedWeekModels
-        .map((event) => _markedWeekModels.value.length == 1);
+    return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
   }
 
   @override

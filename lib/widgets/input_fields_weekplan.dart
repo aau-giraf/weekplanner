@@ -3,20 +3,18 @@ import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
-import 'package:weekplanner/routes.dart';
 
 import 'giraf_button_widget.dart';
 
 class InputFieldsWeekPlan extends StatefulWidget {
   /// Class created for keeping the input fields for the new and
   /// edit week plan screen consisten-t
-  InputFieldsWeekPlan({
-    @required this.bloc,
-    @required this.button,
-    this.weekModel
-  });
+  InputFieldsWeekPlan(
+      {@required this.bloc, @required this.button, this.weekModel});
+
   NewWeekplanBloc bloc;
   GirafButton button;
   WeekModel weekModel;
@@ -30,56 +28,47 @@ class InputFieldsWeekPlan extends StatefulWidget {
 class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        children: <Widget>[
-          _titleInputField(),
-          _yearInputField(),
-          _weekNumberInputField(),
-          _pictogramInputField(),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            Padding(
-                padding:
-                const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                child: widget.button,
-            ),
-          ])
-        ]
-    );
+    return ListView(children: <Widget>[
+      _titleInputField(),
+      _yearInputField(),
+      _weekNumberInputField(),
+      _pictogramInputField(),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: widget.button,
+        ),
+      ])
+    ]);
   }
 
-  Widget _titleInputField(){
+  Widget _titleInputField() {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: StreamBuilder<bool>(
             stream: widget.bloc.validTitleStream,
-            builder:
-                (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return TextFormField(
                 key: const Key('NewWeekplanTitleField'),
                 onChanged: widget.bloc.onTitleChanged.add,
-                initialValue: widget.weekModel == null
-                  ? ''
-                  : widget.weekModel.name,
+                initialValue:
+                    widget.weekModel == null ? '' : widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter(
-                      RegExp('[ -~\u00C0-\u00FF]'))
+                  WhitelistingTextInputFormatter(RegExp('[ -~\u00C0-\u00FF]'))
                 ],
                 style: widget._style,
                 decoration: InputDecoration(
                     labelText: 'Titel',
-                    errorText: (snapshot?.data == false)
-                        ? 'Titel skal angives'
-                        : null,
-                    border: const OutlineInputBorder(
-                        borderSide: BorderSide())),
+                    errorText:
+                        (snapshot?.data == false) ? 'Titel skal angives' : null,
+                    border: const OutlineInputBorder(borderSide: BorderSide())),
               );
-            })
-    );
+            }));
   }
 
-  Widget _yearInputField(){
+  Widget _yearInputField() {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: StreamBuilder<bool>(
@@ -97,11 +86,9 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                     errorText: (snapshot?.data == false)
                         ? 'År skal angives som fire cifre'
                         : null,
-                    border: const OutlineInputBorder(
-                        borderSide: BorderSide())),
+                    border: const OutlineInputBorder(borderSide: BorderSide())),
               );
-            })
-    );
+            }));
   }
 
   Widget _weekNumberInputField() {
@@ -109,8 +96,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: StreamBuilder<bool>(
             stream: widget.bloc.validWeekNumberStream,
-            builder:
-                (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return TextFormField(
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onWeekNumberChanged.add,
@@ -123,14 +109,12 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                     errorText: (snapshot?.data == false)
                         ? 'Ugenummer skal være mellem 1 og 53'
                         : null,
-                    border: const OutlineInputBorder(
-                        borderSide: BorderSide())),
+                    border: const OutlineInputBorder(borderSide: BorderSide())),
               );
-            })
-    );
+            }));
   }
 
-  Widget _pictogramInputField(){
+  Widget _pictogramInputField() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
@@ -145,7 +129,8 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     );
   }
 
-  Widget _buildThumbnail(BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
+  Widget _buildThumbnail(
+      BuildContext context, AsyncSnapshot<PictogramModel> snapshot) {
     if (snapshot?.data == null) {
       return GestureDetector(
         onTap: () => _openPictogramSearch(context, widget.bloc),
@@ -176,7 +161,4 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
       }
     });
   }
-
 }
-
-

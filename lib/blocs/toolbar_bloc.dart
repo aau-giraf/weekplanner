@@ -32,9 +32,7 @@ class ToolbarBloc extends BlocBase {
     _iconsToAdd = <IconButton>[];
 
     // Assigns a map to icons, if icons is null.
-    icons ??= <AppBarIcon, VoidCallback>{
-      AppBarIcon.logout: () {}
-    };
+    icons ??= <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
 
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
@@ -219,7 +217,7 @@ class ToolbarBloc extends BlocBase {
   }
 
   /// Return the dialog of the popup.
-  Alert createPopupDialog(BuildContext context){
+  Alert createPopupDialog(BuildContext context) {
     /// Password controller for passing information from a text field
     /// to the authenticator.
     final TextEditingController passwordCtrl = TextEditingController();
@@ -232,9 +230,7 @@ class ToolbarBloc extends BlocBase {
             RichText(
               text: TextSpan(
                 text: 'Logget ind som ',
-                style: DefaultTextStyle
-                    .of(context)
-                    .style,
+                style: DefaultTextStyle.of(context).style,
                 children: <TextSpan>[
                   TextSpan(
                       text: _authBloc.loggedInUsername,
@@ -260,16 +256,16 @@ class ToolbarBloc extends BlocBase {
             // be tapped than each 2 seconds.
             onPressed: _clickable
                 ? () {
-              if (_clickable) {
-                _clickable = false;
-                loginFromPopUp(context, _authBloc.loggedInUsername,
-                    passwordCtrl.value.text);
-                // Timer makes it clicable again after 2 seconds.
-                Timer(const Duration(milliseconds: 2000), () {
-                  _clickable = true;
-                });
-              }
-            }
+                    if (_clickable) {
+                      _clickable = false;
+                      loginFromPopUp(context, _authBloc.loggedInUsername,
+                          passwordCtrl.value.text);
+                      // Timer makes it clicable again after 2 seconds.
+                      Timer(const Duration(milliseconds: 2000), () {
+                        _clickable = true;
+                      });
+                    }
+                  }
                 : null,
             child: const Text(
               'Bekræft',

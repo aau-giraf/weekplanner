@@ -20,7 +20,7 @@ class ChooseCitizenBloc extends BlocBase {
 
   final Api _api;
   final BehaviorSubject<List<UsernameModel>> _citizens =
-  BehaviorSubject<List<UsernameModel>>.seeded(<UsernameModel>[]);
+      BehaviorSubject<List<UsernameModel>>.seeded(<UsernameModel>[]);
 
   @override
   void dispose() {

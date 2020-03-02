@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -16,24 +17,32 @@ class NewWeekplanBloc extends BlocBase {
   /// The bloc contains sinks to handle when different inputs are entered and
   /// streams to tell if the inputs are valid.
   /// The bloc is also able to save the newly created weekplan.
-  /// 
+  ///
   /// It is important that the bloc is initialized before use!
   /// This is done with the method [initialize].
   NewWeekplanBloc(this.weekApi);
 
   @protected
+
   /// This is used to access the weekModel in the database
   final Api weekApi;
 
   @protected
+
   /// This field is used to get the userId. Accessed in [edit_weekplan_bloc].
   UsernameModel weekUser;
 
-  @protected /// This field controls the title input field
+  @protected
+
+  /// This field controls the title input field
   final BehaviorSubject<String> titleController = BehaviorSubject<String>();
-  @protected  /// This field controls the year no input field
+  @protected
+
+  /// This field controls the year no input field
   final BehaviorSubject<String> yearController = BehaviorSubject<String>();
-  @protected /// This field controls the week no input field
+  @protected
+
+  /// This field controls the week no input field
   final BehaviorSubject<String> weekNoController = BehaviorSubject<String>();
   @protected
   final BehaviorSubject<PictogramModel> thumbnailController =

@@ -1,6 +1,6 @@
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:api_client/models/enums/giraf_theme_enum.dart';
 
 /// All about settings.
 ///
