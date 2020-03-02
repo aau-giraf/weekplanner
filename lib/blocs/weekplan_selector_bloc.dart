@@ -137,12 +137,6 @@ class WeekplansBloc extends BlocBase {
     return _markedWeekModels.value.length;
   }
 
-  //TODO: this does not follow bloc pattern so fix plz
-  /// Returns as list of the marked week models
-  List<WeekModel> getMarkedWeekModels() {
-    return _markedWeekModels.value;
-  }
-
   /// Toggles edit mode
   void toggleEditMode() {
     if (_editMode.value) {

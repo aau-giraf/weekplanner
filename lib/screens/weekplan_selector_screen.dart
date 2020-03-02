@@ -254,20 +254,16 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
 
   void _pushEditWeekPlan(BuildContext context){
-      /*StreamBuilder<List<WeekModel>> builder = StreamBuilder(
-        stream: _weekBloc.weekModels,
-        builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-          return snapshot;
-        },
-      );*/
-      Routes.push<WeekModel>(context,
+      _weekBloc.markedWeekModels.listen((List<WeekModel> markedWeekModels) {
+        Routes.push<WeekModel>(context,
           EditWeekPlanScreen(
             user: _user,
-            weekModel: _weekBloc.getMarkedWeekModels()[0],
+            weekModel: markedWeekModels[0],
           ),
-      ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
-      _weekBloc.toggleEditMode();
-      _weekBloc.clearMarkedWeekModels();
+        ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
+        _weekBloc.toggleEditMode();
+        _weekBloc.clearMarkedWeekModels();
+      });
   }
 
   /// Builds dialog box to confirm/cancel deletion
