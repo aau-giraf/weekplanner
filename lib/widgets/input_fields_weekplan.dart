@@ -9,23 +9,32 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import 'giraf_button_widget.dart';
 
+/// The widget itself for the input fields
 class InputFieldsWeekPlan extends StatefulWidget {
   /// Class created for keeping the input fields for the new and
   /// edit week plan screen consisten-t
-  InputFieldsWeekPlan(
+  const InputFieldsWeekPlan(
       {@required this.bloc, @required this.button, this.weekModel});
 
-  NewWeekplanBloc bloc;
-  GirafButton button;
-  WeekModel weekModel;
+  /// This is the bloc used to control the input fields
+  final NewWeekplanBloc bloc;
 
-  final TextStyle _style = const TextStyle(fontSize: 20);
+  /// This is where you would input the button that should be added after the
+  /// input fields
+  final GirafButton button;
+
+  /// This is the information from the current weekModel object
+  final WeekModel weekModel;
+
 
   @override
   InputFieldsWeekPlanState createState() => InputFieldsWeekPlanState();
 }
 
+/// The state for the input fields
 class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
+  final TextStyle _style = const TextStyle(fontSize: 20);
+
   @override
   Widget build(BuildContext context) {
     return ListView(children: <Widget>[
@@ -58,7 +67,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 inputFormatters: <TextInputFormatter>[
                   WhitelistingTextInputFormatter(RegExp('[ -~\u00C0-\u00FF]'))
                 ],
-                style: widget._style,
+                style: _style,
                 decoration: InputDecoration(
                     labelText: 'Titel',
                     errorText:
@@ -80,7 +89,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 initialValue: widget.weekModel == null
                     ? ''
                     : widget.weekModel.weekYear.toString(),
-                style: widget._style,
+                style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
                     errorText: (snapshot?.data == false)
@@ -103,7 +112,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 initialValue: widget.weekModel == null
                     ? ''
                     : widget.weekModel.weekNumber.toString(),
-                style: widget._style,
+                style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
                     errorText: (snapshot?.data == false)
@@ -139,7 +148,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
-                child: Text('Vælg billede til ugeplan', style: widget._style),
+                child: Text('Vælg billede til ugeplan', style: _style),
               ),
               Expanded(child: Image.asset('assets/icons/galleryBig.png')),
             ],
