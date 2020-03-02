@@ -80,9 +80,9 @@ class LoginScreenState extends State<LoginScreen> {
         padding: portrait
             ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
             : const EdgeInsets.fromLTRB(200, 0, 200, 8),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           // The background of the login-screen
-          image: const DecorationImage(
+          image: DecorationImage(
             image: AssetImage('assets/login_screen_background_image.png'),
             fit: BoxFit.cover,
           ),

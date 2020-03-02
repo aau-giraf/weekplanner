@@ -201,7 +201,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.data == null) {
-          return FittedBox(child: const CircularProgressIndicator());
+          return const FittedBox(child: CircularProgressIndicator());
         }
         return Container(
             child: snapshot.data, key: const Key('PictogramImage'));
@@ -236,7 +236,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 children: <Widget>[
                   GirafButton(
                       text: 'Redigér',
-                      icon: const ImageIcon(AssetImage('assets/icons/edit.png')) ,
+                      icon: const ImageIcon(AssetImage('assets/icons/edit.png')),
                       isEnabled: false,
                       isEnabledStream: _weekBloc.editingIsValidStream(),
                       onPressed: () => _pushEditWeekPlan(context)),
@@ -251,7 +251,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
       ],
     ));
   }
-
 
   void _pushEditWeekPlan(BuildContext context){
     Routes.push<WeekModel>(context,

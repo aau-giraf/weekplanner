@@ -121,8 +121,8 @@ class WeekplanScreen extends StatelessWidget {
             children: <Widget>[
           Expanded(
               child: Container(
-                  decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: <double>[
@@ -384,10 +384,10 @@ class WeekplanScreen extends StatelessWidget {
       builder: (BuildContext context,
           List<Tuple2<ActivityModel, Weekday>> candidateData,
           List<dynamic> rejectedData) {
-        return AspectRatio(
+        return const AspectRatio(
           aspectRatio: 1,
           child: Card(
-            color: const Color.fromRGBO(200, 200, 200, 0.5),
+            color: Color.fromRGBO(200, 200, 200, 0.5),
             child: ListTile(),
           ),
         );

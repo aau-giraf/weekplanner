@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:test_api/test_api.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:mockito/mockito.dart';

@@ -24,8 +24,8 @@ class ChooseCitizenScreen extends StatelessWidget {
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
-        decoration: BoxDecoration(
-          image: const DecorationImage(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
             image: AssetImage('assets/login_screen_background_image.png'),
             fit: BoxFit.cover,
           ),

@@ -6,7 +6,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:test_api/test_api.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
