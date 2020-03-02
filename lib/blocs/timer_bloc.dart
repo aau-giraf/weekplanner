@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
