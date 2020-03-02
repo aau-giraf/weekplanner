@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
@@ -129,9 +129,6 @@ class TimerBloc extends BlocBase {
     if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
-      AudioPlayer audioPlayer = AudioPlayer(
-          mode: PlayerMode.LOW_LATENCY
-      );
 
       _stopwatch = Stopwatch();
       // Calculates the end time
@@ -148,7 +145,6 @@ class TimerBloc extends BlocBase {
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
 
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
-          audioPlayer.play("On My iPad/ReeKid.mp3");
           SystemSound.play(SystemSoundType.click);
         } 
       });
