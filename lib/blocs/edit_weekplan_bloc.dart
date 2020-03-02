@@ -41,7 +41,7 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     // the keys work for the put method does not allow us to change week year
     // and week number
     if(oldWeekModel.weekYear != newWeekModel.weekYear
-        || oldWeekModel.weekNumber != oldWeekModel.weekNumber) {
+        || oldWeekModel.weekNumber != newWeekModel.weekNumber) {
       selectorBloc.deleteWeekModel(oldWeekModel);
     }
 
