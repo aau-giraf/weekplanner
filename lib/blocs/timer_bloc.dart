@@ -148,9 +148,9 @@ class TimerBloc extends BlocBase {
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
 
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
-          audioPlayer.play("../../sound/ReeKid.mp3");
+          audioPlayer.play("sdcard/Download/ReeKid.mp3");
           SystemSound.play(SystemSoundType.click);
-        }
+        } 
       });
       _timerRunningStream.add(true);
 
