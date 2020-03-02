@@ -152,6 +152,11 @@ class WeekplansBloc extends BlocBase {
     return _markedWeekModels.value.length;
   }
 
+  /// Returns all the marked week models.
+  List<WeekModel> getMarkedWeekModels() {
+    return _markedWeekModels.value;
+  }
+
   /// Toggles edit mode
   void toggleEditMode() {
     if (_editMode.value) {
