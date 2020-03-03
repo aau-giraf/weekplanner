@@ -593,7 +593,6 @@ class WeekplanScreen extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
           maxLines: 1,
-          minFontSize: 8,
           group: _cardAutoSizeGroup,
         ),
       ),
