@@ -45,6 +45,7 @@ class WeekplanScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
+  final AutoSizeGroup _cardAutoSizeGroup = new AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
@@ -584,6 +585,7 @@ class WeekplanScreen extends StatelessWidget {
       key: Key(translation),
       color: buttonColor,
       child: ListTile(
+        contentPadding: const EdgeInsets.all(0.0), // Sets padding in cards
         title: AutoSizeText(
           translation,
           style: const TextStyle(
@@ -592,6 +594,7 @@ class WeekplanScreen extends StatelessWidget {
           textAlign: TextAlign.center,
           maxLines: 1,
           minFontSize: 8,
+          group: _cardAutoSizeGroup,
         ),
       ),
     );
