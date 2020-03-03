@@ -204,6 +204,7 @@ void main() {
         done();
       }
     });
+    sleep(const Duration(milliseconds: 10));
 
     timerMock.playTimer();
   }));
