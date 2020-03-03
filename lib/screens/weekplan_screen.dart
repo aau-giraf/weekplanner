@@ -5,6 +5,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -583,12 +584,14 @@ class WeekplanScreen extends StatelessWidget {
       key: Key(translation),
       color: buttonColor,
       child: ListTile(
-        title: Text(
+        title: AutoSizeText(
           translation,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
+          maxLines: 1,
+          minFontSize: 8,
         ),
       ),
     );
