@@ -48,7 +48,7 @@ class TimerBloc extends BlocBase {
       prefix: 'audio/'
   );
 
-  final String audioFile = "dingSound.mp3";
+  final String audioFile = 'dingSound.mp3';
 
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity, {UsernameModel user}) {
