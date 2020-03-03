@@ -105,7 +105,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconSearch(callback));
         break;
       case AppBarIcon.settings:
-        _iconsToAdd.add(_createIconSettings(context));
+        _iconsToAdd.add(_createIconSettings(callback));
         break;
       case AppBarIcon.undo:
         _iconsToAdd.add(_createIconUndo(callback));
@@ -374,13 +374,11 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  IconButton _createIconSettings(BuildContext context) {
+  IconButton _createIconSettings(VoidCallback callback) {
     return IconButton(
       icon: Image.asset('assets/icons/settings.png'),
       tooltip: 'Indstillinger',
-      onPressed: () {
-        Routes.push(context, SettingsScreen());
-      },
+      onPressed: callback,
     );
   }
 

@@ -1,30 +1,97 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+
+  /// Constructor
+  SettingsScreen(UsernameModel user)
+      : _settingsBloc = di.getDependency<SettingsBloc>(),
+        this._user = user;
+
+  final SettingsBloc _settingsBloc;
+  final UsernameModel _user;
+
+  /// temporary solution to store the selected number of days to display
   static int days_displayed = 7;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(title: 'Indstillinger'),
+      appBar: GirafAppBar(title: 'Indstillinger for ' + _user.name),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Expanded(
-              child: _buildViewSection(),
+              child: _buildNumberOfDaysSection(),
             ),
           ]),
     );
   }
 
+  Widget _buildNumberOfDaysSection() {
+    return ListView(children: <Widget>[
+      const Text('Ugeplan visning'),
+      ExpansionTile(
+        key: const PageStorageKey<int>(3),
+        title: const Text('Vælg visning'),
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton(
+                child: const Text('Vis Man-Fre'),
+                onPressed: () { days_displayed = -1; },
+              ),
+              RaisedButton(
+                child: const Text('Vis Man-Søn'),
+                onPressed: () { days_displayed = 0; },
+              ),
+              RaisedButton(
+                child: const Text('Vis kun nuværende dag'),
+                onPressed: () { days_displayed = 1; },
+              ),
+              RaisedButton(
+                child: const Text('Vis 2 dage frem'),
+                onPressed: () { days_displayed = 2; },
+              ),
+              RaisedButton(
+                child: const Text('Vis 3 dage frem'),
+                onPressed: () { days_displayed = 3; },
+              ),
+              RaisedButton(
+                child: const Text('Vis 4 dage frem'),
+                onPressed: () { days_displayed = 4; },
+              ),
+              RaisedButton(
+                child: const Text('Vis 5 dage frem'),
+                onPressed: () { days_displayed = 5; },
+              ),
+              RaisedButton(
+                child: const Text('Vis 6 dage frem'),
+                onPressed: () { days_displayed = 6; },
+              ),
+              RaisedButton(
+                child: const Text('Vis 7 dage frem'),
+                onPressed: () { days_displayed = 7; },
+              ),
+            ],
+          ),
+        ],
+      ),
+    ]);
+  }
+}
 
+/*
+  // Not used in the current version (from 2019)
   Widget _buildThemeSection() {
     return ListView(children: <Widget>[
       const Text('Tema'),
@@ -70,58 +137,4 @@ class SettingsScreen extends StatelessWidget {
     ]);
   }
 
-
-  Widget _buildViewSection() {
-    return ListView(children: <Widget>[
-      const Text('Ugeplan visning'),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Vælg visning'),
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              RaisedButton(
-                child: Text('Vis Man-Fre'),
-                onPressed: () { days_displayed = 1; },
-              ),
-              RaisedButton(
-                child: Text('Vis Man-Søn'),
-                onPressed: () { days_displayed = 2; },
-              ),
-              RaisedButton(
-                child: Text('Vis kun nuværende dag'),
-                onPressed: () { days_displayed = 3; },
-              ),
-              RaisedButton(
-                child: Text('Vis 2 dage frem'),
-                onPressed: () { days_displayed = 4; },
-              ),
-              RaisedButton(
-                child: Text('Vis 3 dage frem'),
-                onPressed: () { days_displayed = 5; },
-              ),
-              RaisedButton(
-                child: Text('Vis 4 dage frem'),
-                onPressed: () { days_displayed = 6; },
-              ),
-              RaisedButton(
-                child: Text('Vis 5 dage frem'),
-                onPressed: () { days_displayed = 7; },
-              ),
-              RaisedButton(
-                child: Text('Vis 6 dage frem'),
-                onPressed: () { days_displayed = 7; },
-              ),
-              RaisedButton(
-                child: Text('Vis 7 dage frem'),
-                onPressed: () { days_displayed = 7; },
-              ),
-            ],
-          ),
-        ],
-      ),
-    ]);
-  }
-}
+*/

@@ -69,7 +69,7 @@ class Bootstrap {
     });
 
     di.registerDependency<SettingsBloc>((Injector i) {
-      return SettingsBloc();
+      return SettingsBloc(i.getDependency());
     });
 
     di.registerDependency((Injector i) {

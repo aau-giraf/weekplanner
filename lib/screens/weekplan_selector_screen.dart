@@ -9,8 +9,10 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
+import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// Screen to select a weekplan for a given user
@@ -33,7 +35,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
         appBarIcons: <AppBarIcon, VoidCallback>{
           AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
           AppBarIcon.logout: () {},
-          AppBarIcon.settings: () {},
+          AppBarIcon.settings: () =>
+              Routes.push(context, SettingsScreen(_user)),
         },
       ),
       bottomNavigationBar: StreamBuilder<bool>(
@@ -47,7 +50,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
           }
         },
       ),
-      body: _buildWeekplanGridview(context),
+      body: _buildWeekplanGridview(context)
     );
   }
 
