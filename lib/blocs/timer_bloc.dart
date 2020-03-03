@@ -7,6 +7,8 @@ import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 /// Logic for activities
 class TimerBloc extends BlocBase {
@@ -14,6 +16,7 @@ class TimerBloc extends BlocBase {
   TimerBloc(this._api);
 
   final Api _api;
+  final cache = AudioCache();
 
   ActivityModel _activityModel;
   UsernameModel _user;
@@ -143,7 +146,7 @@ class TimerBloc extends BlocBase {
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
 
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
-          SystemSound.play(SystemSoundType.click);
+          cache.play('audio/dingSound.mp3');
         } 
       });
       _timerRunningStream.add(true);
