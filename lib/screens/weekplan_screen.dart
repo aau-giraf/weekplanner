@@ -45,7 +45,7 @@ class WeekplanScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
-  final AutoSizeGroup _cardAutoSizeGroup = new AutoSizeGroup();
+  final AutoSizeGroup _cardAutoSizeGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
