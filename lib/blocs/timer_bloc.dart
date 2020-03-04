@@ -3,6 +3,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -44,8 +45,11 @@ class TimerBloc extends BlocBase {
   Stopwatch _stopwatch;
 
   // Audio player used for ding sound.
+  static final AudioPlayer volumePlayer = AudioPlayer();
+
   final AudioCache audioPlayer = AudioCache(
-      prefix: 'audio/'
+      prefix: 'audio/',
+      fixedPlayer: volumePlayer
   );
 
   final String audioFile = 'dingSound.mp3';
@@ -163,6 +167,7 @@ class TimerBloc extends BlocBase {
 
   /// Plays ding sound from mp3 file.
   Future<void> playSound() async {
+    volumePlayer.setVolume(0.7);
     audioPlayer.load(audioFile);
     audioPlayer.play(audioFile);
     audioPlayer.clear(audioFile);
