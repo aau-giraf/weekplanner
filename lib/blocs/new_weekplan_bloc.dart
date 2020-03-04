@@ -6,6 +6,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -15,50 +16,57 @@ class NewWeekplanBloc extends BlocBase {
   /// The bloc contains sinks to handle when different inputs are entered and
   /// streams to tell if the inputs are valid.
   /// The bloc is also able to save the newly created weekplan.
-  /// 
+  ///
   /// It is important that the bloc is initialized before use!
   /// This is done with the method [initialize].
-  NewWeekplanBloc(this._api);
+  NewWeekplanBloc(this.weekApi);
 
-  final Api _api;
-  UsernameModel _user;
+  @protected /// This is used to access the weekModel in the database
+  final Api weekApi;
 
-  final BehaviorSubject<String> _titleController = BehaviorSubject<String>();
-  final BehaviorSubject<String> _yearController = BehaviorSubject<String>();
-  final BehaviorSubject<String> _weekNumberController =
-      BehaviorSubject<String>();
-  final BehaviorSubject<PictogramModel> _thumbnailController =
+  @protected /// This field is used to get the userId. Accessed in
+  /// [edit_weekplan_bloc].
+  UsernameModel weekUser;
+
+  @protected /// This field controls the title input field
+  final BehaviorSubject<String> titleController = BehaviorSubject<String>();
+  @protected  /// This field controls the year no input field
+  final BehaviorSubject<String> yearController = BehaviorSubject<String>();
+  @protected /// This field controls the week no input field
+  final BehaviorSubject<String> weekNoController = BehaviorSubject<String>();
+  @protected  /// This field controls the pictogram input field
+  final BehaviorSubject<PictogramModel> thumbnailController =
       BehaviorSubject<PictogramModel>();
 
   /// Handles when the entered title is changed.
-  Sink<String> get onTitleChanged => _titleController.sink;
+  Sink<String> get onTitleChanged => titleController.sink;
 
   /// Handles when the entered year is changed.
-  Sink<String> get onYearChanged => _yearController.sink;
+  Sink<String> get onYearChanged => yearController.sink;
 
   /// Handles when the entered week number is changed.
-  Sink<String> get onWeekNumberChanged => _weekNumberController.sink;
+  Sink<String> get onWeekNumberChanged => weekNoController.sink;
 
   /// Handles when the thumbnail is changed.
-  Sink<PictogramModel> get onThumbnailChanged => _thumbnailController.sink;
+  Sink<PictogramModel> get onThumbnailChanged => thumbnailController.sink;
 
   /// Gives information about whether the entered title is valid.
   /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validTitleStream =>
-      _titleController.stream.transform(_titleValidation);
+      titleController.stream.transform(_titleValidation);
 
   /// Gives information about whether the entered year is valid.
   /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validYearStream =>
-      _yearController.stream.transform(_yearValidation);
+      yearController.stream.transform(_yearValidation);
 
   /// Gives information about whether the entered week number is valid.
   /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validWeekNumberStream =>
-      _weekNumberController.stream.transform(_weekNumberValidation);
+      weekNoController.stream.transform(_weekNumberValidation);
 
   /// Streams the chosen thumbnail.
-  Observable<PictogramModel> get thumbnailStream => _thumbnailController.stream;
+  Observable<PictogramModel> get thumbnailStream => thumbnailController.stream;
 
   /// Gives information about whether all inputs are valid.
   Observable<bool> get allInputsAreValidStream =>
@@ -74,22 +82,22 @@ class NewWeekplanBloc extends BlocBase {
   /// was used. Switches user to the one provided.
   /// This method should always be called before using the bloc.
   void initialize(UsernameModel user) {
-    if (_user != null) {
+    if (weekUser != null) {
       resetBloc();
     }
-    _user = user;
+    weekUser = user;
   }
 
   /// Saves the entered information to the database.
   Observable<WeekModel> saveWeekplan() {
-    if (_user == null) {
+    if (weekUser == null) {
       return null;
     }
 
-    final String _title = _titleController.value;
-    final int _year = int.parse(_yearController.value);
-    final int _weekNumber = int.parse(_weekNumberController.value);
-    final PictogramModel _thumbnail = _thumbnailController.value;
+    final String _title = titleController.value;
+    final int _year = int.parse(yearController.value);
+    final int _weekNumber = int.parse(weekNoController.value);
+    final PictogramModel _thumbnail = thumbnailController.value;
 
     final WeekModel _weekModel = WeekModel(
         thumbnail: _thumbnail,
@@ -106,18 +114,18 @@ class NewWeekplanBloc extends BlocBase {
           WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
         ]);
 
-    return _api.week.update(
-        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    return weekApi.week.update(
+        weekUser.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
   }
 
   /// Resets the bloc to its default values.
   /// The bloc should be reset after each use.
   void resetBloc() {
-    _user = null;
-    _titleController.sink.add(null);
-    _yearController.sink.add(null);
-    _weekNumberController.sink.add(null);
-    _thumbnailController.sink.add(null);
+    weekUser = null;
+    titleController.sink.add(null);
+    yearController.sink.add(null);
+    weekNoController.sink.add(null);
+    thumbnailController.sink.add(null);
   }
 
   bool _isAllInputValid(
@@ -162,9 +170,9 @@ class NewWeekplanBloc extends BlocBase {
 
   @override
   void dispose() {
-    _titleController.close();
-    _yearController.close();
-    _weekNumberController.close();
-    _thumbnailController.close();
+    titleController.close();
+    yearController.close();
+    weekNoController.close();
+    thumbnailController.close();
   }
 }

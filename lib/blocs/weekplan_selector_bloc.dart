@@ -136,9 +136,31 @@ class WeekplansBloc extends BlocBase {
     clearMarkedWeekModels();
   }
 
+  /// This method deletes the given week model from the database
+  void deleteWeekModel(WeekModel weekModel) {
+    final List<WeekModel> localWeekModels = _weekModel.value;
+
+    if (localWeekModels.contains(weekModel)) {
+      _api.week
+          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+          .listen((bool deleted) {
+        if (deleted) {
+          localWeekModels.remove(weekModel);
+          _weekModel.add(localWeekModels);
+        }
+      });
+    }
+  }
+
   /// Returns the number of marked week models
   int getNumberOfMarkedWeekModels() {
     return _markedWeekModels.value.length;
+  }
+
+  // Not sure if this method breaks bloc-pattern
+  /// Returns all the marked week models.
+  List<WeekModel> getMarkedWeekModels() {
+    return _markedWeekModels.value;
   }
 
   /// Toggles edit mode
@@ -147,6 +169,11 @@ class WeekplansBloc extends BlocBase {
       clearMarkedWeekModels();
     }
     _editMode.add(!_editMode.value);
+  }
+
+  /// This stream checks that you have only marked one week model
+  Observable<bool> editingIsValidStream() {
+    return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
   }
 
   @override
