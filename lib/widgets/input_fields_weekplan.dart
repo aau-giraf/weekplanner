@@ -34,9 +34,15 @@ class InputFieldsWeekPlan extends StatefulWidget {
 /// The state for the input fields
 class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   final TextStyle _style = const TextStyle(fontSize: 20);
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _yearController = TextEditingController();
+  final TextEditingController _weekController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
+    _initControllers();
+
     return ListView(children: <Widget>[
       _titleInputField(),
       _yearInputField(),
@@ -51,17 +57,28 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     ]);
   }
 
+  void _initControllers(){
+    if(widget.weekModel == null) {
+      _titleController.text = '';
+      _yearController.text = '';
+      _weekController.text = '';
+    } else {
+      _titleController.text = widget.weekModel.name;
+      _yearController.text = widget.weekModel.weekYear.toString();
+      _weekController.text = widget.weekModel.weekNumber.toString();
+    }
+  }
+
   Widget _titleInputField() {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: StreamBuilder<bool>(
             stream: widget.bloc.validTitleStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextFormField(
+              return TextField(
                 key: const Key('NewWeekplanTitleField'),
                 onChanged: widget.bloc.onTitleChanged.add,
-                initialValue:
-                    widget.weekModel == null ? '' : widget.weekModel.name,
+                controller: _titleController,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -83,12 +100,10 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         child: StreamBuilder<bool>(
             stream: widget.bloc.validYearStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextFormField(
+              return TextField(
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onYearChanged.add,
-                initialValue: widget.weekModel == null
-                    ? ''
-                    : widget.weekModel.weekYear.toString(),
+                controller: _yearController,
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
@@ -106,12 +121,10 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         child: StreamBuilder<bool>(
             stream: widget.bloc.validWeekNumberStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextFormField(
+              return TextField(
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onWeekNumberChanged.add,
-                initialValue: widget.weekModel == null
-                    ? ''
-                    : widget.weekModel.weekNumber.toString(),
+                controller: _weekController,
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
