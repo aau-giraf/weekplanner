@@ -590,6 +590,7 @@ class WeekplanScreen extends StatelessWidget {
           translation,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
+            fontSize: 30.0,
           ),
           textAlign: TextAlign.center,
           maxLines: 1,
