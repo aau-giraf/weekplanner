@@ -75,10 +75,12 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         child: StreamBuilder<bool>(
             stream: widget.bloc.validTitleStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextField(
+              return TextFormField(
                 key: const Key('NewWeekplanTitleField'),
                 onChanged: widget.bloc.onTitleChanged.add,
-                controller: _titleController,
+                initialValue: widget.weekModel == null
+                    ? ''
+                    : widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -100,10 +102,12 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         child: StreamBuilder<bool>(
             stream: widget.bloc.validYearStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextField(
+              return TextFormField(
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onYearChanged.add,
-                controller: _yearController,
+                initialValue: widget.weekModel == null
+                    ? ''
+                    : widget.weekModel.weekYear.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
@@ -121,10 +125,12 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         child: StreamBuilder<bool>(
             stream: widget.bloc.validWeekNumberStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return TextField(
+              return TextFormField(
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onWeekNumberChanged.add,
-                controller: _weekController,
+                initialValue: widget.weekModel == null
+                    ? ''
+                    : widget.weekModel.weekNumber.toString(),
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
