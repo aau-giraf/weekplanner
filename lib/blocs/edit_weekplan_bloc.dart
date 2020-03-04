@@ -21,7 +21,8 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     super.onThumbnailChanged.add(weekModel.thumbnail);
   }
 
-  /// This method allows one to edit
+  /// This method allows one to save the new information stored in the week
+  /// model object and also deletes the old object if necessary
   Observable<WeekModel> editWeekPlan(
       WeekModel oldWeekModel, WeekplansBloc selectorBloc) {
     final WeekModel newWeekModel = WeekModel();
