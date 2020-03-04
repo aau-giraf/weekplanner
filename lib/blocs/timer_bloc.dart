@@ -167,7 +167,7 @@ class TimerBloc extends BlocBase {
 
   /// Plays ding sound from mp3 file.
   Future<void> playSound() async {
-    volumePlayer.setVolume(0.7);
+    volumePlayer.setVolume(50);
     audioPlayer.load(audioFile);
     audioPlayer.play(audioFile);
     audioPlayer.clear(audioFile);
