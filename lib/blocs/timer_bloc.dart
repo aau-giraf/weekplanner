@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -28,19 +30,29 @@ class TimerBloc extends BlocBase {
 
   /// BehaviorSubject for the progress of the timer.
   final BehaviorSubject<double> _timerProgressStream =
-      BehaviorSubject<double>.seeded(0.0);
+  BehaviorSubject<double>.seeded(0.0);
 
   /// BehaviorSubject for to check if timer is running.
   final BehaviorSubject<bool> _timerRunningStream =
-      BehaviorSubject<bool>.seeded(false);
+  BehaviorSubject<bool>.seeded(false);
 
   /// BehaviorSubject for to check if timer is instantiated.
   final BehaviorSubject<bool> _timerInstantiatedStream =
-      BehaviorSubject<bool>.seeded(false);
+  BehaviorSubject<bool>.seeded(false);
 
   CountdownTimer _countDown;
   StreamSubscription<CountdownTimer> _timerStream;
   Stopwatch _stopwatch;
+
+  // Audio player used for ding sound.
+  static final AudioPlayer volumePlayer = AudioPlayer();
+
+  final AudioCache audioPlayer = AudioCache(
+      prefix: 'audio/',
+      fixedPlayer: volumePlayer
+  );
+
+  final String audioFile = 'dingSound.mp3';
 
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity, {UsernameModel user}) {
@@ -129,7 +141,7 @@ class TimerBloc extends BlocBase {
       // Calculates the end time
       final DateTime _endTime = _activityModel.timer.startTime.add(Duration(
           milliseconds:
-              _activityModel.timer.fullLength - _activityModel.timer.progress));
+          _activityModel.timer.fullLength - _activityModel.timer.progress));
       _countDown = CountdownTimer(
           _endTime.difference(_activityModel.timer.startTime),
           Duration(milliseconds: updatePeriod),
@@ -138,6 +150,10 @@ class TimerBloc extends BlocBase {
       _timerStream = _countDown.listen((CountdownTimer c) {
         _timerProgressStream.add(1 -
             (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
+
+        if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
+          playSound();
+        }
       });
       _timerRunningStream.add(true);
 
@@ -145,6 +161,14 @@ class TimerBloc extends BlocBase {
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {});
     }
+  }
+
+  /// Plays ding sound from mp3 file.
+  Future<void> playSound() async {
+    volumePlayer.setVolume(500);
+    audioPlayer.load(audioFile);
+    audioPlayer.play(audioFile);
+    audioPlayer.clear(audioFile);
   }
 
   /// Pauses the timer and updates the timer in the database accordingly.
@@ -189,7 +213,7 @@ class TimerBloc extends BlocBase {
   }
 
   void _resetCounterAndStopwatch() {
-    // Stops any timers and cancels all listners
+    // Stops any timers and cancels all listeners
     if (_stopwatch != null) {
       _stopwatch.stop();
       _countDown.cancel();
