@@ -24,7 +24,8 @@ class NewWeekplanBloc extends BlocBase {
   @protected /// This is used to access the weekModel in the database
   final Api weekApi;
 
-  @protected /// This field is used to get the userId. Accessed in [edit_weekplan_bloc].
+  @protected /// This field is used to get the userId. Accessed in
+  /// [edit_weekplan_bloc].
   UsernameModel weekUser;
 
   @protected /// This field controls the title input field
