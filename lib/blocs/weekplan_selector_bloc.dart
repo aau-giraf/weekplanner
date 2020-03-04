@@ -79,7 +79,7 @@ class WeekplansBloc extends BlocBase {
           .listen((WeekModel results) {
         weekModels.add(results);
         weekModels.sort((WeekModel a, WeekModel b) {
-          if (a.name == 'Tilføj ugeplan') {
+          if (a.name == 'Tilføj ugeplan'){
             return -1;
           }
           return a.name.toLowerCase().compareTo(b.name.toLowerCase());
