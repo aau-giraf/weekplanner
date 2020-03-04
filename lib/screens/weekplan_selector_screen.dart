@@ -262,10 +262,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
-
-    /*_weekBloc.markedWeekModels.listen((List<WeekModel> markedWeekModels) {
-
-      });*/
   }
 
   /// Builds dialog box to confirm/cancel deletion
