@@ -1,7 +1,7 @@
-import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Shows all the users settings, and lets them change them

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

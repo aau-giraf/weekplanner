@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:api_client/api/api.dart';
-import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:api_client/models/activity_model.dart';
 
 /// Logic for activities
 class TimerBloc extends BlocBase {
@@ -102,6 +101,7 @@ class TimerBloc extends BlocBase {
                     c.remaining.inMilliseconds));
           });
         } else if (_activityModel.timer.paused) {
+
           _timerRunningStream.add(false);
           _timerProgressStream.add(1 -
               (1 /

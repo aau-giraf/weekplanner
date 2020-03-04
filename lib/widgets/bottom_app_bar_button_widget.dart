@@ -3,6 +3,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Creates a button in the ButtomAppBar.
 class BottomAppBarButton extends StatelessWidget {
+  
   /// Constrtuctor to get required information.
   const BottomAppBarButton({
     Key key,
@@ -14,14 +15,14 @@ class BottomAppBarButton extends StatelessWidget {
 
   /// Text to be dispayed on the button.
   final String buttonText;
-
-  /// Key to identify the button when testing.
+  
+  /// Key to identify the button when testing. 
   final String buttonKey;
 
   /// Path to the ImageIcon.
   final String assetPath;
 
-  /// Function to handle when the button is pressed.
+  /// Function to handle when the button is pressed. 
   final Function dialogFunction;
 
   @override

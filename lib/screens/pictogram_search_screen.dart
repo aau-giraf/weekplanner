@@ -1,7 +1,7 @@
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -83,7 +83,7 @@ class PictogramSearch extends StatelessWidget {
                 onPressed: () async {
                   final PictogramModel newActivity =
                       await Routes.push(context, UploadImageFromPhone());
-                  Routes.pop(context, newActivity);
+					  Routes.pop(context, newActivity);
                 },
               ),
             ],

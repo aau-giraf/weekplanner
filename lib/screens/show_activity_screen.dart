@@ -1,12 +1,12 @@
-import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
@@ -389,7 +389,7 @@ class ShowActivityScreen extends StatelessWidget {
                           onPressed: () {
                             _activityBloc.cancelActivity();
                           },
-                          text: activitySnapshot.data.state !=
+                          text: activitySnapshot.data.state != 
                                   ActivityState.Canceled
                               ? 'Aflys'
                               : 'Fortryd',
