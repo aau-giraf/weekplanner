@@ -48,7 +48,7 @@ class TimerBloc extends BlocBase {
   static final AudioPlayer volumePlayer = AudioPlayer();
 
   final AudioCache audioPlayer = AudioCache(
-      prefix: 'audio/',
+      prefix: 'assets/audio/',
       fixedPlayer: volumePlayer
   );
 
