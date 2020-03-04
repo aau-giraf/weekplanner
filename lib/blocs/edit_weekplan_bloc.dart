@@ -5,8 +5,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
+///This bloc is used to control the information when editing week plan
 class EditWeekplanBloc extends NewWeekplanBloc {
-  /// This class is an extension of NewWeekplan bloc
+  /// Constructor
   EditWeekplanBloc(Api api) : super(api);
 
   /// This method should always be called before using the bloc

@@ -9,6 +9,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
+///This screen is called when you edit a week plan
 class EditWeekPlanScreen extends StatelessWidget {
   /// Screen for editing a weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
@@ -23,7 +24,8 @@ class EditWeekPlanScreen extends StatelessWidget {
   /// The current week model that should be edited
   final WeekModel weekModel;
 
-  ///
+  /// This bloc is the bloc from the week plan selector screen it is needed in
+  /// in order to delete the week plan
   final WeekplansBloc selectorBloc;
 
   final EditWeekplanBloc _bloc;
