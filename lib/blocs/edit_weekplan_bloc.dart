@@ -10,7 +10,8 @@ class EditWeekplanBloc extends NewWeekplanBloc {
   /// Constructor
   EditWeekplanBloc(Api api) : super(api);
 
-  /// This method should always be called before using the bloc
+  /// This method should always be called before using the bloc, because
+  /// it fills out the initial values of the week model object
   void initializeEditBloc(UsernameModel user, WeekModel weekModel) {
     super.initialize(user);
     // We just take the values out of the week model and put into our sink
