@@ -19,7 +19,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         msg: |
-          Please use the following checklist. Feel free to check it off as you go along.
+          Please use the following checklist.
 
           **Code Design**
           - [ ] Is the code in the right place? (Both in terms of folder structure and class structure)
