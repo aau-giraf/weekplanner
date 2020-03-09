@@ -13,11 +13,12 @@ jobs:
   comment_checklist:
     runs-on: [ubuntu-latest]
     steps:
-    - name: Create comment
-      uses: peter-evans/create-or-update-comment@v1
+    - name: comment PR
+      uses: unsplash/comment-on-pr@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        body: |
+        msg: |
           Please use the following checklist. Feel free to check it off as you go along.
 
           **Code Design**
