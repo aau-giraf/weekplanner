@@ -39,4 +39,4 @@ When creating a new branch for this project. One should stay on the Weekplanner-
 
 GNU GENERAL PUBLIC LICENSE V3
 
-Copyright [2018] [Aalborg University]
+Copyright [2020] [Aalborg University]
