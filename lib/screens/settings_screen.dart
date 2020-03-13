@@ -1,4 +1,4 @@
-import 'package:api_client/api/api.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -7,18 +7,16 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
-
   /// Constructor
   SettingsScreen(UsernameModel user)
       : _settingsBloc = di.getDependency<SettingsBloc>(),
-        this._user = user;
+        _user = user;
 
   final SettingsBloc _settingsBloc;
   final UsernameModel _user;
 
   /// temporary solution to store the selected number of days to display
   static int days_displayed = 7;
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +29,9 @@ class SettingsScreen extends StatelessWidget {
             Expanded(
               child: _buildNumberOfDaysSection(),
             ),
+            Expanded(
+              child: _buildThemeSection(),
+            )
           ]),
     );
   }
@@ -48,39 +49,57 @@ class SettingsScreen extends StatelessWidget {
             children: <Widget>[
               RaisedButton(
                 child: const Text('Vis Man-Fre'),
-                onPressed: () { days_displayed = -1; },
+                onPressed: () {
+                  days_displayed = -1;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis Man-Søn'),
-                onPressed: () { days_displayed = 0; },
+                onPressed: () {
+                  days_displayed = 0;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis kun nuværende dag'),
-                onPressed: () { days_displayed = 1; },
+                onPressed: () {
+                  days_displayed = 1;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis 2 dage frem'),
-                onPressed: () { days_displayed = 2; },
+                onPressed: () {
+                  days_displayed = 2;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis 3 dage frem'),
-                onPressed: () { days_displayed = 3; },
+                onPressed: () {
+                  days_displayed = 3;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis 4 dage frem'),
-                onPressed: () { days_displayed = 4; },
+                onPressed: () {
+                  days_displayed = 4;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis 5 dage frem'),
-                onPressed: () { days_displayed = 5; },
+                onPressed: () {
+                  days_displayed = 5;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis 6 dage frem'),
-                onPressed: () { days_displayed = 6; },
+                onPressed: () {
+                  days_displayed = 6;
+                },
               ),
               RaisedButton(
                 child: const Text('Vis 7 dage frem'),
-                onPressed: () { days_displayed = 7; },
+                onPressed: () {
+                  days_displayed = 7;
+                },
               ),
             ],
           ),
@@ -88,9 +107,7 @@ class SettingsScreen extends StatelessWidget {
       ),
     ]);
   }
-}
 
-/*
   // Not used in the current version (from 2019)
   Widget _buildThemeSection() {
     return ListView(children: <Widget>[
@@ -136,5 +153,4 @@ class SettingsScreen extends StatelessWidget {
       ),
     ]);
   }
-
-*/
+}
