@@ -1,6 +1,6 @@
 # Weekplanner
 
-[![Build Status](https://dev.azure.com/aau-giraf/giraf/_apis/build/status/aau-giraf.weekplanner?branchName=master)](https://dev.azure.com/aau-giraf/giraf/_build/latest?definitionId=2&branchName=master)
+![Build Status](https://github.com/aau-giraf/weekplanner/workflows/CI/badge.svg)
 
 This is the ongoing project on moving from Xamarin to Flutter.
 
