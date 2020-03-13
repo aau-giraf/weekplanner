@@ -5,9 +5,9 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 void main() {
   testWidgets('Test that a null title is replaced with empty',
       (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
         home: Scaffold(
-      body: const GirafTitleHeader(title: 'TitleHeader'),
+      body: GirafTitleHeader(title: 'TitleHeader'),
     )));
     await tester.pump();
     expect(find.text('TitleHeader'), findsOneWidget);
@@ -15,9 +15,9 @@ void main() {
 
   testWidgets('Test that a null title is replaced with empty',
       (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(const MaterialApp(
         home: Scaffold(
-      body: const GirafTitleHeader(),
+      body: GirafTitleHeader(),
     )));
     await tester.pump();
     expect(find.text(''), findsOneWidget);

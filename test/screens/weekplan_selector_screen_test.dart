@@ -48,14 +48,18 @@ void main() {
       thumbnail: pictogramModel,
       days: <WeekdayModel>[
         WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
-      ]);
+      ],
+      weekNumber: 1,
+      weekYear: 2020);
 
   final WeekModel weekModel2 = WeekModel(
       name: 'weekModel2',
       thumbnail: pictogramModel,
       days: <WeekdayModel>[
         WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
-      ]);
+      ],
+      weekNumber: 1,
+      weekYear: 2020);
 
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
@@ -131,6 +135,15 @@ void main() {
     expect(find.text('Tilføj ugeplan'), findsNWidgets(1));
     expect(find.text('weekModel1'), findsOneWidget);
     expect(find.text('weekModel2'), findsOneWidget);
+  });
+
+  testWidgets('Weekmodels have week/year', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pump(Duration.zero);
+
+    expect(find.text('Uge: 1      År: 2020'), findsNWidgets(2));
+    expect(find.byKey(const Key('weekYear')), findsNWidgets(2));
   });
 
   testWidgets('Click on edit icon toggles edit mode',

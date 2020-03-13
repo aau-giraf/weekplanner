@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -8,7 +10,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:test_api/test_api.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
 
@@ -126,26 +128,28 @@ void main() {
 
   test('Testing timer is instantiated when timer is not paused',
       async((DoneFn done) {
-    activityModel = ActivityModel(
-        id: 1,
-        pictogram: null,
-        order: 1,
-        state: ActivityState.Normal,
-        timer: TimerModel(
+        activityModel = ActivityModel(
+          id: 1,
+          pictogram: null,
+          order: 1,
+          state: ActivityState.Normal,
+          timer: TimerModel(
             startTime: DateTime.now(),
             fullLength: 1000,
             paused: false,
             progress: 1),
-        isChoiceBoard: false);
+          isChoiceBoard: false);
 
-    timerMock.timerIsRunning.skip(1).listen((bool b) {
-      expect(b, isTrue);
-      done();
-    });
+        timerMock.timerIsRunning.skip(1).listen((bool b) {
+          expect(b, isTrue);
+          done();
+        });
+        timerMock.load(activityModel, user: mockUser);
+        sleep(const Duration(milliseconds: 10));
 
-    timerMock.load(activityModel, user: mockUser);
-    timerMock.initTimer();
-  }));
+        timerMock.initTimer();
+      })
+  );
 
   test('Testing if timer is paused the progress is updated',
       async((DoneFn done) {
@@ -200,6 +204,7 @@ void main() {
         done();
       }
     });
+    sleep(const Duration(milliseconds: 10));
 
     timerMock.playTimer();
   }));

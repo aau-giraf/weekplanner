@@ -5,6 +5,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -45,6 +46,7 @@ class WeekplanScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
+  final AutoSizeGroup _cardAutoSizeGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +126,8 @@ class WeekplanScreen extends StatelessWidget {
             children: <Widget>[
           Expanded(
               child: Container(
-                  decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: <double>[
@@ -394,10 +396,10 @@ class WeekplanScreen extends StatelessWidget {
       builder: (BuildContext context,
           List<Tuple2<ActivityModel, Weekday>> candidateData,
           List<dynamic> rejectedData) {
-        return AspectRatio(
+        return const AspectRatio(
           aspectRatio: 1,
           child: Card(
-            color: const Color.fromRGBO(200, 200, 200, 0.5),
+            color: Color.fromRGBO(200, 200, 200, 0.5),
             child: ListTile(),
           ),
         );
@@ -593,12 +595,16 @@ class WeekplanScreen extends StatelessWidget {
       key: Key(translation),
       color: buttonColor,
       child: ListTile(
-        title: Text(
+        contentPadding: const EdgeInsets.all(0.0), // Sets padding in cards
+        title: AutoSizeText(
           translation,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
+            fontSize: 30.0,
           ),
           textAlign: TextAlign.center,
+          maxLines: 1,
+          group: _cardAutoSizeGroup,
         ),
       ),
     );

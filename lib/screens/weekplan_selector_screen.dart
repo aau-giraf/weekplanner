@@ -8,9 +8,11 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -144,7 +146,24 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                   );
-                }))
+                })),
+                Container(
+                  child: weekplan.weekNumber == null
+                      ? null
+                      : Expanded(child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                          return AutoSizeText(
+                            'Uge: ${weekplan.weekNumber}      '
+                            'År: ${weekplan.weekYear}',
+                            key: const Key('weekYear'),
+                            style: const TextStyle(fontSize: 18),
+                            maxLines: 1,
+                            minFontSize: 14,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        })),
+                )
               ],
             )),
           );
@@ -183,7 +202,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.data == null) {
-          return FittedBox(child: const CircularProgressIndicator());
+          return const FittedBox(child: CircularProgressIndicator());
         }
         return Container(
             child: snapshot.data, key: const Key('PictogramImage'));
@@ -200,35 +219,56 @@ class WeekplanSelectorScreen extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Container(
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: <double>[
-                  1 / 3,
-                  2 / 3
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: <double>[
+                    1 / 3,
+                    2 / 3
+                  ],
+                      colors: <Color>[
+                    Color.fromRGBO(254, 215, 108, 1),
+                    Color.fromRGBO(253, 187, 85, 1),
+                  ])),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GirafButton(
+                      text: 'Redigér',
+                      icon:
+                          const ImageIcon(AssetImage('assets/icons/edit.png')),
+                      isEnabled: false,
+                      isEnabledStream: _weekBloc.editingIsValidStream(),
+                      onPressed: () => _pushEditWeekPlan(context)),
+                  BottomAppBarButton(
+                      buttonText: 'Slet',
+                      buttonKey: 'DeleteActivtiesButton',
+                      assetPath: 'assets/icons/delete.png',
+                      dialogFunction: _buildDeletionDialog),
                 ],
-                    colors: <Color>[
-                  Color.fromRGBO(254, 215, 108, 1),
-                  Color.fromRGBO(253, 187, 85, 1),
-                ])),
-            child: IconButton(
-              key: const Key('DeleteActivtiesButton'),
-              iconSize: 50,
-              icon: const Icon(Icons.delete_forever),
-              onPressed: () {
-                // Shows dialog to confirm/cancel deletion
-                _buildConfirmationDialog(context);
-              },
-            ),
-          ),
+              )),
         ),
       ],
     ));
   }
 
+  void _pushEditWeekPlan(BuildContext context) {
+    Routes.push<WeekModel>(
+      context,
+      EditWeekPlanScreen(
+        user: _user,
+        weekModel: _weekBloc.getMarkedWeekModels()[0],
+        selectorBloc: _weekBloc,
+      ),
+    ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
+    _weekBloc.toggleEditMode();
+    _weekBloc.clearMarkedWeekModels();
+  }
+
   /// Builds dialog box to confirm/cancel deletion
-  Future<Center> _buildConfirmationDialog(BuildContext context) {
+  Future<Center> _buildDeletionDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,
