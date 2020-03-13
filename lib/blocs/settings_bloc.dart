@@ -1,15 +1,13 @@
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
-import '../di.dart';
-
 /// Bloc to get settings for a user
 /// Set settings, and listen for changes in them.
 class SettingsBloc extends BlocBase {
-
   /// Default constructor
   SettingsBloc(this._api);
 
@@ -23,23 +21,12 @@ class SettingsBloc extends BlocBase {
 
   Observable<SettingsModel> get settings => _settings.stream;
 
-  BehaviorSubject<SettingsModel> _settings =
-  BehaviorSubject<SettingsModel>();
+  BehaviorSubject<SettingsModel> _settings = BehaviorSubject<SettingsModel>();
 
   void loadSettings(SettingsModel settings, UsernameModel user) {
     _settings = _api.user.getSettings(user.id);
   }
 
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-  }
-
-}
-
-
-/*
   /// Currently selected theme
   Stream<GirafTheme> get theme => _theme.stream;
 
@@ -58,7 +45,7 @@ class SettingsBloc extends BlocBase {
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    // TODO: implement dispose
+  }
 }
-
-*/
