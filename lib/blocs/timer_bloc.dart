@@ -183,7 +183,8 @@ class TimerBloc extends BlocBase {
         _timerStream != null &&
         !_activityModel.timer.paused) {
       _activityModel.timer.paused = true;
-      _activityModel.timer.progress = _activityModel.timer.fullLength - _countDown.remaining.inMilliseconds;
+      _activityModel.timer.progress = _activityModel.timer.fullLength -
+          _countDown.remaining.inMilliseconds;
       _resetCounterAndStopwatch();
       _timerRunningStream.add(false);
 
