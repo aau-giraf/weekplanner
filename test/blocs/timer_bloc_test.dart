@@ -190,7 +190,7 @@ void main() {
         state: ActivityState.Normal,
         timer: TimerModel(
             startTime: DateTime.now(),
-            fullLength: timerMock.updatePeriod * 5,
+            fullLength: 5000,
             paused: true,
             progress: 0),
         isChoiceBoard: false);

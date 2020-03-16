@@ -45,18 +45,15 @@ class TimerBloc extends BlocBase {
   Stopwatch _stopwatch;
 
   // Audio player used for ding sound.
-  static final AudioPlayer volumePlayer = AudioPlayer();
+  static final AudioPlayer _volumePlayer = AudioPlayer();
 
-  final AudioCache audioPlayer = AudioCache(
+  final AudioCache _audioPlayer = AudioCache(
       prefix: 'audio/',
-      fixedPlayer: volumePlayer
+      fixedPlayer: _volumePlayer
   );
 
-  final String audioFile = 'dingSound.mp3';
+  final String _audioFile = 'dingSound.mp3';
   final int _updatePeriod = 1000;
-
-  int get updatePeriod => _updatePeriod;
-
 
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity, {UsernameModel user}) {
@@ -173,10 +170,10 @@ class TimerBloc extends BlocBase {
 
   /// Plays ding sound from mp3 file.
   Future<void> playSound() async {
-    volumePlayer.setVolume(500);
-    audioPlayer.load(audioFile);
-    audioPlayer.play(audioFile);
-    audioPlayer.clear(audioFile);
+    _volumePlayer.setVolume(500);
+    _audioPlayer.load(_audioFile);
+    _audioPlayer.play(_audioFile);
+    _audioPlayer.clear(_audioFile);
   }
 
   /// Pauses the timer and updates the timer in the database accordingly.
