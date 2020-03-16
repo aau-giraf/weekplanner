@@ -53,6 +53,10 @@ class TimerBloc extends BlocBase {
   );
 
   final String audioFile = 'dingSound.mp3';
+  final int _updatePeriod = 1000;
+
+  int get updatePeriod => _updatePeriod;
+
 
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity, {UsernameModel user}) {
@@ -85,7 +89,7 @@ class TimerBloc extends BlocBase {
   /// Method for initialising a timer in an activity.
   /// If the timer is playing the progressCircle will start immediately.
   /// Else it will be paused.
-  void initTimer({int updatePeriod = 10}) {
+  void initTimer() {
     // Checks if a stopWatch exist
     if (_stopwatch == null) {
       if (_activityModel.timer != null) {
@@ -101,7 +105,7 @@ class TimerBloc extends BlocBase {
 
           _stopwatch = Stopwatch();
           _countDown = CountdownTimer(endTime.difference(DateTime.now()),
-              Duration(milliseconds: updatePeriod),
+              Duration(milliseconds: _updatePeriod),
               stopwatch: _stopwatch);
 
           _timerStream = _countDown.listen((CountdownTimer c) {
@@ -131,7 +135,7 @@ class TimerBloc extends BlocBase {
   /// the full length, to calculate the progress of the progress circle in
   /// the widget.
   /// Updates the timer in the database accordingly.
-  void playTimer({int updatePeriod = 10}) {
+  void playTimer() {
     // Makes sure that a timer exist
     if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
@@ -144,7 +148,7 @@ class TimerBloc extends BlocBase {
           _activityModel.timer.fullLength - _activityModel.timer.progress));
       _countDown = CountdownTimer(
           _endTime.difference(_activityModel.timer.startTime),
-          Duration(milliseconds: updatePeriod),
+          Duration(milliseconds: _updatePeriod),
           stopwatch: _stopwatch);
 
       _timerStream = _countDown.listen((CountdownTimer c) {

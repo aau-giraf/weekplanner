@@ -182,6 +182,8 @@ void main() {
 
   test('Testing when timer is played the progress is streamed',
       async((DoneFn done) {
+
+    int updatePeriod = timerMock.updatePeriod;
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,
@@ -189,7 +191,7 @@ void main() {
         state: ActivityState.Normal,
         timer: TimerModel(
             startTime: DateTime.now(),
-            fullLength: 100,
+            fullLength: updatePeriod * 5,
             paused: true,
             progress: 0),
         isChoiceBoard: false);
@@ -197,7 +199,7 @@ void main() {
     timerMock.load(activityModel, user: mockUser);
 
     int i = 0;
-    timerMock.timerProgressStream.skip(1).listen((double d) {
+    timerMock.timerProgressStream.listen((double d) {
       i += 1;
       if (i == 5) {
         expect(d, isPositive);
