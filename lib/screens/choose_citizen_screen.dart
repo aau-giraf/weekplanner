@@ -83,7 +83,27 @@ class ChooseCitizenScreen extends StatelessWidget {
             onPressed:  () => Routes.push(context,
                 WeekplanSelectorScreen(user)))).toList();
 
-    list.insert(0, const RaisedButton(onPressed: null,));
+    list.insert(0, FlatButton(
+      child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Icon(
+                Icons.person_add,
+                size: 50,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(2.0),
+              child: Text(
+                  'Tilføj borger'
+              ),
+            )
+          ]
+      ),
+      onPressed: () {},
+    )
+    );
     return list;
   }
 }
