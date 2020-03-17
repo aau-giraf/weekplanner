@@ -6,6 +6,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
 /// Screen for creating a new weekplan.
@@ -28,11 +29,27 @@ class NewWeekplanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () {
-        _bloc.saveWeekplan().listen((WeekModel response) {
-          if (response != null) {
-            Routes.pop<WeekModel>(context, response);
-          }
-        });
+        showDialog<Center>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              // A confirmation dialog is shown to stop the timer.
+              return GirafConfirmDialog(
+                key: const Key('OverwriteDialogKey'),
+                title: 'Overskriv',
+                description: 'Vil du gemme?',
+                confirmButtonText: 'Okay',
+                confirmButtonIcon:
+                    const ImageIcon(AssetImage('assets/icons/accept.png')),
+                confirmOnPressed: () {
+                  _bloc.saveWeekplan().listen((WeekModel response) {
+                    if (response != null) {
+                      Routes.pop<WeekModel>(context, response);
+                    }
+                  });
+                },
+              );
+            });
       },
     );
 
