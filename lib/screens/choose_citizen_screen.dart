@@ -100,7 +100,7 @@ class ChooseCitizenScreen extends StatelessWidget {
               child: Text(
                   'Tilføj borger'
               ),
-            )
+            ),
           ]
       ),
       onPressed: () {}, //TODO: Apply correct screen route
