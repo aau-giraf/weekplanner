@@ -53,13 +53,9 @@ class ChooseCitizenScreen extends StatelessWidget {
                         ),
                         child: GridView.count(
                             crossAxisCount: portrait ? 2 : 4,
-                            children: snapshot.data
-                                .map<Widget>((UsernameModel user) =>
-                                    CitizenAvatar(
-                                        usernameModel: user,
-                                        onPressed: () => Routes.push(context,
-                                            WeekplanSelectorScreen(user))))
-                                .toList()),
+                            children: _buildCitizenSelectionList(context,
+                                snapshot)
+                        ),
                       );
                     } else {
                       return Container(
@@ -74,5 +70,19 @@ class ChooseCitizenScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Builds the list of citizens together with the "add citizen" button
+  List<Widget> _buildCitizenSelectionList(BuildContext context,
+    AsyncSnapshot<List<UsernameModel>> snapshot) {
+    final List<Widget> list = snapshot.data
+        .map<Widget>((UsernameModel user) =>
+        CitizenAvatar(
+            usernameModel: user,
+            onPressed:  () => Routes.push(context,
+                WeekplanSelectorScreen(user)))).toList();
+
+    list.insert(0, const RaisedButton(onPressed: null,));
+    return list;
   }
 }
