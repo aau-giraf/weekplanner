@@ -73,6 +73,7 @@ class ChooseCitizenScreen extends StatelessWidget {
   }
 
   /// Builds the list of citizens together with the "add citizen" button
+  /// TODO: Write tests for this method
   List<Widget> _buildCitizenSelectionList(BuildContext context,
     AsyncSnapshot<List<UsernameModel>> snapshot) {
     final List<Widget> list = snapshot.data
@@ -94,13 +95,14 @@ class ChooseCitizenScreen extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.all(2.0),
+              //TODO: Change to Autosize Text
               child: Text(
                   'Tilføj borger'
               ),
             )
           ]
       ),
-      onPressed: () {},
+      onPressed: () {}, //TODO: Apply correct screen route
     )
     );
     return list;
