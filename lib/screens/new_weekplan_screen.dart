@@ -13,12 +13,14 @@ import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
-  NewWeekplanScreen(UsernameModel user)
-      : _bloc = di.getDependency<NewWeekplanBloc>() {
+  NewWeekplanScreen(UsernameModel user, {Stream<List<WeekModel>> weekPlans})
+      : _bloc = di.getDependency<NewWeekplanBloc>(),
+        _weekPlans = weekPlans {
     _bloc.initialize(user);
   }
 
   final NewWeekplanBloc _bloc;
+  final Stream<List<WeekModel>> _weekPlans;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,11 @@ class NewWeekplanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () {
+        _weekPlans.listen((List<WeekModel> weekPlans) {
+          // TODO: Move showDialog here.
+          
+        });
+
         showDialog<Center>(
             context: context,
             barrierDismissible: false,
