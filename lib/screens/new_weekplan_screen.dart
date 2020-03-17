@@ -2,6 +2,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -13,14 +14,13 @@ import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
-  NewWeekplanScreen(UsernameModel user, {Stream<List<WeekModel>> weekPlans})
-      : _bloc = di.getDependency<NewWeekplanBloc>(),
-        _weekPlans = weekPlans {
+  NewWeekplanScreen(UsernameModel user)
+      : _bloc = di.getDependency<NewWeekplanBloc>() {
     _bloc.initialize(user);
   }
 
+  final WeekplansBloc _weekplansBloc = di.getDependency<WeekplansBloc>();
   final NewWeekplanBloc _bloc;
-  final Stream<List<WeekModel>> _weekPlans;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,8 @@ class NewWeekplanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () {
-        _weekPlans.listen((List<WeekModel> weekPlans) {
+        _weekplansBloc.weekModels.listen((List<WeekModel> weekPlans) {
           // TODO: Move showDialog here.
-          
         });
 
         showDialog<Center>(
