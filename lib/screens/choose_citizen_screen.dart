@@ -1,4 +1,5 @@
 import 'package:api_client/models/username_model.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -83,26 +84,33 @@ class ChooseCitizenScreen extends StatelessWidget {
             onPressed:  () => Routes.push(context,
                 WeekplanSelectorScreen(user)))).toList();
 
-    list.insert(0, FlatButton(
+    list.insert(0, Padding(
+      padding: const EdgeInsets.only(bottom: 46),
       child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Icon(
-                Icons.person_add,
-                size: 50,
-              ),
+        children: <Widget>[
+          Expanded(
+            child: LayoutBuilder(builder:
+            (BuildContext context, BoxConstraints constraints) {
+              return Icon(Icons.person_add, size: constraints.biggest.height);
+            }
             ),
-            const Padding(
-              padding: EdgeInsets.all(2.0),
-              //TODO: Change to Autosize Text
-              child: Text(
-                  'Tilføj borger'
-              ),
+          ),
+          ConstrainedBox(
+            constraints: const BoxConstraints(
+              minWidth: 200.0,
+              maxWidth: 200.0,
+              minHeight: 15.0,
+              maxHeight: 50.0,
             ),
-          ]
+              child: const Center(
+                child: AutoSizeText(
+                  'Tilføj Borger',
+                  style: TextStyle(fontSize: 30),
+                ),
+              )
+          )
+        ],
       ),
-      onPressed: () {}, //TODO: Apply correct screen route
     )
     );
     return list;
