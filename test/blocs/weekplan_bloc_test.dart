@@ -571,7 +571,7 @@ void main() {
       'no activities are marked', async((DoneFn done) {
 
     // Listening to the markedActivitiesNotEmpty stream to check it is empty
-    weekplanBloc.markedActivitiesNotEmpty.listen((bool result){
+    weekplanBloc.atLeastOneActivityMarked.listen((bool result){
        expect(result, isFalse);
        done();
     });
@@ -587,7 +587,7 @@ void main() {
     weekplanBloc.addMarkedActivity(testActivity);
 
     // Listening to the markedActivitiesNotEmpty stream to check it is filled
-    weekplanBloc.markedActivitiesNotEmpty.listen((bool result){
+    weekplanBloc.atLeastOneActivityMarked.listen((bool result){
       expect(result, isTrue);
       done();
     });

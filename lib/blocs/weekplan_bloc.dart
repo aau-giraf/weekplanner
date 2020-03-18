@@ -28,8 +28,8 @@ class WeekplanBloc extends BlocBase {
       _activityPlaceholderVisible.stream;
 
   /// Checks if there are no selected activities
-  Stream<bool> get markedActivitiesNotEmpty =>
-      _markedActivitiesNotEmpty();
+  Stream<bool> get atLeastOneActivityMarked =>
+      _atLeastOneActivityMarked();
 
   /// The API
   final Api _api;
@@ -234,7 +234,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  Observable<bool> _markedActivitiesNotEmpty(){
+  Observable<bool> _atLeastOneActivityMarked(){
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
   }
