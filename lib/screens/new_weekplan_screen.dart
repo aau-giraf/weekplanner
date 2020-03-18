@@ -2,9 +2,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -54,7 +52,7 @@ class NewWeekplanScreen extends StatelessWidget {
                         key: const Key('OverwriteDialogKey'),
                         title: 'Overskriv ugeplan',
                         description: 'Ugeplanen (år: ${newWeekPlan.weekYear}'
-                            ', uge: ${newWeekPlan.weekNumber}) eksistere '
+                            ', uge: ${newWeekPlan.weekNumber}) eksisterer  '
                             'allerede. Vil du overskrive denne ugeplan?',
                         confirmButtonText: 'Okay',
                         confirmButtonIcon: const ImageIcon(
@@ -72,7 +70,6 @@ class NewWeekplanScreen extends StatelessWidget {
                 return;
               }
             }
-            
             _bloc.saveWeekplan().listen((WeekModel response) {
               if (response != null) {
                 Routes.pop<WeekModel>(context, response);
