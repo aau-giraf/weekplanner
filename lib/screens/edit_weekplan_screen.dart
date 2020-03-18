@@ -19,7 +19,8 @@ class EditWeekPlanScreen extends StatelessWidget {
     @required UsernameModel user,
     @required this.weekModel,
     @required this.selectorBloc,
-  }) : _bloc = di.getDependency<EditWeekplanBloc>(), _weekPlans = selectorBloc.weekNameModels  {
+  })  : _bloc = di.getDependency<EditWeekplanBloc>(),
+        _weekPlans = selectorBloc.weekNameModels {
     _bloc.initializeEditBloc(user, weekModel);
   }
 
@@ -40,8 +41,7 @@ class EditWeekPlanScreen extends StatelessWidget {
       text: 'Gem ændringer',
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
-      onPressed: ()
-      {
+      onPressed: () {
         {
           _weekPlans.take(1).listen((List<WeekNameModel> weekPlans) {
             _bloc.newWeekPlan.take(1).listen((WeekNameModel newWeekPlan) {
@@ -61,7 +61,8 @@ class EditWeekPlanScreen extends StatelessWidget {
                         return GirafConfirmDialog(
                           key: const Key('OverwriteDialogKey'),
                           title: 'Overskriv ugeplan',
-                          description: 'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
+                          description:
+                              'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
                               ', år: ${newWeekPlan.weekYear}) eksisterer '
                               'allerede. Vil du overskrive denne ugeplan?',
                           confirmButtonText: 'Okay',
