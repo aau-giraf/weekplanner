@@ -60,6 +60,7 @@ class NewWeekplanScreen extends StatelessWidget {
                         confirmOnPressed: () {
                           _bloc.saveWeekplan().listen((WeekModel response) {
                             if (response != null) {
+                              Routes.pop(dialogContext);
                               Routes.pop<WeekModel>(context, response);
                             }
                           });
