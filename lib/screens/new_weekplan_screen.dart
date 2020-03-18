@@ -35,10 +35,9 @@ class NewWeekplanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () {
-        _weekPlans.listen((List<WeekNameModel> weekPlans) {
-          _bloc.newWeekPlan.listen((WeekNameModel newWeekPlan) {
+        _weekPlans.take(1).listen((List<WeekNameModel> weekPlans) {
+          _bloc.newWeekPlan.take(1).listen((WeekNameModel newWeekPlan) {
             if (newWeekPlan == null) {
-              // Show error.
               return;
             }
 
@@ -49,12 +48,12 @@ class NewWeekplanScreen extends StatelessWidget {
                 showDialog<Center>(
                     context: context,
                     barrierDismissible: false,
-                    builder: (BuildContext context) {
+                    builder: (BuildContext dialogContext) {
                       // A confirmation dialog is shown to stop the timer.
                       return GirafConfirmDialog(
                         key: const Key('OverwriteDialogKey'),
-                        title: 'Overskriv',
-                        description: 'Vil du gemme?',
+                        title: 'Overskriv ugeplan',
+                        description: 'Ugeplan',
                         confirmButtonText: 'Okay',
                         confirmButtonIcon: const ImageIcon(
                             AssetImage('assets/icons/accept.png')),
