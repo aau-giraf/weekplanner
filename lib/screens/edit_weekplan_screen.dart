@@ -19,8 +19,7 @@ class EditWeekPlanScreen extends StatelessWidget {
     @required UsernameModel user,
     @required this.weekModel,
     @required this.selectorBloc,
-  })  : _bloc = di.getDependency<EditWeekplanBloc>(),
-        _weekPlans = selectorBloc.weekNameModels {
+  }) : _bloc = di.getDependency<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
 
@@ -30,7 +29,6 @@ class EditWeekPlanScreen extends StatelessWidget {
   /// This bloc is the bloc from the week plan selector screen it is needed in
   /// in order to delete the week plan
   final WeekplansBloc selectorBloc;
-  final Stream<List<WeekNameModel>> _weekPlans;
 
   final EditWeekplanBloc _bloc;
 
@@ -42,57 +40,56 @@ class EditWeekPlanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () {
-        {
-          _weekPlans.take(1).listen((List<WeekNameModel> weekPlans) {
-            _bloc.newWeekPlan.take(1).listen((WeekNameModel newWeekPlan) {
-              if (newWeekPlan == null) {
+        selectorBloc.weekNameModels
+            .take(1)
+            .listen((List<WeekNameModel> weekPlans) {
+          _bloc.newWeekPlan.take(1).listen((WeekNameModel newWeekPlan) {
+            if (newWeekPlan == null) {
+              return;
+            }
+
+            for (WeekNameModel existingPlan in weekPlans) {
+              if (existingPlan.weekYear == newWeekPlan.weekYear &&
+                  existingPlan.weekNumber == newWeekPlan.weekNumber) {
+                // Show dialog
+                showDialog<Center>(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext dialogContext) {
+                      // A confirmation dialog is shown to stop the timer.
+                      return GirafConfirmDialog(
+                        key: const Key('OverwriteDialogKey'),
+                        title: 'Overskriv ugeplan',
+                        description: 'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
+                            ', år: ${newWeekPlan.weekYear}) eksisterer '
+                            'allerede. Vil du overskrive denne ugeplan?',
+                        confirmButtonText: 'Okay',
+                        confirmButtonIcon: const ImageIcon(
+                            AssetImage('assets/icons/accept.png')),
+                        confirmOnPressed: () {
+                          _bloc
+                              .editWeekPlan(weekModel, selectorBloc)
+                              .listen((WeekModel response) {
+                            if (response != null) {
+                              Routes.pop(dialogContext);
+                              Routes.pop<WeekModel>(context, response);
+                            }
+                          });
+                        },
+                      );
+                    });
                 return;
               }
-
-              for (WeekNameModel existingPlan in weekPlans) {
-                if (existingPlan.weekYear == newWeekPlan.weekYear &&
-                    existingPlan.weekNumber == newWeekPlan.weekNumber) {
-                  // Show dialog
-                  showDialog<Center>(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext dialogContext) {
-                        // A confirmation dialog is shown to stop the timer.
-                        return GirafConfirmDialog(
-                          key: const Key('OverwriteDialogKey'),
-                          title: 'Overskriv ugeplan',
-                          description:
-                              'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
-                              ', år: ${newWeekPlan.weekYear}) eksisterer '
-                              'allerede. Vil du overskrive denne ugeplan?',
-                          confirmButtonText: 'Okay',
-                          confirmButtonIcon: const ImageIcon(
-                              AssetImage('assets/icons/accept.png')),
-                          confirmOnPressed: () {
-                            _bloc
-                                .editWeekPlan(weekModel, selectorBloc)
-                                .listen((WeekModel response) {
-                              if (response != null) {
-                                Routes.pop(dialogContext);
-                                Routes.pop<WeekModel>(context, response);
-                              }
-                            });
-                          },
-                        );
-                      });
-                  return;
-                }
+            }
+            _bloc
+                .editWeekPlan(weekModel, selectorBloc)
+                .listen((WeekModel response) {
+              if (response != null) {
+                Routes.pop<WeekModel>(context, response);
               }
-              _bloc
-                  .editWeekPlan(weekModel, selectorBloc)
-                  .listen((WeekModel response) {
-                if (response != null) {
-                  Routes.pop<WeekModel>(context, response);
-                }
-              });
             });
           });
-        }
+        });
       },
     );
 

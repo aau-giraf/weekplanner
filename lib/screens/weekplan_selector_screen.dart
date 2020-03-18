@@ -181,11 +181,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
     if (!inEditMode) {
       Routes.push<WeekModel>(
         context,
-        NewWeekplanScreen(
-          _user,
-          weekPlans: _weekBloc.weekNameModels,
-        ),
-      ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
+        NewWeekplanScreen(_user, selectorBloc: _weekBloc),
+      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
     }
   }
 
