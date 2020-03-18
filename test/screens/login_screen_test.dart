@@ -21,7 +21,8 @@ class MockLoginScreenState extends LoginScreenState {
   @override
   void loginAction(BuildContext context) {
     currentContext = context;
-    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
+    authBloc.authenticate(
+        usernameCtrl.value.text, passwordCtrl.value.text, context);
 
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
@@ -68,7 +69,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   String loggedInUsername;
 
   @override
-  void authenticate(String username, String password) {
+  void authenticate(String username, String password, BuildContext context) {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');

@@ -36,12 +36,10 @@ class LoginScreenState extends State<LoginScreen> {
     showLoadingSpinner(context, false, showNotifyDialog, 2000);
     currentContext = context;
     loginStatus = false;
-    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
+    authBloc.authenticate(
+        usernameCtrl.value.text, passwordCtrl.value.text, context);
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
-      if (snapshot) {
-        Routes.goHome(context);
-      }
     });
   }
 

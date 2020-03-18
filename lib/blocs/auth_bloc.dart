@@ -1,7 +1,10 @@
 import 'package:api_client/api/api.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+
+import '../routes.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -34,7 +37,7 @@ class AuthBloc extends BlocBase {
   BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
-  void authenticate(String username, String password) {
+  void authenticate(String username, String password, BuildContext context) {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
     _api.account.login(username, password).listen((bool status) {
@@ -45,6 +48,7 @@ class AuthBloc extends BlocBase {
         _loggedIn.add(status);
         loggedInUsername = username;
         setMode(WeekplanMode.guardian);
+        Routes.goHome(context);
       }
     });
   }
