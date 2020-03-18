@@ -230,6 +230,12 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
+  /// Checks if there are no selected activities
+  Observable<bool> activitiesNotEmptyStream(){
+    return _markedActivities.map((List<ActivityModel> activities) =>
+    activities.isNotEmpty);
+  }
+
   @override
   void dispose() {
     _userWeek.close();
