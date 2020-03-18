@@ -17,6 +17,40 @@ class NewCitizenScreen extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: GirafAppBar(title: 'Ny borger',),
+      body: ListView(
+        children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            child: TextField( //TODO: Lav til TextFormField
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Enter Search Term'
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            child: Column(
+              children: <Widget>[
+                Icon(
+                  Icons.person,
+                  size: 100,
+                ),
+                GirafButton(
+                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
+                  text: 'Tilføj fra kamera',
+                  onPressed: () {},
+                )
+              ],
+            ),
+          ),
+          GirafButton(
+            icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+            text: 'Jeppe',
+            onPressed: () {},
+          )
+        ],
+      ),
     );
   }
 }
