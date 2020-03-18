@@ -5,6 +5,7 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
@@ -21,20 +22,29 @@ class NewWeekplanBloc extends BlocBase {
   /// This is done with the method [initialize].
   NewWeekplanBloc(this.weekApi);
 
-  @protected /// This is used to access the weekModel in the database
+  /// This is used to access the weekModel in the database
+  @protected
   final Api weekApi;
 
-  @protected /// This field is used to get the userId. Accessed in
+  /// This field is used to get the userId. Accessed in
   /// [edit_weekplan_bloc].
+  @protected
   UsernameModel weekUser;
 
-  @protected /// This field controls the title input field
+  /// This field controls the title input field
+  @protected
   final BehaviorSubject<String> titleController = BehaviorSubject<String>();
-  @protected  /// This field controls the year no input field
+
+  /// This field controls the year no input field
+  @protected
   final BehaviorSubject<String> yearController = BehaviorSubject<String>();
-  @protected /// This field controls the week no input field
+
+  /// This field controls the week no input field
+  @protected
   final BehaviorSubject<String> weekNoController = BehaviorSubject<String>();
-  @protected  /// This field controls the pictogram input field
+
+  /// This field controls the pictogram input field
+  @protected
   final BehaviorSubject<PictogramModel> thumbnailController =
       BehaviorSubject<PictogramModel>();
 
@@ -46,6 +56,15 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Handles when the entered week number is changed.
   Sink<String> get onWeekNumberChanged => weekNoController.sink;
+
+  /// Emits a [WeekNameModel] when it has a title, year, and week.
+  /// If any input is invalid, emits null.
+  Stream<WeekNameModel> get newWeekPlan => Observable.combineLatest4(
+      allInputsAreValidStream,
+      titleController.stream,
+      yearController.stream,
+      weekNoController.stream,
+      _combineWeekNameModel);
 
   /// Handles when the thumbnail is changed.
   Sink<PictogramModel> get onThumbnailChanged => thumbnailController.sink;
@@ -126,6 +145,15 @@ class NewWeekplanBloc extends BlocBase {
     yearController.sink.add(null);
     weekNoController.sink.add(null);
     thumbnailController.sink.add(null);
+  }
+
+  WeekNameModel _combineWeekNameModel(
+      bool isValid, String name, String year, String week) {
+    if (!isValid) {
+      return null;
+    }
+    return WeekNameModel(
+        name: name, weekYear: int.parse(year), weekNumber: int.parse(week));
   }
 
   bool _isAllInputValid(
