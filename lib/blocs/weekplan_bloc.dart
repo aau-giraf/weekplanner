@@ -27,6 +27,10 @@ class WeekplanBloc extends BlocBase {
   Stream<bool> get activityPlaceholderVisible =>
       _activityPlaceholderVisible.stream;
 
+  /// Checks if there are no selected activities
+  Stream<bool> get markedActivitiesNotEmpty =>
+      _markedActivitiesNotEmptyStream();
+
   /// The API
   final Api _api;
   final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
@@ -230,8 +234,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  /// Checks if there are no selected activities
-  Observable<bool> activitiesNotEmptyStream(){
+  Observable<bool> _markedActivitiesNotEmptyStream(){
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
   }

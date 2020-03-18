@@ -145,7 +145,7 @@ class WeekplanScreen extends StatelessWidget {
                           assetPath: 'assets/icons/cancel.png',
                           isEnabled: false,
                           isEnabledStream: _weekplanBloc.
-                                                    activitiesNotEmptyStream(),
+                                                  markedActivitiesNotEmpty,
                           dialogFunction: _buildCancelDialog),
                       BottomAppBarButton(
                           buttonText: 'Kopier',
@@ -153,7 +153,7 @@ class WeekplanScreen extends StatelessWidget {
                           assetPath: 'assets/icons/copy.png',
                           isEnabled: false,
                           isEnabledStream: _weekplanBloc.
-                                                    activitiesNotEmptyStream(),
+                                                markedActivitiesNotEmpty,
                           dialogFunction: _buildCopyDialog),
                       BottomAppBarButton(
                           buttonText: 'Slet',
@@ -161,7 +161,7 @@ class WeekplanScreen extends StatelessWidget {
                           assetPath: 'assets/icons/delete.png',
                           isEnabled: false,
                           isEnabledStream: _weekplanBloc.
-                                                    activitiesNotEmptyStream(),
+                                                markedActivitiesNotEmpty,
                           dialogFunction: _buildRemoveDialog)
                     ],
                   )))
