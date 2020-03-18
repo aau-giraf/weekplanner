@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/di.dart';
@@ -13,6 +14,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatelessWidget {
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
+  final AutoSizeGroup _selectionAutoSizeGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
@@ -85,32 +87,38 @@ class ChooseCitizenScreen extends StatelessWidget {
             onPressed:  () => Routes.push(context,
                 WeekplanSelectorScreen(user)))).toList();
 
-    list.insert(0, Padding(
-      padding: const EdgeInsets.only(bottom: 30),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: LayoutBuilder(builder:
-            (BuildContext context, BoxConstraints constraints) {
-              return Icon(Icons.person_add, size: constraints.biggest.height);
-            }
+    list.insert(0, FlatButton(
+      onPressed: () { Routes.push(context, NewCitizenScreen());},
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 30),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: LayoutBuilder(builder:
+              (BuildContext context, BoxConstraints constraints) {
+                return Icon(
+                    Icons.person_add,
+                    size: constraints.biggest.height
+                );
+              }),
             ),
-          ),
-          ConstrainedBox(
-            constraints: const BoxConstraints(
-              minWidth: 200.0,
-              maxWidth: 200.0,
-              minHeight: 15.0,
-              maxHeight: 50.0,
-            ),
-              child: const Center(
-                child: AutoSizeText(
-                  'Tilføj Borger',
-                  style: TextStyle(fontSize: 30),
-                ),
-              )
-          )
-        ],
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: 200.0,
+                maxWidth: 200.0,
+                minHeight: 15.0,
+                maxHeight: 50.0,
+              ),
+                child: Center(
+                  child: AutoSizeText(
+                    'Tilføj Borger',
+                    style: const TextStyle(fontSize: 30),
+                    group: _selectionAutoSizeGroup,
+                  ),
+                )
+            )
+          ],
+        ),
       ),
     )
     );
