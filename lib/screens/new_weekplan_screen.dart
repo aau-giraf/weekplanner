@@ -15,9 +15,7 @@ class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   NewWeekplanScreen(UsernameModel user,
-      {@required Stream<List<WeekNameModel>> weekPlans})
-      : _bloc = di.getDependency<NewWeekplanBloc>(),
-        _weekPlans = weekPlans {
+      {@required Stream<List<WeekNameModel>> weekPlans}): _bloc = di.getDependency<NewWeekplanBloc>(), _weekPlans = weekPlans {
     _bloc.initialize(user);
   }
 
@@ -39,9 +37,9 @@ class NewWeekplanScreen extends StatelessWidget {
               return;
             }
 
-            for (WeekNameModel exisitingPlan in weekPlans) {
-              if (exisitingPlan.weekYear == newWeekPlan.weekYear &&
-                  exisitingPlan.weekNumber == newWeekPlan.weekNumber) {
+            for (WeekNameModel existingPlan in weekPlans) {
+              if (existingPlan.weekYear == newWeekPlan.weekYear &&
+                  existingPlan.weekNumber == newWeekPlan.weekNumber) {
                 // Show dialog
                 showDialog<Center>(
                     context: context,
@@ -49,7 +47,7 @@ class NewWeekplanScreen extends StatelessWidget {
                     builder: (BuildContext dialogContext) {
                       // A confirmation dialog is shown to stop the timer.
                       return GirafConfirmDialog(
-                        key: const Key('OverwriteDialogKey'),
+                        key: const Key('OverwriteEditDialogKey'),
                         title: 'Overskriv ugeplan',
                         description: 'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
                             ', år: ${newWeekPlan.weekYear}) eksisterer '
