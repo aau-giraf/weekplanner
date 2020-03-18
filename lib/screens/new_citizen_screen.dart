@@ -19,9 +19,9 @@ class NewCitizenScreen extends StatelessWidget {
       appBar: GirafAppBar(title: 'Ny borger',),
       body: ListView(
         children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-            child: TextField( //TODO: Lav til TextFormField
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            child: TextFormField(
               decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Enter Search Term'
