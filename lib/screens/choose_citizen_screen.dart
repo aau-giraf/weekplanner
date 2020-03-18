@@ -85,7 +85,7 @@ class ChooseCitizenScreen extends StatelessWidget {
                 WeekplanSelectorScreen(user)))).toList();
 
     list.insert(0, Padding(
-      padding: const EdgeInsets.only(bottom: 46),
+      padding: const EdgeInsets.only(bottom: 30),
       child: Column(
         children: <Widget>[
           Expanded(
