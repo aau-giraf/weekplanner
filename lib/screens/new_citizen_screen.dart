@@ -45,8 +45,9 @@ class NewCitizenScreen extends StatelessWidget {
             ),
           ),
           GirafButton(
+            //TODO Fix width
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-            text: 'Jeppe',
+            text: 'Gem borger',
             onPressed: () {},
           )
         ],
