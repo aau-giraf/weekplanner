@@ -13,6 +13,7 @@ import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
@@ -30,12 +31,8 @@ class MockNewWeekplanBloc extends NewWeekplanBloc {
 
   @override
   Observable<WeekModel> saveWeekplan() {
-    return api.week.update(
-        '123',
-        mockWeek.weekYear ,
-        mockWeek.weekNumber,
-        mockWeek
-    );
+    return api.week
+        .update('123', mockWeek.weekYear, mockWeek.weekNumber, mockWeek);
   }
 
   @override
@@ -82,6 +79,7 @@ final UsernameModel mockUser =
 
 void main() {
   MockNewWeekplanBloc mockBloc;
+  WeekplansBloc selectorBloc;
   Api api;
 
   setUp(() {
@@ -89,6 +87,7 @@ void main() {
     api.week = MockWeekApi();
     api.pictogram = MockPictogramApi();
     mockBloc = MockNewWeekplanBloc(api);
+    selectorBloc = WeekplansBloc(api);
 
     when(api.pictogram.getImage(mockPictogram.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
@@ -106,31 +105,66 @@ void main() {
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
   });
 
   testWidgets('Input fields are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
 
     expect(find.byType(TextField), findsNWidgets(3));
   });
 
   testWidgets('Pictograms are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.byType(PictogramImage), findsOneWidget);
   });
 
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
 
     expect(find.byType(GirafButton), findsNWidgets(1));
   });
@@ -138,7 +172,14 @@ void main() {
   testWidgets('Error text is shown on invalid title input',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = false;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Titel skal angives'), findsOneWidget);
@@ -147,7 +188,14 @@ void main() {
   testWidgets('No error text is shown on valid title input',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = true;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Titel skal angives'), findsNothing);
@@ -156,7 +204,14 @@ void main() {
   testWidgets('Error text is shown on invalid year input',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = false;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('År skal angives som fire cifre'), findsOneWidget);
@@ -165,7 +220,14 @@ void main() {
   testWidgets('No error text is shown on valid year input',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = true;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('År skal angives som fire cifre'), findsNothing);
@@ -174,7 +236,14 @@ void main() {
   testWidgets('Error text is shown on invalid week number input',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = false;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Ugenummer skal være mellem 1 og 53'), findsOneWidget);
@@ -183,7 +252,14 @@ void main() {
   testWidgets('No error text is shown on valid week number input',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = true;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Ugenummer skal være mellem 1 og 53'), findsNothing);
@@ -191,7 +267,14 @@ void main() {
 
   testWidgets('Emojis are blacklisted from title field',
       (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.enterText(
         find.byKey(const Key('NewWeekplanTitleField')), '☺♥');
     await tester.pump();
@@ -202,7 +285,14 @@ void main() {
   testWidgets('Click on thumbnail redirects to pictogram search screen',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = true;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.tap(find.byKey(const Key('NewWeekplanThumbnailKey')));
     await tester.pumpAndSettle();
 
@@ -213,7 +303,14 @@ void main() {
       'Click on save weekplan button saves weekplan and return saved weekplan',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = true;
-    await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          mockUser,
+          selectorBloc: selectorBloc,
+        ),
+      ),
+    );
     await tester.pump();
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
 
