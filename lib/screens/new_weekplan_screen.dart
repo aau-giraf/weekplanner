@@ -51,8 +51,8 @@ class NewWeekplanScreen extends StatelessWidget {
                       return GirafConfirmDialog(
                         key: const Key('OverwriteDialogKey'),
                         title: 'Overskriv ugeplan',
-                        description: 'Ugeplanen (år: ${newWeekPlan.weekYear}'
-                            ', uge: ${newWeekPlan.weekNumber}) eksisterer  '
+                        description: 'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
+                            ', år: ${newWeekPlan.weekYear}) eksisterer '
                             'allerede. Vil du overskrive denne ugeplan?',
                         confirmButtonText: 'Okay',
                         confirmButtonIcon: const ImageIcon(
