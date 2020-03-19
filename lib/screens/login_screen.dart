@@ -117,7 +117,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Brugernavn',
                             hintStyle: TextStyle(
-                                color: theme.GirafColors.transparentGrey),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -140,7 +140,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Adgangskode',
                             hintStyle: TextStyle(
-                                color: theme.GirafColors.transparentGrey),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
