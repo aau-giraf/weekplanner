@@ -15,7 +15,7 @@ class NewCitizenBloc extends BlocBase {
   ///Returns true if success and false otherwise.
   bool createCitizen(String displayName, String username, String password, ) {
     //TODO: Implement method to create a citizen
-
+    print(displayName + " : " + username + " : " + password);
     return true;
   }
 
