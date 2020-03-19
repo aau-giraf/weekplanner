@@ -125,7 +125,6 @@ class TimerBloc extends BlocBase {
     }
   }
 
-
   /// Plays the timer.
   /// The method will use the current time, the progress of the timer and
   /// the full length, to calculate the progress of the progress circle in
@@ -167,7 +166,6 @@ class TimerBloc extends BlocBase {
     _timerProgressStream.add(1 -
         (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
   }
-
 
   /// Plays ding sound from mp3 file.
   Future<void> playSound() async {
