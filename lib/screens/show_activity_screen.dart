@@ -276,7 +276,24 @@ class ShowActivityScreen extends StatelessWidget {
                                   ? timerRunningSnapshot.data
                                   : false)
                               ? _timerBloc.pauseTimer()
-                              : _timerBloc.playTimer();
+                              : showDialog<Center>(
+                                    context: overallContext,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return GirafConfirmDialog(
+                                        key: const Key('TImerCompleteConfirmDialogKey'),
+                                        title: 'Genstart Timer',
+                                        description: 'Vil du genstarte timeren?',
+                                        confirmButtonText: 'Genstart',
+                                        confirmButtonIcon: const ImageIcon(
+                                          AssetImage('fuck')
+                                        ),
+                                        confirmOnPressed: () {
+                                          _timerBloc.playTimer();
+                                          Routes.pop(context);
+                                        },
+                                      );
+                                    });
                         },
                         icon: (timerRunningSnapshot.hasData
                                 ? timerRunningSnapshot.data
