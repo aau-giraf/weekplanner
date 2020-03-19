@@ -106,7 +106,7 @@ class TimerBloc extends BlocBase {
               stopwatch: _stopwatch);
 
           _timerStream = _countDown.listen((CountdownTimer c)
-            => updateTimerProgress(c));
+          => updateTimerProgress(c));
 
           // Do an initial update
           updateTimerProgress(_countDown);
@@ -124,7 +124,6 @@ class TimerBloc extends BlocBase {
       }
     }
   }
-
 
   /// Plays the timer.
   /// The method will use the current time, the progress of the timer and
@@ -151,6 +150,7 @@ class TimerBloc extends BlocBase {
         updateTimerProgress(c);
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
           playSound();
+          stopTimer();
         }
       });
       _timerRunningStream.add(true);
@@ -166,7 +166,6 @@ class TimerBloc extends BlocBase {
     _timerProgressStream.add(1 -
         (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
   }
-
 
   /// Plays ding sound from mp3 file.
   Future<void> playSound() async {
