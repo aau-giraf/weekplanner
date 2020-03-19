@@ -17,6 +17,12 @@ class NewCitizenBloc extends BlocBase {
     //TODO: Implement method to create a citizen
     print(displayName + " : " + username + " : " + password);
     return true;
+
+  }
+
+  //TODO: Create method for validation of input
+  void checkValid() {
+
   }
 
   @override

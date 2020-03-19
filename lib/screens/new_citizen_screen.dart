@@ -27,11 +27,38 @@ class NewCitizenScreen extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
             child: TextFormField(
               decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Enter Search Term'
+                  hintText: 'Navn'
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Brugernavn'
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Adgangskode'
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Gentag adgangskode'
               ),
             ),
           ),
