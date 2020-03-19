@@ -276,7 +276,9 @@ class ShowActivityScreen extends StatelessWidget {
                               ? timerRunningSnapshot.data
                               : false)
                               ? _timerBloc.pauseTimer()
-                              : showDialog<Center>(
+                              : (!timerRunningSnapshot.hasData
+                                ? _timerBloc.playTimer()
+                                : showDialog<Center>(
                               context: overallContext,
                               barrierDismissible: false,
                               builder: (BuildContext context) {
@@ -295,7 +297,7 @@ class ShowActivityScreen extends StatelessWidget {
                                     Routes.pop(context);
                                   },
                                 );
-                              });
+                              }));
                         },
                         icon: (timerRunningSnapshot.hasData
                             ? timerRunningSnapshot.data
