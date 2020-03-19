@@ -281,7 +281,7 @@ class ShowActivityScreen extends StatelessWidget {
                                     barrierDismissible: false,
                                     builder: (BuildContext context) {
                                       return GirafConfirmDialog(
-                                        key: const Key('TImerCompleteConfirmDialogKey'),
+                                        key: const Key('TimerCompleteConfirmDialogKey'),
                                         title: 'Genstart Timer',
                                         description: 'Vil du genstarte timeren?',
                                         confirmButtonText: 'Genstart',
