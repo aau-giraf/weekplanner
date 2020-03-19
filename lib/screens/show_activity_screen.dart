@@ -288,7 +288,7 @@ class ShowActivityScreen extends StatelessWidget {
                                             'timeren?',
                                         confirmButtonText: 'Genstart',
                                         confirmButtonIcon: const ImageIcon(
-                                          AssetImage('fuck')
+                                          AssetImage('assets/icons/play.png')
                                         ),
                                         confirmOnPressed: () {
                                           _timerBloc.playTimer();
