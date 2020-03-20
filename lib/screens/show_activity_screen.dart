@@ -274,7 +274,7 @@ class ShowActivityScreen extends StatelessWidget {
                               ? const Key('TimerPauseButtonKey')
                               : const Key('TimerPlayButtonKey'),
                         onPressed: () {
-                          (!timerRunningSnapshot.hasData
+                          !timerRunningSnapshot.hasData
                               ? _timerBloc.playTimer()
                               : (timerRunningSnapshot.data ==
                                   TimerRunningMode.running
@@ -304,7 +304,7 @@ class ShowActivityScreen extends StatelessWidget {
                                     Routes.pop(context);
                                   },
                                 );
-                              }) : _timerBloc.playTimer()));
+                              }) : _timerBloc.playTimer());
                         },
                         icon: (timerRunningSnapshot.hasData
                             ? timerRunningSnapshot.data ==
