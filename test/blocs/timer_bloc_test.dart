@@ -122,8 +122,7 @@ void main() {
       expect(b, isTrue);
       done();
     });
-
-    TestWidgetsFlutterBinding.ensureInitialized();
+    
     timerMock.load(activityModel, user: mockUser);
     timerMock.initTimer();
   }));
