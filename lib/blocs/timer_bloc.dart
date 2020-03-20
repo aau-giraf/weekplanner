@@ -4,6 +4,7 @@ import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/widgets.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -123,6 +124,7 @@ class TimerBloc extends BlocBase {
           _timerProgressStream.add(1);
         }
         _timerInstantiatedStream.add(true);
+        WidgetsFlutterBinding.ensureInitialized();
         _audioPlayer.load(_audioFile);
       }
     }
