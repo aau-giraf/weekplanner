@@ -37,7 +37,7 @@ class AuthBloc extends BlocBase {
   BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
-  void authenticate(String username, String password, BuildContext context) {
+  void authenticate(String username, String password) {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
     _api.account.login(username, password).listen((bool status) {
@@ -48,7 +48,6 @@ class AuthBloc extends BlocBase {
         _loggedIn.add(status);
         loggedInUsername = username;
         setMode(WeekplanMode.guardian);
-        Routes.goHome(context);
       }
     });
   }

@@ -31,15 +31,22 @@ class LoginScreenState extends State<LoginScreen> {
   /// Stores the login status, used for dismissing the LoadingSpinner
   bool loginStatus = false;
 
+  /// Indicates if the popup has been popped in this instance of the screen.
+  bool _popCalled = false;
+
   /// This is called when login should be triggered
   void loginAction(BuildContext context) {
     showLoadingSpinner(context, false, showNotifyDialog, 2000);
     currentContext = context;
     loginStatus = false;
-    authBloc.authenticate(
-        usernameCtrl.value.text, passwordCtrl.value.text, context);
+    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
+      if (snapshot && !_popCalled) {
+        // Pop the loading spinner
+        Routes.pop(context);
+        _popCalled = true;
+      }
     });
   }
 
