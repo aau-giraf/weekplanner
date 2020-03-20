@@ -142,7 +142,7 @@ void main() {
           isChoiceBoard: false);
 
         timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
-          expect(m, TimerRunningMode.initialized);
+          expect(m, TimerRunningMode.running);
           done();
         });
         timerMock.load(activityModel, user: mockUser);
