@@ -274,8 +274,17 @@ class ShowActivityScreen extends StatelessWidget {
                               ? const Key('TimerPauseButtonKey')
                               : const Key('TimerPlayButtonKey'),
                         onPressed: () {
-                          (!timerRunningSnapshot.hasData ? _timerBloc.playTimer() : (timerRunningSnapshot.data == TimerRunningMode.running ? _timerBloc.pauseTimer() : timerRunningSnapshot.data == TimerRunningMode.paused ? _timerBloc.playTimer() : timerRunningSnapshot.data == TimerRunningMode.completed ?
-                                showDialog<Center>(
+                          (!timerRunningSnapshot.hasData
+                              ? _timerBloc.playTimer()
+                              : (timerRunningSnapshot.data ==
+                                  TimerRunningMode.running
+                              ? _timerBloc.pauseTimer()
+                              : timerRunningSnapshot.data ==
+                                  TimerRunningMode.paused
+                              ? _timerBloc.playTimer()
+                              : timerRunningSnapshot.data ==
+                                  TimerRunningMode.completed
+                              ? showDialog<Center>(
                               context: overallContext,
                               barrierDismissible: false,
                               builder: (BuildContext context) {
