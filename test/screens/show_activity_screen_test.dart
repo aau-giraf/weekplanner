@@ -20,6 +20,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:api_client/api/api.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -459,9 +460,9 @@ void main() {
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester);
-    final StreamSubscription<bool> listenForRunningFalse =
-        timerBloc.timerIsRunning.listen((bool running) {
-      expect(running, isFalse);
+    final StreamSubscription<TimerRunningMode> listenForRunningFalse =
+        timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+      expect(running, TimerRunningMode.paused);
       checkNotRun.complete();
     });
     await checkNotRun.future;
@@ -469,17 +470,17 @@ void main() {
 
     await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
     await tester.pumpAndSettle();
-    final StreamSubscription<bool> listenForRunningTrue =
-        timerBloc.timerIsRunning.listen((bool running) {
-      expect(running, isTrue);
+    final StreamSubscription<TimerRunningMode> listenForRunningTrue =
+        timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+      expect(running, TimerRunningMode.running);
       checkRunning.complete();
     });
     await checkRunning.future;
     listenForRunningTrue.cancel();
     await tester.tap(find.byKey(const Key('TimerPauseButtonKey')));
     await tester.pumpAndSettle();
-    timerBloc.timerIsRunning.listen((bool running) {
-      expect(running, isFalse);
+    timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+      expect(running, TimerRunningMode.paused);
     });
   });
 }
