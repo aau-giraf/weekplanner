@@ -567,17 +567,17 @@ void main() {
     weekplanBloc.loadWeek(week, user);
   }));
 
-  test('Testing markedActivitiesNotEmpty returns false when '
+  test('Testing atLeastOneActivityMarked returns false when '
       'no activities are marked', async((DoneFn done) {
 
-    // Listening to the markedActivitiesNotEmpty stream to check it is empty
+    // Listening to the atLeastOneActivityMarked stream to check it is empty
     weekplanBloc.atLeastOneActivityMarked.listen((bool result){
        expect(result, isFalse);
        done();
     });
   }));
 
-  test('Testing markedActivitiesNotEmpty returns true when an activity is '
+  test('Testing atLeastOneActivityMarked returns true when an activity is '
       'marked', async((DoneFn done) {
 
     // Creating the activity that will be added
@@ -586,7 +586,7 @@ void main() {
 
     weekplanBloc.addMarkedActivity(testActivity);
 
-    // Listening to the markedActivitiesNotEmpty stream to check it is filled
+    // Listening to the atLeastOneActivityMarked stream to check it is filled
     weekplanBloc.atLeastOneActivityMarked.listen((bool result){
       expect(result, isTrue);
       done();
