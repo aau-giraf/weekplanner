@@ -32,4 +32,7 @@ class GirafColors {
 
   /// Color of the shadows box when trying to move a card in the week planner
   static const Color dragShadow = Color.fromRGBO(200, 200, 200, 0.5);
+
+  /// Dark blue color for border
+  static const Color borderColor =Color.fromRGBO(35, 35, 35, 1.0);
 }
