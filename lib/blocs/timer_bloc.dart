@@ -150,7 +150,6 @@ class TimerBloc extends BlocBase {
         updateTimerProgress(c);
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
           playSound();
-          stopTimer();
         }
       });
       _timerRunningStream.add(true);
