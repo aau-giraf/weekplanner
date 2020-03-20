@@ -176,7 +176,8 @@ class ShowActivityScreen extends StatelessWidget {
                                   width: MediaQuery.of(context).size.width,
                                   height: MediaQuery.of(context).size.width,
                                   child: buildLoadPictogramImage()),
-                              _buildActivityStateIcon(context, snapshot.data.state)
+                              _buildActivityStateIcon(context,
+                                  snapshot.data.state)
                             ],
                           );
                         }))),
@@ -276,6 +277,7 @@ class ShowActivityScreen extends StatelessWidget {
                         onPressed: () {
                           !timerRunningSnapshot.hasData
                               ? _timerBloc.playTimer()
+                              // ignore: unnecessary_statements
                               : (timerRunningSnapshot.data ==
                                   TimerRunningMode.running
                               ? _timerBloc.pauseTimer()
