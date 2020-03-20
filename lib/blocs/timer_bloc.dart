@@ -4,7 +4,6 @@ import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/widgets.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
