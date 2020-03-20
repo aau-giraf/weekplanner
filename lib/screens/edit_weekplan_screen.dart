@@ -50,7 +50,9 @@ class EditWeekPlanScreen extends StatelessWidget {
 
             for (WeekNameModel existingPlan in weekPlans) {
               if (existingPlan.weekYear == newWeekPlan.weekYear &&
-                  existingPlan.weekNumber == newWeekPlan.weekNumber) {
+                  existingPlan.weekNumber == newWeekPlan.weekNumber &&
+                  weekModel.weekNumber != newWeekPlan.weekNumber &&
+                  weekModel.weekYear != newWeekPlan.weekYear) {
                 // Show dialog
                 showDialog<Center>(
                     context: context,
