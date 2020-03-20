@@ -307,7 +307,8 @@ class ShowActivityScreen extends StatelessWidget {
                               }) : _timerBloc.playTimer()));
                         },
                         icon: (timerRunningSnapshot.hasData
-                            ? timerRunningSnapshot.data
+                            ? timerRunningSnapshot.data ==
+                                TimerRunningMode.running
                             : false)
                             ? const ImageIcon(
                             AssetImage('assets/icons/pause.png'))
