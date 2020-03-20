@@ -1,10 +1,8 @@
 import 'package:api_client/api/api.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
-import '../routes.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
