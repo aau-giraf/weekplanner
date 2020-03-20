@@ -123,6 +123,7 @@ void main() {
       done();
     });
 
+    TestWidgetsFlutterBinding.ensureInitialized();
     timerMock.load(activityModel, user: mockUser);
     timerMock.initTimer();
   }));
