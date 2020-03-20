@@ -174,7 +174,6 @@ class TimerBloc extends BlocBase {
   Future<void> playSound() async {
     _volumePlayer.setVolume(500);
     _audioPlayer.play(_audioFile);
-    _audioPlayer.clear(_audioFile);
   }
 
   /// Pauses the timer and updates the timer in the database accordingly.
