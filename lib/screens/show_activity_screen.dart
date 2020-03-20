@@ -293,6 +293,7 @@ class ShowActivityScreen extends StatelessWidget {
                                       AssetImage('assets/icons/play.png')
                                   ),
                                   confirmOnPressed: () {
+                                    _timerBloc.stopTimer();
                                     _timerBloc.playTimer();
                                     Routes.pop(context);
                                   },
