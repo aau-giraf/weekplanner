@@ -123,6 +123,7 @@ class TimerBloc extends BlocBase {
           _timerProgressStream.add(1);
         }
         _timerInstantiatedStream.add(true);
+        _audioPlayer.load(_audioFile);
       }
     }
   }
@@ -172,7 +173,6 @@ class TimerBloc extends BlocBase {
   /// Plays ding sound from mp3 file.
   Future<void> playSound() async {
     _volumePlayer.setVolume(500);
-    _audioPlayer.load(_audioFile);
     _audioPlayer.play(_audioFile);
     _audioPlayer.clear(_audioFile);
   }
