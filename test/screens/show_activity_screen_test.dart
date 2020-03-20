@@ -460,13 +460,13 @@ void main() {
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester);
-    final StreamSubscription<TimerRunningMode> listenForRunningFalse =
+    final StreamSubscription<TimerRunningMode> listenForNotInitialized =
         timerBloc.timerRunningMode.listen((TimerRunningMode running) {
-      expect(running, TimerRunningMode.paused);
+      expect(running, TimerRunningMode.not_initialized);
       checkNotRun.complete();
     });
     await checkNotRun.future;
-    listenForRunningFalse.cancel();
+    listenForNotInitialized.cancel();
 
     await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
     await tester.pumpAndSettle();
