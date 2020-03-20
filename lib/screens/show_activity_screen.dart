@@ -8,6 +8,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
@@ -258,27 +259,23 @@ class ShowActivityScreen extends StatelessWidget {
           child: Row(
             key: const Key('TimerButtonRow'),
             children: <Widget>[
-              StreamBuilder<bool>(
-                  stream: _timerBloc.timerIsRunning,
+              StreamBuilder<TimerRunningMode>(
+                  stream: _timerBloc.timerRunningMode,
                   builder: (BuildContext timerRunningContext,
-                      AsyncSnapshot<bool> timerRunningSnapshot) {
+                      AsyncSnapshot<TimerRunningMode> timerRunningSnapshot) {
                     return Flexible(
                       // Button has different icons and press logic depending on
                       // whether the timer is already running.
                       child: GirafButton(
                         key: (timerRunningSnapshot.hasData
-                            ? timerRunningSnapshot.data
-                            : false)
-                            ? const Key('TimerPauseButtonKey')
-                            : const Key('TimerPlayButtonKey'),
+                                ? timerRunningSnapshot.data ==
+                                    TimerRunningMode.running
+                                : false)
+                              ? const Key('TimerPauseButtonKey')
+                              : const Key('TimerPlayButtonKey'),
                         onPressed: () {
-                          (timerRunningSnapshot.hasData
-                              ? timerRunningSnapshot.data
-                              : false)
-                              ? _timerBloc.pauseTimer()
-                              : (!timerRunningSnapshot.hasData
-                                ? _timerBloc.playTimer()
-                                : showDialog<Center>(
+                          (!timerRunningSnapshot.hasData ? _timerBloc.playTimer() : (timerRunningSnapshot.data == TimerRunningMode.running ? _timerBloc.pauseTimer() : timerRunningSnapshot.data == TimerRunningMode.paused ? _timerBloc.playTimer() : timerRunningSnapshot.data == TimerRunningMode.completed ?
+                                showDialog<Center>(
                               context: overallContext,
                               barrierDismissible: false,
                               builder: (BuildContext context) {
@@ -298,7 +295,7 @@ class ShowActivityScreen extends StatelessWidget {
                                     Routes.pop(context);
                                   },
                                 );
-                              }));
+                              }) : _timerBloc.playTimer()));
                         },
                         icon: (timerRunningSnapshot.hasData
                             ? timerRunningSnapshot.data
