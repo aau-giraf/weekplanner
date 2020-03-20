@@ -23,7 +23,7 @@ class SettingsBloc extends BlocBase {
 
   BehaviorSubject<SettingsModel> _settings = BehaviorSubject<SettingsModel>();
 
-  void loadSettings(SettingsModel settings, UsernameModel user) {
+  void loadSettings(UsernameModel user) {
     _settings = _api.user.getSettings(user.id);
   }
 
