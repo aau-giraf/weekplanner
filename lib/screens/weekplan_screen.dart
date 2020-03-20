@@ -246,8 +246,8 @@ class WeekplanScreen extends StatelessWidget {
       0xFFFFFFFF
     ];
     final List<Widget> weekDays = <Widget>[];
-    int _weekday = DateTime.now().weekday.toInt();
-    int _weekdayCounter = _weekday - 1;
+    final int _weekday = DateTime.now().weekday.toInt();
+    int _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
 
     if (role == WeekplanMode.guardian) {
       for (int i = 0; i < weekModel.days.length; i++) {
@@ -261,18 +261,17 @@ class WeekplanScreen extends StatelessWidget {
       int _daysToDisplay = SettingsScreen
           .days_displayed; // TODO(Mads og Simon): use bloc instead
 
-      // Translates setting to actual value
+      // Translates the int received from the settings
+      // -1 means monday - friday and 0 means monday - sunday
       if (_daysToDisplay == -1) {
-        _weekday = 0;
         _weekdayCounter = 0;
         _daysToDisplay = 5;
       } else if (_daysToDisplay == 0) {
-        _weekday = 0;
         _weekdayCounter = 0;
         _daysToDisplay = 7;
       }
 
-      for (int i = _weekday; i < _daysToDisplay + _weekday; i++) {
+      for (int i = 0; i < _daysToDisplay; i++) {
         weekDays.add(Expanded(
             child: Card(
                 color: Color(weekColors[_weekdayCounter]),

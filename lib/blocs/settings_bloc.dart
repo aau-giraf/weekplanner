@@ -19,10 +19,12 @@ class SettingsBloc extends BlocBase {
     _api.user.get(_user.id);
   }
 
+  /// Do not learn from this
   Observable<SettingsModel> get settings => _settings.stream;
 
   BehaviorSubject<SettingsModel> _settings = BehaviorSubject<SettingsModel>();
 
+  /// Do not learn from this
   void loadSettings(SettingsModel settings, UsernameModel user) {
     _settings = _api.user.getSettings(user.id);
   }

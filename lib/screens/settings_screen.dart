@@ -48,6 +48,12 @@ class SettingsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               RaisedButton(
+                child: const Text('Vis kun nuværende dag'),
+                onPressed: () {
+                  days_displayed = 1;
+                },
+              ),
+              RaisedButton(
                 child: const Text('Vis Man-Fre'),
                 onPressed: () {
                   days_displayed = -1;
@@ -57,48 +63,6 @@ class SettingsScreen extends StatelessWidget {
                 child: const Text('Vis Man-Søn'),
                 onPressed: () {
                   days_displayed = 0;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis kun nuværende dag'),
-                onPressed: () {
-                  days_displayed = 1;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis 2 dage frem'),
-                onPressed: () {
-                  days_displayed = 2;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis 3 dage frem'),
-                onPressed: () {
-                  days_displayed = 3;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis 4 dage frem'),
-                onPressed: () {
-                  days_displayed = 4;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis 5 dage frem'),
-                onPressed: () {
-                  days_displayed = 5;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis 6 dage frem'),
-                onPressed: () {
-                  days_displayed = 6;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis 7 dage frem'),
-                onPressed: () {
-                  days_displayed = 7;
                 },
               ),
             ],
