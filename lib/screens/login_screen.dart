@@ -31,7 +31,8 @@ class LoginScreenState extends State<LoginScreen> {
   /// Stores the login status, used for dismissing the LoadingSpinner
   bool loginStatus = false;
 
-  /// Indicates if the popup has been popped in this instance of the screen.
+  /// Indicates if the loading spinner has been popped in this instance of the
+  /// screen.
   bool _popCalled = false;
 
   /// This is called when login should be triggered
