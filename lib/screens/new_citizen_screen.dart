@@ -33,7 +33,7 @@ class NewCitizenScreen extends StatelessWidget {
                   border: InputBorder.none,
                   hintText: 'Navn'
               ),
-              onChanged: _bloc.displayNameController.add,
+              onChanged: _bloc.onDisplayNameChange.add,
             ),
           ),
           Padding(
@@ -43,7 +43,7 @@ class NewCitizenScreen extends StatelessWidget {
                   border: InputBorder.none,
                   hintText: 'Brugernavn'
               ),
-              onChanged: _bloc.usernameController.add,
+              onChanged: _bloc.onUsernameChange.add,
             ),
           ),
           Padding(
@@ -53,7 +53,7 @@ class NewCitizenScreen extends StatelessWidget {
                   border: InputBorder.none,
                   hintText: 'Adgangskode'
               ),
-              onChanged: _bloc.passwordController.add,
+              onChanged: _bloc.onPasswordChange.add,
             ),
           ),
           Padding(
@@ -63,7 +63,7 @@ class NewCitizenScreen extends StatelessWidget {
                   border: InputBorder.none,
                   hintText: 'Gentag adgangskode'
               ),
-              onChanged: _bloc.passwordVerifyController.add,
+              onChanged: _bloc.onPasswordVerifyChange.add,
             ),
           ),
           Padding(
