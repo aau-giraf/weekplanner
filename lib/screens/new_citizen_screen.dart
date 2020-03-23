@@ -86,7 +86,7 @@ class NewCitizenScreen extends StatelessWidget {
             //TODO Fix width
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem borger',
-            onPressed: () {_bloc.createCitizen("Jonas", "jonas", "password");},
+            onPressed: () {_bloc.createCitizen();},
           )
         ],
       ),
