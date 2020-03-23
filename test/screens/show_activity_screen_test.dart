@@ -486,12 +486,42 @@ void main() {
   testWidgets(
       'Test that play button appears when timer is complete',
           (WidgetTester tester) async {
+            final Completer<bool> checkCompleted = Completer<bool>();
         await tester
             .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
         await tester.pumpAndSettle();
         await _openTimePickerAndConfirm(tester, 1, 0, 0);
+        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
         sleep(const Duration(seconds: 2));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        final StreamSubscription<TimerRunningMode> listenForCompleted =
+            timerBloc.timerRunningMode.listen((TimerRunningMode m) {
+              expect(m, TimerRunningMode.completed);
+              checkCompleted.complete();
+            });
+        await checkCompleted.future;
+        listenForCompleted.cancel();
+
         expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
+      }
+  );
+
+  testWidgets(
+      'Test that restart dialog pops up when timer is restarted',
+          (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+        await tester.pumpAndSettle();
+        await _openTimePickerAndConfirm(tester, 1, 0, 0);
+        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+        sleep(const Duration(seconds: 2));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('TimerRestartDialogKey')),
+            findsOneWidget);
       }
   );
 }
