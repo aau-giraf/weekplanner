@@ -32,4 +32,27 @@ class GirafColors {
 
   /// Color of the shadows box when trying to move a card in the week planner
   static const Color dragShadow = Color.fromRGBO(200, 200, 200, 0.5);
+
+  /// Color of transparent dark grey border
+  static const Color transparentDarkGrey = Color.fromRGBO(112, 112, 112, 1);
+
+  /// Yellow color for button default gradient
+  static const Color gradientDefaultYellow = Color(0xFFFFCD59);
+  /// Orange color for button default gradient
+  static const Color gradientDefaultOrange = Color(0xFFFF9D00);
+  /// Border color for button default gradient
+  static const Color gradientDefaultBorder = Color(0xFF8A6E00);
+  /// Yellow color for button pressed gradient
+  static const Color gradientPressedYellow = Color(0xFFD4AD2F);
+  /// Orange color for button pressed gradient
+  static const Color gradientPressedOrange = Color(0xFFFF9D00);
+  /// Border color for button pressed gradient
+  static const Color gradientPressedBorder = Color(0xFF493700);
+  /// Yellow color for button disabled gradient
+  static const Color gradientDisabledYellow = Color(0x46FFCD59);
+  /// Orange color for button disabled gradient
+  static const Color gradientDisabledOrange = Color(0xA6FF9D00);
+  /// Border color for button disabled gradient
+  static const Color gradientDisabledBorder = Color(0xA68A6E00);
+
 }
