@@ -286,7 +286,7 @@ class ShowActivityScreen extends StatelessWidget {
                               ? _timerBloc.playTimer()
                               : timerRunningSnapshot.data ==
                                   TimerRunningMode.completed
-                              ? _buildTimerDialog(overallContext)
+                              ? _buildRestartTimerDialog(overallContext)
                               : _timerBloc.playTimer());
                         },
                         icon: (timerRunningSnapshot.hasData
@@ -373,6 +373,30 @@ class ShowActivityScreen extends StatelessWidget {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return GirafActivityTimerPickerDialog(_activity, _timerBloc);
+        });
+  }
+
+  /// Returns a dialog where the timer can be restarted.
+  void _buildRestartTimerDialog(BuildContext context) {
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+            key: const Key('TimerRestartDialogKey'),
+            title: 'Genstart Timer',
+            description: 'Vil du genstarte '
+                'timeren?',
+            confirmButtonText: 'Genstart',
+            confirmButtonIcon: const ImageIcon(
+                AssetImage('assets/icons/play.png')
+            ),
+            confirmOnPressed: () {
+              _timerBloc.stopTimer();
+              _timerBloc.playTimer();
+              Routes.pop(context);
+            },
+          );
         });
   }
 
