@@ -36,21 +36,37 @@ class NewCitizenBloc extends BlocBase {
   ///[displayName] is the name of the citizen.
   ///[username] and [password] is the login information.
   ///Returns true if success and false otherwise.
-  bool createCitizen(String displayName, String username, String password, ) {
+  bool createCitizen() {
     //TODO: Implement method to create a citizen
-    print(displayName + " : " + username + " : " + password);
+    print(displayNameController.value);
+    print(usernameController.value);
+    print(passwordController.value);
+    print(passwordVerifyController.value);
+
+    resetBloc();
     return true;
 
   }
 
-  //TODO: Create method for validation of input
+  ///Validates input
   void checkValid() {
+    //TODO: Create method for validation of input
+  }
 
+  ///Resets bloc so no information is stored
+  void resetBloc() {
+    displayNameController.sink.add(null);
+    usernameController.sink.add(null);
+    passwordController.sink.add(null);
+    passwordVerifyController.add(null);
   }
 
   @override
   void dispose() {
-    // TODO: Implement dispose
+    displayNameController.close();
+    usernameController.close();
+    passwordController.close();
+    passwordVerifyController.close();
   }
 
 }
