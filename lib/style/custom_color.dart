@@ -55,4 +55,13 @@ class GirafColors {
   /// Border color for button disabled gradient
   static const Color gradientDisabledBorder = Color(0xA68A6E00);
 
+  /// Color for the loading spinner
+  static const Color loadingColor = Color.fromRGBO(255, 157, 0, 0.8);
+
+  /// Color for the notification widget
+  static const Color transparentBlack = Color.fromRGBO(0, 0, 0, 1);
+
+  /// Color of checkbox
+  static const Color checkboxColor = Color.fromARGB(255, 255, 157, 0);
+
 }
