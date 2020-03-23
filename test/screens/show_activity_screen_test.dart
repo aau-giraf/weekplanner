@@ -494,19 +494,4 @@ void main() {
         expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
       }
   );
-
- testWidgets(
-      'Test that restart dialog pops up when timer is restarted',
-          (WidgetTester tester) async {
-        await tester
-            .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
-        await tester.pumpAndSettle();
-        await _openTimePickerAndConfirm(tester, 1, 0, 0);
-        sleep(const Duration(seconds: 2));
-        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-        await tester.pumpAndSettle();
-        expect(find.byKey(const Key('TimerRestartDialogKey')),
-            findsOneWidget);
-      }
-  );
 }
