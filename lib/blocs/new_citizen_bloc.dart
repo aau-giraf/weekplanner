@@ -58,7 +58,7 @@ class NewCitizenBloc extends BlocBase {
     displayNameController.sink.add(null);
     usernameController.sink.add(null);
     passwordController.sink.add(null);
-    passwordVerifyController.add(null);
+    passwordVerifyController.sink.add(null);
   }
 
   @override
