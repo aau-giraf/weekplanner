@@ -16,6 +16,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
+
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
@@ -269,29 +270,29 @@ class ShowActivityScreen extends StatelessWidget {
                       // whether the timer is already running.
                       child: GirafButton(
                         key: (timerRunningSnapshot.hasData
-                                ? timerRunningSnapshot.data ==
-                                    TimerRunningMode.running
-                                : false)
-                              ? const Key('TimerPauseButtonKey')
-                              : const Key('TimerPlayButtonKey'),
+                            ? timerRunningSnapshot.data ==
+                            TimerRunningMode.running
+                            : false)
+                            ? const Key('TimerPauseButtonKey')
+                            : const Key('TimerPlayButtonKey'),
                         onPressed: () {
                           !timerRunningSnapshot.hasData
                               ? _timerBloc.playTimer()
-                              // ignore: unnecessary_statements
+                          // ignore: unnecessary_statements
                               : (timerRunningSnapshot.data ==
-                                  TimerRunningMode.running
+                              TimerRunningMode.running
                               ? _timerBloc.pauseTimer()
                               : timerRunningSnapshot.data ==
-                                  TimerRunningMode.paused
+                              TimerRunningMode.paused
                               ? _timerBloc.playTimer()
                               : timerRunningSnapshot.data ==
-                                  TimerRunningMode.completed
+                              TimerRunningMode.completed
                               ? _buildRestartTimerDialog(overallContext)
-                              : _buildRestartTimerDialog(overallContext));
+                              : _restartTimer());
                         },
                         icon: (timerRunningSnapshot.hasData
                             ? timerRunningSnapshot.data ==
-                                TimerRunningMode.running
+                            TimerRunningMode.running
                             : false)
                             ? const ImageIcon(
                             AssetImage('assets/icons/pause.png'))
@@ -398,6 +399,12 @@ class ShowActivityScreen extends StatelessWidget {
             },
           );
         });
+  }
+
+  /// Restarts timer.
+  void _restartTimer() {
+    _timerBloc.stopTimer();
+    _timerBloc.playTimer();
   }
 
   /// Builds the button that changes the state of the activity. The content
