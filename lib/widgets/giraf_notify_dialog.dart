@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
+import '../style/custom_color.dart' as theme;
 
 /// An AlertDialog for notifications, with a title and description as input.
 /// The only action that the dialog can do is pressing okay, as the
@@ -29,7 +30,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
       contentPadding: const EdgeInsets.all(0.0),
       titlePadding: const EdgeInsets.all(0.0),
       shape:
-      Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+      Border.all(color: theme.GirafColors.transparentDarkGrey, width: 5.0),
       title: Center(
           child: GirafTitleHeader(
             title: title,
@@ -63,7 +64,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                     text: 'Okay',
                     icon: const ImageIcon(
                       AssetImage('assets/icons/accept.png'),
-                      color: Color.fromRGBO(0, 0, 0, 1),),
+                      color: theme.GirafColors.transparentBlack,),
                     onPressed: (){Routes.pop(context);},
                   )
                 ],
