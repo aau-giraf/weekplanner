@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Callback is optional and gives functionality that allows a
 /// method to be called after the timeout
@@ -37,7 +38,7 @@ class LoadingSpinnerWidget extends StatelessWidget {
           scale: 2,
           child: const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
-                Color.fromRGBO(255, 157, 0, 0.8)),
+                theme.GirafColors.loadingColor),
           )),
     );
   }

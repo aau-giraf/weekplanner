@@ -22,9 +22,8 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+import '../style/custom_color.dart' as theme;
 
-/// Color of the add buttons
-const Color buttonColor = Color(0xA0FFFFFF);
 
 /// <summary>
 /// The WeekplanScreen is used to display a week
@@ -132,8 +131,8 @@ class WeekplanScreen extends StatelessWidget {
                         2 / 3
                       ],
                           colors: <Color>[
-                        Color.fromRGBO(254, 215, 108, 1),
-                        Color.fromRGBO(253, 187, 85, 1),
+                        theme.GirafColors.appBarYellow,
+                        theme.GirafColors.appBarOrange,
                       ])),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -231,20 +230,20 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   Row _buildWeeks(WeekModel weekModel, BuildContext context) {
-    const List<int> weekColors = <int>[
-      0xFF08A045,
-      0xFF540D6E,
-      0xFFF77F00,
-      0xFF004777,
-      0xFFF9C80E,
-      0xFFDB2B39,
-      0xFFFFFFFF
+    const List<Color> weekColors = <Color>[
+      theme.GirafColors.mondayColor,
+      theme.GirafColors.tuesdayColor,
+      theme.GirafColors.wednesdayColor,
+      theme.GirafColors.thursdayColor,
+      theme.GirafColors.fridayColor,
+      theme.GirafColors.saturdayColor,
+      theme.GirafColors.sundayColor
     ];
     final List<Widget> weekDays = <Widget>[];
     for (int i = 0; i < weekModel.days.length; i++) {
       weekDays.add(Expanded(
           child: Card(
-              color: Color(weekColors[i]),
+              color: weekColors[i],
               child: _day(weekModel.days[i], context))));
     }
     return Row(children: weekDays);
@@ -269,7 +268,7 @@ class WeekplanScreen extends StatelessWidget {
                       child: RaisedButton(
                           key: const Key('AddActivityButton'),
                           child: Image.asset('assets/icons/add.png'),
-                          color: buttonColor,
+                          color: theme.GirafColors.buttonColor,
                           onPressed: () async {
                             final PictogramModel newActivity =
                                 await Routes.push(context, PictogramSearch());
@@ -389,7 +388,7 @@ class WeekplanScreen extends StatelessWidget {
         return const AspectRatio(
           aspectRatio: 1,
           child: Card(
-            color: Color.fromRGBO(200, 200, 200, 0.5),
+            color: theme.GirafColors.dragShadow,
             child: ListTile(),
           ),
         );
@@ -583,7 +582,7 @@ class WeekplanScreen extends StatelessWidget {
 
     return Card(
       key: Key(translation),
-      color: buttonColor,
+      color: theme.GirafColors.buttonColor,
       child: ListTile(
         contentPadding: const EdgeInsets.all(0.0), // Sets padding in cards
         title: AutoSizeText(

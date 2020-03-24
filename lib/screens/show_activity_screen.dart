@@ -14,6 +14,8 @@ import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import '../style/custom_color.dart' as theme;
+
 
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
@@ -159,7 +161,7 @@ class ShowActivityScreen extends StatelessWidget {
             child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(
-                        color: const Color.fromRGBO(35, 35, 35, 1.0),
+                        color: theme.GirafColors.blueBorderColor,
                         width: 0.25)),
                 child: StreamBuilder<ActivityModel>(
                     stream: _activityBloc.activityModelStream,
