@@ -27,40 +27,40 @@ class NewCitizenScreen extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             child: TextFormField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Navn'
               ),
               onChanged: _bloc.onDisplayNameChange.add,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             child: TextFormField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Brugernavn'
               ),
               onChanged: _bloc.onUsernameChange.add,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             child: TextFormField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Adgangskode'
               ),
               onChanged: _bloc.onPasswordChange.add,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             child: TextFormField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Gentag adgangskode'
               ),
               onChanged: _bloc.onPasswordVerifyChange.add,
