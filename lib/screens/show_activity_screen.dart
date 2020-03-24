@@ -161,7 +161,7 @@ class ShowActivityScreen extends StatelessWidget {
             child: Container(
                 decoration: BoxDecoration(
                     border: Border.all(
-                        color: theme.GirafColors.borderColor,
+                        color: theme.GirafColors.blueBorderColor,
                         width: 0.25)),
                 child: StreamBuilder<ActivityModel>(
                     stream: _activityBloc.activityModelStream,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Custom colors for the GIRAP project. New colors can be added here.
+/// Custom colors for the GIRAF project. New colors can be added here.
 class GirafColors {
   GirafColors._();
 
@@ -64,4 +64,9 @@ class GirafColors {
   /// Color of checkbox
   static const Color checkboxColor = Color.fromARGB(255, 255, 157, 0);
 
+  /// Color of button used in pop up
+  static const Color dialogButton = Color.fromRGBO(255, 157, 0, 100);
+
+  /// Color of the border used in the activity widget
+  static const Color blueBorderColor = Color.fromRGBO(35, 35, 35, 1);
 }
