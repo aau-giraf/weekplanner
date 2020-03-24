@@ -1,3 +1,4 @@
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +101,13 @@ class NewCitizenScreen extends StatelessWidget {
                 child: GirafButton(
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   text: 'Gem borger',
-                  onPressed: () {_bloc.createCitizen();},
+                  onPressed: () {
+                    _bloc.createCitizen().listen((GirafUserModel response) {
+                      if (response != null) {
+                        Routes.pop<GirafUserModel>(context, response);
+                      }
+                    });
+                  },
                 ),
               ),
             ],

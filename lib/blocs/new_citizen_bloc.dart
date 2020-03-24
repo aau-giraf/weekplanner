@@ -1,5 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -37,24 +38,20 @@ class NewCitizenBloc extends BlocBase {
   ///[displayName] is the name of the citizen.
   ///[username] and [password] is the login information.
   ///Returns true if success and false otherwise.
-  bool createCitizen() {
+  Observable<GirafUserModel> createCitizen() {
     //TODO: Implement method to create a citizen
-    _api.account.register(
+
+    print(usernameController.value);
+    print(passwordController.value);
+    print(displayNameController.value);
+
+    return _api.account.register(
         usernameController.value,
         passwordController.value,
         displayName: displayNameController.value,
         departmentId: 1,
         role: Role.Citizen
     );
-
-    print(displayNameController.value);
-    print(usernameController.value);
-    print(passwordController.value);
-    print(passwordVerifyController.value);
-
-    resetBloc();
-    return true;
-
   }
 
   ///Validates input
