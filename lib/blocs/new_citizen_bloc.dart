@@ -1,4 +1,5 @@
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -38,6 +39,14 @@ class NewCitizenBloc extends BlocBase {
   ///Returns true if success and false otherwise.
   bool createCitizen() {
     //TODO: Implement method to create a citizen
+    _api.account.register(
+        usernameController.value,
+        passwordController.value,
+        displayName: displayNameController.value,
+        departmentId: 1,
+        role: Role.Citizen
+    );
+
     print(displayNameController.value);
     print(usernameController.value);
     print(passwordController.value);
