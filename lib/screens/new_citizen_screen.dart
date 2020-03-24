@@ -27,7 +27,12 @@ class NewCitizenScreen extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+            padding: const EdgeInsets.only(
+                left: 16,
+                top: 6,
+                right: 16,
+                bottom: 2.5
+            ),
             child: TextFormField(
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
@@ -37,7 +42,7 @@ class NewCitizenScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: TextFormField(
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
@@ -47,7 +52,7 @@ class NewCitizenScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: TextFormField(
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
@@ -57,7 +62,7 @@ class NewCitizenScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: TextFormField(
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
@@ -67,26 +72,38 @@ class NewCitizenScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: Column(
               children: <Widget>[
                 Icon(
                   Icons.person,
                   size: 100,
                 ),
-                GirafButton(
-                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
-                  text: 'Tilføj fra kamera',
-                  onPressed: () {},
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GirafButton(
+                      icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
+                      text: 'Tilføj fra kamera',
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          GirafButton(
-            //TODO Fix width
-            icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-            text: 'Gem borger',
-            onPressed: () {_bloc.createCitizen();},
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: GirafButton(
+                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+                  text: 'Gem borger',
+                  onPressed: () {_bloc.createCitizen();},
+                ),
+              ),
+            ],
           )
         ],
       ),
