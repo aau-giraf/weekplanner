@@ -282,7 +282,11 @@ class ShowActivityScreen extends StatelessWidget {
                                   TimerRunningMode.running
                               ? _timerBloc.pauseTimer()
                               : timerRunningSnapshot.data ==
-                                  TimerRunningMode.paused
+                                  TimerRunningMode.paused ||
+                              timerRunningSnapshot.data ==
+                                  TimerRunningMode.not_initialized ||
+                              timerRunningSnapshot.data ==
+                                  TimerRunningMode.initialized
                               ? _timerBloc.playTimer()
                               : timerRunningSnapshot.data ==
                                   TimerRunningMode.completed
