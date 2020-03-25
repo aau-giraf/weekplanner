@@ -3,7 +3,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
-
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
   /// Default Constructor
