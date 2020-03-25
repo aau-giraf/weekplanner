@@ -39,59 +39,15 @@ class EditWeekPlanScreen extends StatelessWidget {
       text: 'Gem ændringer',
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
-      onPressed: () {
-        selectorBloc.weekNameModels
-            .take(1)
-            .listen((List<WeekNameModel> weekPlans) {
-          _bloc.newWeekPlan.take(1).listen((WeekNameModel newWeekPlan) {
-            if (newWeekPlan == null) {
-              return;
-            }
+      onPressed: () async {
+        final WeekModel result = await _bloc.editWeekPlan(
+            screenContext: context,
+            oldWeekModel: weekModel,
+            selectorBloc: selectorBloc);
 
-            for (WeekNameModel existingPlan in weekPlans) {
-              if (existingPlan.weekYear == newWeekPlan.weekYear &&
-                  existingPlan.weekNumber == newWeekPlan.weekNumber &&
-                  weekModel.weekNumber != newWeekPlan.weekNumber &&
-                  weekModel.weekYear != newWeekPlan.weekYear) {
-                // Show dialog
-                showDialog<Center>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext dialogContext) {
-                      // A confirmation dialog is shown to stop the timer.
-                      return GirafConfirmDialog(
-                        key: const Key('OverwriteDialogKey'),
-                        title: 'Overskriv ugeplan',
-                        description: 'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
-                            ', år: ${newWeekPlan.weekYear}) eksisterer '
-                            'allerede. Vil du overskrive denne ugeplan?',
-                        confirmButtonText: 'Okay',
-                        confirmButtonIcon: const ImageIcon(
-                            AssetImage('assets/icons/accept.png')),
-                        confirmOnPressed: () {
-                          _bloc
-                              .editWeekPlan(weekModel, selectorBloc)
-                              .listen((WeekModel response) {
-                            if (response != null) {
-                              Routes.pop(dialogContext);
-                              Routes.pop<WeekModel>(context, response);
-                            }
-                          });
-                        },
-                      );
-                    });
-                return;
-              }
-            }
-            _bloc
-                .editWeekPlan(weekModel, selectorBloc)
-                .listen((WeekModel response) {
-              if (response != null) {
-                Routes.pop<WeekModel>(context, response);
-              }
-            });
-          });
-        });
+        if (result != null) {
+          Routes.pop<WeekModel>(context, result);
+        }
       },
     );
 

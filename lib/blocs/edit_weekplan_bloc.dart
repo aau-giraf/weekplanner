@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
@@ -23,8 +27,10 @@ class EditWeekplanBloc extends NewWeekplanBloc {
 
   /// This method allows one to save the new information stored in the week
   /// model object and also deletes the old object if necessary
-  Observable<WeekModel> editWeekPlan(
-      WeekModel oldWeekModel, WeekplansBloc selectorBloc) {
+  Future<WeekModel> editWeekPlan(
+      {BuildContext screenContext,
+      WeekModel oldWeekModel,
+      WeekplansBloc selectorBloc}) async {
     final WeekModel newWeekModel = WeekModel();
 
     // We copy the activities from the old week model.
@@ -36,15 +42,41 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     newWeekModel.weekYear = int.parse(super.yearController.value);
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
 
-    // Here we delete the old week plan (we had to do this because of the way
-    // the keys work for the put method does not allow us to change week year
-    // and week number
+    bool doOverwrite = true;
+    
     if (oldWeekModel.weekYear != newWeekModel.weekYear ||
         oldWeekModel.weekNumber != newWeekModel.weekNumber) {
-      selectorBloc.deleteWeekModel(oldWeekModel);
+      // Check if we changed week or year to those of an existing plan.
+
+      final bool hasExistingMatch = await hasExisitingMatchingWeekplan(
+          year: newWeekModel.weekYear, weekNumber: newWeekModel.weekNumber);
+
+      // If there is a match, ask the user if we should overwrite.
+      if (hasExistingMatch) {
+        doOverwrite = await displayOverwriteDialog(
+            screenContext, newWeekModel.weekNumber, newWeekModel.weekYear);
+      }
+
+      // Here we delete the old week plan (we had to do this because of the way
+      // the keys work for the put method does not allow us to change year
+      // and week number.
+      if (doOverwrite) {
+        selectorBloc.deleteWeekModel(oldWeekModel);
+      }
     }
 
-    return weekApi.week.update(super.weekUser.id, newWeekModel.weekYear,
-        newWeekModel.weekNumber, newWeekModel);
+    final Completer<WeekModel> updateCompleter = Completer<WeekModel>();
+
+    if (doOverwrite) {
+      weekApi.week
+          .update(super.weekUser.id, newWeekModel.weekYear,
+              newWeekModel.weekNumber, newWeekModel)
+          .take(1)
+          .listen(updateCompleter.complete);
+    } else {
+      updateCompleter.complete(null);
+    }
+
+    return updateCompleter.future;
   }
 }

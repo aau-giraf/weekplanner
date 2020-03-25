@@ -114,7 +114,7 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   /// Saves the entered information to the database.
-  Future<WeekModel> saveWeekplan(BuildContext context) async {
+  Future<WeekModel> saveWeekplan(BuildContext screenContext) async {
     if (weekUser == null) {
       return Future<WeekModel>.value(null);
     }
@@ -139,24 +139,24 @@ class NewWeekplanBloc extends BlocBase {
           WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
         ]);
 
-    bool overwrite = true;
-    await for (List<WeekNameModel> existingPlans
-        in _weekplanSelectorBloc.weekNameModels.take(1)) {
-      for (WeekNameModel existingPlan in existingPlans) {
-        if (existingPlan.weekYear == _year &&
-            existingPlan.weekNumber == _weekNumber) {
-          overwrite =
-              await _displayOverwriteDialog(context, _weekNumber, _year);
-        }
-      }
+    bool doOverwrite = true;
+
+    final bool hasExistingMatch = await hasExisitingMatchingWeekplan(
+        year: _year, weekNumber: _weekNumber);
+
+    // If there is a match, ask the user if we should overwrite.
+    if (hasExistingMatch) {
+      doOverwrite =
+          await displayOverwriteDialog(screenContext, _weekNumber, _year);
     }
 
     final Completer<WeekModel> saveCompleter = Completer<WeekModel>();
 
-    if (overwrite) {
+    if (doOverwrite) {
       weekApi.week
           .update(weekUser.id, _weekModel.weekYear, _weekModel.weekNumber,
               _weekModel)
+          .take(1)
           .listen(saveCompleter.complete);
     } else {
       saveCompleter.complete(null);
@@ -165,7 +165,32 @@ class NewWeekplanBloc extends BlocBase {
     return saveCompleter.future;
   }
 
-  Future<bool> _displayOverwriteDialog(
+  /// Returns a [Future] that resolves to true if there is a matching week plan
+  /// with the same year and week number.
+  Future<bool> hasExisitingMatchingWeekplan(
+      {@required int year, @required int weekNumber}) {
+    final Completer<bool> matchCompleter = Completer<bool>();
+
+    bool hasMatch = false;
+
+    _weekplanSelectorBloc.weekNameModels
+        .listen((List<WeekNameModel> existingPlans) {
+      for (WeekNameModel existingPlan in existingPlans) {
+        if (existingPlan.weekYear == year &&
+            existingPlan.weekNumber == weekNumber) {
+          hasMatch = true;
+        }
+      }
+
+      matchCompleter.complete(hasMatch);
+    });
+
+    return matchCompleter.future;
+  }
+
+  /// Display the overwrite dialog and resolve the [Future]
+  /// to true if the user wants to overwrite.
+  Future<bool> displayOverwriteDialog(
       BuildContext context, int weekNumber, int year) {
     final Completer<bool> dialogCompleter = Completer<bool>();
     showDialog<Center>(

@@ -86,14 +86,12 @@ final UsernameModel mockUser =
 
 void main() {
   MockNewWeekplanBloc mockBloc;
-  WeekplansBloc selectorBloc;
   Api api;
 
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
     api.pictogram = MockPictogramApi();
-    selectorBloc = WeekplansBloc(api);
 
     when(api.pictogram.getImage(mockPictogram.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));

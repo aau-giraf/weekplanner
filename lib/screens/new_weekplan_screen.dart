@@ -30,13 +30,12 @@ class NewWeekplanScreen extends StatelessWidget {
       text: 'Gem ugeplan',
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
-      onPressed: () => _bloc.saveWeekplan(context).then(
-        (WeekModel newWeekPlan) {
-          if (newWeekPlan != null) {
-            Routes.pop<WeekModel>(context, newWeekPlan);
-          }
-        },
-      ),
+      onPressed: () async {
+        final WeekModel newWeekPlan = await _bloc.saveWeekplan(context);
+        if (newWeekPlan != null) {
+          Routes.pop<WeekModel>(context, newWeekPlan);
+        }
+      },
     );
 
     return Scaffold(
