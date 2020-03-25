@@ -143,8 +143,8 @@ class NewWeekplanBloc extends BlocBase {
     await for (List<WeekNameModel> existingPlans
         in _weekplanSelectorBloc.weekNameModels.take(1)) {
       for (WeekNameModel existingPlan in existingPlans) {
-        if (existingPlan.weekYear == _weekNumber &&
-            existingPlan.weekNumber == _year) {
+        if (existingPlan.weekYear == _year &&
+            existingPlan.weekNumber == _weekNumber) {
           overwrite =
               await _displayOverwriteDialog(context, _weekNumber, _year);
         }
