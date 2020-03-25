@@ -84,10 +84,11 @@ class GirafConfirmDialog extends StatelessWidget {
                             AssetImage('assets/icons/cancel.png'),
                             color: Colors.black),
                         onPressed: () {
-                          Routes.pop(context);
                           if (cancelOnPressed != null) {
                             cancelOnPressed();
                           }
+                          
+                          Routes.pop(context);
                         }),
                   ),
                 ),

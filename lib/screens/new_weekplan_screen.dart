@@ -32,7 +32,9 @@ class NewWeekplanScreen extends StatelessWidget {
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () => _bloc.saveWeekplan(context).then(
         (WeekModel newWeekPlan) {
-          Routes.pop<WeekModel>(context, newWeekPlan);
+          if (newWeekPlan != null) {
+            Routes.pop<WeekModel>(context, newWeekPlan);
+          }
         },
       ),
     );
