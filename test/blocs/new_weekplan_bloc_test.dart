@@ -45,7 +45,7 @@ void main() {
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(thumbnail);
-    bloc.saveWeekplan();
+    bloc.saveWeekplan(null);
 
     verify(api.week.update(any, any, any, any));
     done();

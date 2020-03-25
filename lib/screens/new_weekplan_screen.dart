@@ -15,13 +15,10 @@ import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
-  NewWeekplanScreen(UsernameModel user, {@required this.selectorBloc})
+  NewWeekplanScreen(UsernameModel user)
       : _bloc = di.getDependency<NewWeekplanBloc>() {
     _bloc.initialize(user);
   }
-
-  /// Week plan selector bloc. Needed to get list of existing week plans.
-  final WeekplansBloc selectorBloc;
 
   final NewWeekplanBloc _bloc;
 
@@ -33,54 +30,11 @@ class NewWeekplanScreen extends StatelessWidget {
       text: 'Gem ugeplan',
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
-      onPressed: () {
-        selectorBloc.weekNameModels
-            .take(1)
-            .listen((List<WeekNameModel> weekPlans) {
-          _bloc.newWeekPlan.take(1).listen((WeekNameModel newWeekPlan) {
-            if (newWeekPlan == null) {
-              return;
-            }
-
-            for (WeekNameModel existingPlan in weekPlans) {
-              if (existingPlan.weekYear == newWeekPlan.weekYear &&
-                  existingPlan.weekNumber == newWeekPlan.weekNumber) {
-                // Show dialog
-                showDialog<Center>(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext dialogContext) {
-                      // A confirmation dialog is shown to stop the timer.
-                      return GirafConfirmDialog(
-                        key: const Key('OverwriteEditDialogKey'),
-                        title: 'Overskriv ugeplan',
-                        description: 'Ugeplanen (uge: ${newWeekPlan.weekNumber}'
-                            ', år: ${newWeekPlan.weekYear}) eksisterer '
-                            'allerede. Vil du overskrive denne ugeplan?',
-                        confirmButtonText: 'Okay',
-                        confirmButtonIcon: const ImageIcon(
-                            AssetImage('assets/icons/accept.png')),
-                        confirmOnPressed: () {
-                          _bloc.saveWeekplan().listen((WeekModel response) {
-                            if (response != null) {
-                              Routes.pop(dialogContext);
-                              Routes.pop<WeekModel>(context, response);
-                            }
-                          });
-                        },
-                      );
-                    });
-                return;
-              }
-            }
-            _bloc.saveWeekplan().listen((WeekModel response) {
-              if (response != null) {
-                Routes.pop<WeekModel>(context, response);
-              }
-            });
-          });
-        });
-      },
+      onPressed: () => _bloc.saveWeekplan(context).then(
+        (WeekModel newWeekPlan) {
+          Routes.pop<WeekModel>(context, newWeekPlan);
+        },
+      ),
     );
 
     return Scaffold(

@@ -16,7 +16,8 @@ class GirafConfirmDialog extends StatelessWidget {
       this.description,
       @required this.confirmButtonText,
       @required this.confirmButtonIcon,
-      @required this.confirmOnPressed})
+      @required this.confirmOnPressed,
+      this.cancelOnPressed})
       : super(key: key);
 
   ///title of the dialogBox, displayed in the header of the dialogBox
@@ -34,6 +35,8 @@ class GirafConfirmDialog extends StatelessWidget {
 
   ///the method to call when the confirmation button is pressed
   final VoidCallback confirmOnPressed;
+
+  final VoidCallback cancelOnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +85,9 @@ class GirafConfirmDialog extends StatelessWidget {
                             color: Colors.black),
                         onPressed: () {
                           Routes.pop(context);
+                          if (cancelOnPressed != null) {
+                            cancelOnPressed();
+                          }
                         }),
                   ),
                 ),

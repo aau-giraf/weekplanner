@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -10,6 +11,9 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// New-Weekplan Business Logic Component.
 class NewWeekplanBloc extends BlocBase {
@@ -97,6 +101,8 @@ class NewWeekplanBloc extends BlocBase {
               _isAllInputValid)
           .asBroadcastStream();
 
+  final WeekplansBloc _weekplanSelectorBloc = di.getDependency<WeekplansBloc>();
+
   /// Resets the bloc if it already contains information from the last time it
   /// was used. Switches user to the one provided.
   /// This method should always be called before using the bloc.
@@ -108,9 +114,9 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   /// Saves the entered information to the database.
-  Observable<WeekModel> saveWeekplan() {
+  Future<WeekModel> saveWeekplan(BuildContext context) async {
     if (weekUser == null) {
-      return null;
+      return Future<WeekModel>.value(null);
     }
 
     final String _title = titleController.value;
@@ -133,8 +139,60 @@ class NewWeekplanBloc extends BlocBase {
           WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
         ]);
 
-    return weekApi.week.update(
-        weekUser.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    bool overwrite = true;
+    await for (List<WeekNameModel> existingPlans
+        in _weekplanSelectorBloc.weekNameModels.take(1)) {
+      for (WeekNameModel existingPlan in existingPlans) {
+        if (existingPlan.weekYear == _weekNumber &&
+            existingPlan.weekNumber == _year) {
+          overwrite =
+              await _displayOverwriteDialog(context, _weekNumber, _year);
+        }
+      }
+    }
+
+    final Completer<WeekModel> saveCompleter = Completer<WeekModel>();
+
+    if (overwrite) {
+      weekApi.week
+          .update(weekUser.id, _weekModel.weekYear, _weekModel.weekNumber,
+              _weekModel)
+          .listen(saveCompleter.complete);
+    } else {
+      saveCompleter.complete(null);
+    }
+
+    return saveCompleter.future;
+  }
+
+  Future<bool> _displayOverwriteDialog(
+      BuildContext context, int weekNumber, int year) {
+    final Completer<bool> dialogCompleter = Completer<bool>();
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext dialogContext) {
+          // A confirmation dialog is shown to stop the timer.
+          return GirafConfirmDialog(
+            key: const Key('OverwriteEditDialogKey'),
+            title: 'Overskriv ugeplan',
+            description: 'Ugeplanen (uge: $weekNumber'
+                ', år: $year) eksisterer '
+                'allerede. Vil du overskrive denne ugeplan?',
+            confirmButtonText: 'Okay',
+            confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/accept.png')),
+            confirmOnPressed: () {
+              dialogCompleter.complete(true);
+              Routes.pop(context);
+            },
+            cancelOnPressed: () {
+              dialogCompleter.complete(false);
+            },
+          );
+        });
+
+    return dialogCompleter.future;
   }
 
   /// Resets the bloc to its default values.
@@ -204,3 +262,5 @@ class NewWeekplanBloc extends BlocBase {
     thumbnailController.close();
   }
 }
+
+class Context {}
