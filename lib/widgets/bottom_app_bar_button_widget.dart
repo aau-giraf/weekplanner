@@ -28,15 +28,12 @@ class BottomAppBarButton extends StatelessWidget {
   /// Function to handle when the button is pressed. 
   final Function dialogFunction;
 
-  /// Determines whether the button is enabled or disabled by default. If
-  /// isEnabledStream is also supplied, the latest emitted item from the stream
-  /// will determine whether the button is enabled. If the stream emits a null
-  /// value, isEnabled will be used instead.
+  /// Determines whether the button is enabled or disabled by default. If no
+  /// isEnabledStream is supplied.
   final bool isEnabled;
 
   /// A stream which tells whether the button should be enabled or disabled.
-  /// If the stream emits a null value, the value of isEnabled will be used
-  /// instead.
+  /// If the stream emits a null value, isEnabled will be used instead.
   final Observable<bool> isEnabledStream;
 
   @override
