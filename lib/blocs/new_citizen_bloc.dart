@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
@@ -11,6 +13,11 @@ class NewCitizenBloc extends BlocBase {
   NewCitizenBloc(this._api);
 
   final Api _api;
+
+  /// Field for storing password
+  String password;
+  /// Field for storing the password validation
+  String passwordVerify;
 
    /// This field controls the display name input field
   final BehaviorSubject<String> displayNameController =
@@ -27,12 +34,26 @@ class NewCitizenBloc extends BlocBase {
 
   /// Handles when the entered display name is changed.
   Sink<String> get onDisplayNameChange => displayNameController.sink;
-  /// Handles when the entered display name is changed.
+  /// Handles when the entered username is changed.
   Sink<String> get onUsernameChange => usernameController.sink;
-  /// Handles when the entered display name is changed.
+  /// Handles when the entered password is changed.
   Sink<String> get onPasswordChange => passwordController.sink;
-  /// Handles when the entered display name is changed.
+  /// Handles when the entered password verification is changed.
   Sink<String> get onPasswordVerifyChange => passwordVerifyController.sink;
+
+  /// Validation stream for display name
+  Observable<bool> get validDisplayNameStream =>
+      displayNameController.stream.transform(_displayNameValidation);
+  /// Validation stream for username
+  Observable<bool> get validUsernameStream =>
+      usernameController.stream.transform(_usernameValidation);
+  /// Validation stream for password
+  Observable<bool> get validPasswordStream =>
+      passwordController.stream.transform(_passwordValidation);
+  /// Validation stream for password validation
+  Observable<bool> get validPasswordVerificationStream =>
+      passwordVerifyController
+          .stream.transform(_passwordVerificationValidation);
 
   ///Method called with information about the new citizen.
   ///[displayName] is the name of the citizen.
@@ -54,10 +75,70 @@ class NewCitizenBloc extends BlocBase {
     );
   }
 
-  ///Validates input
-  void checkValid() {
-    //TODO: Create method for validation of input
+  /// Compares all validation results and
+  /// checks if password and password verification is equal
+  bool _isAllInputValid(
+      bool displayName, bool username, bool password, bool passwordValid) {
+    return displayName &&
+        username &&
+        password &&
+        passwordValid &&
+        passwordController.value == passwordVerifyController.value;
   }
+
+  /// Gives information about whether all inputs are valid.
+  Observable<bool> get allInputsAreValidStream =>
+      Observable.combineLatest4<bool, bool, bool, bool, bool>(
+          validDisplayNameStream,
+          validUsernameStream,
+          validPasswordStream,
+          validPasswordVerificationStream,
+          _isAllInputValid)
+          .asBroadcastStream();
+
+  /// Stream for display name validation
+  final StreamTransformer<String, bool> _displayNameValidation =
+  StreamTransformer<String, bool>.fromHandlers(
+      handleData: (String input, EventSink<bool> sink) {
+        if (input == null) {
+          sink.add(false);
+        } else {
+          sink.add(input.trim().isNotEmpty);
+        }
+      });
+
+  /// Stream for username validation
+  final StreamTransformer<String, bool> _usernameValidation =
+  StreamTransformer<String, bool>.fromHandlers(
+      handleData: (String input, EventSink<bool> sink) {
+        if (input == null) {
+          sink.add(false);
+        } else {
+          sink.add(!input.contains(' '));
+        }
+      });
+
+  /// Stream for password validation
+  final StreamTransformer<String, bool> _passwordValidation =
+  StreamTransformer<String, bool>.fromHandlers(
+      handleData: (String input, EventSink<bool> sink) {
+        if (input == null) {
+          sink.add(false);
+        } else {
+          sink.add(!input.contains(' '));
+        }
+      });
+
+  /// Stream for password verification validation
+  final StreamTransformer<String, bool> _passwordVerificationValidation =
+  StreamTransformer<String, bool>.fromHandlers(
+      handleData: (String input, EventSink<bool> sink) {
+        if (input == null) {
+          sink.add(false);
+        } else {
+          sink.add(!input.contains(' '));
+        }
+      });
 
   ///Resets bloc so no information is stored
   void resetBloc() {
