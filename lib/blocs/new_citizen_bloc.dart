@@ -60,11 +60,7 @@ class NewCitizenBloc extends BlocBase {
   ///[username] and [password] is the login information.
   ///Returns true if success and false otherwise.
   Observable<GirafUserModel> createCitizen() {
-    //TODO: Implement method to create a citizen
-
-    print(usernameController.value);
-    print(passwordController.value);
-    print(displayNameController.value);
+    //TODO: Change hardcoded departmentId
 
     return _api.account.register(
         usernameController.value,
