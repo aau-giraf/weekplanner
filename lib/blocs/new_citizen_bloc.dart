@@ -14,11 +14,6 @@ class NewCitizenBloc extends BlocBase {
 
   final Api _api;
 
-  /// Field for storing password
-  String password;
-  /// Field for storing the password validation
-  String passwordVerify;
-
    /// This field controls the display name input field
   final BehaviorSubject<String> displayNameController =
       BehaviorSubject<String>();
