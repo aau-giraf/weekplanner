@@ -85,6 +85,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
             stream: widget.bloc.validYearStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return TextFormField(
+                key: const Key('NewWeekplanYearField'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onYearChanged.add,
                 initialValue: widget.weekModel == null
@@ -108,6 +109,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
             stream: widget.bloc.validWeekNumberStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return TextFormField(
+                key: const Key('NewWeekplanWeekField'),
                 keyboardType: TextInputType.number,
                 onChanged: widget.bloc.onWeekNumberChanged.add,
                 initialValue: widget.weekModel == null

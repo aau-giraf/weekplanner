@@ -6,6 +6,7 @@ import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -21,6 +22,7 @@ import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import '../test_image.dart';
@@ -100,15 +102,35 @@ void main() {
       return Observable<WeekModel>.just(mockWeek);
     });
 
+    when(api.week.getNames(any)).thenAnswer(
+      (_) {
+        return Observable<List<WeekNameModel>>.just([
+          WeekNameModel(
+              name: mockWeek.name,
+              weekNumber: mockWeek.weekNumber,
+              weekYear: mockWeek.weekYear),
+        ]);
+      },
+    );
+
+    when(api.week.get(any, any, any)).thenAnswer(
+      (_) {
+        return Observable<WeekModel>.just(mockWeek);
+      },
+    );
+
+    final WeekplansBloc mockWeekplanSelector = WeekplansBloc(api);
+    mockWeekplanSelector.load(mockUser);
+
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
+    di.registerSingleton<WeekplansBloc>((_) => mockWeekplanSelector);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<NewWeekplanBloc>((_) => mockBloc);
 
     mockBloc = MockNewWeekplanBloc(api);
+    di.registerDependency<NewWeekplanBloc>((_) => mockBloc);
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {
@@ -283,5 +305,41 @@ void main() {
     mockBloc.saveWeekplan(null).then((WeekModel response) async {
       expect(response, mockWeek);
     });
+  });
+
+  testWidgets('Should show dialog if trying to overwrite',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(mockUser),
+      ),
+    );
+    await tester.pump();
+
+    await tester.enterText(
+        find.byKey(const Key('NewWeekplanTitleField')), mockWeek.name);
+    await tester.enterText(find.byKey(const Key('NewWeekplanYearField')),
+        mockWeek.weekYear.toString());
+    await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
+        mockWeek.weekNumber.toString());
+    mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+
+    // expect(find.byType(PictogramImage), findsOneWidget);
+    // final Completer<bool> enabledCompleter = Completer<bool>();
+
+    // // tester
+    // //     .widget<GirafButton>(find.byType(GirafButton))
+    // //     .isEnabledStream
+    // //     .listen(enabledCompleter.complete);
+
+    // // final bool isEnabled = await enabledCompleter.future;
+
+    // // bool x = true;
+
+    // // expect(isEnabled, true);
+
+    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
+    await tester.pumpAndSettle();
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
 }
