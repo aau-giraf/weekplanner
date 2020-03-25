@@ -19,7 +19,7 @@ class MockSettingsApi extends Mock implements UserApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
+  Observable<GirafUserModel> get(String id) {
     return Observable<GirafUserModel>.just(GirafUserModel(
         id: '1',
         department: 3,
@@ -29,6 +29,7 @@ class MockUserApi extends Mock implements UserApi {
         username: 'SpaceLord69',
     ));
   }
+
 }
 
 void main() {
@@ -51,6 +52,18 @@ void main() {
       weekDayColors: null
   );
 
+  final SettingsModel updatedSettings = SettingsModel(
+      orientation: Orientation.Landscape,
+      completeMark: CompleteMark.MovedRight,
+      cancelMark: CancelMark.Removed,
+      defaultTimer: DefaultTimer.Hourglass,
+      timerSeconds: 2,
+      activitiesCount: 3,
+      theme: GirafTheme.GirafYellow,
+      nrOfDaysToDisplay: 2,
+      weekDayColors: null,
+  );
+
   setUp(() {
     api = Api('any');
 
@@ -60,15 +73,45 @@ void main() {
       return Observable<SettingsModel>.just(settings);
     });
 
+    when(api.user.updateSettings(any, any)).thenAnswer((Invocation inv) {
+      return Observable<SettingsModel>.just(updatedSettings);
+    });
+
     settingsBloc = SettingsBloc(api);
   });
 
   test('Can load settings from username model', async((DoneFn done) {
     settingsBloc.settings.listen((SettingsModel response) {
-      expect(1, 1);
+      expect(response, isNotNull);
+      expect(response.toJson(), equals(settings.toJson()));
+      verify(api.user.getSettings(any));
       done();
     });
 
     settingsBloc.loadSettings(user);
+  }));
+
+  test('Can update settings', async((DoneFn done) {
+    settings.orientation = Orientation.Landscape;
+    settings.completeMark = CompleteMark.MovedRight;
+    settings.cancelMark = CancelMark.Removed;
+    settings.defaultTimer = DefaultTimer.Hourglass;
+    settings.timerSeconds = 2;
+    settings.activitiesCount = 3;
+    settings.theme = GirafTheme.GirafYellow;
+    settings.nrOfDaysToDisplay = 2;
+    settings.weekDayColors = null;
+    settingsBloc.settings.listen((SettingsModel response) {
+      expect(response, isNotNull);
+      expect(response.toJson(), equals(settings.toJson()));
+      done();
+    });
+
+    settingsBloc.updateSettings(user.id, settings);
+  }));
+
+  test('Should dispose stream', async((DoneFn done) {
+    settingsBloc.settings.listen((_) {}, onDone: done);
+    settingsBloc.dispose();
   }));
 }
