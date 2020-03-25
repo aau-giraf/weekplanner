@@ -3,15 +3,18 @@ import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
+import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
   EditWeekplanBloc bloc;
+  WeekplansBloc selector;
   Api api;
   MockWeekApi weekApi;
   final UsernameModel mockUser =
@@ -37,8 +40,17 @@ void main() {
     weekApi = MockWeekApi();
     api.week = weekApi;
     bloc = EditWeekplanBloc(api);
+    selector = WeekplansBloc(api);
     bloc.initializeEditBloc(mockUser, weekModel);
 
     setupApiCalls();
   });
+
+  test('Test that a weekplan can be edited', async((DoneFn done) {
+    bloc.editWeekPlan(weekModel, selector).listen((WeekModel model) {
+
+    });
+    
+    done();
+  }));
 }
