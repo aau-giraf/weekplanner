@@ -243,9 +243,9 @@ class WeekplanScreen extends StatelessWidget {
       theme.GirafColors.sundayColor
     ];
     final List<Widget> weekDays = <Widget>[];
-    final _weekday = DateTime.now().weekday.toInt();
+    final int _weekday = DateTime.now().weekday.toInt();
     int _weekdayCounter = _weekday - 1;
-    for (int i = _weekday; i < SettingsScreen.days_displayed + _weekday; i++) {
+    for (int i = _weekday; i < SettingsScreen.daysDisplayed + _weekday; i++) {
       weekDays.add(Expanded(
           child: Card(
               color: weekColors[_weekdayCounter],

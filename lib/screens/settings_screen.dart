@@ -16,7 +16,7 @@ class SettingsScreen extends StatelessWidget {
   final UsernameModel _user;
 
   /// temporary solution to store the selected number of days to display
-  static int days_displayed = 7;
+  static int daysDisplayed = 7;
 
   @override
   Widget build(BuildContext context) {
@@ -50,55 +50,55 @@ class SettingsScreen extends StatelessWidget {
               RaisedButton(
                 child: const Text('Vis Man-Fre'),
                 onPressed: () {
-                  days_displayed = -1;
+                  daysDisplayed = -1;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis Man-Søn'),
                 onPressed: () {
-                  days_displayed = 0;
+                  daysDisplayed = 0;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis kun nuværende dag'),
                 onPressed: () {
-                  days_displayed = 1;
+                  daysDisplayed = 1;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis 2 dage frem'),
                 onPressed: () {
-                  days_displayed = 2;
+                  daysDisplayed = 2;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis 3 dage frem'),
                 onPressed: () {
-                  days_displayed = 3;
+                  daysDisplayed = 3;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis 4 dage frem'),
                 onPressed: () {
-                  days_displayed = 4;
+                  daysDisplayed = 4;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis 5 dage frem'),
                 onPressed: () {
-                  days_displayed = 5;
+                  daysDisplayed = 5;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis 6 dage frem'),
                 onPressed: () {
-                  days_displayed = 6;
+                  daysDisplayed = 6;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis 7 dage frem'),
                 onPressed: () {
-                  days_displayed = 7;
+                  daysDisplayed = 7;
                 },
               ),
             ],
@@ -150,37 +150,6 @@ class SettingsScreen extends StatelessWidget {
         key: PageStorageKey<int>(3),
         title: Text('Grå skala'),
         children: <Widget>[Text('Tema 1'), Text('Tema 2')],
-      ),
-    ]);
-  }
-
-  Widget _buildOrientationSection() {
-    return ListView(children: const <Widget>[
-      Text('Orientering'),
-      ExpansionTile(
-        key: PageStorageKey<int>(3),
-        title: Text('Antal aktiviteter'),
-        children: <Widget>[Text('Tema 1'), Text('Tema 2')],
-      ),
-    ]);
-  }
-
-  Widget _buildUgeplanSection() {
-    return ListView(children: <Widget>[
-      const Text('Ugeplan'),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Antal aktiviteter'),
-        children: <Widget>[
-          RaisedButton(
-            child: const Text('Tema 1'),
-            onPressed: () {},
-          ),
-          RaisedButton(
-            child: const Text('Tema 2'),
-            onPressed: () {},
-          ),
-        ],
       ),
     ]);
   }
