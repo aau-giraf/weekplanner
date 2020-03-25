@@ -16,6 +16,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
@@ -228,8 +229,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     2 / 3
                   ],
                       colors: <Color>[
-                    Color.fromRGBO(254, 215, 108, 1),
-                    Color.fromRGBO(253, 187, 85, 1),
+                    theme.GirafColors.appBarYellow,
+                    theme.GirafColors.appBarOrange,
                   ])),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

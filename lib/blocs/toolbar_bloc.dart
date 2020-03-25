@@ -8,10 +8,10 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
@@ -275,7 +275,7 @@ class ToolbarBloc extends BlocBase {
               'Bekræft',
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            color: const Color.fromRGBO(255, 157, 0, 100),
+            color: theme.GirafColors.dialogButton,
           )
         ]);
   }
@@ -335,7 +335,10 @@ class ToolbarBloc extends BlocBase {
                 confirmButtonText: 'Log ud',
                 confirmButtonIcon:
                     const ImageIcon(AssetImage('assets/icons/logout.png')),
-                confirmOnPressed: () => _authBloc.logout(),
+                confirmOnPressed: () {
+                  _authBloc.logout();
+                  Routes.pop(context);
+                },
               );
             });
       },

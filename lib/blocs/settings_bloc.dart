@@ -19,25 +19,43 @@ class SettingsBloc extends BlocBase {
     _api.user.get(_user.id);
   }
 
+  /// Settings stream
   Observable<SettingsModel> get settings => _settings.stream;
-
-  BehaviorSubject<SettingsModel> _settings = BehaviorSubject<SettingsModel>();
-
-  void loadSettings(SettingsModel settings, UsernameModel user) {
-    _settings = _api.user.getSettings(user.id);
-  }
 
   /// Currently selected theme
   Stream<GirafTheme> get theme => _theme.stream;
 
   /// List of available themes
   Stream<List<GirafTheme>> get themeList => _themeList.stream;
-
   final BehaviorSubject<List<GirafTheme>> _themeList =
       BehaviorSubject<List<GirafTheme>>.seeded(<GirafTheme>[]);
 
   final BehaviorSubject<GirafTheme> _theme =
       BehaviorSubject<GirafTheme>.seeded(null);
+
+  final BehaviorSubject<SettingsModel> _settings =
+      BehaviorSubject<SettingsModel>();
+
+  /// Load the settings for a user
+  void loadSettings(UsernameModel user) {
+    _api.user
+        .getSettings(user.id)
+        .listen((SettingsModel settingsModel) {
+          _settings.add(settingsModel);
+        });
+  }
+
+  /// Update an existing settingsModel
+  void updateSettings(
+      String userId,
+      SettingsModel settingsModel
+  ) {
+    _api.user
+        .updateSettings(userId, settingsModel)
+        .listen((SettingsModel updated) {
+          _settings.add(updated);
+        });
+  }
 
   /// Set the theme to be used
   void setTheme(GirafTheme theme) {
@@ -46,6 +64,6 @@ class SettingsBloc extends BlocBase {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _settings.close();
   }
 }
