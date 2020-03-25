@@ -60,6 +60,7 @@ class NewCitizenScreen extends StatelessWidget {
                   hintText: 'Adgangskode'
               ),
               onChanged: _bloc.onPasswordChange.add,
+              obscureText: true,
             ),
           ),
           Padding(
@@ -70,6 +71,7 @@ class NewCitizenScreen extends StatelessWidget {
                   hintText: 'Gentag adgangskode'
               ),
               onChanged: _bloc.onPasswordVerifyChange.add,
+              obscureText: true,
             ),
           ),
           Padding(
