@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -5,6 +6,7 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import 'package:http/http.dart' as http;
 
 /// Logs the user in
 class LoginScreen extends StatefulWidget {
@@ -47,21 +49,39 @@ class LoginScreenState extends State<LoginScreen> {
 
   /// This is the callback method of the loading spinner to show the dialog
   void showNotifyDialog() {
-    if (!loginStatus) {
-      // Remove the loading spinner
-      Routes.pop(currentContext);
-      // Show the new NotifyDialog
-      showDialog<Center>(
-          barrierDismissible: false,
-          context: currentContext,
-          builder: (BuildContext context) {
-            return const GirafNotifyDialog(
-                title: 'Fejl',
-                description: 'Forkert brugernavn og/eller adgangskode',
-                key: Key('WrongUsernameOrPassword'));
-          });
-    }
+    checkInternetConnection().then((value) {
+      if (value == true) {
+        checkServerConnection().then((value1) {
+          if (value1 == true) {
+
+            if (!loginStatus) {
+              creatingNotifyDialog('Forkert brugernavn og/eller adgangskode', 'WrongUsernameOrPassword');
+            }
+          } else {
+            creatingNotifyDialog('Der er i øjeblikket ikke forbindelse til severen', 'NoConnectionToServer');
+          }
+        });
+      } else {
+        creatingNotifyDialog('Der er ingen forbindelse til internettet', 'NoConnectionToInternet');
+      }
+    });
   }
+
+  void creatingNotifyDialog(String description, String key) {
+    // Remove the loading spinner
+    Routes.pop(currentContext);
+    // Show the new NotifyDialog
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: currentContext,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl',
+              description: description,
+              key: Key(key));
+        });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +124,7 @@ class LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: Colors.white),
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
@@ -128,7 +148,7 @@ class LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: Colors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -169,27 +189,27 @@ class LoginScreenState extends State<LoginScreen> {
                     // Autologin button, only used for debugging
                     environment.getVar<bool>('DEBUG')
                         ? Container(
-                            child: Transform.scale(
-                              scale: 1.2,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: const Text(
-                                  'Auto-Login',
-                                  key: Key('AutoLoginKey'),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  usernameCtrl.text =
-                                      environment.getVar<String>('USERNAME');
-                                  passwordCtrl.text =
-                                      environment.getVar<String>('PASSWORD');
-                                  loginAction(context);
-                                },
-                                color: const Color.fromRGBO(48, 81, 118, 1),
-                              ),
-                            ),
-                          )
+                      child: Transform.scale(
+                        scale: 1.2,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: const Text(
+                            'Auto-Login',
+                            key: Key('AutoLoginKey'),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            usernameCtrl.text =
+                                environment.getVar<String>('USERNAME');
+                            passwordCtrl.text =
+                                environment.getVar<String>('PASSWORD');
+                            loginAction(context);
+                          },
+                          color: const Color.fromRGBO(48, 81, 118, 1),
+                        ),
+                      ),
+                    )
                         : Container(),
                   ],
                 ),
@@ -212,4 +232,36 @@ class LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.only(bottom: 10),
     );
   }
+
+  // Function to test connection to server, it both checks for DEV API connection and to PROD API connection
+  Future<bool> checkServerConnection() async {
+    var loginUrl = environment.getVar<String>('SERVER_HOST');
+    try {
+      http.Response loginResponse =
+      await http.get(loginUrl).timeout(Duration(seconds: 10));
+      if (loginResponse.statusCode == 200) {
+        return Future.value(true);
+      } else {
+        throw Exception('Authentication Error');
+      }
+    } catch (e) {
+      print("Errorwqeqweqwewqeqewq: " + e.toString());
+      return Future.value(false);
+    }
+  }
+
+  // Function to test connection to internet
+  Future<bool> checkInternetConnection() async {
+    try {
+      final List<InternetAddress> result = await InternetAddress.lookup(
+          'google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return Future.value(true);
+      }
+    } on SocketException catch (e) {
+      print(e.message);
+      return Future.value(false);
+    }
+  }
+
 }
