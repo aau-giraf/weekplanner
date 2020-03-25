@@ -55,10 +55,7 @@ class NewCitizenBloc extends BlocBase {
       passwordVerifyController
           .stream.transform(_passwordVerificationValidation);
 
-  ///Method called with information about the new citizen.
-  ///[displayName] is the name of the citizen.
-  ///[username] and [password] is the login information.
-  ///Returns true if success and false otherwise.
+  /// Method called with information about the new citizen.
   Observable<GirafUserModel> createCitizen() {
     //TODO: Change hardcoded departmentId
 
