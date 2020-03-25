@@ -2,6 +2,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
@@ -15,7 +16,7 @@ class NewCitizenScreen extends StatelessWidget {
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   NewCitizenScreen()
       : _bloc = di.getDependency<NewCitizenBloc>() {
-    //_bloc.initialize(user);
+    _bloc.initialize();
   }
 
   final NewCitizenBloc _bloc;

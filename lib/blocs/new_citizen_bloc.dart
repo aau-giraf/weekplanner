@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -13,6 +14,7 @@ class NewCitizenBloc extends BlocBase {
   NewCitizenBloc(this._api);
 
   final Api _api;
+  GirafUserModel _user;
 
    /// This field controls the display name input field
   final BehaviorSubject<String> displayNameController =
@@ -50,15 +52,21 @@ class NewCitizenBloc extends BlocBase {
       passwordVerifyController
           .stream.transform(_passwordVerificationValidation);
 
+  /// Updates the current user(guardian)
+  /// Necessary to call in case another user logs in without terminating the app
+  void initialize() {
+    _api.user.me().listen((GirafUserModel user) {
+      _user = user;
+    });
+  }
+
   /// Method called with information about the new citizen.
   Observable<GirafUserModel> createCitizen() {
-    //TODO: Change hardcoded departmentId
-
     return _api.account.register(
         usernameController.value,
         passwordController.value,
         displayName: displayNameController.value,
-        departmentId: 1,
+        departmentId: _user.department,
         role: Role.Citizen
     );
   }
@@ -134,6 +142,7 @@ class NewCitizenBloc extends BlocBase {
     usernameController.sink.add(null);
     passwordController.sink.add(null);
     passwordVerifyController.sink.add(null);
+    _user = null;
   }
 
   @override
