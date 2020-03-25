@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -125,7 +124,7 @@ class LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: Colors.white),
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
@@ -149,7 +148,7 @@ class LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: Colors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -190,27 +189,27 @@ class LoginScreenState extends State<LoginScreen> {
                     // Autologin button, only used for debugging
                     environment.getVar<bool>('DEBUG')
                         ? Container(
-                            child: Transform.scale(
-                              scale: 1.2,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: const Text(
-                                  'Auto-Login',
-                                  key: Key('AutoLoginKey'),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  usernameCtrl.text =
-                                      environment.getVar<String>('USERNAME');
-                                  passwordCtrl.text =
-                                      environment.getVar<String>('PASSWORD');
-                                  loginAction(context);
-                                },
-                                color: const Color.fromRGBO(48, 81, 118, 1),
-                              ),
-                            ),
-                          )
+                      child: Transform.scale(
+                        scale: 1.2,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: const Text(
+                            'Auto-Login',
+                            key: Key('AutoLoginKey'),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            usernameCtrl.text =
+                                environment.getVar<String>('USERNAME');
+                            passwordCtrl.text =
+                                environment.getVar<String>('PASSWORD');
+                            loginAction(context);
+                          },
+                          color: const Color.fromRGBO(48, 81, 118, 1),
+                        ),
+                      ),
+                    )
                         : Container(),
                   ],
                 ),
