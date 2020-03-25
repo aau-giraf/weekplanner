@@ -246,4 +246,22 @@ void main() {
     });
     done();
   }));
+
+  // Fails for some reason. Maybe the function is implementation incorrectly.
+  test('Test that editing is valid', async((DoneFn done) {
+    bloc.clearMarkedWeekModels();
+    bloc.editingIsValidStream().listen((bool b) {
+      expect(b, false);
+    });
+
+    bloc.toggleMarkedWeekModel(weekModel1);
+    bloc.editingIsValidStream().listen((bool b) {
+      expect(b, true);
+    });
+
+    bloc.toggleMarkedWeekModel(weekModel2);
+    bloc.editingIsValidStream().listen((bool b) {
+      expect(b, false);
+    });
+  }));
 }
