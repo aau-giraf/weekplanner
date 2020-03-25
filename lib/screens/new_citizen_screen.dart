@@ -101,10 +101,13 @@ class NewCitizenScreen extends StatelessWidget {
                 child: GirafButton(
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   text: 'Gem borger',
+                  isEnabled: false,
+                  isEnabledStream: _bloc.allInputsAreValidStream,
                   onPressed: () {
                     _bloc.createCitizen().listen((GirafUserModel response) {
                       if (response != null) {
                         Routes.pop<GirafUserModel>(context, response);
+                        _bloc.resetBloc();
                       }
                     });
                   },
