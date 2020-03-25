@@ -5,6 +5,7 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Logs the user in
 class LoginScreen extends StatefulWidget {
@@ -116,7 +117,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Brugernavn',
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -139,7 +140,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Adgangskode',
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -161,7 +162,7 @@ class LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               loginAction(context);
                             },
-                            color: const Color.fromRGBO(48, 81, 118, 1),
+                            color: theme.GirafColors.loginButtonColor,
                           ),
                         ),
                       ),
@@ -186,7 +187,7 @@ class LoginScreenState extends State<LoginScreen> {
                                       environment.getVar<String>('PASSWORD');
                                   loginAction(context);
                                 },
-                                color: const Color.fromRGBO(48, 81, 118, 1),
+                                color: theme.GirafColors.loginButtonColor,
                               ),
                             ),
                           )

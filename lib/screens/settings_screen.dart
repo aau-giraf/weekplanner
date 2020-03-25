@@ -16,7 +16,7 @@ class SettingsScreen extends StatelessWidget {
   final UsernameModel _user;
 
   /// temporary solution to store the selected number of days to display
-  static int days_displayed = 7;
+  static int daysDisplayed = 7;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
               RaisedButton(
                 child: const Text('Vis kun nuværende dag'),
                 onPressed: () {
-                  days_displayed = 1;
+                  daysDisplayed = 1;
                 },
               ),
               RaisedButton(
@@ -114,37 +114,6 @@ class SettingsScreen extends StatelessWidget {
         key: PageStorageKey<int>(3),
         title: Text('Grå skala'),
         children: <Widget>[Text('Tema 1'), Text('Tema 2')],
-      ),
-    ]);
-  }
-
-  Widget _buildOrientationSection() {
-    return ListView(children: const <Widget>[
-      Text('Orientering'),
-      ExpansionTile(
-        key: PageStorageKey<int>(3),
-        title: Text('Antal aktiviteter'),
-        children: <Widget>[Text('Tema 1'), Text('Tema 2')],
-      ),
-    ]);
-  }
-
-  Widget _buildUgeplanSection() {
-    return ListView(children: <Widget>[
-      const Text('Ugeplan'),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Antal aktiviteter'),
-        children: <Widget>[
-          RaisedButton(
-            child: const Text('Tema 1'),
-            onPressed: () {},
-          ),
-          RaisedButton(
-            child: const Text('Tema 2'),
-            onPressed: () {},
-          ),
-        ],
       ),
     ]);
   }
