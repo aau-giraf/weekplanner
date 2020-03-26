@@ -18,6 +18,7 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../style/custom_color.dart' as theme;
 
 
+
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
@@ -270,48 +271,29 @@ class ShowActivityScreen extends StatelessWidget {
                       // whether the timer is already running.
                       child: GirafButton(
                         key: (timerRunningSnapshot.hasData
-                                ? timerRunningSnapshot.data ==
-                                    TimerRunningMode.running
-                                : false)
-                              ? const Key('TimerPauseButtonKey')
-                              : const Key('TimerPlayButtonKey'),
+                            ? timerRunningSnapshot.data ==
+                            TimerRunningMode.running
+                            : false)
+                            ? const Key('TimerPauseButtonKey')
+                            : const Key('TimerPlayButtonKey'),
                         onPressed: () {
                           !timerRunningSnapshot.hasData
                               ? _timerBloc.playTimer()
-                              // ignore: unnecessary_statements
+                          // ignore: unnecessary_statements
                               : (timerRunningSnapshot.data ==
-                                  TimerRunningMode.running
+                              TimerRunningMode.running
                               ? _timerBloc.pauseTimer()
                               : timerRunningSnapshot.data ==
-                                  TimerRunningMode.paused
+                              TimerRunningMode.paused
                               ? _timerBloc.playTimer()
                               : timerRunningSnapshot.data ==
-                                  TimerRunningMode.completed
-                              ? showDialog<Center>(
-                              context: overallContext,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return GirafConfirmDialog(
-                                  key: const Key('TimerCompleteConfirm'
-                                      'DialogKey'),
-                                  title: 'Genstart Timer',
-                                  description: 'Vil du genstarte '
-                                      'timeren?',
-                                  confirmButtonText: 'Genstart',
-                                  confirmButtonIcon: const ImageIcon(
-                                      AssetImage('assets/icons/play.png')
-                                  ),
-                                  confirmOnPressed: () {
-                                    _timerBloc.stopTimer();
-                                    _timerBloc.playTimer();
-                                    Routes.pop(context);
-                                  },
-                                );
-                              }) : _timerBloc.playTimer());
+                              TimerRunningMode.completed
+                              ? _buildRestartTimerDialog(overallContext)
+                              : _restartTimer());
                         },
                         icon: (timerRunningSnapshot.hasData
                             ? timerRunningSnapshot.data ==
-                                TimerRunningMode.running
+                            TimerRunningMode.running
                             : false)
                             ? const ImageIcon(
                             AssetImage('assets/icons/pause.png'))
@@ -394,6 +376,36 @@ class ShowActivityScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return GirafActivityTimerPickerDialog(_activity, _timerBloc);
         });
+  }
+
+  /// Returns a dialog where the timer can be restarted.
+  void _buildRestartTimerDialog(BuildContext context) {
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+            key: const Key('TimerRestartDialogKey'),
+            title: 'Genstart Timer',
+            description: 'Vil du genstarte '
+                'timeren?',
+            confirmButtonText: 'Genstart',
+            confirmButtonIcon: const ImageIcon(
+                AssetImage('assets/icons/play.png')
+            ),
+            confirmOnPressed: () {
+              _timerBloc.stopTimer();
+              _timerBloc.playTimer();
+              Routes.pop(context);
+            },
+          );
+        });
+  }
+
+  /// Restarts timer.
+  void _restartTimer() {
+    _timerBloc.stopTimer();
+    _timerBloc.playTimer();
   }
 
   /// Builds the button that changes the state of the activity. The content
