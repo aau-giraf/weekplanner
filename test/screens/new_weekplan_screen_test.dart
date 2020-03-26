@@ -45,7 +45,6 @@ class MockNewWeekplanBloc extends NewWeekplanBloc {
 //    return completer.future;
 //  }
 
-
   @override
   Observable<bool> get validTitleStream =>
       Observable<bool>.just(acceptAllInputs);
@@ -331,8 +330,27 @@ void main() {
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
     await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
-
   });
 
+  testWidgets('Should show expected message when trying to overwrite',
+      (WidgetTester tester) async {
+    mockBloc.acceptAllInputs = true;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(mockUser),
+      ),
+    );
 
+    await tester.pump();
+    mockBloc.onTitleChanged.add(mockWeek.name);
+    mockBloc.onWeekNumberChanged.add(mockWeek.weekNumber.toString());
+    mockBloc.onYearChanged.add(mockWeek.weekYear.toString());
+    mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+
+    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
+    await tester.pumpAndSettle();
+    expect(find.text('Ugeplanen (uge: '+mockWeek.weekNumber.toString()+
+        ', år: '+mockWeek.weekYear.toString()+') eksisterer '
+        'allerede. Vil du overskrive denne ugeplan?'), findsOneWidget);
+  });
 }
