@@ -145,16 +145,25 @@ class WeekplanScreen extends StatelessWidget {
                           buttonText: 'Aflys',
                           buttonKey: 'CancelActivtiesButton',
                           assetPath: 'assets/icons/cancel.png',
+                          isEnabled: false,
+                          isEnabledStream: _weekplanBloc.
+                                                  atLeastOneActivityMarked,
                           dialogFunction: _buildCancelDialog),
                       BottomAppBarButton(
                           buttonText: 'Kopier',
                           buttonKey: 'CopyActivtiesButton',
                           assetPath: 'assets/icons/copy.png',
+                          isEnabled: false,
+                          isEnabledStream: _weekplanBloc.
+                                                atLeastOneActivityMarked,
                           dialogFunction: _buildCopyDialog),
                       BottomAppBarButton(
                           buttonText: 'Slet',
                           buttonKey: 'DeleteActivtiesButton',
                           assetPath: 'assets/icons/delete.png',
+                          isEnabled: false,
+                          isEnabledStream: _weekplanBloc.
+                                                atLeastOneActivityMarked,
                           dialogFunction: _buildRemoveDialog)
                     ],
                   )))
