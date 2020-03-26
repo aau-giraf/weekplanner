@@ -1,18 +1,15 @@
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/di.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
-  /// Constructor
-  SettingsScreen(UsernameModel user)
-      : _settingsBloc = di.getDependency<SettingsBloc>(),
-        _user = user;
 
-  final SettingsBloc _settingsBloc;
+  /// Constructor
+  const SettingsScreen(UsernameModel user)
+      : _user = user;
+
   final UsernameModel _user;
 
   @override
