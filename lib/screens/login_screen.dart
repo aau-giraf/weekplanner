@@ -73,12 +73,12 @@ class LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  // Function that creates the notify dialog,
-  // depeninding which login error occured
+  /// Function that creates the notify dialog,
+  /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
-    // Remove the loading spinner
+     /// Remove the loading spinner
     Routes.pop(currentContext);
-    // Show the new NotifyDialog
+    /// Show the new NotifyDialog
     showDialog<Center>(
         barrierDismissible: false,
         context: currentContext,
@@ -241,8 +241,8 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Function to test connection to server,
-  // it both checks for DEV API connection and to PROD API connection
+  /// Function to test connection to server,
+  /// it both checks for DEV API connection and to PROD API connection
   Future<bool> checkServerConnection() async {
     final String loginUrl = environment.getVar<String>('SERVER_HOST');
     try {
@@ -259,7 +259,7 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Function to test connection to internet
+  /// Function to test connection to internet
   Future<bool> checkInternetConnection() async {
     try {
       final List<InternetAddress> result = await InternetAddress.lookup(
