@@ -5,10 +5,8 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
-
   /// Constructor
-  const SettingsScreen(UsernameModel user)
-      : _user = user;
+  const SettingsScreen(UsernameModel user) : _user = user;
 
   final UsernameModel _user;
 
@@ -127,7 +125,8 @@ class SettingsScreen extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.normal),
               ))
         ],
       ),
