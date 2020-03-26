@@ -68,7 +68,7 @@ class WeekplanScreen extends StatelessWidget {
                         AppBarIcon.changeToCitizen: () {},
                         AppBarIcon.logout: () {},
                         AppBarIcon.settings: () =>
-                            Routes.push(context, SettingsScreen())
+                            Routes.push(context, SettingsScreen(_user))
                       }
                     : <AppBarIcon, VoidCallback>{
                         AppBarIcon.changeToGuardian: () {}
