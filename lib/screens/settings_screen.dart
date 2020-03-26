@@ -18,7 +18,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Settings'),
+        appBar: GirafAppBar(title: 'Indstillinger'),
         body: Column(
           children: <Widget>[
             Expanded(
