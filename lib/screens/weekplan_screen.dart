@@ -81,7 +81,7 @@ class WeekplanScreen extends StatelessWidget {
                     AsyncSnapshot<UserWeekModel> snapshot) {
                   if (snapshot.hasData) {
                     return _buildWeeks(
-                        snapshot.data.week, context, weekModeSnapshot.data);
+                        snapshot.data.week, context);
                   } else {
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -241,8 +241,8 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-  Row _buildWeeks(
-      WeekModel weekModel, BuildContext context, WeekplanMode role) {
+  StreamBuilder<WeekplanMode> _buildWeeks(
+      WeekModel weekModel, BuildContext context) {
     const List<Color> weekColors = <Color>[
       theme.GirafColors.mondayColor,
       theme.GirafColors.tuesdayColor,
@@ -257,37 +257,46 @@ class WeekplanScreen extends StatelessWidget {
     final int _weekday = DateTime.now().weekday.toInt();
     int _weekdayCounter = 0;
 
-    if (role == WeekplanMode.guardian) {
-      for (int i = 0; i < weekModel.days.length; i++) {
-        weekDays.add(Expanded(
-            child: Card(
-                color: weekColors[i],
-                child: _day(weekModel.days[i], context))));
-      }
-      return Row(children: weekDays);
-    } else if (role == WeekplanMode.citizen) {
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext context,
+            AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+          if (weekModeSnapshot.hasData) {
+            WeekplanMode role = weekModeSnapshot.data;
 
-      // must be changed
-      const int _daysToDisplay = 5; //settingsModel.nrOfDaysToDisplay;
+            if (role == WeekplanMode.guardian) {
+              for (int i = 0; i < weekModel.days.length; i++) {
+                weekDays.add(Expanded(
+                    child: Card(
+                        color: weekColors[i],
+                        child: _day(weekModel.days[i], context))));
+              }
+              return Row(children: weekDays);
+            } else if (role == WeekplanMode.citizen) {
+              // must be changed
+              const int _daysToDisplay = 5; //settingsModel.nrOfDaysToDisplay;
 
-      // If the option of showing 1 day is chosen the _weekdayCounter must start
-      // from today's date
-      if (_daysToDisplay == 1) {
-        _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
-      }
-      for (int i = 0; i < _daysToDisplay; i++) {
-        weekDays.add(Expanded(
-            child: Card(
-                color: weekColors[_weekdayCounter],
-                child: _day(weekModel.days[_weekdayCounter], context))));
-        if (_weekdayCounter == 6) {
-          _weekdayCounter = 0;
-        } else {
-          _weekdayCounter += 1;
-        }
-      }
-    }
-    return Row(children: weekDays);
+              // If the option of showing 1 day is chosen the _weekdayCounter
+              // must start from today's date
+              if (_daysToDisplay == 1) {
+                _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
+              }
+              for (int i = 0; i < _daysToDisplay; i++) {
+                weekDays.add(Expanded(
+                    child: Card(
+                        color: weekColors[_weekdayCounter],
+                        child:
+                            _day(weekModel.days[_weekdayCounter], context))));
+                if (_weekdayCounter == 6) {
+                  _weekdayCounter = 0;
+                } else {
+                  _weekdayCounter += 1;
+                }
+              }
+            }
+          }
+          return Row(children: weekDays);
+        });
   }
 
   Column _day(WeekdayModel weekday, BuildContext context) {
