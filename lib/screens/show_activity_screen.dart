@@ -15,6 +15,8 @@ import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import '../style/custom_color.dart' as theme;
+
 
 
 /// Screen to show information about an activity, and change the state of it.
@@ -155,36 +157,35 @@ class ShowActivityScreen extends StatelessWidget {
   Card buildActivity(BuildContext context) {
     return Card(
         child: Column(children: <Widget>[
-          const Center(child: Padding(padding: EdgeInsets.all(8.0))),
-          Expanded(
-            child: FittedBox(
-                child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: const Color.fromRGBO(35, 35, 35, 1.0),
-                            width: 0.25)),
-                    child: StreamBuilder<ActivityModel>(
-                        stream: _activityBloc.activityModelStream,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<ActivityModel> snapshot) {
-                          if (snapshot.data == null) {
-                            return const CircularProgressIndicator();
-                          }
-                          return Stack(
-                            alignment: AlignmentDirectional.center,
-                            children: <Widget>[
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.width,
-                                  child: buildLoadPictogramImage()),
-                              _buildActivityStateIcon(context,
-                                  snapshot.data.state)
-                            ],
-                          );
-                        }))),
-          ),
-          buildButtonBar()
-        ]));
+      const Center(child: Padding(padding: EdgeInsets.all(8.0))),
+      Expanded(
+        child: FittedBox(
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: theme.GirafColors.blueBorderColor,
+                        width: 0.25)),
+                child: StreamBuilder<ActivityModel>(
+                    stream: _activityBloc.activityModelStream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<ActivityModel> snapshot) {
+                      if (snapshot.data == null) {
+                        return const CircularProgressIndicator();
+                      }
+                      return Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
+                              child: buildLoadPictogramImage()),
+                          _buildActivityStateIcon(context, snapshot.data.state)
+                        ],
+                      );
+                    }))),
+      ),
+      buildButtonBar()
+    ]));
   }
 
   /// The widget to show, in the case that a timer has been initiated,
