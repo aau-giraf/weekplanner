@@ -247,7 +247,7 @@ class LoginScreenState extends State<LoginScreen> {
     final String loginUrl = environment.getVar<String>('SERVER_HOST');
     try {
       final http.Response loginResponse =
-      await http.get(loginUrl).timeout(Duration(seconds: 10));
+      await http.get(loginUrl).timeout(const Duration(seconds: 10));
       if (loginResponse.statusCode == 200) {
         return Future<bool>.value(true);
       } else {
