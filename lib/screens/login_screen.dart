@@ -49,11 +49,15 @@ class LoginScreenState extends State<LoginScreen> {
 
   /// This is the callback method of the loading spinner to show the dialog
   void showNotifyDialog() {
+    // Checking internet connection, if true check server connection
     checkInternetConnection().then((value) {
       if (value == true) {
+
+        // Checking server connection, if true check username/password
         checkServerConnection().then((value1) {
           if (value1 == true) {
 
+            // Checking username/password
             if (!loginStatus) {
               creatingNotifyDialog('Forkert brugernavn og/eller adgangskode', 'WrongUsernameOrPassword');
             }
@@ -67,6 +71,7 @@ class LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  // Function that creates the notify dialog, depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
     // Remove the loading spinner
     Routes.pop(currentContext);
