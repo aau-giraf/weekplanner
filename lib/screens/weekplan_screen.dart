@@ -2,6 +2,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
@@ -23,6 +25,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+
 import '../style/custom_color.dart' as theme;
 
 /// <summary>
@@ -38,9 +41,11 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="user">owner of the weekplan</param>
   WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
     _weekplanBloc.loadWeek(_week, _user);
+    _settingsBloc.loadSettings(_user);
   }
 
   final WeekplanBloc _weekplanBloc = di.getDependency<WeekplanBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
@@ -80,8 +85,7 @@ class WeekplanScreen extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<UserWeekModel> snapshot) {
                   if (snapshot.hasData) {
-                    return _buildWeeks(
-                        snapshot.data.week, context);
+                    return _buildWeeks(snapshot.data.week, context);
                   } else {
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -273,26 +277,42 @@ class WeekplanScreen extends StatelessWidget {
               }
               return Row(children: weekDays);
             } else if (role == WeekplanMode.citizen) {
-              // must be changed
-              const int _daysToDisplay = 5; //settingsModel.nrOfDaysToDisplay;
+              return StreamBuilder<SettingsModel>(
+                stream: _settingsBloc.settings,
+                builder: (BuildContext context,
+                    AsyncSnapshot<SettingsModel> settingsSnapshot) {
 
-              // If the option of showing 1 day is chosen the _weekdayCounter
-              // must start from today's date
-              if (_daysToDisplay == 1) {
-                _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
-              }
-              for (int i = 0; i < _daysToDisplay; i++) {
-                weekDays.add(Expanded(
-                    child: Card(
-                        color: weekColors[_weekdayCounter],
-                        child:
-                            _day(weekModel.days[_weekdayCounter], context))));
-                if (_weekdayCounter == 6) {
-                  _weekdayCounter = 0;
-                } else {
-                  _weekdayCounter += 1;
-                }
-              }
+
+                  if (settingsSnapshot.hasData) {
+
+                    SettingsModel settingsModel = settingsSnapshot.data;
+
+                    int _daysToDisplay = settingsModel.nrOfDaysToDisplay;
+
+                    print('DAAAAAAGE: ' + _daysToDisplay.toString());
+                    // If the option of showing 1 day is chosen the
+                    // _weekdayCounter
+                    // must start from today's date
+                    if (_daysToDisplay == 1) {
+                      _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
+                    }
+                    for (int i = 0; i < _daysToDisplay; i++) {
+                      weekDays.add(Expanded(
+                          child: Card(
+                              color: weekColors[_weekdayCounter],
+                              child: _day(
+                                  weekModel.days[_weekdayCounter], context))));
+                      if (_weekdayCounter == 6) {
+                        _weekdayCounter = 0;
+                      } else {
+                        _weekdayCounter += 1;
+                      }
+                    }
+                  }
+
+                  return Row(children: weekDays);
+                },
+              );
             }
           }
           return Row(children: weekDays);
