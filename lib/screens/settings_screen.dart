@@ -70,7 +70,7 @@ class SettingsScreen extends StatelessWidget {
           child: CheckboxListTile(
             value: true,
             title: const Text('Landskab'),
-            onChanged: (value) {},
+            onChanged: (bool value) {},
           ),
         )
       ],
