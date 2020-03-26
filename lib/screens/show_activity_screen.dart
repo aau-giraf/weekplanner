@@ -86,7 +86,14 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       ),
-      _buildTimer(context),
+
+      StreamBuilder<ActivityModel>(
+          stream: _activityBloc.activityModelStream,
+          builder: (BuildContext context, AsyncSnapshot<ActivityModel>
+          activitySnapshot){
+            return activitySnapshot.data.state == ActivityState.Canceled ?
+            Container(width: 0, height: 0) : _buildTimer(context);
+          })
     ];
   }
 
