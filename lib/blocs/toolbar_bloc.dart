@@ -338,7 +338,7 @@ class ToolbarBloc extends BlocBase {
                     const ImageIcon(AssetImage('assets/icons/logout.png')),
                 confirmOnPressed: () {
                   _authBloc.logout();
-                  Routes.pop(context);
+                  Routes.goHome(context);
                 },
               );
             });
