@@ -23,8 +23,8 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
-
 import '../style/custom_color.dart' as theme;
+
 
 /// <summary>
 /// The WeekplanScreen is used to display a week
@@ -68,7 +68,7 @@ class WeekplanScreen extends StatelessWidget {
                         AppBarIcon.changeToCitizen: () {},
                         AppBarIcon.logout: () {},
                         AppBarIcon.settings: () =>
-                            Routes.push(context, SettingsScreen(_user)),
+                            Routes.push(context, SettingsScreen(_user))
                       }
                     : <AppBarIcon, VoidCallback>{
                         AppBarIcon.changeToGuardian: () {}
@@ -146,16 +146,25 @@ class WeekplanScreen extends StatelessWidget {
                           buttonText: 'Aflys',
                           buttonKey: 'CancelActivtiesButton',
                           assetPath: 'assets/icons/cancel.png',
+                          isEnabled: false,
+                          isEnabledStream: _weekplanBloc.
+                                                  atLeastOneActivityMarked,
                           dialogFunction: _buildCancelDialog),
                       BottomAppBarButton(
                           buttonText: 'Kopier',
                           buttonKey: 'CopyActivtiesButton',
                           assetPath: 'assets/icons/copy.png',
+                          isEnabled: false,
+                          isEnabledStream: _weekplanBloc.
+                                                atLeastOneActivityMarked,
                           dialogFunction: _buildCopyDialog),
                       BottomAppBarButton(
                           buttonText: 'Slet',
                           buttonKey: 'DeleteActivtiesButton',
                           assetPath: 'assets/icons/delete.png',
+                          isEnabled: false,
+                          isEnabledStream: _weekplanBloc.
+                                                atLeastOneActivityMarked,
                           dialogFunction: _buildRemoveDialog)
                     ],
                   )))
@@ -233,8 +242,7 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-  Row _buildWeeks(
-      WeekModel weekModel, BuildContext context, WeekplanMode role) {
+  Row _buildWeeks(WeekModel weekModel, BuildContext context) {
     const List<Color> weekColors = <Color>[
       theme.GirafColors.mondayColor,
       theme.GirafColors.tuesdayColor,
@@ -245,36 +253,11 @@ class WeekplanScreen extends StatelessWidget {
       theme.GirafColors.sundayColor
     ];
     final List<Widget> weekDays = <Widget>[];
-    final int _weekday = DateTime.now().weekday.toInt();
-    int _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
-
-    if (role == WeekplanMode.guardian) {
-      for (int i = 0; i < weekModel.days.length; i++) {
-        weekDays.add(Expanded(
-            child: Card(
-                color: weekColors[i],
-                child: _day(weekModel.days[i], context))));
-      }
-      return Row(children: weekDays);
-    } else if (role == WeekplanMode.citizen) {
-      int _daysToDisplay = 1;
-
-      if (_daysToDisplay == 1) {
-        _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
-      }
-
-      for (int i = 0; i < _daysToDisplay; i++) {
-        weekDays.add(Expanded(
-            child: Card(
-                color: weekColors[_weekdayCounter],
-                child:
-                _day(weekModel.days[_weekdayCounter], context))));
-        if (_weekdayCounter == 6) {
-          _weekdayCounter = 0;
-        } else {
-          _weekdayCounter += 1;
-        }
-      }
+    for (int i = 0; i < weekModel.days.length; i++) {
+      weekDays.add(Expanded(
+          child: Card(
+              color: weekColors[i],
+              child: _day(weekModel.days[i], context))));
     }
     return Row(children: weekDays);
   }
