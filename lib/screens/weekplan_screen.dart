@@ -23,8 +23,8 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
-import '../style/custom_color.dart' as theme;
 
+import '../style/custom_color.dart' as theme;
 
 /// <summary>
 /// The WeekplanScreen is used to display a week
@@ -233,7 +233,8 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-  Row _buildWeeks(WeekModel weekModel, BuildContext context) {
+  Row _buildWeeks(
+      WeekModel weekModel, BuildContext context, WeekplanMode role) {
     const List<Color> weekColors = <Color>[
       theme.GirafColors.mondayColor,
       theme.GirafColors.tuesdayColor,
@@ -251,39 +252,33 @@ class WeekplanScreen extends StatelessWidget {
       for (int i = 0; i < weekModel.days.length; i++) {
         weekDays.add(Expanded(
             child: Card(
-                color: Color(weekColors[i]),
+                color: weekColors[i],
                 child: _day(weekModel.days[i], context))));
       }
       return Row(children: weekDays);
     } else if (role == WeekplanMode.citizen) {
-      int _daysToDisplay = SettingsScreen
-          .days_displayed; // TODO(Mads og Simon): use bloc instead
+      int _daysToDisplay = 1;
 
-      // Translates the int received from the settings
-      // -1 means monday - friday and 0 means monday - sunday
-      if (_daysToDisplay == -1) {
-        _weekdayCounter = 0;
-        _daysToDisplay = 5;
-      } else if (_daysToDisplay == 0) {
-        _weekdayCounter = 0;
-        _daysToDisplay = 7;
+      if (_daysToDisplay == 1) {
+        _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
       }
 
       for (int i = 0; i < _daysToDisplay; i++) {
         weekDays.add(Expanded(
             child: Card(
-                color: Color(weekColors[_weekdayCounter]),
-                child: _day(weekModel.days[_weekdayCounter], context))));
+                color: weekColors[_weekdayCounter],
+                child:
+                _day(weekModel.days[_weekdayCounter], context))));
         if (_weekdayCounter == 6) {
           _weekdayCounter = 0;
         } else {
           _weekdayCounter += 1;
         }
       }
-      return Row(children: weekDays);
     }
+    return Row(children: weekDays);
   }
-
+  
   Column _day(WeekdayModel weekday, BuildContext context) {
     return Column(
       children: <Widget>[

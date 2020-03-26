@@ -36,6 +36,9 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  /// Fix later. Must use bloc instead
+  int daysToDisplay = 1;
+
   Widget _buildNumberOfDaysSection() {
     return ListView(children: <Widget>[
       const Text('Ugeplan visning'),
@@ -50,19 +53,19 @@ class SettingsScreen extends StatelessWidget {
               RaisedButton(
                 child: const Text('Vis kun nuværende dag'),
                 onPressed: () {
-                  daysDisplayed = 1;
+                  daysToDisplay = 1;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis Man-Fre'),
                 onPressed: () {
-                  days_displayed = -1;
+                  daysToDisplay = 5;
                 },
               ),
               RaisedButton(
                 child: const Text('Vis Man-Søn'),
                 onPressed: () {
-                  days_displayed = 0;
+                  daysToDisplay = 7;
                 },
               ),
             ],
