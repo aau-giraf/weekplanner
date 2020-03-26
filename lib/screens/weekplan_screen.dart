@@ -253,10 +253,39 @@ class WeekplanScreen extends StatelessWidget {
       theme.GirafColors.sundayColor
     ];
     final List<Widget> weekDays = <Widget>[];
-    for (int i = 0; i < weekModel.days.length; i++) {
-      weekDays.add(Expanded(
-          child: Card(
-              color: weekColors[i], child: _day(weekModel.days[i], context))));
+
+    final int _weekday = DateTime.now().weekday.toInt();
+    int _weekdayCounter = 0;
+
+    if (role == WeekplanMode.guardian) {
+      for (int i = 0; i < weekModel.days.length; i++) {
+        weekDays.add(Expanded(
+            child: Card(
+                color: weekColors[i],
+                child: _day(weekModel.days[i], context))));
+      }
+      return Row(children: weekDays);
+    } else if (role == WeekplanMode.citizen) {
+
+      // must be changed
+      const int _daysToDisplay = 5; //settingsModel.nrOfDaysToDisplay;
+
+      // If the option of showing 1 day is chosen the _weekdayCounter must start
+      // from today's date
+      if (_daysToDisplay == 1) {
+        _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
+      }
+      for (int i = 0; i < _daysToDisplay; i++) {
+        weekDays.add(Expanded(
+            child: Card(
+                color: weekColors[_weekdayCounter],
+                child: _day(weekModel.days[_weekdayCounter], context))));
+        if (_weekdayCounter == 6) {
+          _weekdayCounter = 0;
+        } else {
+          _weekdayCounter += 1;
+        }
+      }
     }
     return Row(children: weekDays);
   }
