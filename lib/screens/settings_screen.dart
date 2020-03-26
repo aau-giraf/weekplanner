@@ -30,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
       children: <Widget>[
         _buildThemeSection(),
         _buildOrientationSection(),
-        _buildWeekplanSection(),
+        _buildWeekPlanSection(),
         _buildUserSettings()
       ],
     );
@@ -77,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekplanSection() {
+  Widget _buildWeekPlanSection() {
     return Column(
       children: <Widget>[
         const ListTile(
@@ -115,7 +115,7 @@ class SettingsScreen extends StatelessWidget {
 
   OutlineButton _button(VoidCallback onPressed, String text) {
     return OutlineButton(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       onPressed: () => onPressed,
       child: Stack(
         children: <Widget>[
