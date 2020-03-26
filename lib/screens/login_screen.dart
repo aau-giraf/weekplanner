@@ -50,11 +50,11 @@ class LoginScreenState extends State<LoginScreen> {
   /// This is the callback method of the loading spinner to show the dialog
   void showNotifyDialog() {
     // Checking internet connection, if true check server connection
-    checkInternetConnection().then((value) {
+    checkInternetConnection().then((bool value) {
       if (value == true) {
 
         // Checking server connection, if true check username/password
-        checkServerConnection().then((value1) {
+        checkServerConnection().then((bool value1) {
           if (value1 == true) {
 
             // Checking username/password
@@ -62,16 +62,19 @@ class LoginScreenState extends State<LoginScreen> {
               creatingNotifyDialog('Forkert brugernavn og/eller adgangskode', 'WrongUsernameOrPassword');
             }
           } else {
-            creatingNotifyDialog('Der er i øjeblikket ikke forbindelse til severen', 'NoConnectionToServer');
+            creatingNotifyDialog('Der er i øjeblikket'
+                ' ikke forbindelse til severen', 'NoConnectionToServer');
           }
         });
       } else {
-        creatingNotifyDialog('Der er ingen forbindelse til internettet', 'NoConnectionToInternet');
+        creatingNotifyDialog('Der er ingen forbindelse'
+            ' til internettet', 'NoConnectionToInternet');
       }
     });
   }
 
-  // Function that creates the notify dialog, depeninding which login error occured
+  // Function that creates the notify dialog,
+  // depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
     // Remove the loading spinner
     Routes.pop(currentContext);
@@ -238,20 +241,21 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Function to test connection to server, it both checks for DEV API connection and to PROD API connection
+  // Function to test connection to server,
+  // it both checks for DEV API connection and to PROD API connection
   Future<bool> checkServerConnection() async {
-    var loginUrl = environment.getVar<String>('SERVER_HOST');
+    final String loginUrl = environment.getVar<String>('SERVER_HOST');
     try {
-      http.Response loginResponse =
+      final http.Response loginResponse =
       await http.get(loginUrl).timeout(Duration(seconds: 10));
       if (loginResponse.statusCode == 200) {
-        return Future.value(true);
+        return Future<bool>.value(true);
       } else {
         throw Exception('Authentication Error');
       }
     } catch (e) {
-      print("Errorwqeqweqwewqeqewq: " + e.toString());
-      return Future.value(false);
+      print('Error:' + e.toString());
+      return Future<bool>.value(false);
     }
   }
 
@@ -261,12 +265,14 @@ class LoginScreenState extends State<LoginScreen> {
       final List<InternetAddress> result = await InternetAddress.lookup(
           'google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return Future.value(true);
+        return Future<bool>.value(true);
       }
+      return null;
     } on SocketException catch (e) {
       print(e.message);
-      return Future.value(false);
+      return Future<bool>.value(false);
     }
   }
 
 }
+
