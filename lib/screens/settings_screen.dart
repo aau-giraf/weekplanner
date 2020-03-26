@@ -14,7 +14,6 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(title: 'Indstillinger'),
-        appBar: GirafAppBar(title: 'Indstillinger'),
         body: Column(
           children: <Widget>[
             Expanded(
@@ -35,10 +34,14 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  /// Fix later. Must use bloc instead
-  int daysToDisplay = 1;
+
+
 
   Widget _buildNumberOfDaysSection() {
+
+    // must be removed later
+    int daysToDisplay = 1;
+
     return ListView(children: <Widget>[
       const Text('Ugeplan visning'),
       ExpansionTile(

@@ -25,7 +25,6 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import '../style/custom_color.dart' as theme;
 
-
 /// <summary>
 /// The WeekplanScreen is used to display a week
 /// and all the activities that occur in it.
@@ -147,24 +146,24 @@ class WeekplanScreen extends StatelessWidget {
                           buttonKey: 'CancelActivtiesButton',
                           assetPath: 'assets/icons/cancel.png',
                           isEnabled: false,
-                          isEnabledStream: _weekplanBloc.
-                                                  atLeastOneActivityMarked,
+                          isEnabledStream:
+                              _weekplanBloc.atLeastOneActivityMarked,
                           dialogFunction: _buildCancelDialog),
                       BottomAppBarButton(
                           buttonText: 'Kopier',
                           buttonKey: 'CopyActivtiesButton',
                           assetPath: 'assets/icons/copy.png',
                           isEnabled: false,
-                          isEnabledStream: _weekplanBloc.
-                                                atLeastOneActivityMarked,
+                          isEnabledStream:
+                              _weekplanBloc.atLeastOneActivityMarked,
                           dialogFunction: _buildCopyDialog),
                       BottomAppBarButton(
                           buttonText: 'Slet',
                           buttonKey: 'DeleteActivtiesButton',
                           assetPath: 'assets/icons/delete.png',
                           isEnabled: false,
-                          isEnabledStream: _weekplanBloc.
-                                                atLeastOneActivityMarked,
+                          isEnabledStream:
+                              _weekplanBloc.atLeastOneActivityMarked,
                           dialogFunction: _buildRemoveDialog)
                     ],
                   )))
@@ -242,7 +241,8 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-  Row _buildWeeks(WeekModel weekModel, BuildContext context) {
+  Row _buildWeeks(
+      WeekModel weekModel, BuildContext context, WeekplanMode role) {
     const List<Color> weekColors = <Color>[
       theme.GirafColors.mondayColor,
       theme.GirafColors.tuesdayColor,
@@ -256,12 +256,11 @@ class WeekplanScreen extends StatelessWidget {
     for (int i = 0; i < weekModel.days.length; i++) {
       weekDays.add(Expanded(
           child: Card(
-              color: weekColors[i],
-              child: _day(weekModel.days[i], context))));
+              color: weekColors[i], child: _day(weekModel.days[i], context))));
     }
     return Row(children: weekDays);
   }
-  
+
   Column _day(WeekdayModel weekday, BuildContext context) {
     return Column(
       children: <Widget>[
