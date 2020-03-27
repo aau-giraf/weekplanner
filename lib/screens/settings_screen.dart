@@ -1,5 +1,6 @@
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
@@ -17,28 +18,24 @@ class SettingsScreen extends StatelessWidget {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: _buildAllSettings(),
+              child: _buildAllSettings(context),
             )
           ],
         ));
   }
 
-  Widget _buildAllSettings() {
+  Widget _buildAllSettings(BuildContext context) {
     return ListView(
       children: <Widget>[
         _buildThemeSection(),
         _buildOrientationSection(),
-        _buildWeekPlanSection(),
+        _buildWeekPlanSection(context),
         _buildUserSettings()
       ],
     );
   }
 
-
-
-
   Widget _buildNumberOfDaysSection() {
-
     // must be removed later
     int daysToDisplay = 1;
 
@@ -119,7 +116,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekPlanSection() {
+  Widget _buildWeekPlanSection(BuildContext context) {
     return Column(
       children: <Widget>[
         const ListTile(
@@ -131,7 +128,9 @@ class SettingsScreen extends StatelessWidget {
         ),
         SizedBox(
           width: double.infinity,
-          child: _button(() {}, 'Antal dage'),
+          child: _button(() {
+            Routes.push(context, NumberOfDaysScreen());
+          }, 'Antal dage'),
         )
       ],
     );
@@ -158,7 +157,57 @@ class SettingsScreen extends StatelessWidget {
   OutlineButton _button(VoidCallback onPressed, String text) {
     return OutlineButton(
       padding: const EdgeInsets.all(15),
-      onPressed: () => onPressed,
+      onPressed: () => onPressed(),
+      child: Stack(
+        children: <Widget>[
+          Align(
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.arrow_forward)),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                text,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.normal),
+              ))
+        ],
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      highlightedBorderColor: GirafColors.appBarOrange,
+    );
+  }
+}
+
+class NumberOfDaysScreen extends StatelessWidget {
+  int daysToDisplay = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: GirafAppBar(
+          title: 'Antal dage',
+        ),
+        body: ListView(
+          children: <Widget>[
+            _button(() {
+              Routes.push(context, NumberOfDaysScreen());
+            }, 'Vis kun nuværende dag'),
+            _button(() {
+              Routes.push(context, NumberOfDaysScreen());
+            }, 'Vis mandag til fredag'),
+            _button(() {
+              Routes.push(context, NumberOfDaysScreen());
+            }, 'Vis mandag til søndag')
+          ],
+        ));
+  }
+
+  // TODO: ADD checkmark √ functionality to button
+  OutlineButton _button(VoidCallback onPressed, String text) {
+    return OutlineButton(
+      padding: const EdgeInsets.all(15),
+      onPressed: () => onPressed(),
       child: Stack(
         children: <Widget>[
           Align(
