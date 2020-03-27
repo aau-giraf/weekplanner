@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
@@ -60,6 +62,103 @@ void main() {
     bloc.createCitizen();
 
     verify(bloc.createCitizen());
+    done();
+  }));
+
+  test('All inputs are valid', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+    });
+    done();
+  }));
+
+  test('No inputs are valid', async((DoneFn done) {
+    bloc.onUsernameChange.add(null);
+    bloc.onPasswordChange.add(null);
+    bloc.onPasswordVerifyChange.add(null);
+    bloc.onDisplayNameChange.add(null);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
+
+  test('resetBloc test', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.resetBloc();
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
+
+  test('All inputs are not valid - password', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1224');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
+
+  test('All inputs are not valid - password 2', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1224');
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
+
+  test('All inputs are not valid - username', async((DoneFn done) {
+    bloc.onUsernameChange.add('my username');
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
+
+  test('All inputs are not valid - Display name', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(null);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
+
+  test('All inputs are not valid - username', async((DoneFn done) {
+    bloc.onUsernameChange.add('');
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
     done();
   }));
 
