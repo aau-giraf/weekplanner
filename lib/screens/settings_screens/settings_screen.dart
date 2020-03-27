@@ -1,11 +1,17 @@
+import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
+import '../../di.dart';
+import 'number_of_days_selection_screen.dart';
+
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
+
   /// Constructor
   const SettingsScreen(UsernameModel user) : _user = user;
 
@@ -129,7 +135,7 @@ class SettingsScreen extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: _button(() {
-            Routes.push(context, NumberOfDaysScreen());
+            Routes.push(context, NumberOfDaysScreen(_user));
           }, 'Antal dage'),
         )
       ],
@@ -179,52 +185,3 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-class NumberOfDaysScreen extends StatelessWidget {
-  int daysToDisplay = 1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: GirafAppBar(
-          title: 'Antal dage',
-        ),
-        body: ListView(
-          children: <Widget>[
-            _button(() {
-              Routes.push(context, NumberOfDaysScreen());
-            }, 'Vis kun nuværende dag'),
-            _button(() {
-              Routes.push(context, NumberOfDaysScreen());
-            }, 'Vis mandag til fredag'),
-            _button(() {
-              Routes.push(context, NumberOfDaysScreen());
-            }, 'Vis mandag til søndag')
-          ],
-        ));
-  }
-
-  // TODO: ADD checkmark √ functionality to button
-  OutlineButton _button(VoidCallback onPressed, String text) {
-    return OutlineButton(
-      padding: const EdgeInsets.all(15),
-      onPressed: () => onPressed(),
-      child: Stack(
-        children: <Widget>[
-          Align(
-              alignment: Alignment.centerRight,
-              child: Icon(Icons.arrow_forward)),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                text,
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.normal),
-              ))
-        ],
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-      highlightedBorderColor: GirafColors.appBarOrange,
-    );
-  }
-}
