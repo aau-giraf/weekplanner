@@ -71,4 +71,194 @@ void main() {
       done();
     });
   }));
+
+  test('Username with space in front', async((DoneFn done) {
+    bloc.onUsernameChange.add(' ' + user.username);
+    bloc.validUsernameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Username with space after', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username + ' ');
+    bloc.validUsernameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Username with space', async((DoneFn done) {
+    bloc.onUsernameChange.add('user name');
+    bloc.validUsernameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('No username', async((DoneFn done) {
+    bloc.onUsernameChange.add('');
+    bloc.validUsernameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Username is null', async((DoneFn done) {
+    bloc.onUsernameChange.add(null);
+    bloc.validUsernameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Display name validation', async((DoneFn done) {
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.validDisplayNameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
+
+  test('Display name with space', async((DoneFn done) {
+    bloc.onDisplayNameChange.add('Display Name');
+    bloc.validDisplayNameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
+
+  test('No display name', async((DoneFn done) {
+    bloc.onDisplayNameChange.add('');
+    bloc.validDisplayNameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Display name is null', async((DoneFn done) {
+    bloc.onDisplayNameChange.add(null);
+    bloc.validDisplayNameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Password validation', async((DoneFn done) {
+    bloc.onPasswordChange.add('1234');
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
+
+  test('Password with space in front', async((DoneFn done) {
+    bloc.onPasswordChange.add(' 1234');
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Password with space in middel', async((DoneFn done) {
+    bloc.onPasswordChange.add('12 34');
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Password with space last', async((DoneFn done) {
+    bloc.onPasswordChange.add('1234 ');
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('No password', async((DoneFn done) {
+    bloc.onPasswordChange.add('');
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('Password is null', async((DoneFn done) {
+    bloc.onPasswordChange.add(null);
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('PasswordVerification validation', async((DoneFn done) {
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
+
+  test('PasswordVerification with space in front', async((DoneFn done) {
+    bloc.onPasswordVerifyChange.add(' 1234');
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('PasswordVerification with space last', async((DoneFn done) {
+    bloc.onPasswordVerifyChange.add('1234 ');
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('PasswordVerification with space in middel', async((DoneFn done) {
+    bloc.onPasswordVerifyChange.add('12 34');
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('No passwordVerification', async((DoneFn done) {
+    bloc.onPasswordChange.add('');
+    bloc.validPasswordStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
+  test('PasswordVerification is null', async((DoneFn done) {
+    bloc.onPasswordVerifyChange.add(null);
+    bloc.validPasswordVerificationStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+      done();
+    });
+  }));
+
 }
