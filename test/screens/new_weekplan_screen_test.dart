@@ -193,7 +193,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewWeekplanScreen(mockUser)));
     await tester.enterText(
-        find.byKey(const Key('NewWeekplanTitleField')), '☺♥');
+        find.byKey(const Key('WeekTitleTextFieldKey')), '☺♥');
     await tester.pump();
 
     expect(find.text('☺♥'), findsNothing);
