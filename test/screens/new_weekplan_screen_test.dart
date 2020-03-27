@@ -300,19 +300,16 @@ void main() {
       ),
     );
     await tester.pump();
-    //await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
+    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
 
 // TODO: Fix this test.
     mockBloc.saveWeekplan(null).then((WeekModel response) async {
       expect(response, mockWeek);
       await tester.pump();
     });
-
-    expect(
-        tester.widget<GirafButton>(find.byType(GirafButton)).isEnabled, isTrue);
   });
 
-  testWidgets('Should show dialog if trying to overwrite',
+  testWidgets('Should show overwrite dialog if trying to overwrite',
       (WidgetTester tester) async {
     mockBloc.acceptAllInputs = true;
     await tester.pumpWidget(
@@ -322,35 +319,24 @@ void main() {
     );
 
     await tester.pump();
-    mockBloc.onTitleChanged.add(mockWeek.name);
-    mockBloc.onWeekNumberChanged.add(mockWeek.weekNumber.toString());
-    mockBloc.onYearChanged.add(mockWeek.weekYear.toString());
+    await tester.enterText(
+        find.byKey(const Key('NewWeekplanTitleField')), mockWeek.name);
+    await tester.enterText(find.byKey(const Key('NewWeekplanYearField')),
+        mockWeek.weekYear.toString());
+    await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
+        mockWeek.weekNumber.toString());
     mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
 
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
     await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
-  });
-
-  testWidgets('Should show expected message when trying to overwrite',
-      (WidgetTester tester) async {
-    mockBloc.acceptAllInputs = true;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: NewWeekplanScreen(mockUser),
-      ),
-    );
-
-    await tester.pump();
-    mockBloc.onTitleChanged.add(mockWeek.name);
-    mockBloc.onWeekNumberChanged.add(mockWeek.weekNumber.toString());
-    mockBloc.onYearChanged.add(mockWeek.weekYear.toString());
-    mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
-
-    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
-    await tester.pumpAndSettle();
-    expect(find.text('Ugeplanen (uge: '+mockWeek.weekNumber.toString()+
-        ', år: '+mockWeek.weekYear.toString()+') eksisterer '
-        'allerede. Vil du overskrive denne ugeplan?'), findsOneWidget);
+    expect(
+        find.text('Ugeplanen (uge: ' +
+            mockWeek.weekNumber.toString() +
+            ', år: ' +
+            mockWeek.weekYear.toString() +
+            ') eksisterer '
+                'allerede. Vil du overskrive denne ugeplan?'),
+        findsOneWidget);
   });
 }
