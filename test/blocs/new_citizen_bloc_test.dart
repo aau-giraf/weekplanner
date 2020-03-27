@@ -3,6 +3,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -23,28 +24,51 @@ class MockUserApi extends Mock implements UserApi {
 class MockAccountApi extends Mock implements AccountApi {}
 
 void main() {
-  NewCitizenBloc _bloc;
-  Api _api;
+  NewCitizenBloc bloc;
+  Api api;
+
+  final GirafUserModel user = GirafUserModel(id: '1',
+      department: 1,
+      role: Role.Citizen,
+      roleName: 'Citizen',
+      screenName: 'Birgit',
+      username: 'b1337');
 
   setUp(() {
-    _api = Api('any');
-    _api.user = MockUserApi();
-    _api.account = MockAccountApi()
-    _bloc = NewCitizenBloc(_api);
-    _bloc.initialize();
-    final GirafUserModel user = GirafUserModel(id: '1',
-        department: 1,
-        role: Role.Citizen,
-        roleName: 'Citizen',
-        screenName: 'Birgit',
-        username: 'b1337');
+    api = Api('any');
+    api.user = MockUserApi();
+    api.account = MockAccountApi();
+    bloc = NewCitizenBloc(api);
+    bloc.initialize();
 
-//    when(_api.account.register(
-//        any, any, displayName: any, departmentId: any, role:  any)
-//        .thenAnswer((_) {
-//      return Observable<GirafUserModel>.just(user);
-//    }));
+
+    when(api.account.register(
+        any, any, displayName: anyNamed('displayName'),
+        departmentId: anyNamed('departmentId'), role:  anyNamed('role')))
+        .thenAnswer((_) {
+      return Observable<GirafUserModel>.just(user);
+    });
+
+
   });
 
+  test('Should save a new citizen', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.createCitizen();
 
+    verify(bloc.createCitizen());
+    done();
+  }));
+
+  test('Username validation', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.validUsernameStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, true);
+      done();
+    });
+  }));
 }
