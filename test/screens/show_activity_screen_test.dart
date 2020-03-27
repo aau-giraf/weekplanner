@@ -482,4 +482,19 @@ void main() {
       expect(running, isFalse);
     });
   });
+
+  testWidgets('Timer not visivle when activity cancelled',
+          (WidgetTester tester) async{
+    mockActivity.state = ActivityState.Canceled;
+
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser)));
+
+    expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
+
+    mockActivity.state = ActivityState.Normal;
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
+  });
 }
