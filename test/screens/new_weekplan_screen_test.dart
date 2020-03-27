@@ -300,16 +300,13 @@ void main() {
       ),
     );
     await tester.pump();
-    //await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
+    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
 
 // TODO: Fix this test.
     mockBloc.saveWeekplan(null).then((WeekModel response) async {
       expect(response, mockWeek);
       await tester.pump();
     });
-
-    expect(
-        tester.widget<GirafButton>(find.byType(GirafButton)).isEnabled, isTrue);
   });
 
   testWidgets('Should show overwrite dialog if trying to overwrite',
