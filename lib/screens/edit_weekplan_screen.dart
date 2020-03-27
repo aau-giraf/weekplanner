@@ -1,6 +1,5 @@
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
-import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
@@ -8,7 +7,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
 ///This screen is called when you edit a week plan
@@ -18,7 +16,6 @@ class EditWeekPlanScreen extends StatelessWidget {
   EditWeekPlanScreen({
     @required UsernameModel user,
     @required this.weekModel,
-    @required this.selectorBloc,
   }) : _bloc = di.getDependency<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
@@ -28,7 +25,7 @@ class EditWeekPlanScreen extends StatelessWidget {
 
   /// This bloc is the bloc from the week plan selector screen it is needed in
   /// in order to delete the week plan
-  final WeekplansBloc selectorBloc;
+  final WeekplansBloc selectorBloc = di.getDependency<WeekplansBloc>();
 
   final EditWeekplanBloc _bloc;
 

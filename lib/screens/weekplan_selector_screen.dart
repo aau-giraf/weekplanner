@@ -259,7 +259,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
       EditWeekPlanScreen(
         user: _user,
         weekModel: _weekBloc.getMarkedWeekModels()[0],
-        selectorBloc: _weekBloc,
       ),
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();
