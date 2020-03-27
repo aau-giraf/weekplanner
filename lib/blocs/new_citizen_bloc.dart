@@ -95,7 +95,7 @@ class NewCitizenBloc extends BlocBase {
   final StreamTransformer<String, bool> _displayNameValidation =
   StreamTransformer<String, bool>.fromHandlers(
       handleData: (String input, EventSink<bool> sink) {
-        if (input == null) {
+        if (input == null || input.isEmpty) {
           sink.add(false);
         } else {
           sink.add(input.trim().isNotEmpty);
@@ -106,7 +106,7 @@ class NewCitizenBloc extends BlocBase {
   final StreamTransformer<String, bool> _usernameValidation =
   StreamTransformer<String, bool>.fromHandlers(
       handleData: (String input, EventSink<bool> sink) {
-        if (input == null) {
+        if (input == null || input.isEmpty) {
           sink.add(false);
         } else {
           sink.add(!input.contains(' '));
@@ -117,7 +117,7 @@ class NewCitizenBloc extends BlocBase {
   final StreamTransformer<String, bool> _passwordValidation =
   StreamTransformer<String, bool>.fromHandlers(
       handleData: (String input, EventSink<bool> sink) {
-        if (input == null) {
+        if (input == null || input.isEmpty) {
           sink.add(false);
         } else {
           sink.add(!input.contains(' '));
@@ -128,7 +128,7 @@ class NewCitizenBloc extends BlocBase {
   final StreamTransformer<String, bool> _passwordVerificationValidation =
   StreamTransformer<String, bool>.fromHandlers(
       handleData: (String input, EventSink<bool> sink) {
-        if (input == null) {
+        if (input == null || input.isEmpty) {
           sink.add(false);
         } else {
           sink.add(!input.contains(' '));
