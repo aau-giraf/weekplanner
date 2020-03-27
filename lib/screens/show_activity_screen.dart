@@ -91,7 +91,8 @@ class ShowActivityScreen extends StatelessWidget {
           stream: _activityBloc.activityModelStream,
           builder: (BuildContext context, AsyncSnapshot<ActivityModel>
           activitySnapshot){
-            return activitySnapshot.data.state == ActivityState.Canceled ?
+            return (activitySnapshot.hasData && activitySnapshot.data.state ==
+                ActivityState.Canceled) ?
             Container(width: 0, height: 0) : _buildTimer(context);
           })
     ];
@@ -110,6 +111,7 @@ class ShowActivityScreen extends StatelessWidget {
                 // If a timer is not initiated, and the app is in citizen mode,
                 // nothing is shown
                 return Visibility(
+                  key: const Key('Visibilitytest'),
                   visible: (timerInitSnapshot.hasData && modeSnapshot.hasData)
                       ? timerInitSnapshot.data ||
                           (!timerInitSnapshot.data &&
