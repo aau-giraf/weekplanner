@@ -36,6 +36,7 @@ class GirafConfirmDialog extends StatelessWidget {
   ///the method to call when the confirmation button is pressed
   final VoidCallback confirmOnPressed;
 
+  ///the method is call when the cancel button is pressed. Optional
   final VoidCallback cancelOnPressed;
 
   @override

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -20,7 +18,6 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
-import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -105,7 +102,7 @@ void main() {
 
     when(api.week.getNames(any)).thenAnswer(
       (_) {
-        return Observable<List<WeekNameModel>>.just([
+        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,
@@ -149,7 +146,9 @@ void main() {
       ),
     );
 
-    expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+        widget is GirafAppBar && widget.title == 'Ny ugeplan'),
         findsOneWidget);
   });
 
@@ -311,7 +310,6 @@ void main() {
 
   testWidgets('Should show overwrite dialog if trying to overwrite',
       (WidgetTester tester) async {
-    mockBloc.acceptAllInputs = true;
     await tester.pumpWidget(
       MaterialApp(
         home: NewWeekplanScreen(mockUser),

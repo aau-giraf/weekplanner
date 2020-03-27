@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -104,7 +102,7 @@ void main() {
 
     when(api.week.getNames(any)).thenAnswer(
       (_) {
-        return Observable<List<WeekNameModel>>.just([
+        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,

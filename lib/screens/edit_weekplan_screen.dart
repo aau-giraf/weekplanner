@@ -33,6 +33,7 @@ class EditWeekPlanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final GirafButton editButton = GirafButton(
       icon: const ImageIcon(AssetImage('assets/icons/edit.png')),
+      key: const Key('EditWeekPlanSaveBtnKey'),
       text: 'Gem ændringer',
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,

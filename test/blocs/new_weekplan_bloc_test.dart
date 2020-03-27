@@ -43,7 +43,7 @@ void main() {
 
     when(api.week.getNames(any)).thenAnswer(
       (_) {
-        return Observable<List<WeekNameModel>>.just([
+        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,

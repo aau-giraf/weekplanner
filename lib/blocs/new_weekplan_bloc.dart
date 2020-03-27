@@ -288,4 +288,3 @@ class NewWeekplanBloc extends BlocBase {
   }
 }
 
-class Context {}
