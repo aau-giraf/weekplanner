@@ -11,12 +11,11 @@ import '../../di.dart';
 /// Screen where the user can select how many days to show for a citizen
 class NumberOfDaysScreen extends StatelessWidget {
   /// Constructor
-  NumberOfDaysScreen(UsernameModel user) {
-    _user = user; // The selected citizen
+  NumberOfDaysScreen(UsernameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
 
-  UsernameModel _user;
+  final UsernameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
@@ -28,26 +27,22 @@ class NumberOfDaysScreen extends StatelessWidget {
           if (settingsSnapshot.hasData) {
             print('Data');
 
-            SettingsModel _settingsModel = settingsSnapshot.data;
-            int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
-
-            print('Test!!!');
-
+            final SettingsModel _settingsModel = settingsSnapshot.data;
             return Scaffold(
                 appBar: GirafAppBar(
                   title: 'Antal dage',
                 ),
                 body: ListView(
                   children: <Widget>[
-                    _button(() {
+                    _button(1, _settingsModel.nrOfDaysToDisplay, () {
                       _settingsModel.nrOfDaysToDisplay = 1;
                       _settingsBloc.updateSettings(_user.id, _settingsModel);
                     }, 'Vis kun nuværende dag'),
-                    _button(() {
+                    _button(5, _settingsModel.nrOfDaysToDisplay, () {
                       _settingsModel.nrOfDaysToDisplay = 5;
                       _settingsBloc.updateSettings(_user.id, _settingsModel);
                     }, 'Vis mandag til fredag'),
-                    _button(() {
+                    _button(7, _settingsModel.nrOfDaysToDisplay, () {
                       _settingsModel.nrOfDaysToDisplay = 7;
                       _settingsBloc.updateSettings(_user.id, _settingsModel);
                     }, 'Vis mandag til søndag')
@@ -60,16 +55,21 @@ class NumberOfDaysScreen extends StatelessWidget {
         });
   }
 
-  // TODO: ADD checkmark √ functionality to button
-  OutlineButton _button(VoidCallback onPressed, String text) {
+  OutlineButton _button(
+      int expected, int current, VoidCallback onPressed, String text) {
+    Widget _child;
+    if (expected == current) {
+      _child = Icon(Icons.check, size: 20);
+    } else {
+      _child = null;
+    }
+
     return OutlineButton(
       padding: const EdgeInsets.all(15),
       onPressed: () => onPressed(),
       child: Stack(
         children: <Widget>[
-          Align(
-              alignment: Alignment.centerRight,
-              child: Icon(Icons.arrow_forward)),
+          Align(alignment: Alignment.centerRight, child: _child),
           Align(
               alignment: Alignment.centerLeft,
               child: Text(

@@ -1,17 +1,13 @@
-import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
-import '../../di.dart';
 import 'number_of_days_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
-
   /// Constructor
   const SettingsScreen(UsernameModel user) : _user = user;
 
@@ -20,7 +16,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Indstillinger'),
+        appBar: GirafAppBar(title: _user.name + '\'s indstillinger'),
         body: Column(
           children: <Widget>[
             Expanded(
@@ -41,46 +37,6 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNumberOfDaysSection() {
-    // must be removed later
-    int daysToDisplay = 1;
-
-    return ListView(children: <Widget>[
-      const Text('Ugeplan visning'),
-      ExpansionTile(
-        key: const PageStorageKey<int>(3),
-        title: const Text('Vælg visning'),
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              RaisedButton(
-                child: const Text('Vis kun nuværende dag'),
-                onPressed: () {
-                  daysToDisplay = 1;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis Man-Fre'),
-                onPressed: () {
-                  daysToDisplay = 5;
-                },
-              ),
-              RaisedButton(
-                child: const Text('Vis Man-Søn'),
-                onPressed: () {
-                  daysToDisplay = 7;
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    ]);
-  }
-
-  // Not used in the current version (from 2019)
   Widget _buildThemeSection() {
     return Column(children: <Widget>[
       const ListTile(
@@ -184,4 +140,3 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
-
