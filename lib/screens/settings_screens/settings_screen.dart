@@ -110,7 +110,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         SizedBox(
           width: double.infinity,
-          child: _button(() {}, _user.name + 's indstillinger'),
+          child: _button(() {}, _user.name + ' indstillinger'),
         )
       ],
     );

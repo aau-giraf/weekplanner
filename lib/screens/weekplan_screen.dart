@@ -278,7 +278,6 @@ class WeekplanScreen extends StatelessWidget {
                 stream: _settingsBloc.settings,
                 builder: (BuildContext context,
                     AsyncSnapshot<SettingsModel> settingsSnapshot) {
-
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;

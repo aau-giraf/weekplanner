@@ -16,6 +16,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+
 import '../style/custom_color.dart' as theme;
 
 /// Screen to select a weekplan for a given user
@@ -33,27 +34,27 @@ class WeekplanSelectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(
-        title: _user.name,
-        appBarIcons: <AppBarIcon, VoidCallback>{
-          AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-          AppBarIcon.logout: () {},
-          AppBarIcon.settings: () => Routes.push(context, SettingsScreen(_user))
-        },
-      ),
-      bottomNavigationBar: StreamBuilder<bool>(
-        stream: _weekBloc.editMode,
-        initialData: false,
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.data) {
-            return _buildBottomAppBar(context);
-          } else {
-            return Container(width: 0.0, height: 0.0);
-          }
-        },
-      ),
-      body: _buildWeekplanGridview(context)
-    );
+        appBar: GirafAppBar(
+          title: _user.name,
+          appBarIcons: <AppBarIcon, VoidCallback>{
+            AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
+            AppBarIcon.logout: () {},
+            AppBarIcon.settings: () =>
+                Routes.push(context, SettingsScreen(_user))
+          },
+        ),
+        bottomNavigationBar: StreamBuilder<bool>(
+          stream: _weekBloc.editMode,
+          initialData: false,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.data) {
+              return _buildBottomAppBar(context);
+            } else {
+              return Container(width: 0.0, height: 0.0);
+            }
+          },
+        ),
+        body: _buildWeekplanGridview(context));
   }
 
   Widget _buildWeekplanGridview(BuildContext context) {
