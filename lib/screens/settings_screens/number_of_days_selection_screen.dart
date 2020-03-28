@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 import '../../di.dart';
 
+/// Screen where the user can select how many days to show for a citizen
 class NumberOfDaysScreen extends StatelessWidget {
   /// Constructor
   NumberOfDaysScreen(UsernameModel user) {
-    _user = user;
+    _user = user; // The selected citizen
     _settingsBloc.loadSettings(_user);
   }
 
@@ -25,7 +25,6 @@ class NumberOfDaysScreen extends StatelessWidget {
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
-
           if (settingsSnapshot.hasData) {
             print('Data');
 
@@ -54,7 +53,10 @@ class NumberOfDaysScreen extends StatelessWidget {
                     }, 'Vis mandag til søndag')
                   ],
                 ));
-          } return CircularProgressIndicator();
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         });
   }
 
