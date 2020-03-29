@@ -288,6 +288,7 @@ class WeekplanScreen extends StatelessWidget {
                     if (_daysToDisplay == 1) {
                       _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
+                    // Adding the selected number of days to weekDays
                     for (int i = 0; i < _daysToDisplay; i++) {
                       weekDays.add(Expanded(
                           child: Card(

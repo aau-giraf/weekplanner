@@ -25,8 +25,6 @@ class NumberOfDaysScreen extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
-            print('Data');
-
             final SettingsModel _settingsModel = settingsSnapshot.data;
             return Scaffold(
                 appBar: GirafAppBar(
