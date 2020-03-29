@@ -305,6 +305,10 @@ class WeekplanScreen extends StatelessWidget {
                 },
               );
             }
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
           return Row(children: weekDays);
         });
