@@ -12,12 +12,6 @@ class SettingsBloc extends BlocBase {
   SettingsBloc(this._api);
 
   final Api _api;
-  UsernameModel _user;
-
-  /// Loads all settings for a given [user]
-  void load(UsernameModel user) {
-    _api.user.get(_user.id);
-  }
 
   /// Settings stream
   Observable<SettingsModel> get settings => _settings.stream;
@@ -38,23 +32,18 @@ class SettingsBloc extends BlocBase {
 
   /// Load the settings for a user
   void loadSettings(UsernameModel user) {
-    _api.user
-        .getSettings(user.id)
-        .listen((SettingsModel settingsModel) {
-          _settings.add(settingsModel);
-        });
+    _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
+      _settings.add(settingsModel);
+    });
   }
 
   /// Update an existing settingsModel
-  void updateSettings(
-      String userId,
-      SettingsModel settingsModel
-  ) {
+  void updateSettings(String userId, SettingsModel settingsModel) {
     _api.user
         .updateSettings(userId, settingsModel)
         .listen((SettingsModel updated) {
-          _settings.add(updated);
-        });
+      _settings.add(updated);
+    });
   }
 
   /// Set the theme to be used
