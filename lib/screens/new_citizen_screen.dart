@@ -37,6 +37,7 @@ class NewCitizenScreen extends StatelessWidget {
                   hintText: 'Navn'
               ),
               onChanged: _bloc.onDisplayNameChange.add,
+              keyboardType: TextInputType.text,
             ),
           ),
           Padding(
@@ -47,6 +48,7 @@ class NewCitizenScreen extends StatelessWidget {
                   hintText: 'Brugernavn'
               ),
               onChanged: _bloc.onUsernameChange.add,
+              keyboardType: TextInputType.text,
             ),
           ),
           Padding(
@@ -57,6 +59,7 @@ class NewCitizenScreen extends StatelessWidget {
                   hintText: 'Adgangskode'
               ),
               onChanged: _bloc.onPasswordChange.add,
+              keyboardType: TextInputType.text,
               obscureText: true,
             ),
           ),
@@ -68,6 +71,7 @@ class NewCitizenScreen extends StatelessWidget {
                   hintText: 'Gentag adgangskode'
               ),
               onChanged: _bloc.onPasswordVerifyChange.add,
+              keyboardType: TextInputType.text,
               obscureText: true,
             ),
           ),
