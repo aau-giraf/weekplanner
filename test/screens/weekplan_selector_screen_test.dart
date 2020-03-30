@@ -20,6 +20,7 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../test_image.dart';
@@ -239,45 +240,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('isSelectedKey')), findsNothing);
-  });
-
-  testWidgets('Edits a week plan',
-      (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(Key(weekModel1.name)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('EditButtonKey')));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('SaveEditButtonKey')), findsOneWidget);
-    
-    await tester.enterText(find.byKey(const Key('WeekTitleTextFieldKey')),
-        'New title');
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
-        '1998');
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
-        '23');
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('SaveEditButtonKey')));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(Key(weekModel1.name)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('EditButtonKey')));
-    await tester.pumpAndSettle();
-    
-    expect(find.text('New title'), findsOneWidget);
-    expect(find.text('1998'), findsOneWidget);
-    expect(find.text('23'), findsOneWidget);
   });
 
   testWidgets('Test editing is valid',
