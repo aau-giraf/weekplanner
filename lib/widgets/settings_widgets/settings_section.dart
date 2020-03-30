@@ -15,9 +15,6 @@ class SettingsSection extends StatelessWidget {
 
   @override
   Column build(BuildContext context) {
-    /*  children.add(SettingsArrowButton('H', () {
-      print('h');
-    })); */
 
     // Adding dividers
     for (int i = 0; i < children.length; i += 2) {
