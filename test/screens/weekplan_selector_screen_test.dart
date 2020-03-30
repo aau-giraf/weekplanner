@@ -242,7 +242,7 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel2), false);
   });
 
-  testWidgets('Marking activity and marking it again unmarks it',
+  testWidgets('Clicking a marked activity should unmark it',
   (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
