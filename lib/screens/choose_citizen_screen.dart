@@ -13,7 +13,6 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatelessWidget {
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
-  final AutoSizeGroup _selectionAutoSizeGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +75,6 @@ class ChooseCitizenScreen extends StatelessWidget {
   }
 
   /// Builds the list of citizens together with the "add citizen" button
-  /// TODO: Write tests for this method
   List<Widget> _buildCitizenSelectionList(BuildContext context,
     AsyncSnapshot<List<UsernameModel>> snapshot) {
     final List<Widget> list = snapshot.data
