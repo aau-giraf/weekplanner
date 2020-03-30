@@ -234,6 +234,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   GirafButton(
+                      key: const Key('EditButtonKey'),
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
