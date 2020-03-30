@@ -68,41 +68,4 @@ void main() {
     expect(titleFinder, findsOneWidget);
   });
 
-  testWidgets('Settings has Tema section', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.text('Tema'), findsOneWidget);
-    expect(find.text('Farver på ugeplan'), findsOneWidget);
-    expect(find.text('Tegn for udførelse'), findsOneWidget);
-  });
-
-  testWidgets('Settings has Orientering section', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.text('Orientering'), findsOneWidget);
-    expect(find.text('Landskab'), findsOneWidget);
-    expect(find.byType(CheckboxListTile), findsOneWidget);
-  });
-
-  testWidgets('Settings has Ugeplan section', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.text('Ugeplan'), findsOneWidget);
-    expect(find.text('Antal dage'), findsOneWidget);
-  });
-
-  testWidgets('Settings has Brugerindstillinger section',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.text('Brugerindstillinger'), findsOneWidget);
-    expect(find.text(user.name + ' indstillinger'), findsOneWidget);
-  });
-
-  testWidgets('The Antal dage button leads to numberOfDays screen',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Antal dage'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OutlineButton), findsNWidgets(3));
-    expect(find.byIcon(Icons.check), findsOneWidget);
-  });
 }
