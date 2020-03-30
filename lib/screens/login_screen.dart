@@ -7,6 +7,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import 'package:http/http.dart' as http;
+import '../style/custom_color.dart' as theme;
 
 /// Logs the user in
 class LoginScreen extends StatefulWidget {
@@ -33,6 +34,10 @@ class LoginScreenState extends State<LoginScreen> {
   /// Stores the login status, used for dismissing the LoadingSpinner
   bool loginStatus = false;
 
+  /// Indicates if the loading spinner has been popped in this instance of the
+  /// screen.
+  bool _popCalled = false;
+
   /// This is called when login should be triggered
   void loginAction(BuildContext context) {
     showLoadingSpinner(context, false, showNotifyDialog, 2000);
@@ -41,8 +46,10 @@ class LoginScreenState extends State<LoginScreen> {
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
-      if (snapshot) {
-        Routes.goHome(context);
+      if (snapshot && !_popCalled) {
+        // Pop the loading spinner
+        Routes.pop(context);
+        _popCalled = true;
       }
     });
   }
@@ -144,7 +151,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Brugernavn',
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -167,7 +174,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Adgangskode',
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -189,7 +196,7 @@ class LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               loginAction(context);
                             },
-                            color: const Color.fromRGBO(48, 81, 118, 1),
+                            color: theme.GirafColors.loginButtonColor,
                           ),
                         ),
                       ),
@@ -197,27 +204,27 @@ class LoginScreenState extends State<LoginScreen> {
                     // Autologin button, only used for debugging
                     environment.getVar<bool>('DEBUG')
                         ? Container(
-                      child: Transform.scale(
-                        scale: 1.2,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: const Text(
-                            'Auto-Login',
-                            key: Key('AutoLoginKey'),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () {
-                            usernameCtrl.text =
-                                environment.getVar<String>('USERNAME');
-                            passwordCtrl.text =
-                                environment.getVar<String>('PASSWORD');
-                            loginAction(context);
-                          },
-                          color: const Color.fromRGBO(48, 81, 118, 1),
-                        ),
-                      ),
-                    )
+                            child: Transform.scale(
+                              scale: 1.2,
+                              child: RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                child: const Text(
+                                  'Auto-Login',
+                                  key: Key('AutoLoginKey'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  usernameCtrl.text =
+                                      environment.getVar<String>('USERNAME');
+                                  passwordCtrl.text =
+                                      environment.getVar<String>('PASSWORD');
+                                  loginAction(context);
+                                },
+                                color: theme.GirafColors.loginButtonColor,
+                              ),
+                            ),
+                          )
                         : Container(),
                   ],
                 ),
