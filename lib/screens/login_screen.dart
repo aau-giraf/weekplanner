@@ -50,8 +50,8 @@ class LoginScreenState extends State<LoginScreen> {
   /// This is the callback method of the loading spinner to show the dialog
   void showNotifyDialog() {
     // Checking internet connection, if true check server connection
-    checkInternetConnection().then((bool value) {
-      if (value == true) {
+    checkInternetConnection().then((bool hasInternetConnection) {
+      if (hasInternetConnection) {
 
         // Checking server connection, if true check username/password
         checkServerConnection().then((bool value1) {
@@ -275,4 +275,3 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
 }
-
