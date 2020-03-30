@@ -53,6 +53,7 @@ class NumberOfDaysScreen extends StatelessWidget {
         });
   }
 
+  /// The button will show a check mark if [expected] is the same as [current]
   OutlineButton _button(
       int expected, int current, VoidCallback onPressed, String text) {
     Widget _child;
@@ -61,7 +62,6 @@ class NumberOfDaysScreen extends StatelessWidget {
     } else {
       _child = null;
     }
-
     return OutlineButton(
       padding: const EdgeInsets.all(15),
       onPressed: () => onPressed(),
