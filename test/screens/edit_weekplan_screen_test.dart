@@ -87,16 +87,19 @@ final UsernameModel mockUser =
 void main() {
   MockEditWeekplanBloc mockBloc;
   Api api;
+  bool savedWeekplan;
 
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
     api.pictogram = MockPictogramApi();
+    savedWeekplan = false;
 
     when(api.pictogram.getImage(mockPictogram.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      savedWeekplan = true;
       return Observable<WeekModel>.just(mockWeek);
     });
 
@@ -314,7 +317,7 @@ void main() {
           mockWeek.weekYear.toString());
       await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
           mockWeek.weekNumber.toString());
-      
+
       mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
 
       final Finder saveButton = find.byWidgetPredicate((Widget widget) =>
@@ -332,6 +335,82 @@ void main() {
               ') eksisterer '
                   'allerede. Vil du overskrive denne ugeplan?'),
           findsOneWidget);
+    });
+    testWidgets(
+        'Should remove overwrite dialog when tapping the "Fortyd" button',
+        (WidgetTester tester) async {
+      final WeekModel editWeekModel = WeekModel(
+          name: mockWeek.name,
+          weekNumber: mockWeek.weekNumber + 1,
+          weekYear: mockWeek.weekYear,
+          days: mockWeek.days,
+          thumbnail: mockWeek.thumbnail);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: EditWeekPlanScreen(user: mockUser, weekModel: editWeekModel),
+        ),
+      );
+      await tester.pump();
+
+      await tester.enterText(
+          find.byKey(const Key('NewWeekplanTitleField')), mockWeek.name);
+      await tester.enterText(find.byKey(const Key('NewWeekplanYearField')),
+          mockWeek.weekYear.toString());
+      await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
+          mockWeek.weekNumber.toString());
+
+      mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+
+      final Finder saveButton = find.byWidgetPredicate((Widget widget) =>
+          widget is GirafButton && widget.text == 'Gem ændringer');
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('ConfirmDialogCancelButton')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(GirafConfirmDialog), findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafAppBar && widget.title == 'Rediger ugeplan'),
+          findsOneWidget);
+      expect(savedWeekplan, false);
+    });
+    testWidgets(
+        'Saves weekplan when tapping the "Okay" button in overwrite dialog',
+        (WidgetTester tester) async {
+      final WeekModel editWeekModel = WeekModel(
+          name: mockWeek.name,
+          weekNumber: mockWeek.weekNumber + 1,
+          weekYear: mockWeek.weekYear,
+          days: mockWeek.days,
+          thumbnail: mockWeek.thumbnail);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: EditWeekPlanScreen(user: mockUser, weekModel: editWeekModel),
+        ),
+      );
+      await tester.pump();
+
+      await tester.enterText(
+          find.byKey(const Key('NewWeekplanTitleField')), mockWeek.name);
+      await tester.enterText(find.byKey(const Key('NewWeekplanYearField')),
+          mockWeek.weekYear.toString());
+      await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
+          mockWeek.weekNumber.toString());
+
+      mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+
+      final Finder saveButton = find.byWidgetPredicate((Widget widget) =>
+          widget is GirafButton && widget.text == 'Gem ændringer');
+      await tester.tap(saveButton);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(GirafConfirmDialog), findsNothing);
+      expect(savedWeekplan, true);
     });
   });
 }
