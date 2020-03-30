@@ -54,8 +54,8 @@ class LoginScreenState extends State<LoginScreen> {
       if (hasInternetConnection) {
 
         // Checking server connection, if true check username/password
-        checkServerConnection().then((bool value1) {
-          if (value1 == true) {
+        checkServerConnection().then((bool hasServerConnection) {
+          if (hasServerConnection) {
 
             // Checking username/password
             if (!loginStatus) {
