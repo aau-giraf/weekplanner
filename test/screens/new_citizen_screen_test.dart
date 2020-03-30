@@ -99,13 +99,65 @@ void main() {
     expect(find.byType(GirafButton), findsNWidgets(2));
   });
 
-  testWidgets('Error text is shown on invalid title input',
+  testWidgets('You can input a display name',
           (WidgetTester tester) async {
-        mockNewCitizenBloc.acceptAllInputs = false;
         await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+        await tester.enterText(
+            find.byKey(const Key('displayNameField')), 'Birgit Jensen');
         await tester.pump();
 
-        expect(find.text('Titel skal angives'), findsOneWidget);
-      });
+        expect(find.text('Birgit Jensen'), findsNWidgets(1));
+  });
 
+  testWidgets('You can input a username',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+        await tester.enterText(
+            find.byKey(const Key('usernameField')), 'birgit');
+        await tester.pump();
+
+        expect(find.text('birgit'), findsNWidgets(1));
+  });
+
+  testWidgets('You can input a password',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+        await tester.enterText(
+            find.byKey(const Key('passwordField')), 'password');
+        await tester.pump();
+
+        expect(find.text('password'), findsNWidgets(1));
+  });
+
+  testWidgets('You can input a password verification',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+        await tester.enterText(
+            find.byKey(const Key('passwordVerifyField')), 'password');
+        await tester.pump();
+
+        expect(find.text('password'), findsNWidgets(1));
+  });
+
+  testWidgets('Save button is disabled by default',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    expect(tester.widget<GirafButton>(
+        find.byKey(const Key('saveButton'))).isEnabled, isFalse);
+  });
+
+  testWidgets('Save button is enabled after correct inputs',
+          (WidgetTester tester) async {
+    mockNewCitizenBloc.displayNameController.add('Henrik');
+    mockNewCitizenBloc.usernameController.add('henrik');
+    mockNewCitizenBloc.passwordController.add('password');
+    mockNewCitizenBloc.passwordVerifyController.add('password');
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    expect(tester.widget<GirafButton>(
+        find.byKey(const Key('saveButton'))).isEnabled, isTrue);
+  });
 }
