@@ -108,11 +108,10 @@ class ChooseCitizenScreen extends StatelessWidget {
                 minHeight: 15.0,
                 maxHeight: 50.0,
               ),
-                child: Center(
+                child: const Center(
                   child: AutoSizeText(
                     'Tilføj Borger',
-                    style: const TextStyle(fontSize: 30),
-                    group: _selectionAutoSizeGroup,
+                    style: TextStyle(fontSize: 30),
                   ),
                 )
             )
