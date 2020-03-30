@@ -31,17 +31,6 @@ class MockNewWeekplanBloc extends NewWeekplanBloc {
   bool acceptAllInputs = true;
   Api api;
 
-//  @override
-//  Future<WeekModel> saveWeekplan(BuildContext context) {
-//    final Completer<WeekModel> completer = Completer<WeekModel>();
-//
-//    api.week
-//        .update('123', mockWeek.weekYear, mockWeek.weekNumber, mockWeek)
-//        .listen(completer.complete);
-//
-//    return completer.future;
-//  }
-
   @override
   Observable<bool> get validTitleStream =>
       Observable<bool>.just(acceptAllInputs);
@@ -311,12 +300,6 @@ void main() {
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
 
     expect(savedWeekplan, true);
-
-// TODO: Fix this test.
-//    mockBloc.saveWeekplan(null).then((WeekModel response) async {
-//      expect(response, mockWeek);
-//      await tester.pump();
-//    });
   });
 
   testWidgets('Should show overwrite dialog if trying to overwrite',

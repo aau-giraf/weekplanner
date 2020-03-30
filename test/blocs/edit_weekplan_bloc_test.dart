@@ -79,11 +79,11 @@ void main() {
     bloc.onThumbnailChanged.add(mockThumbnail);
     bloc
         .editWeekPlan(
-        screenContext: null,
-        oldWeekModel: mockWeek,
-        selectorBloc: mockWeekplanSelector)
+            screenContext: null,
+            oldWeekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector)
         .then(
-          (WeekModel w) {
+      (WeekModel w) {
         verify(api.week.update(any, any, any, any));
         done();
       },

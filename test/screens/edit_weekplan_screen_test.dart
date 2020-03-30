@@ -31,17 +31,6 @@ class MockEditWeekplanBloc extends EditWeekplanBloc {
   bool acceptAllInputs = true;
   Api api;
 
-//  @override
-//  Future<WeekModel> saveWeekplan(BuildContext context) {
-//    final Completer<WeekModel> completer = Completer<WeekModel>();
-//
-//    api.week
-//        .update('123', mockWeek.weekYear, mockWeek.weekNumber, mockWeek)
-//        .listen(completer.complete);
-//
-//    return completer.future;
-//  }
-
   @override
   Observable<bool> get validTitleStream =>
       Observable<bool>.just(acceptAllInputs);
