@@ -36,44 +36,17 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildThemeSection() {
     return Column(children: <Widget>[
-      const ListTile(
-        title: Text('Tema',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-            )),
-      ),
-      _buttonDivider(),
-      SizedBox(
-          width: double.infinity, child: _button(() {}, 'Farver på ugeplan')),
-      _buttonDivider(),
-      SizedBox(
-        width: double.infinity,
-        child: _button(() {}, 'Tegn for udførelse'),
-      ),
-      _buttonDivider()
+      _sectionLabel('Tema'),
+      _arrowButton(() { }, 'Farver på ugeplan'),
+      _arrowButton(() { }, 'Tegn for udførelse'),
     ]);
   }
 
   Widget _buildOrientationSection() {
     return Column(
       children: <Widget>[
-        const ListTile(
-          title: Text('Orientering',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              )),
-        ),
-        _buttonDivider(),
-        Container(
-          child: CheckboxListTile(
-            value: true,
-            title: const Text('Landskab'),
-            onChanged: (bool value) {},
-          ),
-        ),
-        _buttonDivider(),
+        _sectionLabel('Orientering'),
+        _checkboxButton((bool b) { return; }, 'Landskab'),
       ],
     );
   }
@@ -81,19 +54,8 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildWeekPlanSection() {
     return Column(
       children: <Widget>[
-        const ListTile(
-          title: Text('Ugeplan',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              )),
-        ),
-        _buttonDivider(),
-        SizedBox(
-          width: double.infinity,
-          child: _button(() {}, 'Antal dage'),
-        ),
-        _buttonDivider()
+        _sectionLabel('Ugeplan'),
+        _arrowButton(() { }, 'Antal dage'),
       ],
     );
   }
@@ -101,54 +63,76 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildUserSettings() {
     return Column(
       children: <Widget>[
-        const ListTile(
-          title: Text('Brugerindstillinger',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              )),
-        ),
-        _buttonDivider(),
-        SizedBox(
-          width: double.infinity,
-          child: _button(() {}, _user.name + 's indstillinger'),
-        ),
-        _buttonDivider(),
+        _sectionLabel('Brugerindstillinger'),
+        _arrowButton(() {}, _user.name + 's indstillinger')
       ],
     );
   }
 
-  OutlineButton _button(VoidCallback onPressed, String text) {
-    return OutlineButton(
-      padding: const EdgeInsets.all(15),
-      onPressed: () => onPressed,
-      child: Stack(
-        children: <Widget>[
-          Align(
-              alignment: Alignment.centerRight,
-              child: Icon(Icons.arrow_forward)),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                text,
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.normal),
-              ))
-        ],
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-      highlightedBorderColor: GirafColors.appBarOrange,
-      borderSide: BorderSide(
-        color: Colors.transparent
-      )
+  Widget _sectionLabel(String text) {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        _divider()
+      ],
     );
   }
 
-  Divider _buttonDivider() {
+  Widget _arrowButton(VoidCallback onPressed, String text) {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+            width: double.infinity,
+            child: OutlineButton(
+                padding: const EdgeInsets.all(15),
+                onPressed: () => onPressed,
+                child: Stack(
+                  children: <Widget>[
+                    Align(
+                        alignment: Alignment.centerRight,
+                        child: Icon(Icons.arrow_forward)),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          text,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.normal),
+                        )),
+                  ],
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)),
+                highlightedBorderColor: GirafColors.appBarOrange,
+                borderSide: BorderSide(color: Colors.transparent))
+        ),
+        _divider()
+      ],
+    );
+  }
+
+  Widget _checkboxButton(VoidCallback onChange(bool b), String label) {
+    return Column(children: <Widget>[
+      CheckboxListTile(
+        value: true,
+        title: const Text('Landskab'),
+        onChanged: onChange,
+      ),
+      _divider()
+    ]);
+  }
+
+  Divider _divider() {
     return const Divider(
       color: Colors.grey,
     );
   }
-
 }
