@@ -54,7 +54,7 @@ class NewCitizenScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: TextFormField(
-              key: const Key('passordField'),
+              key: const Key('passwordField'),
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Adgangskode'
