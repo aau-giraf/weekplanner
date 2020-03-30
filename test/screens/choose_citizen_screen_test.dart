@@ -85,4 +85,11 @@ void main() {
     });
     await done.future;
   });
+
+  testWidgets('Has add citizen button', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FlatButton), findsNWidgets(1));
+  });
 }
