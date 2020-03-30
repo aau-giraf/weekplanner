@@ -90,7 +90,7 @@ void main() {
     );
   }));
 
-  test('Should save the weekplan with new weeknumber', async((DoneFn done) {
+  test('Should save the weekplan with new week number', async((DoneFn done) {
     bloc.onTitleChanged.add('Week');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
