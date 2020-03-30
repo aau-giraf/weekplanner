@@ -32,18 +32,22 @@ class NumberOfDaysScreen extends StatelessWidget {
                 ),
                 body: ListView(
                   children: <Widget>[
+                    _buttonDivider(),
                     _button(1, _settingsModel.nrOfDaysToDisplay, () {
                       _settingsModel.nrOfDaysToDisplay = 1;
                       _settingsBloc.updateSettings(_user.id, _settingsModel);
                     }, 'Vis kun nuværende dag'),
+                    _buttonDivider(),
                     _button(5, _settingsModel.nrOfDaysToDisplay, () {
                       _settingsModel.nrOfDaysToDisplay = 5;
                       _settingsBloc.updateSettings(_user.id, _settingsModel);
                     }, 'Vis mandag til fredag'),
+                    _buttonDivider(),
                     _button(7, _settingsModel.nrOfDaysToDisplay, () {
                       _settingsModel.nrOfDaysToDisplay = 7;
                       _settingsBloc.updateSettings(_user.id, _settingsModel);
-                    }, 'Vis mandag til søndag')
+                    }, 'Vis mandag til søndag'),
+                    _buttonDivider(),
                   ],
                 ));
           }
@@ -80,6 +84,16 @@ class NumberOfDaysScreen extends StatelessWidget {
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
       highlightedBorderColor: GirafColors.appBarOrange,
+      borderSide: BorderSide(
+        color: Colors.transparent
+      ),
     );
   }
+
+  Divider _buttonDivider() {
+    return const Divider(
+      color: Colors.grey,
+    );
+  }
+
 }
