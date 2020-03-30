@@ -59,6 +59,8 @@ void main() {
       },
     );
 
+    when(api.week.delete(mockUser.id, mockWeek.weekYear, mockWeek.weekNumber))
+        .thenAnswer((_) => BehaviorSubject<bool>.seeded(true));
 
     mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);
@@ -70,8 +72,26 @@ void main() {
     bloc.initialize(mockUser);
   });
 
-  test('Should save the new weekplan', async((DoneFn done) {
+  test('Should save the weekplan with new title', async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
+    bloc.onYearChanged.add('2019');
+    bloc.onWeekNumberChanged.add('1');
+    bloc.onThumbnailChanged.add(mockThumbnail);
+    bloc
+        .editWeekPlan(
+        screenContext: null,
+        oldWeekModel: mockWeek,
+        selectorBloc: mockWeekplanSelector)
+        .then(
+          (WeekModel w) {
+        verify(api.week.update(any, any, any, any));
+        done();
+      },
+    );
+  }));
+
+  test('Should save the weekplan with new weeknumber', async((DoneFn done) {
+    bloc.onTitleChanged.add('Week');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(mockThumbnail);
