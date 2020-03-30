@@ -46,12 +46,15 @@ class SettingsScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             )),
       ),
+      _buttonDivider(),
       SizedBox(
           width: double.infinity, child: _button(() {}, 'Farver på ugeplan')),
+      _buttonDivider(),
       SizedBox(
         width: double.infinity,
         child: _button(() {}, 'Tegn for udførelse'),
-      )
+      ),
+      _buttonDivider()
     ]);
   }
 
@@ -65,15 +68,15 @@ class SettingsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               )),
         ),
+        _buttonDivider(),
         Container(
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.grey[350])),
           child: CheckboxListTile(
             value: true,
             title: const Text('Landskab'),
             onChanged: (bool value) {},
           ),
-        )
+        ),
+        _buttonDivider(),
       ],
     );
   }
@@ -88,12 +91,14 @@ class SettingsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               )),
         ),
+        _buttonDivider(),
         SizedBox(
           width: double.infinity,
           child: _button(() {
             Routes.push(context, NumberOfDaysScreen(_user));
           }, 'Antal dage'),
-        )
+        ),
+        _buttonDivider()
       ],
     );
   }
@@ -108,10 +113,12 @@ class SettingsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               )),
         ),
+        _buttonDivider(),
         SizedBox(
           width: double.infinity,
           child: _button(() {}, _user.name + ' indstillinger'),
-        )
+        ),
+        _buttonDivider(),
       ],
     );
   }
@@ -137,6 +144,16 @@ class SettingsScreen extends StatelessWidget {
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
       highlightedBorderColor: GirafColors.appBarOrange,
+      borderSide: BorderSide(
+        color: Colors.transparent
+      )
     );
   }
+
+  Divider _buttonDivider() {
+    return const Divider(
+      color: Colors.grey,
+    );
+  }
+
 }
