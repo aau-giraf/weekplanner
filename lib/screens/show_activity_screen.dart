@@ -90,8 +90,20 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       ),
-      _buildTimer(context),
+      StreamBuilder<ActivityModel>(
+          stream: _activityBloc.activityModelStream,
+          builder: (BuildContext context, AsyncSnapshot<ActivityModel>
+          activitySnapshot){
+            return (activitySnapshot.hasData && activitySnapshot.data.state ==
+                ActivityState.Canceled) ?
+            _resetTimerAndBuildEmptyContainer() : _buildTimer(context);
+          })
     ];
+  }
+
+  Container _resetTimerAndBuildEmptyContainer(){
+    _timerBloc.stopTimer();
+    return Container(width: 0, height: 0);
   }
 
   /// Builds the timer widget.
