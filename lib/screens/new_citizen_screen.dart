@@ -75,28 +75,6 @@ class NewCitizenScreen extends StatelessWidget {
               obscureText: true,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
-            child: Column(
-              children: <Widget>[
-                Icon(
-                  Icons.person,
-                  size: 100,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    GirafButton(
-                      key: const Key('addPicture'),
-                      icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
-                      text: 'Tilføj fra kamera',
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
