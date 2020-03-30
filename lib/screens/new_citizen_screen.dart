@@ -9,8 +9,8 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatelessWidget {
-  /// Screen for creating a new weekplan.
-  /// Requires a [UsernameModel] to be able to save the new weekplan.
+
+  /// Constructor for the NewCitizenScreen()
   NewCitizenScreen()
       : _bloc = di.getDependency<NewCitizenBloc>() {
     _bloc.initialize();
