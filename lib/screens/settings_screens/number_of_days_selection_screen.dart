@@ -31,7 +31,7 @@ class NumberOfDaysScreen extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<SettingsModel> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
-                SettingsModel _settingsModel = settingsSnapshot.data;
+                final SettingsModel _settingsModel = settingsSnapshot.data;
 
                 return ListView(
                   children: <Widget>[
