@@ -87,6 +87,7 @@ class NewCitizenScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     GirafButton(
+                      key: const Key('addPicture'),
                       icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
                       text: 'Tilføj fra kamera',
                       onPressed: () {},
@@ -102,6 +103,7 @@ class NewCitizenScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: GirafButton(
+                  key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   text: 'Gem borger',
                   isEnabled: false,
