@@ -247,12 +247,6 @@ void main() {
     done();
   }));
 
-  // TODO: Maybe use skip(1) on stream listener.
-  // Test fails.
- /* test('Test deleting week model', async((DoneFn done) {
-    done();
-  }));*/
-
   test('Test marked week models', async((DoneFn done) {
     final List<WeekModel> correctMarked = <WeekModel>[
       weekModel1, weekModel2, weekModel3
@@ -264,22 +258,4 @@ void main() {
     expect(bloc.getMarkedWeekModels(), correctMarked);
     done();
   }));
-
-  // Fails for some reason. Maybe the function is implementation incorrectly.
-  /*test('Test that editing is valid', async((DoneFn done) {
-    bloc.clearMarkedWeekModels();
-    bloc.editingIsValidStream().listen((bool b) {
-      expect(b, false);
-    });
-
-    bloc.toggleMarkedWeekModel(weekModel1);
-    bloc.editingIsValidStream().listen((bool b) {
-      expect(b, true);
-    });
-
-    bloc.toggleMarkedWeekModel(weekModel2);
-    bloc.editingIsValidStream().listen((bool b) {
-      expect(b, true);
-    });
-  }));*/
 }
