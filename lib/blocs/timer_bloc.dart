@@ -201,17 +201,12 @@ class TimerBloc extends BlocBase {
 
   /// Stops the timer and resets it and updates is database.
   void stopTimer() {
-    _resetCounterAndStopwatch();
-    _activityModel.timer.paused = true;
-    _activityModel.timer.progress = 0;
-    _timerRunningModeStream.add(TimerRunningMode.stopped);
-    _timerProgressStream.add(0);
     // Makes sure that a timer exists
     if (_activityModel.timer != null) {
       _resetCounterAndStopwatch();
       _activityModel.timer.paused = true;
       _activityModel.timer.progress = 0;
-      _timerRunningStream.add(false);
+      _timerRunningModeStream.add(TimerRunningMode.stopped);
       _timerProgressStream.add(0);
 
       _api.activity
