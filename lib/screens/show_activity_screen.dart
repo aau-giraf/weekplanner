@@ -93,9 +93,14 @@ class ShowActivityScreen extends StatelessWidget {
           activitySnapshot){
             return (activitySnapshot.hasData && activitySnapshot.data.state ==
                 ActivityState.Canceled) ?
-            Container(width: 0, height: 0) : _buildTimer(context);
+            _resetTimerAndBuildEmptyContainer() : _buildTimer(context);
           })
     ];
+  }
+
+  Container _resetTimerAndBuildEmptyContainer(){
+    _timerBloc.stopTimer();
+    return Container(width: 0, height: 0);
   }
 
   /// Builds the timer widget.
