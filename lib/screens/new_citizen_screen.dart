@@ -32,6 +32,7 @@ class NewCitizenScreen extends StatelessWidget {
                 bottom: 2.5
             ),
             child: TextFormField(
+              key: const Key('displayNameField'),
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Navn'
@@ -43,6 +44,7 @@ class NewCitizenScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: TextFormField(
+              key: const Key('usernameField'),
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Brugernavn'
@@ -54,6 +56,7 @@ class NewCitizenScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: TextFormField(
+              key: const Key('passordField'),
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Adgangskode'
@@ -66,6 +69,7 @@ class NewCitizenScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: TextFormField(
+              key: const Key('passwordVerifyField'),
               decoration: const InputDecoration(
                   border: OutlineInputBorder(borderSide: BorderSide()),
                   hintText: 'Gentag adgangskode'
