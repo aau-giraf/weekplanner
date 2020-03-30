@@ -86,7 +86,6 @@ class ShowActivityScreen extends StatelessWidget {
           ),
         ),
       ),
-
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
           builder: (BuildContext context, AsyncSnapshot<ActivityModel>
