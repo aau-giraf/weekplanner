@@ -23,7 +23,7 @@ class SettingsSection extends StatelessWidget {
     for (int i = 0; i < children.length; i += 2) {
       children.insert(i, const SettingsDivider());
     }
-    children.add(SettingsDivider());
+    children.add(const SettingsDivider());
 
     final Container _titleContainer = Container(
       width: double.infinity,
@@ -41,7 +41,6 @@ class SettingsSection extends StatelessWidget {
       children: <Widget>[_titleContainer] + children,
     );
   }
-
 }
 
 /// Created to be able to add Divider in List<SettingsSectionItem>
