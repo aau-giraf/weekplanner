@@ -2,7 +2,6 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -14,7 +13,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import '../test_image.dart';
 
 class MockNewCitizenBloc extends NewCitizenBloc {
   MockNewCitizenBloc(this.api) : super(api);
@@ -24,13 +22,13 @@ class MockNewCitizenBloc extends NewCitizenBloc {
 
   @override
   Observable<GirafUserModel> createCitizen() {
-    return api.account.register(
-        'mockUserName', 'password', departmentId: null, role: null);
+    return api.account
+        .register('mockUserName', 'password', departmentId: null, role: null);
   }
 
   @override
   Observable<bool> get validDisplayNameStream =>
-    Observable<bool>.just(acceptAllInputs);
+      Observable<bool>.just(acceptAllInputs);
 
   @override
   Observable<bool> get validUsernameStream =>
@@ -45,8 +43,7 @@ class MockNewCitizenBloc extends NewCitizenBloc {
       Observable<bool>.just(acceptAllInputs);
 
   @override
-  Observable<bool> get allInputsAreValidStream =>
-      Observable<bool>.just(true);
+  Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
 }
 
 class MockUserApi extends Mock implements UserApi {
@@ -96,68 +93,53 @@ void main() {
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
 
-    expect(find.byType(GirafButton), findsNWidgets(2));
+    expect(find.byType(GirafButton), findsNWidgets(1));
   });
 
-  testWidgets('You can input a display name',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-        await tester.enterText(
-            find.byKey(const Key('displayNameField')), 'Birgit Jensen');
-        await tester.pump();
+  testWidgets('You can input a display name', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.enterText(
+        find.byKey(const Key('displayNameField')), 'Birgit Jensen');
+    await tester.pump();
 
-        expect(find.text('Birgit Jensen'), findsNWidgets(1));
+    expect(find.text('Birgit Jensen'), findsNWidgets(1));
   });
 
-  testWidgets('You can input a username',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-        await tester.enterText(
-            find.byKey(const Key('usernameField')), 'birgit');
-        await tester.pump();
+  testWidgets('You can input a username', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.enterText(find.byKey(const Key('usernameField')), 'birgit');
+    await tester.pump();
 
-        expect(find.text('birgit'), findsNWidgets(1));
+    expect(find.text('birgit'), findsNWidgets(1));
   });
 
-  testWidgets('You can input a password',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-        await tester.enterText(
-            find.byKey(const Key('passwordField')), 'password');
-        await tester.pump();
+  testWidgets('You can input a password', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.enterText(find.byKey(const Key('passwordField')), 'password');
+    await tester.pump();
 
-        expect(find.text('password'), findsNWidgets(1));
+    expect(find.text('password'), findsNWidgets(1));
   });
 
   testWidgets('You can input a password verification',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-        await tester.enterText(
-            find.byKey(const Key('passwordVerifyField')), 'password');
-        await tester.pump();
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.enterText(
+        find.byKey(const Key('passwordVerifyField')), 'password');
+    await tester.pump();
 
-        expect(find.text('password'), findsNWidgets(1));
+    expect(find.text('password'), findsNWidgets(1));
   });
 
   testWidgets('Save button is disabled by default',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
     await tester.pump();
 
-    expect(tester.widget<GirafButton>(
-        find.byKey(const Key('saveButton'))).isEnabled, isFalse);
-  });
-
-  testWidgets('Save button is enabled after correct inputs',
-          (WidgetTester tester) async {
-    mockNewCitizenBloc.displayNameController.add('Henrik');
-    mockNewCitizenBloc.usernameController.add('henrik');
-    mockNewCitizenBloc.passwordController.add('password');
-    mockNewCitizenBloc.passwordVerifyController.add('password');
-    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-    await tester.pump();
-
-    expect(tester.widget<GirafButton>(
-        find.byKey(const Key('saveButton'))).isEnabled, isTrue);
+    expect(
+        tester
+            .widget<GirafButton>(find.byKey(const Key('saveButton')))
+            .isEnabled,
+        isFalse);
   });
 }
