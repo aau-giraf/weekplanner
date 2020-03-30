@@ -111,7 +111,6 @@ class ShowActivityScreen extends StatelessWidget {
                 // If a timer is not initiated, and the app is in citizen mode,
                 // nothing is shown
                 return Visibility(
-                  key: const Key('Visibilitytest'),
                   visible: (timerInitSnapshot.hasData && modeSnapshot.hasData)
                       ? timerInitSnapshot.data ||
                           (!timerInitSnapshot.data &&
