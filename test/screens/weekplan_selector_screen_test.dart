@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -276,5 +278,43 @@ void main() {
     expect(find.text('New title'), findsOneWidget);
     expect(find.text('1998'), findsOneWidget);
     expect(find.text('23'), findsOneWidget);
+  });
+
+  testWidgets('Test editing is valid',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.pumpAndSettle();
+
+    final StreamSubscription<bool> listenForValid1 =
+        bloc.editingIsValidStream().listen((bool b) {
+          expect(b, true);
+        });
+    listenForValid1.cancel();
+
+    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.pumpAndSettle();
+
+    final StreamSubscription<bool> listenForValid2 =
+    bloc.editingIsValidStream().listen((bool b) {
+      expect(b, false);
+    });
+    listenForValid2.cancel();
+  });
+
+  testWidgets('Test deleting weekmodel',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.text('weekModel1'), findsOneWidget);
+    bloc.deleteWeekModel(weekModel1);
+    await tester.pumpAndSettle();
+    expect(find.text('weekModel1'), findsNothing);
   });
 }
