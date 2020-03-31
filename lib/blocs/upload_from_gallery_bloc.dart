@@ -31,9 +31,6 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Publishes if the input fields are filled
   Observable<bool> get isInputValid => _isInputValid.stream;
 
-  /// State of upload
-  Observable<bool> get uploadSucess => _uploadSuccess.stream;
-
   final PublishSubject<PictogramModel> _pictogram =
       PublishSubject<PictogramModel>();
   final BehaviorSubject<bool> _isInputValid =
@@ -43,9 +40,6 @@ class UploadFromGalleryBloc extends BlocBase {
       BehaviorSubject<String>.seeded('Offentlig');
   final BehaviorSubject<bool> _isUploading =
       BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<bool> _uploadSuccess =
-        BehaviorSubject<bool>.seeded(true);
-
   AccessLevel _accessLevel = AccessLevel.PUBLIC;
 
   /// pushes an imagePicker screen, then sets the pictogram image,
@@ -55,9 +49,8 @@ class UploadFromGalleryBloc extends BlocBase {
       if (f != null) {
         _publishImage(f);
         _checkInput();
-        _uploadSuccess.add(true);
       } else {
-        _uploadSuccess.add(false);
+        _file.add(null);
       }
     });
   }
