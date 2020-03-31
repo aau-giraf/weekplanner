@@ -101,7 +101,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     if (isMarked) {
       return Container(
-          key: const Key('isSelectedKey'),
           decoration:
               BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
           child: _buildWeekplanCard(context, weekplan, bloc));
@@ -183,8 +182,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(bool inEditMode, BuildContext context) {
     if (!inEditMode) {
-      Routes.push<WeekModel>(context, NewWeekplanScreen(_user))
-          .then((WeekModel newWeek) => _weekBloc.load(_user, true));
+      Routes.push<WeekModel>(
+        context,
+        NewWeekplanScreen(_user),
+      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
     }
   }
 
@@ -237,6 +238,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   GirafButton(
+                      key: const Key('EditButtonKey'),
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
@@ -261,7 +263,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
       EditWeekPlanScreen(
         user: _user,
         weekModel: _weekBloc.getMarkedWeekModels()[0],
-        selectorBloc: _weekBloc,
       ),
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();

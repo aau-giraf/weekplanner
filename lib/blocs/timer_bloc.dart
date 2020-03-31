@@ -139,7 +139,7 @@ class TimerBloc extends BlocBase {
   /// the widget.
   /// Updates the timer in the database accordingly.
   void playTimer() {
-    // Makes sure that a timer exist
+    // Makes sure that a timer exists
     if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
@@ -202,15 +202,18 @@ class TimerBloc extends BlocBase {
 
   /// Stops the timer and resets it and updates is database.
   void stopTimer() {
-    _resetCounterAndStopwatch();
-    _activityModel.timer.paused = true;
-    _activityModel.timer.progress = 0;
-    _timerRunningModeStream.add(TimerRunningMode.stopped);
-    _timerProgressStream.add(0);
+    // Makes sure that a timer exists
+    if (_activityModel.timer != null) {
+      _resetCounterAndStopwatch();
+      _activityModel.timer.paused = true;
+      _activityModel.timer.progress = 0;
+      _timerRunningModeStream.add(TimerRunningMode.stopped);
+      _timerProgressStream.add(0);
 
-    _api.activity
-        .update(_activityModel, _user.id)
-        .listen((ActivityModel activity) {});
+      _api.activity
+          .update(_activityModel, _user.id)
+          .listen((ActivityModel activity) {});
+    }
   }
 
   /// Deletes the timer from the activity and updates is database.

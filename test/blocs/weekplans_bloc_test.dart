@@ -246,4 +246,16 @@ void main() {
     });
     done();
   }));
+
+  test('Test marked week models', async((DoneFn done) {
+    final List<WeekModel> correctMarked = <WeekModel>[
+      weekModel1, weekModel2, weekModel3
+    ];
+
+    bloc.toggleMarkedWeekModel(weekModel1);
+    bloc.toggleMarkedWeekModel(weekModel2);
+    bloc.toggleMarkedWeekModel(weekModel3);
+    expect(bloc.getMarkedWeekModels(), correctMarked);
+    done();
+  }));
 }
