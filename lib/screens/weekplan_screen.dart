@@ -581,7 +581,7 @@ class WeekplanScreen extends StatelessWidget {
         icon = Icon(
           Icons.check,
           key: const Key('IconComplete'),
-          color: Colors.green,
+          color: theme.GirafColors.green,
           size: MediaQuery.of(context).size.width,
         );
         break;
@@ -589,7 +589,7 @@ class WeekplanScreen extends StatelessWidget {
         icon = Icon(
           Icons.clear,
           key: const Key('IconCanceled'),
-          color: Colors.red,
+          color: theme.GirafColors.red,
           size: MediaQuery.of(context).size.width,
         );
         break;

@@ -102,7 +102,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
     if (isMarked) {
       return Container(
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
+              BoxDecoration(border: Border.all(color: theme.GirafColors.black,
+                  width: 15)),
           child: _buildWeekplanCard(context, weekplan, bloc));
     } else {
       return _buildWeekplanCard(context, weekplan, bloc);
