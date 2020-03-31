@@ -99,16 +99,16 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = WeekplansBloc(api);
-    editBloc = EditWeekplanBloc(api);
-
+    
     setupApiCalls();
-
+    
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => bloc);
+    di.registerSingleton<WeekplansBloc>((_) => bloc);
     di.registerDependency<EditWeekplanBloc>((_) => editBloc);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    editBloc = EditWeekplanBloc(api);
   });
 
   testWidgets('Renders the screen', (WidgetTester tester) async {
@@ -273,8 +273,7 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
   });
 
-  testWidgets('Test editing is valid',
-      (WidgetTester tester) async {
+  testWidgets('Test editing is valid', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
@@ -285,22 +284,21 @@ void main() {
 
     final StreamSubscription<bool> listenForValid1 =
         bloc.editingIsValidStream().listen((bool b) {
-          expect(b, true);
-        });
+      expect(b, true);
+    });
     listenForValid1.cancel();
 
     await tester.tap(find.byKey(Key(weekModel2.name)));
     await tester.pumpAndSettle();
 
     final StreamSubscription<bool> listenForValid2 =
-    bloc.editingIsValidStream().listen((bool b) {
+        bloc.editingIsValidStream().listen((bool b) {
       expect(b, false);
     });
     listenForValid2.cancel();
   });
 
-  testWidgets('Test deleting weekmodel',
-          (WidgetTester tester) async {
+  testWidgets('Test deleting weekmodel', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();

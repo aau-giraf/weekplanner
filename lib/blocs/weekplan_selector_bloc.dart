@@ -53,8 +53,9 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(_weekNameModelsList.add,
-        onError: (Object exception) => getAllWeekInfo(null));
+    _api.week.getNames(_user.id).listen((List<WeekNameModel> weekNames) {
+      _weekNameModelsList.add(weekNames);
+    }, onError: (Object exception) => getAllWeekInfo(null));
   }
 
   /// Gets all the information for a [Weekmodel].
@@ -79,7 +80,7 @@ class WeekplansBloc extends BlocBase {
           .listen((WeekModel results) {
         weekModels.add(results);
         weekModels.sort((WeekModel a, WeekModel b) {
-          if (a.name == 'Tilføj ugeplan'){
+          if (a.name == 'Tilføj ugeplan') {
             return -1;
           }
           if (a.weekYear == b.weekYear) {
