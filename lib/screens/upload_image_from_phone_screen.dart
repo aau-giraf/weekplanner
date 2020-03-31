@@ -129,7 +129,7 @@ class UploadImageFromPhone extends StatelessWidget {
         child: Row(
           children: <Widget>[
             StreamBuilder<bool>(
-              stream: _uploadFromGallery.uploadSucess,
+              stream: _uploadFromGallery.uploadSuccess,
               builder: (BuildContext context,
                   AsyncSnapshot<bool> uploadSuccessSnapshot) {
                 return Container(
