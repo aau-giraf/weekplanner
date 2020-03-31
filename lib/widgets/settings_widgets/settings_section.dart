@@ -26,7 +26,7 @@ class SettingsSection extends StatelessWidget {
       width: double.infinity,
       color: Colors.grey[350],
       child: Text(
-        '  ' + title,
+        title,
         style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
