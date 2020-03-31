@@ -189,7 +189,6 @@ class UploadImageFromPhone extends StatelessWidget {
   }
 
   Column _displayIfNoImage(BuildContext context) {
-    _showUploadError(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
