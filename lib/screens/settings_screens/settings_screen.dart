@@ -1,5 +1,7 @@
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
@@ -16,15 +18,16 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Indstillinger'), body: _buildAllSettings());
+        appBar: GirafAppBar(title: 'Indstillinger'),
+        body: _buildAllSettings(context));
   }
 
-  Widget _buildAllSettings() {
+  Widget _buildAllSettings(BuildContext context) {
     return ListView(
       children: <Widget>[
         _buildThemeSection(),
         _buildOrientationSection(),
-        _buildWeekPlanSection(),
+        _buildWeekPlanSection(context),
         _buildUserSettings()
       ],
     );
@@ -39,13 +42,14 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildOrientationSection() {
     return SettingsSection('Orientering', <SettingsSectionItem>[
-      SettingsCheckMarkButton('Landskab', () {}),
+      SettingsCheckMarkButton(5, 5, 'Landskab', () {}),
     ]);
   }
 
-  Widget _buildWeekPlanSection() {
+  Widget _buildWeekPlanSection(BuildContext context) {
     return SettingsSection('Ugeplan', <SettingsSectionItem>[
-      SettingsArrowButton('Antal dage', () {}),
+      SettingsArrowButton(
+          'Antal dage', () => Routes.push(context,  NumberOfDaysScreen(_user))),
     ]);
   }
 

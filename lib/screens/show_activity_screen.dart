@@ -18,7 +18,6 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../style/custom_color.dart' as theme;
 
 
-
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
