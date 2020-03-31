@@ -7,6 +7,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// Screen for uploading a [PictogramModel] to the server
@@ -131,12 +132,26 @@ class UploadImageFromPhone extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
                 snapshot.data != null
                     ? _displayImage(snapshot.data)
-                    : _displayIfNoImage()),
+                    : _displayIfNoImage(context)),
       ),
     );
   }
 
-  Column _displayIfNoImage() {
+  void _showUploadError(BuildContext context) {
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+            title: 'Fejl',
+            description: 'Upload af pictogram fejlede.',
+          );
+        }
+    );
+  }
+
+  Column _displayIfNoImage(BuildContext context) {
+    _showUploadError(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
