@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
@@ -29,6 +32,7 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
   WeekplansBloc bloc;
+  EditWeekplanBloc editBloc;
   Api api;
   MockWeekApi weekApi;
   MockPictogramApi pictogramApi;
@@ -95,14 +99,16 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = WeekplansBloc(api);
-
+    
     setupApiCalls();
-
+    
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => bloc);
+    di.registerSingleton<WeekplansBloc>((_) => bloc);
+    di.registerDependency<EditWeekplanBloc>((_) => editBloc);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    editBloc = EditWeekplanBloc(api);
   });
 
   testWidgets('Renders the screen', (WidgetTester tester) async {
@@ -233,5 +239,41 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('isSelectedKey')), findsNothing);
+  });
+
+  testWidgets('Test editing is valid', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.pumpAndSettle();
+
+    final StreamSubscription<bool> listenForValid1 =
+        bloc.editingIsValidStream().listen((bool b) {
+      expect(b, true);
+    });
+    listenForValid1.cancel();
+
+    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.pumpAndSettle();
+
+    final StreamSubscription<bool> listenForValid2 =
+        bloc.editingIsValidStream().listen((bool b) {
+      expect(b, false);
+    });
+    listenForValid2.cancel();
+  });
+
+  testWidgets('Test deleting weekmodel', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.text('weekModel1'), findsOneWidget);
+    bloc.deleteWeekModel(weekModel1);
+    await tester.pumpAndSettle();
+    expect(find.text('weekModel1'), findsNothing);
   });
 }

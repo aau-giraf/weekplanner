@@ -262,7 +262,7 @@ void main() {
         ),
       );
       await tester.enterText(
-          find.byKey(const Key('NewWeekplanTitleField')), '☺♥');
+          find.byKey(const Key('WeekTitleTextFieldKey')), '☺♥');
       await tester.pump();
 
       expect(find.text('☺♥'), findsNothing);
@@ -276,7 +276,7 @@ void main() {
           home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
         ),
       );
-      await tester.tap(find.byKey(const Key('NewWeekplanThumbnailKey')));
+      await tester.tap(find.byKey(const Key('WeekThumbnailKey')));
       await tester.pumpAndSettle();
 
       expect(find.byType(PictogramSearch), findsOneWidget);
@@ -301,10 +301,10 @@ void main() {
       await tester.pump();
 
       await tester.enterText(
-          find.byKey(const Key('NewWeekplanTitleField')), mockWeek.name);
-      await tester.enterText(find.byKey(const Key('NewWeekplanYearField')),
+          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+      await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
           mockWeek.weekYear.toString());
-      await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
+      await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
           mockWeek.weekNumber.toString());
 
       mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
@@ -343,10 +343,10 @@ void main() {
       await tester.pump();
 
       await tester.enterText(
-          find.byKey(const Key('NewWeekplanTitleField')), mockWeek.name);
-      await tester.enterText(find.byKey(const Key('NewWeekplanYearField')),
+          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+      await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
           mockWeek.weekYear.toString());
-      await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
+      await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
           mockWeek.weekNumber.toString());
 
       mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
@@ -383,10 +383,10 @@ void main() {
       await tester.pump();
 
       await tester.enterText(
-          find.byKey(const Key('NewWeekplanTitleField')), mockWeek.name);
-      await tester.enterText(find.byKey(const Key('NewWeekplanYearField')),
+          find.byKey(const Key('WeekTitleTextFieldKey')), mockWeek.name);
+      await tester.enterText(find.byKey(const Key('WeekYearTextFieldKey')),
           mockWeek.weekYear.toString());
-      await tester.enterText(find.byKey(const Key('NewWeekplanWeekField')),
+      await tester.enterText(find.byKey(const Key('WeekNumberTextFieldKey')),
           mockWeek.weekNumber.toString());
 
       mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);

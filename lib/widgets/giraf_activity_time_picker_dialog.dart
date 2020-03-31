@@ -6,6 +6,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
+import '../style/custom_color.dart' as theme;
 
 /// The acitivty time picker dialog is a dialog, asking for a duration input.
 /// The duration should be inserted in the textfield, and the user can either
@@ -38,7 +39,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
         contentPadding: const EdgeInsets.all(0.0),
         titlePadding: const EdgeInsets.all(0.0),
         shape: Border.all(
-            color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+            color: theme.GirafColors.transparentDarkGrey, width: 5.0),
         title: const Center(
             child: GirafTitleHeader(
               title: 'Vælg tid for aktivitet',

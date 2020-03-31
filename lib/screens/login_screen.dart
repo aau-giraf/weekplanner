@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -5,6 +6,8 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import 'package:http/http.dart' as http;
+import '../style/custom_color.dart' as theme;
 
 /// Logs the user in
 class LoginScreen extends StatefulWidget {
@@ -31,6 +34,10 @@ class LoginScreenState extends State<LoginScreen> {
   /// Stores the login status, used for dismissing the LoadingSpinner
   bool loginStatus = false;
 
+  /// Indicates if the loading spinner has been popped in this instance of the
+  /// screen.
+  bool _popCalled = false;
+
   /// This is called when login should be triggered
   void loginAction(BuildContext context) {
     showLoadingSpinner(context, false, showNotifyDialog, 2000);
@@ -39,29 +46,57 @@ class LoginScreenState extends State<LoginScreen> {
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
-      if (snapshot) {
-        Routes.goHome(context);
+      if (snapshot && !_popCalled) {
+        // Pop the loading spinner
+        Routes.pop(context);
+        _popCalled = true;
       }
     });
   }
 
   /// This is the callback method of the loading spinner to show the dialog
   void showNotifyDialog() {
-    if (!loginStatus) {
-      // Remove the loading spinner
-      Routes.pop(currentContext);
-      // Show the new NotifyDialog
-      showDialog<Center>(
-          barrierDismissible: false,
-          context: currentContext,
-          builder: (BuildContext context) {
-            return const GirafNotifyDialog(
-                title: 'Fejl',
-                description: 'Forkert brugernavn og/eller adgangskode',
-                key: Key('WrongUsernameOrPassword'));
-          });
-    }
+    // Checking internet connection, if true check server connection
+    checkInternetConnection().then((bool hasInternetConnection) {
+      if (hasInternetConnection) {
+
+        // Checking server connection, if true check username/password
+        checkServerConnection().then((bool hasServerConnection) {
+          if (hasServerConnection) {
+
+            // Checking username/password
+            if (!loginStatus) {
+              creatingNotifyDialog('Forkert brugernavn og/eller adgangskode', 'WrongUsernameOrPassword');
+            }
+          } else {
+            creatingNotifyDialog('Der er i øjeblikket'
+                ' ikke forbindelse til severen', 'NoConnectionToServer');
+          }
+        });
+      } else {
+        creatingNotifyDialog('Der er ingen forbindelse'
+            ' til internettet', 'NoConnectionToInternet');
+      }
+    });
   }
+
+  /// Function that creates the notify dialog,
+  /// depeninding which login error occured
+  void creatingNotifyDialog(String description, String key) {
+     /// Remove the loading spinner
+    Routes.pop(currentContext);
+    /// Show the new NotifyDialog
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: currentContext,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl',
+              description: description,
+              key: Key(key));
+        });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +139,7 @@ class LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: Colors.white),
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
@@ -116,7 +151,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Brugernavn',
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -128,7 +163,7 @@ class LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: Colors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -139,7 +174,7 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Adgangskode',
                             hintStyle: TextStyle(
-                                color: Color.fromRGBO(170, 170, 170, 1)),
+                                color: theme.GirafColors.loginFieldText),
                             fillColor: Colors.white,
                           ),
                         ),
@@ -161,7 +196,7 @@ class LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               loginAction(context);
                             },
-                            color: const Color.fromRGBO(48, 81, 118, 1),
+                            color: theme.GirafColors.loginButtonColor,
                           ),
                         ),
                       ),
@@ -186,7 +221,7 @@ class LoginScreenState extends State<LoginScreen> {
                                       environment.getVar<String>('PASSWORD');
                                   loginAction(context);
                                 },
-                                color: const Color.fromRGBO(48, 81, 118, 1),
+                                color: theme.GirafColors.loginButtonColor,
                               ),
                             ),
                           )
@@ -212,4 +247,38 @@ class LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.only(bottom: 10),
     );
   }
+
+  /// Function to test connection to server,
+  /// it both checks for DEV API connection and to PROD API connection
+  Future<bool> checkServerConnection() async {
+    final String loginUrl = environment.getVar<String>('SERVER_HOST');
+    try {
+      final http.Response loginResponse =
+      await http.get(loginUrl).timeout(const Duration(seconds: 10));
+      if (loginResponse.statusCode == 200) {
+        return Future<bool>.value(true);
+      } else {
+        throw Exception('Authentication Error');
+      }
+    } catch (e) {
+      print('Error:' + e.toString());
+      return Future<bool>.value(false);
+    }
+  }
+
+  /// Function to test connection to internet
+  Future<bool> checkInternetConnection() async {
+    try {
+      final List<InternetAddress> result = await InternetAddress.lookup(
+          'google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return Future<bool>.value(true);
+      }
+      return null;
+    } on SocketException catch (e) {
+      print(e.message);
+      return Future<bool>.value(false);
+    }
+  }
+
 }
