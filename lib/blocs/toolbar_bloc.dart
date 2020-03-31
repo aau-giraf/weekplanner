@@ -8,7 +8,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
@@ -106,7 +105,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconSearch(callback));
         break;
       case AppBarIcon.settings:
-        _iconsToAdd.add(_createIconSettings(context));
+        _iconsToAdd.add(_createIconSettings(callback));
         break;
       case AppBarIcon.undo:
         _iconsToAdd.add(_createIconUndo(callback));
@@ -378,13 +377,11 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  IconButton _createIconSettings(BuildContext context) {
+  IconButton _createIconSettings(VoidCallback callback) {
     return IconButton(
       icon: Image.asset('assets/icons/settings.png'),
       tooltip: 'Indstillinger',
-      onPressed: () {
-        Routes.push(context, SettingsScreen());
-      },
+      onPressed: callback,
     );
   }
 
