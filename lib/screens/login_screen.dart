@@ -137,10 +137,11 @@ class LoginScreenState extends State<LoginScreen> {
                           : const EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
+                            border: Border.all(color: theme.GirafColors.grey,
+                                width: 1),
                             borderRadius:
                             const BorderRadius.all(Radius.circular(20.0)),
-                            color: Colors.white),
+                            color: theme.GirafColors.white),
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
                           key: const Key('UsernameKey'),
@@ -152,7 +153,7 @@ class LoginScreenState extends State<LoginScreen> {
                             hintText: 'Brugernavn',
                             hintStyle: TextStyle(
                                 color: theme.GirafColors.loginFieldText),
-                            fillColor: Colors.white,
+                            fillColor: theme.GirafColors.white,
                           ),
                         ),
                       ),
@@ -161,10 +162,11 @@ class LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
+                            border: Border.all(color: theme.GirafColors.grey,
+                                width: 1),
                             borderRadius:
                             const BorderRadius.all(Radius.circular(20.0)),
-                            color: Colors.white),
+                            color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           key: const Key('PasswordKey'),
@@ -175,7 +177,7 @@ class LoginScreenState extends State<LoginScreen> {
                             hintText: 'Adgangskode',
                             hintStyle: TextStyle(
                                 color: theme.GirafColors.loginFieldText),
-                            fillColor: Colors.white,
+                            fillColor: theme.GirafColors.white,
                           ),
                         ),
                       ),
@@ -191,7 +193,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(10.0)),
                             child: const Text(
                               'Login',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
                               loginAction(context);
@@ -212,7 +214,8 @@ class LoginScreenState extends State<LoginScreen> {
                                 child: const Text(
                                   'Auto-Login',
                                   key: Key('AutoLoginKey'),
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color:
+                                    theme.GirafColors.white),
                                 ),
                                 onPressed: () {
                                   usernameCtrl.text =
