@@ -125,16 +125,41 @@ class UploadImageFromPhone extends StatelessWidget {
 
   Widget _getAndDisplayPicture() {
     return Container(
-      child: FlatButton(
-        onPressed: _uploadFromGallery.chooseImageFromGallery,
-        child: StreamBuilder<File>(
-            stream: _uploadFromGallery.file,
-            builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                snapshot.data != null
-                    ? _displayImage(snapshot.data)
-                    : _displayIfNoImage(context)),
+      child: SizedBox(
+        child: Row(
+          children: <Widget>[
+            StreamBuilder<bool>(
+              stream: _uploadFromGallery.uploadSucess,
+              builder: (BuildContext context,
+                  AsyncSnapshot<bool> uploadSuccessSnapshot) {
+                return Container(
+                  child: FlatButton(
+                      onPressed: () {
+                        _uploadPictogram(context, uploadSuccessSnapshot);
+                      },
+                      child: StreamBuilder<File>(
+                      stream: _uploadFromGallery.file,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<File> snapshot) =>
+                      snapshot.data != null
+                          ? _displayImage(snapshot.data)
+                          : _displayIfNoImage(context)),
+                ),
+                );
+              },
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  void _uploadPictogram(BuildContext context,
+      AsyncSnapshot<bool> checkSuccess) {
+    _uploadFromGallery.chooseImageFromGallery();
+    checkSuccess.hasData && !checkSuccess.data
+        ? _showUploadError(context)
+        : _showUploadSuccess(context);
   }
 
   void _showUploadError(BuildContext context) {
@@ -145,6 +170,19 @@ class UploadImageFromPhone extends StatelessWidget {
           return const GirafNotifyDialog(
             title: 'Fejl',
             description: 'Upload af pictogram fejlede.',
+          );
+        }
+    );
+  }
+
+  void _showUploadSuccess(BuildContext context) {
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+            title: 'Success',
+            description: 'Upload af pictogram lykkes.',
           );
         }
     );
