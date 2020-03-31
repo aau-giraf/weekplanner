@@ -86,5 +86,6 @@ class GirafColors {
   static const Color blue = Colors.blue;
   /// Green color
   static const Color green = Colors.green;
-
+  /// Grey[350] color
+  static const Color lightGrey = Color(0xFFD6D6D6);
 }

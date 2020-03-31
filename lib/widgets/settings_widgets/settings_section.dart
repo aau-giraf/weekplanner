@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
+import '../../style/custom_color.dart' as theme;
 
 /// SettingSection class
 class SettingsSection extends StatelessWidget {
@@ -24,7 +25,7 @@ class SettingsSection extends StatelessWidget {
 
     final Container _titleContainer = Container(
       width: double.infinity,
-      color: Colors.grey[350],
+      color: theme.GirafColors.lightGrey,
       child: Text(
         title,
         style: const TextStyle(
@@ -49,7 +50,7 @@ class SettingsDivider extends SettingsSectionItem {
   Widget build(BuildContext context) {
     return const Divider(
       height: 0,
-      color: Colors.grey,
+      color: theme.GirafColors.grey,
     );
   }
 }
