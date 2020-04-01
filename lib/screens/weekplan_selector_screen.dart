@@ -10,6 +10,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
+import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -38,7 +39,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
         appBarIcons: <AppBarIcon, VoidCallback>{
           AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
           AppBarIcon.logout: () {},
-          AppBarIcon.back: () => _weekBloc.toggleEditMode()
+          AppBarIcon.settings: () =>
+              Routes.push(context, SettingsScreen(_user))
         },
       ),
       bottomNavigationBar: StreamBuilder<bool>(
