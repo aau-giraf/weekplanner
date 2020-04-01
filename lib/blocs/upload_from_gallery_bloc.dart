@@ -113,11 +113,11 @@ class UploadFromGalleryBloc extends BlocBase {
         .flatMap((PictogramModel pictogram) {
       return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
     }).listen((PictogramModel pictogram) {
-      // TODO(scarress):  add proper succeses handling, https://github.com/aau-giraf/weekplanner/issues/245
+      _uploadSuccess.add(true);
       _isUploading.add(false);
       _pictogram.add(pictogram);
     }, onError: (Object error) {
-      // TODO(scarress):  add error handling, https://github.com/aau-giraf/weekplanner/issues/245
+      _uploadSuccess.add(false);
       _isUploading.add(false);
     });
   }
