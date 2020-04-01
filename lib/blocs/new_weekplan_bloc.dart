@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -11,7 +10,6 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
@@ -101,8 +99,6 @@ class NewWeekplanBloc extends BlocBase {
               _isAllInputValid)
           .asBroadcastStream();
 
-  final WeekplansBloc _weekplanSelectorBloc = di.getDependency<WeekplansBloc>();
-
   /// Resets the bloc if it already contains information from the last time it
   /// was used. Switches user to the one provided.
   /// This method should always be called before using the bloc.
@@ -114,7 +110,10 @@ class NewWeekplanBloc extends BlocBase {
   }
 
   /// Saves the entered information to the database.
-  Future<WeekModel> saveWeekplan(BuildContext screenContext) async {
+  Future<WeekModel> saveWeekplan({
+    @required BuildContext screenContext,
+    @required Stream<List<WeekNameModel>> existingWeekPlans,
+  }) async {
     if (weekUser == null) {
       return Future<WeekModel>.value(null);
     }
@@ -142,7 +141,9 @@ class NewWeekplanBloc extends BlocBase {
     bool doOverwrite = true;
 
     final bool hasExistingMatch = await hasExisitingMatchingWeekplan(
-        year: _year, weekNumber: _weekNumber);
+        existingWeekPlans: existingWeekPlans,
+        year: _year,
+        weekNumber: _weekNumber);
 
     // If there is a match, ask the user if we should overwrite.
     if (hasExistingMatch) {
@@ -167,14 +168,16 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Returns a [Future] that resolves to true if there is a matching week plan
   /// with the same year and week number.
-  Future<bool> hasExisitingMatchingWeekplan(
-      {@required int year, @required int weekNumber}) {
+  Future<bool> hasExisitingMatchingWeekplan({
+    @required Stream<List<WeekNameModel>> existingWeekPlans,
+    @required int year,
+    @required int weekNumber,
+  }) {
     final Completer<bool> matchCompleter = Completer<bool>();
 
     bool hasMatch = false;
 
-    _weekplanSelectorBloc.weekNameModels
-        .listen((List<WeekNameModel> existingPlans) {
+    existingWeekPlans.take(1).listen((List<WeekNameModel> existingPlans) {
       for (WeekNameModel existingPlan in existingPlans) {
         if (existingPlan.weekYear == year &&
             existingPlan.weekNumber == weekNumber) {
@@ -287,4 +290,3 @@ class NewWeekplanBloc extends BlocBase {
     thumbnailController.close();
   }
 }
-
