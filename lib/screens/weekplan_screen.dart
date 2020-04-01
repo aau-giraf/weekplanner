@@ -539,29 +539,16 @@ class WeekplanScreen extends StatelessWidget {
                             Orientation.portrait) {
                           if (modeSnapshot.data == WeekplanMode.citizen) {
                             if (_daysToDisplay == 1) {
-                              _height = 4;
+                              _height = 2;
                               _width = 1;
                             }
                           }
                         } else if (MediaQuery.of(context).orientation ==
                             Orientation.landscape) {
-                          if (modeSnapshot.data == WeekplanMode.guardian) {
-                            _height = 5;
-                            _width = 3;
-                          }
-
                           if (modeSnapshot.data == WeekplanMode.citizen) {
                             if (_daysToDisplay == 1) {
-                              _height = 11;
+                              _height = 5.4;
                               _width = 1;
-                            }
-                            if (_daysToDisplay == 5) {
-                              _height = 9;
-                              _width = 4;
-                            }
-                            if (_daysToDisplay == 7) {
-                              _height = 5;
-                              _width = 3;
                             }
                           }
                         }
