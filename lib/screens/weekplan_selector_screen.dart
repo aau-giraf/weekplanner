@@ -36,7 +36,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         title: _user.name,
         appBarIcons: <AppBarIcon, VoidCallback>{
           AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-          AppBarIcon.logout: () => _weekBloc.toggleEditMode()
+          AppBarIcon.back: () => _weekBloc.toggleEditMode()
         },
       ),
       bottomNavigationBar: StreamBuilder<bool>(
