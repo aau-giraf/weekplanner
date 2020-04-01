@@ -99,16 +99,16 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = WeekplansBloc(api);
-    editBloc = EditWeekplanBloc(api);
-
+    
     setupApiCalls();
-
+    
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => bloc);
+    di.registerSingleton<WeekplansBloc>((_) => bloc);
     di.registerDependency<EditWeekplanBloc>((_) => editBloc);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    editBloc = EditWeekplanBloc(api);
   });
 
   testWidgets('Renders the screen', (WidgetTester tester) async {
@@ -181,14 +181,19 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
-    expect(find.text('weekModel1'), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+    // Before we mark the week plan weekModel1 we check that it
+    // is in fact not marked
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
+    // After we have marked the week plan weekModel1 we check that it
+    // is in fact marked
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
   });
 
   testWidgets('Marking a activity and deleting removes it',
@@ -220,7 +225,36 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
-    expect(find.text('weekModel1'), findsOneWidget);
+    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.pumpAndSettle();
+
+    // Checks that the two marked week model are in fact marked
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
+    expect(bloc.getMarkedWeekModels().contains(weekModel2), true);
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    // Checks that after the "Rediger"-button has been pressed, the
+    // week plans are not marked any more
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
+    expect(bloc.getMarkedWeekModels().contains(weekModel2), false);
+  });
+
+  testWidgets('Clicking a marked activity should unmark it',
+  (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
@@ -228,21 +262,18 @@ void main() {
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
+    // Checks that the marked week model is in fact marked
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
 
-    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('isSelectedKey')), findsNWidgets(2));
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('isSelectedKey')), findsNothing);
+    // Checks that after marking/tapping the week plan again, the
+    // week plan are not marked any more
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
   });
 
-  testWidgets('Test editing is valid',
-      (WidgetTester tester) async {
+  testWidgets('Test editing is valid', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
@@ -253,22 +284,21 @@ void main() {
 
     final StreamSubscription<bool> listenForValid1 =
         bloc.editingIsValidStream().listen((bool b) {
-          expect(b, true);
-        });
+      expect(b, true);
+    });
     listenForValid1.cancel();
 
     await tester.tap(find.byKey(Key(weekModel2.name)));
     await tester.pumpAndSettle();
 
     final StreamSubscription<bool> listenForValid2 =
-    bloc.editingIsValidStream().listen((bool b) {
+        bloc.editingIsValidStream().listen((bool b) {
       expect(b, false);
     });
     listenForValid2.cancel();
   });
 
-  testWidgets('Test deleting weekmodel',
-          (WidgetTester tester) async {
+  testWidgets('Test deleting weekmodel', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();

@@ -132,6 +132,7 @@ class TimerBloc extends BlocBase {
     }
   }
 
+
   /// Plays the timer.
   /// The method will use the current time, the progress of the timer and
   /// the full length, to calculate the progress of the progress circle in

@@ -15,6 +15,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+
 import '../style/custom_color.dart' as theme;
 
 /// Screen to select a weekplan for a given user
@@ -99,9 +100,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     if (isMarked) {
       return Container(
-          key: const Key('isSelectedKey'),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
+              BoxDecoration(border: Border.all(color: theme.GirafColors.black,
+                  width: 15)),
           child: _buildWeekplanCard(context, weekplan, bloc));
     } else {
       return _buildWeekplanCard(context, weekplan, bloc);
@@ -181,8 +182,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(bool inEditMode, BuildContext context) {
     if (!inEditMode) {
-      Routes.push<WeekModel>(context, NewWeekplanScreen(_user))
-          .then((WeekModel newWeek) => _weekBloc.load(_user, true));
+      Routes.push<WeekModel>(
+        context,
+        NewWeekplanScreen(_user),
+      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
     }
   }
 
@@ -260,7 +263,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
       EditWeekPlanScreen(
         user: _user,
         weekModel: _weekBloc.getMarkedWeekModels()[0],
-        selectorBloc: _weekBloc,
       ),
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();

@@ -130,7 +130,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
-        key: const Key('NewWeekplanThumbnailKey'),
+        key: const Key('WeekThumbnailKey'),
         width: 200,
         height: 200,
         child: StreamBuilder<PictogramModel>(
