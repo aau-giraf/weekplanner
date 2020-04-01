@@ -593,7 +593,9 @@ class WeekplanScreen extends StatelessWidget {
                               ),
                             ));
                       } else {
-                        return null;
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
                       }
                     });
               }),
