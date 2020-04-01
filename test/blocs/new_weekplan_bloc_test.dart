@@ -33,6 +33,8 @@ void main() {
       weekNumber: 1,
       weekYear: 2019);
 
+  WeekplansBloc mockWeekplanSelector;
+  
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
@@ -58,7 +60,7 @@ void main() {
       },
     );
 
-    final WeekplansBloc mockWeekplanSelector = WeekplansBloc(api);
+    mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
@@ -68,18 +70,24 @@ void main() {
     bloc.initialize(mockUser);
   });
 
-  test('Should save the new weekplan', async((DoneFn done) {
-    bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2019');
-    bloc.onWeekNumberChanged.add('42');
-    bloc.onThumbnailChanged.add(mockThumbnail);
-    bloc.saveWeekplan(null).then(
-      (WeekModel w) {
-        verify(api.week.update(any, any, any, any));
-        done();
-      },
-    );
-  }));
+  test('Should save the new weekplan', async(
+    (DoneFn done) {
+      bloc.onTitleChanged.add('Ugeplan');
+      bloc.onYearChanged.add('2019');
+      bloc.onWeekNumberChanged.add('42');
+      bloc.onThumbnailChanged.add(mockThumbnail);
+      bloc
+          .saveWeekplan(
+              screenContext: null,
+              existingWeekPlans: mockWeekplanSelector.weekNameModels)
+          .then(
+        (WeekModel w) {
+          verify(api.week.update(any, any, any, any));
+          done();
+        },
+      );
+    },
+  ));
 
   test('Should validate title: Ugeplan', async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
