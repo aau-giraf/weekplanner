@@ -308,4 +308,30 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('weekModel1'), findsNothing);
   });
+
+  testWidgets('Test that going back from week plans untoggles edit mode',
+      (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Rediger'));
+        await tester.pumpAndSettle();
+
+        final StreamSubscription<bool> listenForEditModeTrue =
+            bloc.editMode.listen((bool b) {
+              expect(b, true);
+            });
+        listenForEditModeTrue.cancel();
+
+        await tester.tap(find.byIcon(Icons.arrow_back));
+        await tester.pumpAndSettle();
+
+        final StreamSubscription<bool> listenForEditModeFalse =
+        bloc.editMode.listen((bool b) {
+          expect(b, false);
+        });
+        listenForEditModeFalse.cancel();
+
+        expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+  });
 }
