@@ -22,7 +22,7 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Map<AppBarIcon, VoidCallback> appBarIcons;
 
   /// Called when pressing back button.
-  VoidCallback onBackPressed;
+  final VoidCallback onBackPressed;
 
   /// Contains the functionality of the toolbar.
   final ToolbarBloc toolbarBloc;
