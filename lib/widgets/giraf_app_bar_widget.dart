@@ -7,7 +7,8 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
-  GirafAppBar({Key key, this.title, this.appBarIcons, this.isGuardian = true})
+  GirafAppBar({Key key, this.title, this.appBarIcons,
+    this.onBackPressed, this.isGuardian = true})
       : toolbarBloc = di.getDependency<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
@@ -20,6 +21,9 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Used to store the icons that should be displayed in the appbar.
   final Map<AppBarIcon, VoidCallback> appBarIcons;
 
+  /// Called when pressing back button.
+  VoidCallback onBackPressed;
+
   /// Contains the functionality of the toolbar.
   final ToolbarBloc toolbarBloc;
   @override
@@ -30,6 +34,12 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
     toolbarBloc.updateIcons(appBarIcons, context);
     return AppBar(
         title: Text(title, overflow: TextOverflow.clip),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => onBackPressed != null
+                ? onBackPressed()
+                : Navigator.of(context).pop(),
+        ),
         flexibleSpace: const GirafTitleHeader(),
         actions: <Widget>[
           StreamBuilder<List<IconButton>>(
