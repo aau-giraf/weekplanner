@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -36,6 +38,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
     return Scaffold(
       appBar: GirafAppBar(
         title: _user.name,
+        onBackPressed: () => _goBack(context),
         appBarIcons: <AppBarIcon, VoidCallback>{
           AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
           AppBarIcon.logout: () {},
@@ -56,6 +59,18 @@ class WeekplanSelectorScreen extends StatelessWidget {
       ),
       body: _buildWeekplanGridview(context),
     );
+  }
+
+  /// Untoggles edit mode and returns back.
+  void _goBack(BuildContext context) {
+    final StreamSubscription<bool> inEditMode =
+    _weekBloc.editMode.listen((bool b) {
+      if (b) {
+        _weekBloc.toggleEditMode();
+      }
+    });
+    inEditMode.cancel();
+    Navigator.of(context).pop();
   }
 
   Widget _buildWeekplanGridview(BuildContext context) {
