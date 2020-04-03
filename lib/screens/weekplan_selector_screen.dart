@@ -8,10 +8,16 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
+import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+
+import '../style/custom_color.dart' as theme;
 
 /// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
@@ -28,26 +34,27 @@ class WeekplanSelectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(
-        title: _user.name,
-        appBarIcons: <AppBarIcon, VoidCallback>{
-          AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-          AppBarIcon.logout: () {}
-        },
-      ),
-      bottomNavigationBar: StreamBuilder<bool>(
-        stream: _weekBloc.editMode,
-        initialData: false,
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.data) {
-            return _buildBottomAppBar(context);
-          } else {
-            return Container(width: 0.0, height: 0.0);
-          }
-        },
-      ),
-      body: _buildWeekplanGridview(context),
-    );
+        appBar: GirafAppBar(
+          title: _user.name,
+          appBarIcons: <AppBarIcon, VoidCallback>{
+            AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
+            AppBarIcon.logout: () {},
+            AppBarIcon.settings: () =>
+                Routes.push(context, SettingsScreen(_user))
+          },
+        ),
+        bottomNavigationBar: StreamBuilder<bool>(
+          stream: _weekBloc.editMode,
+          initialData: false,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.data) {
+              return _buildBottomAppBar(context);
+            } else {
+              return Container(width: 0.0, height: 0.0);
+            }
+          },
+        ),
+        body: _buildWeekplanGridview(context));
   }
 
   Widget _buildWeekplanGridview(BuildContext context) {
@@ -94,9 +101,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     if (isMarked) {
       return Container(
-          key: const Key('isSelectedKey'),
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
+          decoration: BoxDecoration(
+            border: Border.all(color: theme.GirafColors.black, width: 15),
+          ),
           child: _buildWeekplanCard(context, weekplan, bloc));
     } else {
       return _buildWeekplanCard(context, weekplan, bloc);
@@ -140,7 +147,24 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                   );
-                }))
+                })),
+                Container(
+                  child: weekplan.weekNumber == null
+                      ? null
+                      : Expanded(child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                          return AutoSizeText(
+                            'Uge: ${weekplan.weekNumber}      '
+                            'År: ${weekplan.weekYear}',
+                            key: const Key('weekYear'),
+                            style: const TextStyle(fontSize: 18),
+                            maxLines: 1,
+                            minFontSize: 14,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          );
+                        })),
+                )
               ],
             )),
           );
@@ -159,8 +183,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(bool inEditMode, BuildContext context) {
     if (!inEditMode) {
-      Routes.push<WeekModel>(context, NewWeekplanScreen(_user))
-          .then((WeekModel newWeek) => _weekBloc.load(_user, true));
+      Routes.push<WeekModel>(
+        context,
+        NewWeekplanScreen(
+          user: _user,
+          existingWeekPlans: _weekBloc.weekNameModels,
+        ),
+      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
     }
   }
 
@@ -179,7 +208,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.data == null) {
-          return FittedBox(child: const CircularProgressIndicator());
+          return const FittedBox(child: CircularProgressIndicator());
         }
         return Container(
             child: snapshot.data, key: const Key('PictogramImage'));
@@ -196,35 +225,57 @@ class WeekplanSelectorScreen extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Container(
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: <double>[
-                  1 / 3,
-                  2 / 3
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: <double>[
+                    1 / 3,
+                    2 / 3
+                  ],
+                      colors: <Color>[
+                    theme.GirafColors.appBarYellow,
+                    theme.GirafColors.appBarOrange,
+                  ])),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GirafButton(
+                      key: const Key('EditButtonKey'),
+                      text: 'Redigér',
+                      icon:
+                          const ImageIcon(AssetImage('assets/icons/edit.png')),
+                      isEnabled: false,
+                      isEnabledStream: _weekBloc.editingIsValidStream(),
+                      onPressed: () => _pushEditWeekPlan(context)),
+                  BottomAppBarButton(
+                      buttonText: 'Slet',
+                      buttonKey: 'DeleteActivtiesButton',
+                      assetPath: 'assets/icons/delete.png',
+                      dialogFunction: _buildDeletionDialog),
                 ],
-                    colors: <Color>[
-                  Color.fromRGBO(254, 215, 108, 1),
-                  Color.fromRGBO(253, 187, 85, 1),
-                ])),
-            child: IconButton(
-              key: const Key('DeleteActivtiesButton'),
-              iconSize: 50,
-              icon: const Icon(Icons.delete_forever),
-              onPressed: () {
-                // Shows dialog to confirm/cancel deletion
-                _buildConfirmationDialog(context);
-              },
-            ),
-          ),
+              )),
         ),
       ],
     ));
   }
 
+  void _pushEditWeekPlan(BuildContext context) {
+    Routes.push<WeekModel>(
+      context,
+      EditWeekPlanScreen(
+        user: _user,
+        weekModel: _weekBloc.getMarkedWeekModels()[0],
+        selectorBloc: _weekBloc,
+      ),
+    ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
+    _weekBloc.toggleEditMode();
+    _weekBloc.clearMarkedWeekModels();
+  }
+
   /// Builds dialog box to confirm/cancel deletion
-  Future<Center> _buildConfirmationDialog(BuildContext context) {
+  Future<Center> _buildDeletionDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,

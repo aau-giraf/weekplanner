@@ -25,6 +25,7 @@
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
@@ -892,3 +893,7 @@ assets/environments.json
 
 ios/Runner/GeneratedPluginRegistrant.m
 android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
+ios/Flutter/Flutter.podspec
+
+ios/Flutter/flutter_export_environment.sh

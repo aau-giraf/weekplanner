@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -8,9 +10,10 @@ import 'package:api_client/models/username_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:test_api/test_api.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
@@ -119,33 +122,35 @@ void main() {
       expect(b, isTrue);
       done();
     });
-
+    
     timerMock.load(activityModel, user: mockUser);
     timerMock.initTimer();
   }));
 
   test('Testing timer is instantiated when timer is not paused',
       async((DoneFn done) {
-    activityModel = ActivityModel(
-        id: 1,
-        pictogram: null,
-        order: 1,
-        state: ActivityState.Normal,
-        timer: TimerModel(
+        activityModel = ActivityModel(
+          id: 1,
+          pictogram: null,
+          order: 1,
+          state: ActivityState.Normal,
+          timer: TimerModel(
             startTime: DateTime.now(),
             fullLength: 1000,
             paused: false,
             progress: 1),
-        isChoiceBoard: false);
+          isChoiceBoard: false);
 
-    timerMock.timerIsRunning.skip(1).listen((bool b) {
-      expect(b, isTrue);
-      done();
-    });
+        timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
+          expect(m, TimerRunningMode.running);
+          done();
+        });
+        timerMock.load(activityModel, user: mockUser);
+        sleep(const Duration(milliseconds: 10));
 
-    timerMock.load(activityModel, user: mockUser);
-    timerMock.initTimer();
-  }));
+        timerMock.initTimer();
+      })
+  );
 
   test('Testing if timer is paused the progress is updated',
       async((DoneFn done) {
@@ -178,6 +183,7 @@ void main() {
 
   test('Testing when timer is played the progress is streamed',
       async((DoneFn done) {
+
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,
@@ -185,7 +191,7 @@ void main() {
         state: ActivityState.Normal,
         timer: TimerModel(
             startTime: DateTime.now(),
-            fullLength: 100,
+            fullLength: 5000,
             paused: true,
             progress: 0),
         isChoiceBoard: false);
@@ -193,13 +199,14 @@ void main() {
     timerMock.load(activityModel, user: mockUser);
 
     int i = 0;
-    timerMock.timerProgressStream.skip(1).listen((double d) {
+    timerMock.timerProgressStream.listen((double d) {
       i += 1;
       if (i == 5) {
         expect(d, isPositive);
         done();
       }
     });
+    sleep(const Duration(milliseconds: 10));
 
     timerMock.playTimer();
   }));
@@ -229,8 +236,8 @@ void main() {
       expect(activityModel.timer.progress, isPositive);
     });
 
-    timerMock.timerIsRunning.skip(1).listen((bool b) {
-      expect(b, isFalse);
+    timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
+      expect(m, TimerRunningMode.paused);
       done();
     });
 
@@ -262,8 +269,8 @@ void main() {
       expect(activityModel.timer.progress, 0);
     });
 
-    timerMock.timerIsRunning.listen((bool b) {
-      expect(b, isFalse);
+    timerMock.timerRunningMode.listen((TimerRunningMode m) {
+      expect(m, TimerRunningMode.stopped);
     });
 
     timerMock.timerProgressStream.listen((double d) {

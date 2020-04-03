@@ -50,7 +50,7 @@ void main() {
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     toolbarBloc = ToolbarBloc();
     di.registerDependency<ChooseCitizenBloc>((_) => bloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc());
+    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
     di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
   });
 

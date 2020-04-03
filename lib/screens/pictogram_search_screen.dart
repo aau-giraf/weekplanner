@@ -7,6 +7,7 @@ import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Screen for searching for pictograms
 ///
@@ -73,7 +74,7 @@ class PictogramSearch extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: Colors.amber,
+          color: theme.GirafColors.amber,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

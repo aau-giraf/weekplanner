@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../style/custom_color.dart' as theme;
 
 /// The GirafDialogHeader is to be used at the title location of widgets
 class GirafTitleHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -25,8 +26,8 @@ class GirafTitleHeader extends StatelessWidget implements PreferredSizeWidget {
                 textAlign: TextAlign.center,
               )),
             ),
-            decoration: BoxDecoration(
-                gradient: const LinearGradient(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: <double>[
@@ -34,8 +35,8 @@ class GirafTitleHeader extends StatelessWidget implements PreferredSizeWidget {
                   0.66
                 ],
                     colors: <Color>[
-                  Color.fromRGBO(254, 215, 108, 1),
-                  Color.fromRGBO(253, 187, 85, 1),
+                  theme.GirafColors.appBarYellow,
+                  theme.GirafColors.appBarOrange,
                 ])),
           ),
         ),

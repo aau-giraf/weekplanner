@@ -11,9 +11,9 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:async_test/async_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:test_api/test_api.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
@@ -23,12 +23,13 @@ class MockUserApi extends Mock implements UserApi {
   @override
   Observable<GirafUserModel> me() {
     return Observable<GirafUserModel>.just(GirafUserModel(
-        id: '1',
-        department: 3,
-        role: Role.Guardian,
-        roleName: 'Guardian',
-        screenName: 'Kurt',
-        username: 'SpaceLord69'));
+      id: '1',
+      department: 3,
+      role: Role.Guardian,
+      roleName: 'Guardian',
+      screenName: 'Kurt',
+      username: 'SpaceLord69',
+    ));
   }
 }
 

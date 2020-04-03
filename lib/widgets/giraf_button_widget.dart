@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import '../style/custom_color.dart' as theme;
 
 /// A button for the Giraf application.
 class GirafButton extends StatefulWidget {
@@ -66,23 +67,26 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   static const Gradient _gradientDefault = LinearGradient(
-      colors: <Color>[Color(0xFFFFCD59), Color(0xFFFF9D00)],
+      colors: <Color>[theme.GirafColors.gradientDefaultYellow,
+        theme.GirafColors.gradientDefaultOrange],
       begin: Alignment(0.0, -1.0),
       end: Alignment(0.0, 1.0));
 
   static const Gradient _gradientPressed = LinearGradient(
-      colors: <Color>[Color(0xFFD4AD2F), Color(0xFFFF9D00)],
+      colors: <Color>[theme.GirafColors.gradientPressedYellow,
+        theme.GirafColors.gradientPressedOrange],
       begin: Alignment(0.0, -1.0),
       end: Alignment(0.0, 1.0));
 
   static const Gradient _gradientDisabled = LinearGradient(
-      colors: <Color>[Color(0x46FFCD59), Color(0xA6FF9D00)],
+      colors: <Color>[theme.GirafColors.gradientDisabledYellow,
+        theme.GirafColors.gradientDisabledOrange],
       begin: Alignment(0.0, -1.0),
       end: Alignment(0.0, 1.0));
 
-  static const Color _borderDefault = Color(0xFF8A6E00);
-  static const Color _borderPressed = Color(0xFF493700);
-  static const Color _borderDisabled = Color(0xA68A6E00);
+  static const Color _borderDefault = theme.GirafColors.gradientDefaultBorder;
+  static const Color _borderPressed = theme.GirafColors.gradientPressedBorder;
+  static const Color _borderDisabled = theme.GirafColors.gradientDisabledBorder;
 
   bool _isPressed;
   bool _isEnabled;
@@ -156,9 +160,10 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _buildWidgetsOnButton() {
-    const TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 20);
+    const TextStyle textStyle =
+        TextStyle(color: theme.GirafColors.black, fontSize: 20);
 
-    if (widget.text != null && widget.icon != null)
+    if (widget.text != null && widget.icon != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -172,13 +177,13 @@ class _GirafButtonState extends State<GirafButton> {
           ),
         ],
       );
-    else if (widget.text != null)
+    } else if (widget.text != null) {
       return Center(
           child: Text(
         widget.text,
         style: textStyle,
       ));
-    else if (widget.icon != null) {
+    } else if (widget.icon != null) {
       return Center(
         child: widget.icon,
       );

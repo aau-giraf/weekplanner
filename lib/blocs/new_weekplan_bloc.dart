@@ -5,9 +5,13 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
 /// New-Weekplan Business Logic Component.
 class NewWeekplanBloc extends BlocBase {
@@ -15,50 +19,75 @@ class NewWeekplanBloc extends BlocBase {
   /// The bloc contains sinks to handle when different inputs are entered and
   /// streams to tell if the inputs are valid.
   /// The bloc is also able to save the newly created weekplan.
-  /// 
+  ///
   /// It is important that the bloc is initialized before use!
   /// This is done with the method [initialize].
-  NewWeekplanBloc(this._api);
+  NewWeekplanBloc(this.weekApi);
 
-  final Api _api;
-  UsernameModel _user;
+  /// This is used to access the weekModel in the database
+  @protected
+  final Api weekApi;
 
-  final BehaviorSubject<String> _titleController = BehaviorSubject<String>();
-  final BehaviorSubject<String> _yearController = BehaviorSubject<String>();
-  final BehaviorSubject<String> _weekNumberController =
-      BehaviorSubject<String>();
-  final BehaviorSubject<PictogramModel> _thumbnailController =
+  /// This field is used to get the userId. Accessed in
+  /// [edit_weekplan_bloc].
+  @protected
+  UsernameModel weekUser;
+
+  /// This field controls the title input field
+  @protected
+  final BehaviorSubject<String> titleController = BehaviorSubject<String>();
+
+  /// This field controls the year no input field
+  @protected
+  final BehaviorSubject<String> yearController = BehaviorSubject<String>();
+
+  /// This field controls the week no input field
+  @protected
+  final BehaviorSubject<String> weekNoController = BehaviorSubject<String>();
+
+  /// This field controls the pictogram input field
+  @protected
+  final BehaviorSubject<PictogramModel> thumbnailController =
       BehaviorSubject<PictogramModel>();
 
   /// Handles when the entered title is changed.
-  Sink<String> get onTitleChanged => _titleController.sink;
+  Sink<String> get onTitleChanged => titleController.sink;
 
   /// Handles when the entered year is changed.
-  Sink<String> get onYearChanged => _yearController.sink;
+  Sink<String> get onYearChanged => yearController.sink;
 
   /// Handles when the entered week number is changed.
-  Sink<String> get onWeekNumberChanged => _weekNumberController.sink;
+  Sink<String> get onWeekNumberChanged => weekNoController.sink;
+
+  /// Emits a [WeekNameModel] when it has a title, year, and week.
+  /// If any input is invalid, emits null.
+  Stream<WeekNameModel> get newWeekPlan => Observable.combineLatest4(
+      allInputsAreValidStream,
+      titleController.stream,
+      yearController.stream,
+      weekNoController.stream,
+      _combineWeekNameModel);
 
   /// Handles when the thumbnail is changed.
-  Sink<PictogramModel> get onThumbnailChanged => _thumbnailController.sink;
+  Sink<PictogramModel> get onThumbnailChanged => thumbnailController.sink;
 
   /// Gives information about whether the entered title is valid.
   /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validTitleStream =>
-      _titleController.stream.transform(_titleValidation);
+      titleController.stream.transform(_titleValidation);
 
   /// Gives information about whether the entered year is valid.
   /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validYearStream =>
-      _yearController.stream.transform(_yearValidation);
+      yearController.stream.transform(_yearValidation);
 
   /// Gives information about whether the entered week number is valid.
   /// Values can be true (valid), false (invalid) and null (initial value).
   Observable<bool> get validWeekNumberStream =>
-      _weekNumberController.stream.transform(_weekNumberValidation);
+      weekNoController.stream.transform(_weekNumberValidation);
 
   /// Streams the chosen thumbnail.
-  Observable<PictogramModel> get thumbnailStream => _thumbnailController.stream;
+  Observable<PictogramModel> get thumbnailStream => thumbnailController.stream;
 
   /// Gives information about whether all inputs are valid.
   Observable<bool> get allInputsAreValidStream =>
@@ -74,22 +103,25 @@ class NewWeekplanBloc extends BlocBase {
   /// was used. Switches user to the one provided.
   /// This method should always be called before using the bloc.
   void initialize(UsernameModel user) {
-    if (_user != null) {
+    if (weekUser != null) {
       resetBloc();
     }
-    _user = user;
+    weekUser = user;
   }
 
   /// Saves the entered information to the database.
-  Observable<WeekModel> saveWeekplan() {
-    if (_user == null) {
-      return null;
+  Future<WeekModel> saveWeekplan({
+    @required BuildContext screenContext,
+    @required Stream<List<WeekNameModel>> existingWeekPlans,
+  }) async {
+    if (weekUser == null) {
+      return Future<WeekModel>.value(null);
     }
 
-    final String _title = _titleController.value;
-    final int _year = int.parse(_yearController.value);
-    final int _weekNumber = int.parse(_weekNumberController.value);
-    final PictogramModel _thumbnail = _thumbnailController.value;
+    final String _title = titleController.value;
+    final int _year = int.parse(yearController.value);
+    final int _weekNumber = int.parse(weekNoController.value);
+    final PictogramModel _thumbnail = thumbnailController.value;
 
     final WeekModel _weekModel = WeekModel(
         thumbnail: _thumbnail,
@@ -106,18 +138,108 @@ class NewWeekplanBloc extends BlocBase {
           WeekdayModel(day: Weekday.Sunday, activities: <ActivityModel>[])
         ]);
 
-    return _api.week.update(
-        _user.id, _weekModel.weekYear, _weekModel.weekNumber, _weekModel);
+    bool doOverwrite = true;
+
+    final bool hasExistingMatch = await hasExisitingMatchingWeekplan(
+        existingWeekPlans: existingWeekPlans,
+        year: _year,
+        weekNumber: _weekNumber);
+
+    // If there is a match, ask the user if we should overwrite.
+    if (hasExistingMatch) {
+      doOverwrite =
+          await displayOverwriteDialog(screenContext, _weekNumber, _year);
+    }
+
+    final Completer<WeekModel> saveCompleter = Completer<WeekModel>();
+
+    if (doOverwrite) {
+      weekApi.week
+          .update(weekUser.id, _weekModel.weekYear, _weekModel.weekNumber,
+              _weekModel)
+          .take(1)
+          .listen(saveCompleter.complete);
+    } else {
+      saveCompleter.complete(null);
+    }
+
+    return saveCompleter.future;
+  }
+
+  /// Returns a [Future] that resolves to true if there is a matching week plan
+  /// with the same year and week number.
+  Future<bool> hasExisitingMatchingWeekplan({
+    @required Stream<List<WeekNameModel>> existingWeekPlans,
+    @required int year,
+    @required int weekNumber,
+  }) {
+    final Completer<bool> matchCompleter = Completer<bool>();
+
+    bool hasMatch = false;
+
+    existingWeekPlans.take(1).listen((List<WeekNameModel> existingPlans) {
+      for (WeekNameModel existingPlan in existingPlans) {
+        if (existingPlan.weekYear == year &&
+            existingPlan.weekNumber == weekNumber) {
+          hasMatch = true;
+        }
+      }
+
+      matchCompleter.complete(hasMatch);
+    });
+
+    return matchCompleter.future;
+  }
+
+  /// Display the overwrite dialog and resolve the [Future]
+  /// to true if the user wants to overwrite.
+  Future<bool> displayOverwriteDialog(
+      BuildContext context, int weekNumber, int year) {
+    final Completer<bool> dialogCompleter = Completer<bool>();
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext dialogContext) {
+          // A confirmation dialog is shown to stop the timer.
+          return GirafConfirmDialog(
+            key: const Key('OverwriteEditDialogKey'),
+            title: 'Overskriv ugeplan',
+            description: 'Ugeplanen (uge: $weekNumber'
+                ', år: $year) eksisterer '
+                'allerede. Vil du overskrive denne ugeplan?',
+            confirmButtonText: 'Okay',
+            confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/accept.png')),
+            confirmOnPressed: () {
+              dialogCompleter.complete(true);
+              Routes.pop(context);
+            },
+            cancelOnPressed: () {
+              dialogCompleter.complete(false);
+            },
+          );
+        });
+
+    return dialogCompleter.future;
   }
 
   /// Resets the bloc to its default values.
   /// The bloc should be reset after each use.
   void resetBloc() {
-    _user = null;
-    _titleController.sink.add(null);
-    _yearController.sink.add(null);
-    _weekNumberController.sink.add(null);
-    _thumbnailController.sink.add(null);
+    weekUser = null;
+    titleController.sink.add(null);
+    yearController.sink.add(null);
+    weekNoController.sink.add(null);
+    thumbnailController.sink.add(null);
+  }
+
+  WeekNameModel _combineWeekNameModel(
+      bool isValid, String name, String year, String week) {
+    if (!isValid) {
+      return null;
+    }
+    return WeekNameModel(
+        name: name, weekYear: int.parse(year), weekNumber: int.parse(week));
   }
 
   bool _isAllInputValid(
@@ -162,9 +284,9 @@ class NewWeekplanBloc extends BlocBase {
 
   @override
   void dispose() {
-    _titleController.close();
-    _yearController.close();
-    _weekNumberController.close();
-    _thumbnailController.close();
+    titleController.close();
+    yearController.close();
+    weekNoController.close();
+    thumbnailController.close();
   }
 }

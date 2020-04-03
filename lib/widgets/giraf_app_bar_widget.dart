@@ -4,7 +4,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.

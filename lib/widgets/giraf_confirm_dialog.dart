@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
+import '../style/custom_color.dart' as theme;
 
 ///A dialog widget presented to the user to confirm an action, such as
 ///logging out or deleting a weekplan. The dialog consists of a title,
@@ -16,7 +17,8 @@ class GirafConfirmDialog extends StatelessWidget {
       this.description,
       @required this.confirmButtonText,
       @required this.confirmButtonIcon,
-      @required this.confirmOnPressed})
+      @required this.confirmOnPressed,
+      this.cancelOnPressed})
       : super(key: key);
 
   ///title of the dialogBox, displayed in the header of the dialogBox
@@ -35,13 +37,16 @@ class GirafConfirmDialog extends StatelessWidget {
   ///the method to call when the confirmation button is pressed
   final VoidCallback confirmOnPressed;
 
+  ///the method is call when the cancel button is pressed. Optional
+  final VoidCallback cancelOnPressed;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0.0),
       titlePadding: const EdgeInsets.all(0.0),
       shape:
-          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+          Border.all(color: theme.GirafColors.transparentDarkGrey, width: 5.0),
       title: Center(
           child: GirafTitleHeader(
         title: title,
@@ -79,8 +84,12 @@ class GirafConfirmDialog extends StatelessWidget {
                         text: 'Fortryd',
                         icon: const ImageIcon(
                             AssetImage('assets/icons/cancel.png'),
-                            color: Colors.black),
+                            color: theme.GirafColors.black),
                         onPressed: () {
+                          if (cancelOnPressed != null) {
+                            cancelOnPressed();
+                          }
+                          
                           Routes.pop(context);
                         }),
                   ),

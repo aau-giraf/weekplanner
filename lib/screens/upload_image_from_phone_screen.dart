@@ -8,6 +8,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Screen for uploading a [PictogramModel] to the server
 class UploadImageFromPhone extends StatelessWidget {
@@ -112,9 +113,9 @@ class UploadImageFromPhone extends StatelessWidget {
           decoration: BoxDecoration(
               border: Border.all(
                 width: 4,
-                color: Colors.black,
+                color: theme.GirafColors.black,
               ),
-              color: Colors.white70,
+              color: theme.GirafColors.white70,
               borderRadius: _imageBorder),
           child: _getAndDisplayPicture(),
         ),
@@ -143,12 +144,12 @@ class UploadImageFromPhone extends StatelessWidget {
       children: <Widget>[
         Image.asset(
           'assets/icons/gallery.png',
-          color: Colors.black,
+          color: theme.GirafColors.black,
           scale: .75,
         ),
         const Text(
           'Tryk for at vælge billede',
-          style: TextStyle(color: Colors.black, fontSize: 25),
+          style: TextStyle(color: theme.GirafColors.black, fontSize: 25),
         )
       ],
     );
@@ -161,7 +162,7 @@ class UploadImageFromPhone extends StatelessWidget {
         ),
         child: Text(
           'Vælg billede fra galleri',
-          style: TextStyle(color: Colors.black, fontSize: 25),
+          style: TextStyle(color: theme.GirafColors.black, fontSize: 25),
           textAlign: TextAlign.center,
         ));
   }
