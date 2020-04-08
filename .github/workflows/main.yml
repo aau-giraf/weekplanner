@@ -37,6 +37,7 @@ jobs:
           path: build/app/outputs/apk/release/app-release.apk
           
   deploy-to-playstore:
+    if: github.ref == 'refs/heads/master'
     needs: build-and-test-android
     name: Android on Ubuntu
     runs-on: ${{ matrix.os }}
