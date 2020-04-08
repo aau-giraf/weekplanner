@@ -9,6 +9,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
@@ -34,18 +35,30 @@ class MockLoginScreenState extends LoginScreenState {
   /// This is the callback method of the loading spinner to show the dialog
   @override
   void showNotifyDialog() {
+    // Checking username/password
     if (!loginStatus) {
-      // Show the new NotifyDialog
-      showDialog<Center>(
-          barrierDismissible: false,
-          context: currentContext,
-          builder: (BuildContext context) {
-            return const GirafNotifyDialog(
-                title: 'Fejl!',
-                description: 'Forkert brugernavn og/eller adgangskode',
-                key: Key('WrongUsernameOrPassword'));
-          });
+
+      creatingNotifyDialog('Forkert brugernavn og/eller adgangskode',
+          'WrongUsernameOrPassword');
     }
+  }
+
+  /// Function that creates the notify dialog,
+  /// depeninding which login error occured
+  @override
+  void creatingNotifyDialog(String description, String key) {
+    /// Remove the loading spinner
+    Routes.pop(currentContext);
+    /// Show the new NotifyDialog
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: currentContext,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl',
+              description: description,
+              key: Key(key));
+        });
   }
 }
 
@@ -219,5 +232,6 @@ void main() {
     await tester.tap(find.byKey(const Key('LoginBtnKey')));
     await tester.pump();
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
+    expect(find.byKey(const Key('WrongUsernameOrPassword')), findsOneWidget);
   });
 }

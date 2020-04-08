@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:api_client/api/api.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -322,12 +324,10 @@ void main() {
     expect(find.byKey(const Key('TimerButtonRow')), findsNothing);
   });
 
-  Future<void> _openTimePickerAndConfirm(WidgetTester tester) async {
+  Future<void> _openTimePickerAndConfirm(WidgetTester tester,
+      int seconds, int minutes, int hours) async {
     await tester.tap(find.byKey(const Key('AddTimerButtonKey')));
     await tester.pump();
-    const int hours = 1;
-    const int minutes = 2;
-    const int seconds = 3;
     await tester.enterText(
         find.byKey(const Key('TimerTextFieldKey')), hours.toString());
     await tester.pump();
@@ -348,7 +348,7 @@ void main() {
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pump();
     expect(find.byKey(const Key('AddTimerButtonKey')), findsOneWidget);
-    await _openTimePickerAndConfirm(tester);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
     expect(find.byKey(const Key('TimerTitleKey')), findsOneWidget);
     expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
     expect(find.byKey(const Key('TimerButtonRow')), findsOneWidget);
@@ -360,7 +360,7 @@ void main() {
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pump();
     expect(find.byKey(const Key('AddTimerButtonKey')), findsOneWidget);
-    await _openTimePickerAndConfirm(tester);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
     authBloc.setMode(WeekplanMode.citizen);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('AddTimerButtonKey')), findsNothing);
@@ -375,7 +375,7 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
     expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
     expect(find.byKey(const Key('TimerStopButtonKey')), findsOneWidget);
     expect(find.byKey(const Key('TimerDeleteButtonKey')), findsOneWidget);
@@ -393,7 +393,7 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
     authBloc.setMode(WeekplanMode.citizen);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
@@ -412,7 +412,7 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
     await tester.tap(find.byKey(const Key('TimerStopButtonKey')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('TimerStopConfirmDialogKey')), findsOneWidget);
@@ -423,7 +423,7 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
     await tester.tap(find.byKey(const Key('TimerDeleteButtonKey')));
     await tester.pumpAndSettle();
     expect(
@@ -444,7 +444,7 @@ void main() {
     await done.future;
     listenForFalse.cancel();
     await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
     timerBloc.timerIsInstantiated.listen((bool init) {
       expect(init, isTrue);
     });
@@ -458,28 +458,85 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester);
-    final StreamSubscription<bool> listenForRunningFalse =
-        timerBloc.timerIsRunning.listen((bool running) {
-      expect(running, isFalse);
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
+    final StreamSubscription<TimerRunningMode> listenForNotInitialized =
+        timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+      expect(running, TimerRunningMode.not_initialized);
       checkNotRun.complete();
     });
     await checkNotRun.future;
-    listenForRunningFalse.cancel();
+    listenForNotInitialized.cancel();
 
     await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
     await tester.pumpAndSettle();
-    final StreamSubscription<bool> listenForRunningTrue =
-        timerBloc.timerIsRunning.listen((bool running) {
-      expect(running, isTrue);
+    final StreamSubscription<TimerRunningMode> listenForRunningTrue =
+        timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+      expect(running, TimerRunningMode.running);
       checkRunning.complete();
     });
     await checkRunning.future;
     listenForRunningTrue.cancel();
     await tester.tap(find.byKey(const Key('TimerPauseButtonKey')));
     await tester.pumpAndSettle();
-    timerBloc.timerIsRunning.listen((bool running) {
-      expect(running, isFalse);
+    timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+      expect(running, TimerRunningMode.paused);
     });
   });
+
+  testWidgets('Timer not visivle when activity cancelled',
+          (WidgetTester tester) async{
+    mockActivity.state = ActivityState.Canceled;
+
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser)));
+
+    expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
+
+    mockActivity.state = ActivityState.Normal;
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
+  });
+
+  testWidgets(
+      'Test that play button appears when timer is complete',
+          (WidgetTester tester) async {
+            final Completer<bool> checkCompleted = Completer<bool>();
+        await tester
+            .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+        await tester.pumpAndSettle();
+        await _openTimePickerAndConfirm(tester, 1, 0, 0);
+        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+        sleep(const Duration(seconds: 2));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        final StreamSubscription<TimerRunningMode> listenForCompleted =
+            timerBloc.timerRunningMode.listen((TimerRunningMode m) {
+              expect(m, TimerRunningMode.completed);
+              checkCompleted.complete();
+            });
+        await checkCompleted.future;
+        listenForCompleted.cancel();
+
+        expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
+      }
+  );
+
+  testWidgets(
+      'Test that restart dialog pops up when timer is restarted',
+          (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+        await tester.pumpAndSettle();
+        await _openTimePickerAndConfirm(tester, 1, 0, 0);
+        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+        sleep(const Duration(seconds: 2));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('TimerRestartDialogKey')),
+            findsOneWidget);
+      }
+  );
 }

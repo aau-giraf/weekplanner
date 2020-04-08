@@ -4,6 +4,7 @@ import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/copy_dialog_buttons_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
+import '../style/custom_color.dart' as theme;
 
 /// A dialog widget presented to the user to confirm an action based on
 /// a list of checkboxes presented in the dialog. The dialog consists of a
@@ -40,16 +41,13 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
   /// the method to call when the confirmation button is pressed
   final void Function(List<bool>, BuildContext) confirmOnPressed;
 
-  /// color of checkbox
-  static const Color checkboxColor = Color.fromARGB(255, 255, 157, 0);
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: const EdgeInsets.all(0.0),
       titlePadding: const EdgeInsets.all(0.0),
       shape:
-          Border.all(color: const Color.fromRGBO(112, 112, 112, 1), width: 5.0),
+          Border.all(color: theme.GirafColors.transparentDarkGrey, width: 5.0),
       title: Center(
           child: GirafTitleHeader(
         title: title,
@@ -146,7 +144,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
           copyActivitiesBloc.toggleCheckboxState(weekday.index),
       title: Text(checkboxTitle),
       controlAffinity: ListTileControlAffinity.trailing,
-      activeColor: checkboxColor,
+      activeColor: theme.GirafColors.checkboxColor,
     );
   }
 }

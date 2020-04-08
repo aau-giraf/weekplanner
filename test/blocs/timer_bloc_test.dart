@@ -13,6 +13,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
@@ -121,7 +122,7 @@ void main() {
       expect(b, isTrue);
       done();
     });
-
+    
     timerMock.load(activityModel, user: mockUser);
     timerMock.initTimer();
   }));
@@ -140,8 +141,8 @@ void main() {
             progress: 1),
           isChoiceBoard: false);
 
-        timerMock.timerIsRunning.skip(1).listen((bool b) {
-          expect(b, isTrue);
+        timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
+          expect(m, TimerRunningMode.running);
           done();
         });
         timerMock.load(activityModel, user: mockUser);
@@ -235,8 +236,8 @@ void main() {
       expect(activityModel.timer.progress, isPositive);
     });
 
-    timerMock.timerIsRunning.skip(1).listen((bool b) {
-      expect(b, isFalse);
+    timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
+      expect(m, TimerRunningMode.paused);
       done();
     });
 
@@ -268,8 +269,8 @@ void main() {
       expect(activityModel.timer.progress, 0);
     });
 
-    timerMock.timerIsRunning.listen((bool b) {
-      expect(b, isFalse);
+    timerMock.timerRunningMode.listen((TimerRunningMode m) {
+      expect(m, TimerRunningMode.stopped);
     });
 
     timerMock.timerProgressStream.listen((double d) {
