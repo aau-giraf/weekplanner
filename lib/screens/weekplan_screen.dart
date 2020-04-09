@@ -580,7 +580,7 @@ class WeekplanScreen extends StatelessWidget {
         margin: const EdgeInsets.all(20),
         child: FittedBox(
           child: Stack(
-            alignment: AlignmentDirectional.center,
+            alignment: AlignmentDirectional.topEnd,
             children: <Widget>[
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -590,12 +590,7 @@ class WeekplanScreen extends StatelessWidget {
                 ),
               ),
               _buildActivityStateIcon(context, activityState),
-              Stack(
-                alignment: AlignmentDirectional.topEnd,
-                children: <Widget>[
-                  _buildTimerIcon(context, activities[index]),
-                ],
-              )
+              _buildTimerIcon(context, activities[index]),
             ],
           ),
         ));
@@ -634,9 +629,10 @@ class WeekplanScreen extends StatelessWidget {
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
-          return const ImageIcon(
-            AssetImage('assets/icons/TimerIcon.png'),
-            key: Key('TimerIconKey'),
+          return Icon(
+            Icons.watch_later,
+            color: Colors.red,
+            size: MediaQuery.of(context).size.width /3,
           );
         }
         return Container();
