@@ -424,35 +424,25 @@ class WeekplanScreen extends StatelessWidget {
     }
   }
 
-  // TODO: Call _buildActivityCard with proper args.
   /// Builds activity card with a status icon if it is marked
-  StatefulWidget buildIsMarked(bool isMarked, BuildContext context,
+  StatelessWidget buildIsMarked(bool isMarked, BuildContext context,
       List<ActivityModel> activities, int index) {
-    final TimerBloc timerBloc = di.getDependency<TimerBloc>();
-
-    return StreamBuilder<TimerRunningMode>(
-      stream: timerBloc.timerRunningMode,
-      builder: (BuildContext context,
-          AsyncSnapshot<TimerRunningMode> timerRunningSnapshot) {
-        if (isMarked) {
-          return Container(
-              key: const Key('isSelectedKey'),
-              margin: const EdgeInsets.all(20),
-              decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
-              child: _buildActivityCard(
-                  context,
-                  activities,
-                  index,
-                  activities[index].state,
-                  false
-              ));
-        } else {
-          return _buildActivityCard(
-              context, activities, index, activities[index].state, false);
-        }
-      },
-    );
+    if (isMarked) {
+      return Container(
+          key: const Key('isSelectedKey'),
+          margin: const EdgeInsets.all(20),
+          decoration:
+          BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
+          child: _buildActivityCard(
+            context,
+            activities,
+            index,
+            activities[index].state,
+          ));
+    } else {
+      return _buildActivityCard(
+          context, activities, index, activities[index].state);
+    }
   }
 
   // Returns the grayed out drag targets in the end of the columns.
@@ -586,31 +576,7 @@ class WeekplanScreen extends StatelessWidget {
     List<ActivityModel> activities,
     int index,
     ActivityState activityState,
-    bool hasTimer
   ) {
-    Widget icon;
-    switch (activityState) {
-      case ActivityState.Completed:
-        icon = Icon(
-          Icons.check,
-          key: const Key('IconComplete'),
-          color: Colors.green,
-          size: MediaQuery.of(context).size.width,
-        );
-        break;
-      case ActivityState.Canceled:
-        icon = Icon(
-          Icons.clear,
-          key: const Key('IconCanceled'),
-          color: Colors.red,
-          size: MediaQuery.of(context).size.width,
-        );
-        break;
-      default:
-        icon = Container();
-        break;
-    }
-
     return Card(
         margin: const EdgeInsets.all(20),
         child: FittedBox(
@@ -624,10 +590,58 @@ class WeekplanScreen extends StatelessWidget {
                   child: _getPictogram(activities[index]),
                 ),
               ),
-              icon
+              _buildActivityStateIcon(context, activityState),
+              Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: <Widget>[
+                  _buildTimerIcon(context),
+                ],
+              )
             ],
           ),
         ));
+  }
+
+  /// Build activity state icon.
+  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+    switch (state) {
+      case ActivityState.Completed:
+        return Icon(
+          Icons.check,
+          key: const Key('IconComplete'),
+          color: Colors.green,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      case ActivityState.Canceled:
+        return Icon(
+          Icons.clear,
+          key: const Key('IconCanceled'),
+          color: Colors.red,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      default:
+        return Container();
+    }
+  }
+
+  /// Builds timer icon depending on activity has timer.
+  Widget _buildTimerIcon(BuildContext context) {
+    final TimerBloc timerBloc = di.getDependency<TimerBloc>();
+
+    return StreamBuilder<TimerRunningMode>(
+      stream: timerBloc.timerRunningMode,
+      builder: (BuildContext streamContext,
+          AsyncSnapshot<TimerRunningMode> timerSnapshot) {
+        return Icon(
+          Icons.timer,
+          key: const Key('IconTimer'),
+          color: Colors.red,
+          size: MediaQuery.of(context).size.width / 2,
+        );
+      }
+    );
   }
 
   Card _translateWeekDay(Weekday day) {
