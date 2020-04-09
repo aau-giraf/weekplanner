@@ -40,13 +40,15 @@ class EditWeekplanBloc extends NewWeekplanBloc {
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
 
     bool doOverwrite = true;
-    
+
     if (oldWeekModel.weekYear != newWeekModel.weekYear ||
         oldWeekModel.weekNumber != newWeekModel.weekNumber) {
       // Check if we changed week or year to those of an existing plan.
 
       final bool hasExistingMatch = await hasExisitingMatchingWeekplan(
-          year: newWeekModel.weekYear, weekNumber: newWeekModel.weekNumber);
+          existingWeekPlans: selectorBloc.weekNameModels,
+          year: newWeekModel.weekYear,
+          weekNumber: newWeekModel.weekNumber);
 
       // If there is a match, ask the user if we should overwrite.
       if (hasExistingMatch) {

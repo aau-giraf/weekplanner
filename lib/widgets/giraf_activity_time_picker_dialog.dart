@@ -106,9 +106,9 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
             padding: const EdgeInsets.all(5.0),
             child: Container(
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1),
+                  border: Border.all(color: theme.GirafColors.grey, width: 1),
                   borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                  color: Colors.white),
+                  color: theme.GirafColors.white),
               child: TextField(
                   key: Key(fieldName + 'TextFieldKey'),
                   onSubmitted: (String s) {
