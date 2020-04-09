@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -99,8 +98,6 @@ class NewWeekplanBloc extends BlocBase {
               thumbnailStream,
               _isAllInputValid)
           .asBroadcastStream();
-
-  final WeekplansBloc _weekplanSelectorBloc = di.getDependency<WeekplansBloc>();
 
   /// Resets the bloc if it already contains information from the last time it
   /// was used. Switches user to the one provided.
@@ -293,4 +290,3 @@ class NewWeekplanBloc extends BlocBase {
     thumbnailController.close();
   }
 }
-

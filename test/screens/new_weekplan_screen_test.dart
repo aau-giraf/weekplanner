@@ -343,18 +343,6 @@ void main() {
         find.byKey(const Key('WeekNumberTextFieldKey')), '20');
     mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
-    await tester.pumpAndSettle();
-    expect(find.byType(GirafConfirmDialog), findsOneWidget);
-    expect(
-        find.text('Ugeplanen (uge: ' +
-            mockWeek.weekNumber.toString() +
-            ', år: ' +
-            mockWeek.weekYear.toString() +
-            ') eksisterer '
-                'allerede. Vil du overskrive denne ugeplan?'),
-        findsOneWidget);
-  });
-
 
     expect(savedWeekplan, true);
   });
@@ -397,7 +385,6 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
-
         home: NewWeekplanScreen(
           user: mockUser,
           existingWeekPlans: mockWeekplanSelector.weekNameModels,
