@@ -12,9 +12,11 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
@@ -422,25 +424,35 @@ class WeekplanScreen extends StatelessWidget {
     }
   }
 
+  // TODO: Call _buildActivityCard with proper args.
   /// Builds activity card with a status icon if it is marked
-  StatelessWidget buildIsMarked(bool isMarked, BuildContext context,
+  StatefulWidget buildIsMarked(bool isMarked, BuildContext context,
       List<ActivityModel> activities, int index) {
-    if (isMarked) {
-      return Container(
-          key: const Key('isSelectedKey'),
-          margin: const EdgeInsets.all(20),
-          decoration:
+    final TimerBloc timerBloc = di.getDependency<TimerBloc>();
+
+    return StreamBuilder<TimerRunningMode>(
+      stream: timerBloc.timerRunningMode,
+      builder: (BuildContext context,
+          AsyncSnapshot<TimerRunningMode> timerRunningSnapshot) {
+        if (isMarked) {
+          return Container(
+              key: const Key('isSelectedKey'),
+              margin: const EdgeInsets.all(20),
+              decoration:
               BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
-          child: _buildActivityCard(
-            context,
-            activities,
-            index,
-            activities[index].state,
-          ));
-    } else {
-      return _buildActivityCard(
-          context, activities, index, activities[index].state);
-    }
+              child: _buildActivityCard(
+                  context,
+                  activities,
+                  index,
+                  activities[index].state,
+                  false
+              ));
+        } else {
+          return _buildActivityCard(
+              context, activities, index, activities[index].state, false);
+        }
+      },
+    );
   }
 
   // Returns the grayed out drag targets in the end of the columns.
@@ -574,6 +586,7 @@ class WeekplanScreen extends StatelessWidget {
     List<ActivityModel> activities,
     int index,
     ActivityState activityState,
+    bool hasTimer
   ) {
     Widget icon;
     switch (activityState) {
