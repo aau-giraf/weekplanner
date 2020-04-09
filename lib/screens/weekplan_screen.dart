@@ -16,7 +16,6 @@ import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
-import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
@@ -594,7 +593,7 @@ class WeekplanScreen extends StatelessWidget {
               Stack(
                 alignment: AlignmentDirectional.topEnd,
                 children: <Widget>[
-                  _buildTimerIcon(context),
+                  _buildTimerIcon(context, activities[index]),
                 ],
               )
             ],
@@ -627,19 +626,23 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Builds timer icon depending on activity has timer.
-  Widget _buildTimerIcon(BuildContext context) {
+  Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
     final TimerBloc timerBloc = di.getDependency<TimerBloc>();
-
-    return StreamBuilder<TimerRunningMode>(
-      stream: timerBloc.timerRunningMode,
+    timerBloc.load(activity, user: _user);
+    return StreamBuilder<bool>(
+      stream: timerBloc.timerIsInstantiated,
       builder: (BuildContext streamContext,
-          AsyncSnapshot<TimerRunningMode> timerSnapshot) {
-        return Icon(
-          Icons.timer,
-          key: const Key('IconTimer'),
-          color: Colors.red,
-          size: MediaQuery.of(context).size.width / 2,
-        );
+          AsyncSnapshot<bool> timerSnapshot) {
+        if (timerSnapshot.hasData && timerSnapshot.data) {
+          return Icon(
+            Icons.timer,
+            key: const Key('IconTimer'),
+            color: Colors.red,
+            size: MediaQuery.of(context).size.width / 2,
+          );
+        } else {
+          return Container();
+        }
       }
     );
   }
