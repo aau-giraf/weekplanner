@@ -634,21 +634,9 @@ class WeekplanScreen extends StatelessWidget {
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
-          return Stack(
-            alignment: AlignmentDirectional.topEnd,
-            children: <Widget>[
-              Icon(
-                Icons.stop,
-                size: MediaQuery.of(context).size.width,
-                color: Colors.black,
-              ),
-              Icon(
-                Icons.timer,
-                key: const Key('IconTimer'),
-                color: Colors.white,
-                size: MediaQuery.of(context).size.width / 2,
-              )
-            ],
+          return const ImageIcon(
+            AssetImage('assets/icons/TimerIcon.png'),
+            key: Key('TimerIconKey'),
           );
         }
         return Container();
