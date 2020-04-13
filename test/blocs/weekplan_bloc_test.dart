@@ -97,7 +97,8 @@ void main() {
         id: 1,
         isChoiceBoard: null,
         order: null,
-        state: null);
+        state: null
+    );
 
     weekplanBloc.markedActivities
         .skip(1)
@@ -564,5 +565,31 @@ void main() {
     });
 
     weekplanBloc.loadWeek(week, user);
+  }));
+
+  test('Testing atLeastOneActivityMarked returns false when '
+      'no activities are marked', async((DoneFn done) {
+
+    // Listening to the atLeastOneActivityMarked stream to check it is empty
+    weekplanBloc.atLeastOneActivityMarked.listen((bool result){
+       expect(result, isFalse);
+       done();
+    });
+  }));
+
+  test('Testing atLeastOneActivityMarked returns true when an activity is '
+      'marked', async((DoneFn done) {
+
+    // Creating the activity that will be added
+    final ActivityModel testActivity = ActivityModel(
+        id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
+
+    weekplanBloc.addMarkedActivity(testActivity);
+
+    // Listening to the atLeastOneActivityMarked stream to check it is filled
+    weekplanBloc.atLeastOneActivityMarked.listen((bool result){
+      expect(result, isTrue);
+      done();
+    });
   }));
 }

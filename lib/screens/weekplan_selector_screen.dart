@@ -10,11 +10,14 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
+import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+
+import '../style/custom_color.dart' as theme;
 
 /// Screen to select a weekplan for a given user
 class WeekplanSelectorScreen extends StatelessWidget {
@@ -31,26 +34,27 @@ class WeekplanSelectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GirafAppBar(
-        title: _user.name,
-        appBarIcons: <AppBarIcon, VoidCallback>{
-          AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-          AppBarIcon.logout: () {}
-        },
-      ),
-      bottomNavigationBar: StreamBuilder<bool>(
-        stream: _weekBloc.editMode,
-        initialData: false,
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.data) {
-            return _buildBottomAppBar(context);
-          } else {
-            return Container(width: 0.0, height: 0.0);
-          }
-        },
-      ),
-      body: _buildWeekplanGridview(context),
-    );
+        appBar: GirafAppBar(
+          title: _user.name,
+          appBarIcons: <AppBarIcon, VoidCallback>{
+            AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
+            AppBarIcon.logout: () {},
+            AppBarIcon.settings: () =>
+                Routes.push(context, SettingsScreen(_user))
+          },
+        ),
+        bottomNavigationBar: StreamBuilder<bool>(
+          stream: _weekBloc.editMode,
+          initialData: false,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.data) {
+              return _buildBottomAppBar(context);
+            } else {
+              return Container(width: 0.0, height: 0.0);
+            }
+          },
+        ),
+        body: _buildWeekplanGridview(context));
   }
 
   Widget _buildWeekplanGridview(BuildContext context) {
@@ -97,9 +101,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     if (isMarked) {
       return Container(
-          key: const Key('isSelectedKey'),
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
+          decoration: BoxDecoration(
+            border: Border.all(color: theme.GirafColors.black, width: 15),
+          ),
           child: _buildWeekplanCard(context, weekplan, bloc));
     } else {
       return _buildWeekplanCard(context, weekplan, bloc);
@@ -179,8 +183,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(bool inEditMode, BuildContext context) {
     if (!inEditMode) {
-      Routes.push<WeekModel>(context, NewWeekplanScreen(_user))
-          .then((WeekModel newWeek) => _weekBloc.load(_user, true));
+      Routes.push<WeekModel>(
+        context,
+        NewWeekplanScreen(
+          user: _user,
+          existingWeekPlans: _weekBloc.weekNameModels,
+        ),
+      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
     }
   }
 
@@ -225,14 +234,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     2 / 3
                   ],
                       colors: <Color>[
-                    Color.fromRGBO(254, 215, 108, 1),
-                    Color.fromRGBO(253, 187, 85, 1),
+                    theme.GirafColors.appBarYellow,
+                    theme.GirafColors.appBarOrange,
                   ])),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   GirafButton(
+                      key: const Key('EditButtonKey'),
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),

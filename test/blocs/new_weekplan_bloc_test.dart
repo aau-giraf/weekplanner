@@ -3,53 +3,91 @@ import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/week_name_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:async_test/async_test.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
+import 'package:weekplanner/di.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
   NewWeekplanBloc bloc;
   Api api;
-  final PictogramModel thumbnail = PictogramModel(
+  final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
       lastEdit: null,
       title: null,
       accessLevel: null,
       imageUrl: 'http://any.tld',
       imageHash: null);
-  final UsernameModel user = UsernameModel(name: 'User', id: '1', role: null);
-  final WeekModel week = WeekModel(
-      thumbnail: thumbnail,
+  final UsernameModel mockUser =
+      UsernameModel(name: 'User', id: '1', role: null);
+  final WeekModel mockWeek = WeekModel(
+      thumbnail: mockThumbnail,
       days: null,
       name: 'Week',
       weekNumber: 1,
       weekYear: 2019);
 
+  WeekplansBloc mockWeekplanSelector;
+  
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
-    bloc = NewWeekplanBloc(api);
-    bloc.initialize(user);
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
-      return Observable<WeekModel>.just(week);
+      return Observable<WeekModel>.just(mockWeek);
     });
+
+    when(api.week.getNames(any)).thenAnswer(
+      (_) {
+        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
+          WeekNameModel(
+              name: mockWeek.name,
+              weekNumber: mockWeek.weekNumber,
+              weekYear: mockWeek.weekYear),
+        ]);
+      },
+    );
+
+    when(api.week.get(any, any, any)).thenAnswer(
+      (_) {
+        return Observable<WeekModel>.just(mockWeek);
+      },
+    );
+
+    mockWeekplanSelector = WeekplansBloc(api);
+    mockWeekplanSelector.load(mockUser);
+
+    di.clearAll();
+    di.registerSingleton<WeekplansBloc>((_) => mockWeekplanSelector);
+
+    bloc = NewWeekplanBloc(api);
+    bloc.initialize(mockUser);
   });
 
-  test('Should save the new weekplan', async((DoneFn done) {
-    bloc.onTitleChanged.add('Ugeplan');
-    bloc.onYearChanged.add('2019');
-    bloc.onWeekNumberChanged.add('42');
-    bloc.onThumbnailChanged.add(thumbnail);
-    bloc.saveWeekplan();
-
-    verify(api.week.update(any, any, any, any));
-    done();
-  }));
+  test('Should save the new weekplan', async(
+    (DoneFn done) {
+      bloc.onTitleChanged.add('Ugeplan');
+      bloc.onYearChanged.add('2019');
+      bloc.onWeekNumberChanged.add('42');
+      bloc.onThumbnailChanged.add(mockThumbnail);
+      bloc
+          .saveWeekplan(
+              screenContext: null,
+              existingWeekPlans: mockWeekplanSelector.weekNameModels)
+          .then(
+        (WeekModel w) {
+          verify(api.week.update(any, any, any, any));
+          done();
+        },
+      );
+    },
+  ));
 
   test('Should validate title: Ugeplan', async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
@@ -176,7 +214,7 @@ void main() {
     bloc.onTitleChanged.add('Ugeplan');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
-    bloc.onThumbnailChanged.add(thumbnail);
+    bloc.onThumbnailChanged.add(mockThumbnail);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -189,7 +227,7 @@ void main() {
     bloc.onTitleChanged.add('Ugeplan');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('-42');
-    bloc.onThumbnailChanged.add(thumbnail);
+    bloc.onThumbnailChanged.add(mockThumbnail);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -202,7 +240,7 @@ void main() {
     bloc.onTitleChanged.add('');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
-    bloc.onThumbnailChanged.add(thumbnail);
+    bloc.onThumbnailChanged.add(mockThumbnail);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -227,7 +265,7 @@ void main() {
     bloc.onTitleChanged.add('Ugeplan');
     bloc.onYearChanged.add('2019');
     bloc.onWeekNumberChanged.add('42');
-    bloc.onThumbnailChanged.add(thumbnail);
+    bloc.onThumbnailChanged.add(mockThumbnail);
     bloc.resetBloc();
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);

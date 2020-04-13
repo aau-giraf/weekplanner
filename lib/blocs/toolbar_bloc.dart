@@ -8,10 +8,10 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Contains the functionality of the toolbar.
 class ToolbarBloc extends BlocBase {
@@ -105,7 +105,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconSearch(callback));
         break;
       case AppBarIcon.settings:
-        _iconsToAdd.add(_createIconSettings(context));
+        _iconsToAdd.add(_createIconSettings(callback));
         break;
       case AppBarIcon.undo:
         _iconsToAdd.add(_createIconUndo(callback));
@@ -273,9 +273,9 @@ class ToolbarBloc extends BlocBase {
                 : null,
             child: const Text(
               'Bekræft',
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: theme.GirafColors.white, fontSize: 20),
             ),
-            color: const Color.fromRGBO(255, 157, 0, 100),
+            color: theme.GirafColors.dialogButton,
           )
         ]);
   }
@@ -335,7 +335,10 @@ class ToolbarBloc extends BlocBase {
                 confirmButtonText: 'Log ud',
                 confirmButtonIcon:
                     const ImageIcon(AssetImage('assets/icons/logout.png')),
-                confirmOnPressed: () => _authBloc.logout(),
+                confirmOnPressed: () {
+                  _authBloc.logout();
+                  Routes.goHome(context);
+                },
               );
             });
       },
@@ -374,13 +377,11 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  IconButton _createIconSettings(BuildContext context) {
+  IconButton _createIconSettings(VoidCallback callback) {
     return IconButton(
       icon: Image.asset('assets/icons/settings.png'),
       tooltip: 'Indstillinger',
-      onPressed: () {
-        Routes.push(context, SettingsScreen());
-      },
+      onPressed: callback,
     );
   }
 
@@ -401,11 +402,11 @@ class ToolbarBloc extends BlocBase {
     alertBorder: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(0.0),
       side: const BorderSide(
-        color: Colors.white,
+        color: theme.GirafColors.white,
       ),
     ),
     titleStyle: const TextStyle(
-      color: Colors.black,
+      color: theme.GirafColors.black,
     ),
   );
 
