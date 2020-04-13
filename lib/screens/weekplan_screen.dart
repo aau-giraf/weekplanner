@@ -600,80 +600,92 @@ class WeekplanScreen extends StatelessWidget {
         ));
   }
 
+  /// Creates a cover for a completed activity, if choosing to not display them
+  Container completedActivityColor (Color dayColor, BuildContext context) {
+    return Container(
+      color: dayColor,
+      height: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width
+    );
+  }
+
   /// Build activity state icon.
   Widget _buildActivityStateIcon(BuildContext context, ActivityState state,
       WeekdayModel weekday) {
     switch (state) {
       case ActivityState.Completed:
-        return StreamBuilder<SettingsModel>(
-          stream: _settingsBloc.settings,
-          builder: (BuildContext context,
-              AsyncSnapshot<SettingsModel> snapshot) {
-            if (snapshot.data.nrOfDaysToDisplay == null ||
-                snapshot.data.nrOfDaysToDisplay == 1) {
-              return Icon(
-                Icons.check,
-                key: const Key('IconComplete'),
-                color: Colors.green,
-                size: MediaQuery.of(context).size.width,
-              );
-            } else if (snapshot.data.nrOfDaysToDisplay == 5) {
-              return Container(
-                  color: theme.GirafColors.transparentGrey,
-                  height: MediaQuery.of(context).size.width,
-                  width: MediaQuery.of(context).size.width
-              );
-            } else if (snapshot.data.nrOfDaysToDisplay == 7) {
-              if (weekday.day.index == 0) {
-                return Container(
-                  color: theme.GirafColors.mondayColor,
-                  height: MediaQuery.of(context).size.width,
-                  width: MediaQuery.of(context).size.width
-                );
-              } else if (weekday.day.index == 1) {
-                return Container(
-                    color: theme.GirafColors.tuesdayColor,
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width
-                );
-              } else if (weekday.day.index == 2) {
-                return Container(
-                    color: theme.GirafColors.wednesdayColor,
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width
-                );
-              } else if (weekday.day.index == 3) {
-                return Container(
-                    color: theme.GirafColors.thursdayColor,
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width
-                );
-              } else if (weekday.day.index == 4) {
-                return Container(
-                    color: theme.GirafColors.fridayColor,
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width
-                );
-              } else if (weekday.day.index == 5) {
-                return Container(
-                    color: theme.GirafColors.saturdayColor,
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width
-                );
-              } else {
-                return Container(
-                    color: theme.GirafColors.sundayColor,
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width
-                );
-              }
+        return StreamBuilder<WeekplanMode>(
+            stream: _authBloc.mode,
+            builder: (BuildContext context,
+                AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+              if (weekModeSnapshot.hasData) {
+                final WeekplanMode role = weekModeSnapshot.data;
+
+                if (role == WeekplanMode.guardian) {
+                  return Icon(
+                    Icons.check,
+                    key: const Key('IconComplete'),
+                    color: Colors.green,
+                    size: MediaQuery.of(context).size.width,
+                  );
+                } else if (role == WeekplanMode.citizen) {
+                  return StreamBuilder<SettingsModel>(
+                    stream: _settingsBloc.settings,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<SettingsModel> snapshot) {
+                      if (!snapshot.hasData ||
+                        snapshot.data.nrOfDaysToDisplay == null ||
+                        snapshot.data.nrOfDaysToDisplay == 1) {
+                        return Icon(
+                          Icons.check,
+                          key: const Key('IconComplete'),
+                          color: Colors.green,
+                          size: MediaQuery.of(context).size.width,
+                        );
+                      } else if (snapshot.data.nrOfDaysToDisplay == 5) {
+                        return completedActivityColor(
+                          theme.GirafColors.transparentGrey, context);
+                      } else if (snapshot.data.nrOfDaysToDisplay == 7) {
+                        if (weekday.day.index == 0) {
+                          return completedActivityColor(
+                            theme.GirafColors.mondayColor, context);
+                        } else if (weekday.day.index == 1) {
+                          return completedActivityColor(
+                            theme.GirafColors.tuesdayColor, context);
+                        } else if (weekday.day.index == 2) {
+                          return completedActivityColor(
+                            theme.GirafColors.wednesdayColor, context);
+                        } else if (weekday.day.index == 3) {
+                          return completedActivityColor(
+                            theme.GirafColors.thursdayColor, context);
+                        } else if (weekday.day.index == 4) {
+                          return completedActivityColor(
+                            theme.GirafColors.fridayColor, context);
+                        } else if (weekday.day.index == 5) {
+                          return completedActivityColor(
+                            theme.GirafColors.saturdayColor, context);
+                        } else {
+                          return completedActivityColor(
+                            theme.GirafColors.sundayColor, context);
+                        }
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                  });
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
             }
-          },
-        );
+        });
+
       case ActivityState.Canceled:
         return Icon(
           Icons.clear,
