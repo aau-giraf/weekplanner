@@ -273,7 +273,7 @@ class ToolbarBloc extends BlocBase {
                 : null,
             child: const Text(
               'Bekræft',
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: theme.GirafColors.white, fontSize: 20),
             ),
             color: theme.GirafColors.dialogButton,
           )
@@ -402,11 +402,11 @@ class ToolbarBloc extends BlocBase {
     alertBorder: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(0.0),
       side: const BorderSide(
-        color: Colors.white,
+        color: theme.GirafColors.white,
       ),
     ),
     titleStyle: const TextStyle(
-      color: Colors.black,
+      color: theme.GirafColors.black,
     ),
   );
 

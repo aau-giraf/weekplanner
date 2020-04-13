@@ -211,9 +211,10 @@ class ShowActivityScreen extends StatelessWidget {
           return Container(
             decoration: const ShapeDecoration(
                 shape: CircleBorder(
-                    side: BorderSide(color: Colors.black, width: 0.5))),
+                    side: BorderSide(color: theme.GirafColors.black,
+                        width: 0.5))),
             child: CircleAvatar(
-              backgroundColor: Colors.red,
+              backgroundColor: theme.GirafColors.red,
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: CircularProgressIndicator(
@@ -221,7 +222,8 @@ class ShowActivityScreen extends StatelessWidget {
                   value: timerProgressSnapshot.hasData
                       ? timerProgressSnapshot.data
                       : 0.0,
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                      theme.GirafColors.white),
                 ),
               ),
             ),
@@ -452,10 +454,10 @@ class ShowActivityScreen extends StatelessWidget {
                               ActivityState.Canceled
                               ? const ImageIcon(
                               AssetImage('assets/icons/cancel.png'),
-                              color: Colors.red)
+                              color: theme.GirafColors.red)
                               : const ImageIcon(
                               AssetImage('assets/icons/undo.png'),
-                              color: Colors.blue));
+                              color: theme.GirafColors.blue));
                     } else {
                       return GirafButton(
                           key: const Key('CompleteStateToggleButton'),
@@ -469,10 +471,10 @@ class ShowActivityScreen extends StatelessWidget {
                               ActivityState.Completed
                               ? const ImageIcon(
                               AssetImage('assets/icons/accept.png'),
-                              color: Colors.green)
+                              color: theme.GirafColors.green)
                               : const ImageIcon(
                               AssetImage('assets/icons/undo.png'),
-                              color: Colors.blue));
+                              color: theme.GirafColors.blue));
                     }
                   });
             },
@@ -499,14 +501,14 @@ class ShowActivityScreen extends StatelessWidget {
       return Icon(
         Icons.check,
         key: const Key('IconCompleted'),
-        color: Colors.green,
+        color: theme.GirafColors.green,
         size: MediaQuery.of(context).size.width,
       );
     } else if (state == ActivityState.Canceled) {
       return Icon(
         Icons.clear,
         key: const Key('IconCanceled'),
-        color: Colors.red,
+        color: theme.GirafColors.red,
         size: MediaQuery.of(context).size.width,
       );
     } else {

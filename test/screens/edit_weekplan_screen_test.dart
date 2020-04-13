@@ -73,6 +73,8 @@ final WeekModel mockWeek = WeekModel(
 final UsernameModel mockUser =
     UsernameModel(name: 'test', role: 'test', id: 'test');
 
+WeekplansBloc mockWeekplanSelector;
+
 void main() {
   MockEditWeekplanBloc mockBloc;
   Api api;
@@ -109,11 +111,11 @@ void main() {
       },
     );
 
-    final WeekplansBloc mockWeekplanSelector = WeekplansBloc(api);
+    mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
-    di.registerSingleton<WeekplansBloc>((_) => mockWeekplanSelector);
+    di.registerDependency<WeekplansBloc>((_) => mockWeekplanSelector);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
@@ -126,7 +128,11 @@ void main() {
     testWidgets('Edit week plan screen renders', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
     });
@@ -134,7 +140,11 @@ void main() {
     testWidgets('The screen has a GirafAppBar', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
 
@@ -149,7 +159,11 @@ void main() {
     testWidgets('Input fields are rendered', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
 
@@ -159,7 +173,11 @@ void main() {
     testWidgets('Pictograms are rendered', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -170,7 +188,11 @@ void main() {
     testWidgets('Buttons are rendered', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
 
@@ -182,7 +204,11 @@ void main() {
       mockBloc.acceptAllInputs = false;
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -195,7 +221,11 @@ void main() {
       mockBloc.acceptAllInputs = true;
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -208,7 +238,11 @@ void main() {
       mockBloc.acceptAllInputs = false;
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -221,7 +255,11 @@ void main() {
       mockBloc.acceptAllInputs = true;
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -234,7 +272,11 @@ void main() {
       mockBloc.acceptAllInputs = false;
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -246,7 +288,11 @@ void main() {
       mockBloc.acceptAllInputs = true;
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -258,7 +304,11 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.enterText(
@@ -273,7 +323,11 @@ void main() {
       mockBloc.acceptAllInputs = true;
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: mockWeek),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: mockWeek,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.tap(find.byKey(const Key('WeekThumbnailKey')));
@@ -295,7 +349,11 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: editWeekModel),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: editWeekModel,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -337,7 +395,11 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: editWeekModel),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: editWeekModel,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();
@@ -377,7 +439,11 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: EditWeekPlanScreen(user: mockUser, weekModel: editWeekModel),
+          home: EditWeekPlanScreen(
+            user: mockUser,
+            weekModel: editWeekModel,
+            selectorBloc: mockWeekplanSelector,
+          ),
         ),
       );
       await tester.pump();

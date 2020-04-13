@@ -101,8 +101,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     if (isMarked) {
       return Container(
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 15)),
+          decoration: BoxDecoration(
+            border: Border.all(color: theme.GirafColors.black, width: 15),
+          ),
           child: _buildWeekplanCard(context, weekplan, bloc));
     } else {
       return _buildWeekplanCard(context, weekplan, bloc);
@@ -184,7 +185,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
     if (!inEditMode) {
       Routes.push<WeekModel>(
         context,
-        NewWeekplanScreen(_user),
+        NewWeekplanScreen(
+          user: _user,
+          existingWeekPlans: _weekBloc.weekNameModels,
+        ),
       ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
     }
   }
@@ -263,6 +267,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       EditWeekPlanScreen(
         user: _user,
         weekModel: _weekBloc.getMarkedWeekModels()[0],
+        selectorBloc: _weekBloc,
       ),
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();
