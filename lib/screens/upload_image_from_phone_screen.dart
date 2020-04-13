@@ -137,13 +137,19 @@ class UploadImageFromPhone extends StatelessWidget {
                   child: FlatButton(
                       onPressed: () {
                         _uploadFromGallery.chooseImageFromGallery();
+
+                        if (uploadSuccessSnapshot.hasData &&
+                            !uploadSuccessSnapshot.data) {
+                          _showUploadError(context);
+                        }
                       },
                       child: StreamBuilder<File>(
                       stream: _uploadFromGallery.file,
                       builder: (BuildContext context,
                           AsyncSnapshot<File> snapshot) =>
-                      _respondToUpload(context, snapshot,
-                          uploadSuccessSnapshot)),
+                          snapshot.data != null
+                          ? _displayImage(snapshot.data)
+                          : _displayIfNoImage(context)),
                 ),
                 );
               },
@@ -152,18 +158,6 @@ class UploadImageFromPhone extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Column _respondToUpload(BuildContext context,
-      AsyncSnapshot<File> fileSnapshot, AsyncSnapshot<bool> uploadSnapshot) {
-    if ((uploadSnapshot.hasData && !uploadSnapshot.data) ||
-        (uploadSnapshot.hasData && fileSnapshot.data == null)) {
-      _showUploadError(context);
-    }
-
-    return fileSnapshot.data != null
-        ? _displayImage(fileSnapshot.data)
-        : _displayIfNoImage(context);
   }
 
   void _showUploadError(BuildContext context) {
