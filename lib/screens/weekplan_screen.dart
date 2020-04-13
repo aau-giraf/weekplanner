@@ -12,6 +12,7 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
@@ -430,7 +431,7 @@ class WeekplanScreen extends StatelessWidget {
           key: const Key('isSelectedKey'),
           margin: const EdgeInsets.all(20),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
+          BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
           child: _buildActivityCard(
             context,
             activities,
@@ -575,34 +576,11 @@ class WeekplanScreen extends StatelessWidget {
     int index,
     ActivityState activityState,
   ) {
-    Widget icon;
-    switch (activityState) {
-      case ActivityState.Completed:
-        icon = Icon(
-          Icons.check,
-          key: const Key('IconComplete'),
-          color: Colors.green,
-          size: MediaQuery.of(context).size.width,
-        );
-        break;
-      case ActivityState.Canceled:
-        icon = Icon(
-          Icons.clear,
-          key: const Key('IconCanceled'),
-          color: Colors.red,
-          size: MediaQuery.of(context).size.width,
-        );
-        break;
-      default:
-        icon = Container();
-        break;
-    }
-
     return Card(
         margin: const EdgeInsets.all(20),
         child: FittedBox(
           child: Stack(
-            alignment: AlignmentDirectional.center,
+            alignment: AlignmentDirectional.topEnd,
             children: <Widget>[
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -611,10 +589,55 @@ class WeekplanScreen extends StatelessWidget {
                   child: _getPictogram(activities[index]),
                 ),
               ),
-              icon
+              _buildActivityStateIcon(context, activityState),
+              _buildTimerIcon(context, activities[index]),
             ],
           ),
         ));
+  }
+
+  /// Build activity state icon.
+  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+    switch (state) {
+      case ActivityState.Completed:
+        return Icon(
+          Icons.check,
+          key: const Key('IconComplete'),
+          color: Colors.green,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      case ActivityState.Canceled:
+        return Icon(
+          Icons.clear,
+          key: const Key('IconCanceled'),
+          color: Colors.red,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      default:
+        return Container();
+    }
+  }
+
+  /// Builds timer icon depending on activity has timer.
+  Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
+    final TimerBloc timerBloc = di.getDependency<TimerBloc>();
+    timerBloc.load(activity, user: _user);
+    return StreamBuilder<bool>(
+      stream: timerBloc.timerIsInstantiated,
+      builder: (BuildContext streamContext,
+          AsyncSnapshot<bool> timerSnapshot) {
+        if (timerSnapshot.hasData && timerSnapshot.data) {
+          return Icon(
+            Icons.watch_later,
+            color: Colors.red,
+            size: MediaQuery.of(context).size.width /3,
+          );
+        }
+        return Container();
+      }
+    );
   }
 
   Card _translateWeekDay(Weekday day) {
