@@ -425,7 +425,7 @@ class WeekplanScreen extends StatelessWidget {
 
   /// Builds activity card with a status icon if it is marked
   StatelessWidget buildIsMarked(bool isMarked, BuildContext context,
-      List<ActivityModel> activities, int index) {
+      WeekdayModel weekday, List<ActivityModel> activities, int index) {
     if (isMarked) {
       return Container(
           key: const Key('isSelectedKey'),
@@ -436,11 +436,12 @@ class WeekplanScreen extends StatelessWidget {
             context,
             activities,
             index,
+            weekday,
             activities[index].state,
           ));
     } else {
       return _buildActivityCard(
-          context, activities, index, activities[index].state);
+          context, activities, index, weekday, activities[index].state);
     }
   }
 
@@ -543,9 +544,11 @@ class WeekplanScreen extends StatelessWidget {
                         },
                         child: (snapshot.data == WeekplanMode.guardian)
                             ? buildIsMarked(
-                                isMarked, context, weekday.activities, index)
+                                isMarked, context, weekday,
+                                weekday.activities, index)
                             : buildIsMarked(
-                                false, context, weekday.activities, index),
+                                false, context, weekday,
+                                weekday.activities, index),
                       ),
                     ));
               }),
@@ -574,6 +577,7 @@ class WeekplanScreen extends StatelessWidget {
     BuildContext context,
     List<ActivityModel> activities,
     int index,
+    WeekdayModel weekday,
     ActivityState activityState,
   ) {
     return Card(
@@ -589,7 +593,7 @@ class WeekplanScreen extends StatelessWidget {
                   child: _getPictogram(activities[index]),
                 ),
               ),
-              _buildActivityStateIcon(context, activityState),
+              _buildActivityStateIcon(context, activityState, weekday),
               _buildTimerIcon(context, activities[index]),
             ],
           ),
@@ -597,16 +601,79 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Build activity state icon.
-  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+  Widget _buildActivityStateIcon(BuildContext context, ActivityState state,
+      WeekdayModel weekday) {
     switch (state) {
       case ActivityState.Completed:
-        return Icon(
-          Icons.check,
-          key: const Key('IconComplete'),
-          color: Colors.green,
-          size: MediaQuery.of(context).size.width,
+        return StreamBuilder<SettingsModel>(
+          stream: _settingsBloc.settings,
+          builder: (BuildContext context,
+              AsyncSnapshot<SettingsModel> snapshot) {
+            if (snapshot.data.nrOfDaysToDisplay == null ||
+                snapshot.data.nrOfDaysToDisplay == 1) {
+              return Icon(
+                Icons.check,
+                key: const Key('IconComplete'),
+                color: Colors.green,
+                size: MediaQuery.of(context).size.width,
+              );
+            } else if (snapshot.data.nrOfDaysToDisplay == 5) {
+              return Container(
+                  color: theme.GirafColors.transparentGrey,
+                  height: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width
+              );
+            } else if (snapshot.data.nrOfDaysToDisplay == 7) {
+              if (weekday.day.index == 0) {
+                return Container(
+                  color: theme.GirafColors.mondayColor,
+                  height: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width
+                );
+              } else if (weekday.day.index == 1) {
+                return Container(
+                    color: theme.GirafColors.tuesdayColor,
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width
+                );
+              } else if (weekday.day.index == 2) {
+                return Container(
+                    color: theme.GirafColors.wednesdayColor,
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width
+                );
+              } else if (weekday.day.index == 3) {
+                return Container(
+                    color: theme.GirafColors.thursdayColor,
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width
+                );
+              } else if (weekday.day.index == 4) {
+                return Container(
+                    color: theme.GirafColors.fridayColor,
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width
+                );
+              } else if (weekday.day.index == 5) {
+                return Container(
+                    color: theme.GirafColors.saturdayColor,
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width
+                );
+              } else {
+                return Container(
+                    color: theme.GirafColors.sundayColor,
+                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width
+                );
+              }
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         );
-        break;
       case ActivityState.Canceled:
         return Icon(
           Icons.clear,
@@ -614,7 +681,6 @@ class WeekplanScreen extends StatelessWidget {
           color: Colors.red,
           size: MediaQuery.of(context).size.width,
         );
-        break;
       default:
         return Container();
     }

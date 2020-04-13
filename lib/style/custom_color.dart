@@ -69,4 +69,7 @@ class GirafColors {
 
   /// Color of the border used in the activity widget
   static const Color blueBorderColor = Color.fromRGBO(35, 35, 35, 1);
+
+  /// Color of transparent grey for completed activity
+  static const Color transparentGrey = Color.fromRGBO(112, 112, 112, 0.3);
 }
