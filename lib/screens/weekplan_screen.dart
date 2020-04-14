@@ -386,7 +386,7 @@ class WeekplanScreen extends StatelessWidget {
                           fontSize: 15,
                           height: 35,
                           width: 110,
-                          key: const Key("SelectAllButton"), onPressed: () {
+                          key: const Key('SelectAllButton'), onPressed: () {
                             markAllDayActivities(weekDay);},
                         ),
                         const SizedBox(height: 3.5),
@@ -395,7 +395,7 @@ class WeekplanScreen extends StatelessWidget {
                           fontSize: 15,
                           height: 35,
                           width: 110,
-                          key: const Key("DeselectAllButton"), onPressed: () {
+                          key: const Key('DeselectAllButton'), onPressed: () {
                           unmarkAllDayActivities(weekDay);
                         },
                         ),

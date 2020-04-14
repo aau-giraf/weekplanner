@@ -566,4 +566,13 @@ void main() {
 
     weekplanBloc.loadWeek(week, user);
   }));
+
+  test('Marks all activities for a given day', async((DoneFn done) {
+
+  }));
+
+  test('Unmarks all activities for a given day', async((DoneFn done) {
+
+  }));
 }
+
