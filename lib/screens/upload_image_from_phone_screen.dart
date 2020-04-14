@@ -92,16 +92,29 @@ class UploadImageFromPhone extends StatelessWidget {
         Container(
           height: 15,
         ),
-        Container(
-          width: 250,
-          height: 50,
-          child: GirafButton(
-            icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-            text: 'Gem billede',
-            onPressed: _uploadFromGallery.createPictogram,
-            isEnabledStream: _uploadFromGallery.isInputValid,
-          ),
-        ),
+        StreamBuilder<bool>(
+          stream: _uploadFromGallery.uploadSuccess,
+          builder: (BuildContext context,
+              AsyncSnapshot<bool> uploadSuccessSnapshot) {
+            return Container(
+              width: 250,
+              height: 50,
+              child: GirafButton(
+                icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+                text: 'Gem billede',
+                onPressed: () {
+                  _uploadFromGallery.createPictogram();
+
+                  if (uploadSuccessSnapshot.hasData &&
+                      !uploadSuccessSnapshot.data) {
+                    _showUploadError(context);
+                  }
+                },
+                isEnabledStream: _uploadFromGallery.isInputValid,
+              ),
+            );
+          },
+        )
       ],
     );
   }
@@ -135,14 +148,7 @@ class UploadImageFromPhone extends StatelessWidget {
                   AsyncSnapshot<bool> uploadSuccessSnapshot) {
                 return Container(
                   child: FlatButton(
-                      onPressed: () {
-                        _uploadFromGallery.chooseImageFromGallery();
-
-                        if (uploadSuccessSnapshot.hasData &&
-                            !uploadSuccessSnapshot.data) {
-                          _showUploadError(context);
-                        }
-                      },
+                      onPressed: _uploadFromGallery.chooseImageFromGallery,
                       child: StreamBuilder<File>(
                       stream: _uploadFromGallery.file,
                       builder: (BuildContext context,
