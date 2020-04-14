@@ -26,6 +26,8 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
+
+import 'package:weekplanner/style/Socicon.dart';
 import '../style/custom_color.dart' as theme;
 
 /// <summary>
@@ -629,9 +631,9 @@ class WeekplanScreen extends StatelessWidget {
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
-          return ImageIcon(
-            const AssetImage('assets/icons/TimerIndicator.svg'),
-            size: MediaQuery.of(context).size.width / 3,
+          return Icon(
+            Socicon.timerIndicator,
+            size: MediaQuery.of(context).size.width / 3
           );
         }
         return Container();
