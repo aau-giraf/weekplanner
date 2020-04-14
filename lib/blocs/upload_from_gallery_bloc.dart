@@ -56,8 +56,6 @@ class UploadFromGalleryBloc extends BlocBase {
         _publishImage(f);
         _checkInput();
         _uploadSuccess.add(true);
-      } else {
-        _uploadSuccess.add(false);
       }
     });
   }
