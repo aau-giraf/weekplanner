@@ -30,48 +30,78 @@ class NewCitizenScreen extends StatelessWidget {
                 right: 16,
                 bottom: 2.5
             ),
-            child: TextFormField(
-              key: const Key('displayNameField'),
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(borderSide: BorderSide()),
-                  hintText: 'Navn'
-              ),
-              onChanged: _bloc.onDisplayNameChange.add,
+            child: StreamBuilder<bool>(
+              stream: _bloc.validDisplayNameStream,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return TextFormField(
+                  key: const Key('displayNameField'),
+                  decoration: InputDecoration(
+                      border: const OutlineInputBorder(borderSide:
+                      BorderSide()),
+                      labelText: 'Navn',
+                      errorText: (snapshot?.data == false) ?
+                      'Navn skal udfyldes' : null,
+                  ),
+                  onChanged: _bloc.onDisplayNameChange.add,
+                );
+              }
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
-            child: TextFormField(
-              key: const Key('usernameField'),
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(borderSide: BorderSide()),
-                  hintText: 'Brugernavn'
-              ),
-              onChanged: _bloc.onUsernameChange.add,
+            child: StreamBuilder<bool>(
+              stream: _bloc.validUsernameStream,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return TextFormField(
+                  key: const Key('usernameField'),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(borderSide: BorderSide()),
+                    labelText: 'Brugernavn',
+                    errorText: (snapshot?.data == false) ?
+                    'Brugernavn må ikke indeholde mellemrum eller være tom'
+                        : null,
+                  ),
+                  onChanged: _bloc.onUsernameChange.add,
+                );
+              }
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
-            child: TextFormField(
-              key: const Key('passwordField'),
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(borderSide: BorderSide()),
-                  hintText: 'Adgangskode'
-              ),
-              onChanged: _bloc.onPasswordChange.add,
-              obscureText: true,
+            child: StreamBuilder<bool>(
+              stream: _bloc.validPasswordStream,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return TextFormField(
+                  key: const Key('passwordField'),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(borderSide: BorderSide()),
+                    labelText: 'Kodeord',
+                    errorText: (snapshot?.data == false) ?
+                    'Kodeord må ikke indeholde mellemrum eller være tom' : null,
+                  ),
+                  onChanged: _bloc.onPasswordChange.add,
+                  obscureText: true,
+                );
+              }
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
-            child: TextFormField(
-              key: const Key('passwordVerifyField'),
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(borderSide: BorderSide()),
-                  hintText: 'Gentag adgangskode'
-              ),
-              onChanged: _bloc.onPasswordVerifyChange.add,
-              obscureText: true,
+            child: StreamBuilder<bool>(
+              stream: _bloc.validPasswordVerificationStream,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return TextFormField(
+                  key: const Key('passwordVerifyField'),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(borderSide: BorderSide()),
+                    labelText: 'Gentag kodeord',
+                    errorText: (snapshot?.data == false) ?
+                    'Kodeord må ikke indeholde mellemrum eller være tom' : null,
+                  ),
+                  onChanged: _bloc.onPasswordVerifyChange.add,
+                  obscureText: true,
+                );
+              }
             ),
           ),
           Row(
