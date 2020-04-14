@@ -28,6 +28,7 @@ class SettingsScreen extends StatelessWidget {
         _buildThemeSection(),
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
+        _buildTimerSection(context),
         _buildUserSettings()
       ],
     );
@@ -50,6 +51,12 @@ class SettingsScreen extends StatelessWidget {
     return SettingsSection('Ugeplan', <SettingsSectionItem>[
       SettingsArrowButton(
           'Antal dage', () => Routes.push(context,  NumberOfDaysScreen(_user))),
+    ]);
+  }
+
+  Widget _buildTimerSection(BuildContext context) {
+    return SettingsSection('Tid', <SettingsSectionItem>[
+      SettingsCheckMarkButton(1, 0, 'Lås tidsstyring', (){})
     ]);
   }
 
