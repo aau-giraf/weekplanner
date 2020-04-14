@@ -8,6 +8,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -26,8 +27,6 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
-
-import 'package:weekplanner/style/Socicon.dart';
 import '../style/custom_color.dart' as theme;
 
 /// <summary>
@@ -632,7 +631,8 @@ class WeekplanScreen extends StatelessWidget {
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
           return Icon(
-            Socicon.timerIndicator,
+            MdiIcons.timelapse,
+            color: Colors.red,
             size: MediaQuery.of(context).size.width / 3
           );
         }
