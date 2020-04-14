@@ -8,7 +8,6 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -630,10 +629,10 @@ class WeekplanScreen extends StatelessWidget {
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
-          return Icon(
-            MdiIcons.timelapse,
+          return const ImageIcon(
+            AssetImage('assets/icons/redcircle.png'),
             color: Colors.red,
-            size: MediaQuery.of(context).size.width / 3
+            size: 250,
           );
         }
         return Container();
