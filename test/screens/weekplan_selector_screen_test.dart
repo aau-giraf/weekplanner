@@ -114,6 +114,7 @@ void main() {
   testWidgets('Renders the screen', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    //TODO remember to test this.
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
@@ -152,6 +153,7 @@ void main() {
     expect(find.byKey(const Key('weekYear')), findsNWidgets(2));
   });
 
+  //TODO check if this needs to be tested in here or in BLoC
   testWidgets('Click on edit icon toggles edit mode',
       (WidgetTester tester) async {
     await tester
@@ -175,7 +177,7 @@ void main() {
 
     expect(resultValue, false);
   });
-
+  //TODO Check if this is done correctly or could be done differently
   testWidgets('Clicking on an activity marks it', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
@@ -195,8 +197,8 @@ void main() {
     // is in fact marked
     expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
   });
-
-  testWidgets('Marking a activity and deleting removes it',
+  //TODO split test into two
+  testWidgets('Marking an activity and deleting removes it',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
@@ -218,7 +220,7 @@ void main() {
 
     expect(find.text('weekModel1'), findsNothing);
   });
-
+  //TODO SPLIT into more tests
   testWidgets('Marking activities and leave edit mode unmarks all activities',
       (WidgetTester tester) async {
     await tester
@@ -248,6 +250,7 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel2), false);
   });
 
+  //TODO this sould probably be in BloC since it tests if the BloC have marked it and not the screen.
   testWidgets('Clicking a marked activity should unmark it',
   (WidgetTester tester) async {
     await tester
@@ -273,6 +276,7 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
   });
 
+  //TODO Should be moved to BloC test.
   testWidgets('Test editing is valid', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
