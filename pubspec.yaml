@@ -24,6 +24,7 @@ dependencies:
   image: ^2.0.7
   quiver: '>=2.0.0 <3.0.0'
   mutex: ^1.0.1
+  material_design_icons_flutter: ^3.2.3895
   audioplayers:
 
 dev_dependencies:
@@ -67,6 +68,12 @@ flutter:
         - asset: assets/fonts/Quicksand-Light.ttf
         - asset: assets/fonts/Quicksand-Medium.ttf
         - asset: assets/fonts/Quicksand-Regular.ttf
+    - family: 'Socicon'
+      fonts:
+        - asset: assets/icons/fonts/Socicon.tff
+    - family:  MyFlutterApp
+      fonts:
+        - asset: assets/icons/flutter-icons/MyFlutterApp.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
