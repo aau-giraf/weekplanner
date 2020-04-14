@@ -13,6 +13,7 @@ class GirafButton extends StatefulWidget {
   const GirafButton({
     Key key,
     this.text,
+    this.fontSize = 20,
     this.icon,
     this.width,
     this.height = 40.0,
@@ -23,6 +24,9 @@ class GirafButton extends StatefulWidget {
 
   /// The text placed at the center of the button.
   final String text;
+
+  /// The size of the text
+  final double fontSize;
 
   /// The icon placed next to the text on the button.
   final ImageIcon icon;
@@ -160,7 +164,8 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _buildWidgetsOnButton() {
-    const TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 20);
+    final TextStyle textStyle = TextStyle(color: Colors.black,
+        fontSize: widget.fontSize);
 
     if (widget.text != null && widget.icon != null) {
       return Row(

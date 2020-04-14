@@ -7,6 +7,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -22,6 +23,7 @@ import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
@@ -317,8 +319,10 @@ class WeekplanScreen extends StatelessWidget {
 
   Column _day(WeekdayModel weekday, BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         _translateWeekDay(weekday.day),
+        buildDaySelectorButtons(context, weekday),
         buildDayActivities(weekday.activities, weekday),
         Container(
           padding: const EdgeInsets.only(left: 5, right: 5),
@@ -356,6 +360,74 @@ class WeekplanScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  ///Builds the selector buttons for each week day
+  Container buildDaySelectorButtons(BuildContext context, WeekdayModel weekDay)
+  {
+    return Container (
+        child: StreamBuilder<WeekplanMode>(
+          stream: _authBloc.mode,
+          initialData: WeekplanMode.guardian,
+          builder: (BuildContext context,
+          AsyncSnapshot<WeekplanMode> snapshot) {
+            return Visibility(
+              visible: snapshot.data == WeekplanMode.guardian,
+              child: StreamBuilder<bool>(
+                stream: _weekplanBloc.editMode,
+                initialData: false,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  if (snapshot.data) {
+                return Container(
+                  child: Column(
+                      children: <Widget>[
+                        GirafButton(
+                          text: 'Vælg alle',
+                          fontSize: 15,
+                          height: 35,
+                          width: 110,
+                          key: const Key("SelectAllButton"), onPressed: () {
+                            markAllDayActivities(weekDay);},
+                        ),
+                        const SizedBox(height: 3.5),
+                        GirafButton(
+                          text: 'Fravælg alle',
+                          fontSize: 15,
+                          height: 35,
+                          width: 110,
+                          key: const Key("DeselectAllButton"), onPressed: () {
+                          unmarkAllDayActivities(weekDay);
+                        },
+                        ),
+                      ]
+                  ),
+                );
+              } else {
+                return Container(width: 0.0, height: 0.0);
+              }
+            },
+          ),
+        );
+      },
+    ));
+  }
+
+  /// Marks all activities for a given day
+  void markAllDayActivities(WeekdayModel weekdayModel) {
+    for (ActivityModel activity in weekdayModel.activities) {
+      if (_weekplanBloc.isActivityMarked(activity) == false) {
+        _weekplanBloc.addMarkedActivity(activity);
+      }
+    }
+  }
+
+  /// Unmarks all activities for a given day
+  void unmarkAllDayActivities(WeekdayModel weekdayModel) {
+    for (ActivityModel activity in weekdayModel.activities) {
+      if (_weekplanBloc.isActivityMarked(activity) == true) {
+        _weekplanBloc.removeMarkedActivity(activity);
+      }
+    }
   }
 
   /// Builds a day's activities
