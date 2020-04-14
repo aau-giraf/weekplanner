@@ -362,7 +362,7 @@ class WeekplanScreen extends StatelessWidget {
     );
   }
 
-  ///Builds the selector buttons for each week day
+  ///Builds the selector buttons day
   Container buildDaySelectorButtons(BuildContext context, WeekdayModel weekDay)
   {
     return Container (
