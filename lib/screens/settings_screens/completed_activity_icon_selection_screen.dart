@@ -46,14 +46,14 @@ class CompletedActivityIconScreen extends StatelessWidget {
                       SettingsCheckMarkButton(
                           5,
                           _settingsModel.nrOfDaysToDisplay,
-                          'Transparent', () {
+                          'Lav aktiviteten grå', () {
                         _settingsModel.nrOfDaysToDisplay = 5;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
                       }),
                       SettingsCheckMarkButton(
                           7,
                           _settingsModel.nrOfDaysToDisplay,
-                          'Fjernet', () {
+                          'Fjern aktiviteten for borgeren', () {
                         _settingsModel.nrOfDaysToDisplay = 7;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
                       }),
