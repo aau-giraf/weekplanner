@@ -308,4 +308,31 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('weekModel1'), findsNothing);
   });
+  
+  testWidgets('Test BottomAppBar buttons exist', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Redigér'), findsOneWidget);
+    expect(find.text('Kopiér'), findsOneWidget);
+    expect(find.text('Slet'), findsOneWidget);
+  });
+
+  testWidgets('Test copy weekplan', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(Key('CopyWeekplanButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fortryd'), findsOneWidget);
+    expect(find.text('Kopiér til andre borgere'), findsOneWidget);
+    expect(find.text('Kopiér her'), findsOneWidget);
+  });
+  
 }

@@ -16,6 +16,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -250,6 +251,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       isEnabledStream: _weekBloc.editingIsValidStream(),
                       onPressed: () => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
+                      buttonText: 'Kopiér',
+                      buttonKey: 'CopyWeekplanButton',
+                      assetPath: 'assets/icons/copy.png',
+                      dialogFunction: _buildCopyDialog),
+                  BottomAppBarButton(
                       buttonText: 'Slet',
                       buttonKey: 'DeleteActivtiesButton',
                       assetPath: 'assets/icons/delete.png',
@@ -272,6 +278,32 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
+  }
+
+  ///Builds dialog box to select where to copy weekplan or cancel
+  Future<Center> _buildCopyDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Giraf3ButtonDialog(
+              title: 'Kopiér ugeplaner',
+              description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
+              option1Text: 'Kopiér til andre borgere',
+              option1OnPressed: (){},
+              option1Icon:
+                  const ImageIcon(AssetImage('assets/icons/copy.png')),
+              option2Text: 'Kopiér her',
+              option2OnPressed: () {
+                _pushEditWeekPlan(context);
+                _weekBloc.toggleEditMode();
+                // Closes the dialog box
+                Routes.pop(context);
+              },
+              option2Icon:
+                  const ImageIcon(AssetImage('assets/icons/copy.png')),
+              );
+        });
   }
 
   /// Builds dialog box to confirm/cancel deletion
