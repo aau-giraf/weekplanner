@@ -16,6 +16,7 @@ class EditWeekPlanScreen extends StatelessWidget {
   EditWeekPlanScreen({
     @required UsernameModel user,
     @required this.weekModel,
+    @required this.selectorBloc,
   }) : _bloc = di.getDependency<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
@@ -25,8 +26,7 @@ class EditWeekPlanScreen extends StatelessWidget {
 
   /// This bloc is the bloc from the week plan selector screen it is needed in
   /// in order to delete the week plan
-  final WeekplansBloc selectorBloc = di.getDependency<WeekplansBloc>();
-
+  final WeekplansBloc selectorBloc;
   final EditWeekplanBloc _bloc;
 
   @override

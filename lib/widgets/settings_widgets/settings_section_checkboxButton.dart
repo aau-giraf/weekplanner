@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
+import '../../style/custom_color.dart' as theme;
 
 /// SettingSection CheckMarkButton class
 class SettingsCheckMarkButton extends SettingsSectionItem {
@@ -20,7 +21,7 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
   ListTile build(BuildContext context) {
     Widget trailing;
     if (expected == current) {
-      trailing = Icon(Icons.check, color: Colors.black);
+      trailing = Icon(Icons.check, color: theme.GirafColors.black);
     } else {
       trailing = null;
     }

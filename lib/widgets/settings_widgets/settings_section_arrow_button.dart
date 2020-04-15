@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
+import '../../style/custom_color.dart' as theme;
 
 /// SettingSection ArrowButton class
 class SettingsArrowButton extends SettingsSectionItem {
@@ -19,7 +20,7 @@ class SettingsArrowButton extends SettingsSectionItem {
       title: Text(text),
       trailing: Icon(
         Icons.arrow_forward,
-        color: Colors.black,
+        color: theme.GirafColors.black,
       ),
       onTap: () => callback(),
     );

@@ -12,6 +12,7 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
@@ -532,31 +533,69 @@ class WeekplanScreen extends StatelessWidget {
           StreamBuilder<WeekplanMode>(
               stream: _authBloc.mode,
               initialData: WeekplanMode.guardian,
-              builder:
-                  (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
-                return SizedBox(
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width,
-                    child: FittedBox(
-                      child: GestureDetector(
-                        key: Key(weekday.day.index.toString() +
-                            weekday.activities[index].id.toString()),
-                        onTap: () {
-                          if (snapshot.data == WeekplanMode.guardian) {
-                            handleOnTapActivity(inEditMode, isMarked,
-                                weekday.activities, index, context);
-                          } else {
-                            handleOnTapActivity(false, false,
-                                weekday.activities, index, context);
+              builder: (BuildContext context,
+                  AsyncSnapshot<WeekplanMode> modeSnapshot) {
+                return StreamBuilder<SettingsModel>(
+                    stream: _settingsBloc.settings,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                      if (settingsSnapshot.hasData && modeSnapshot.hasData) {
+                        double _height, _width;
+                        _height =
+                            _width = 1; // default value of one to one scale
+                        final int _daysToDisplay =
+                            settingsSnapshot.data.nrOfDaysToDisplay;
+
+                        if (MediaQuery.of(context).orientation ==
+                            Orientation.portrait) {
+                          if (modeSnapshot.data == WeekplanMode.citizen) {
+                            if (_daysToDisplay == 1) {
+                              _height = 2;
+                              _width = 1;
+                            }
                           }
-                        },
-                        child: (snapshot.data == WeekplanMode.guardian)
-                            ? buildIsMarked(
-                                isMarked, context, weekday.activities, index)
-                            : buildIsMarked(
-                                false, context, weekday.activities, index),
-                      ),
-                    ));
+                        } else if (MediaQuery.of(context).orientation ==
+                            Orientation.landscape) {
+                          if (modeSnapshot.data == WeekplanMode.citizen) {
+                            if (_daysToDisplay == 1) {
+                              _height = 5.4;
+                              _width = 1;
+                            }
+                          }
+                        }
+                        return SizedBox(
+                            height: MediaQuery.of(context).size.width / _height,
+                            // MediaQuery.of(context).size.width / 3,
+                            width: MediaQuery.of(context).size.width / _width,
+                            //  MediaQuery.of(context).size.width / 1,
+                            child: FittedBox(
+                              child: GestureDetector(
+                                key: Key(weekday.day.index.toString() +
+                                    weekday.activities[index].id.toString()),
+                                onTap: () {
+                                  if (modeSnapshot.data ==
+                                      WeekplanMode.guardian) {
+                                    handleOnTapActivity(inEditMode, isMarked,
+                                        weekday.activities, index, context);
+                                  } else {
+                                    handleOnTapActivity(false, false,
+                                        weekday.activities, index, context);
+                                  }
+                                },
+                                child:
+                                    (modeSnapshot.data == WeekplanMode.guardian)
+                                        ? buildIsMarked(isMarked, context,
+                                            weekday.activities, index)
+                                        : buildIsMarked(false, context,
+                                            weekday.activities, index),
+                              ),
+                            ));
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    });
               }),
         ],
       ),
@@ -585,34 +624,11 @@ class WeekplanScreen extends StatelessWidget {
     int index,
     ActivityState activityState,
   ) {
-    Widget icon;
-    switch (activityState) {
-      case ActivityState.Completed:
-        icon = Icon(
-          Icons.check,
-          key: const Key('IconComplete'),
-          color: Colors.green,
-          size: MediaQuery.of(context).size.width,
-        );
-        break;
-      case ActivityState.Canceled:
-        icon = Icon(
-          Icons.clear,
-          key: const Key('IconCanceled'),
-          color: Colors.red,
-          size: MediaQuery.of(context).size.width,
-        );
-        break;
-      default:
-        icon = Container();
-        break;
-    }
-
     return Card(
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: FittedBox(
           child: Stack(
-            alignment: AlignmentDirectional.center,
+            alignment: AlignmentDirectional.topEnd,
             children: <Widget>[
               SizedBox(
                 width: MediaQuery.of(context).size.width,
@@ -621,10 +637,55 @@ class WeekplanScreen extends StatelessWidget {
                   child: _getPictogram(activities[index]),
                 ),
               ),
-              icon
+              _buildActivityStateIcon(context, activityState),
+              _buildTimerIcon(context, activities[index]),
             ],
           ),
         ));
+  }
+
+  /// Build activity state icon.
+  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+    switch (state) {
+      case ActivityState.Completed:
+        return Icon(
+          Icons.check,
+          key: const Key('IconComplete'),
+          color: theme.GirafColors.green,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      case ActivityState.Canceled:
+        return Icon(
+          Icons.clear,
+          key: const Key('IconCanceled'),
+          color: theme.GirafColors.red,
+          size: MediaQuery.of(context).size.width,
+        );
+        break;
+      default:
+        return Container();
+    }
+  }
+
+  /// Builds timer icon depending on activity has timer.
+  Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
+    final TimerBloc timerBloc = di.getDependency<TimerBloc>();
+    timerBloc.load(activity, user: _user);
+    return StreamBuilder<bool>(
+      stream: timerBloc.timerIsInstantiated,
+      builder: (BuildContext streamContext,
+          AsyncSnapshot<bool> timerSnapshot) {
+        if (timerSnapshot.hasData && timerSnapshot.data) {
+          return const ImageIcon(
+            AssetImage('assets/icons/redcircle.png'),
+            color: Colors.red,
+            size: 250,
+          );
+        }
+        return Container();
+      }
+    );
   }
 
   Card _translateWeekDay(Weekday day) {
