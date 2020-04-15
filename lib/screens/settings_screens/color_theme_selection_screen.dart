@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// This class is used to select the color theme for a citizen's weekplans
-class WeekplanColorSelectorScreen extends StatelessWidget {
+class ColorThemeSelectorScreen extends StatelessWidget {
   /// Constructor
-  WeekplanColorSelectorScreen({@required UsernameModel user}) : _user = user {
+  ColorThemeSelectorScreen({@required UsernameModel user}) : _user = user {
     //_settingsBloc.loadSettings(_user);
   }
 

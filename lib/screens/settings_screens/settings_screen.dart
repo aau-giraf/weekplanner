@@ -2,7 +2,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/weekplan_color_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
@@ -38,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
     return SettingsSection('Tema', <SettingsSectionItem>[
       SettingsArrowButton('Farver på ugeplan',
               () => Routes.push(
-                  context, WeekplanColorSelectorScreen(user : _user)
+                  context, ColorThemeSelectorScreen(user : _user)
               )
       ),
       SettingsArrowButton('Tegn for udførelse', () {})
