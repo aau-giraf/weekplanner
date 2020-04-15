@@ -93,9 +93,9 @@ class UploadImageFromPhone extends StatelessWidget {
           height: 15,
         ),
         StreamBuilder<bool>(
-          stream: _uploadFromGallery.uploadSuccess,
+          stream: _uploadFromGallery.hasInternet,
           builder: (BuildContext context,
-              AsyncSnapshot<bool> uploadSuccessSnapshot) {
+              AsyncSnapshot<bool> hasInternetSnapshot) {
             return Container(
               width: 250,
               height: 50,
@@ -105,8 +105,8 @@ class UploadImageFromPhone extends StatelessWidget {
                 onPressed: () {
                   _uploadFromGallery.createPictogram();
 
-                  if (uploadSuccessSnapshot.hasData &&
-                      !uploadSuccessSnapshot.data) {
+                  if (hasInternetSnapshot.hasData &&
+                      !hasInternetSnapshot.data) {
                     _showUploadError(context);
                   }
                 },
@@ -143,7 +143,7 @@ class UploadImageFromPhone extends StatelessWidget {
         child: Row(
           children: <Widget>[
             StreamBuilder<bool>(
-              stream: _uploadFromGallery.uploadSuccess,
+              stream: _uploadFromGallery.hasInternet,
               builder: (BuildContext context,
                   AsyncSnapshot<bool> uploadSuccessSnapshot) {
                 return Container(
