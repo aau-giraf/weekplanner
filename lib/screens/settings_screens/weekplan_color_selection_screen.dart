@@ -5,13 +5,11 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class WeekplanColorSelectorScreen extends StatelessWidget {
   ///Constructor
-  WeekplanColorSelectorScreen(UsernameModel user) : _user = user {
+  WeekplanColorSelectorScreen({@required UsernameModel user}) : _user = user {
     //_settingsBloc.loadSettings(_user);
   }
 
   final UsernameModel _user;
-
-
 
 
 @override
