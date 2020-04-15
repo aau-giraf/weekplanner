@@ -11,6 +11,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
+import 'package:weekplanner/screens/settings_screens/weekplan_color_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
@@ -39,8 +40,10 @@ void main() {
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar &&
-        widget.title == 'Indstillinger'), findsOneWidget);
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is GirafAppBar && widget.title == 'Indstillinger'),
+        findsOneWidget);
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
@@ -69,5 +72,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Bruger indstillinger'), findsOneWidget);
     expect(find.text(user.name + ' indstillinger'), findsOneWidget);
+  });
+
+  testWidgets('Farver på ugeplan button changes screen',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.tap(find.text('Farver på ugeplan'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WeekplanColorSelectorScreen), findsOneWidget);
   });
 }
