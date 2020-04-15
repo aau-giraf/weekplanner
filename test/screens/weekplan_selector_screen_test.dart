@@ -36,6 +36,7 @@ void main() {
   Api api;
   MockWeekApi weekApi;
   MockPictogramApi pictogramApi;
+  //TODO: change to testName testRole testId
   final UsernameModel mockUser =
       UsernameModel(name: 'test', role: 'test', id: 'test');
 
@@ -92,6 +93,7 @@ void main() {
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
   }
 
+  //region setUp()
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
@@ -99,9 +101,9 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = WeekplansBloc(api);
-    
+
     setupApiCalls();
-    
+
     di.clearAll();
     di.registerSingleton<WeekplansBloc>((_) => bloc);
     di.registerDependency<EditWeekplanBloc>((_) => editBloc);
@@ -110,11 +112,12 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     editBloc = EditWeekplanBloc(api);
   });
+  //endregion
 
-  testWidgets('Renders the screen', (WidgetTester tester) async {
+  testWidgets('Should render WeekplanSelectorScreen widget',
+      (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    //TODO remember to test this.
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
@@ -252,7 +255,7 @@ void main() {
 
   //TODO this sould probably be in BloC since it tests if the BloC have marked it and not the screen.
   testWidgets('Clicking a marked activity should unmark it',
-  (WidgetTester tester) async {
+      (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
