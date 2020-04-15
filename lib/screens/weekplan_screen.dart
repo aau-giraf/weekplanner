@@ -1,5 +1,6 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -670,18 +671,20 @@ class WeekplanScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> snapshot) {
                       if (!snapshot.hasData ||
-                        snapshot.data.nrOfDaysToDisplay == null ||
-                        snapshot.data.nrOfDaysToDisplay == 1) {
+                        snapshot.data.completeMark == null ||
+                        snapshot.data.completeMark == CompleteMark.Checkmark) {
                         return Icon(
                           Icons.check,
                           key: const Key('IconComplete'),
                           color: Colors.green,
                           size: MediaQuery.of(context).size.width,
                         );
-                      } else if (snapshot.data.nrOfDaysToDisplay == 5) {
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.MovedRight) {
                         return completedActivityColor(
                           theme.GirafColors.transparentGrey, context);
-                      } else if (snapshot.data.nrOfDaysToDisplay == 7) {
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.Removed) {
                         if (weekday.day.index == 0) {
                           return completedActivityColor(
                             theme.GirafColors.mondayColor, context);
