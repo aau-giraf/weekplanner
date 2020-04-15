@@ -55,7 +55,6 @@ class UploadFromGalleryBloc extends BlocBase {
       if (f != null) {
         _publishImage(f);
         _checkInput();
-        _uploadSuccess.add(true);
       }
     });
   }
@@ -102,6 +101,12 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
   void createPictogram() {
+    if (_internetAvailable()) {
+      _uploadSuccess.add(true);
+    } else {
+      _uploadSuccess.add(false);
+    }
+
     _isUploading.add(true);
     _api.pictogram
         .create(PictogramModel(
@@ -111,13 +116,27 @@ class UploadFromGalleryBloc extends BlocBase {
         .flatMap((PictogramModel pictogram) {
       return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
     }).listen((PictogramModel pictogram) {
-      _uploadSuccess.add(true);
       _isUploading.add(false);
       _pictogram.add(pictogram);
     }, onError: (Object error) {
-      _uploadSuccess.add(false);
       _isUploading.add(false);
     });
+  }
+
+  /// Checks internet connection.
+  bool _internetAvailable() {
+    final PictogramModel pictogramModel = PictogramModel(
+      title: 'Check',
+      accessLevel: _accessLevel,
+    );
+    bool hasInternet;
+    _api.pictogram.create(pictogramModel).listen((PictogramModel pictogram) {
+      _api.pictogram.delete(pictogramModel.id);
+      hasInternet = true;
+    }, onError: () {
+      hasInternet = false;
+    });
+    return hasInternet;
   }
 
   @override
