@@ -102,7 +102,6 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
   void createPictogram() {
-    _checkInternetConnection();
     _isUploading.add(true);
     _api.pictogram
         .create(PictogramModel(
