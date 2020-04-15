@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import 'package:api_client/models/displayname_model.dart';
+=======
+>>>>>>> 6c1de51... added settings for timer and moved piechart timer
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -13,11 +16,16 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/timer_widgets/timer_piechart.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+<<<<<<< HEAD
 import 'package:weekplanner/widgets/pictogram_text.dart';
+=======
+import 'package:api_client/models/enums/default_timer_enum.dart';
+>>>>>>> 6c1de51... added settings for timer and moved piechart timer
 import '../style/custom_color.dart' as theme;
 
 /// Screen to show information about an activity, and change the state of it.
@@ -32,6 +40,8 @@ class ShowActivityScreen extends StatelessWidget {
 
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
+
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
