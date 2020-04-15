@@ -57,6 +57,7 @@ class UploadFromGalleryBloc extends BlocBase {
         _checkInput();
       }
     });
+    _checkInternetConnection();
   }
 
   /// Checks if the input fields are filled out
