@@ -267,6 +267,7 @@ class WeekplanScreen extends StatelessWidget {
             final WeekplanMode role = weekModeSnapshot.data;
 
             if (role == WeekplanMode.guardian) {
+              weekDays.clear();
               for (int i = 0; i < weekModel.days.length; i++) {
                 weekDays.add(Expanded(
                     child: Card(
@@ -290,6 +291,7 @@ class WeekplanScreen extends StatelessWidget {
                       _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
                     // Adding the selected number of days to weekDays
+                    weekDays.clear();
                     for (int i = 0; i < _daysToDisplay; i++) {
                       weekDays.add(Expanded(
                           child: Card(
@@ -322,7 +324,10 @@ class WeekplanScreen extends StatelessWidget {
         _translateWeekDay(weekday.day),
         buildDayActivities(weekday.activities, weekday),
         Container(
-          padding: const EdgeInsets.only(left: 5, right: 5),
+          padding: EdgeInsets.symmetric(horizontal:
+          MediaQuery.of(context).orientation == Orientation.portrait ?
+          MediaQuery.of(context).size.width * 0.01 :
+          MediaQuery.of(context).size.height * 0.01),
           child: ButtonTheme(
             child: SizedBox(
               width: double.infinity,
@@ -429,9 +434,10 @@ class WeekplanScreen extends StatelessWidget {
     if (isMarked) {
       return Container(
           key: const Key('isSelectedKey'),
-          margin: const EdgeInsets.all(20),
+          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
           decoration:
-          BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
+              BoxDecoration(border: Border.all(color: Colors.black,
+                  width: MediaQuery.of(context).size.width * 0.1)),
           child: _buildActivityCard(
             context,
             activities,
@@ -495,8 +501,12 @@ class WeekplanScreen extends StatelessWidget {
           onDragEnd: (DraggableDetails details) =>
               _weekplanBloc.setActivityPlaceholderVisible(false),
           feedback: Container(
-              height: 150,
-              width: 150,
+              height: MediaQuery.of(context).orientation==Orientation.portrait ?
+              MediaQuery.of(context).size.width * 0.4 :
+              MediaQuery.of(context).size.height * 0.4,
+              width: MediaQuery.of(context).orientation==Orientation.portrait ?
+              MediaQuery.of(context).size.width * 0.4 :
+              MediaQuery.of(context).size.height * 0.4,
               child: _pictogramIconStack(context, index, weekday, inEditMode)),
         );
       },
@@ -617,7 +627,7 @@ class WeekplanScreen extends StatelessWidget {
     ActivityState activityState,
   ) {
     return Card(
-        margin: const EdgeInsets.all(20),
+        margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: FittedBox(
           child: Stack(
             alignment: AlignmentDirectional.topEnd,
