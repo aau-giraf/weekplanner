@@ -70,6 +70,22 @@ class GirafColors {
   /// Color of the border used in the activity widget
   static const Color blueBorderColor = Color.fromRGBO(35, 35, 35, 1);
 
-  /// Color of transparent grey for completed activity
-  static const Color transparentGrey = Color.fromRGBO(112, 112, 112, 0.3);
+  /// White color
+  static const Color white = Colors.white;
+  /// White70 color
+  static const Color white70 = Colors.white70;
+  /// Black color
+  static const Color black = Colors.black;
+  /// Grey color
+  static const Color grey = Colors.grey;
+  /// Amber color
+  static const Color amber = Colors.amber;
+  /// Red color
+  static const Color red = Colors.red;
+  /// Blue color
+  static const Color blue = Colors.blue;
+  /// Green color
+  static const Color green = Colors.green;
+  /// Grey[350] color
+  static const Color lightGrey = Color(0xFFD6D6D6);
 }

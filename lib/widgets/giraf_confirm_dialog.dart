@@ -84,7 +84,7 @@ class GirafConfirmDialog extends StatelessWidget {
                         text: 'Fortryd',
                         icon: const ImageIcon(
                             AssetImage('assets/icons/cancel.png'),
-                            color: Colors.black),
+                            color: theme.GirafColors.black),
                         onPressed: () {
                           if (cancelOnPressed != null) {
                             cancelOnPressed();
