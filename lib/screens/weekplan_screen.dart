@@ -524,33 +524,69 @@ class WeekplanScreen extends StatelessWidget {
           StreamBuilder<WeekplanMode>(
               stream: _authBloc.mode,
               initialData: WeekplanMode.guardian,
-              builder:
-                  (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
-                return SizedBox(
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width,
-                    child: FittedBox(
-                      child: GestureDetector(
-                        key: Key(weekday.day.index.toString() +
-                            weekday.activities[index].id.toString()),
-                        onTap: () {
-                          if (snapshot.data == WeekplanMode.guardian) {
-                            handleOnTapActivity(inEditMode, isMarked,
-                                weekday.activities, index, context);
-                          } else {
-                            handleOnTapActivity(false, false,
-                                weekday.activities, index, context);
+              builder: (BuildContext context,
+                  AsyncSnapshot<WeekplanMode> modeSnapshot) {
+                return StreamBuilder<SettingsModel>(
+                    stream: _settingsBloc.settings,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                      if (settingsSnapshot.hasData && modeSnapshot.hasData) {
+                        double _height, _width;
+                        _height =
+                            _width = 1; // default value of one to one scale
+                        final int _daysToDisplay =
+                            settingsSnapshot.data.nrOfDaysToDisplay;
+
+                        if (MediaQuery.of(context).orientation ==
+                            Orientation.portrait) {
+                          if (modeSnapshot.data == WeekplanMode.citizen) {
+                            if (_daysToDisplay == 1) {
+                              _height = 2;
+                              _width = 1;
+                            }
                           }
-                        },
-                        child: (snapshot.data == WeekplanMode.guardian)
-                            ? buildIsMarked(
-                                isMarked, context, weekday,
-                                weekday.activities, index)
-                            : buildIsMarked(
-                                false, context, weekday,
-                                weekday.activities, index),
-                      ),
-                    ));
+                        } else if (MediaQuery.of(context).orientation ==
+                            Orientation.landscape) {
+                          if (modeSnapshot.data == WeekplanMode.citizen) {
+                            if (_daysToDisplay == 1) {
+                              _height = 5.4;
+                              _width = 1;
+                            }
+                          }
+                        }
+                        return SizedBox(
+                            height: MediaQuery.of(context).size.width / _height,
+                            // MediaQuery.of(context).size.width / 3,
+                            width: MediaQuery.of(context).size.width / _width,
+                            //  MediaQuery.of(context).size.width / 1,
+                            child: FittedBox(
+                              child: GestureDetector(
+                                key: Key(weekday.day.index.toString() +
+                                    weekday.activities[index].id.toString()),
+                                onTap: () {
+                                  if (modeSnapshot.data ==
+                                      WeekplanMode.guardian) {
+                                    handleOnTapActivity(inEditMode, isMarked,
+                                        weekday.activities, index, context);
+                                  } else {
+                                    handleOnTapActivity(false, false,
+                                        weekday.activities, index, context);
+                                  }
+                                },
+                                child:
+                                    (modeSnapshot.data == WeekplanMode.guardian)
+                                        ? buildIsMarked(isMarked, context,
+                                            weekday, weekday.activities, index)
+                                        : buildIsMarked(false, context,
+                                            weekday, weekday.activities, index),
+                              ),
+                            ));
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    });
               }),
         ],
       ),
@@ -707,10 +743,10 @@ class WeekplanScreen extends StatelessWidget {
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
-          return Icon(
-            Icons.watch_later,
+          return const ImageIcon(
+            AssetImage('assets/icons/redcircle.png'),
             color: Colors.red,
-            size: MediaQuery.of(context).size.width /3,
+            size: 250,
           );
         }
         return Container();

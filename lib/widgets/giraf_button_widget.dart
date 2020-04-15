@@ -160,7 +160,8 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _buildWidgetsOnButton() {
-    const TextStyle textStyle = TextStyle(color: Colors.black, fontSize: 20);
+    const TextStyle textStyle =
+        TextStyle(color: theme.GirafColors.black, fontSize: 20);
 
     if (widget.text != null && widget.icon != null) {
       return Row(
