@@ -32,7 +32,7 @@ class UploadFromGalleryBloc extends BlocBase {
   Observable<bool> get isInputValid => _isInputValid.stream;
 
   /// State of upload
-  Observable<bool> get uploadSuccess => _uploadSuccess.stream;
+  Observable<bool> get hasInternet => _hasInternet.stream;
 
   final PublishSubject<PictogramModel> _pictogram =
       PublishSubject<PictogramModel>();
@@ -43,7 +43,7 @@ class UploadFromGalleryBloc extends BlocBase {
       BehaviorSubject<String>.seeded('Offentlig');
   final BehaviorSubject<bool> _isUploading =
       BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<bool> _uploadSuccess =
+  final BehaviorSubject<bool> _hasInternet =
         BehaviorSubject<bool>.seeded(true);
 
   AccessLevel _accessLevel = AccessLevel.PUBLIC;
@@ -101,12 +101,7 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
   void createPictogram() {
-    if (_internetAvailable()) {
-      _uploadSuccess.add(true);
-    } else {
-      _uploadSuccess.add(false);
-    }
-
+    _checkInternetConnection();
     _isUploading.add(true);
     _api.pictogram
         .create(PictogramModel(
@@ -124,19 +119,17 @@ class UploadFromGalleryBloc extends BlocBase {
   }
 
   /// Checks internet connection.
-  bool _internetAvailable() {
+  void _checkInternetConnection() {
     final PictogramModel pictogramModel = PictogramModel(
       title: 'Check',
       accessLevel: _accessLevel,
     );
-    bool hasInternet;
     _api.pictogram.create(pictogramModel).listen((PictogramModel pictogram) {
       _api.pictogram.delete(pictogramModel.id);
-      hasInternet = true;
-    }, onError: () {
-      hasInternet = false;
+      _hasInternet.add(true);
+    }, onError: (Object error) {
+      _hasInternet.add(false);
     });
-    return hasInternet;
   }
 
   @override
