@@ -36,6 +36,10 @@ void main() {
   Api api;
   MockWeekApi weekApi;
   MockPictogramApi pictogramApi;
+
+  const String nameWeekModel1 = 'weekmodel1';
+  const String nameWeekModel2 = 'weekmodel2';
+
   //TODO: change to testName testRole testId
   final UsernameModel mockUser =
       UsernameModel(name: 'test', role: 'test', id: 'test');
@@ -49,7 +53,7 @@ void main() {
       imageHash: null);
 
   final WeekModel weekModel1 = WeekModel(
-      name: 'weekModel1',
+      name: nameWeekModel1,
       thumbnail: pictogramModel,
       days: <WeekdayModel>[
         WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
@@ -58,7 +62,7 @@ void main() {
       weekYear: 2020);
 
   final WeekModel weekModel2 = WeekModel(
-      name: 'weekModel2',
+      name: nameWeekModel2,
       thumbnail: pictogramModel,
       days: <WeekdayModel>[
         WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
@@ -120,7 +124,8 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
   });
 
-  testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
+  testWidgets('Should have a Giraf App Bar Widget',
+      (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
@@ -128,12 +133,12 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('GridView is rendered', (WidgetTester tester) async {
+  testWidgets('Should have a GridView Widget', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GridView),
-        findsNWidgets(1));
+        findsOneWidget);
   });
 
   testWidgets('Weekmodels exist with the expected names',
@@ -142,9 +147,9 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pump(Duration.zero);
 
-    expect(find.text('Tilføj ugeplan'), findsNWidgets(1));
-    expect(find.text('weekModel1'), findsOneWidget);
-    expect(find.text('weekModel2'), findsOneWidget);
+    expect(find.text('Tilføj ugeplan'), findsOneWidget);
+    expect(find.text(nameWeekModel1), findsOneWidget);
+    expect(find.text(nameWeekModel2), findsOneWidget);
   });
 
   testWidgets('Weekmodels have week/year', (WidgetTester tester) async {
@@ -207,7 +212,7 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
-    expect(find.text('weekModel1'), findsOneWidget);
+    expect(find.text(nameWeekModel1), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
@@ -221,7 +226,7 @@ void main() {
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
     await tester.pumpAndSettle();
 
-    expect(find.text('weekModel1'), findsNothing);
+    expect(find.text(nameWeekModel1), findsNothing);
   });
   //TODO SPLIT into more tests
   testWidgets('Marking activities and leave edit mode unmarks all activities',
@@ -310,9 +315,9 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
-    expect(find.text('weekModel1'), findsOneWidget);
+    expect(find.text(nameWeekModel1), findsOneWidget);
     bloc.deleteWeekModel(weekModel1);
     await tester.pumpAndSettle();
-    expect(find.text('weekModel1'), findsNothing);
+    expect(find.text(nameWeekModel1), findsNothing);
   });
 }
