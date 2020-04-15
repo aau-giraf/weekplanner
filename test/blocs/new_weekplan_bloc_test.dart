@@ -89,6 +89,31 @@ void main() {
     },
   ));
 
+  test('Should save the new weekplan even when there are no existing', async(
+    (DoneFn done) {
+      when(api.week.getNames(any)).thenAnswer(
+          (_) => Observable<List<WeekNameModel>>.error(Exception()));
+
+      mockWeekplanSelector = WeekplansBloc(api);
+      mockWeekplanSelector.load(mockUser);
+
+      bloc.onTitleChanged.add('Ugeplan');
+      bloc.onYearChanged.add('2019');
+      bloc.onWeekNumberChanged.add('42');
+      bloc.onThumbnailChanged.add(mockThumbnail);
+      bloc
+          .saveWeekplan(
+              screenContext: null,
+              existingWeekPlans: mockWeekplanSelector.weekNameModels)
+          .then(
+        (WeekModel w) {
+          verify(api.week.update(any, any, any, any));
+          done();
+        },
+      );
+    },
+  ));
+
   test('Should validate title: Ugeplan', async((DoneFn done) {
     bloc.onTitleChanged.add('Ugeplan');
     bloc.validTitleStream.listen((bool isValid) {
