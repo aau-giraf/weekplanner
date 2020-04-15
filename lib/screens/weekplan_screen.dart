@@ -244,7 +244,7 @@ class WeekplanScreen extends StatelessWidget {
 
   StreamBuilder<WeekplanMode> _buildWeeks(
       WeekModel weekModel, BuildContext context) {
-    const List<Color> weekColors = <Color>[
+    const List<Color> defaultWeekColors = <Color>[
       theme.GirafColors.mondayColor,
       theme.GirafColors.tuesdayColor,
       theme.GirafColors.wednesdayColor,
@@ -269,7 +269,7 @@ class WeekplanScreen extends StatelessWidget {
               for (int i = 0; i < weekModel.days.length; i++) {
                 weekDays.add(Expanded(
                     child: Card(
-                        color: weekColors[i],
+                        color: defaultWeekColors[i],
                         child: _day(weekModel.days[i], context))));
               }
               return Row(children: weekDays);
@@ -283,16 +283,18 @@ class WeekplanScreen extends StatelessWidget {
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
                     // If the option of showing 1 day is chosen the
-                    // _weekdayCounter
-                    // must start from today's date
+                    // _weekdayCounter must start from today's date
                     if (_daysToDisplay == 1) {
                       _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
                     // Adding the selected number of days to weekDays
                     for (int i = 0; i < _daysToDisplay; i++) {
+                      // Get color from the citizen's chosen color theme
+                      final String hexColor = _settingsModel
+                          .weekDayColors[_weekdayCounter].hexColor;
                       weekDays.add(Expanded(
                           child: Card(
-                              color: weekColors[_weekdayCounter],
+                              color: Color(int.parse(hexColor)),
                               child: _day(
                                   weekModel.days[_weekdayCounter], context))));
                       if (_weekdayCounter == 6) {
