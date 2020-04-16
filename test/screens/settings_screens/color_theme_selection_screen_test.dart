@@ -135,4 +135,7 @@ void main() {
     });
   });
 
+  //TODO få lavet nogle tests, hvor når man trykker på de forskellige temaer
+  // så skifter værdierne i response.weekDayColors, så testene skal meget minde
+  // om den ovenfor
 }
