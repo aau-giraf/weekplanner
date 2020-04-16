@@ -128,7 +128,9 @@ void main() {
       List<WeekdayColorModel> expectedList = MockUserApi.createWeekDayColors();
 
       for(int i = 0; i < response.weekDayColors.length; i++) {
-        expect(response.weekDayColors[i] == expectedList[i], isTrue);
+        expect(response.weekDayColors[i].hexColor == expectedList[i].hexColor,
+            isTrue);
+        expect(response.weekDayColors[i].day == expectedList[i].day, isTrue);
       }
     });
   });
