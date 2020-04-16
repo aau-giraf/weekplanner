@@ -33,12 +33,12 @@ class UploadImageFromPhone extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return snapshot.hasData && snapshot.data
                 ? const LoadingSpinnerWidget()
-                : _buildBody();
+                : _buildBody(context);
           }),
     );
   }
 
-  Padding _buildBody() {
+  Padding _buildBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       child: Column(
@@ -46,13 +46,13 @@ class UploadImageFromPhone extends StatelessWidget {
         children: <Widget>[
           _buildDefaultText(),
           _buildImageBox(),
-          _buildInputField(),
+          _buildInputField(context),
         ],
       ),
     );
   }
 
-  Column _buildInputField() {
+  Column _buildInputField(BuildContext context) {
     return Column(
       children: <Widget>[
         Row(
@@ -92,29 +92,22 @@ class UploadImageFromPhone extends StatelessWidget {
         Container(
           height: 15,
         ),
-        StreamBuilder<bool>(
-          stream: _uploadFromGallery.hasInternet,
-          builder: (BuildContext context,
-              AsyncSnapshot<bool> hasInternetSnapshot) {
-            return Container(
-              width: 250,
-              height: 50,
-              child: GirafButton(
-                icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                text: 'Gem billede',
-                onPressed: () {
-                  _uploadFromGallery.createPictogram();
-
-                  if (hasInternetSnapshot.hasData &&
-                      !hasInternetSnapshot.data) {
-                    _showUploadError(context);
-                  }
-                },
-                isEnabledStream: _uploadFromGallery.isInputValid,
-              ),
-            );
-          },
-        )
+        Container(
+          width: 250,
+          height: 50,
+          child: GirafButton(
+            icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+            text: 'Gem billede',
+            onPressed: () async {
+              try {
+                await _uploadFromGallery.createPictogram();
+              } catch (e) {
+                _showUploadError(context);
+              }
+            },
+            isEnabledStream: _uploadFromGallery.isInputValid,
+          ),
+        ),
       ],
     );
   }
@@ -139,29 +132,14 @@ class UploadImageFromPhone extends StatelessWidget {
 
   Widget _getAndDisplayPicture() {
     return Container(
-      child: SizedBox(
-        child: Row(
-          children: <Widget>[
-            StreamBuilder<bool>(
-              stream: _uploadFromGallery.hasInternet,
-              builder: (BuildContext context,
-                  AsyncSnapshot<bool> uploadSuccessSnapshot) {
-                return Container(
-                  child: FlatButton(
-                      onPressed: _uploadFromGallery.chooseImageFromGallery,
-                      child: StreamBuilder<File>(
-                      stream: _uploadFromGallery.file,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<File> snapshot) =>
-                          snapshot.data != null
-                          ? _displayImage(snapshot.data)
-                          : _displayIfNoImage(context)),
-                ),
-                );
-              },
-            )
-          ],
-        ),
+      child: FlatButton(
+        onPressed: _uploadFromGallery.chooseImageFromGallery,
+        child: StreamBuilder<File>(
+            stream: _uploadFromGallery.file,
+            builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+            snapshot.data != null
+                ? _displayImage(snapshot.data)
+                : _displayIfNoImage()),
       ),
     );
   }
@@ -179,7 +157,7 @@ class UploadImageFromPhone extends StatelessWidget {
     );
   }
 
-  Column _displayIfNoImage(BuildContext context) {
+  Column _displayIfNoImage() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
