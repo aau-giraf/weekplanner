@@ -9,14 +9,12 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
-import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 
@@ -33,7 +31,7 @@ class MockUserApi extends Mock implements UserApi {
   Observable<SettingsModel> getSettings(String id) {
     final List<WeekdayColorModel> weekDayColors = createWeekDayColors();
 
-    SettingsModel settingsModel = SettingsModel(
+    final SettingsModel settingsModel = SettingsModel(
         orientation: null,
         completeMark: null,
         cancelMark: null,
@@ -47,7 +45,7 @@ class MockUserApi extends Mock implements UserApi {
 
 
   static List<WeekdayColorModel>createWeekDayColors() {
-    final List<WeekdayColorModel> weekDayColors = [];
+    final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
     weekDayColors.add(WeekdayColorModel(
         hexColor: '#FF0000',
         day: Weekday.Monday
@@ -125,7 +123,8 @@ void main() {
     settingsBloc.settings.listen((SettingsModel response) {
       expect(response, isNotNull);
 
-      List<WeekdayColorModel> expectedList = MockUserApi.createWeekDayColors();
+      final List<WeekdayColorModel> expectedList =
+        MockUserApi.createWeekDayColors();
 
       for(int i = 0; i < response.weekDayColors.length; i++) {
         expect(response.weekDayColors[i].hexColor == expectedList[i].hexColor,
@@ -134,8 +133,8 @@ void main() {
       }
     });
   });
-
-  //TODO få lavet nogle tests, hvor når man trykker på de forskellige temaer
-  // så skifter værdierne i response.weekDayColors, så testene skal meget minde
-  // om den ovenfor
+  // TODO(EsbenNedergaard): få lavet nogle tests.
+  // Vi skal gøre så når man trykker på de forskellige temaer så skifter
+  // værdierne i response.weekDayColors, så testene skal meget minde om
+  // den ovenfor
 }

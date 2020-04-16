@@ -26,7 +26,7 @@ class MockUserApi extends Mock implements UserApi {
 
   @override
   Observable<SettingsModel> getSettings(String id) {
-    SettingsModel settingsModel = SettingsModel(
+    final SettingsModel settingsModel = SettingsModel(
         orientation: null,
         completeMark: null,
         cancelMark: null,

@@ -45,9 +45,10 @@ class ColorThemeSelectorScreen extends StatelessWidget {
             }));
   }
 
-  //TODO: få lavet lavet vores egen udgave af checkMarkButton som ikke bare
-  // sammenligner ints, og derefter få brugt den her og gjort så den ændrer
-  // værdien af _settingsModel.weekDayColors i stedet for nrOfdaysToDisplay.
+  // TODO(eneder17): få lavet lavet vores egen udgave af checkMarkButton.
+  // Den skal ikke bare sammenligner ints men weekDayColor værdier.
+  // Derefter få brugt den her og gjort så knapperne ændrer værdien af
+  // _settingsModel.weekDayColors.
   List<SettingsSectionItem> _createSettingList(SettingsModel _settingsModel) {
     final List<SettingsSectionItem> settingsList = <SettingsSectionItem>[];
     settingsList.add(SettingsCheckMarkButton(
