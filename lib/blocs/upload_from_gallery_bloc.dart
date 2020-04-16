@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:api_client/api/api.dart';
@@ -57,7 +58,6 @@ class UploadFromGalleryBloc extends BlocBase {
         _checkInput();
       }
     });
-    _checkInternetConnection();
   }
 
   /// Checks if the input fields are filled out
@@ -101,7 +101,8 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
-  void createPictogram() {
+  Future<void> createPictogram() {
+    final Completer<PictogramModel> completer = Completer<PictogramModel>();
     _isUploading.add(true);
     _api.pictogram
         .create(PictogramModel(
@@ -113,23 +114,13 @@ class UploadFromGalleryBloc extends BlocBase {
     }).listen((PictogramModel pictogram) {
       _isUploading.add(false);
       _pictogram.add(pictogram);
+      completer.complete(pictogram);
     }, onError: (Object error) {
       _isUploading.add(false);
+      completer.complete(error);
     });
-  }
 
-  /// Checks internet connection.
-  void _checkInternetConnection() {
-    final PictogramModel pictogramModel = PictogramModel(
-      title: 'Check',
-      accessLevel: _accessLevel,
-    );
-    _api.pictogram.create(pictogramModel).listen((PictogramModel pictogram) {
-      _api.pictogram.delete(pictogramModel.id);
-      _hasInternet.add(true);
-    }, onError: (Object error) {
-      _hasInternet.add(false);
-    });
+    return completer.future;
   }
 
   @override
