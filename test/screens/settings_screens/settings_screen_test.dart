@@ -1,9 +1,11 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -32,9 +34,45 @@ class MockUserApi extends Mock implements UserApi {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
+        weekDayColors: createWeekDayColors()
     );
 
     return Observable<SettingsModel>.just(settingsModel);
+  }
+
+
+  static List<WeekdayColorModel>createWeekDayColors() {
+    final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
+    weekDayColors.add(WeekdayColorModel(
+        hexColor: '#FF0000',
+        day: Weekday.Monday
+    ));
+    weekDayColors.add(WeekdayColorModel(
+        hexColor: '#FF0000',
+        day: Weekday.Tuesday
+    ));
+    weekDayColors.add(WeekdayColorModel(
+        hexColor: '#FF0000',
+        day: Weekday.Wednesday
+    ));
+    weekDayColors.add(WeekdayColorModel(
+        hexColor: '#FF0000',
+        day: Weekday.Thursday
+    ));
+    weekDayColors.add(WeekdayColorModel(
+        hexColor: '#FF0000',
+        day: Weekday.Friday
+    ));
+    weekDayColors.add(WeekdayColorModel(
+        hexColor: '#FF0000',
+        day: Weekday.Saturday
+    ));
+    weekDayColors.add(WeekdayColorModel(
+        hexColor: '#FF0000',
+        day: Weekday.Sunday
+    ));
+
+    return weekDayColors;
   }
 }
 
@@ -66,6 +104,7 @@ void main() {
 
   testWidgets('Settings has Tema section', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
     expect(find.text('Tema'), findsOneWidget);
     expect(find.text('Farver på ugeplan'), findsOneWidget);
     expect(find.text('Tegn for udførelse'), findsOneWidget);
@@ -94,6 +133,7 @@ void main() {
   testWidgets('Farver på ugeplan button changes screen',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Farver på ugeplan'));
     await tester.pumpAndSettle();
     expect(find.byType(ColorThemeSelectorScreen), findsOneWidget);
