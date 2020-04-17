@@ -8,18 +8,6 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
   const SettingsCheckMarkButton(
       this.expected, this.current, this.text, this.callback);
 
-  /// Factory constructor that can be used to create the button from a
-  /// boolean value instead of two integer values.
-  factory SettingsCheckMarkButton.fromBoolean(
-      bool shouldBeChecked, String text, VoidCallback callback) {
-    if(shouldBeChecked == true) {
-       return SettingsCheckMarkButton(0, 0, text, callback);
-    } else {
-      return SettingsCheckMarkButton(0, 1, text, callback);
-    }
-  }
-
-
   /// Values used to keep track of, if the check should be shown
   final int expected, current;
 
