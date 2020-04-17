@@ -43,7 +43,6 @@ class UploadFromGalleryBloc extends BlocBase {
       BehaviorSubject<String>.seeded('Offentlig');
   final BehaviorSubject<bool> _isUploading =
       BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<bool> _hasInternet =
         BehaviorSubject<bool>.seeded(true);
 
   AccessLevel _accessLevel = AccessLevel.PUBLIC;
