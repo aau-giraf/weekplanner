@@ -70,14 +70,4 @@ void main() {
     expect(find.text('Bruger indstillinger'), findsOneWidget);
     expect(find.text(user.name + ' indstillinger'), findsOneWidget);
   });
-
-  testWidgets('Settings has different options for Tegnforudførelse section',
-       (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    await tester.tap(find.text('Tegn for udførelse'));
-    await tester.pumpAndSettle();
-    expect(find.text('Fjern aktiviteten for borgeren'), findsOneWidget);
-    expect(find.text('Flueben'), findsOneWidget);
-    expect(find.text('Lav aktiviteten grå'), findsOneWidget);
-  });
 }
