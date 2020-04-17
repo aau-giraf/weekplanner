@@ -16,11 +16,14 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
 
 
 
 class MockUserApi extends Mock implements UserApi {
+  SettingsModel _settingsModel;
+
   @override
   Observable<GirafUserModel> me() {
     return Observable<GirafUserModel>.just(
@@ -28,10 +31,20 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
+  Observable<SettingsModel> updateSettings(String id, SettingsModel settings) {
+    _settingsModel = settings;
+    return Observable.just(settings);
+  }
+
+  @override
   Observable<SettingsModel> getSettings(String id) {
+    return Observable<SettingsModel>.just(_settingsModel);
+  }
+
+  void createInitialSettings() {
     final List<WeekdayColorModel> weekDayColors = createWeekDayColors();
 
-    final SettingsModel settingsModel = SettingsModel(
+    _settingsModel = SettingsModel(
         orientation: null,
         completeMark: null,
         cancelMark: null,
@@ -39,10 +52,7 @@ class MockUserApi extends Mock implements UserApi {
         theme: null,
         weekDayColors: weekDayColors
     );
-
-    return Observable<SettingsModel>.just(settingsModel);
   }
-
 
   static List<WeekdayColorModel>createWeekDayColors() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
@@ -89,7 +99,9 @@ void main() {
 
   setUp(() {
     api = Api('any');
-    api.user = MockUserApi();
+    final MockUserApi temp = MockUserApi();
+    temp.createInitialSettings();
+    api.user = temp;
     settingsBloc = SettingsBloc(api);
 
 
@@ -133,8 +145,17 @@ void main() {
       }
     });
   });
+
   // TODO(EsbenNedergaard): få lavet nogle tests.
   // Vi skal gøre så når man trykker på de forskellige temaer så skifter
   // værdierne i response.weekDayColors, så testene skal meget minde om
   // den ovenfor
+
+  testWidgets('Has three SettingsCheckMarkButtons',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(
+        user: user)
+    ));
+    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
+  });
 }
