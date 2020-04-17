@@ -101,25 +101,20 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
   Observable<PictogramModel> createPictogram() {
-    Observable<PictogramModel> observable;
     _isUploading.add(true);
-    _api.pictogram
+    return _api.pictogram
         .create(PictogramModel(
       accessLevel: _accessLevel,
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {
-      observable =
-          _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
-      return observable;
+      return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
     }).map((PictogramModel pictogram) {
       _isUploading.add(false);
       _pictogram.add(pictogram);
     }).doOnError((Object error) {
       _isUploading.add(false);
     });
-
-    return observable;
   }
 
   @override
