@@ -34,7 +34,6 @@ class UploadFromGalleryBloc extends BlocBase {
   /// State of upload
   Observable<bool> get hasInternet => _hasInternet.stream;
 
-  final PublishSubject<PictogramModel> _pictogram =
       PublishSubject<PictogramModel>();
   final BehaviorSubject<bool> _isInputValid =
       BehaviorSubject<bool>.seeded(false);
