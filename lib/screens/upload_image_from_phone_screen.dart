@@ -99,11 +99,11 @@ class UploadImageFromPhone extends StatelessWidget {
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem billede',
             onPressed: () async {
-              try {
-                await _uploadFromGallery.createPictogram();
-              } catch (e) {
+              _uploadFromGallery.createPictogram().
+              listen((_) => true,
+                  onError: (Object error) {
                 _showUploadError(context);
-              }
+              });
             },
             isEnabledStream: _uploadFromGallery.isInputValid,
           ),
