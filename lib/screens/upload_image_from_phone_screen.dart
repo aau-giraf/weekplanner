@@ -23,9 +23,6 @@ class UploadImageFromPhone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _uploadFromGallery.pictogram.listen((PictogramModel p) {
-      Routes.pop(context, p);
-    });
     return Scaffold(
       appBar: GirafAppBar(title: 'Tilføj fra galleri'),
       body: StreamBuilder<bool>(
@@ -100,7 +97,9 @@ class UploadImageFromPhone extends StatelessWidget {
             text: 'Gem billede',
             onPressed: () async {
               _uploadFromGallery.createPictogram().
-              listen((_) => true,
+              listen((PictogramModel p) {
+                Routes.pop(context, p);
+              },
                   onError: (Object error) {
                 _showUploadError(context);
               });

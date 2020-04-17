@@ -114,7 +114,7 @@ class UploadFromGalleryBloc extends BlocBase {
       _pictogram.add(pictogram);
     }).doOnError((Object error) {
       _isUploading.add(false);
-    });
+    }).take(1);
   }
 
   @override
