@@ -95,7 +95,7 @@ class UploadImageFromPhone extends StatelessWidget {
           child: GirafButton(
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem billede',
-            onPressed: () async {
+            onPressed: () {
               _uploadFromGallery.createPictogram().
               listen((PictogramModel p) {
                 Routes.pop(context, p);
