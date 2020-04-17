@@ -186,7 +186,7 @@ void main() {
     expect(resultValue, false);
   });
 
-  testWidgets('Clicking on a weekplan marks it', (WidgetTester tester) async {
+  testWidgets('Clicking on a weekmodel marks it', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
@@ -208,7 +208,7 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
   });
 
-  testWidgets('Marking an weekplan and deleting removes it',
+  testWidgets('Marking an weekmodel and deleting removes it',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
@@ -233,7 +233,7 @@ void main() {
     expect(find.text(nameWeekModel1), findsNothing);
   });
 
-  testWidgets('Marking weekplan and leave edit mode unmarks all weekmodels',
+  testWidgets('Marking weekmodel and leave edit mode unmarks all weekmodels',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
@@ -312,16 +312,5 @@ void main() {
     expect(editingIsValid, false);
 
     listenForValid1.cancel();
-  });
-
-  testWidgets('Test deleting weekmodel', (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-
-    expect(find.text(nameWeekModel1), findsOneWidget);
-    bloc.deleteWeekModel(weekModel1);
-    await tester.pumpAndSettle();
-    expect(find.text(nameWeekModel1), findsNothing);
   });
 }
