@@ -160,8 +160,8 @@ void main() {
     expect(find.text('Uge: 1      År: 2020'), findsNWidgets(2));
     expect(find.byKey(const Key('weekYear')), findsNWidgets(2));
   });
+//TODO Test that the buttons rediger and such in fact is there, and that they contain the right buttons.
 
-  //TODO check if this needs to be tested in here or in BLoC
   testWidgets('Click on edit icon toggles edit mode',
       (WidgetTester tester) async {
     await tester
@@ -185,19 +185,21 @@ void main() {
 
     expect(resultValue, false);
   });
-  //TODO Check if this is done correctly or could be done differently
-  testWidgets('Clicking on an activity marks it', (WidgetTester tester) async {
+
+  testWidgets('Clicking on a weekplan marks it', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
     // Before we mark the week plan weekModel1 we check that it
     // is in fact not marked
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
 
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
@@ -205,8 +207,8 @@ void main() {
     // is in fact marked
     expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
   });
-  //TODO split test into two
-  testWidgets('Marking an activity and deleting removes it',
+
+  testWidgets('Marking an weekplan and deleting removes it',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
@@ -220,22 +222,25 @@ void main() {
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
+  //TODO test that this button is there
     await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
     await tester.pumpAndSettle();
 
+  //TODO test that this button is there
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
     await tester.pumpAndSettle();
 
     expect(find.text(nameWeekModel1), findsNothing);
   });
-  //TODO SPLIT into more tests
-  testWidgets('Marking activities and leave edit mode unmarks all activities',
+
+  testWidgets('Marking weekplan and leave edit mode unmarks all weekmodels',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
@@ -259,7 +264,7 @@ void main() {
   });
 
   //TODO this sould probably be in BloC since it tests if the BloC have marked it and not the screen.
-  testWidgets('Clicking a marked activity should unmark it',
+  testWidgets('Clicking a marked weekplan should unmark it',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
