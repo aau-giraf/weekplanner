@@ -10,6 +10,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:async_test/async_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -166,6 +167,11 @@ void main() {
     expect(find.byKey(const Key('weekYear')), findsNWidgets(2));
   });
 //TODO Test that the buttons rediger and such in fact is there, and that they contain the right buttons.
+  testWidgets('description',(WidgetTester tester) async{
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+
+  });
 
   testWidgets('Click on edit icon toggles edit mode',
       (WidgetTester tester) async {
