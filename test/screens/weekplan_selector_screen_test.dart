@@ -327,12 +327,24 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.byKey(Key('CopyWeekplanButton')));
     await tester.pumpAndSettle();
 
     expect(find.text('Fortryd'), findsOneWidget);
-    expect(find.text('Kopiér til andre borgere'), findsOneWidget);
-    expect(find.text('Kopiér her'), findsOneWidget);
+    expect(find.text('Anden borger'), findsOneWidget);
+    expect(find.text('Denne borger'), findsOneWidget);
   });
-  
+
+
+  testWidgets('Test that “kopier” button is only available '
+      'when having marked a single weekplan',
+          (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+  });
+
 }

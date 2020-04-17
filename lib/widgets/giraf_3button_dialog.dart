@@ -33,16 +33,19 @@ class Giraf3ButtonDialog extends StatelessWidget {
 
   ///text for option 1 button
   final String option1Text;
+
   ///text for option 2 button
   final String option2Text;
 
   ///icon for option 1
   final ImageIcon option1Icon;
+
   ///icon for option 2
   final ImageIcon option2Icon;
 
   ///the method to call when option 1 is pressed
   final VoidCallback option1OnPressed;
+
   ///the method to call when option 2 is pressed
   final VoidCallback option2OnPressed;
 
@@ -60,76 +63,80 @@ class Giraf3ButtonDialog extends StatelessWidget {
           child: GirafTitleHeader(
         title: title,
       )),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Text(
+      content: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Text(
                   //if description is null,
                   // its replaced with empty.
                   description ?? '',
                   textAlign: TextAlign.center,
                 ),
-              ))
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-            child: Row(
+                    ))
+              ],
+            ),
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: GirafButton(
-                        key: const Key('ConfirmDialogCancelButton'),
-                        text: 'Fortryd',
-                        icon: const ImageIcon(
-                            AssetImage('assets/icons/cancel.png'),
-                            color: theme.GirafColors.black),
-                        onPressed: () {
-                          if (cancelOnPressed != null) {
-                            cancelOnPressed();
-                          }
-
-                          Routes.pop(context);
-                        }),
-                  ),
-                ),
+                    fit: FlexFit.loose,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GirafButton(
+                          key: const Key('Option1Button'),
+                          text: option1Text,
+                          icon: option1Icon,
+                          onPressed: () {
+                            option1OnPressed();
+                          }),
+                    )),
                 Flexible(
                     fit: FlexFit.loose,
                     child: Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: GirafButton(
-                            key: const Key('Option1Button'),
-                            text: option1Text,
-                            icon: option1Icon,
-                            onPressed: () {
-                              option1OnPressed();
-                            }))),
-                Flexible(
-                    fit: FlexFit.loose,
-                    child: Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: GirafButton(
-                            key: const Key('Option2Button'),
-                            text: option2Text,
-                            icon: option2Icon,
-                            onPressed: () {
-                              option2OnPressed();
-                            })))
+                      padding: const EdgeInsets.all(8.0),
+                      child: GirafButton(
+                          key: const Key('Option2Button'),
+                          text: option2Text,
+                          icon: option2Icon,
+                          onPressed: () {
+                            option2OnPressed();
+                          }),
+                    ))
               ],
             ),
-          ),
-        ],
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: GirafButton(
+                      key: const Key('ConfirmDialogCancelButton'),
+                      text: 'Fortryd',
+                      icon: const ImageIcon(
+                          AssetImage('assets/icons/cancel.png'),
+                          color: theme.GirafColors.black),
+                      onPressed: () {
+                        if (cancelOnPressed != null) {
+                          cancelOnPressed();
+                        }
+
+                        Routes.pop(context);
+                      }),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

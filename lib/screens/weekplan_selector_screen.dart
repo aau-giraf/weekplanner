@@ -289,11 +289,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
           return Giraf3ButtonDialog(
               title: 'Kopiér ugeplaner',
               description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
-              option1Text: 'Kopiér til andre borgere',
+              option1Text: 'Anden borger',
               option1OnPressed: (){},
               option1Icon:
                   const ImageIcon(AssetImage('assets/icons/copy.png')),
-              option2Text: 'Kopiér her',
+              option2Text: 'Denne borger',
               option2OnPressed: () {
                 _pushEditWeekPlan(context);
                 _weekBloc.toggleEditMode();
