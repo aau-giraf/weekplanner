@@ -24,6 +24,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import '../test_image.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
@@ -167,10 +168,20 @@ void main() {
     expect(find.byKey(const Key('weekYear')), findsNWidgets(2));
   });
 //TODO Test that the buttons rediger and such in fact is there, and that they contain the right buttons.
-  testWidgets('description',(WidgetTester tester) async{
+  testWidgets('Should have Redigér and Slet buttons in edit mode',
+          (WidgetTester tester) async{
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
 
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Redigér'), findsOneWidget);
+    expect(find.byKey(const Key('EditButtonKey')), findsOneWidget);
+
+    expect(find.text('Slet'), findsOneWidget);
+    expect(find.byKey(const Key('DeleteActivtiesButton')), findsOneWidget);
   });
 
   testWidgets('Click on edit icon toggles edit mode',
@@ -233,11 +244,9 @@ void main() {
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
-  //TODO test that this button is there
     await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
     await tester.pumpAndSettle();
-
-  //TODO test that this button is there
+    
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
     await tester.pumpAndSettle();
 
