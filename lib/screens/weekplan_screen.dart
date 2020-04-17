@@ -291,7 +291,8 @@ class WeekplanScreen extends StatelessWidget {
                     for (int i = 0; i < _daysToDisplay; i++) {
                       // Get color from the citizen's chosen color theme
                       final String hexColor = _settingsModel
-                          .weekDayColors[_weekdayCounter].hexColor;
+                          .weekDayColors[_weekdayCounter].hexColor
+                          .replaceFirst('#', '0xff');
                       weekDays.add(Expanded(
                           child: Card(
                               color: Color(int.parse(hexColor)),
