@@ -96,7 +96,7 @@ class NewCitizenScreen extends StatelessWidget {
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Gentag kodeord',
                     errorText: (snapshot?.data == false) ?
-                    'Kodeord må ikke indeholde mellemrum eller være tom' : null,
+                    'Kodeord skal være ens' : null,
                   ),
                   onChanged: _bloc.onPasswordVerifyChange.add,
                   obscureText: true,

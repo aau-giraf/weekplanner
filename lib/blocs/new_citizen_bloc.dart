@@ -48,8 +48,9 @@ class NewCitizenBloc extends BlocBase {
       passwordController.stream.transform(_passwordValidation);
   /// Validation stream for password validation
   Observable<bool> get validPasswordVerificationStream =>
-      passwordVerifyController
-          .stream.transform(_passwordVerificationValidation);
+      Observable.combineLatest2<String, String, bool>
+        (passwordController, passwordVerifyController,
+              (String a, String b) => a == b);
 
   /// Updates the current user(guardian)
   /// Necessary to call in case another user logs in without terminating the app
@@ -69,18 +70,6 @@ class NewCitizenBloc extends BlocBase {
         role: Role.Citizen
     );
   }
-
-  /// Compares all validation results and
-  /// checks if password and password verification is equal
-  bool _isAllInputValid(
-      bool displayName, bool username, bool password, bool passwordValid) {
-    return displayName &&
-        username &&
-        password &&
-        passwordValid &&
-        passwordController.value == passwordVerifyController.value;
-  }
-
   /// Gives information about whether all inputs are valid.
   Observable<bool> get allInputsAreValidStream =>
       Observable.combineLatest4<bool, bool, bool, bool, bool>(
@@ -88,7 +77,7 @@ class NewCitizenBloc extends BlocBase {
           validUsernameStream,
           validPasswordStream,
           validPasswordVerificationStream,
-          _isAllInputValid)
+          (bool a, bool b, bool c, bool d) => a && b && c && d)
           .asBroadcastStream();
 
   /// Stream for display name validation
@@ -115,17 +104,6 @@ class NewCitizenBloc extends BlocBase {
 
   /// Stream for password validation
   final StreamTransformer<String, bool> _passwordValidation =
-  StreamTransformer<String, bool>.fromHandlers(
-      handleData: (String input, EventSink<bool> sink) {
-        if (input == null || input.isEmpty) {
-          sink.add(false);
-        } else {
-          sink.add(!input.contains(' '));
-        }
-      });
-
-  /// Stream for password verification validation
-  final StreamTransformer<String, bool> _passwordVerificationValidation =
   StreamTransformer<String, bool>.fromHandlers(
       handleData: (String input, EventSink<bool> sink) {
         if (input == null || input.isEmpty) {
