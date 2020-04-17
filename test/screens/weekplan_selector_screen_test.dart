@@ -20,6 +20,7 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../test_image.dart';
@@ -129,7 +130,11 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
-    expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
+    expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar &&
+        widget.title == mockUser.name &&
+        widget.appBarIcons.keys.contains(AppBarIcon.edit) &&
+        widget.appBarIcons.keys.contains(AppBarIcon.logout) &&
+        widget.appBarIcons.keys.contains(AppBarIcon.settings)),
         findsOneWidget);
   });
 
