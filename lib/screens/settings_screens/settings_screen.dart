@@ -56,7 +56,8 @@ class SettingsScreen extends StatelessWidget {
                     () =>
                     Routes.push(
                         context, ColorThemeSelectorScreen(user: _user)
-                    ),
+                    ).then((Object object) =>
+                          _settingsBloc.loadSettings(_user)),
                 trailing: ThemeBox.fromHexValues(
                     settingsModel.weekDayColors[0].hexColor,
                     settingsModel.weekDayColors[1].hexColor
