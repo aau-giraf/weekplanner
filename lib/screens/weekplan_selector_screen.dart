@@ -248,12 +248,14 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
                       isEnabled: false,
-                      isEnabledStream: _weekBloc.editingIsValidStream(),
+                      isEnabledStream: _weekBloc.onlyOneModelMarkedStream(),
                       onPressed: () => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
                       buttonText: 'Kopiér',
                       buttonKey: 'CopyWeekplanButton',
                       assetPath: 'assets/icons/copy.png',
+                      isEnabled: false,
+                      isEnabledStream: _weekBloc.onlyOneModelMarkedStream(),
                       dialogFunction: _buildCopyDialog),
                   BottomAppBarButton(
                       buttonText: 'Slet',

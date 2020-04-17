@@ -173,7 +173,7 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// This stream checks that you have only marked one week model
-  Observable<bool> editingIsValidStream() {
+  Observable<bool> onlyOneModelMarkedStream() {
     return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
   }
 
@@ -182,4 +182,5 @@ class WeekplansBloc extends BlocBase {
     _weekModel.close();
     _weekNameModelsList.close();
   }
+
 }
