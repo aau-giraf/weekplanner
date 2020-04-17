@@ -671,8 +671,12 @@ class WeekplanScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> snapshot) {
                       if (!snapshot.hasData ||
-                        snapshot.data.completeMark == null ||
-                        snapshot.data.completeMark == CompleteMark.Checkmark) {
+                          snapshot.data.completeMark == null) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.Checkmark) {
                         return Icon(
                           Icons.check,
                           key: const Key('IconComplete'),
