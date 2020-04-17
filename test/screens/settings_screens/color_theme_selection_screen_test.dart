@@ -16,6 +16,7 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
 
 
@@ -133,8 +134,17 @@ void main() {
       }
     });
   });
+
   // TODO(EsbenNedergaard): få lavet nogle tests.
   // Vi skal gøre så når man trykker på de forskellige temaer så skifter
   // værdierne i response.weekDayColors, så testene skal meget minde om
   // den ovenfor
+
+  testWidgets('Has three SettingsCheckMarkButtons',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(
+        user: user)
+    ));
+    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
+  });
 }
