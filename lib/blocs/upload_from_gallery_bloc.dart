@@ -111,7 +111,7 @@ class UploadFromGalleryBloc extends BlocBase {
       return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
     }).map((PictogramModel pictogram) {
       _isUploading.add(false);
-      _pictogram.add(pictogram);
+      return pictogram;
     }).doOnError((Object error, StackTrace trace) {
       _isUploading.add(false);
     }).take(1);
