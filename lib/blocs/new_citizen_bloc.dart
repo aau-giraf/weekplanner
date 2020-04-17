@@ -49,8 +49,9 @@ class NewCitizenBloc extends BlocBase {
   /// Validation stream for password validation
   Observable<bool> get validPasswordVerificationStream =>
       Observable.combineLatest2<String, String, bool>
-        (passwordController, passwordVerifyController,
+        (passwordController.startWith(''), passwordVerifyController,
               (String a, String b) => a == b);
+
 
   /// Updates the current user(guardian)
   /// Necessary to call in case another user logs in without terminating the app
