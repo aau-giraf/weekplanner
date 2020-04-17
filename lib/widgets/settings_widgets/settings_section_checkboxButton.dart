@@ -5,11 +5,25 @@ import '../../style/custom_color.dart' as theme;
 /// SettingSection CheckMarkButton class
 class SettingsCheckMarkButton extends SettingsSectionItem {
   /// Constructor
-  const SettingsCheckMarkButton(
+  SettingsCheckMarkButton(
       this.expected, this.current, this.text, this.callback);
 
+  /// Constructor that can be used to create the button from a boolean value
+  /// instead of two integer values.
+  SettingsCheckMarkButton.fromBool(
+      bool shouldBeChecked, this.text, this.callback){
+    if(shouldBeChecked == true) {
+      this.expected = 0;
+      this.current = 0;
+    } else {
+      this.expected = 0;
+      this.current = 1;
+    }
+  }
+
+
   /// Values used to keep track of, if the check should be shown
-  final int expected, current;
+  int expected, current;
 
   /// Text on button
   final String text;
