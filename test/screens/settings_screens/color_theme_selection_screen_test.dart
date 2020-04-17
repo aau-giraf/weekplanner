@@ -126,7 +126,17 @@ void main() {
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
-  testWidgets('The correct settings are loaded', (WidgetTester tester) async {
+  testWidgets('Has three SettingsCheckMarkButtons',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(
+            user: user)
+        ));
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
+      });
+
+  testWidgets('The correct initial settings are loaded',
+          (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(
         user: user)
     ));
@@ -150,12 +160,9 @@ void main() {
   // værdierne i response.weekDayColors, så testene skal meget minde om
   // den ovenfor
 
-  testWidgets('Has three SettingsCheckMarkButtons',
-          (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(
-        user: user)
-    ));
-    await tester.pumpAndSettle();
-    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
-  });
+
+
+
+
+
 }
