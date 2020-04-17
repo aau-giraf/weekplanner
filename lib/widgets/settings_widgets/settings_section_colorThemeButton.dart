@@ -5,10 +5,10 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 import '../../style/custom_color.dart' as theme;
 
 /// Button used for the color theme settings
-class ColorThemeCheckMarkButton extends SettingsSectionItem {
+class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
 
   /// Constructor
-  const ColorThemeCheckMarkButton(
+  const SettingsColorThemeCheckMarkButton(
       this._expected, this._current, this._text, this._callback);
 
 
@@ -35,7 +35,11 @@ class ColorThemeCheckMarkButton extends SettingsSectionItem {
     );
   }
 
-  bool _shouldHaveCheckmark(){
+  bool _shouldHaveCheckmark() {
+    if (_expected == null || _current == null){
+      return false;
+    }
+
     if(_expected.length != _current.length) {
       return false;
     }
