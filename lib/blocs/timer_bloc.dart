@@ -32,16 +32,31 @@ class TimerBloc extends BlocBase {
 
   /// BehaviorSubject for the progress of the timer.
   final BehaviorSubject<double> _timerProgressStream =
-  BehaviorSubject<double>.seeded(0.0);
+      BehaviorSubject<double>.seeded(0.0);
 
   /// BehaviorSubject for to check if timer is running.
   final BehaviorSubject<TimerRunningMode> _timerRunningModeStream =
-  BehaviorSubject<TimerRunningMode>.seeded(TimerRunningMode.not_initialized);
+      BehaviorSubject<TimerRunningMode>.seeded(
+          TimerRunningMode.not_initialized);
 
   /// BehaviorSubject for to check if timer is instantiated.
   final BehaviorSubject<bool> _timerInstantiatedStream =
-  BehaviorSubject<bool>.seeded(false);
+      BehaviorSubject<bool>.seeded(false);
 
+  /// Stream for the progress of the timer in minutes and seconds.
+  /// The array streamed contains minutes at index 0 and seconds at index 1.
+  Stream<List<int>> get timerProgressNumeric = _timerProgressNumeric.Stream();
+
+  
+  final List<int>.from(arr)
+  final BehaviorSubject<List<int>> _timerProgressNumeric = initializeList();
+
+  List<int> initializeList() {
+    return [0,0]
+  }
+  
+  BehaviorSubject<List<int>>.seeded(List<int>.from(arr));
+  
   CountdownTimer _countDown;
   StreamSubscription<CountdownTimer> _timerStream;
   Stopwatch _stopwatch;
@@ -49,10 +64,8 @@ class TimerBloc extends BlocBase {
   // Audio player used for ding sound.
   static final AudioPlayer _volumePlayer = AudioPlayer();
 
-  final AudioCache _audioPlayer = AudioCache(
-      prefix: 'audio/',
-      fixedPlayer: _volumePlayer
-  );
+  final AudioCache _audioPlayer =
+      AudioCache(prefix: 'audio/', fixedPlayer: _volumePlayer);
 
   final String _audioFile = 'dingSound.wav';
   final int _updatePeriod = 1000;
@@ -108,8 +121,8 @@ class TimerBloc extends BlocBase {
               Duration(milliseconds: _updatePeriod),
               stopwatch: _stopwatch);
 
-          _timerStream = _countDown.listen((CountdownTimer c)
-          => updateTimerProgress(c));
+          _timerStream =
+              _countDown.listen((CountdownTimer c) => updateTimerProgress(c));
 
           // Do an initial update
           updateTimerProgress(_countDown);
@@ -133,7 +146,6 @@ class TimerBloc extends BlocBase {
     }
   }
 
-
   /// Plays the timer.
   /// The method will use the current time, the progress of the timer and
   /// the full length, to calculate the progress of the progress circle in
@@ -149,7 +161,7 @@ class TimerBloc extends BlocBase {
       // Calculates the end time
       final DateTime _endTime = _activityModel.timer.startTime.add(Duration(
           milliseconds:
-          _activityModel.timer.fullLength - _activityModel.timer.progress));
+              _activityModel.timer.fullLength - _activityModel.timer.progress));
       _countDown = CountdownTimer(
           _endTime.difference(_activityModel.timer.startTime),
           Duration(milliseconds: _updatePeriod),
@@ -171,9 +183,9 @@ class TimerBloc extends BlocBase {
   }
 
   /// Calculate progress and write it to the _timerProgressStream
-  void updateTimerProgress(CountdownTimer c){
-    _timerProgressStream.add(1 -
-        (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
+  void updateTimerProgress(CountdownTimer c) {
+    _timerProgressStream.add(
+        1 - (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
   }
 
   /// Plays ding sound from mp3 file.
@@ -190,8 +202,8 @@ class TimerBloc extends BlocBase {
         _timerStream != null &&
         !_activityModel.timer.paused) {
       _activityModel.timer.paused = true;
-      _activityModel.timer.progress = _activityModel.timer.fullLength -
-          _countDown.remaining.inMilliseconds;
+      _activityModel.timer.progress =
+          _activityModel.timer.fullLength - _countDown.remaining.inMilliseconds;
       _resetCounterAndStopwatch();
       _timerRunningModeStream.add(TimerRunningMode.paused);
 
