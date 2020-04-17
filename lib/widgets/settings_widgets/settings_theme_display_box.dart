@@ -8,8 +8,17 @@ class ThemeBox extends StatelessWidget {
   /// Constructor
   const ThemeBox(this._leftColor, this._rightColor);
 
+  /// Constructer that takes hex values as input
+  factory ThemeBox.fromHexValues(String leftHexValue, String rightHexValue){
+    return ThemeBox(_colorFromHex(leftHexValue), _colorFromHex(rightHexValue));
+  }
+
   final Color _leftColor;
   final Color _rightColor;
+
+  static Color _colorFromHex(String hexColorValue) {
+    return Color(int.parse(hexColorValue.replaceFirst('#', '0xff')));
+  }
 
   @override
   Widget build(BuildContext context) {

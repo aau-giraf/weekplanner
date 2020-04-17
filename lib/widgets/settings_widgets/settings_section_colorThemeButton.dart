@@ -19,7 +19,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
   @override
   Widget build(BuildContext context) {
     Widget trailing;
-    if (_shouldHaveCheckmark()) {
+    if (_shouldHaveCheckMark()) {
       trailing = Icon(Icons.check, color: theme.GirafColors.black);
     } else {
       trailing = null;
@@ -28,8 +28,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
     return ListTile(
       title: Row(
         children: <Widget>[
-          ThemeBox(_colorFromHex(_expected[0].hexColor),
-              _colorFromHex(_expected[1].hexColor)),
+          ThemeBox.fromHexValues(_expected[0].hexColor, _expected[1].hexColor),
           Text(_text),
         ],
       ),
@@ -38,7 +37,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
     );
   }
 
-  bool _shouldHaveCheckmark() {
+  bool _shouldHaveCheckMark() {
     if (_expected == null || _current == null) {
       return false;
     }
@@ -56,9 +55,5 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
       }
     }
     return true;
-  }
-
-  Color _colorFromHex(String hexColorValue) {
-    return Color(int.parse(hexColorValue.replaceFirst('#', '0xff')));
   }
 }
