@@ -43,20 +43,14 @@ class TimerBloc extends BlocBase {
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 
+  /// Behavior subject for the progress of the timer in minutes and seconds.
+  final BehaviorSubject<List<int>> _timerProgressNumeric = 
+      BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
+
   /// Stream for the progress of the timer in minutes and seconds.
   /// The array streamed contains minutes at index 0 and seconds at index 1.
-  Stream<List<int>> get timerProgressNumeric = _timerProgressNumeric.Stream();
+  Stream<List<int>> get timerProgressNumeric => _timerProgressNumeric.stream;
 
-  
-  final List<int>.from(arr)
-  final BehaviorSubject<List<int>> _timerProgressNumeric = initializeList();
-
-  List<int> initializeList() {
-    return [0,0]
-  }
-  
-  BehaviorSubject<List<int>>.seeded(List<int>.from(arr));
-  
   CountdownTimer _countDown;
   StreamSubscription<CountdownTimer> _timerStream;
   Stopwatch _stopwatch;
