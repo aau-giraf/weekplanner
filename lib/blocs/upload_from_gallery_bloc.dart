@@ -25,14 +25,9 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Publishes the accessLevel for the pictogram
   Observable<String> get accessLevel => _accessString.stream;
 
-  /// The latest uploaded pictogram
-  Observable<PictogramModel> get pictogram => _pictogram.stream;
-
   /// Publishes if the input fields are filled
   Observable<bool> get isInputValid => _isInputValid.stream;
 
-
-      PublishSubject<PictogramModel>();
   final BehaviorSubject<bool> _isInputValid =
       BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<File> _file = BehaviorSubject<File>();
@@ -56,7 +51,8 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null && _pictogramName.isNotEmpty) {
+    if (_file.value != null && _pictogramName != null &&
+        _pictogramName.isNotEmpty) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
