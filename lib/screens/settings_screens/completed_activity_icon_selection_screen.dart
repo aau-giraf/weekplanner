@@ -1,3 +1,4 @@
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,24 +38,26 @@ class CompletedActivityIconScreen extends StatelessWidget {
                   children: <Widget>[
                     SettingsSection('Tegn for udførelse', <SettingsSectionItem>[
                       SettingsCheckMarkButton(
-                          1, _settingsModel.nrOfDaysToDisplay,
-                          'Flueben', () {
-                              _settingsModel.nrOfDaysToDisplay = 1;
+                          1,
+                          _settingsModel.completeMark.index + 1,
+                          'Fjern aktiviteten for borgeren', () {
+                              _settingsModel.completeMark =
+                                  CompleteMark.Removed;
                               _settingsBloc.updateSettings(_user.id,
                                 _settingsModel);
                           }),
                       SettingsCheckMarkButton(
-                          5,
-                          _settingsModel.nrOfDaysToDisplay,
-                          'Lav aktiviteten grå', () {
-                        _settingsModel.nrOfDaysToDisplay = 5;
+                          2,
+                          _settingsModel.completeMark.index + 1,
+                          'Flueben', () {
+                        _settingsModel.completeMark = CompleteMark.Checkmark;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
                       }),
                       SettingsCheckMarkButton(
-                          7,
-                          _settingsModel.nrOfDaysToDisplay,
-                          'Fjern aktiviteten for borgeren', () {
-                        _settingsModel.nrOfDaysToDisplay = 7;
+                          3,
+                          _settingsModel.completeMark.index + 1,
+                          'Lav aktiviteten grå', () {
+                        _settingsModel.completeMark = CompleteMark.MovedRight;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
                       }),
                     ]),

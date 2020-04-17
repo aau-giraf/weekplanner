@@ -1,5 +1,6 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -267,7 +268,6 @@ class WeekplanScreen extends StatelessWidget {
             final WeekplanMode role = weekModeSnapshot.data;
 
             if (role == WeekplanMode.guardian) {
-              weekDays.clear();
               for (int i = 0; i < weekModel.days.length; i++) {
                 weekDays.add(Expanded(
                     child: Card(
@@ -291,7 +291,6 @@ class WeekplanScreen extends StatelessWidget {
                       _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
                     // Adding the selected number of days to weekDays
-                    weekDays.clear();
                     for (int i = 0; i < _daysToDisplay; i++) {
                       weekDays.add(Expanded(
                           child: Card(
@@ -324,10 +323,7 @@ class WeekplanScreen extends StatelessWidget {
         _translateWeekDay(weekday.day),
         buildDayActivities(weekday.activities, weekday),
         Container(
-          padding: EdgeInsets.symmetric(horizontal:
-          MediaQuery.of(context).orientation == Orientation.portrait ?
-          MediaQuery.of(context).size.width * 0.01 :
-          MediaQuery.of(context).size.height * 0.01),
+          padding: const EdgeInsets.only(left: 5, right: 5),
           child: ButtonTheme(
             child: SizedBox(
               width: double.infinity,
@@ -434,10 +430,9 @@ class WeekplanScreen extends StatelessWidget {
     if (isMarked) {
       return Container(
           key: const Key('isSelectedKey'),
-          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+          margin: const EdgeInsets.all(20),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black,
-                  width: MediaQuery.of(context).size.width * 0.1)),
+          BoxDecoration(border: Border.all(color: Colors.black, width: 50)),
           child: _buildActivityCard(
             context,
             activities,
@@ -501,12 +496,8 @@ class WeekplanScreen extends StatelessWidget {
           onDragEnd: (DraggableDetails details) =>
               _weekplanBloc.setActivityPlaceholderVisible(false),
           feedback: Container(
-              height: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.width * 0.4 :
-              MediaQuery.of(context).size.height * 0.4,
-              width: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.width * 0.4 :
-              MediaQuery.of(context).size.height * 0.4,
+              height: 150,
+              width: 150,
               child: _pictogramIconStack(context, index, weekday, inEditMode)),
         );
       },
@@ -627,7 +618,7 @@ class WeekplanScreen extends StatelessWidget {
     ActivityState activityState,
   ) {
     return Card(
-        margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+        margin: const EdgeInsets.all(20),
         child: FittedBox(
           child: Stack(
             alignment: AlignmentDirectional.topEnd,
@@ -680,18 +671,20 @@ class WeekplanScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> snapshot) {
                       if (!snapshot.hasData ||
-                        snapshot.data.nrOfDaysToDisplay == null ||
-                        snapshot.data.nrOfDaysToDisplay == 1) {
+                        snapshot.data.completeMark == null ||
+                        snapshot.data.completeMark == CompleteMark.Checkmark) {
                         return Icon(
                           Icons.check,
                           key: const Key('IconComplete'),
                           color: Colors.green,
                           size: MediaQuery.of(context).size.width,
                         );
-                      } else if (snapshot.data.nrOfDaysToDisplay == 5) {
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.MovedRight) {
                         return completedActivityColor(
                           theme.GirafColors.transparentGrey, context);
-                      } else if (snapshot.data.nrOfDaysToDisplay == 7) {
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.Removed) {
                         if (weekday.day.index == 0) {
                           return completedActivityColor(
                             theme.GirafColors.mondayColor, context);

@@ -1,7 +1,9 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -69,5 +71,15 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Bruger indstillinger'), findsOneWidget);
     expect(find.text(user.name + ' indstillinger'), findsOneWidget);
+  });
+
+  testWidgets('Settings has different options for Tegnforudførelse section',
+       (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.tap(find.text('Tegn for udførelse'));
+    await tester.pumpAndSettle();
+    expect(find.text('Fjern aktiviteten for borgeren'), findsOneWidget);
+    expect(find.text('Flueben'), findsOneWidget);
+    expect(find.text('Lav aktiviteten grå'), findsOneWidget);
   });
 }
