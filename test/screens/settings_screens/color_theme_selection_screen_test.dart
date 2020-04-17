@@ -22,6 +22,8 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxBu
 
 
 class MockUserApi extends Mock implements UserApi {
+  SettingsModel _settingsModel;
+
   @override
   Observable<GirafUserModel> me() {
     return Observable<GirafUserModel>.just(
@@ -29,10 +31,20 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
+  Observable<SettingsModel> updateSettings(String id, SettingsModel settings) {
+    _settingsModel = settings;
+    return Observable.just(settings);
+  }
+
+  @override
   Observable<SettingsModel> getSettings(String id) {
+    return Observable<SettingsModel>.just(_settingsModel);
+  }
+
+  void createInitialSettings() {
     final List<WeekdayColorModel> weekDayColors = createWeekDayColors();
 
-    final SettingsModel settingsModel = SettingsModel(
+    _settingsModel = SettingsModel(
         orientation: null,
         completeMark: null,
         cancelMark: null,
@@ -40,10 +52,7 @@ class MockUserApi extends Mock implements UserApi {
         theme: null,
         weekDayColors: weekDayColors
     );
-
-    return Observable<SettingsModel>.just(settingsModel);
   }
-
 
   static List<WeekdayColorModel>createWeekDayColors() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
@@ -90,7 +99,9 @@ void main() {
 
   setUp(() {
     api = Api('any');
-    api.user = MockUserApi();
+    final MockUserApi temp = MockUserApi();
+    temp.createInitialSettings();
+    api.user = temp;
     settingsBloc = SettingsBloc(api);
 
 
