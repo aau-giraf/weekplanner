@@ -17,8 +17,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
-
 
 
 
@@ -34,7 +32,7 @@ class MockUserApi extends Mock implements UserApi {
   @override
   Observable<SettingsModel> updateSettings(String id, SettingsModel settings) {
     _settingsModel = settings;
-    return Observable.just(settings);
+    return Observable<SettingsModel>.just(settings);
   }
 
   @override
