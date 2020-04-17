@@ -112,7 +112,7 @@ class UploadFromGalleryBloc extends BlocBase {
     }).map((PictogramModel pictogram) {
       _isUploading.add(false);
       _pictogram.add(pictogram);
-    }).doOnError((Object error) {
+    }).doOnError((Object error, StackTrace trace) {
       _isUploading.add(false);
     }).take(1);
   }
