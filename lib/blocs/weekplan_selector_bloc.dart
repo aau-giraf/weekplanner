@@ -55,11 +55,10 @@ class WeekplansBloc extends BlocBase {
     weekNameModels.listen(getAllWeekInfo);
     _api.week.getNames(_user.id).listen(
       _weekNameModelsList.add,
-      onError: (Object exception) {
-        // OBS: THIS IS A HACK, BECAUSE THE WEB API RETURNS success:false,
-        // WHEN THERE ARE NO WEEK PLANS ON A USER!
+      // THIS onError IS A HACK, BECAUSE THE WEB API RETURNS success:false,
+      // WHEN THERE ARE NO WEEK PLANS ON A USER!
+      onError: (Object error) {
         _weekNameModelsList.add(<WeekNameModel>[]);
-        getAllWeekInfo(null);
       },
     );
   }
@@ -76,7 +75,7 @@ class WeekplansBloc extends BlocBase {
       weekPlans.add(WeekModel(name: 'Tilføj ugeplan'));
     }
 
-    if (weekPlanNames == null || weekPlanNames.isEmpty) {
+    if (weekPlanNames.isEmpty) {
       _weekModel.add(weekPlans);
       return;
     }
