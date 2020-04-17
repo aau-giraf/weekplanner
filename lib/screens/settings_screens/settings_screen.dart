@@ -50,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
         if(settingsSnapshot.hasData) {
-          SettingsModel settingsModel = settingsSnapshot.data;
+          final SettingsModel settingsModel = settingsSnapshot.data;
           return SettingsSection('Tema', <SettingsSectionItem>[
             SettingsArrowButton('Farver på ugeplan',
                     () =>
