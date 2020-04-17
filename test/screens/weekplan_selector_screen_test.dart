@@ -263,7 +263,6 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel2), false);
   });
 
-  //TODO this sould probably be in BloC since it tests if the BloC have marked it and not the screen.
   testWidgets('Clicking a marked weekplan should unmark it',
       (WidgetTester tester) async {
     await tester
@@ -289,30 +288,30 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
   });
 
-  //TODO Should be moved to BloC test.
   testWidgets('Test editing is valid', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
+    bool editingIsValid;
+
+    final StreamSubscription<bool> listenForValid1 =
+    bloc.editingIsValidStream().listen((bool b) {
+      editingIsValid = b;
+    });
+
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
-    final StreamSubscription<bool> listenForValid1 =
-        bloc.editingIsValidStream().listen((bool b) {
-      expect(b, true);
-    });
-    listenForValid1.cancel();
+    expect(editingIsValid, true);
 
     await tester.tap(find.byKey(Key(weekModel2.name)));
     await tester.pumpAndSettle();
 
-    final StreamSubscription<bool> listenForValid2 =
-        bloc.editingIsValidStream().listen((bool b) {
-      expect(b, false);
-    });
-    listenForValid2.cancel();
+    expect(editingIsValid, false);
+
+    listenForValid1.cancel();
   });
 
   testWidgets('Test deleting weekmodel', (WidgetTester tester) async {
