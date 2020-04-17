@@ -157,11 +157,6 @@ void main() {
     });
   });
 
-  // TODO(EsbenNedergaard): få lavet nogle tests.
-  // Vi skal gøre så når man trykker på de forskellige temaer så skifter
-  // værdierne i response.weekDayColors, så testene skal meget minde om
-  // den ovenfor
-
   testWidgets('The standard color theme button works',
           (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(
