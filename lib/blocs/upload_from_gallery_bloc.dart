@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:api_client/api/api.dart';
@@ -101,8 +100,8 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
-  Future<void> createPictogram() {
-    final Completer<PictogramModel> completer = Completer<PictogramModel>();
+  Observable<PictogramModel> createPictogram() {
+    Observable<PictogramModel> observable;
     _isUploading.add(true);
     _api.pictogram
         .create(PictogramModel(
@@ -110,17 +109,17 @@ class UploadFromGalleryBloc extends BlocBase {
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {
-      return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
-    }).listen((PictogramModel pictogram) {
+      observable =
+          _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
+      return observable;
+    }).map((PictogramModel pictogram) {
       _isUploading.add(false);
       _pictogram.add(pictogram);
-      completer.complete(pictogram);
-    }, onError: (Object error) {
+    }).doOnError((Object error) {
       _isUploading.add(false);
-      completer.complete(error);
     });
 
-    return completer.future;
+    return observable;
   }
 
   @override
