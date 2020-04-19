@@ -93,6 +93,7 @@ class UploadImageFromPhone extends StatelessWidget {
           width: 250,
           height: 50,
           child: GirafButton(
+            key: const Key('SavePictogramButtonKey'),
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem billede',
             onPressed: () {
