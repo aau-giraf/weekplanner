@@ -1,3 +1,6 @@
+import 'package:http/http.dart' as http;
+import 'package:api_client/http/http.dart';
+import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -72,6 +75,41 @@ void main() {
 
   test('Should save the new weekplan', async(
     (DoneFn done) {
+      bloc.onTitleChanged.add('Ugeplan');
+      bloc.onYearChanged.add('2019');
+      bloc.onWeekNumberChanged.add('42');
+      bloc.onThumbnailChanged.add(mockThumbnail);
+      bloc
+          .saveWeekplan(
+              screenContext: null,
+              existingWeekPlans: mockWeekplanSelector.weekNameModels)
+          .then(
+        (WeekModel w) {
+          verify(api.week.update(any, any, any, any));
+          done();
+        },
+      );
+    },
+  ));
+
+  test('Should save the new weekplan even when there are no existing', async(
+    (DoneFn done) {
+      when(api.week.getNames(any)).thenAnswer(
+        (_) => Observable<List<WeekNameModel>>.error(ApiException(Response(
+            http.Response(
+                '{"success":false,"errorKey":"NoWeekScheduleFound"'
+                '"errorProperties":[]}',
+                200),
+            <String, dynamic>{
+              'success': 'false',
+              'errorKey': 'NoWeekScheduleFound',
+              'errorProperties': <List<dynamic>>[]
+            }))),
+      );
+
+      mockWeekplanSelector = WeekplansBloc(api);
+      mockWeekplanSelector.load(mockUser);
+
       bloc.onTitleChanged.add('Ugeplan');
       bloc.onYearChanged.add('2019');
       bloc.onWeekNumberChanged.add('42');
