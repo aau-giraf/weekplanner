@@ -43,9 +43,8 @@ void main() {
   const String nameWeekModel1 = 'weekmodel1';
   const String nameWeekModel2 = 'weekmodel2';
 
-  //TODO: change to testName testRole testId
   final UsernameModel mockUser =
-      UsernameModel(name: 'test', role: 'test', id: 'test');
+      UsernameModel(name: 'testName', role: 'testRole', id: 'testId');
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
@@ -83,14 +82,15 @@ void main() {
     weekNameModelList.add(weekNameModel);
     weekNameModelList.add(weekNameModel2);
 
-    when(weekApi.getNames('test')).thenAnswer(
+    when(weekApi.getNames('testId')).thenAnswer(
         (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
-    when(weekApi.get('test', weekNameModel.weekYear, weekNameModel.weekNumber))
+    when(weekApi.get('testId',
+        weekNameModel.weekYear, weekNameModel.weekNumber))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.get(
-            'test', weekNameModel2.weekYear, weekNameModel2.weekNumber))
+            'testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel2));
 
     when(weekApi.delete(mockUser.id, any, any))
@@ -167,7 +167,44 @@ void main() {
     expect(find.text('Uge: 1      År: 2020'), findsNWidgets(2));
     expect(find.byKey(const Key('weekYear')), findsNWidgets(2));
   });
-//TODO Test that the buttons rediger and such in fact is there, and that they contain the right buttons.
+
+  testWidgets('Should not have Redigér and Slet buttons outside edit mode',
+          (WidgetTester tester) async{
+        await tester
+            .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Redigér'), findsNothing);
+        expect(find.byKey(const Key('EditButtonKey')), findsNothing);
+
+        expect(find.text('Slet'), findsNothing);
+        expect(find.byKey(const Key('DeleteActivtiesButton')), findsNothing);
+  });
+
+  testWidgets('Click on edit icon toggles edit mode',
+          (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+        bool resultValue = false;
+
+        bloc.editMode.listen((bool editMode) {
+          resultValue = editMode;
+        });
+
+        expect(resultValue, false);
+
+        await tester.tap(find.byTooltip('Rediger'));
+        await tester.pumpAndSettle();
+
+        expect(resultValue, true);
+
+        await tester.tap(find.byTooltip('Rediger'));
+        await tester.pumpAndSettle();
+
+        expect(resultValue, false);
+      });
+
   testWidgets('Should have Redigér and Slet buttons in edit mode',
           (WidgetTester tester) async{
     await tester
@@ -182,30 +219,6 @@ void main() {
 
     expect(find.text('Slet'), findsOneWidget);
     expect(find.byKey(const Key('DeleteActivtiesButton')), findsOneWidget);
-  });
-
-  testWidgets('Click on edit icon toggles edit mode',
-      (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-    bool resultValue = false;
-
-    bloc.editMode.listen((bool editMode) {
-      resultValue = editMode;
-    });
-
-    expect(resultValue, false);
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    expect(resultValue, true);
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    expect(resultValue, false);
   });
 
   testWidgets('Clicking on a weekmodel marks it', (WidgetTester tester) async {
@@ -229,6 +242,80 @@ void main() {
     // is in fact marked
     expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
   });
+
+  testWidgets('Clicking on multiple weekmodels marks them',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    // Before we mark the week plans we check that they are in fact not marked
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
+    expect(bloc.getMarkedWeekModels().contains(weekModel2), false);
+
+    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key(weekModel2.name)));
+    await tester.pumpAndSettle();
+
+    // After we have marked the week plans we check that they are in fact marked
+    expect(bloc.getMarkedWeekModels().contains(weekModel1), true);
+    expect(bloc.getMarkedWeekModels().contains(weekModel2), true);
+  });
+
+  testWidgets('Should not have a Fortryd and an extra Slet button in edit mode',
+          (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byTooltip('Rediger'));
+        await tester.pumpAndSettle();
+
+        // Finds one 'Slet' buttons, because there is a 'Slet' button in edit
+        // mode
+        expect(find.text('Slet'), findsOneWidget);
+        expect(find.byKey(const Key('ConfirmDialogConfirmButton')),
+            findsNothing);
+
+        expect(find.text('Fortryd'), findsNothing);
+        expect(find.byKey(const Key('ConfirmDialogCancelButton')),
+            findsNothing);
+      });
+
+  testWidgets('Should have a Fortryd and an extra slet button in delete dialog',
+          (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+
+        expect(find.text(nameWeekModel1), findsOneWidget);
+
+        await tester.tap(find.byTooltip('Rediger'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(Key(weekModel1.name)));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
+        await tester.pumpAndSettle();
+
+        // Finds two 'Slet' buttons, because there is a 'Slet' button from edit
+        // mode
+        expect(find.text('Slet'), findsNWidgets(2));
+        expect(find.byKey(const Key('ConfirmDialogConfirmButton')),
+            findsOneWidget);
+
+        expect(find.text('Fortryd'), findsOneWidget);
+        expect(find.byKey(const Key('ConfirmDialogCancelButton')),
+            findsOneWidget);
+      });
 
   testWidgets('Marking an weekmodel and deleting removes it',
       (WidgetTester tester) async {
