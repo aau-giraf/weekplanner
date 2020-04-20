@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import '../style/custom_color.dart' as theme;
@@ -187,9 +188,10 @@ class _GirafButtonState extends State<GirafButton> {
       );
     } else if (widget.text != null) {
       return Center(
-          child: Text(
-        widget.text,
-        style: textStyle,
+          child: AutoSizeText(
+            widget.text,
+            style: textStyle,
+            minFontSize: 5,
       ));
     } else if (widget.icon != null) {
       return Center(
