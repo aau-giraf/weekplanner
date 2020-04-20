@@ -38,7 +38,7 @@ class GirafButton extends StatefulWidget {
   /// The height of the button.
   final double height;
 
-  ///
+  /// The typeface thickness to use when painting the text (e.g., bold)
   final FontWeight fontWeight;
 
   /// The function to be called when the button is pressed.
