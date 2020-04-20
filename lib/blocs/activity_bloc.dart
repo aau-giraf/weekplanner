@@ -44,6 +44,7 @@ class ActivityBloc extends BlocBase {
     _activityModel.state = _activityModel.state == ActivityState.Canceled
         ? ActivityState.Normal
         : ActivityState.Canceled;
+
     update();
   }
 
