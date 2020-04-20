@@ -182,5 +182,4 @@ class WeekplansBloc extends BlocBase {
     _weekModel.close();
     _weekNameModelsList.close();
   }
-
 }
