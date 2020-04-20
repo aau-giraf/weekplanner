@@ -1,3 +1,6 @@
+import 'package:http/http.dart' as http;
+import 'package:api_client/http/http.dart';
+import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -349,8 +352,18 @@ void main() {
 
   testWidgets('Week plan is created even when there are no existing plans',
       (WidgetTester tester) async {
-    when(api.week.getNames(any))
-        .thenAnswer((_) => Observable<List<WeekNameModel>>.error(Exception()));
+    when(api.week.getNames(any)).thenAnswer(
+      (_) => Observable<List<WeekNameModel>>.error(ApiException(Response(
+          http.Response(
+              '{"success":false,"errorKey":"NoWeekScheduleFound"'
+              '"errorProperties":[]}',
+              200),
+          <String, dynamic>{
+            'success': 'false',
+            'errorKey': 'NoWeekScheduleFound',
+            'errorProperties': <List<dynamic>>[]
+          }))),
+    );
 
     mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);
