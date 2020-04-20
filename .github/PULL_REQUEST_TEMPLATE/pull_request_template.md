@@ -1,6 +1,6 @@
 ---
 name: Pull request template
-about: If you are makinng a pull request
+about: If you are making a pull request
 title: 'feature ISSUE_NUMBER'
 
 ---
