@@ -50,7 +50,6 @@ class WeekplanScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
-  final AutoSizeGroup _cardAutoSizeGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
@@ -383,7 +382,8 @@ class WeekplanScreen extends StatelessWidget {
                       children: <Widget>[
                         GirafButton(
                           text: 'Vælg alle',
-                          fontSize: 15,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                           height: 35,
                           width: 110,
                           key: const Key('SelectAllButton'), onPressed: () {
@@ -392,7 +392,8 @@ class WeekplanScreen extends StatelessWidget {
                         const SizedBox(height: 3.5),
                         GirafButton(
                           text: 'Fravælg alle',
-                          fontSize: 15,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                           height: 35,
                           width: 110,
                           key: const Key('DeselectAllButton'), onPressed: () {
@@ -769,7 +770,6 @@ class WeekplanScreen extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
           maxLines: 1,
-          group: _cardAutoSizeGroup,
         ),
       ),
     );

@@ -14,6 +14,7 @@ class GirafButton extends StatefulWidget {
     Key key,
     this.text,
     this.fontSize = 20,
+    this.fontWeight = FontWeight.normal,
     this.icon,
     this.width,
     this.height = 40.0,
@@ -36,6 +37,9 @@ class GirafButton extends StatefulWidget {
 
   /// The height of the button.
   final double height;
+
+  ///
+  final FontWeight fontWeight;
 
   /// The function to be called when the button is pressed.
   /// The function must be a void funtion with no input parameters.
@@ -165,7 +169,7 @@ class _GirafButtonState extends State<GirafButton> {
 
   Widget _buildWidgetsOnButton() {
     final TextStyle textStyle = TextStyle(color: Colors.black,
-        fontSize: widget.fontSize);
+        fontSize: widget.fontSize, fontWeight: widget.fontWeight);
 
     if (widget.text != null && widget.icon != null) {
       return Row(
