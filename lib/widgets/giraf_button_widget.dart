@@ -168,7 +168,7 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _buildWidgetsOnButton() {
-    final TextStyle textStyle = TextStyle(color: Colors.black,
+    final TextStyle textStyle = TextStyle(color: theme.GirafColors.black,
         fontSize: widget.fontSize, fontWeight: widget.fontWeight);
 
     if (widget.text != null && widget.icon != null) {
