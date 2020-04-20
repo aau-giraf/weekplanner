@@ -12,12 +12,13 @@ import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Screen for uploading a [PictogramModel] to the server
-class UploadImageFromPhone extends StatelessWidget {
+/// Generic type I used for mocks in testing
+class UploadImageFromPhone<I extends UploadFromGalleryBloc>
+    extends StatelessWidget {
   /// Default constructor
   UploadImageFromPhone({Key key}) : super(key: key);
 
-  final UploadFromGalleryBloc _uploadFromGallery =
-      di.getDependency<UploadFromGalleryBloc>();
+  final I _uploadFromGallery = di.getDependency<I>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
 
@@ -95,7 +96,7 @@ class UploadImageFromPhone extends StatelessWidget {
           child: GirafButton(
             key: const Key('SavePictogramButtonKey'),
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-            text: 'Gem billede',
+            text: 'Gem',
             onPressed: () {
               _uploadFromGallery.createPictogram().
               listen((PictogramModel p) {
