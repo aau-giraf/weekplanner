@@ -31,32 +31,45 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
+class MockUploadFromGalleryBloc extends UploadFromGalleryBloc {
+  MockUploadFromGalleryBloc(Api api) : super(api);
+
+  @override
+  Observable<bool> get isInputValid => _isInputValid.stream;
+
+  final BehaviorSubject<bool> _isInputValid =
+  BehaviorSubject<bool>.seeded(false);
+
+  void setInputIsValid(bool b) {
+    _isInputValid.add(b);
+  }
+}
+
 void main() {
-  UploadFromGalleryBloc bloc;
+  MockUploadFromGalleryBloc bloc;
   Api api;
 
   setUp(() {
     api = Api('Any');
     api.pictogram = MockPictogramApi();
     api.user = MockUserApi();
-    bloc = UploadFromGalleryBloc(api);
+    bloc = MockUploadFromGalleryBloc(api);
 
     di.clearAll();
-    di.registerDependency<UploadFromGalleryBloc>((_) => bloc);
+    di.registerDependency<MockUploadFromGalleryBloc>((_) => bloc);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
   });
 
   testWidgets('Tests error dialog pops up on upload error',
       (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: UploadImageFromPhone<MockUploadFromGalleryBloc>()
+    ));
+    await tester.pumpAndSettle();
     when(api.pictogram.create(any))
         .thenAnswer((_) => Observable<PictogramModel>.error(Exception()));
-
-    await tester.pumpWidget(MaterialApp(home: UploadImageFromPhone()));
-    await tester.pumpAndSettle();
-
-    // ignore: always_specify_types
-    bloc.isInputValid.mergeWith([Observable<bool>.just(true)]);
+    bloc.setInputIsValid(true);
 
     await tester.tap(find.byKey(const Key('SavePictogramButtonKey')));
     await tester.pumpAndSettle();
