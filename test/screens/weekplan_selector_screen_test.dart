@@ -68,6 +68,15 @@ void main() {
       weekNumber: 1,
       weekYear: 2020);
 
+  final WeekModel weekModel1Copy = WeekModel(
+    name: 'weekModel1',
+    thumbnail: pictogramModel,
+    days: <WeekdayModel>[
+      WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
+    ],
+    weekNumber: 3,
+    weekYear: 2020);
+
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
     final WeekNameModel weekNameModel =
@@ -83,6 +92,10 @@ void main() {
 
     when(weekApi.get('test', weekNameModel.weekYear, weekNameModel.weekNumber))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Observable<WeekModel>.just(weekModel1Copy);
+    });
 
     when(weekApi.get(
             'test', weekNameModel2.weekYear, weekNameModel2.weekNumber))
@@ -409,8 +422,17 @@ void main() {
     await tester.tap(find.byKey(const Key('Option2Button')));
     await tester.pumpAndSettle();
 
-    expectLater(bloc.weekModels, emits([weekModel1, weekModel2, weekModel1]));
-
     expect(find.byType(EditWeekPlanScreen), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const Key('WeekNumberTextFieldKey')), '3');
+    await tester.pumpAndSettle();
+    expect(find.text('3'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('EditWeekPlanSaveBtn')));
+    await tester.pump(Duration(milliseconds: 500));
+
+    expect(find.text("weekModel1"), findsNWidgets(2));
+
   });
 }
