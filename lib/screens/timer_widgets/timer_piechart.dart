@@ -18,9 +18,9 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../../style/custom_color.dart' as theme;
 
-/// Class for drawing
+/// Class for drawing a timer piechart
 class TimerPiechart extends StatelessWidget {
-  ///Constructor
+  /// Constructor
   TimerPiechart(TimerBloc timerBloc) {
     _timerBloc = timerBloc;
   }

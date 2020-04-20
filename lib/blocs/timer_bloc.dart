@@ -43,8 +43,8 @@ class TimerBloc extends BlocBase {
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 
-  /// Behavior subject for the progress of the timer in minutes and seconds.
-  final BehaviorSubject<List<int>> _timerProgressNumeric = 
+  /// Behavior subject for the progress of the timer in hours,   minutes and seconds.
+  final BehaviorSubject<List<int>> _timerProgressNumeric =
       BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
 
   /// Stream for the progress of the timer in minutes and seconds.
@@ -87,9 +87,19 @@ class TimerBloc extends BlocBase {
     // Update the streams
     _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
+    _timerProgressNumeric.add(_durationToTimestamp(duration));
     _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {});
+  }
+
+  List<int> _durationToTimestamp(Duration duration) {
+    List<int> timestamp = List<int>(3);
+    print(duration.inMinutes);
+    timestamp[0] = duration.inHours;
+    timestamp[1] = duration.inMinutes.remainder(60);
+    timestamp[2] = duration.inSeconds.remainder(60);
+    return timestamp;
   }
 
   /// Method for initialising a timer in an activity.
@@ -251,6 +261,7 @@ class TimerBloc extends BlocBase {
   void dispose() {
     _resetCounterAndStopwatch();
     _timerProgressStream.close();
+    _timerProgressNumeric.close();
     _timerRunningModeStream.close();
   }
 }

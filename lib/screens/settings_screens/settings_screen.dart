@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
-<<<<<<< HEAD
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
-=======
-import 'package:weekplanner/screens/settings_screens/time_representation_screen.dart';
->>>>>>> 6c1de51... added settings for timer and moved piechart timer
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
@@ -44,13 +40,8 @@ class SettingsScreen extends StatelessWidget {
         _buildThemeSection(context),
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
-<<<<<<< HEAD
         _buildTimerSection(context),
         _buildUserSettings()
-=======
-        _buildUserSettings(),
-        _buildTimeRepresentationSettings(context)
->>>>>>> 6c1de51... added settings for timer and moved piechart timer
       ],
     );
   }
