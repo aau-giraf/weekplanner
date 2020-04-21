@@ -145,14 +145,14 @@ class UploadImageFromPhone extends StatelessWidget {
 
   void _showUploadError(BuildContext context) {
     showDialog<Center>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return const GirafNotifyDialog(
-            title: 'Fejl',
-            description: 'Upload af pictogram fejlede.',
-          );
-        },
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const GirafNotifyDialog(
+          title: 'Fejl',
+          description: 'Upload af pictogram fejlede.',
+        );
+      },
     );
   }
 
