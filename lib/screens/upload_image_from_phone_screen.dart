@@ -151,7 +151,6 @@ class UploadImageFromPhone extends StatelessWidget {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return const GirafNotifyDialog(
-            key: Key('UploadErrorKey'),
             title: 'Fejl',
             description: 'Upload af pictogram fejlede.',
           );
