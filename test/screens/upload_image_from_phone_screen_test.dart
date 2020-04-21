@@ -69,7 +69,7 @@ void main() {
   testWidgets('Tests error dialog pops up on upload error',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: UploadImageFromPhone()
+        home: UploadImageFromPhone(),
     ));
     await tester.pumpAndSettle();
     when(api.pictogram.create(any))
