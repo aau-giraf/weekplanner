@@ -1,13 +1,20 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/enums/cancel_mark_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
+import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
@@ -24,17 +31,41 @@ class MockUserApi extends Mock implements UserApi {
 
 void main() {
   Api api;
+  SettingsBloc settingsBloc;
 
   final UsernameModel user = UsernameModel(
       name: 'Anders And', id: '101', role: Role.Guardian.toString());
+
+  final SettingsModel settings = SettingsModel(
+      orientation: orientation.Orientation.Portrait,
+      completeMark: CompleteMark.Checkmark,
+      cancelMark: CancelMark.Cross,
+      defaultTimer: DefaultTimer.AnalogClock,
+      timerSeconds: 1,
+      activitiesCount: 1,
+      theme: GirafTheme.GirafYellow,
+      nrOfDaysToDisplay: 1,
+      weekDayColors: null,
+      lockTimerControl: false,
+  );
 
   setUp(() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
 
+   when(api.user.getSettings(any)).thenAnswer((_){
+     return Observable<SettingsModel>.just(settings);
+   });
+
+    when(api.user.updateSettings(any, any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(settings);
+    });
+
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    settingsBloc = SettingsBloc(api);
+    di.registerDependency<SettingsBloc>((_) => settingsBloc);
   });
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {
@@ -69,5 +100,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Bruger indstillinger'), findsOneWidget);
     expect(find.text(user.name + ' indstillinger'), findsOneWidget);
+  });
+
+  testWidgets('Settings has TimerControl checkbox',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    expect(find.byWidgetPredicate((Widget widget) => widget is
+    SettingsCheckMarkButton && widget.text == 'Lås tidsstyring'
+    ), findsOneWidget);
   });
 }

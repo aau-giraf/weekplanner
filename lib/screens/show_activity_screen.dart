@@ -336,9 +336,9 @@ class ShowActivityScreen extends StatelessWidget {
                       }),
                   Visibility(
                     visible: modeSnapshot.data == WeekplanMode.guardian ||
-                        (settingsSnapshot.hasData
-                            ? (settingsSnapshot.data.lockTimerControl == false)
-                            : false),
+                        (!settingsSnapshot.hasData
+                            ? true
+                            : !settingsSnapshot.data.lockTimerControl),
                     child: Flexible(
                       child: GirafButton(
                         key: const Key('TimerStopButtonKey'),
