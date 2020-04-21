@@ -45,18 +45,23 @@ class MockUploadFromGalleryBloc extends UploadFromGalleryBloc {
   }
 }
 
+class UploadMock extends MockUploadFromGalleryBloc implements
+    UploadFromGalleryBloc {
+  UploadMock(Api api) : super(api);
+}
+
 void main() {
-  MockUploadFromGalleryBloc bloc;
+  UploadMock bloc;
   Api api;
 
   setUp(() {
     api = Api('Any');
     api.pictogram = MockPictogramApi();
     api.user = MockUserApi();
-    bloc = MockUploadFromGalleryBloc(api);
+    bloc = UploadMock(api);
 
     di.clearAll();
-    di.registerDependency<MockUploadFromGalleryBloc>((_) => bloc);
+    di.registerDependency<UploadFromGalleryBloc>((_) => bloc);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
   });
@@ -64,7 +69,7 @@ void main() {
   testWidgets('Tests error dialog pops up on upload error',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: UploadImageFromPhone<MockUploadFromGalleryBloc>()
+        home: UploadImageFromPhone()
     ));
     await tester.pumpAndSettle();
     when(api.pictogram.create(any))
