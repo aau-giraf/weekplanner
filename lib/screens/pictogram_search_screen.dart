@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
-import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/routes.dart';
@@ -84,8 +83,7 @@ class PictogramSearch extends StatelessWidget {
                 text: 'Tilføj fra galleri',
                 onPressed: () async {
                   final PictogramModel newActivity =
-                      await Routes.push(context,
-                          UploadImageFromPhone<UploadFromGalleryBloc>());
+                      await Routes.push(context, UploadImageFromPhone());
 					  Routes.pop(context, newActivity);
                 },
               ),
