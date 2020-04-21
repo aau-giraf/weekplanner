@@ -9,6 +9,7 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxBu
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
 
 import '../../di.dart';
+import '../../routes.dart';
 
 /// Screen where the user can select how many days to show for a citizen
 class NumberOfDaysScreen extends StatelessWidget {
@@ -41,6 +42,7 @@ class NumberOfDaysScreen extends StatelessWidget {
                           () {
                         _settingsModel.nrOfDaysToDisplay = 1;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
+                        Routes.pop(context);
                       }),
                       SettingsCheckMarkButton(
                           5,
@@ -48,6 +50,7 @@ class NumberOfDaysScreen extends StatelessWidget {
                           'Vis mandag til fredag', () {
                         _settingsModel.nrOfDaysToDisplay = 5;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
+                        Routes.pop(context);
                       }),
                       SettingsCheckMarkButton(
                           7,
@@ -55,6 +58,7 @@ class NumberOfDaysScreen extends StatelessWidget {
                           'Vis mandag til søndag', () {
                         _settingsModel.nrOfDaysToDisplay = 7;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
+                        Routes.pop(context);
                       }),
                     ]),
                   ],
