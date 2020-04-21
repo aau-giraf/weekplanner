@@ -49,7 +49,8 @@ class NumberOfDaysScreen extends StatelessWidget {
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til fredag', () {
                         _settingsModel.nrOfDaysToDisplay = 5;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel);
+                        _settingsBloc.updateSettings(_user.id,
+                            _settingsModel);
                         Routes.pop(context);
                       }),
                       SettingsCheckMarkButton(
@@ -58,6 +59,7 @@ class NumberOfDaysScreen extends StatelessWidget {
                           'Vis mandag til søndag', () {
                         _settingsModel.nrOfDaysToDisplay = 7;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
+
                         Routes.pop(context);
                       }),
                     ]),

@@ -90,7 +90,9 @@ class SettingsScreen extends StatelessWidget {
           return SettingsSection('Ugeplan', <SettingsSectionItem>[
             SettingsArrowButton(
               'Antal dage',
-              () => Routes.push(context, NumberOfDaysScreen(_user)),
+              () => Routes.push(context,
+                  NumberOfDaysScreen(_user)).then((Object object) =>
+                  _settingsBloc.loadSettings(_user)),
               titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1?
               'En dag':settingsModel.nrOfDaysToDisplay == 5?
               'Mandag til fredag' : 'Mandag til søndag'),
