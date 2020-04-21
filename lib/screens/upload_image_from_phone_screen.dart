@@ -98,11 +98,9 @@ class UploadImageFromPhone extends StatelessWidget {
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem',
             onPressed: () {
-              _uploadFromGallery.createPictogram().
-              listen((PictogramModel p) {
+              _uploadFromGallery.createPictogram().listen((PictogramModel p) {
                 Routes.pop(context, p);
-              },
-                  onError: (Object error) {
+              }, onError: (Object error) {
                 _showUploadError(context);
               });
             },
@@ -138,9 +136,9 @@ class UploadImageFromPhone extends StatelessWidget {
         child: StreamBuilder<File>(
             stream: _uploadFromGallery.file,
             builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-            snapshot.data != null
-                ? _displayImage(snapshot.data)
-                : _displayIfNoImage()),
+                snapshot.data != null
+                    ? _displayImage(snapshot.data)
+                    : _displayIfNoImage()),
       ),
     );
   }
@@ -155,8 +153,7 @@ class UploadImageFromPhone extends StatelessWidget {
             title: 'Fejl',
             description: 'Upload af pictogram fejlede.',
           );
-        }
-    );
+        });
   }
 
   Column _displayIfNoImage() {
