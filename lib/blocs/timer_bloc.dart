@@ -4,6 +4,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -43,7 +44,7 @@ class TimerBloc extends BlocBase {
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 
-  /// Behavior subject for the progress of the timer in hours,   minutes and seconds.
+  /// Behavior subject for the progress of the timer in hours, minutes and seconds.
   final BehaviorSubject<List<int>> _timerProgressNumeric =
       BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
 
@@ -94,11 +95,11 @@ class TimerBloc extends BlocBase {
   }
 
   List<int> _durationToTimestamp(Duration duration) {
-    List<int> timestamp = List<int>(3);
-    print(duration.inMinutes);
+    final List<int> timestamp = List<int>(3);
     timestamp[0] = duration.inHours;
     timestamp[1] = duration.inMinutes.remainder(60);
     timestamp[2] = duration.inSeconds.remainder(60);
+    debugPrint(duration.toString());
     return timestamp;
   }
 
@@ -137,6 +138,10 @@ class TimerBloc extends BlocBase {
                   _activityModel.timer.fullLength *
                   (_activityModel.timer.fullLength -
                       _activityModel.timer.progress)));
+          if (_countDown != null) {
+            _timerProgressNumeric
+                .add(_durationToTimestamp(_countDown.remaining));
+          }
 
           if (_activityModel.timer.progress >=
               _activityModel.timer.fullLength) {
@@ -144,6 +149,10 @@ class TimerBloc extends BlocBase {
           }
         } else {
           _timerProgressStream.add(1);
+          if (_countDown != null) {
+            _timerProgressNumeric
+                .add(_durationToTimestamp(_countDown.remaining));
+          }
         }
         _timerInstantiatedStream.add(true);
       }
@@ -190,6 +199,8 @@ class TimerBloc extends BlocBase {
   void updateTimerProgress(CountdownTimer c) {
     _timerProgressStream.add(
         1 - (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
+    _timerProgressNumeric.add(_durationToTimestamp(c.remaining));
+    debugPrint('Updated numeric!');
   }
 
   /// Plays ding sound from mp3 file.
@@ -226,6 +237,9 @@ class TimerBloc extends BlocBase {
       _activityModel.timer.progress = 0;
       _timerRunningModeStream.add(TimerRunningMode.stopped);
       _timerProgressStream.add(0);
+      if (_countDown != null) {
+        _timerProgressNumeric.add(_durationToTimestamp(_countDown.remaining));
+      }
 
       _api.activity
           .update(_activityModel, _user.id)
