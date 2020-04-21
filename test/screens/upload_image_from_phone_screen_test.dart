@@ -78,6 +78,6 @@ void main() {
 
     await tester.tap(find.byKey(const Key('SavePictogramButtonKey')));
     await tester.pumpAndSettle();
-    expect(find.text('Fejl'), findsOneWidget);
+    expect(find.text('Upload af pictogram fejlede.'), findsOneWidget);
   });
 }
