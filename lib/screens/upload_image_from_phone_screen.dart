@@ -13,12 +13,12 @@ import '../style/custom_color.dart' as theme;
 
 /// Screen for uploading a [PictogramModel] to the server
 /// Generic type I used for mocks in testing
-class UploadImageFromPhone<I extends UploadFromGalleryBloc>
-    extends StatelessWidget {
+class UploadImageFromPhone extends StatelessWidget {
   /// Default constructor
   UploadImageFromPhone({Key key}) : super(key: key);
 
-  final I _uploadFromGallery = di.getDependency<I>();
+  final UploadFromGalleryBloc _uploadFromGallery =
+      di.getDependency<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
 
