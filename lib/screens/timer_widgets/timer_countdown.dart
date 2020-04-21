@@ -21,13 +21,9 @@ class TimerCountdown extends StatelessWidget {
           return Container(
             decoration: const BoxDecoration(color: theme.GirafColors.white),
             child: timerProgressSnapshot.hasData
-                ? Text(
-                    _formatTime(timerProgressSnapshot.data),
-                    style: TextStyle(
-                      color: theme.GirafColors.black,
-                      fontSize: 40,
-                    ),
-                  )
+                ? FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(_formatTime(timerProgressSnapshot.data)))
                 : const Center(child: CircularProgressIndicator()),
           );
         });
@@ -37,6 +33,9 @@ class TimerCountdown extends StatelessWidget {
   /// of the timer.
   String _formatTime(List<int> time) {
     const int _paddingSize = 2;
+    time[0].round();
+    time[1].round();
+    time[2].round();
     final String _hours = time[0].toString().padLeft(_paddingSize, '0');
     final String _minutes = time[1].toString().padLeft(_paddingSize, '0');
     final String _seconds = time[2].toString().padLeft(_paddingSize, '0');

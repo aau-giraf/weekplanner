@@ -99,8 +99,18 @@ class TimerBloc extends BlocBase {
     timestamp[0] = duration.inHours;
     timestamp[1] = duration.inMinutes.remainder(60);
     timestamp[2] = duration.inSeconds.remainder(60);
-    debugPrint(duration.toString());
+    timestamp[2] += _checkAndAddRemainingSecond(duration);
     return timestamp;
+  }
+
+  int _checkAndAddRemainingSecond(Duration duration) {
+    int _remainingSecond = 0;
+
+    if (duration.inMilliseconds.remainder(1000) >= 500) {
+      _remainingSecond = 1;
+    }
+
+    return _remainingSecond;
   }
 
   /// Method for initialising a timer in an activity.
@@ -179,6 +189,8 @@ class TimerBloc extends BlocBase {
           _endTime.difference(_activityModel.timer.startTime),
           Duration(milliseconds: _updatePeriod),
           stopwatch: _stopwatch);
+      // This is needed to send the start time when the timer is restarted
+      _timerProgressNumeric.add(_durationToTimestamp(_countDown.remaining));
 
       _timerStream = _countDown.listen((CountdownTimer c) {
         updateTimerProgress(c);
@@ -200,7 +212,6 @@ class TimerBloc extends BlocBase {
     _timerProgressStream.add(
         1 - (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
     _timerProgressNumeric.add(_durationToTimestamp(c.remaining));
-    debugPrint('Updated numeric!');
   }
 
   /// Plays ding sound from mp3 file.
