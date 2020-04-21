@@ -81,6 +81,29 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildWeekPlanSection(BuildContext context) {
+    return StreamBuilder<SettingsModel>(
+      stream: _settingsBloc.settings,
+        builder:(BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+        if(settingsSnapshot.hasData){
+          final SettingsModel settingsModel = settingsSnapshot.data;
+          return SettingsSection('Ugeplan', <SettingsSectionItem>[
+            SettingsArrowButton(
+              'Antal dage',
+              () => Routes.push(context, NumberOfDaysScreen(_user)),
+              titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1?
+              'En dag':settingsModel.nrOfDaysToDisplay == 5?
+              'Mandag til fredag' : 'Mandag til søndag'),
+            )
+          ]);
+        }
+        else{
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        });
     return SettingsSection('Ugeplan', <SettingsSectionItem>[
       SettingsArrowButton(
           'Antal dage', () => Routes.push(context,  NumberOfDaysScreen(_user))),
