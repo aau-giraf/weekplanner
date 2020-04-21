@@ -32,7 +32,7 @@ class ShowActivityScreen extends StatelessWidget {
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
-  di.getDependency<PictogramImageBloc>();
+      di.getDependency<PictogramImageBloc>();
   final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
@@ -280,55 +280,66 @@ class ShowActivityScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
-              child: Visibility(
-                //TODO insert check if the button for timer should show up
-                //visible: settingsSnapshot.hasData ? settingsSnapshot.data.timerControl == 1 : false,
-                child: Row(
-                  key: const Key('TimerButtonRow'),
-                  children: <Widget>[
-                    StreamBuilder<TimerRunningMode>(
-                        stream: _timerBloc.timerRunningMode,
-                        builder: (BuildContext timerRunningContext,
-                            AsyncSnapshot<TimerRunningMode>
-                            timerRunningSnapshot) {
-                          return Flexible(
+              child: Row(
+                key: const Key('TimerButtonRow'),
+                children: <Widget>[
+                  StreamBuilder<TimerRunningMode>(
+                      stream: _timerBloc.timerRunningMode,
+                      builder: (BuildContext timerRunningContext,
+                          AsyncSnapshot<TimerRunningMode>
+                              timerRunningSnapshot) {
+                        return Visibility(
+                          visible: modeSnapshot.data == WeekplanMode.guardian ||
+                                  !settingsSnapshot.hasData
+                              ? true
+                              : !settingsSnapshot.data.lockTimerControl
+                                  ? true
+                                  : timerRunningSnapshot.data ==
+                                      TimerRunningMode.initialized,
+                          child: Flexible(
                             // Button has different icons and press logic depending on
                             // whether the timer is already running.
                             child: GirafButton(
                               key: (timerRunningSnapshot.hasData
-                                  ? timerRunningSnapshot.data ==
-                                  TimerRunningMode.running
-                                  : false)
+                                      ? timerRunningSnapshot.data ==
+                                          TimerRunningMode.running
+                                      : false)
                                   ? const Key('TimerPauseButtonKey')
                                   : const Key('TimerPlayButtonKey'),
                               onPressed: () {
                                 !timerRunningSnapshot.hasData
                                     ? _timerBloc.playTimer()
-                                // ignore: unnecessary_statements
+                                    // ignore: unnecessary_statements
                                     : (timerRunningSnapshot.data ==
-                                    TimerRunningMode.running
-                                    ? _timerBloc.pauseTimer()
-                                    : timerRunningSnapshot.data ==
-                                    TimerRunningMode.paused
-                                    ? _timerBloc.playTimer()
-                                    : timerRunningSnapshot.data ==
-                                    TimerRunningMode.completed
-                                    ? _buildRestartTimerDialog(
-                                    overallContext)
-                                    : _restartTimer());
+                                            TimerRunningMode.running
+                                        ? _timerBloc.pauseTimer()
+                                        : timerRunningSnapshot.data ==
+                                                TimerRunningMode.paused
+                                            ? _timerBloc.playTimer()
+                                            : timerRunningSnapshot.data ==
+                                                    TimerRunningMode.completed
+                                                ? _buildRestartTimerDialog(
+                                                    overallContext)
+                                                : _restartTimer());
                               },
                               icon: (timerRunningSnapshot.hasData
-                                  ? timerRunningSnapshot.data ==
-                                  TimerRunningMode.running
-                                  : false)
+                                      ? timerRunningSnapshot.data ==
+                                          TimerRunningMode.running
+                                      : false)
                                   ? const ImageIcon(
-                                  AssetImage('assets/icons/pause.png'))
+                                      AssetImage('assets/icons/pause.png'))
                                   : const ImageIcon(
-                                  AssetImage('assets/icons/play.png')),
+                                      AssetImage('assets/icons/play.png')),
                             ),
-                          );
-                        }),
-                    Flexible(
+                          ),
+                        );
+                      }),
+                  Visibility(
+                    visible: modeSnapshot.data == WeekplanMode.guardian ||
+                        (settingsSnapshot.hasData
+                            ? (settingsSnapshot.data.lockTimerControl == false)
+                            : false),
+                    child: Flexible(
                       child: GirafButton(
                         key: const Key('TimerStopButtonKey'),
                         onPressed: () {
@@ -355,42 +366,41 @@ class ShowActivityScreen extends StatelessWidget {
                             AssetImage('assets/icons/stop.png')),
                       ),
                     ),
-                    Visibility(
-                      // The delete button is only visible when in guardian mode,
-                      // since a citizen should not be able to delete the timer.
-                      visible: modeSnapshot.data == WeekplanMode.guardian,
-                      child: Flexible(
-                        child: GirafButton(
-                          key: const Key('TimerDeleteButtonKey'),
-                          onPressed: () {
-                            showDialog<Center>(
-                                context: overallContext,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  // A confirmation dialog is
-                                  // shown to delete the timer.
-                                  return GirafConfirmDialog(
-                                    key: const Key(
-                                        'TimerDeleteConfirmDialogKey'),
-                                    title: 'Slet timer',
-                                    description: 'Vil du slette timeren?',
-                                    confirmButtonText: 'Slet',
-                                    confirmButtonIcon: const ImageIcon(
-                                        AssetImage('assets/icons/delete.png')),
-                                    confirmOnPressed: () {
-                                      _timerBloc.deleteTimer();
-                                      Routes.pop(context);
-                                    },
-                                  );
-                                });
-                          },
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/delete.png')),
-                        ),
+                  ),
+                  Visibility(
+                    // The delete button is only visible when in guardian mode,
+                    // since a citizen should not be able to delete the timer.
+                    visible: modeSnapshot.data == WeekplanMode.guardian,
+                    child: Flexible(
+                      child: GirafButton(
+                        key: const Key('TimerDeleteButtonKey'),
+                        onPressed: () {
+                          showDialog<Center>(
+                              context: overallContext,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                // A confirmation dialog is
+                                // shown to delete the timer.
+                                return GirafConfirmDialog(
+                                  key: const Key('TimerDeleteConfirmDialogKey'),
+                                  title: 'Slet timer',
+                                  description: 'Vil du slette timeren?',
+                                  confirmButtonText: 'Slet',
+                                  confirmButtonIcon: const ImageIcon(
+                                      AssetImage('assets/icons/delete.png')),
+                                  confirmOnPressed: () {
+                                    _timerBloc.deleteTimer();
+                                    Routes.pop(context);
+                                  },
+                                );
+                              });
+                        },
+                        icon: const ImageIcon(
+                            AssetImage('assets/icons/delete.png')),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -398,7 +408,6 @@ class ShowActivityScreen extends StatelessWidget {
       },
     );
   }
-
 
   /// Returns a dialog where time can be decided for an activity(timer)
   void _buildTimerDialog(BuildContext context) {

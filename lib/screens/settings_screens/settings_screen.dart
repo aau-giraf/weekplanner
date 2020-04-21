@@ -15,7 +15,7 @@ import '../../di.dart';
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
   /// Constructor
-  SettingsScreen(UsernameModel user) : _user = user{
+  SettingsScreen(UsernameModel user) : _user = user {
     _settingsBloc.loadSettings(user);
   }
 
@@ -57,24 +57,26 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildWeekPlanSection(BuildContext context) {
     return SettingsSection('Ugeplan', <SettingsSectionItem>[
       SettingsArrowButton(
-          'Antal dage', () => Routes.push(context,  NumberOfDaysScreen(_user))),
+          'Antal dage', () => Routes.push(context, NumberOfDaysScreen(_user))),
     ]);
   }
 
   Widget _buildTimerSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
-      stream: _settingsBloc.settings,
-      builder: (BuildContext context, AsyncSnapshot<SettingsModel> settingsSnapshot) {
-        return SettingsSection('Tid', <SettingsSectionItem>[
-          SettingsCheckMarkButton(1, 0, 'Lås tidsstyring', (){
-            //TODO insert that changes the value of settings
-           //final SettingsModel _settingsModel = settingsSnapshot.data;
-           //_settingsModel.timerControl = _settingsModel.timerControl == 1 ? 0 : 1;
-           //_settingsBloc.updateSettings(_user.id, _settingsModel);
-          })
-        ]);
-      }
-    );
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          final SettingsModel _settingsModel = settingsSnapshot.data;
+          return SettingsSection('Tid', <SettingsSectionItem>[
+            SettingsCheckMarkButton(
+                1, _settingsModel.lockTimerControl ? 1 : 0, 'Lås tidsstyring',
+                () {
+              _settingsModel.lockTimerControl =
+                  _settingsModel.lockTimerControl ? false : true;
+              _settingsBloc.updateSettings(_user.id, _settingsModel);
+            })
+          ]);
+        });
   }
 
   Widget _buildUserSettings() {
