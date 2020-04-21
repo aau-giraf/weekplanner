@@ -155,7 +155,7 @@ class UploadImageFromPhone extends StatelessWidget {
             title: 'Fejl',
             description: 'Upload af pictogram fejlede.',
           );
-        }
+        },
     );
   }
 
