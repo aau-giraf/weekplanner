@@ -8,6 +8,7 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
@@ -293,7 +294,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
               title: 'Kopiér ugeplaner',
               description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
               option1Text: 'Anden borger',
-              option1OnPressed: (){},
+              option1OnPressed: (){Routes.push(context,
+                  CopyToCitizensScreen());},
               option1Icon:
                   const ImageIcon(AssetImage('assets/icons/copy.png')),
               option2Text: 'Denne borger',

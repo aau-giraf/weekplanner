@@ -9,7 +9,7 @@ import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// The screen to choose a citizen
-class copyToCitizensScreen extends StatelessWidget {
+class CopyToCitizensScreen extends StatelessWidget {
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
 
   @override
@@ -35,7 +35,7 @@ class copyToCitizensScreen extends StatelessWidget {
             appBar: GirafAppBar(
               title: 'Vælg borger',
               appBarIcons: const <AppBarIcon, VoidCallback>{
-                AppBarIcon.logout: null
+                AppBarIcon.back: null
               },
             ),
             body: Padding(

@@ -437,7 +437,7 @@ void main() {
 
   });
   
-  testWidgets('Test when copying to another citizen '
+  testWidgets('Test when copying weekplans '
     'that the right dialog comes up', (WidgetTester tester) async {
 
     await tester
@@ -456,6 +456,7 @@ void main() {
     await tester.tap(find.byKey(const Key('Option1Button')));
     await tester.pumpAndSettle();
     
-    expect(find.byType(copyToCitizensScreen), findsOneWidget);
+    expect(find.byType(CopyToCitizensScreen), findsOneWidget);
   });
+
 }
