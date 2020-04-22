@@ -749,6 +749,7 @@ class WeekplanScreen extends StatelessWidget {
                     child: AutoSizeText(
                       pictogramText,
                       minFontSize: 80,
+                      //creates a ... postfix if text is too long (overflows)
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
