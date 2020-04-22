@@ -2,6 +2,7 @@ import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
@@ -87,6 +88,10 @@ class Bootstrap {
 
     di.registerDependency<TimerBloc>((Injector i) {
       return TimerBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency<CopyWeekplanBloc>((Injector i) {
+      return CopyWeekplanBloc(i.getDependency<Api>());
     });
   }
 }
