@@ -114,6 +114,31 @@ class WeekplansBloc extends BlocBase {
     return list;
   }
 
+  bool isWeekDone(WeekModel weekPlan){
+    final int currentYear= DateTime.now().year;
+    final int currentMonth = DateTime.now().month;
+
+    if ((weekPlan.weekYear < currentYear) &&
+        (weekPlan.weekNumber < currentMonth)) {
+      print("this week should be grey");
+      return false;
+    }
+    print("this week should have colors");
+    return true;
+  }
+
+  List<WeekModel> getAllDoneWeeks(List<WeekModel> weekList){
+    List<WeekModel> doneWeeks = <WeekModel>[];
+
+    for (WeekModel week in weekList) {
+      if (!isWeekDone(week)){
+        doneWeeks.add(week);
+      }
+    }
+
+    return doneWeeks;
+  }
+
   /// Adds a new marked week model to the stream
   void toggleMarkedWeekModel(WeekModel weekModel) {
     final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;
