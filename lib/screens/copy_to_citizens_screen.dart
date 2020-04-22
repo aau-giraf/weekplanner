@@ -1,3 +1,4 @@
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import '../style/custom_color.dart' as theme;
 
 /// The screen to choose a citizen
 class CopyToCitizensScreen extends StatelessWidget {
@@ -66,16 +68,32 @@ class CopyToCitizensScreen extends StatelessWidget {
                     AsyncSnapshot<List<UsernameModel>> markedUsersSnapshot) {
                   return GridView.count(
                       crossAxisCount: portrait ? 2 : 4,
-                      children: markedUsersSnapshot.data
-                          .map<Widget>((UsernameModel user) =>
-                          CitizenAvatar(
-                              usernameModel: user,
-                              onPressed: () =>
-                                  _bloc.toggleMarkedWeekModel(user)))
-                          .toList());
+                      children: usersSnapshot.data
+                          .map((UsernameModel user)
+                  {
+                    return _buildUserSelector(context, user,
+                        markedUsersSnapshot.data.contains(user));
+                  }).toList());
                 });
           }
         });
+  }
+
+  Widget _buildUserSelector(
+      BuildContext context, UsernameModel user, bool isMarked) {
+    final CitizenAvatar avatar = CitizenAvatar(
+        usernameModel: user,
+        onPressed: () => _bloc.toggleMarkedWeekModel(user));
+
+    if (isMarked) {
+      return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: theme.GirafColors.black, width: 15),
+          ),
+          child: avatar);
+    } else {
+      return avatar;
+    }
   }
 
 }
