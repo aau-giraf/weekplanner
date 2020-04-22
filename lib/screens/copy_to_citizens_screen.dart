@@ -1,23 +1,23 @@
 import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// The screen to choose a citizen
 class CopyToCitizensScreen extends StatelessWidget {
-  final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
+  /// <param name="model">WeekModel that should be copied
+  CopyToCitizensScreen(this._copiedWeekModel);
+
+  final CopyWeekplanBloc _bloc = di.getDependency<CopyWeekplanBloc>();
+  final WeekModel _copiedWeekModel;
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
-    final bool portrait =
-      MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       body: Container(
@@ -35,39 +35,12 @@ class CopyToCitizensScreen extends StatelessWidget {
             appBar: GirafAppBar(
               title: 'Vælg borger',
               appBarIcons: const <AppBarIcon, VoidCallback>{
-                AppBarIcon.back: null
               },
             ),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                child: StreamBuilder<List<UsernameModel>>(
-                  stream: _bloc.citizen,
-                  builder: (BuildContext context,
-                    AsyncSnapshot<List<UsernameModel>> snapshot) {
-                    if (snapshot.connectionState != ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 20,
-                        ),
-                        child: GridView.count(
-                          crossAxisCount: portrait ? 2 : 4,
-                          children: snapshot.data
-                            .map<Widget>((UsernameModel user) =>
-                            CitizenAvatar(
-                              usernameModel: user,
-                              onPressed: () => Routes.push(context,
-                                WeekplanSelectorScreen(user))))
-                            .toList()),
-                      );
-                    } else {
-                      return Container(
-                        child: const Text('Loading...'),
-                      );
-                    }
-                  },
-                ),
+                child: _buildWeekplanGridview(context)
               ),
             ),
           ),
@@ -75,4 +48,34 @@ class CopyToCitizensScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildWeekplanGridview(BuildContext context) {
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    return StreamBuilder<List<UsernameModel>>(
+        initialData: const <UsernameModel>[],
+        stream: _bloc.citizen,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<UsernameModel>> usersSnapshot) {
+          if (usersSnapshot.data == null) {
+            return Container();
+          } else {
+            return StreamBuilder<List<UsernameModel>>(
+                stream: _bloc.markedUserModels,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<UsernameModel>> markedUsersSnapshot) {
+                  return GridView.count(
+                      crossAxisCount: portrait ? 2 : 4,
+                      children: markedUsersSnapshot.data
+                          .map<Widget>((UsernameModel user) =>
+                          CitizenAvatar(
+                              usernameModel: user,
+                              onPressed: () =>
+                                  _bloc.toggleMarkedWeekModel(user)))
+                          .toList());
+                });
+          }
+        });
+  }
+
 }
