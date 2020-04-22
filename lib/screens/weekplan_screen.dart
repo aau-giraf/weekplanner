@@ -380,36 +380,39 @@ class WeekplanScreen extends StatelessWidget {
               builder:
                   (BuildContext context, AsyncSnapshot<bool> editModeSnapshot) {
                 return Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == weekday.activities.length) {
-                        return StreamBuilder<bool>(
-                            stream: _weekplanBloc.activityPlaceholderVisible,
-                            initialData: false,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<bool> snapshot) {
-                              return Visibility(
-                                key: const Key('GreyDragVisibleKey'),
-                                visible: snapshot.data,
-                                child: _dragTargetPlaceholder(index, weekday),
-                              );
-                            });
-                      } else {
-                        return StreamBuilder<WeekplanMode>(
-                            stream: _authBloc.mode,
-                            initialData: WeekplanMode.guardian,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<WeekplanMode> snapshot) {
-                              if (snapshot.data == WeekplanMode.guardian) {
-                                return _dragTargetPictogram(
-                                    index, weekday, editModeSnapshot.data);
-                              }
-                              return _pictogramIconStack(context, index,
-                                  weekday, editModeSnapshot.data);
-                            });
-                      }
-                    },
-                    itemCount: weekday.activities.length + 1,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == weekday.activities.length) {
+                          return StreamBuilder<bool>(
+                              stream: _weekplanBloc.activityPlaceholderVisible,
+                              initialData: false,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<bool> snapshot) {
+                                return Visibility(
+                                  key: const Key('GreyDragVisibleKey'),
+                                  visible: snapshot.data,
+                                  child: _dragTargetPlaceholder(index, weekday),
+                                );
+                              });
+                        } else {
+                          return StreamBuilder<WeekplanMode>(
+                              stream: _authBloc.mode,
+                              initialData: WeekplanMode.guardian,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<WeekplanMode> snapshot) {
+                                if (snapshot.data == WeekplanMode.guardian) {
+                                  return _dragTargetPictogram(
+                                      index, weekday, editModeSnapshot.data);
+                                }
+                                return _pictogramIconStack(context, index,
+                                    weekday, editModeSnapshot.data);
+                              });
+                        }
+                      },
+                      itemCount: weekday.activities.length + 1,
+                    ),
                   ),
                 );
               });
@@ -546,26 +549,6 @@ class WeekplanScreen extends StatelessWidget {
                         double _height, _width;
                         _height =
                             _width = 1; // default value of one to one scale
-                        final int _daysToDisplay =
-                            settingsSnapshot.data.nrOfDaysToDisplay;
-
-                        if (MediaQuery.of(context).orientation ==
-                            Orientation.portrait) {
-                          if (modeSnapshot.data == WeekplanMode.citizen) {
-                            if (_daysToDisplay == 1) {
-                              _height = 2;
-                              _width = 1;
-                            }
-                          }
-                        } else if (MediaQuery.of(context).orientation ==
-                            Orientation.landscape) {
-                          if (modeSnapshot.data == WeekplanMode.citizen) {
-                            if (_daysToDisplay == 1) {
-                              _height = 5.4;
-                              _width = 1;
-                            }
-                          }
-                        }
                         return SizedBox(
                             height: MediaQuery.of(context).size.width / _height,
                             // MediaQuery.of(context).size.width / 3,
