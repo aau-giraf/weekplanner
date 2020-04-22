@@ -17,7 +17,7 @@ class MockUserApi extends Mock implements UserApi {
         department: 3,
         role: Role.Guardian,
         roleName: 'Guardian',
-        screenName: 'Kurt',
+        displayName: 'Kurt',
         username: 'SpaceLord69'));
   }
 

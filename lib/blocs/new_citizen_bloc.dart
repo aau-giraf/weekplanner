@@ -66,7 +66,7 @@ class NewCitizenBloc extends BlocBase {
     return _api.account.register(
         usernameController.value,
         passwordController.value,
-        displayName: displayNameController.value,
+        displayNameController.value,
         departmentId: _user.department,
         role: Role.Citizen
     );
