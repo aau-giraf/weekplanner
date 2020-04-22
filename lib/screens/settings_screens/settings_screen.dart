@@ -66,6 +66,7 @@ class SettingsScreen extends StatelessWidget {
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if(settingsSnapshot.hasData){
           final SettingsModel _settingsModel = settingsSnapshot.data;
           return SettingsSection('Tid', <SettingsSectionItem>[
             SettingsCheckMarkButton(
@@ -76,6 +77,12 @@ class SettingsScreen extends StatelessWidget {
               _settingsBloc.updateSettings(_user.id, _settingsModel);
             })
           ]);
+          }else{
+            print('Hello there');
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         });
   }
 

@@ -36,7 +36,14 @@ void main() {
   final UsernameModel user = UsernameModel(
       name: 'Anders And', id: '101', role: Role.Guardian.toString());
 
-  final SettingsModel settings = SettingsModel(
+  SettingsModel mockSettings;
+
+  setUp(() {
+    di.clearAll();
+    api = Api('any');
+    api.user = MockUserApi();
+
+    mockSettings = SettingsModel(
       orientation: orientation.Orientation.Portrait,
       completeMark: CompleteMark.Checkmark,
       cancelMark: CancelMark.Cross,
@@ -47,19 +54,14 @@ void main() {
       nrOfDaysToDisplay: 1,
       weekDayColors: null,
       lockTimerControl: false,
-  );
+    );
 
-  setUp(() {
-    di.clearAll();
-    api = Api('any');
-    api.user = MockUserApi();
-
-   when(api.user.getSettings(any)).thenAnswer((_){
-     return Observable<SettingsModel>.just(settings);
-   });
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(settings);
+      return Observable<SettingsModel>.just(mockSettings);
     });
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
@@ -70,8 +72,10 @@ void main() {
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar &&
-        widget.title == 'Indstillinger'), findsOneWidget);
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is GirafAppBar && widget.title == 'Indstillinger'),
+        findsOneWidget);
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
@@ -102,11 +106,32 @@ void main() {
     expect(find.text(user.name + ' indstillinger'), findsOneWidget);
   });
 
-  testWidgets('Settings has TimerControl checkbox',
+  testWidgets('Settings has TimerControl checkbox without an checkmark',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.byWidgetPredicate((Widget widget) => widget is
-    SettingsCheckMarkButton && widget.text == 'Lås tidsstyring'
-    ), findsOneWidget);
+    await tester.pump();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+                widget.current == 0 && widget.text == 'Lås tidsstyring'),
+        findsOneWidget);
+  });
+
+  testWidgets('Tapping the TimerControl checkbox changes the current value',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
+
+    await tester.tap(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+            widget.text == 'Lås tidsstyring'));
+    await tester.pump();
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+            widget.current == 1 && widget.text == 'Lås tidsstyring'),
+        findsOneWidget);
   });
 }

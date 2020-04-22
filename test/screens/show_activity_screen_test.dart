@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/week_api.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -9,6 +10,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -16,6 +18,11 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/enums/cancel_mark_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
+import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
@@ -25,6 +32,8 @@ import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+
+import '../blocs/choose_citizen_bloc_test.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
@@ -133,6 +142,19 @@ ActivityModel makeNewActivityModel() {
           lastEdit: null));
 }
 
+final SettingsModel mockSettings = SettingsModel(
+  orientation: orientation.Orientation.Portrait,
+  completeMark: CompleteMark.Checkmark,
+  cancelMark: CancelMark.Cross,
+  defaultTimer: DefaultTimer.AnalogClock,
+  timerSeconds: 1,
+  activitiesCount: 1,
+  theme: GirafTheme.GirafYellow,
+  nrOfDaysToDisplay: 1,
+  weekDayColors: null,
+  lockTimerControl: false,
+);
+
 
 void main() {
   ActivityBloc bloc;
@@ -140,16 +162,22 @@ void main() {
   MockWeekApi weekApi;
   AuthBloc authBloc;
   TimerBloc timerBloc;
+  SettingsBloc settingsBloc;
 
   void setupApiCalls() {
     when(weekApi.update(
             mockUser.id, mockWeek.weekYear, mockWeek.weekNumber, mockWeek))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
+
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
   }
 
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
+    api.user = MockUserApi();
     api.week = weekApi;
     api.activity = MockActivityApi();
     authBloc = AuthBloc(api);
@@ -165,6 +193,8 @@ void main() {
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<TimerBloc>((_) => timerBloc);
+    settingsBloc = SettingsBloc(api);
+    di.registerDependency<SettingsBloc>((_) => settingsBloc);
   });
 
   testWidgets('renders', (WidgetTester tester) async {
