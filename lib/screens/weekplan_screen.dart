@@ -615,9 +615,7 @@ class WeekplanScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> settingsSnapshot) {
                       if (settingsSnapshot.hasData && modeSnapshot.hasData) {
-                        double _height, _width;
-                        _height =
-                            _width = 1; // default value of one to one scale
+                        double _width = 1;
                         final int _daysToDisplay =
                             settingsSnapshot.data.nrOfDaysToDisplay;
 
@@ -625,7 +623,6 @@ class WeekplanScreen extends StatelessWidget {
                             Orientation.portrait) {
                           if (modeSnapshot.data == WeekplanMode.citizen) {
                             if (_daysToDisplay == 1) {
-                              _height = 2;
                               _width = 1;
                             }
                           }
@@ -633,13 +630,11 @@ class WeekplanScreen extends StatelessWidget {
                             Orientation.landscape) {
                           if (modeSnapshot.data == WeekplanMode.citizen) {
                             if (_daysToDisplay == 1) {
-                              _height = 5.4;
                               _width = 1;
                             }
                           }
                         }
                         return SizedBox(
-                            height: MediaQuery.of(context).size.width / _height,
                             // MediaQuery.of(context).size.width / 3,
                             width: MediaQuery.of(context).size.width / _width,
                             //  MediaQuery.of(context).size.width / 1,
@@ -693,46 +688,76 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Builds card that displays the activity
-  Widget _buildActivityCard(BuildContext context,
+  Card _buildActivityCard(BuildContext context,
       List<ActivityModel> activities,
       int index,
       ActivityState activityState,) {
+    return Card(
+        margin: EdgeInsets.all(MediaQuery
+            .of(context)
+            .size
+            .width * 0.02),
+        child: Column(
+          children: <Widget>[
+            Stack(
+              alignment: AlignmentDirectional.topEnd,
+              children: <Widget>[
+                SizedBox(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  child: FittedBox(
+                    child: _getPictogram(activities[index]),
+                  ),
+                ),
+                _buildActivityStateIcon(context, activityState),
+                _buildTimerIcon(context, activities[index]),
+              ],
+            ),
+            _buildPictogramText(context, activities[index]),
+          ],
+        ));
+  }
+
+  Widget _buildPictogramText(BuildContext context, ActivityModel activity) {
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
-            return Card(
-                margin: EdgeInsets.all(MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.02),
-                child: FittedBox(
-                  child: Stack(
-                    alignment: AlignmentDirectional.topEnd,
-                    children: <Widget>[
-                      SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        child: FittedBox(
-                          child: _getPictogram(activities[index]),
-                        ),
-                      ),
-                      _buildActivityStateIcon(context, activityState),
-                      _buildTimerIcon(context, activities[index]),
-                    ],
-                  ),
-                ));
+            // TODO(klogeat): Bind this boolean to the real settings value
+            const bool hasPictogramText = true;
+            if (hasPictogramText) {
+              final String pictogramText =
+              activity.pictogram.title.toUpperCase();
+              return SizedBox(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .width / 5,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AutoSizeText(
+                      pictogramText,
+                      minFontSize: 80,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 150),
+                    ),
+                  ));
+            }
           }
-          else {
-            return const Center(child: CircularProgressIndicator());
-          }
+          return Container(width: 0, height: 0);
         }
     );
   }
