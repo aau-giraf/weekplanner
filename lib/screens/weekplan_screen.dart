@@ -693,30 +693,41 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Builds card that displays the activity
-  Card _buildActivityCard(
+  Widget _buildActivityCard(
     BuildContext context,
     List<ActivityModel> activities,
     int index,
     ActivityState activityState,
   ) {
-    return Card(
-        margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        child: FittedBox(
-          child: Stack(
-            alignment: AlignmentDirectional.topEnd,
-            children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width,
-                child: FittedBox(
-                  child: _getPictogram(activities[index]),
-                ),
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if(settingsSnapshot.hasData){
+        return Card(
+            margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+            child: FittedBox(
+              child: Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    child: FittedBox(
+                      child: _getPictogram(activities[index]),
+                    ),
+                  ),
+                  _buildActivityStateIcon(context, activityState),
+                  _buildTimerIcon(context, activities[index]),
+                ],
               ),
-              _buildActivityStateIcon(context, activityState),
-              _buildTimerIcon(context, activities[index]),
-            ],
-          ),
-        ));
+            ));
+      }
+        else {
+        return const Center(child: CircularProgressIndicator());
+        }
+        }
+    );
   }
 
   /// Build activity state icon.
