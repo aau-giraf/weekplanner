@@ -119,53 +119,57 @@ class WeekplanSelectorScreen extends StatelessWidget {
             key: Key(weekplan.name),
             onTap: () =>
                 handleOnTap(context, weekplan, inEditModeSnapshot.data),
-            child: Card(
-                child: Column(
-              children: <Widget>[
-                Expanded(
-                  flex: 4,
-                  child: LayoutBuilder(builder:
-                      (BuildContext context, BoxConstraints constraint) {
-                    if (weekplan.thumbnail != null) {
-                      return _getPictogram(weekplan, bloc);
-                    } else {
-                      return Icon(
-                        Icons.add,
-                        size: constraint.maxHeight,
-                      );
-                    }
-                  }),
-                ),
-                Expanded(child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  return AutoSizeText(
-                    weekplan.name,
-                    style: const TextStyle(fontSize: 18),
-                    maxLines: 1,
-                    minFontSize: 14,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  );
-                })),
-                Container(
-                  child: weekplan.weekNumber == null
-                      ? null
-                      : Expanded(child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                          return AutoSizeText(
-                            'Uge: ${weekplan.weekNumber}      '
-                            'År: ${weekplan.weekYear}',
-                            key: const Key('weekYear'),
-                            style: const TextStyle(fontSize: 18),
-                            maxLines: 1,
-                            minFontSize: 14,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
+            child: Opacity(
+              opacity: 0.3,
+                child: Card(
+                    child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraint) {
+                        if (weekplan.thumbnail != null) {
+                          return _getPictogram(weekplan, bloc);
+                        } else {
+                          return Icon(
+                            Icons.add,
+                            size: constraint.maxHeight,
                           );
-                        })),
-                )
-              ],
-            )),
+                        }
+                      }),
+                    ),
+                    Expanded(child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return AutoSizeText(
+                        weekplan.name,
+                        style: const TextStyle(fontSize: 18),
+                        maxLines: 1,
+                        minFontSize: 14,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    })),
+                    Container(
+                      child: weekplan.weekNumber == null
+                          ? null
+                          : Expanded(child: LayoutBuilder(builder:
+                              (BuildContext context, BoxConstraints constraints)
+                      {
+                              return AutoSizeText(
+                                'Uge: ${weekplan.weekNumber}      '
+                                'År: ${weekplan.weekYear}',
+                                key: const Key('weekYear'),
+                                style: const TextStyle(fontSize: 18),
+                                maxLines: 1,
+                                minFontSize: 14,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              );
+                            })),
+                    )
+                  ],
+                )),
+              )
           );
         });
   }
