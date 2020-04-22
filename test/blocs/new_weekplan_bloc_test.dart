@@ -37,7 +37,7 @@ void main() {
       weekYear: 2019);
 
   WeekplansBloc mockWeekplanSelector;
-  
+
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
@@ -95,17 +95,7 @@ void main() {
   test('Should save the new weekplan even when there are no existing', async(
     (DoneFn done) {
       when(api.week.getNames(any)).thenAnswer(
-        (_) => Observable<List<WeekNameModel>>.error(ApiException(Response(
-            http.Response(
-                '{"success":false,"errorKey":"NoWeekScheduleFound"'
-                '"errorProperties":[]}',
-                200),
-            <String, dynamic>{
-              'success': 'false',
-              'errorKey': 'NoWeekScheduleFound',
-              'errorProperties': <List<dynamic>>[]
-            }))),
-      );
+          (_) => Observable<List<WeekNameModel>>.just(<WeekNameModel>[]));
 
       mockWeekplanSelector = WeekplansBloc(api);
       mockWeekplanSelector.load(mockUser);
