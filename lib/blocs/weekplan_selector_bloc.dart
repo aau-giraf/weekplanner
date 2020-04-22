@@ -53,14 +53,7 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(
-      _weekNameModelsList.add,
-      // THIS onError IS A HACK, BECAUSE THE WEB API RETURNS success:false,
-      // WHEN THERE ARE NO WEEK PLANS ON A USER!
-      onError: (Object error) {
-        _weekNameModelsList.add(<WeekNameModel>[]);
-      },
-    );
+    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
   }
 
   /// Gets all the information for a [Weekmodel].
