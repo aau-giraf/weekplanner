@@ -379,9 +379,10 @@ class WeekplanScreen extends StatelessWidget {
               stream: _weekplanBloc.editMode,
               builder:
                   (BuildContext context, AsyncSnapshot<bool> editModeSnapshot) {
+                final double screenWidth = MediaQuery.of(context).size.width;
                 return Expanded(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 400),
+                    constraints: BoxConstraints(maxWidth: screenWidth * 0.40),
                     child: ListView.builder(
                       itemBuilder: (BuildContext context, int index) {
                         if (index == weekday.activities.length) {
