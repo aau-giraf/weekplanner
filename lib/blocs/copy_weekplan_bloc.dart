@@ -20,20 +20,16 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   }
 
   /// Adds a new marked week model to the stream
-  void toggleMarkedWeekModel(UsernameModel user) {
-    final List<UsernameModel> localMarkedWeekModels = _markedUserModels.value;
-    if (localMarkedWeekModels.contains(user)) {
-      localMarkedWeekModels.remove(user);
+  void toggleMarkedUserModel(UsernameModel user) {
+    final List<UsernameModel> localMarkedUserModels = _markedUserModels.value;
+    if (localMarkedUserModels.contains(user)) {
+      localMarkedUserModels.remove(user);
     } else {
-      localMarkedWeekModels.add(user);
+      localMarkedUserModels.add(user);
     }
 
-    _markedUserModels.add(localMarkedWeekModels);
+    _markedUserModels.add(localMarkedUserModels);
   }
 
-  /// Clears marked week models
-  void clearMarkedWeekModels() {
-    _markedUserModels.add(<UsernameModel>[]);
-  }
 
 }

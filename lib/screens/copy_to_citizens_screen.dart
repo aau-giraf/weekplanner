@@ -7,6 +7,8 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import '../routes.dart';
 import '../style/custom_color.dart' as theme;
 
 /// The screen to choose a citizen
@@ -41,8 +43,32 @@ class CopyToCitizensScreen extends StatelessWidget {
             ),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: _buildWeekplanGridview(context)
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: _buildWeekplanGridview(context)
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: GirafButton(
+                          key: const Key('CancelButton'),
+                          onPressed: () {Routes.pop(context);},
+                          icon: const ImageIcon(AssetImage(
+                              'assets/icons/cancel.png')),
+                        ),
+                      ),
+                      Container(
+                        child: GirafButton(
+                          key: const Key('AcceptButton'),
+                          onPressed: () {_bloc.copyToMarkedCitizens();},
+                          icon: const ImageIcon(AssetImage(
+                            'assets/icons/accept.png'))
+                        )
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
           ),
@@ -83,12 +109,12 @@ class CopyToCitizensScreen extends StatelessWidget {
       BuildContext context, UsernameModel user, bool isMarked) {
     final CitizenAvatar avatar = CitizenAvatar(
         usernameModel: user,
-        onPressed: () => _bloc.toggleMarkedWeekModel(user));
+        onPressed: () => _bloc.toggleMarkedUserModel(user));
 
     if (isMarked) {
       return Container(
           decoration: BoxDecoration(
-            border: Border.all(color: theme.GirafColors.black, width: 15),
+            border: Border.all(color: theme.GirafColors.black, width: 10),
           ),
           child: avatar);
     } else {
