@@ -46,10 +46,11 @@ class CopyToCitizensScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Container(
-                    child: _buildWeekplanGridview(context)
+                    child: Expanded(child: _buildWeekplanGridview(context))
                   ),
                   Row(
                     children: <Widget>[
+                      const Spacer(flex: 1),
                       Container(
                         child: GirafButton(
                           key: const Key('CancelButton'),
@@ -58,6 +59,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                               'assets/icons/cancel.png')),
                         ),
                       ),
+                      const Spacer(flex: 2),
                       Container(
                         child: GirafButton(
                           key: const Key('AcceptButton'),
@@ -65,7 +67,8 @@ class CopyToCitizensScreen extends StatelessWidget {
                           icon: const ImageIcon(AssetImage(
                             'assets/icons/accept.png'))
                         )
-                      )
+                      ),
+                      const Spacer(flex: 1)
                     ],
                   )
                 ],
