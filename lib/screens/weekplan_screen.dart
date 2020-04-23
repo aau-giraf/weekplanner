@@ -26,6 +26,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+import 'package:weekplanner/widgets/pictogram_text.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -719,41 +720,9 @@ class WeekplanScreen extends StatelessWidget {
                 _buildTimerIcon(context, activities[index]),
               ],
             ),
-            _buildPictogramText(context, activities[index]),
+            PictogramText(activities[index].pictogram, _settingsBloc,),
           ],
         ));
-  }
-
-  Widget _buildPictogramText(BuildContext context, ActivityModel activity) {
-    return StreamBuilder<SettingsModel>(
-        stream: _settingsBloc.settings,
-        builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
-          if (settingsSnapshot.hasData) {
-            // TODO(klogeat): Bind this boolean to the real settings value
-            const bool hasPictogramText = true;
-            if (hasPictogramText) {
-              final String pictogramText =
-              activity.pictogram.title.toUpperCase();
-              return SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width / 4,
-                  child: AutoSizeText(
-                    pictogramText,
-                    minFontSize: 100,
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                    //creates a ... postfix if text is too long (overflows)
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 150),
-                  ));
-            }
-          }
-          return Container(width: 0, height: 0);
-        }
-    );
   }
 
   /// Build activity state icon.
