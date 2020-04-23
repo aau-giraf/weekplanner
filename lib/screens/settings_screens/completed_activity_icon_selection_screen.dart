@@ -11,7 +11,7 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 
 import '../../di.dart';
 
-/// Screen where the user can select how many days to show for a citizen
+/// Screen where the icon for completed activity can be chosen
 class CompletedActivityIconScreen extends StatelessWidget {
   /// Constructor
   CompletedActivityIconScreen(UsernameModel user) : _user = user {
