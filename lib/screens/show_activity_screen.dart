@@ -200,7 +200,8 @@ class ShowActivityScreen extends StatelessWidget {
                                   snapshot.data.state),
                             ],
                           ),
-                          PictogramText(_activity.pictogram, _settingsBloc),
+                          PictogramText(_activity.pictogram, _settingsBloc,
+                              minFontSize: 50),
                         ],
                       );
                     }))),

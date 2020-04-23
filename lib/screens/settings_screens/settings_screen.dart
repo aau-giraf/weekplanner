@@ -86,7 +86,7 @@ class SettingsScreen extends StatelessWidget {
           'Antal dage', () => Routes.push(context, NumberOfDaysScreen(_user))),
       // TODO(klogeat): bind to correct settings value when API is merged
       SettingsCheckMarkButton.fromBoolean(
-          true, 'Piktogram tekst er synlig', () {}),
+          false, 'Piktogram tekst er synlig', () {}),
     ]);
   }
 
