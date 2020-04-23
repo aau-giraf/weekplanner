@@ -53,45 +53,65 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen((List<WeekNameModel> weekNames) {
-      _weekNameModelsList.add(weekNames);
-    }, onError: (Object exception) => getAllWeekInfo(null));
+    _api.week.getNames(_user.id).listen(
+      _weekNameModelsList.add,
+      // THIS onError IS A HACK, BECAUSE THE WEB API RETURNS success:false,
+      // WHEN THERE ARE NO WEEK PLANS ON A USER!
+      onError: (Object error) {
+        _weekNameModelsList.add(<WeekNameModel>[]);
+      },
+    );
   }
 
   /// Gets all the information for a [Weekmodel].
-  /// [weekNameModels] parameter contains all the information
+  /// [weekPlanNames] parameter contains all the information
   /// needed for getting all [WeekModel]'s.
   /// The result are published in [_weekModel].
-  void getAllWeekInfo(List<WeekNameModel> weekNameModels) {
-    final List<WeekModel> weekModels = <WeekModel>[];
+  void getAllWeekInfo(List<WeekNameModel> weekPlanNames) {
+    final List<WeekModel> weekPlans = <WeekModel>[];
 
     // This is used by weekplan_selector_screen for adding a new weekplan.
     if (_addWeekplan) {
-      weekModels.add(WeekModel(name: 'Tilføj ugeplan'));
-      _weekModel.add(weekModels);
+      weekPlans.add(WeekModel(name: 'Tilføj ugeplan'));
     }
-    if (weekNameModels == null) {
+
+    if (weekPlanNames.isEmpty) {
+      _weekModel.add(weekPlans);
       return;
     }
 
-    for (WeekNameModel weekNameModel in weekNameModels) {
-      _api.week
-          .get(_user.id, weekNameModel.weekYear, weekNameModel.weekNumber)
-          .listen((WeekModel results) {
-        weekModels.add(results);
-        weekModels.sort((WeekModel a, WeekModel b) {
-          if (a.name == 'Tilføj ugeplan') {
-            return -1;
-          }
-          if (a.weekYear == b.weekYear) {
-            return a.weekNumber.compareTo(b.weekNumber);
-          } else {
-            return a.weekYear.compareTo(b.weekYear);
-          }
-        });
-        _weekModel.add(weekModels);
-      });
+    final List<Observable<WeekModel>> weekDetails = <Observable<WeekModel>>[];
+
+    for (WeekNameModel weekPlanName in weekPlanNames) {
+      weekDetails.add(_api.week
+          .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+          .take(1));
     }
+
+    final Observable<List<WeekModel>> getWeekPlans = weekDetails.length < 2
+        ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
+        : Observable.combineLatestList(weekDetails);
+
+    getWeekPlans
+        .take(1)
+        .map((List<WeekModel> plans) => weekPlans + plans)
+        .map(_sortWeekPlans)
+        .listen(_weekModel.add);
+  }
+
+  List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
+    list.sort((WeekModel a, WeekModel b) {
+      if (a.name == 'Tilføj ugeplan') {
+        return -1;
+      }
+      if (a.weekYear == b.weekYear) {
+        return a.weekNumber.compareTo(b.weekNumber);
+      } else {
+        return a.weekYear.compareTo(b.weekYear);
+      }
+    });
+
+    return list;
   }
 
   /// Adds a new marked week model to the stream

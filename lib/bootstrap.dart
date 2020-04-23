@@ -3,6 +3,7 @@ import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
+import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -59,6 +60,10 @@ class Bootstrap {
 
     di.registerSingleton<NewWeekplanBloc>((Injector i) {
       return NewWeekplanBloc(i.getDependency<Api>());
+    });
+
+    di.registerSingleton<NewCitizenBloc>((Injector i) {
+      return NewCitizenBloc(i.getDependency<Api>());
     });
 
     di.registerDependency<EditWeekplanBloc>((Injector i) {

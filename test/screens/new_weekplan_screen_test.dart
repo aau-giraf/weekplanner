@@ -1,3 +1,6 @@
+import 'package:http/http.dart' as http;
+import 'package:api_client/http/http.dart';
+import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -342,6 +345,47 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('WeekNumberTextFieldKey')), '20');
     mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
+
+    expect(savedWeekplan, true);
+  });
+
+  testWidgets('Week plan is created even when there are no existing plans',
+      (WidgetTester tester) async {
+    when(api.week.getNames(any)).thenAnswer(
+      (_) => Observable<List<WeekNameModel>>.error(ApiException(Response(
+          http.Response(
+              '{"success":false,"errorKey":"NoWeekScheduleFound"'
+              '"errorProperties":[]}',
+              200),
+          <String, dynamic>{
+            'success': 'false',
+            'errorKey': 'NoWeekScheduleFound',
+            'errorProperties': <List<dynamic>>[]
+          }))),
+    );
+
+    mockWeekplanSelector = WeekplansBloc(api);
+    mockWeekplanSelector.load(mockUser);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          user: mockUser,
+          existingWeekPlans: mockWeekplanSelector.weekNameModels,
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.enterText(
+        find.byKey(const Key('WeekTitleTextFieldKey')), 'Test');
+    await tester.enterText(
+        find.byKey(const Key('WeekYearTextFieldKey')), '2020');
+    await tester.enterText(
+        find.byKey(const Key('WeekNumberTextFieldKey')), '20');
+    mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
 
     expect(savedWeekplan, true);

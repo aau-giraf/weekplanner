@@ -23,6 +23,7 @@ import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 
@@ -49,7 +50,6 @@ class WeekplanScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final UsernameModel _user;
   final WeekModel _week;
-  final AutoSizeGroup _cardAutoSizeGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +245,7 @@ class WeekplanScreen extends StatelessWidget {
 
   StreamBuilder<WeekplanMode> _buildWeeks(
       WeekModel weekModel, BuildContext context) {
-    const List<Color> weekColors = <Color>[
+    const List<Color> defaultWeekColors = <Color>[
       theme.GirafColors.mondayColor,
       theme.GirafColors.tuesdayColor,
       theme.GirafColors.wednesdayColor,
@@ -271,7 +271,7 @@ class WeekplanScreen extends StatelessWidget {
               for (int i = 0; i < weekModel.days.length; i++) {
                 weekDays.add(Expanded(
                     child: Card(
-                        color: weekColors[i],
+                        color: defaultWeekColors[i],
                         child: _day(weekModel.days[i], context))));
               }
               return Row(children: weekDays);
@@ -285,17 +285,20 @@ class WeekplanScreen extends StatelessWidget {
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
                     // If the option of showing 1 day is chosen the
-                    // _weekdayCounter
-                    // must start from today's date
+                    // _weekdayCounter must start from today's date
                     if (_daysToDisplay == 1) {
                       _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
                     // Adding the selected number of days to weekDays
                     weekDays.clear();
                     for (int i = 0; i < _daysToDisplay; i++) {
+                      // Get color from the citizen's chosen color theme
+                      final String hexColor = _settingsModel
+                          .weekDayColors[_weekdayCounter].hexColor
+                          .replaceFirst('#', '0xff');
                       weekDays.add(Expanded(
                           child: Card(
-                              color: weekColors[_weekdayCounter],
+                              color: Color(int.parse(hexColor)),
                               child: _day(
                                   weekModel.days[_weekdayCounter], context))));
                       if (_weekdayCounter == 6) {
@@ -320,8 +323,10 @@ class WeekplanScreen extends StatelessWidget {
 
   Column _day(WeekdayModel weekday, BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         _translateWeekDay(weekday.day),
+        buildDaySelectorButtons(context, weekday),
         buildDayActivities(weekday.activities, weekday),
         Container(
           padding: EdgeInsets.symmetric(horizontal:
@@ -362,6 +367,76 @@ class WeekplanScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  ///Builds the selector buttons day
+  Container buildDaySelectorButtons(BuildContext context, WeekdayModel weekDay)
+  {
+    return Container (
+        child: StreamBuilder<WeekplanMode>(
+          stream: _authBloc.mode,
+          initialData: WeekplanMode.guardian,
+          builder: (BuildContext context,
+          AsyncSnapshot<WeekplanMode> snapshot) {
+            return Visibility(
+              visible: snapshot.data == WeekplanMode.guardian,
+              child: StreamBuilder<bool>(
+                stream: _weekplanBloc.editMode,
+                initialData: false,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  if (snapshot.data) {
+                return Container(
+                  child: Column(
+                      children: <Widget>[
+                        GirafButton(
+                          text: 'Vælg alle',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          height: 35,
+                          width: 110,
+                          key: const Key('SelectAllButton'), onPressed: () {
+                            markAllDayActivities(weekDay);},
+                        ),
+                        const SizedBox(height: 3.5),
+                        GirafButton(
+                          text: 'Fravælg alle',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          height: 35,
+                          width: 110,
+                          key: const Key('DeselectAllButton'), onPressed: () {
+                          unmarkAllDayActivities(weekDay);
+                        },
+                        ),
+                      ]
+                  ),
+                );
+              } else {
+                return Container(width: 0.0, height: 0.0);
+              }
+            },
+          ),
+        );
+      },
+    ));
+  }
+
+  /// Marks all activities for a given day
+  void markAllDayActivities(WeekdayModel weekdayModel) {
+    for (ActivityModel activity in weekdayModel.activities) {
+      if (_weekplanBloc.isActivityMarked(activity) == false) {
+        _weekplanBloc.addMarkedActivity(activity);
+      }
+    }
+  }
+
+  /// Unmarks all activities for a given day
+  void unmarkAllDayActivities(WeekdayModel weekdayModel) {
+    for (ActivityModel activity in weekdayModel.activities) {
+      if (_weekplanBloc.isActivityMarked(activity) == true) {
+        _weekplanBloc.removeMarkedActivity(activity);
+      }
+    }
   }
 
   /// Builds a day's activities
@@ -806,7 +881,6 @@ class WeekplanScreen extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
           maxLines: 1,
-          group: _cardAutoSizeGroup,
         ),
       ),
     );

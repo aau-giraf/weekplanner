@@ -230,7 +230,7 @@ class WeekplanBloc extends BlocBase {
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(week, user));
+      _userWeek.add(UserWeekModel(newWeek, user));
     });
   }
 

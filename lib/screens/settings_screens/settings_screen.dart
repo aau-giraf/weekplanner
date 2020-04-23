@@ -1,5 +1,6 @@
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/completed_activity_icon_selection_screen.dart';
@@ -9,12 +10,19 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_butt
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
 
+import '../../di.dart';
+
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
+
   /// Constructor
-  const SettingsScreen(UsernameModel user) : _user = user;
+  SettingsScreen(UsernameModel user) : _user = user{
+    _settingsBloc.loadSettings(_user);
+  }
 
   final UsernameModel _user;
+
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
