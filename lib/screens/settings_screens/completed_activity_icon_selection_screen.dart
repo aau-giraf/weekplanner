@@ -38,8 +38,8 @@ class CompletedActivityIconScreen extends StatelessWidget {
                   children: <Widget>[
                     SettingsSection('Tegn for udførelse', <SettingsSectionItem>[
                       SettingsCheckMarkButton(
-                          1,
-                          _settingsModel.completeMark.index + 1,
+                          0,
+                          _settingsModel.completeMark.index,
                           'Fjern aktiviteten for borgeren', () {
                               _settingsModel.completeMark =
                                   CompleteMark.Removed;
@@ -47,15 +47,15 @@ class CompletedActivityIconScreen extends StatelessWidget {
                                 _settingsModel);
                           }),
                       SettingsCheckMarkButton(
-                          2,
-                          _settingsModel.completeMark.index + 1,
+                          1,
+                          _settingsModel.completeMark.index,
                           'Flueben', () {
                         _settingsModel.completeMark = CompleteMark.Checkmark;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
                       }),
                       SettingsCheckMarkButton(
-                          3,
-                          _settingsModel.completeMark.index + 1,
+                          2,
+                          _settingsModel.completeMark.index,
                           'Lav aktiviteten grå', () {
                         _settingsModel.completeMark = CompleteMark.MovedRight;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
