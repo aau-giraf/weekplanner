@@ -209,8 +209,16 @@ class TimerBloc extends BlocBase {
 
   /// Calculate progress and write it to the _timerProgressStream
   void updateTimerProgress(CountdownTimer c) {
-    _timerProgressStream.add(
-        1 - (1 / _activityModel.timer.fullLength * c.remaining.inMilliseconds));
+    _timerProgressStream.add((1 -
+                (1 /
+                    _activityModel.timer.fullLength *
+                    c.remaining.inMilliseconds)) >
+            1
+        ? 1
+        : (1 -
+            (1 /
+                _activityModel.timer.fullLength *
+                c.remaining.inMilliseconds)));
     _timerProgressNumeric.add(_durationToTimestamp(c.remaining));
   }
 
