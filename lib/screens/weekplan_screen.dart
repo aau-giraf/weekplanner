@@ -737,10 +737,11 @@ class WeekplanScreen extends StatelessWidget {
               activity.pictogram.title.toUpperCase();
               return SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width / 5,
+                  height: MediaQuery.of(context).size.width / 4,
                   child: AutoSizeText(
                     pictogramText,
                     minFontSize: 100,
+                    maxLines: 2,
                     textAlign: TextAlign.center,
                     //creates a ... postfix if text is too long (overflows)
                     overflow: TextOverflow.ellipsis,
