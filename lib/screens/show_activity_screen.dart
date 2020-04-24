@@ -26,23 +26,27 @@ class ShowActivityScreen extends StatelessWidget {
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(_activity, _girafUser);
+    _settingsBloc.loadSettings(_girafUser);
   }
 
   final UsernameModel _girafUser;
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
-      di.getDependency<PictogramImageBloc>();
+  di.getDependency<PictogramImageBloc>();
   final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   /// Text style used for title.
   final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
 
   @override
   Widget build(BuildContext context) {
-    final Orientation orientation = MediaQuery.of(context).orientation;
+    final Orientation orientation = MediaQuery
+        .of(context)
+        .orientation;
     _timerBloc.load(_activity, user: _girafUser);
     _timerBloc.initTimer();
 
@@ -52,8 +56,8 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Build the activity screens in a row or column
   /// depending on the orientation of the device.
-  Scaffold buildScreenFromOrientation(
-      Orientation orientation, BuildContext context) {
+  Scaffold buildScreenFromOrientation(Orientation orientation,
+      BuildContext context) {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
@@ -66,7 +70,10 @@ class ShowActivityScreen extends StatelessWidget {
         children: buildScreen(context),
       );
     }
-    final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    final bool keyboardVisible = MediaQuery
+        .of(context)
+        .viewInsets
+        .bottom > 0;
 
     return Scaffold(
         appBar: GirafAppBar(
@@ -92,11 +99,12 @@ class ShowActivityScreen extends StatelessWidget {
       ),
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
-          builder: (BuildContext context, AsyncSnapshot<ActivityModel>
-          activitySnapshot){
-            return (activitySnapshot.hasData && activitySnapshot.data.state ==
-                ActivityState.Canceled) ?
-            _resetTimerAndBuildEmptyContainer() : _buildTimer(context);
+          builder: (BuildContext context,
+              AsyncSnapshot<ActivityModel> activitySnapshot) {
+            return (activitySnapshot.hasData &&
+                activitySnapshot.data.state == ActivityState.Canceled)
+                ? _resetTimerAndBuildEmptyContainer()
+                : _buildTimer(context);
           })
     ];
   }
@@ -144,8 +152,8 @@ class ShowActivityScreen extends StatelessWidget {
                                         textAlign: TextAlign.center),
                                   )),
                               Expanded(
-                                  // Depending on whether a timer is initiated,
-                                  // different widgets are shown.
+                                // Depending on whether a timer is initiated,
+                                // different widgets are shown.
                                   child: (timerInitSnapshot.hasData
                                       ? timerInitSnapshot.data
                                       : false)
@@ -169,35 +177,42 @@ class ShowActivityScreen extends StatelessWidget {
   Card buildActivity(BuildContext context) {
     return Card(
         child: Column(children: <Widget>[
-      const Center(child: Padding(padding: EdgeInsets.all(8.0))),
-      Expanded(
-        child: FittedBox(
-            child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: theme.GirafColors.blueBorderColor,
-                        width: 0.25)),
-                child: StreamBuilder<ActivityModel>(
-                    stream: _activityBloc.activityModelStream,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<ActivityModel> snapshot) {
-                      if (snapshot.data == null) {
-                        return const CircularProgressIndicator();
-                      }
-                      return Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                              child: buildLoadPictogramImage()),
-                          _buildActivityStateIcon(context, snapshot.data.state)
-                        ],
-                      );
-                    }))),
-      ),
-      buildButtonBar()
-    ]));
+          const Center(child: Padding(padding: EdgeInsets.all(8.0))),
+          Expanded(
+            child: FittedBox(
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: theme.GirafColors.blueBorderColor,
+                            width: 0.25)),
+                    child: StreamBuilder<ActivityModel>(
+                        stream: _activityBloc.activityModelStream,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<ActivityModel> snapshot) {
+                          if (snapshot.data == null) {
+                            return const CircularProgressIndicator();
+                          }
+                          return Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: <Widget>[
+                              SizedBox(
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  height: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  child: buildLoadPictogramImage()),
+                              _buildActivityStateIcon(
+                                  context, snapshot.data.state)
+                            ],
+                          );
+                        }))),
+          ),
+          buildButtonBar()
+        ]));
   }
 
   /// The widget to show, in the case that a timer has been initiated,
@@ -237,39 +252,35 @@ class ShowActivityScreen extends StatelessWidget {
   /// The widget to show, in the case that a timer has not been initiated
   /// for the activity. When in guardian mode, an "addTimer" button is shown,
   /// as citizen, nothing is shown.
-  Widget _timerIsNotInitiatedWidget(
-      BuildContext overallContext, AsyncSnapshot<WeekplanMode> modeSnapshot) {
+  Widget _timerIsNotInitiatedWidget(BuildContext overallContext,
+      AsyncSnapshot<WeekplanMode> modeSnapshot) {
     return (modeSnapshot.hasData
         ? (modeSnapshot.data == WeekplanMode.guardian)
         : false)
         ? FittedBox(
-            key: const Key('TimerNotInitGuardianKey'),
-            child: Padding(
-              padding: const EdgeInsets.all(0),
-              child: Container(
-                  child: IconButton(
-                      key: const Key('AddTimerButtonKey'),
-                      icon: const ImageIcon(
-                          AssetImage('assets/icons/addTimerHighRes.png')),
-                      onPressed: () {
-                        _buildTimerDialog(overallContext);
-                      })),
-            ))
+        key: const Key('TimerNotInitGuardianKey'),
+        child: Padding(
+          padding: const EdgeInsets.all(0),
+          child: Container(
+              child: IconButton(
+                  key: const Key('AddTimerButtonKey'),
+                  icon: const ImageIcon(
+                      AssetImage('assets/icons/addTimerHighRes.png')),
+                  onPressed: () {
+                    _buildTimerDialog(overallContext);
+                  })),
+        ))
         : Container(
-            key: const Key('TimerNotInitCitizenKey'),
-          );
+      key: const Key('TimerNotInitCitizenKey'),
+    );
   }
 
   /// The buttons for the timer. Depending on whether the application is in
   /// citizen or guardian mode, certain buttons are displayed.
   /// Buttons are: Play/Pause, Stop and Delete
-  Widget _timerButtons(
-      BuildContext overallContext,
+  Widget _timerButtons(BuildContext overallContext,
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot) {
-    final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-    _settingsBloc.loadSettings(_girafUser);
-
     return StreamBuilder<SettingsModel>(
       stream: _settingsBloc.settings,
       builder: (BuildContext timerButtonsContext,
@@ -283,130 +294,152 @@ class ShowActivityScreen extends StatelessWidget {
               child: Row(
                 key: const Key('TimerButtonRow'),
                 children: <Widget>[
-                  StreamBuilder<TimerRunningMode>(
-                      stream: _timerBloc.timerRunningMode,
-                      builder: (BuildContext timerRunningContext,
-                          AsyncSnapshot<TimerRunningMode>
-                              timerRunningSnapshot) {
-                        return Visibility(
-                          visible: modeSnapshot.data == WeekplanMode.guardian ||
-                              (!settingsSnapshot.hasData
-                              ? false
-                              : !settingsSnapshot.data.lockTimerControl
-                                  ? true
-                                  : !timerRunningSnapshot.hasData
-                                      ? false
-                                      : (timerRunningSnapshot.data ==
-                                          TimerRunningMode.initialized)),
-                          child: Flexible(
-                            // Button has different icons and press logic depending on
-                            // whether the timer is already running.
-                            child: GirafButton(
-                              key: (timerRunningSnapshot.hasData
-                                  ? timerRunningSnapshot.data ==
-                                  TimerRunningMode.running
-                                  : false)
-                                  ? const Key('TimerPauseButtonKey')
-                                  : const Key('TimerPlayButtonKey'),
-                              onPressed: () {
-                                !timerRunningSnapshot.hasData
-                                    ? _timerBloc.playTimer()
-                                // ignore: unnecessary_statements
-                                    : (timerRunningSnapshot.data ==
-                                    TimerRunningMode.running
-                                    ? _timerBloc.pauseTimer()
-                                    : timerRunningSnapshot.data ==
-                                    TimerRunningMode.paused
-                                    ? _timerBloc.playTimer()
-                                    : timerRunningSnapshot.data ==
-                                    TimerRunningMode.completed
-                                    ? _buildRestartTimerDialog(overallContext)
-                                    : _restartTimer());
-                              },
-                              icon: (timerRunningSnapshot.hasData
-                                  ? timerRunningSnapshot.data ==
-                                  TimerRunningMode.running
-                                  : false)
-                                  ? const ImageIcon(
-                                  AssetImage('assets/icons/pause.png'))
-                                  : const ImageIcon(
-                                  AssetImage('assets/icons/play.png')),
-                            ),
-                          ),
-                        );
-                      }),
-                  Visibility(
-                    visible: modeSnapshot.data == WeekplanMode.guardian ||
-                        (!settingsSnapshot.hasData
-                            ? false
-                            : !settingsSnapshot.data.lockTimerControl),
-                    child: Flexible(
-                      child: GirafButton(
-                        key: const Key('TimerStopButtonKey'),
-                        onPressed: () {
-                          showDialog<Center>(
-                              context: overallContext,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                // A confirmation dialog is shown to stop the timer.
-                                return GirafConfirmDialog(
-                                  key: const Key('TimerStopConfirmDialogKey'),
-                                  title: 'Stop Timer',
-                                  description: 'Vil du stoppe timeren?',
-                                  confirmButtonText: 'Stop',
-                                  confirmButtonIcon: const ImageIcon(
-                                      AssetImage('assets/icons/stop.png')),
-                                  confirmOnPressed: () {
-                                    _timerBloc.stopTimer();
-                                    Routes.pop(context);
-                                  },
-                                );
-                              });
-                        },
-                        icon: const ImageIcon(
-                            AssetImage('assets/icons/stop.png')),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    // The delete button is only visible when in guardian mode,
-                    // since a citizen should not be able to delete the timer.
-                    visible: modeSnapshot.data == WeekplanMode.guardian,
-                    child: Flexible(
-                      child: GirafButton(
-                        key: const Key('TimerDeleteButtonKey'),
-                        onPressed: () {
-                          showDialog<Center>(
-                              context: overallContext,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                // A confirmation dialog is
-                                // shown to delete the timer.
-                                return GirafConfirmDialog(
-                                  key: const Key('TimerDeleteConfirmDialogKey'),
-                                  title: 'Slet timer',
-                                  description: 'Vil du slette timeren?',
-                                  confirmButtonText: 'Slet',
-                                  confirmButtonIcon: const ImageIcon(
-                                      AssetImage('assets/icons/delete.png')),
-                                  confirmOnPressed: () {
-                                    _timerBloc.deleteTimer();
-                                    Routes.pop(context);
-                                  },
-                                );
-                              });
-                        },
-                        icon: const ImageIcon(
-                            AssetImage('assets/icons/delete.png')),
-                      ),
-                    ),
-                  ),
+                  _playPauseButton(overallContext, timerInitSnapshot,
+                      modeSnapshot, settingsSnapshot),
+                  _stopButton(overallContext, timerInitSnapshot, modeSnapshot,
+                      settingsSnapshot),
+                  _deleteButton(overallContext, timerInitSnapshot, modeSnapshot,
+                      settingsSnapshot),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _playPauseButton(BuildContext overallContext,
+      AsyncSnapshot<bool> timerInitSnapshot,
+      AsyncSnapshot<WeekplanMode> modeSnapshot,
+      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+    return StreamBuilder<TimerRunningMode>(
+        stream: _timerBloc.timerRunningMode,
+        builder: (BuildContext timerRunningContext,
+            AsyncSnapshot<TimerRunningMode>
+            timerRunningSnapshot) {
+          return Visibility(
+            visible: modeSnapshot.data == WeekplanMode.guardian ||
+                ((settingsSnapshot.hasData &&
+                    !settingsSnapshot.data.lockTimerControl)
+                    ? true
+                    : (timerRunningSnapshot.hasData &&
+                    (timerRunningSnapshot.data ==
+                        TimerRunningMode.initialized))),
+            child: Flexible(
+              // Button has different icons and press logic
+              // depending on whether the timer is running.
+              child: GirafButton(
+                key: (timerRunningSnapshot.hasData
+                    ? timerRunningSnapshot.data ==
+                    TimerRunningMode.running
+                    : false)
+                    ? const Key('TimerPauseButtonKey')
+                    : const Key('TimerPlayButtonKey'),
+                onPressed: () {
+                  !timerRunningSnapshot.hasData
+                      ? _timerBloc.playTimer()
+                  // ignore: unnecessary_statements
+                      : (timerRunningSnapshot.data ==
+                      TimerRunningMode.running
+                      ? _timerBloc.pauseTimer()
+                      : timerRunningSnapshot.data ==
+                      TimerRunningMode.paused
+                      ? _timerBloc.playTimer()
+                      : timerRunningSnapshot.data ==
+                      TimerRunningMode.completed
+                      ? _buildRestartTimerDialog(
+                      overallContext)
+                      : _restartTimer());
+                },
+                icon: (timerRunningSnapshot.hasData
+                    ? timerRunningSnapshot.data ==
+                    TimerRunningMode.running
+                    : false)
+                    ? const ImageIcon(
+                    AssetImage('assets/icons/pause.png'))
+                    : const ImageIcon(
+                    AssetImage('assets/icons/play.png')),
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget _stopButton(BuildContext overallContext,
+      AsyncSnapshot<bool> timerInitSnapshot,
+      AsyncSnapshot<WeekplanMode> modeSnapshot,
+      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+    return Visibility(
+      visible: modeSnapshot.data == WeekplanMode.guardian ||
+          (settingsSnapshot.hasData &&
+              !settingsSnapshot.data.lockTimerControl),
+      child: Flexible(
+        child: GirafButton(
+          key: const Key('TimerStopButtonKey'),
+          onPressed: () {
+            showDialog<Center>(
+                context: overallContext,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  //Confirmation dialog for stopping the timer.
+                  return GirafConfirmDialog(
+                    key: const Key('TimerStopConfirmDialogKey'),
+                    title: 'Stop Timer',
+                    description: 'Vil du stoppe timeren?',
+                    confirmButtonText: 'Stop',
+                    confirmButtonIcon: const ImageIcon(
+                        AssetImage('assets/icons/stop.png')),
+                    confirmOnPressed: () {
+                      _timerBloc.stopTimer();
+                      Routes.pop(context);
+                    },
+                  );
+                });
+          },
+          icon: const ImageIcon(
+              AssetImage('assets/icons/stop.png')),
+        ),
+      ),
+    );
+  }
+
+  Widget _deleteButton(BuildContext overallContext,
+      AsyncSnapshot<bool> timerInitSnapshot,
+      AsyncSnapshot<WeekplanMode> modeSnapshot,
+      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+    return Visibility(
+      // The delete button is only visible when in guardian mode,
+      // since a citizen should not be able to delete the timer.
+      visible: modeSnapshot.data == WeekplanMode.guardian,
+      child: Flexible(
+        child: GirafButton(
+          key: const Key('TimerDeleteButtonKey'),
+          onPressed: () {
+            showDialog<Center>(
+                context: overallContext,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  // A confirmation dialog is
+                  // shown to delete the timer.
+                  return GirafConfirmDialog(
+                    key: const Key('TimerDeleteConfirmDialogKey'),
+                    title: 'Slet timer',
+                    description: 'Vil du slette timeren?',
+                    confirmButtonText: 'Slet',
+                    confirmButtonIcon: const ImageIcon(
+                        AssetImage('assets/icons/delete.png')),
+                    confirmOnPressed: () {
+                      _timerBloc.deleteTimer();
+                      Routes.pop(context);
+                    },
+                  );
+                });
+          },
+          icon: const ImageIcon(
+              AssetImage('assets/icons/delete.png')),
+        ),
+      ),
     );
   }
 
@@ -433,7 +466,7 @@ class ShowActivityScreen extends StatelessWidget {
                 'timeren?',
             confirmButtonText: 'Genstart',
             confirmButtonIcon:
-                const ImageIcon(AssetImage('assets/icons/play.png')),
+            const ImageIcon(AssetImage('assets/icons/play.png')),
             confirmOnPressed: () {
               _timerBloc.stopTimer();
               _timerBloc.playTimer();
@@ -453,7 +486,7 @@ class ShowActivityScreen extends StatelessWidget {
   /// of the button depends on whether it is in guardian or citizen mode.
   ButtonBar buildButtonBar() {
     return ButtonBar(
-        // Key used for testing widget.
+      // Key used for testing widget.
         key: const Key('ButtonBarRender'),
         alignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -530,14 +563,20 @@ class ShowActivityScreen extends StatelessWidget {
         Icons.check,
         key: const Key('IconCompleted'),
         color: theme.GirafColors.green,
-        size: MediaQuery.of(context).size.width,
+        size: MediaQuery
+            .of(context)
+            .size
+            .width,
       );
     } else if (state == ActivityState.Canceled) {
       return Icon(
         Icons.clear,
         key: const Key('IconCanceled'),
         color: theme.GirafColors.red,
-        size: MediaQuery.of(context).size.width,
+        size: MediaQuery
+            .of(context)
+            .size
+            .width,
       );
     } else {
       return Container();

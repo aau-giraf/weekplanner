@@ -66,18 +66,18 @@ class SettingsScreen extends StatelessWidget {
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
-          if(settingsSnapshot.hasData){
-          final SettingsModel _settingsModel = settingsSnapshot.data;
-          return SettingsSection('Tid', <SettingsSectionItem>[
-            SettingsCheckMarkButton(
-                1, _settingsModel.lockTimerControl ? 1 : 0, 'Lås tidsstyring',
-                () {
-              _settingsModel.lockTimerControl =
-                  _settingsModel.lockTimerControl ? false : true;
-              _settingsBloc.updateSettings(_user.id, _settingsModel);
-            })
-          ]);
-          }else{
+          if (settingsSnapshot.hasData) {
+            final SettingsModel _settingsModel = settingsSnapshot.data;
+            return SettingsSection('Tid', <SettingsSectionItem>[
+              SettingsCheckMarkButton(
+                  1, _settingsModel.lockTimerControl ? 1 : 0, 'Lås tidsstyring',
+                  () {
+                _settingsModel.lockTimerControl =
+                    !_settingsModel.lockTimerControl;
+                _settingsBloc.updateSettings(_user.id, _settingsModel);
+              })
+            ]);
+          } else {
             return const Center(
               child: CircularProgressIndicator(),
             );
