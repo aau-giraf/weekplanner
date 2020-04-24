@@ -64,16 +64,18 @@ class WeekplanSelectorScreen extends StatelessWidget {
     return Container(
         child: Column(children: <Widget>[
       Text("Evt bar med overskrift"),
-      Expanded(child: _buildWeekplanGridview(context, weekModels)),
+      Expanded(child: _buildWeekplanGridview(context, weekModels, true)),
       Text("Overståede ugeplaner"), //Skal erstattes med en bar
-      Expanded(child: _buildWeekplanGridview(context, oldWeekModels))
+      Expanded(child: _buildWeekplanGridview(context, oldWeekModels, false))
     ]));
   }
 
   Widget _buildWeekplanGridview(
-      BuildContext context, Stream<List<WeekModel>> weekModels) {
+      BuildContext context, Stream<List<WeekModel>> weekModels, bool current) {
+    List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
+    if(!current){ initial = List<WeekModel>(); }
     return StreamBuilder<List<WeekModel>>(
-        initialData: <WeekModel>[WeekModel(name: 'Tilføj ugeplan')],
+        initialData: initial,
         stream: weekModels,
         builder: (BuildContext context,
             AsyncSnapshot<List<WeekModel>> weekplansSnapshot) {
