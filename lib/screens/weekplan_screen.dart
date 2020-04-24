@@ -830,55 +830,47 @@ class WeekplanScreen extends StatelessWidget {
   /// Builds timer icon depending on activity has timer.
   Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
     final TimerBloc timerBloc = di.getDependency<TimerBloc>();
-    final ActivityBloc activityBloc = di.getDependency<ActivityBloc>();
     timerBloc.load(activity, user: _user);
-    activityBloc.load(activity, _user);
     return StreamBuilder<bool>(
       stream: timerBloc.timerIsInstantiated,
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
-          return StreamBuilder<ActivityModel>(
-            stream: activityBloc.activityModelStream,
-            builder: (BuildContext activityContext,
-                AsyncSnapshot<ActivityModel> activity) {
-              // Activities that are not overlayed.
-              if (activity.data.state != ActivityState.Completed) {
-                return _buildTimerAssetIcon();
-              }
-              // If activity is completed and overlayed.
-              return StreamBuilder<WeekplanMode>(
-                  stream: _authBloc.mode,
-                  builder: (BuildContext roleContext,
-                      AsyncSnapshot<WeekplanMode> role) {
-                    if (role.data == WeekplanMode.guardian) {
-                      return const ImageIcon(
-                        AssetImage('assets/icons/redcircle.png'),
-                        color: Colors.red,
-                        size: 250,
-                      );
-                    } else {
-                      return StreamBuilder<SettingsModel>(
-                          stream: _settingsBloc.settings,
-                          builder: (BuildContext settingsContext,
-                              AsyncSnapshot<SettingsModel> settings) {
-                            if (!settings.hasData ||
-                                settings.data.completeMark !=
-                                    CompleteMark.Removed) {
-                              return const ImageIcon(
-                                AssetImage('assets/icons/redcircle.png'),
-                                color: Colors.red,
-                                size: 250,
-                              );
-                            }
+          // Activities that are not overlayed.
+          if (activity.state != ActivityState.Completed) {
+            return _buildTimerAssetIcon();
+          }
+          // Activities that are overlayed.
+          return StreamBuilder<WeekplanMode>(
+              stream: _authBloc.mode,
+              builder: (BuildContext roleContext,
+                  AsyncSnapshot<WeekplanMode> role) {
+                if (role.data == WeekplanMode.guardian) {
+                  return const ImageIcon(
+                    AssetImage('assets/icons/redcircle.png'),
+                    color: Colors.red,
+                    size: 250,
+                  );
+                } else {
+                  return StreamBuilder<SettingsModel>(
+                      stream: _settingsBloc.settings,
+                      builder: (BuildContext settingsContext,
+                          AsyncSnapshot<SettingsModel> settings) {
+                        if (!settings.hasData ||
+                            settings.data.completeMark !=
+                                CompleteMark.Removed) {
+                          return const ImageIcon(
+                            AssetImage('assets/icons/redcircle.png'),
+                            color: Colors.red,
+                            size: 250,
+                          );
+                        }
 
-                            return Container();
-                          }
-                      );
-                    }
-                  }
-              );
-            }
+                        return Container();
+                      }
+                  );
+                }
+              }
           );
         }
         return Container();
