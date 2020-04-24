@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiver/strings.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import '../../style/custom_color.dart' as theme;
 
@@ -16,13 +15,16 @@ class TimerHourglass extends StatelessWidget {
         stream: _timerBloc.timerProgressStream,
         builder: (BuildContext timerProgressContext,
             AsyncSnapshot<double> timerProgressSnapshot) {
-          // The stream timerProgressSnapshot seems to over shoot,
-          // so to counter this, we check above or equal to 1
-          if (timerProgressSnapshot.data >= 1) {
-            return _drawDoneHourglass();
-          } else {
-            return _drawHourglass(timerProgressSnapshot);
+          if (timerProgressSnapshot.hasData) {
+            // The stream timerProgressSnapshot seems to over shoot,
+            // so to counter this, we check above or equal to 1
+            if (timerProgressSnapshot.data >= 1) {
+              return _drawDoneHourglass();
+            } else {
+              return _drawHourglass(timerProgressSnapshot);
+            }
           }
+          return const CircularProgressIndicator();
         });
   }
 }
