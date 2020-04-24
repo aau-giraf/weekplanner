@@ -1,6 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
@@ -33,8 +33,8 @@ void main() {
   final WeekModel weekModel3 = WeekModel(weekNumber: 28, weekYear: 2020);
   final WeekModel weekModel4 = WeekModel(weekNumber: 3, weekYear: 2020);
   final WeekModel weekModel5 = WeekModel(weekNumber: 50, weekYear: 2019);
-  final UsernameModel mockUser =
-      UsernameModel(displayName: 'test', id: 'test', role: 'test');
+  final DisplayNameModel mockUser =
+  DisplayNameModel(displayName: 'test', id: 'test', role: 'test');
 
   void setupApiCalls() {
     weekNameModelList.clear();
@@ -91,7 +91,7 @@ void main() {
       done();
     });
 
-    bloc.load(UsernameModel(displayName: 'test', role: 'test', id: 'test'));
+    bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
   }));
 
   test('Should dispose weekModels stream', async((DoneFn done) {
@@ -239,7 +239,7 @@ void main() {
     weekModelList.add(weekModel4);
     weekModelList.add(weekModel5);
 
-    bloc.load(UsernameModel(displayName: 'test', role: 'test', id: 'test'));
+    bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
 
     bloc.weekModels.listen((List<WeekModel>weekModels) {
       expect(correctList, weekModels);

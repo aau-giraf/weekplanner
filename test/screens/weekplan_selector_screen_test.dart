@@ -4,9 +4,9 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -36,8 +36,8 @@ void main() {
   Api api;
   MockWeekApi weekApi;
   MockPictogramApi pictogramApi;
-  final UsernameModel mockUser =
-      UsernameModel(displayName: 'test', role: 'test', id: 'test');
+  final DisplayNameModel mockUser =
+  DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,

@@ -1,10 +1,10 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:api_client/http/http.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:mockito/mockito.dart';
@@ -27,8 +27,8 @@ void main() {
       accessLevel: null,
       imageUrl: 'http://any.tld',
       imageHash: null);
-  final UsernameModel mockUser =
-      UsernameModel(displayName: 'User' , id: '1', role: null);
+  final DisplayNameModel mockUser =
+  DisplayNameModel(displayName: 'User' , id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,

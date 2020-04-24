@@ -4,9 +4,9 @@ import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/timer_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -29,8 +29,8 @@ void main() {
   MockActivityApi mockActivityApi;
   TimerBloc timerMock;
   ActivityModel activityModel;
-  final UsernameModel mockUser =
-      UsernameModel(displayName: 'test', role: 'test', id: 'test');
+  final DisplayNameModel mockUser =
+  DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
 
   setUp(() {
     api = Api('any');

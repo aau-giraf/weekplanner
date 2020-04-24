@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
@@ -11,9 +11,9 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
   /// Constructor
-  const SettingsScreen(UsernameModel user) : _user = user;
+  const SettingsScreen(DisplayNameModel user) : _user = user;
 
-  final UsernameModel _user;
+  final DisplayNameModel _user;
 
   @override
   Widget build(BuildContext context) {
