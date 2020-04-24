@@ -5,6 +5,7 @@ import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
+import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import '../routes.dart';
@@ -20,7 +21,9 @@ class CopyToCitizensScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return Scaffold(
       body: Container(
@@ -68,7 +71,14 @@ class CopyToCitizensScreen extends StatelessWidget {
                             child: GirafButton(
                                 key: const Key('AcceptButton'),
                                 onPressed: () {
-                                  _bloc.copyToMarkedCitizens(_copiedWeekModel);
+                                   int conflicts = _bloc
+                                      .numberOfConflictingUsers(
+                                      _copiedWeekModel);
+                                  if(conflicts > 0) {
+                                    _showConflictDialog(context, conflicts);
+                                  }
+                                  _bloc.copyToMarkedCitizens(
+                                      context, _copiedWeekModel);
                                 },
                                 icon: const ImageIcon(
                                     AssetImage('assets/icons/accept.png')))),
@@ -87,7 +97,9 @@ class CopyToCitizensScreen extends StatelessWidget {
 
   Widget _buildWeekplanGridview(BuildContext context) {
     final bool portrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
     return StreamBuilder<List<UsernameModel>>(
         initialData: const <UsernameModel>[],
         stream: _bloc.citizen,
@@ -111,8 +123,8 @@ class CopyToCitizensScreen extends StatelessWidget {
         });
   }
 
-  Widget _buildUserSelector(
-      BuildContext context, UsernameModel user, bool isMarked) {
+  Widget _buildUserSelector(BuildContext context, UsernameModel user,
+      bool isMarked) {
     final CitizenAvatar avatar = CitizenAvatar(
         usernameModel: user,
         onPressed: () => _bloc.toggleMarkedUserModel(user));
@@ -126,5 +138,28 @@ class CopyToCitizensScreen extends StatelessWidget {
     } else {
       return avatar;
     }
+  }
+
+  ///Builds dialog box to fix conflict
+  Future<Center> _showConflictDialog(BuildContext context, int conflicts) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Giraf3ButtonDialog(
+            title: 'Kopiér konflikt',
+            description: 'Der er ${conflicts} konflikter!',
+            option1Text: 'ændr',
+            option1OnPressed: () {
+            },
+            option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+            option2Text: 'Overskriv',
+            option2OnPressed: () {
+              _bloc.copyToMarkedCitizens(context, _copiedWeekModel);
+              Routes.pop(context);
+            },
+            option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+          );
+        });
   }
 }

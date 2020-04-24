@@ -3,6 +3,8 @@ import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
@@ -20,23 +22,19 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   final Api _api;
 
   /// Copies weekplan to all selected citizens
-  void copyToMarkedCitizens(WeekModel weekModel) {
+  void copyToMarkedCitizens(BuildContext context, WeekModel weekModel) {
     List<UsernameModel> users = _markedUserModels.value;
     List<UsernameModel> conflictingUsers =
         getConflictingUsers(users, weekModel);
-    
-    for (UsernameModel user in users) {
-      if (conflictingUsers.contains(user)) {
-        users.remove(user);
-      }
-    }
-    
-    if (conflictingUsers.isNotEmpty){
+
+    if (conflictingUsers.isNotEmpty) {
+      showDialog(context: null);
       //Overwrite dialog - Giraf3ButtonDialog
       //  conflictingUsers.length
     }
-    
   }
+
+  void showCopyDialog(BuildContext context) {}
 
   /// Returns a list of all users which already have a weekplan in the same week
   List getConflictingUsers(List<UsernameModel> users, WeekModel weekModel) {
@@ -47,6 +45,12 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
       }
     }
     return conflictingUsers;
+  }
+
+  /// Checks if any user has a conflicting weekplan
+  int numberOfConflictingUsers(WeekModel weekModel) {
+    List<UsernameModel> users = _markedUserModels.value;
+    return getConflictingUsers(users, weekModel).length;
   }
 
   /// Compares a single Citizen's Weekplans with the copied weekplan

@@ -17,7 +17,7 @@ class EditWeekPlanScreen extends StatelessWidget {
     @required UsernameModel user,
     @required this.weekModel,
     @required this.selectorBloc,
-    bool this.inCopyMode = false,
+    this.inCopyMode = false,
   }) : _bloc = di.getDependency<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
