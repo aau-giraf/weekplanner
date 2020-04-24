@@ -20,7 +20,6 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
@@ -436,27 +435,6 @@ void main() {
     expect(find.text("weekModel1"), findsNWidgets(2));
 
   });
-  
-  testWidgets('Test when copying weekplans '
-    'that the right dialog comes up', (WidgetTester tester) async {
 
-    await tester
-      .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(Key(weekModel1.name)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('Option1Button')));
-    await tester.pumpAndSettle();
-    
-    expect(find.byType(CopyToCitizensScreen), findsOneWidget);
-  });
 
 }

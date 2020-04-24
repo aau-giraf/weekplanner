@@ -44,7 +44,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
               }),
         ],
         automaticallyImplyLeading: isGuardian,
-        
     );
   }
 }

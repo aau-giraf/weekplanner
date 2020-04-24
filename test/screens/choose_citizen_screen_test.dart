@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';

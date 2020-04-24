@@ -294,7 +294,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
               title: 'Kopiér ugeplaner',
               description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
               option1Text: 'Anden borger',
-              option1OnPressed: (){Routes.push(context,
+              option1OnPressed: (){
+                Routes.push(context,
                   CopyToCitizensScreen(_weekBloc.getMarkedWeekModels()[0]));},
               option1Icon:
                   const ImageIcon(AssetImage('assets/icons/copy.png')),

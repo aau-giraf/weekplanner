@@ -1,4 +1,3 @@
-import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
@@ -38,37 +37,43 @@ class CopyToCitizensScreen extends StatelessWidget {
           child: Scaffold(
             appBar: GirafAppBar(
               title: 'Vælg borger',
-              appBarIcons: const <AppBarIcon, VoidCallback>{
-              },
+              appBarIcons: const <AppBarIcon, VoidCallback>{},
             ),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: <Widget>[
                   Container(
-                    child: Expanded(child: _buildWeekplanGridview(context))
-                  ),
+                      child: Expanded(child: _buildWeekplanGridview(context))),
                   Row(
                     children: <Widget>[
-                      const Spacer(flex: 1),
-                      Container(
-                        child: GirafButton(
-                          key: const Key('CancelButton'),
-                          onPressed: () {Routes.pop(context);},
-                          icon: const ImageIcon(AssetImage(
-                              'assets/icons/cancel.png')),
+                      Spacer(flex: 1),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: GirafButton(
+                            key: const Key('CancelButton'),
+                            onPressed: () {
+                              Routes.pop(context);
+                            },
+                            icon: const ImageIcon(
+                                AssetImage('assets/icons/cancel.png')),
+                          ),
                         ),
                       ),
-                      const Spacer(flex: 2),
-                      Container(
-                        child: GirafButton(
-                          key: const Key('AcceptButton'),
-                          onPressed: () {_bloc.copyToMarkedCitizens();},
-                          icon: const ImageIcon(AssetImage(
-                            'assets/icons/accept.png'))
-                        )
+                      Spacer(flex: 1),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            child: GirafButton(
+                                key: const Key('AcceptButton'),
+                                onPressed: () {
+                                  _bloc.copyToMarkedCitizens(_copiedWeekModel);
+                                },
+                                icon: const ImageIcon(
+                                    AssetImage('assets/icons/accept.png')))),
                       ),
-                      const Spacer(flex: 1)
+                      Spacer(flex: 1),
                     ],
                   )
                 ],
@@ -97,12 +102,10 @@ class CopyToCitizensScreen extends StatelessWidget {
                     AsyncSnapshot<List<UsernameModel>> markedUsersSnapshot) {
                   return GridView.count(
                       crossAxisCount: portrait ? 2 : 4,
-                      children: usersSnapshot.data
-                          .map((UsernameModel user)
-                  {
-                    return _buildUserSelector(context, user,
-                        markedUsersSnapshot.data.contains(user));
-                  }).toList());
+                      children: usersSnapshot.data.map((UsernameModel user) {
+                        return _buildUserSelector(context, user,
+                            markedUsersSnapshot.data.contains(user));
+                      }).toList());
                 });
           }
         });
@@ -124,5 +127,4 @@ class CopyToCitizensScreen extends StatelessWidget {
       return avatar;
     }
   }
-
 }

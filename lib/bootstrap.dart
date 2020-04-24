@@ -93,5 +93,7 @@ class Bootstrap {
     di.registerDependency<CopyWeekplanBloc>((Injector i) {
       return CopyWeekplanBloc(i.getDependency<Api>());
     });
+    print('succes');
+
   }
 }
