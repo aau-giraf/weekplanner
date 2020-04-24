@@ -834,47 +834,41 @@ class WeekplanScreen extends StatelessWidget {
       stream: timerBloc.timerIsInstantiated,
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
-        if (timerSnapshot.hasData && timerSnapshot.data && _showTimerIcon()) {
-          return const ImageIcon(
-            AssetImage('assets/icons/redcircle.png'),
-            color: Colors.red,
-            size: 250,
+        if (timerSnapshot.hasData && timerSnapshot.data) {
+          return StreamBuilder<WeekplanMode>(
+            stream: _authBloc.mode,
+            builder: (BuildContext roleContext,
+                AsyncSnapshot<WeekplanMode> role) {
+              if (role.data == WeekplanMode.guardian) {
+                return const ImageIcon(
+                  AssetImage('assets/icons/redcircle.png'),
+                  color: Colors.red,
+                  size: 250,
+                );
+              } else {
+                return StreamBuilder<SettingsModel>(
+                  stream: _settingsBloc.settings,
+                  builder: (BuildContext settingsContext,
+                      AsyncSnapshot<SettingsModel> settings) {
+                    if (!settings.hasData ||
+                        settings.data.completeMark != CompleteMark.Removed) {
+                      return const ImageIcon(
+                        AssetImage('assets/icons/redcircle.png'),
+                        color: Colors.red,
+                        size: 250,
+                      );
+                    }
+
+                    return Container();
+                  }
+                );
+              }
+            }
           );
         }
         return Container();
       }
     );
-  }
-  
-  /// Checks that user is either citizen and checkmark is not remove, or
-  /// user is guardian.
-  bool _showTimerIcon() {
-    bool res = false;
-    StreamBuilder<WeekplanMode>(
-      stream: _authBloc.mode,
-      builder: (BuildContext roleContext, AsyncSnapshot<WeekplanMode> role) {
-        if (role.data == WeekplanMode.guardian) {
-          res = true;
-        } else {
-          StreamBuilder<SettingsModel>(
-            stream: _settingsBloc.settings,
-            builder: (BuildContext settingsContext,
-                AsyncSnapshot<SettingsModel> settings) {
-              if (!settings.hasData ||
-                  settings.data.completeMark != CompleteMark.Removed) {
-                res = true;
-              }
-
-              return null;
-            },
-          );
-        }
-
-        return null;
-      },
-    );
-
-    return res;
   }
 
   Card _translateWeekDay(Weekday day) {
