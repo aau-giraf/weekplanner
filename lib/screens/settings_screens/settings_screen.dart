@@ -78,7 +78,6 @@ class SettingsScreen extends StatelessWidget {
             })
           ]);
           }else{
-            print('Hello there');
             return const Center(
               child: CircularProgressIndicator(),
             );
