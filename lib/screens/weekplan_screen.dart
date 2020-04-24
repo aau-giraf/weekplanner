@@ -10,7 +10,6 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
-import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -491,7 +490,7 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Handles tap on an activity
-  void handleOnTapActivity(bool inEditMode, bool isMarked,
+  void handleOnTapActivity(bool inEditMode, bool isMarked, bool isCitizen,
       List<ActivityModel> activities, int index, BuildContext context) {
     if (inEditMode) {
       if (isMarked) {
@@ -499,7 +498,8 @@ class WeekplanScreen extends StatelessWidget {
       } else {
         _weekplanBloc.addMarkedActivity(activities[index]);
       }
-    } else {
+    } else if (!(activities[index].state == ActivityState.Completed &&
+        isCitizen)) {
       Routes.push(context, ShowActivityScreen(activities[index], _user))
           .then((Object object) => _weekplanBloc.loadWeek(_week, _user));
     }
@@ -654,9 +654,10 @@ class WeekplanScreen extends StatelessWidget {
                                   if (modeSnapshot.data ==
                                       WeekplanMode.guardian) {
                                     handleOnTapActivity(inEditMode, isMarked,
-                                        weekday.activities, index, context);
+                                        false, weekday.activities, index,
+                                        context);
                                   } else {
-                                    handleOnTapActivity(false, false,
+                                    handleOnTapActivity(false, false, true,
                                         weekday.activities, index, context);
                                   }
                                 },
