@@ -136,8 +136,6 @@ class WeekplansBloc extends BlocBase {
     return weekNum;
   }
 
-
-
   List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
     list.sort((WeekModel a, WeekModel b) {
       if (a.name == 'Tilføj ugeplan') {
@@ -153,31 +151,31 @@ class WeekplansBloc extends BlocBase {
     return list;
   }
 
-    bool isWeekDone(WeekNameModel weekPlan){
+  // Checks if a week is in the past/expired
+  bool isWeekDone(WeekNameModel weekPlan){
     final int currentYear = DateTime.now().year;
     final int currentWeek = getCurrentWeekNum();
 
     if (weekPlan.weekYear < currentYear ||
        (weekPlan.weekYear == currentYear && weekPlan.weekNumber < currentWeek)){
-      print("this week should be grey");
       return true;
     }
-    print("this week should have colors");
     return false;
   }
-/*
-  List<WeekModel> getAllDoneWeeks(List<WeekModel> weekList){
-    List<WeekModel> doneWeeks = <WeekModel>[];
 
-    for (WeekModel weekPlan in weekList) {
-      if (!isWeekDone(weekPlan)){
+  // Puts all done/expired weeks in a list for themselves
+  List<WeekNameModel> getAllDoneWeeks(List<WeekNameModel> weekList){
+    List<WeekNameModel> doneWeeks = <WeekNameModel>[];
+
+    for (WeekNameModel weekPlan in weekList) {
+      if (isWeekDone(weekPlan)) {
+        print(weekPlan.weekNumber);
         doneWeeks.add(weekPlan);
       }
     }
-
     return doneWeeks;
   }
-*/
+
   /// Adds a new marked week model to the stream
   void toggleMarkedWeekModel(WeekModel weekModel) {
     final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;

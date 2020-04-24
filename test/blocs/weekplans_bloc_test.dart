@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/username_model.dart';
@@ -256,6 +258,28 @@ void main() {
     bloc.toggleMarkedWeekModel(weekModel2);
     bloc.toggleMarkedWeekModel(weekModel3);
     expect(bloc.getMarkedWeekModels(), correctMarked);
+    done();
+  }));
+
+  test('Check if a week is done', async((DoneFn done) {
+    expect(bloc.isWeekDone(weekNameModel1), true);
+    expect(bloc.isWeekDone(weekNameModel2), false);
+    expect(bloc.isWeekDone(weekNameModel3), false);
+    expect(bloc.isWeekDone(weekNameModel4), true);
+    expect(bloc.isWeekDone(weekNameModel5), true);
+    done();
+  }));
+
+  test('Checks all done weeks is sorted', async((DoneFn done) {
+    final List<WeekNameModel> correctList = <WeekNameModel>[
+      weekNameModel1, weekNameModel4, weekNameModel5
+    ];
+    weekNameModelList.add(weekNameModel2);
+    weekNameModelList.add(weekNameModel3);
+    weekNameModelList.add(weekNameModel4);
+    weekNameModelList.add(weekNameModel5);
+
+    expect(bloc.getAllDoneWeeks(weekNameModelList), correctList);
     done();
   }));
 }
