@@ -22,25 +22,17 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   final Api _api;
 
   /// Copies weekplan to all selected citizens
-  void copyToMarkedCitizens(BuildContext context, WeekModel weekModel) {
+  void copyWeekplan(WeekModel weekModel) {
     List<UsernameModel> users = _markedUserModels.value;
     List<UsernameModel> conflictingUsers =
         getConflictingUsers(users, weekModel);
-
-    if (conflictingUsers.isNotEmpty) {
-      showDialog(context: null);
-      //Overwrite dialog - Giraf3ButtonDialog
-      //  conflictingUsers.length
-    }
   }
-
-  void showCopyDialog(BuildContext context) {}
 
   /// Returns a list of all users which already have a weekplan in the same week
   List getConflictingUsers(List<UsernameModel> users, WeekModel weekModel) {
     List<UsernameModel> conflictingUsers = <UsernameModel>[];
     for (UsernameModel user in users) {
-      if (checkCitizenWeekNumber(user, weekModel)) {
+      if (CompareCitizenWeekNumber(user, weekModel)) {
         conflictingUsers.add(user);
       }
     }
@@ -54,7 +46,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   }
 
   /// Compares a single Citizen's Weekplans with the copied weekplan
-  bool checkCitizenWeekNumber(UsernameModel user, WeekModel weekModel) {
+  bool CompareCitizenWeekNumber(UsernameModel user, WeekModel weekModel) {
     if (_api.week.get(user.id, weekModel.weekYear, weekModel.weekYear) !=
         null) {
       return true;

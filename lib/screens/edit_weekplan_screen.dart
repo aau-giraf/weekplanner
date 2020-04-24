@@ -17,7 +17,6 @@ class EditWeekPlanScreen extends StatelessWidget {
     @required UsernameModel user,
     @required this.weekModel,
     @required this.selectorBloc,
-    this.inCopyMode = false,
   }) : _bloc = di.getDependency<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
@@ -30,9 +29,6 @@ class EditWeekPlanScreen extends StatelessWidget {
   final WeekplansBloc selectorBloc;
   final EditWeekplanBloc _bloc;
 
-  /// Whether the week plan should copy or not.
-  final bool inCopyMode;
-
   @override
   Widget build(BuildContext context) {
     final GirafButton editButton = GirafButton(
@@ -42,17 +38,11 @@ class EditWeekPlanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        WeekModel result;
-        if (inCopyMode) {
-          result = await _bloc.saveWeekplan(
-              screenContext: context,
-              existingWeekPlans: selectorBloc.weekNameModels);
-        } else {
-          result = await _bloc.editWeekPlan(
-              screenContext: context,
-              oldWeekModel: weekModel,
-              selectorBloc: selectorBloc);
-        }
+        WeekModel result = await _bloc.editWeekPlan(
+            screenContext: context,
+            oldWeekModel: weekModel,
+            selectorBloc: selectorBloc);
+
         if (result != null) {
           Routes.pop<WeekModel>(context, result);
         }
