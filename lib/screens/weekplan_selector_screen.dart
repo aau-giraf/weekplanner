@@ -270,14 +270,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ));
   }
 
-  void _pushEditWeekPlan(BuildContext context,{bool incopymode = false}) {
+  void _pushEditWeekPlan(BuildContext context) {
     Routes.push<WeekModel>(
       context,
       EditWeekPlanScreen(
         user: _user,
         weekModel: _weekBloc.getMarkedWeekModels()[0],
         selectorBloc: _weekBloc,
-        inCopyMode: incopymode,
       ),
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();
@@ -302,7 +301,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
               option2Text: 'Denne borger',
               option2OnPressed: () {
                 Routes.pop(context);
-                _pushEditWeekPlan(context, incopymode: true);
+                _pushEditWeekPlan(context);
               },
               option2Icon:
                   const ImageIcon(AssetImage('assets/icons/copy.png')),

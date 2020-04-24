@@ -77,8 +77,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                                   if(conflicts > 0) {
                                     _showConflictDialog(context, conflicts);
                                   }
-                                  _bloc.copyToMarkedCitizens(
-                                      context, _copiedWeekModel);
+                                  _bloc.copyWeekplan(_copiedWeekModel);
                                 },
                                 icon: const ImageIcon(
                                     AssetImage('assets/icons/accept.png')))),
