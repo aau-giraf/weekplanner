@@ -97,7 +97,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(
         find.byWidgetPredicate((Widget widget) =>
-            widget is GirafAppBar && widget.title == 'Indstillinger'),
+        widget is GirafAppBar && widget.title == 'Indstillinger'),
         findsOneWidget);
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
@@ -124,18 +124,18 @@ void main() {
   });
 
   testWidgets('Settings has Brugerindstillinger section',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.text('Bruger indstillinger'), findsOneWidget);
-    expect(find.text(user.name + ' indstillinger'), findsOneWidget);
-  });
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        expect(find.text('Bruger indstillinger'), findsOneWidget);
+        expect(find.text(user.name + ' indstillinger'), findsOneWidget);
+      });
 
   testWidgets('Farver på ugeplan button changes screen',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Farver på ugeplan'));
-    await tester.pumpAndSettle();
-    expect(find.byType(ColorThemeSelectorScreen), findsOneWidget);
-  });
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Farver på ugeplan'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ColorThemeSelectorScreen), findsOneWidget);
+      });
 }
