@@ -97,7 +97,8 @@ class TimerBloc extends BlocBase {
             milliseconds: _activityModel.timer.fullLength -
                 _activityModel.timer.progress));
         // Checks if the timer is running
-        if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
+        if ((_activityModel.timer.startTime.isBefore(DateTime.now()) ||
+            _activityModel.timer.startTime.isAtSameMomentAs(DateTime.now())) &&
             DateTime.now().isBefore(endTime) &&
             !_activityModel.timer.paused) {
           _timerRunningModeStream.add(TimerRunningMode.running);
