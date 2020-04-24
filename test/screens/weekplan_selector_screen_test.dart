@@ -131,7 +131,7 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar &&
-        widget.title == mockUser.name &&
+        widget.title == mockUser.displayName &&
         widget.appBarIcons.keys.contains(AppBarIcon.edit) &&
         widget.appBarIcons.keys.contains(AppBarIcon.logout) &&
         widget.appBarIcons.keys.contains(AppBarIcon.settings)),
