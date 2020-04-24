@@ -66,7 +66,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         ),
         Text("Overståede ugeplaner"), //Skal erstattes med en bar
         Expanded(child:
-        _buildWeekplanGridview(context)
+        _buildOldWeekplanGridview(context)
         )
       ])
     );
@@ -105,6 +105,41 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   });
             });
   }
+
+  Widget _buildOldWeekplanGridview(BuildContext context) {
+    return StreamBuilder<List<WeekModel>>(
+        initialData: <WeekModel>[WeekModel(name: 'Tilføj ugeplan')],
+        stream: _weekBloc.oldWeekModels,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<WeekModel>> weekplansSnapshot) {
+          return StreamBuilder<List<WeekModel>>(
+              stream: _weekBloc.markedWeekModels,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
+                return GridView.count(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    crossAxisCount: MediaQuery.of(context).orientation ==
+                        Orientation.landscape
+                        ? 4
+                        : 3,
+                    crossAxisSpacing:
+                    MediaQuery.of(context).size.width / 100 * 1.5,
+                    mainAxisSpacing:
+                    MediaQuery.of(context).size.width / 100 * 1.5,
+                    children:
+                    weekplansSnapshot.data.map((WeekModel weekplan) {
+                      return _buildWeekPlanSelector(
+                        context,
+                        weekplan,
+                        markedWeeksSnapshot.hasData &&
+                            markedWeeksSnapshot.data.contains(weekplan),
+                      );
+                    }).toList());
+              });
+        });
+  }
+
 
   Widget _buildWeekPlanSelector(
       BuildContext context, WeekModel weekplan, bool isMarked) {

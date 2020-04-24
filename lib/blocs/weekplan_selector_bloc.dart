@@ -29,6 +29,11 @@ class WeekplansBloc extends BlocBase {
   final BehaviorSubject<List<WeekModel>> _weekModel =
       BehaviorSubject<List<WeekModel>>();
 
+  final BehaviorSubject<List<WeekModel>> _oldWeekModel =
+  BehaviorSubject<List<WeekModel>>();
+
+  Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
+
   final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
       BehaviorSubject<List<WeekNameModel>>();
 
@@ -81,27 +86,44 @@ class WeekplansBloc extends BlocBase {
     }
 
     final List<Observable<WeekModel>> weekDetails = <Observable<WeekModel>>[];
+    final List<Observable<WeekModel>> oldWeekDetails =
+      <Observable<WeekModel>>[];
 
     for (WeekNameModel weekPlanName in weekPlanNames) {
-      weekDetails.add(_api.week
-          .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
-          .take(1));
+      if(isWeekDone(weekPlanName)) {
+        oldWeekDetails.add(_api.week
+            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .take(1));
+      } else {
+        weekDetails.add(_api.week
+            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .take(1));
+      }
     }
 
     final Observable<List<WeekModel>> getWeekPlans = weekDetails.length < 2
         ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
         : Observable.combineLatestList(weekDetails);
 
-    print('************************ PRINTER BBY *****************************');
-    print(weekDetails);
+    final Observable<List<WeekModel>> getOldWeekPlans =
+      oldWeekDetails.length < 2 ? oldWeekDetails[0].map((WeekModel plan) =>
+      <WeekModel>[plan]) : Observable.combineLatestList(oldWeekDetails);
 
     getWeekPlans
         .take(1)
         .map((List<WeekModel> plans) => weekPlans + plans)
         .map(_sortWeekPlans)
         .listen(_weekModel.add);
+
+    getOldWeekPlans
+      .take(1)
+      .map((List<WeekModel> plans) => plans)
+      .map(_sortWeekPlans)
+      .listen(_oldWeekModel.add);
+
   }
 
+  // Function that returns the current week number
   int getCurrentWeekNum(){
     final int dayOfYear = DateTime.now().difference(
         DateTime(DateTime.now().year, 1, 1)).inDays;
@@ -113,6 +135,8 @@ class WeekplansBloc extends BlocBase {
     }
     return weekNum;
   }
+
+
 
   List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
     list.sort((WeekModel a, WeekModel b) {
@@ -129,19 +153,19 @@ class WeekplansBloc extends BlocBase {
     return list;
   }
 
-  bool isWeekDone(WeekModel weekPlan){
+    bool isWeekDone(WeekNameModel weekPlan){
     final int currentYear = DateTime.now().year;
     final int currentWeek = getCurrentWeekNum();
 
     if (weekPlan.weekYear < currentYear ||
        (weekPlan.weekYear == currentYear && weekPlan.weekNumber < currentWeek)){
       print("this week should be grey");
-      return false;
+      return true;
     }
     print("this week should have colors");
-    return true;
+    return false;
   }
-
+/*
   List<WeekModel> getAllDoneWeeks(List<WeekModel> weekList){
     List<WeekModel> doneWeeks = <WeekModel>[];
 
@@ -153,7 +177,7 @@ class WeekplansBloc extends BlocBase {
 
     return doneWeeks;
   }
-
+*/
   /// Adds a new marked week model to the stream
   void toggleMarkedWeekModel(WeekModel weekModel) {
     final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;
