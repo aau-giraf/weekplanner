@@ -97,7 +97,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(
         find.byWidgetPredicate((Widget widget) =>
-        widget is GirafAppBar && widget.title == 'Indstillinger'),
+            widget is GirafAppBar && widget.title == 'Indstillinger'),
         findsOneWidget);
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
