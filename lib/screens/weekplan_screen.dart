@@ -1,5 +1,6 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -827,7 +828,7 @@ class WeekplanScreen extends StatelessWidget {
       stream: timerBloc.timerIsInstantiated,
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
-        if (timerSnapshot.hasData && timerSnapshot.data) {
+        if (timerSnapshot.hasData && timerSnapshot.data && _showTimerIcon()) {
           return const ImageIcon(
             AssetImage('assets/icons/redcircle.png'),
             color: Colors.red,
@@ -837,6 +838,37 @@ class WeekplanScreen extends StatelessWidget {
         return Container();
       }
     );
+  }
+  
+  /// Checks that user is either citizen and checkmark is not remove, or
+  /// user is guardian.
+  bool _showTimerIcon() {
+    bool res = false;
+    StreamBuilder<WeekplanMode>(
+      stream: _authBloc.mode,
+      builder: (BuildContext roleContext, AsyncSnapshot<WeekplanMode> role) {
+        if (role.data == WeekplanMode.guardian) {
+          res = true;
+        } else {
+          StreamBuilder<SettingsModel>(
+            stream: _settingsBloc.settings,
+            builder: (BuildContext settingsContext,
+                AsyncSnapshot<SettingsModel> settings) {
+              if (!settings.hasData ||
+                  settings.data.completeMark != CompleteMark.Removed) {
+                res = true;
+              }
+
+              return null;
+            },
+          );
+        }
+
+        return null;
+      },
+    );
+
+    return res;
   }
 
   Card _translateWeekDay(Weekday day) {
