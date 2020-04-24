@@ -16,9 +16,13 @@ class TimerHourglass extends StatelessWidget {
         stream: _timerBloc.timerProgressStream,
         builder: (BuildContext timerProgressContext,
             AsyncSnapshot<double> timerProgressSnapshot) {
-          timerProgressSnapshot.data >= 1
-              ? _emptyHourglass()
-              : _drawHourglass(timerProgressSnapshot);
+          // The stream timerProgressSnapshot seems to over shoot,
+          // so to counter this, we check above or equal to 1
+          if (timerProgressSnapshot.data >= 1) {
+            return _drawDoneHourglass();
+          } else {
+            return _drawHourglass(timerProgressSnapshot);
+          }
         });
   }
 }
@@ -91,6 +95,11 @@ Stack _drawHourglass(AsyncSnapshot<double> timerProgressSnapshot) {
   );
 }
 
-Image _emptyHourglass() {
-  return Image(image: const AssetImage('assets/hourglass.png'));
+Image _drawDoneHourglass() {
+  return Image(image: const AssetImage('assets/hourglass_done.png'));
+}
+
+CircularProgressIndicator _drawLoading() {
+  debugPrint('Drawing loading');
+  return CircularProgressIndicator();
 }

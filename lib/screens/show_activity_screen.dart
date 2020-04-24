@@ -216,6 +216,7 @@ class ShowActivityScreen extends StatelessWidget {
   /// The widget to show, in the case that a timer has been initiated,
   /// showing the progression for the timer in both citizen and guardian mode.
   Widget _timerIsInitiatedWidget() {
+<<<<<<< HEAD
     return FittedBox(
       key: const Key('TimerInitKey'),
       child: StreamBuilder<double>(
@@ -245,6 +246,28 @@ class ShowActivityScreen extends StatelessWidget {
         },
       ),
     );
+=======
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            StatelessWidget returnWidget;
+            final SettingsModel _settingsModel = settingsSnapshot.data;
+            if (_settingsModel.defaultTimer == DefaultTimer.Hourglass) {
+              returnWidget = TimerHourglass(_timerBloc);
+            } else if (_settingsModel.defaultTimer == DefaultTimer.Hourglass) {
+              //Do something
+            }
+
+            return returnWidget;
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+>>>>>>> ad695c7... Working hourglass
   }
 
   /// The widget to show, in the case that a timer has not been initiated
