@@ -92,12 +92,28 @@ class WeekplansBloc extends BlocBase {
         ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
         : Observable.combineLatestList(weekDetails);
 
+
+
     getWeekPlans
         .take(1)
         .map((List<WeekModel> plans) => weekPlans + plans)
         .map(_sortWeekPlans)
         .listen(_weekModel.add);
   }
+
+  int getCurrentWeekNum(){
+    final int dayOfYear = DateTime.now().difference(
+        DateTime(DateTime.now().year, 1, 1)).inDays;
+    final int dayOfWeek = DateTime.now().weekday;
+    final int dowJan1 = DateTime(DateTime.now().year, 1, 1).weekday;
+    int weekNum = ((dayOfYear + 6) / 7).round();
+    if(dayOfWeek < dowJan1){
+      weekNum++;
+    }
+    return weekNum;
+  }
+
+
 
   List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
     list.sort((WeekModel a, WeekModel b) {
