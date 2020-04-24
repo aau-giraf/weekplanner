@@ -92,7 +92,8 @@ class WeekplansBloc extends BlocBase {
         ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
         : Observable.combineLatestList(weekDetails);
 
-
+    print('************************ PRINTER BBY *****************************');
+    print(weekDetails);
 
     getWeekPlans
         .take(1)
@@ -113,8 +114,6 @@ class WeekplansBloc extends BlocBase {
     return weekNum;
   }
 
-
-
   List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
     list.sort((WeekModel a, WeekModel b) {
       if (a.name == 'Tilføj ugeplan') {
@@ -131,11 +130,11 @@ class WeekplansBloc extends BlocBase {
   }
 
   bool isWeekDone(WeekModel weekPlan){
-    final int currentYear= DateTime.now().year;
-    final int currentMonth = DateTime.now().month;
+    final int currentYear = DateTime.now().year;
+    final int currentWeek = getCurrentWeekNum();
 
-    if ((weekPlan.weekYear < currentYear) &&
-        (weekPlan.weekNumber < currentMonth)) {
+    if (weekPlan.weekYear < currentYear ||
+       (weekPlan.weekYear == currentYear && weekPlan.weekNumber < currentWeek)){
       print("this week should be grey");
       return false;
     }
@@ -146,9 +145,9 @@ class WeekplansBloc extends BlocBase {
   List<WeekModel> getAllDoneWeeks(List<WeekModel> weekList){
     List<WeekModel> doneWeeks = <WeekModel>[];
 
-    for (WeekModel week in weekList) {
-      if (!isWeekDone(week)){
-        doneWeeks.add(week);
+    for (WeekModel weekPlan in weekList) {
+      if (!isWeekDone(weekPlan)){
+        doneWeeks.add(weekPlan);
       }
     }
 
