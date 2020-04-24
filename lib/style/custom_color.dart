@@ -89,7 +89,7 @@ class GirafColors {
   static const Color blueBorderColor = Color.fromRGBO(35, 35, 35, 1);
 
   /// Color of transparent grey for completed activity
-  static const Color transparentGrey = Color.fromRGBO(112, 112, 112, 0.3);
+  static const Color transparentGrey = Color.fromRGBO(112, 112, 112, 0.5);
 
   /// White color
   static const Color white = Colors.white;

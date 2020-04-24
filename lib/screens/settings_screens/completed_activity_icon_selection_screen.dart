@@ -1,3 +1,4 @@
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,7 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 
 import '../../di.dart';
 
-/// Screen where the user can select how many days to show for a citizen
+/// Screen where the icon for completed activity can be chosen
 class CompletedActivityIconScreen extends StatelessWidget {
   /// Constructor
   CompletedActivityIconScreen(UsernameModel user) : _user = user {
@@ -37,24 +38,26 @@ class CompletedActivityIconScreen extends StatelessWidget {
                   children: <Widget>[
                     SettingsSection('Tegn for udførelse', <SettingsSectionItem>[
                       SettingsCheckMarkButton(
-                          1, _settingsModel.nrOfDaysToDisplay,
-                          'Flueben', () {
-                              _settingsModel.nrOfDaysToDisplay = 1;
+                          0,
+                          _settingsModel.completeMark.index,
+                          'Fjern aktiviteten for borgeren', () {
+                              _settingsModel.completeMark =
+                                  CompleteMark.Removed;
                               _settingsBloc.updateSettings(_user.id,
                                 _settingsModel);
                           }),
                       SettingsCheckMarkButton(
-                          5,
-                          _settingsModel.nrOfDaysToDisplay,
-                          'Lav aktiviteten grå', () {
-                        _settingsModel.nrOfDaysToDisplay = 5;
+                          1,
+                          _settingsModel.completeMark.index,
+                          'Flueben', () {
+                        _settingsModel.completeMark = CompleteMark.Checkmark;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
                       }),
                       SettingsCheckMarkButton(
-                          7,
-                          _settingsModel.nrOfDaysToDisplay,
-                          'Fjern aktiviteten for borgeren', () {
-                        _settingsModel.nrOfDaysToDisplay = 7;
+                          2,
+                          _settingsModel.completeMark.index,
+                          'Lav aktiviteten grå', () {
+                        _settingsModel.completeMark = CompleteMark.MovedRight;
                         _settingsBloc.updateSettings(_user.id, _settingsModel);
                       }),
                     ]),

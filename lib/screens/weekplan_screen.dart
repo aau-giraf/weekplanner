@@ -512,8 +512,8 @@ class WeekplanScreen extends StatelessWidget {
           key: const Key('isSelectedKey'),
           margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
           decoration:
-              BoxDecoration(border: Border.all(color: Colors.black,
-                  width: MediaQuery.of(context).size.width * 0.1)),
+            BoxDecoration(border: Border.all(color: Colors.black,
+                width: MediaQuery.of(context).size.width * 0.1)),
           child: _buildActivityCard(
             context,
             activities,
@@ -756,18 +756,24 @@ class WeekplanScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> snapshot) {
                       if (!snapshot.hasData ||
-                        snapshot.data.nrOfDaysToDisplay == null ||
-                        snapshot.data.nrOfDaysToDisplay == 1) {
+                          snapshot.data.completeMark == null) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.Checkmark) {
                         return Icon(
                           Icons.check,
                           key: const Key('IconComplete'),
                           color: Colors.green,
                           size: MediaQuery.of(context).size.width,
                         );
-                      } else if (snapshot.data.nrOfDaysToDisplay == 5) {
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.MovedRight) {
                         return completedActivityColor(
                           theme.GirafColors.transparentGrey, context);
-                      } else if (snapshot.data.nrOfDaysToDisplay == 7) {
+                      } else if (snapshot.data.completeMark ==
+                          CompleteMark.Removed) {
                         if (weekday.day.index == 0) {
                           return completedActivityColor(
                             theme.GirafColors.mondayColor, context);
@@ -812,7 +818,7 @@ class WeekplanScreen extends StatelessWidget {
         return Icon(
           Icons.clear,
           key: const Key('IconCanceled'),
-          color: Colors.red,
+          color: theme.GirafColors.red,
           size: MediaQuery.of(context).size.width,
         );
       default:
