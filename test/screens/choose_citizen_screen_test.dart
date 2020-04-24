@@ -28,10 +28,10 @@ class MockUserApi extends Mock implements UserApi {
   @override
   Observable<List<UsernameModel>> getCitizens(String id) {
     final List<UsernameModel> output = <UsernameModel>[];
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
+    output.add(UsernameModel(displayName: 'test1', role: 'test1', id: id));
+    output.add(UsernameModel(displayName: 'test1', role: 'test1', id: id));
+    output.add(UsernameModel(displayName: 'test1', role: 'test1', id: id));
+    output.add(UsernameModel(displayName: 'test1', role: 'test1', id: id));
     return Observable<List<UsernameModel>>.just(output);
   }
 }

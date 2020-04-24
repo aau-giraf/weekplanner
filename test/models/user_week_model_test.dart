@@ -8,7 +8,7 @@ void main() {
   test('Can add week and user', () {
     final WeekModel week = WeekModel();
     final UsernameModel user =
-        UsernameModel(name: 'User', role: Role.Guardian.toString(), id: '1');
+        UsernameModel(displayName: 'User', role: Role.Guardian.toString(), id: '1');
 
     final UserWeekModel userWeek = UserWeekModel(week, user);
 

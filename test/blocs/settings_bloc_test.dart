@@ -37,7 +37,7 @@ void main() {
   Api api;
   final UsernameModel user = UsernameModel(
     role: Role.Citizen.toString(),
-    name: 'Citizen',
+    displayName: 'Citizen',
     id: '1'
   );
   final SettingsModel settings = SettingsModel(

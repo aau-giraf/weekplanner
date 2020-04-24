@@ -40,7 +40,7 @@ void main() {
   WeekModel week;
 
   final UsernameModel user =
-      UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+      UsernameModel(role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
   setUp(() {
     week = WeekModel(
@@ -216,7 +216,7 @@ void main() {
   test('Checks if marked activities are deleted from a users weekplan',
       async((DoneFn done) {
     final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+        UsernameModel(role: Role.Citizen.toString(), displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -266,7 +266,7 @@ void main() {
   test('Checks if marked activities are copied to a new day',
       async((DoneFn done) {
     final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+        UsernameModel(role: Role.Citizen.toString(), displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -348,7 +348,8 @@ void main() {
 
   test('Checks if marked activities are marked as cancel', async((DoneFn done) {
     final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+        UsernameModel(role: Role.Citizen.toString(),
+            displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -453,7 +454,8 @@ void main() {
 
   test('Adds an activity to a given weekplan', async((DoneFn done) {
     final UsernameModel user =
-        UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+        UsernameModel(role: Role.Guardian.toString(),
+            displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         order: null,

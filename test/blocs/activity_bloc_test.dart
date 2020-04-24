@@ -24,7 +24,7 @@ void main() {
   MockActivityApi activityApi;
 
   final UsernameModel mockUser = 
-    UsernameModel(id: '50', name: null, role: null);
+    UsernameModel(id: '50', displayName: "testUser202", role: null);
 
   final ActivityModel mockActivity = ActivityModel(
       id: 1,

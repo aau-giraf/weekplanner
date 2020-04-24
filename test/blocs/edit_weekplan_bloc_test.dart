@@ -26,7 +26,7 @@ void main() {
       imageUrl: 'http://any.tld',
       imageHash: null);
   final UsernameModel mockUser =
-      UsernameModel(name: 'User', id: '1', role: null);
+      UsernameModel(displayName: 'User', id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,

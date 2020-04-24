@@ -34,7 +34,7 @@ void main() {
   final WeekModel weekModel4 = WeekModel(weekNumber: 3, weekYear: 2020);
   final WeekModel weekModel5 = WeekModel(weekNumber: 50, weekYear: 2019);
   final UsernameModel mockUser =
-      UsernameModel(name: 'test', id: 'test', role: 'test');
+      UsernameModel(displayName: 'test', id: 'test', role: 'test');
 
   void setupApiCalls() {
     weekNameModelList.clear();
@@ -91,7 +91,7 @@ void main() {
       done();
     });
 
-    bloc.load(UsernameModel(name: 'test', role: 'test', id: 'test'));
+    bloc.load(UsernameModel(displayName: 'test', role: 'test', id: 'test'));
   }));
 
   test('Should dispose weekModels stream', async((DoneFn done) {
@@ -239,7 +239,7 @@ void main() {
     weekModelList.add(weekModel4);
     weekModelList.add(weekModel5);
 
-    bloc.load(UsernameModel(name: 'test', role: 'test', id: 'test'));
+    bloc.load(UsernameModel(displayName: 'test', role: 'test', id: 'test'));
 
     bloc.weekModels.listen((List<WeekModel>weekModels) {
       expect(correctList, weekModels);

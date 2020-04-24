@@ -71,7 +71,7 @@ final WeekModel mockWeek = WeekModel(
     weekYear: 2019);
 
 final UsernameModel mockUser =
-    UsernameModel(name: 'test', role: 'test', id: 'test');
+    UsernameModel(displayName: 'test', role: 'test', id: 'test');
 
 WeekplansBloc mockWeekplanSelector;
 

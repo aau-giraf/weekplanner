@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildUserSettings() {
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-      SettingsArrowButton(_user.name + ' indstillinger', () {}),
+      SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
     ]);
   }
 }

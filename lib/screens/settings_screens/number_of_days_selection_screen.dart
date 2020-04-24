@@ -24,7 +24,7 @@ class NumberOfDaysScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: _user.name + ': indstillinger',
+          title: _user.displayName + ': indstillinger',
         ),
         body: StreamBuilder<SettingsModel>(
             stream: _settingsBloc.settings,

@@ -35,7 +35,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: _user.name,
+          title: _user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
             AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
             AppBarIcon.logout: () {},

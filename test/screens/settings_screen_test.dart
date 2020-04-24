@@ -26,7 +26,7 @@ void main() {
   Api api;
 
   final UsernameModel user = UsernameModel(
-      name: 'Anders And', id: '101', role: Role.Guardian.toString());
+      displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
 
   setUp(() {
     di.clearAll();
@@ -68,6 +68,6 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Bruger indstillinger'), findsOneWidget);
-    expect(find.text(user.name + ' indstillinger'), findsOneWidget);
+    expect(find.text(user.displayName + ' indstillinger'), findsOneWidget);
   });
 }

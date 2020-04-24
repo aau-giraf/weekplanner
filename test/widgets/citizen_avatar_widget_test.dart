@@ -8,7 +8,7 @@ class MockScreen extends StatelessWidget {
 
   final VoidCallback callback;
   final UsernameModel usernameModel =
-      UsernameModel(name: 'Testname', role: 'Guardian', id: '2');
+      UsernameModel(displayName: 'Testname', role: 'Guardian', id: '2');
 
   @override
   Widget build(BuildContext context) {

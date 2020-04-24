@@ -37,7 +37,7 @@ void main() {
   MockWeekApi weekApi;
   MockPictogramApi pictogramApi;
   final UsernameModel mockUser =
-      UsernameModel(name: 'test', role: 'test', id: 'test');
+      UsernameModel(displayName: 'test', role: 'test', id: 'test');
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,

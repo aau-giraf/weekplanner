@@ -43,7 +43,7 @@ void main() {
 
 
     when(api.account.register(
-        any, any, anyNamed('displayName'),
+        any, any, any,
         departmentId: anyNamed('departmentId'), role:  anyNamed('role')))
         .thenAnswer((_) {
       return Observable<GirafUserModel>.just(user);

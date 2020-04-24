@@ -104,7 +104,8 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
           lastEdit: null))
 ];
 
-final UsernameModel mockUser = UsernameModel(id: '42', name: null, role: null);
+final UsernameModel mockUser = UsernameModel(id: '42',
+    displayName: "mockUser", role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {
@@ -156,7 +157,7 @@ void main() {
     bloc = ActivityBloc(api);
     timerBloc = TimerBloc(api);
     timerBloc.load(mockActivity,
-        user: UsernameModel(id: '10', name: 'Test', role: ''));
+        user: UsernameModel(id: '10', displayName: 'Test', role: ''));
     setupApiCalls();
 
     di.clearAll();

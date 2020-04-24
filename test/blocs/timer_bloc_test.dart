@@ -30,7 +30,7 @@ void main() {
   TimerBloc timerMock;
   ActivityModel activityModel;
   final UsernameModel mockUser =
-      UsernameModel(name: 'test', role: 'test', id: 'test');
+      UsernameModel(displayName: 'test', role: 'test', id: 'test');
 
   setUp(() {
     api = Api('any');
