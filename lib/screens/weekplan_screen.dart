@@ -10,6 +10,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -829,45 +830,68 @@ class WeekplanScreen extends StatelessWidget {
   /// Builds timer icon depending on activity has timer.
   Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
     final TimerBloc timerBloc = di.getDependency<TimerBloc>();
+    final ActivityBloc activityBloc = di.getDependency<ActivityBloc>();
     timerBloc.load(activity, user: _user);
+    activityBloc.load(activity, _user);
     return StreamBuilder<bool>(
       stream: timerBloc.timerIsInstantiated,
       builder: (BuildContext streamContext,
           AsyncSnapshot<bool> timerSnapshot) {
         if (timerSnapshot.hasData && timerSnapshot.data) {
-          return StreamBuilder<WeekplanMode>(
-            stream: _authBloc.mode,
-            builder: (BuildContext roleContext,
-                AsyncSnapshot<WeekplanMode> role) {
-              if (role.data == WeekplanMode.guardian) {
-                return const ImageIcon(
-                  AssetImage('assets/icons/redcircle.png'),
-                  color: Colors.red,
-                  size: 250,
-                );
-              } else {
-                return StreamBuilder<SettingsModel>(
-                  stream: _settingsBloc.settings,
-                  builder: (BuildContext settingsContext,
-                      AsyncSnapshot<SettingsModel> settings) {
-                    if (!settings.hasData ||
-                        settings.data.completeMark != CompleteMark.Removed) {
+          return StreamBuilder<ActivityModel>(
+            stream: activityBloc.activityModelStream,
+            builder: (BuildContext activityContext,
+                AsyncSnapshot<ActivityModel> activity) {
+              // Activities that are not overlayed.
+              if (activity.data.state != ActivityState.Completed) {
+                return _buildTimerAssetIcon();
+              }
+              // If activity is completed and overlayed.
+              return StreamBuilder<WeekplanMode>(
+                  stream: _authBloc.mode,
+                  builder: (BuildContext roleContext,
+                      AsyncSnapshot<WeekplanMode> role) {
+                    if (role.data == WeekplanMode.guardian) {
                       return const ImageIcon(
                         AssetImage('assets/icons/redcircle.png'),
                         color: Colors.red,
                         size: 250,
                       );
-                    }
+                    } else {
+                      return StreamBuilder<SettingsModel>(
+                          stream: _settingsBloc.settings,
+                          builder: (BuildContext settingsContext,
+                              AsyncSnapshot<SettingsModel> settings) {
+                            if (!settings.hasData ||
+                                settings.data.completeMark !=
+                                    CompleteMark.Removed) {
+                              return const ImageIcon(
+                                AssetImage('assets/icons/redcircle.png'),
+                                color: Colors.red,
+                                size: 250,
+                              );
+                            }
 
-                    return Container();
+                            return Container();
+                          }
+                      );
+                    }
                   }
-                );
-              }
+              );
             }
           );
         }
         return Container();
       }
+    );
+  }
+
+  /// Build timer icon.
+  ImageIcon _buildTimerAssetIcon() {
+    return const ImageIcon(
+      AssetImage('assets/icons/redcircle.png'),
+      color: Colors.red,
+      size: 250,
     );
   }
 
