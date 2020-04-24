@@ -53,17 +53,15 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
         onTap: () => callback(),
       );
     } else {
-      String _imageUrl;
+      String _imagePath;
       if (timer == DefaultTimer.AnalogClock) {
-        _imageUrl = 'https://i.picsum.photos/id/9/250/250.jpg';
+        _imagePath = 'assets/icons/piechart.png';
       } else if (timer == DefaultTimer.Hourglass) {
-        _imageUrl = 'https://i.picsum.photos/id/9/250/250.jpg';
+        _imagePath = 'assets/icons/hourglass_icon.png';
       }
       checkBoxButton = ListTile(
           title: Text(text),
-          leading: Image.network(
-            _imageUrl,
-          ),
+          leading: Image(image: AssetImage(_imagePath)),
           trailing: trailing,
           onTap: () => callback());
     }

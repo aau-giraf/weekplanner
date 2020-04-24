@@ -256,8 +256,9 @@ class ShowActivityScreen extends StatelessWidget {
             final SettingsModel _settingsModel = settingsSnapshot.data;
             if (_settingsModel.defaultTimer == DefaultTimer.Hourglass) {
               returnWidget = TimerHourglass(_timerBloc);
-            } else if (_settingsModel.defaultTimer == DefaultTimer.Hourglass) {
-              //Do something
+            } else if (_settingsModel.defaultTimer ==
+                DefaultTimer.AnalogClock) {
+              returnWidget = TimerPiechart(_timerBloc);
             }
 
             return returnWidget;
