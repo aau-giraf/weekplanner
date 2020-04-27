@@ -117,6 +117,7 @@ void main() {
 
   testWidgets('Settings has Ugeplan section', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
     expect(find.text('Ugeplan'), findsOneWidget);
     expect(find.text('Antal dage'), findsOneWidget);
     expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
