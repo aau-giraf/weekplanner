@@ -108,6 +108,7 @@ void main() {
     });
 
     settingsBloc.updateSettings(user.id, settings);
+    settingsBloc.loadSettings(user);
   }));
 
   test('Should dispose stream', async((DoneFn done) {
