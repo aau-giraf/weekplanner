@@ -174,19 +174,6 @@ class WeekplansBloc extends BlocBase {
     return false;
   }
 
-  // Puts all done/expired weeks in a list for themselves
-  List<WeekNameModel> getAllDoneWeeks(List<WeekNameModel> weekList){
-    List<WeekNameModel> doneWeeks = <WeekNameModel>[];
-
-    for (WeekNameModel weekPlan in weekList) {
-      if (isWeekDone(weekPlan)) {
-        print(weekPlan.weekNumber);
-        doneWeeks.add(weekPlan);
-      }
-    }
-    return doneWeeks;
-  }
-
   /// Adds a new marked week model to the stream
   void toggleMarkedWeekModel(WeekModel weekModel) {
     final List<WeekModel> localMarkedWeekModels = _markedWeekModels.value;

@@ -270,16 +270,4 @@ void main() {
     done();
   }));
 
-  test('Checks all done weeks is sorted', async((DoneFn done) {
-    final List<WeekNameModel> correctList = <WeekNameModel>[
-      weekNameModel1, weekNameModel4, weekNameModel5
-    ];
-    weekNameModelList.add(weekNameModel2);
-    weekNameModelList.add(weekNameModel3);
-    weekNameModelList.add(weekNameModel4);
-    weekNameModelList.add(weekNameModel5);
-
-    expect(bloc.getAllDoneWeeks(weekNameModelList), correctList);
-    done();
-  }));
 }
