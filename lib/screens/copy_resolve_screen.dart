@@ -46,7 +46,7 @@ class CopyResolveScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final GirafButton saveButton = GirafButton(
       icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-      key: const Key('NewWeekplanSaveBtnKey'),
+      key: const Key('CopyResolveSaveButton'),
       text: 'Gem ugeplan',
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,

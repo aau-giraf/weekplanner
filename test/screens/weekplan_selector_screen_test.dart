@@ -15,11 +15,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
+import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/screens/copy_resolve_screen.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
@@ -124,6 +127,8 @@ void main() {
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<CopyResolveBloc>((_)=> CopyResolveBloc(api));
+    di.registerDependency<CopyWeekplanBloc>((_)=> CopyWeekplanBloc(api));
     editBloc = EditWeekplanBloc(api);
   });
 
@@ -405,7 +410,7 @@ void main() {
 
   testWidgets(
       'Test if when pressing “kopier her” a copy is made '
-      'and the edit/add-weekplan screen comes up', (WidgetTester tester) async {
+      'and the CopyResolverScreen comes up', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
@@ -422,15 +427,15 @@ void main() {
     await tester.tap(find.byKey(const Key('Option2Button')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(EditWeekPlanScreen), findsOneWidget);
+    expect(find.byType(CopyResolveScreen), findsOneWidget);
 
     await tester.enterText(
       find.byKey(const Key('WeekNumberTextFieldKey')), '3');
     await tester.pumpAndSettle();
     expect(find.text('3'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('EditWeekPlanSaveBtn')));
-    await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(find.byKey(const Key('CopyResolveSaveButton')));
+    await tester.pump(const Duration(milliseconds: 1000));
 
     expect(find.text('weekModel1'), findsNWidgets(2));
 
