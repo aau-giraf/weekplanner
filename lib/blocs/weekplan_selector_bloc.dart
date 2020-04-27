@@ -89,17 +89,7 @@ class WeekplansBloc extends BlocBase {
     final List<Observable<WeekModel>> oldWeekDetails =
       <Observable<WeekModel>>[];
 
-    for (WeekNameModel weekPlanName in weekPlanNames) {
-      if(isWeekDone(weekPlanName)) {
-        oldWeekDetails.add(_api.week
-            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
-            .take(1));
-      } else {
-        weekDetails.add(_api.week
-            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
-            .take(1));
-      }
-    }
+    getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
     final Observable<List<WeekModel>> getWeekPlans = weekDetails.length < 2
         ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
@@ -123,6 +113,25 @@ class WeekplansBloc extends BlocBase {
       .map(_sortWeekPlans)
       .listen(_oldWeekModel.add);
 
+  }
+
+  // Makes API calls to get the week details
+  void getWeekDetails(
+      List<WeekNameModel> weekPlanNames,
+      List<Observable<WeekModel>> weekDetails,
+      List<Observable<WeekModel>>oldWeekDetails){
+
+    for (WeekNameModel weekPlanName in weekPlanNames) {
+      if(isWeekDone(weekPlanName)) {
+        oldWeekDetails.add(_api.week
+            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .take(1));
+      } else {
+        weekDetails.add(_api.week
+            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .take(1));
+      }
+    }
   }
 
   // Function that returns the current week number
