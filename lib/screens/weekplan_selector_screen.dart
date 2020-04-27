@@ -298,7 +298,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
               Routes.push(
                   context,
                   CopyToCitizensScreen(
-                      _weekBloc.getMarkedWeekModels()[0], _user));
+                      _weekBloc.getMarkedWeekModels()[0], _user))
+              .then((_) {
+                _weekBloc.toggleEditMode();
+                _weekBloc.clearMarkedWeekModels();
+              });
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
             option2Text: 'Denne borger',
@@ -312,7 +316,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   forThisCitizen: true,
                 )
               ).then((_) {
-                _weekBloc.load(_user, true);
+                _weekBloc.toggleEditMode();
+                _weekBloc.clearMarkedWeekModels();
+                Future.delayed(Duration(milliseconds: 200), () {
+                  _weekBloc.load(_user, true);
+                });
               });
             },
             option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
