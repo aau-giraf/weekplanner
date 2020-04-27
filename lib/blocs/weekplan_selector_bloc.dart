@@ -71,7 +71,8 @@ class WeekplansBloc extends BlocBase {
   /// Gets all the information for a [Weekmodel].
   /// [weekPlanNames] parameter contains all the information
   /// needed for getting all [WeekModel]'s.
-  /// The result are published in [_weekModel].
+  /// The upcoming weekplans are published in [_weekModel].
+  /// Old weekplans are published in [_oldWeekModel].
   void getAllWeekInfo(List<WeekNameModel> weekPlanNames) {
     final List<WeekModel> weekPlans = <WeekModel>[];
 
@@ -92,34 +93,33 @@ class WeekplansBloc extends BlocBase {
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
     final Observable<List<WeekModel>> getWeekPlans = weekDetails.length < 2
-        ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
-        : Observable.combineLatestList(weekDetails);
+      ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
+      : Observable.combineLatestList(weekDetails);
 
     final Observable<List<WeekModel>> getOldWeekPlans =
-        oldWeekDetails.isEmpty ? Observable.empty() :
-        oldWeekDetails.length == 1 ?
-          oldWeekDetails[0].map((WeekModel plan) => <WeekModel>[plan]) :
-        Observable.combineLatestList(oldWeekDetails);
+      oldWeekDetails.isEmpty ? Observable.empty() :
+      oldWeekDetails.length == 1 ?
+      oldWeekDetails[0].map((WeekModel plan) => <WeekModel>[plan]) :
+      Observable.combineLatestList(oldWeekDetails);
 
     getWeekPlans
-        .take(1)
-        .map((List<WeekModel> plans) => weekPlans + plans)
-        .map(_sortWeekPlans)
-        .listen(_weekModel.add);
+      .take(1)
+      .map((List<WeekModel> plans) => weekPlans + plans)
+      .map(_sortWeekPlans)
+      .listen(_weekModel.add);
 
     getOldWeekPlans
       .take(1)
       .map((List<WeekModel> plans) => plans)
       .map(_sortWeekPlans)
       .listen(_oldWeekModel.add);
-
   }
 
   // Makes API calls to get the week details
   void getWeekDetails(
-      List<WeekNameModel> weekPlanNames,
-      List<Observable<WeekModel>> weekDetails,
-      List<Observable<WeekModel>>oldWeekDetails){
+    List<WeekNameModel> weekPlanNames,
+    List<Observable<WeekModel>> weekDetails,
+    List<Observable<WeekModel>> oldWeekDetails){
 
     for (WeekNameModel weekPlanName in weekPlanNames) {
       if(isWeekDone(weekPlanName)) {
@@ -222,6 +222,7 @@ class WeekplansBloc extends BlocBase {
           .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
           .listen((bool deleted) {
         if (deleted) {
+          // Checks if its an old or upcoming weekplan
           if(localWeekModels.contains(weekModel)){
             localWeekModels.remove(weekModel);
             _weekModel.add(localWeekModels);
