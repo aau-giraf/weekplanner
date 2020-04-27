@@ -705,6 +705,7 @@ class WeekplanScreen extends StatelessWidget {
     ActivityState activityState,
   ) {
     return Card(
+        elevation: activityState == ActivityState.Completed ? 0 : 1,
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: FittedBox(
           child: Stack(
