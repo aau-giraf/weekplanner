@@ -74,7 +74,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                                 onPressed: () {
                                   _bloc
                                       .numberOfConflictingUsers(
-                                          _copiedWeekModel)
+                                          _copiedWeekModel, _currentUser, false)
                                       .then((conflicts) {
                                     if (conflicts > 0) {
                                       _showConflictDialog(context, conflicts);

@@ -53,8 +53,10 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   }
 
   /// Checks if any user has a conflicting weekplan
-  Future<int> numberOfConflictingUsers(WeekModel weekModel) async {
-    List<UsernameModel> users = _markedUserModels.value;
+  Future<int> numberOfConflictingUsers(WeekModel weekModel,
+      UsernameModel currentUser, bool forThisCitizen) async {
+    List<UsernameModel> users =
+        forThisCitizen ? <UsernameModel>[currentUser] : _markedUserModels.value;
     List<UsernameModel> conflictingUsers =
         await getConflictingUsers(users, weekModel);
     return conflictingUsers.length;

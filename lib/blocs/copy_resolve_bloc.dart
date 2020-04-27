@@ -39,7 +39,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
 
     int numberOfConflicts =
-        await copyBloc.numberOfConflictingUsers(newWeekModel);
+        await copyBloc.numberOfConflictingUsers(newWeekModel, currentUser, forThisCitizen);
 
     if (numberOfConflicts > 0) {
       bool toOverwrite = await _displayConflictDialog(context,
