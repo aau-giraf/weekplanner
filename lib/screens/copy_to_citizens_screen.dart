@@ -9,6 +9,7 @@ import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../routes.dart';
 import '../style/custom_color.dart' as theme;
 
@@ -79,6 +80,9 @@ class CopyToCitizensScreen extends StatelessWidget {
                                       _showConflictDialog(context, conflicts);
                                     }
                                     _bloc.copyWeekplan(_copiedWeekModel);
+                                    Routes.pop(context);
+                                    Routes.pop(context);
+                                    _showCopySuccessDialog(context);
                                   });
                                 },
                                 icon: const ImageIcon(
@@ -164,4 +168,18 @@ class CopyToCitizensScreen extends StatelessWidget {
           );
         });
   }
+
+  Future<Center> _showCopySuccessDialog(BuildContext context){
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+              title: 'Ugeplan kopieret',
+              description: 'Ugeplanen blev kopieret til de valgte borgere',
+              key: Key('OkaySuccessButton')
+          );
+        });
+  }
+
 }
