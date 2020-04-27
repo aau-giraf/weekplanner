@@ -106,15 +106,8 @@ class SettingsScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-
-        });
-    return SettingsSection('Ugeplan', <SettingsSectionItem>[
-      SettingsArrowButton(
-          'Antal dage', () => Routes.push(context, NumberOfDaysScreen(_user))),
-      // TODO(klogeat): bind to correct settings value when API is merged
-      SettingsCheckMarkButton.fromBoolean(
-          false, 'Piktogram tekst er synlig', () {}),
-    ]);
+      }
+      );
   }
 
   Widget _buildUserSettings() {
