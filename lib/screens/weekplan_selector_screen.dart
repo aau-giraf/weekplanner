@@ -318,6 +318,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
               ).then((_) {
                 _weekBloc.toggleEditMode();
                 _weekBloc.clearMarkedWeekModels();
+                Routes.pop(context);
                 Future.delayed(Duration(milliseconds: 200), () {
                   _weekBloc.load(_user, true);
                 });
