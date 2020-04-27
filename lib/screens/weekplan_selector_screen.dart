@@ -308,7 +308,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
             option2Text: 'Denne borger',
             option2OnPressed: () {
-              Routes.pop(context);
               Routes.push(
                 context,
                 CopyResolveScreen(
