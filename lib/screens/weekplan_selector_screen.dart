@@ -8,6 +8,7 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/copy_resolve_screen.dart';
 import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
@@ -290,22 +291,30 @@ class WeekplanSelectorScreen extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return Giraf3ButtonDialog(
-              title: 'Kopiér ugeplaner',
-              description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
-              option1Text: 'Anden borger',
-              option1OnPressed: (){
-                Routes.push(context,
-                  CopyToCitizensScreen(_weekBloc.getMarkedWeekModels()[0]));},
-              option1Icon:
-                  const ImageIcon(AssetImage('assets/icons/copy.png')),
-              option2Text: 'Denne borger',
-              option2OnPressed: () {
-                Routes.pop(context);
-                _pushEditWeekPlan(context);
-              },
-              option2Icon:
-                  const ImageIcon(AssetImage('assets/icons/copy.png')),
+            title: 'Kopiér ugeplaner',
+            description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
+            option1Text: 'Anden borger',
+            option1OnPressed: () {
+              Routes.push(
+                  context,
+                  CopyToCitizensScreen(
+                      _weekBloc.getMarkedWeekModels()[0], _user));
+            },
+            option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+            option2Text: 'Denne borger',
+            option2OnPressed: () {
+              Routes.pop(context);
+              Routes.push(
+                context,
+                CopyResolveScreen(
+                  currentUser: _user,
+                  weekModel: _weekBloc.getMarkedWeekModels()[0],
+                  forThisCitizen: true,
+                )
               );
+            },
+            option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+          );
         });
   }
 

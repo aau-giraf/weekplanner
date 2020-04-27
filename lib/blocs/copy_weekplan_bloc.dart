@@ -19,19 +19,30 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   Stream<List<UsernameModel>> get markedUserModels => _markedUserModels.stream;
 
   final BehaviorSubject<List<UsernameModel>> _markedUserModels =
-  BehaviorSubject<List<UsernameModel>>.seeded(<UsernameModel>[]);
+      BehaviorSubject<List<UsernameModel>>.seeded(<UsernameModel>[]);
   final Api _api;
 
   /// Copies weekplan to all selected citizens
-  void copyWeekplan(WeekModel weekModel) {
-    List<UsernameModel> users = _markedUserModels.value;
-    //List<UsernameModel> conflictingUsers =
-    // getConflictingUsers(users, weekModel);
+  void copyWeekplan(
+      WeekModel weekModel, UsernameModel currentUser, bool forThisCitizen) {
+    List<UsernameModel> users = <UsernameModel>[];
+    if (forThisCitizen) {
+      users.add(currentUser);
+    } else {
+      users = _markedUserModels.value;
+    }
+
+    for (UsernameModel user in users) {
+      _api.week
+        .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
+        .take(1)
+        .listen((WeekModel weekModel){});
+    }
   }
 
   /// Returns a list of all users which already have a weekplan in the same week
-  Future<List<UsernameModel>> getConflictingUsers(List<UsernameModel> users,
-    WeekModel weekModel) async {
+  Future<List<UsernameModel>> getConflictingUsers(
+      List<UsernameModel> users, WeekModel weekModel) async {
     List<UsernameModel> conflictingUsers = <UsernameModel>[];
     for (UsernameModel user in users) {
       if (await isConflictingUser(user, weekModel)) {
@@ -44,18 +55,18 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   /// Checks if any user has a conflicting weekplan
   Future<int> numberOfConflictingUsers(WeekModel weekModel) async {
     List<UsernameModel> users = _markedUserModels.value;
-    List<UsernameModel> conflictingUsers = await getConflictingUsers(
-      users, weekModel);
+    List<UsernameModel> conflictingUsers =
+        await getConflictingUsers(users, weekModel);
     return conflictingUsers.length;
   }
 
   /// Compares a single Citizen's Weekplans with the copied weekplan
-  Future<bool> isConflictingUser(UsernameModel user,
-    WeekModel weekModel) async {
+  Future<bool> isConflictingUser(
+      UsernameModel user, WeekModel weekModel) async {
     bool daysAreEmpty = true;
     WeekModel response = await _api.week
-      .get(user.id, weekModel.weekYear, weekModel.weekNumber)
-      .first;
+        .get(user.id, weekModel.weekYear, weekModel.weekNumber)
+        .first;
 
     for (WeekdayModel weekDay in response.days) {
       daysAreEmpty = daysAreEmpty && weekDay.activities.isEmpty;

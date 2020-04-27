@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
 /// Screen for creating a new weekplan.
@@ -17,15 +21,20 @@ class CopyResolveScreen extends StatelessWidget {
   CopyResolveScreen({
     @required this.currentUser,
     @required this.weekModel,
+    @required this.forThisCitizen,
     this.copyBloc,
-  }) : _bloc = di.getDependency<NewWeekplanBloc>() {
-    _bloc.initialize(currentUser);
+  }) : _bloc = di.getDependency<CopyResolveBloc>() {
+    _bloc.initializeCopyResolverBloc(currentUser, weekModel);
+    copyBloc ??= di.getDependency<CopyWeekplanBloc>();
   }
 
-  final NewWeekplanBloc _bloc;
+  final CopyResolveBloc _bloc;
+
+  /// Tell us whether to copy to this citizen or to others
+  final bool forThisCitizen;
 
   /// An instance of the copyWeekplanBloc.
-  final CopyWeekplanBloc copyBloc;
+  CopyWeekplanBloc copyBloc;
 
   /// The user that is being copied from
   final UsernameModel currentUser;
@@ -42,9 +51,8 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        if (await copyBloc.numberOfConflictingUsers(weekModel) > 0) {
-          copyBloc.copyWeekplan(weekModel);
-        }
+        _bloc.copyContent(
+            context, weekModel, copyBloc, currentUser, forThisCitizen);
       },
     );
 

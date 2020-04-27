@@ -16,16 +16,15 @@ import '../style/custom_color.dart' as theme;
 /// The screen to choose a citizen
 class CopyToCitizensScreen extends StatelessWidget {
   /// <param name="model">WeekModel that should be copied
-  CopyToCitizensScreen(this._copiedWeekModel);
+  CopyToCitizensScreen(this._copiedWeekModel, this._currentUser);
 
   final CopyWeekplanBloc _bloc = di.getDependency<CopyWeekplanBloc>();
   final WeekModel _copiedWeekModel;
+  final UsernameModel _currentUser;
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery
-        .of(context)
-        .size;
+    final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Container(
@@ -74,15 +73,18 @@ class CopyToCitizensScreen extends StatelessWidget {
                                 key: const Key('AcceptButton'),
                                 onPressed: () {
                                   _bloc
-                                    .numberOfConflictingUsers(
-                                    _copiedWeekModel).then((conflicts) {
-                                    if(conflicts > 0) {
+                                      .numberOfConflictingUsers(
+                                          _copiedWeekModel)
+                                      .then((conflicts) {
+                                    if (conflicts > 0) {
                                       _showConflictDialog(context, conflicts);
+                                    } else {
+                                      _bloc.copyWeekplan(_copiedWeekModel,
+                                          _currentUser, false);
+                                      Routes.pop(context);
+                                      Routes.pop(context);
+                                      _showCopySuccessDialog(context);
                                     }
-                                    _bloc.copyWeekplan(_copiedWeekModel);
-                                    Routes.pop(context);
-                                    Routes.pop(context);
-                                    _showCopySuccessDialog(context);
                                   });
                                 },
                                 icon: const ImageIcon(
@@ -102,9 +104,7 @@ class CopyToCitizensScreen extends StatelessWidget {
 
   Widget _buildWeekplanGridview(BuildContext context) {
     final bool portrait =
-        MediaQuery
-            .of(context)
-            .orientation == Orientation.portrait;
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return StreamBuilder<List<UsernameModel>>(
         initialData: const <UsernameModel>[],
         stream: _bloc.citizen,
@@ -128,8 +128,8 @@ class CopyToCitizensScreen extends StatelessWidget {
         });
   }
 
-  Widget _buildUserSelector(BuildContext context, UsernameModel user,
-      bool isMarked) {
+  Widget _buildUserSelector(
+      BuildContext context, UsernameModel user, bool isMarked) {
     final CitizenAvatar avatar = CitizenAvatar(
         usernameModel: user,
         onPressed: () => _bloc.toggleMarkedUserModel(user));
@@ -156,12 +156,21 @@ class CopyToCitizensScreen extends StatelessWidget {
             description: 'Der er ${conflicts} konflikter!',
             option1Text: 'Ændr',
             option1OnPressed: () {
-              //Routes.push(context, CopyResolveScreen());
+              Routes.pop(context);
+              Routes.push(
+                  context,
+                  CopyResolveScreen(
+                    currentUser: _currentUser,
+                    weekModel: _copiedWeekModel,
+                    copyBloc: _bloc,
+                    forThisCitizen: false,
+                  ));
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
             option2Text: 'Overskriv',
             option2OnPressed: () {
-              _bloc.copyWeekplan(_copiedWeekModel);
+              _bloc.copyWeekplan(_copiedWeekModel,
+                _currentUser, false);
               Routes.pop(context);
             },
             option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
@@ -169,7 +178,7 @@ class CopyToCitizensScreen extends StatelessWidget {
         });
   }
 
-  Future<Center> _showCopySuccessDialog(BuildContext context){
+  Future<Center> _showCopySuccessDialog(BuildContext context) {
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,
@@ -177,9 +186,7 @@ class CopyToCitizensScreen extends StatelessWidget {
           return const GirafNotifyDialog(
               title: 'Ugeplan kopieret',
               description: 'Ugeplanen blev kopieret til de valgte borgere',
-              key: Key('OkaySuccessButton')
-          );
+              key: Key('OkaySuccessButton'));
         });
   }
-
 }
