@@ -33,6 +33,7 @@ class MockUserApi extends Mock implements UserApi {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
+        nrOfDaysToDisplay: 1,
         weekDayColors: createWeekDayColors()
     );
 
@@ -120,6 +121,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Ugeplan'), findsOneWidget);
     expect(find.text('Antal dage'), findsOneWidget);
+    expect(find.text('En dag'), findsOneWidget);
     expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
