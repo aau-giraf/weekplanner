@@ -57,13 +57,15 @@ void main() {
   testWidgets('Renders CopyToCitizenScreen', (WidgetTester tester) async {
     final WeekModel weekplan1 = WeekModel(
       thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(weekplan1)));
+    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
+        weekplan1, mockUser)));
     expect(find.byType(CopyToCitizensScreen), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(mockWeek)));
+    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
+        mockWeek, mockUser)));
     await tester.pumpAndSettle();
     bloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
@@ -73,7 +75,8 @@ void main() {
   });
   
   testWidgets('Has Accept and Cancel buttons', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(mockWeek)));
+    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
+        mockWeek, mockUser)));
     await tester.pumpAndSettle();
     
     expect(find.byKey(const Key('AcceptButton')), findsOneWidget);
@@ -81,11 +84,11 @@ void main() {
   });
 
   testWidgets('Shows copy successful dialog', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(mockWeek)));
+    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
+        mockWeek, mockUser)));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(CircleAvatar).first);
-    await tester.pumpAndSettle();
+    bloc.toggleMarkedUserModel(mockUser);
 
     await tester.tap(find.byKey(const Key('AcceptButton')));
     await tester.pumpAndSettle();

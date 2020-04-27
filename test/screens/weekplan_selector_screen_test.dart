@@ -367,7 +367,7 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    GirafButton button =
+    final GirafButton button =
         tester.widget<GirafButton>(find.byKey(const Key('CopyWeekplanButton')));
 
     expectLater(button.isEnabledStream, emits(false));
@@ -430,9 +430,9 @@ void main() {
     expect(find.text('3'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('EditWeekPlanSaveBtn')));
-    await tester.pump(Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text("weekModel1"), findsNWidgets(2));
+    expect(find.text('weekModel1'), findsNWidgets(2));
 
   });
 

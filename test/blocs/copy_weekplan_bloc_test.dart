@@ -85,7 +85,7 @@ void main() {
       });
     }
 
-    bloc.copyWeekplan(weekplan1);
+    bloc.copyWeekplan(weekplan1, user, false);
 
     bloc.markedUserModels.listen((List<UsernameModel> markedUsers) {
       for (UsernameModel user in markedUsers){
