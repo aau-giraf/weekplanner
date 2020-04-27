@@ -63,9 +63,16 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     return Container(
         child: Column(children: <Widget>[
-      Text("Evt bar med overskrift"),
-      Expanded(child: _buildWeekplanGridview(context, weekModels, true)),
-      Text("Overståede ugeplaner"), //Skal erstattes med en bar
+      Container(
+          child: Expanded(child: _buildWeekplanGridview(context, weekModels, true)),
+      ),
+
+      Container(color: Colors.grey,
+        child:
+        Text("Overståede uger", style: TextStyle(fontWeight: FontWeight.bold),),
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.fromLTRB(10.0, 3, 0, 3),
+      ),
       Expanded(child: _buildWeekplanGridview(context, oldWeekModels, false))
     ]));
   }
@@ -100,6 +107,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                         weekplan,
                         markedWeeksSnapshot.hasData &&
                             markedWeeksSnapshot.data.contains(weekplan),
+                        current
                       );
                     }).toList());
               });
@@ -107,7 +115,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   Widget _buildWeekPlanSelector(
-      BuildContext context, WeekModel weekplan, bool isMarked) {
+      BuildContext context, WeekModel weekplan, bool isMarked, bool current) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
 
     if (weekplan.thumbnail != null) {
@@ -119,14 +127,14 @@ class WeekplanSelectorScreen extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(color: theme.GirafColors.black, width: 15),
           ),
-          child: _buildWeekplanCard(context, weekplan, bloc));
+          child: _buildWeekplanCard(context, weekplan, bloc, current));
     } else {
-      return _buildWeekplanCard(context, weekplan, bloc);
+      return _buildWeekplanCard(context, weekplan, bloc, current);
     }
   }
 
   Widget _buildWeekplanCard(
-      BuildContext context, WeekModel weekplan, PictogramImageBloc bloc) {
+      BuildContext context, WeekModel weekplan, PictogramImageBloc bloc, bool current) {
     return StreamBuilder<bool>(
         stream: _weekBloc.editMode,
         builder:
@@ -136,7 +144,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
               onTap: () =>
                   handleOnTap(context, weekplan, inEditModeSnapshot.data),
               child: Opacity(
-                opacity: 0.3,
+
+                opacity: current ? 1.0 : 0.3,
                 child: Card(
                     child: Column(
                   children: <Widget>[
