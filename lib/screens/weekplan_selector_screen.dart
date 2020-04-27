@@ -302,6 +302,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
               .then((_) {
                 _weekBloc.toggleEditMode();
                 _weekBloc.clearMarkedWeekModels();
+                Routes.pop(context);
               });
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),

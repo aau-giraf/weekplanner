@@ -53,6 +53,7 @@ class CopyResolveScreen extends StatelessWidget {
       onPressed: () async {
         _bloc.copyContent(
             context, weekModel, copyBloc, currentUser, forThisCitizen);
+        Routes.pop(context);
       },
     );
 
