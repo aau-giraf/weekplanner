@@ -5,6 +5,7 @@ import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/screens/copy_resolve_screen.dart';
+import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -24,7 +25,9 @@ class CopyToCitizensScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery
+      .of(context)
+      .size;
 
     return Scaffold(
       body: Container(
@@ -48,7 +51,7 @@ class CopyToCitizensScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Container(
-                      child: Expanded(child: _buildWeekplanGridview(context))),
+                    child: Expanded(child: _buildWeekplanGridview(context))),
                   Row(
                     children: <Widget>[
                       Spacer(flex: 1),
@@ -61,7 +64,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                               Routes.pop(context);
                             },
                             icon: const ImageIcon(
-                                AssetImage('assets/icons/cancel.png')),
+                              AssetImage('assets/icons/cancel.png')),
                           ),
                         ),
                       ),
@@ -69,26 +72,27 @@ class CopyToCitizensScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                            child: GirafButton(
-                                key: const Key('AcceptButton'),
-                                onPressed: () {
-                                  _bloc
-                                    .numberOfConflictingUsers(
-                                        _copiedWeekModel, _currentUser, false)
-                                    .then((conflicts) {
-                                      if (conflicts > 0) {
-                                        _showConflictDialog(context, conflicts);
-                                      } else {
-                                        _bloc.copyWeekplan(_copiedWeekModel,
-                                            _currentUser, false);
-                                        Routes.pop(context);
-                                        Routes.pop(context);
-                                        _showCopySuccessDialog(context);
-                                      }
-                                  });
-                                },
-                                icon: const ImageIcon(
-                                    AssetImage('assets/icons/accept.png')))),
+                          child: GirafButton(
+                            key: const Key('AcceptButton'),
+                            onPressed: () async {
+                              _bloc
+                                .numberOfConflictingUsers(
+                                _copiedWeekModel, _currentUser, false)
+                                .then((conflicts) {
+                                if (conflicts > 0) {
+                                  _showConflictDialog(context, conflicts);
+                                } else {
+                                  _bloc.copyWeekplan(_copiedWeekModel,
+                                    _currentUser, false);
+                                  Routes.goHome(context);
+                                  Routes.push(context,
+                                    WeekplanSelectorScreen(_currentUser));
+                                  _showCopySuccessDialog(context);
+                                }
+                              });
+                            },
+                            icon: const ImageIcon(
+                              AssetImage('assets/icons/accept.png')))),
                       ),
                       Spacer(flex: 1),
                     ],
@@ -104,42 +108,44 @@ class CopyToCitizensScreen extends StatelessWidget {
 
   Widget _buildWeekplanGridview(BuildContext context) {
     final bool portrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+      MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
     return StreamBuilder<List<UsernameModel>>(
-        initialData: const <UsernameModel>[],
-        stream: _bloc.citizen,
-        builder: (BuildContext context,
-            AsyncSnapshot<List<UsernameModel>> usersSnapshot) {
-          if (usersSnapshot.data == null) {
-            return Container();
-          } else {
-            return StreamBuilder<List<UsernameModel>>(
-                stream: _bloc.markedUserModels,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<UsernameModel>> markedUsersSnapshot) {
-                  return GridView.count(
-                      crossAxisCount: portrait ? 2 : 4,
-                      children: usersSnapshot.data.map((UsernameModel user) {
-                        return _buildUserSelector(context, user,
-                            markedUsersSnapshot.data.contains(user));
-                      }).toList());
-                });
-          }
-        });
+      initialData: const <UsernameModel>[],
+      stream: _bloc.citizen,
+      builder: (BuildContext context,
+        AsyncSnapshot<List<UsernameModel>> usersSnapshot) {
+        if (usersSnapshot.data == null) {
+          return Container();
+        } else {
+          return StreamBuilder<List<UsernameModel>>(
+            stream: _bloc.markedUserModels,
+            builder: (BuildContext context,
+              AsyncSnapshot<List<UsernameModel>> markedUsersSnapshot) {
+              return GridView.count(
+                crossAxisCount: portrait ? 2 : 4,
+                children: usersSnapshot.data.map((UsernameModel user) {
+                  return _buildUserSelector(context, user,
+                    markedUsersSnapshot.data.contains(user));
+                }).toList());
+            });
+        }
+      });
   }
 
-  Widget _buildUserSelector(
-      BuildContext context, UsernameModel user, bool isMarked) {
+  Widget _buildUserSelector(BuildContext context, UsernameModel user,
+    bool isMarked) {
     final CitizenAvatar avatar = CitizenAvatar(
-        usernameModel: user,
-        onPressed: () => _bloc.toggleMarkedUserModel(user));
+      usernameModel: user,
+      onPressed: () => _bloc.toggleMarkedUserModel(user));
 
     if (isMarked) {
       return Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: theme.GirafColors.black, width: 10),
-          ),
-          child: avatar);
+        decoration: BoxDecoration(
+          border: Border.all(color: theme.GirafColors.black, width: 10),
+        ),
+        child: avatar);
     } else {
       return avatar;
     }
@@ -148,45 +154,45 @@ class CopyToCitizensScreen extends StatelessWidget {
   ///Builds dialog box to fix conflict
   Future<Center> _showConflictDialog(BuildContext context, int conflicts) {
     return showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return Giraf3ButtonDialog(
-            title: 'Kopiér konflikt',
-            description: 'Der er ${conflicts} konflikter!',
-            option1Text: 'Ændr',
-            option1OnPressed: () {
-              Routes.pop(context);
-              Routes.push(
-                  context,
-                  CopyResolveScreen(
-                    currentUser: _currentUser,
-                    weekModel: _copiedWeekModel,
-                    copyBloc: _bloc,
-                    forThisCitizen: false,
-                  ));
-            },
-            option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-            option2Text: 'Overskriv',
-            option2OnPressed: () {
-              _bloc.copyWeekplan(_copiedWeekModel, _currentUser, false);
-              Routes.pop(context);
-              Routes.pop(context);
-            },
-            option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-          );
-        });
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Giraf3ButtonDialog(
+          title: 'Kopiér konflikt',
+          description: 'Der er ${conflicts} konflikter!',
+          option1Text: 'Ændr',
+          option1OnPressed: () {
+            Routes.pop(context);
+            Routes.push(
+              context,
+              CopyResolveScreen(
+                currentUser: _currentUser,
+                weekModel: _copiedWeekModel,
+                copyBloc: _bloc,
+                forThisCitizen: false,
+              ));
+          },
+          option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+          option2Text: 'Overskriv',
+          option2OnPressed: () {
+            _bloc.copyWeekplan(_copiedWeekModel, _currentUser, false);
+            Routes.pop(context);
+            Routes.pop(context);
+          },
+          option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+        );
+      });
   }
 
   Future<Center> _showCopySuccessDialog(BuildContext context) {
     return showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return const GirafNotifyDialog(
-              title: 'Ugeplan kopieret',
-              description: 'Ugeplanen blev kopieret til de valgte borgere',
-              key: Key('OkaySuccessButton'));
-        });
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return const GirafNotifyDialog(
+          title: 'Ugeplan kopieret',
+          description: 'Ugeplanen blev kopieret til de valgte borgere',
+          key: Key('OkaySuccessButton'));
+      });
   }
 }

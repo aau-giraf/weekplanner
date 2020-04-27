@@ -1,12 +1,8 @@
+import 'dart:async';
 import 'package:api_client/api/api.dart';
-import 'package:api_client/api/week_api.dart';
-import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
@@ -25,6 +21,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   /// Copies weekplan to all selected citizens
   void copyWeekplan(WeekModel weekModel, UsernameModel currentUser,
       bool forThisCitizen) async {
+
     List<UsernameModel> users = <UsernameModel>[];
     if (forThisCitizen) {
       users.add(currentUser);
