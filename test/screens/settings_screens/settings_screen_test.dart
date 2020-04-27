@@ -17,7 +17,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -114,7 +113,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Orientering'), findsOneWidget);
     expect(find.text('Landskab'), findsOneWidget);
-    expect(find.byType(SettingsCheckMarkButton), findsOneWidget);
+    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Ugeplan section', (WidgetTester tester) async {

@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
+import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -10,6 +14,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -28,7 +33,26 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+class MockUserApi extends Mock implements UserApi {
 
+  @override
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(
+        GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
+  }
+
+  @override
+  Observable<SettingsModel> getSettings(String id) {
+    final SettingsModel settingsModel = SettingsModel(
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      defaultTimer: null,
+      theme: null,
+    );
+    return Observable<SettingsModel>.just(settingsModel);
+  }
+}
 
 class MockAuth extends Mock implements AuthBloc {
   @override
@@ -166,6 +190,7 @@ void main() {
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<TimerBloc>((_) => timerBloc);
+    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
   });
 
   testWidgets('renders', (WidgetTester tester) async {
