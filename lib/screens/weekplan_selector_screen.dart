@@ -66,9 +66,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
       Container(
           child: Expanded(flex: 7, child: _buildWeekplanGridview(context, weekModels, true)),
       ),
-      Container(color: Colors.grey,
+      Container(
+        color: Colors.grey,
         child:
-        Text("Overståede uger", style: TextStyle(fontWeight: FontWeight.bold),),
+          Text(
+              "Overståede uger",
+              style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
@@ -142,9 +146,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
               key: Key(weekplan.name),
               onTap: () =>
                   handleOnTap(context, weekplan, inEditModeSnapshot.data),
-              child: Opacity(
-
-                opacity: current ? 1.0 : 0.3,
+              child: ColorFiltered(
+                colorFilter:
+                    ColorFilter.mode(
+                        Colors.grey,
+                        current ? BlendMode.dst : BlendMode.modulate),
                 child: Card(
                     child: Column(
                   children: <Widget>[
