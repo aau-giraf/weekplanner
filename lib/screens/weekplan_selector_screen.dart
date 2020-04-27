@@ -295,19 +295,18 @@ class WeekplanSelectorScreen extends StatelessWidget {
             description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
             option1Text: 'Anden borger',
             option1OnPressed: () {
+              Routes.pop(context);
               Routes.push(
                   context,
                   CopyToCitizensScreen(
-                      _weekBloc.getMarkedWeekModels()[0], _user))
-              .then((_) {
-                _weekBloc.toggleEditMode();
-                _weekBloc.clearMarkedWeekModels();
-                Routes.pop(context);
-              });
+                      _weekBloc.getMarkedWeekModels()[0], _user));
+              _weekBloc.toggleEditMode();
+              _weekBloc.clearMarkedWeekModels();
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
             option2Text: 'Denne borger',
             option2OnPressed: () {
+              Routes.pop(context);
               Routes.push(
                 context,
                 CopyResolveScreen(
@@ -316,13 +315,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   forThisCitizen: true,
                 )
               ).then((_) {
-                _weekBloc.toggleEditMode();
-                _weekBloc.clearMarkedWeekModels();
-                Routes.pop(context);
-                Future.delayed(Duration(milliseconds: 200), () {
-                  _weekBloc.load(_user, true);
+                Future.delayed(Duration(milliseconds: 500), () {
+                  _weekBloc.notifyUpdate();
                 });
               });
+              _weekBloc.toggleEditMode();
+              _weekBloc.clearMarkedWeekModels();
             },
             option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
           );

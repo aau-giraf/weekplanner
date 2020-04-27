@@ -38,17 +38,17 @@ class CopyResolveBloc extends NewWeekplanBloc {
     newWeekModel.weekYear = int.parse(super.yearController.value);
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
 
-    int numberOfConflicts =
-        await copyBloc.numberOfConflictingUsers(newWeekModel, currentUser, forThisCitizen);
+    int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
+        newWeekModel, currentUser, forThisCitizen);
 
     if (numberOfConflicts > 0) {
-      bool toOverwrite = await _displayConflictDialog(context,
-          newWeekModel.weekNumber, newWeekModel.weekYear, numberOfConflicts);
-
-      if (toOverwrite) {
-        copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
-        Routes.pop(context);
-      }
+      _displayConflictDialog(context, newWeekModel.weekNumber,
+              newWeekModel.weekYear, numberOfConflicts)
+          .then((toOverwrite) {
+            if (toOverwrite) {
+              copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
+            }
+          });
     } else {
       copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
       Routes.pop(context);
@@ -63,18 +63,18 @@ class CopyResolveBloc extends NewWeekplanBloc {
         barrierDismissible: false,
         builder: (BuildContext dialogContext) {
           return GirafConfirmDialog(
-            key: const Key('OverwriteEditDialogKey'),
+            key: const Key('OverwriteCopyDialogKey'),
             title: 'Lav ny ugeplan til at kopiere',
             description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
                 ', år: $year) hos $numberOfConflicts af borgerne. '
                 'Vil du overskrive '
-                '${numberOfConflicts == 1
-                ? "denne ugeplan" : "disse ugeplaner"} ?',
+                '${numberOfConflicts == 1 ? "denne ugeplan" : "disse ugeplaner"} ?',
             confirmButtonText: 'Ja',
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
             confirmOnPressed: () {
               dialogCompleter.complete(true);
+              Routes.pop(context);
               Routes.pop(context);
             },
             cancelOnPressed: () {

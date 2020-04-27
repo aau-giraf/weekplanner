@@ -72,13 +72,13 @@ void main() {
       weekYear: 2020);
 
   final WeekModel weekModel1Copy = WeekModel(
-    name: 'weekModel1',
-    thumbnail: pictogramModel,
-    days: <WeekdayModel>[
-      WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
-    ],
-    weekNumber: 3,
-    weekYear: 2020);
+      name: 'weekModel1',
+      thumbnail: pictogramModel,
+      days: <WeekdayModel>[
+        WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
+      ],
+      weekNumber: 3,
+      weekYear: 2020);
 
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
@@ -90,13 +90,24 @@ void main() {
     weekNameModelList.add(weekNameModel);
     weekNameModelList.add(weekNameModel2);
 
-    when(weekApi.getNames('test')).thenAnswer(
-        (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+    when(weekApi.getNames('test')).thenAnswer((_) {
+      return BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList);
+    });
 
-    when(weekApi.get('test', weekNameModel.weekYear, weekNameModel.weekNumber))
+    when(weekApi.get(
+            'test', 2020, 3))
+        .thenAnswer((_) {
+          return BehaviorSubject<WeekModel>.seeded(weekModel1Copy);
+        });
+
+    when(weekApi.get(any, any, any))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      weekNameModelList.add(WeekNameModel(
+          name: weekModel1Copy.name,
+          weekNumber: weekModel1Copy.weekNumber,
+          weekYear: weekModel1Copy.weekYear));
       return Observable<WeekModel>.just(weekModel1Copy);
     });
 
@@ -118,7 +129,6 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = WeekplansBloc(api);
-
     setupApiCalls();
 
     di.clearAll();
@@ -127,8 +137,8 @@ void main() {
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<CopyResolveBloc>((_)=> CopyResolveBloc(api));
-    di.registerDependency<CopyWeekplanBloc>((_)=> CopyWeekplanBloc(api));
+    di.registerDependency<CopyResolveBloc>((_) => CopyResolveBloc(api));
+    di.registerDependency<CopyWeekplanBloc>((_) => CopyWeekplanBloc(api));
     editBloc = EditWeekplanBloc(api);
   });
 
@@ -428,18 +438,5 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(CopyResolveScreen), findsOneWidget);
-
-    await tester.enterText(
-      find.byKey(const Key('WeekNumberTextFieldKey')), '3');
-    await tester.pumpAndSettle();
-    expect(find.text('3'), findsOneWidget);
-
-    await tester.tap(find.byKey(const Key('CopyResolveSaveButton')));
-    await tester.pump(const Duration(milliseconds: 1000));
-
-    expect(find.text('weekModel1'), findsNWidgets(2));
-
   });
-
-
 }

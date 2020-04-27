@@ -73,18 +73,18 @@ class CopyToCitizensScreen extends StatelessWidget {
                                 key: const Key('AcceptButton'),
                                 onPressed: () {
                                   _bloc
-                                      .numberOfConflictingUsers(
-                                          _copiedWeekModel, _currentUser, false)
-                                      .then((conflicts) {
-                                    if (conflicts > 0) {
-                                      _showConflictDialog(context, conflicts);
-                                    } else {
-                                      _bloc.copyWeekplan(_copiedWeekModel,
-                                          _currentUser, false);
-                                      Routes.pop(context);
-                                      Routes.pop(context);
-                                      _showCopySuccessDialog(context);
-                                    }
+                                    .numberOfConflictingUsers(
+                                        _copiedWeekModel, _currentUser, false)
+                                    .then((conflicts) {
+                                      if (conflicts > 0) {
+                                        _showConflictDialog(context, conflicts);
+                                      } else {
+                                        _bloc.copyWeekplan(_copiedWeekModel,
+                                            _currentUser, false);
+                                        Routes.pop(context);
+                                        Routes.pop(context);
+                                        _showCopySuccessDialog(context);
+                                      }
                                   });
                                 },
                                 icon: const ImageIcon(
@@ -169,8 +169,7 @@ class CopyToCitizensScreen extends StatelessWidget {
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
             option2Text: 'Overskriv',
             option2OnPressed: () {
-              _bloc.copyWeekplan(_copiedWeekModel,
-                _currentUser, false);
+              _bloc.copyWeekplan(_copiedWeekModel, _currentUser, false);
               Routes.pop(context);
               Routes.pop(context);
             },
