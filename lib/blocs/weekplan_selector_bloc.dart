@@ -106,8 +106,10 @@ class WeekplansBloc extends BlocBase {
         : Observable.combineLatestList(weekDetails);
 
     final Observable<List<WeekModel>> getOldWeekPlans =
-      oldWeekDetails.length < 2 ? oldWeekDetails[0].map((WeekModel plan) =>
-      <WeekModel>[plan]) : Observable.combineLatestList(oldWeekDetails);
+        oldWeekDetails.isEmpty ? Observable.empty() :
+        oldWeekDetails.length == 1 ?
+          oldWeekDetails[0].map((WeekModel plan) => <WeekModel>[plan]) :
+        Observable.combineLatestList(oldWeekDetails);
 
     getWeekPlans
         .take(1)
@@ -204,14 +206,20 @@ class WeekplansBloc extends BlocBase {
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
     final List<WeekModel> localWeekModels = _weekModel.value;
+    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value;
     // Updates the weekplan in the database
-    for (WeekModel weekmodel in _markedWeekModels.value) {
+    for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
-          .delete(_user.id, weekmodel.weekYear, weekmodel.weekNumber)
+          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
           .listen((bool deleted) {
         if (deleted) {
-          localWeekModels.remove(weekmodel);
-          _weekModel.add(localWeekModels);
+          if(localWeekModels.contains(weekModel)){
+            localWeekModels.remove(weekModel);
+            _weekModel.add(localWeekModels);
+          } else {
+            oldLocalWeekModels.remove(weekModel);
+            _oldWeekModel.add(oldLocalWeekModels);
+          }
         }
       });
     }
