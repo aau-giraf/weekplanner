@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/username_model.dart';
@@ -38,6 +39,20 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
+class MockWeekApi extends Mock implements WeekApi {
+  @override
+  Observable<WeekModel> get(String id, int year, int weekNumber) {
+    return Observable<WeekModel>.just(WeekModel(
+        thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32));
+  }
+
+  @override
+  Observable<WeekModel> update(
+      String id, int year, int weekNumber, WeekModel weekModel) {
+    return Observable<WeekModel>.just(weekModel);
+  }
+}
+
 void main() {
   CopyWeekplanBloc bloc;
   ToolbarBloc toolbarBloc;
@@ -46,6 +61,7 @@ void main() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
+    api.week = MockWeekApi();
     bloc = CopyWeekplanBloc(api);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     toolbarBloc = ToolbarBloc();
@@ -56,16 +72,16 @@ void main() {
 
   testWidgets('Renders CopyToCitizenScreen', (WidgetTester tester) async {
     final WeekModel weekplan1 = WeekModel(
-      thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
-        weekplan1, mockUser)));
+        thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
+    await tester.pumpWidget(
+        MaterialApp(home: CopyToCitizensScreen(weekplan1, mockUser)));
     expect(find.byType(CopyToCitizensScreen), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
-        mockWeek, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
     await tester.pumpAndSettle();
     bloc.citizen.listen((List<UsernameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
@@ -73,35 +89,15 @@ void main() {
     });
     await done.future;
   });
-  
+
   testWidgets('Has Accept and Cancel buttons', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
-        mockWeek, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
     await tester.pumpAndSettle();
-    
+
     expect(find.byKey(const Key('AcceptButton')), findsOneWidget);
     expect(find.byKey(const Key('CancelButton')), findsOneWidget);
   });
-
-  testWidgets('Shows copy successful dialog', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(
-        mockWeek, mockUser)));
-    await tester.pumpAndSettle();
-
-    bloc.toggleMarkedUserModel(mockUser);
-
-    await tester.tap(find.byKey(const Key('AcceptButton')));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(GirafNotifyDialog), findsOneWidget);
-  });
-
-
-  //testWidgets('Shows successful dialog', callback)
-
-
-
-
 
 
 }
