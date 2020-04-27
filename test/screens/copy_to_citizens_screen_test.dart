@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -14,6 +16,9 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+
+import 'edit_weekplan_screen_test.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -51,10 +56,46 @@ void main() {
 
   testWidgets('Renders CopyToCitizenScreen', (WidgetTester tester) async {
     final WeekModel weekplan1 = WeekModel(
-      thumbnail: null, name: "weekplan1", weekYear: 2020, weekNumber: 32);
+      thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
     await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(weekplan1)));
     expect(find.byType(CopyToCitizensScreen), findsOneWidget);
   });
+
+  testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(mockWeek)));
+    await tester.pumpAndSettle();
+    bloc.citizen.listen((List<UsernameModel> response) {
+      expect(find.byType(CircleAvatar), findsNWidgets(response.length));
+      done.complete(true);
+    });
+    await done.future;
+  });
+  
+  testWidgets('Has Accept and Cancel buttons', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(mockWeek)));
+    await tester.pumpAndSettle();
+    
+    expect(find.byKey(const Key('AcceptButton')), findsOneWidget);
+    expect(find.byKey(const Key('CancelButton')), findsOneWidget);
+  });
+
+  testWidgets('Shows copy successful dialog', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: CopyToCitizensScreen(mockWeek)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(CircleAvatar).first);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('AcceptButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
+  });
+
+
+  //testWidgets('Shows successful dialog', callback)
+
 
 
 
