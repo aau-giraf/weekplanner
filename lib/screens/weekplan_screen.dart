@@ -641,12 +641,12 @@ class WeekplanScreen extends StatelessWidget {
                             }
                           }
                         }
-                        return SizedBox(
+                        return Container(
                             height: MediaQuery.of(context).size.width / _height,
                             // MediaQuery.of(context).size.width / 3,
                             width: MediaQuery.of(context).size.width / _width,
                             //  MediaQuery.of(context).size.width / 1,
-                            child: FittedBox(
+                            child: Container(
                               child: GestureDetector(
                                 key: Key(weekday.day.index.toString() +
                                     weekday.activities[index].id.toString()),
@@ -697,15 +697,14 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Builds card that displays the activity
-  Card _buildActivityCard(
+  Container _buildActivityCard(
     BuildContext context,
     List<ActivityModel> activities,
     int index,
     WeekdayModel weekday,
     ActivityState activityState,
   ) {
-    return Card(
-        elevation: activityState == ActivityState.Completed ? 0 : 1,
+    return Container(
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: FittedBox(
           child: Stack(
