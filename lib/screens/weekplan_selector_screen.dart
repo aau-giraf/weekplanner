@@ -66,6 +66,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       Container(
           child: Expanded(child: _buildWeekplanGridview(context, weekModels, true)),
       ),
+
       Container(color: Colors.grey,
         child:
         Text("Overståede uger", style: TextStyle(fontWeight: FontWeight.bold),),
