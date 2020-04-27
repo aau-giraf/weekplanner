@@ -113,13 +113,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Orientering'), findsOneWidget);
     expect(find.text('Landskab'), findsOneWidget);
-    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Ugeplan section', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Ugeplan'), findsOneWidget);
     expect(find.text('Antal dage'), findsOneWidget);
+    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Brugerindstillinger section',

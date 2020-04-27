@@ -96,7 +96,9 @@ class SettingsScreen extends StatelessWidget {
               titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1?
               'En dag':settingsModel.nrOfDaysToDisplay == 5?
               'Mandag til fredag' : 'Mandag til søndag'),
-            )
+            ),
+            SettingsCheckMarkButton.fromBoolean(
+                false, 'Piktogram tekst er synlig', () {}),
           ]);
         }
         else{
