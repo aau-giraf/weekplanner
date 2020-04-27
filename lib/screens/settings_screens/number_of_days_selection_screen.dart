@@ -40,27 +40,40 @@ class NumberOfDaysScreen extends StatelessWidget {
                       SettingsCheckMarkButton(
                           1, _settingsModel.nrOfDaysToDisplay, 'Vis kun i dag',
                           () {
-                        _settingsModel.nrOfDaysToDisplay = 1;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel);
-                        Routes.pop(context);
-                      }),
+                            _settingsModel.nrOfDaysToDisplay = 1;
+                            _settingsBloc.updateSettings(
+                                _user.id, _settingsModel)
+                                .listen((SettingsModel response) {
+                              if (response != null) {
+                                Routes.pop(context);
+                              }
+                            });
+                          }),
                       SettingsCheckMarkButton(
                           5,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til fredag', () {
                         _settingsModel.nrOfDaysToDisplay = 5;
-                        _settingsBloc.updateSettings(_user.id,
-                            _settingsModel);
-                        Routes.pop(context);
+                        _settingsBloc.updateSettings(
+                            _user.id, _settingsModel)
+                            .listen((SettingsModel response) {
+                          if (response != null) {
+                            Routes.pop(context);
+                          }
+                        });
                       }),
                       SettingsCheckMarkButton(
                           7,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til søndag', () {
                         _settingsModel.nrOfDaysToDisplay = 7;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel);
-
-                        Routes.pop(context);
+                        _settingsBloc.updateSettings(
+                            _user.id, _settingsModel)
+                            .listen((SettingsModel response) {
+                          if (response != null) {
+                            Routes.pop(context);
+                          }
+                        });
                       }),
                     ]),
                   ],
