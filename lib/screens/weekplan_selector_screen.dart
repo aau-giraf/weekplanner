@@ -311,7 +311,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   weekModel: _weekBloc.getMarkedWeekModels()[0],
                   forThisCitizen: true,
                 )
-              );
+              ).then((_) {
+                _weekBloc.load(_user, true);
+              });
             },
             option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
           );

@@ -23,8 +23,8 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   final Api _api;
 
   /// Copies weekplan to all selected citizens
-  void copyWeekplan(
-      WeekModel weekModel, UsernameModel currentUser, bool forThisCitizen) {
+  void copyWeekplan(WeekModel weekModel, UsernameModel currentUser,
+      bool forThisCitizen) async {
     List<UsernameModel> users = <UsernameModel>[];
     if (forThisCitizen) {
       users.add(currentUser);
@@ -34,9 +34,9 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
 
     for (UsernameModel user in users) {
       _api.week
-        .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
-        .take(1)
-        .listen((WeekModel weekModel){});
+          .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
+          .take(1)
+          .listen((WeekModel weekModel) {});
     }
   }
 

@@ -61,6 +61,7 @@ class CopyResolveScreen extends StatelessWidget {
       body: InputFieldsWeekPlan(
         bloc: _bloc,
         button: saveButton,
+        weekModel: weekModel
       ),
     );
   }
