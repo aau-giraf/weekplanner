@@ -25,15 +25,16 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   /// Copies weekplan to all selected citizens
   void copyWeekplan(WeekModel weekModel) {
     List<UsernameModel> users = _markedUserModels.value;
-    List<UsernameModel> conflictingUsers =
-    getConflictingUsers(users, weekModel);
+    //List<UsernameModel> conflictingUsers =
+    // getConflictingUsers(users, weekModel);
   }
 
   /// Returns a list of all users which already have a weekplan in the same week
-  List getConflictingUsers(List<UsernameModel> users, WeekModel weekModel) {
+  Future<List<UsernameModel>> getConflictingUsers(List<UsernameModel> users,
+    WeekModel weekModel) async {
     List<UsernameModel> conflictingUsers = <UsernameModel>[];
     for (UsernameModel user in users) {
-      if (isConflictingUser(user, weekModel)) {
+      if (await isConflictingUser(user, weekModel)) {
         conflictingUsers.add(user);
       }
     }
@@ -41,21 +42,25 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   }
 
   /// Checks if any user has a conflicting weekplan
-  int numberOfConflictingUsers(WeekModel weekModel) {
+  Future<int> numberOfConflictingUsers(WeekModel weekModel) async {
     List<UsernameModel> users = _markedUserModels.value;
-    print(getConflictingUsers(users, weekModel));
-    return getConflictingUsers(users, weekModel).length;
+    List<UsernameModel> conflictingUsers = await getConflictingUsers(
+      users, weekModel);
+    return conflictingUsers.length;
   }
 
   /// Compares a single Citizen's Weekplans with the copied weekplan
-  bool isConflictingUser(UsernameModel user, WeekModel weekModel) {
+  Future<bool> isConflictingUser(UsernameModel user,
+    WeekModel weekModel) async {
     bool daysAreEmpty = true;
-    _api.week.get(user.id, weekModel.weekYear, weekModel.weekNumber).listen((
-      weekModel) {
-      for (WeekdayModel weekDay in weekModel.days){
-        daysAreEmpty = daysAreEmpty && weekDay.activities.isEmpty;
-      }
-    });
+    WeekModel response = await _api.week
+      .get(user.id, weekModel.weekYear, weekModel.weekNumber)
+      .first;
+
+    for (WeekdayModel weekDay in response.days) {
+      daysAreEmpty = daysAreEmpty && weekDay.activities.isEmpty;
+    }
+
     return !daysAreEmpty;
   }
 

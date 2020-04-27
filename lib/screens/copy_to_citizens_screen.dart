@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/screens/copy_resolve_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -71,14 +72,14 @@ class CopyToCitizensScreen extends StatelessWidget {
                             child: GirafButton(
                                 key: const Key('AcceptButton'),
                                 onPressed: () {
-                                   int conflicts = _bloc
-                                      .numberOfConflictingUsers(
-                                      _copiedWeekModel);
-                                   print(conflicts);
-                                  if(conflicts > 0) {
-                                    _showConflictDialog(context, conflicts);
-                                  }
-                                  _bloc.copyWeekplan(_copiedWeekModel);
+                                  _bloc
+                                    .numberOfConflictingUsers(
+                                    _copiedWeekModel).then((conflicts) {
+                                    if(conflicts > 0) {
+                                      _showConflictDialog(context, conflicts);
+                                    }
+                                    _bloc.copyWeekplan(_copiedWeekModel);
+                                  });
                                 },
                                 icon: const ImageIcon(
                                     AssetImage('assets/icons/accept.png')))),
@@ -149,8 +150,9 @@ class CopyToCitizensScreen extends StatelessWidget {
           return Giraf3ButtonDialog(
             title: 'Kopiér konflikt',
             description: 'Der er ${conflicts} konflikter!',
-            option1Text: 'ændr',
+            option1Text: 'Ændr',
             option1OnPressed: () {
+              //Routes.push(context, CopyResolveScreen());
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
             option2Text: 'Overskriv',

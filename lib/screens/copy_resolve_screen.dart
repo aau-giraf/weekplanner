@@ -42,7 +42,7 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        if (copyBloc.numberOfConflictingUsers(weekModel) > 0) {
+        if (await copyBloc.numberOfConflictingUsers(weekModel) > 0) {
           copyBloc.copyWeekplan(weekModel);
         }
       },
