@@ -92,7 +92,7 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
-    });
+  });
 
     clearMarkedActivities();
   }
