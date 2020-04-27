@@ -27,6 +27,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+import 'package:weekplanner/widgets/pictogram_text.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -618,9 +619,7 @@ class WeekplanScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> settingsSnapshot) {
                       if (settingsSnapshot.hasData && modeSnapshot.hasData) {
-                        double _height, _width;
-                        _height =
-                            _width = 1; // default value of one to one scale
+                        double _width = 1;
                         final int _daysToDisplay =
                             settingsSnapshot.data.nrOfDaysToDisplay;
 
@@ -628,7 +627,6 @@ class WeekplanScreen extends StatelessWidget {
                             Orientation.portrait) {
                           if (modeSnapshot.data == WeekplanMode.citizen) {
                             if (_daysToDisplay == 1) {
-                              _height = 2;
                               _width = 1;
                             }
                           }
@@ -636,13 +634,11 @@ class WeekplanScreen extends StatelessWidget {
                             Orientation.landscape) {
                           if (modeSnapshot.data == WeekplanMode.citizen) {
                             if (_daysToDisplay == 1) {
-                              _height = 5.4;
                               _width = 1;
                             }
                           }
                         }
                         return SizedBox(
-                            height: MediaQuery.of(context).size.width / _height,
                             // MediaQuery.of(context).size.width / 3,
                             width: MediaQuery.of(context).size.width / _width,
                             //  MediaQuery.of(context).size.width / 1,
