@@ -31,7 +31,7 @@ class MockUserApi extends Mock implements UserApi {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
-        nrOfDaysToDisplay: null,
+        nrOfDaysToDisplay: 1,
         weekDayColors: null);
 
     return Observable<SettingsModel>.just(settingsModel);
@@ -87,5 +87,11 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Vis mandag til søndag'), findsOneWidget);
+  });
+
+  testWidgets('Has only one selected option', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.check), findsOneWidget);
   });
 }
