@@ -26,7 +26,7 @@ import '../style/custom_color.dart' as theme;
 class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
-  WeekplanSelectorScreen(this._user)
+  WeekplanSelectorScreen(this._user, {this.waitAndUpdate = false})
       : _weekBloc = di.getDependency<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
@@ -34,8 +34,17 @@ class WeekplanSelectorScreen extends StatelessWidget {
   final WeekplansBloc _weekBloc;
   final UsernameModel _user;
 
+  /// Bool that tells whether the bloc should update after a while
+  final bool waitAndUpdate;
+
   @override
   Widget build(BuildContext context) {
+    if (waitAndUpdate){
+      Future.delayed(Duration(milliseconds: 500), () {
+        _weekBloc.notifyUpdate();
+      });
+    }
+
     return Scaffold(
         appBar: GirafAppBar(
           title: _user.name,
@@ -295,18 +304,14 @@ class WeekplanSelectorScreen extends StatelessWidget {
             description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
             option1Text: 'Anden borger',
             option1OnPressed: () {
-              Routes.pop(context);
               Routes.push(
                   context,
                   CopyToCitizensScreen(
                       _weekBloc.getMarkedWeekModels()[0], _user));
-              _weekBloc.toggleEditMode();
-              _weekBloc.clearMarkedWeekModels();
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
             option2Text: 'Denne borger',
             option2OnPressed: () {
-              Routes.pop(context);
               Routes.push(
                 context,
                 CopyResolveScreen(
@@ -314,13 +319,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                   weekModel: _weekBloc.getMarkedWeekModels()[0],
                   forThisCitizen: true,
                 )
-              ).then((_) {
-                Future.delayed(Duration(milliseconds: 500), () {
-                  _weekBloc.notifyUpdate();
-                });
-              });
-              _weekBloc.toggleEditMode();
-              _weekBloc.clearMarkedWeekModels();
+              );
             },
             option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
           );

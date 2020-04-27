@@ -4,6 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
+import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import '../routes.dart';
 import 'new_weekplan_bloc.dart';
@@ -24,6 +25,8 @@ class CopyResolveBloc extends NewWeekplanBloc {
     super.onThumbnailChanged.add(weekModel.thumbnail);
   }
 
+  /// Takes the content of the bloc and create a new weekplan
+  /// and copies it to the chosen citizens
   void copyContent(
       BuildContext context,
       WeekModel oldWeekModel,
@@ -37,26 +40,25 @@ class CopyResolveBloc extends NewWeekplanBloc {
     newWeekModel.name = super.titleController.value;
     newWeekModel.weekYear = int.parse(super.yearController.value);
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
-
     int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
         newWeekModel, currentUser, forThisCitizen);
 
     if (numberOfConflicts > 0) {
       _displayConflictDialog(context, newWeekModel.weekNumber,
-              newWeekModel.weekYear, numberOfConflicts)
+              newWeekModel.weekYear, numberOfConflicts, currentUser)
           .then((toOverwrite) {
-            if (toOverwrite) {
-              copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
-            }
-          });
+        if (toOverwrite) {
+          copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
+        }
+      });
     } else {
       copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
-      Routes.pop(context);
+      _returnToSelectorScreen(context, currentUser);
     }
   }
 
-  Future<bool> _displayConflictDialog(
-      BuildContext context, int weekNumber, int year, int numberOfConflicts) {
+  Future<bool> _displayConflictDialog(BuildContext context, int weekNumber,
+      int year, int numberOfConflicts, UsernameModel currentUser) {
     final Completer<bool> dialogCompleter = Completer<bool>();
     showDialog<Center>(
         context: context,
@@ -74,8 +76,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
             confirmOnPressed: () {
               dialogCompleter.complete(true);
-              Routes.pop(context);
-              Routes.pop(context);
+              _returnToSelectorScreen(context, currentUser);
             },
             cancelOnPressed: () {
               dialogCompleter.complete(false);
@@ -84,5 +85,10 @@ class CopyResolveBloc extends NewWeekplanBloc {
         });
 
     return dialogCompleter.future;
+  }
+
+  void _returnToSelectorScreen(BuildContext context, UsernameModel user) {
+    Routes.goHome(context);
+    Routes.push(context, WeekplanSelectorScreen(user, waitAndUpdate: true));
   }
 }
