@@ -641,7 +641,7 @@ class WeekplanScreen extends StatelessWidget {
                             }
                           }
                         }
-                        return Container(
+                        return SizedBox(
                             height: MediaQuery.of(context).size.width / _height,
                             // MediaQuery.of(context).size.width / 3,
                             width: MediaQuery.of(context).size.width / _width,
@@ -749,7 +749,7 @@ class WeekplanScreen extends StatelessWidget {
                   return Icon(
                     Icons.check,
                     key: const Key('IconComplete'),
-                    color: Colors.green,
+                    color: theme.GirafColors.green,
                     size: MediaQuery.of(context).size.width,
                   );
                 } else if (role == WeekplanMode.citizen) {
@@ -767,7 +767,7 @@ class WeekplanScreen extends StatelessWidget {
                         return Icon(
                           Icons.check,
                           key: const Key('IconComplete'),
-                          color: Colors.green,
+                          color: theme.GirafColors.green,
                           size: MediaQuery.of(context).size.width,
                         );
                       } else if (snapshot.data.completeMark ==
@@ -849,7 +849,7 @@ class WeekplanScreen extends StatelessWidget {
                 if (role.data == WeekplanMode.guardian) {
                   return const ImageIcon(
                     AssetImage('assets/icons/redcircle.png'),
-                    color: Colors.red,
+                    color: theme.GirafColors.red,
                     size: 250,
                   );
                 } else {
@@ -862,7 +862,7 @@ class WeekplanScreen extends StatelessWidget {
                                 CompleteMark.Removed) {
                           return const ImageIcon(
                             AssetImage('assets/icons/redcircle.png'),
-                            color: Colors.red,
+                            color: theme.GirafColors.red,
                             size: 250,
                           );
                         }
@@ -883,7 +883,7 @@ class WeekplanScreen extends StatelessWidget {
   ImageIcon _buildTimerAssetIcon() {
     return const ImageIcon(
       AssetImage('assets/icons/redcircle.png'),
-      color: Colors.red,
+      color: theme.GirafColors.red,
       size: 250,
     );
   }
