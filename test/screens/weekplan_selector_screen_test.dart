@@ -4,9 +4,9 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -41,8 +41,8 @@ void main() {
   const String nameWeekModel1 = 'weekmodel1';
   const String nameWeekModel2 = 'weekmodel2';
 
-  final UsernameModel mockUser =
-      UsernameModel(name: 'testName', role: 'testRole', id: 'testId');
+  final DisplayNameModel mockUser =
+      DisplayNameModel(displayName: 'testName', role: 'testRole', id: 'testId');
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
@@ -131,7 +131,7 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar &&
-        widget.title == mockUser.name &&
+        widget.title == mockUser.displayName &&
         widget.appBarIcons.keys.contains(AppBarIcon.edit) &&
         widget.appBarIcons.keys.contains(AppBarIcon.logout) &&
         widget.appBarIcons.keys.contains(AppBarIcon.settings)),

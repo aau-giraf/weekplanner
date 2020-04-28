@@ -1,5 +1,5 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
@@ -18,11 +18,11 @@ import '../../di.dart';
 class SettingsScreen extends StatelessWidget {
 
   /// Constructor
-  SettingsScreen(UsernameModel user) : _user = user{
+  SettingsScreen(DisplayNameModel user) : _user = user{
     _settingsBloc.loadSettings(_user);
   }
 
-  final UsernameModel _user;
+  final DisplayNameModel _user;
 
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
@@ -92,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildUserSettings() {
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-      SettingsArrowButton(_user.name + ' indstillinger', () {}),
+      SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
     ]);
   }
 }

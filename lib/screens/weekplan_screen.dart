@@ -1,9 +1,9 @@
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -49,7 +49,7 @@ class WeekplanScreen extends StatelessWidget {
   final WeekplanBloc _weekplanBloc = di.getDependency<WeekplanBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final UsernameModel _user;
+  final DisplayNameModel _user;
   final WeekModel _week;
 
   @override
@@ -66,7 +66,7 @@ class WeekplanScreen extends StatelessWidget {
                 weekModeSnapshot.data == WeekplanMode.guardian,
             child: Scaffold(
               appBar: GirafAppBar(
-                title: _user.name + ' - ' + _week.name,
+                title: _user.displayName + ' - ' + _week.name,
                 appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
                     ? <AppBarIcon, VoidCallback>{
                         AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),

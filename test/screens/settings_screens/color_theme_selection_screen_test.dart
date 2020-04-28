@@ -1,10 +1,10 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -94,8 +94,8 @@ void main() {
   Api api;
   SettingsBloc settingsBloc;
 
-  final UsernameModel user = UsernameModel(
-      name: 'Anders And', id: '101', role: Role.Guardian.toString());
+  final DisplayNameModel user = DisplayNameModel(
+      displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
 
   setUp(() {
     api = Api('any');
