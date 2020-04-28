@@ -125,6 +125,8 @@ jobs:
                      -exportPath $PWD/build/Runner.ipa
 
         name: Build for iOS
+        env:
+          FLUTTER_BUILD_NUMBER: ${{ github.run_number }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v1.0.0
         with:
