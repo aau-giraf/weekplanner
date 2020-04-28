@@ -1,12 +1,13 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -15,6 +16,7 @@ import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/pictogram_text.dart';
 import '../style/custom_color.dart' as theme;
 
 
@@ -25,14 +27,16 @@ class ShowActivityScreen extends StatelessWidget {
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(_activity, _girafUser);
+    _settingsBloc.loadSettings(_girafUser);
   }
 
-  final UsernameModel _girafUser;
+  final DisplayNameModel _girafUser;
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
   di.getDependency<PictogramImageBloc>();
   final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
@@ -183,14 +187,21 @@ class ShowActivityScreen extends StatelessWidget {
                       if (snapshot.data == null) {
                         return const CircularProgressIndicator();
                       }
-                      return Stack(
-                        alignment: AlignmentDirectional.center,
+                      return Column(
                         children: <Widget>[
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                              child: buildLoadPictogramImage()),
-                          _buildActivityStateIcon(context, snapshot.data.state)
+                          Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: <Widget>[
+                              SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.width,
+                                  child: buildLoadPictogramImage()),
+                              _buildActivityStateIcon(context,
+                                  snapshot.data.state),
+                            ],
+                          ),
+                          PictogramText(_activity.pictogram, _settingsBloc,
+                              minFontSize: 50),
                         ],
                       );
                     }))),
@@ -198,6 +209,7 @@ class ShowActivityScreen extends StatelessWidget {
       buildButtonBar()
     ]));
   }
+
 
   /// The widget to show, in the case that a timer has been initiated,
   /// showing the progression for the timer in both citizen and guardian mode.

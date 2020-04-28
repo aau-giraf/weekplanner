@@ -1,7 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
+import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -9,6 +14,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -17,7 +23,6 @@ import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:api_client/api/api.dart';
@@ -28,7 +33,26 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+class MockUserApi extends Mock implements UserApi {
 
+  @override
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(
+        GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
+  }
+
+  @override
+  Observable<SettingsModel> getSettings(String id) {
+    final SettingsModel settingsModel = SettingsModel(
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      defaultTimer: null,
+      theme: null,
+    );
+    return Observable<SettingsModel>.just(settingsModel);
+  }
+}
 
 class MockAuth extends Mock implements AuthBloc {
   @override
@@ -104,7 +128,8 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
           lastEdit: null))
 ];
 
-final UsernameModel mockUser = UsernameModel(id: '42', name: null, role: null);
+final DisplayNameModel mockUser = DisplayNameModel(id: '42',
+    displayName: "mockUser", role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {
@@ -156,7 +181,7 @@ void main() {
     bloc = ActivityBloc(api);
     timerBloc = TimerBloc(api);
     timerBloc.load(mockActivity,
-        user: UsernameModel(id: '10', name: 'Test', role: ''));
+        user: DisplayNameModel(id: '10', displayName: 'Test', role: ''));
     setupApiCalls();
 
     di.clearAll();
@@ -165,6 +190,7 @@ void main() {
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<TimerBloc>((_) => timerBloc);
+    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
   });
 
   testWidgets('renders', (WidgetTester tester) async {

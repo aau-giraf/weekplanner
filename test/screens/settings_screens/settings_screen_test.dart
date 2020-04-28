@@ -1,10 +1,10 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,7 +17,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -79,8 +78,8 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   Api api;
 
-  final UsernameModel user = UsernameModel(
-      name: 'Anders And', id: '101', role: Role.Guardian.toString());
+  final DisplayNameModel user = DisplayNameModel(
+      displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
 
   setUp(() {
     di.clearAll();
@@ -114,7 +113,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Orientering'), findsOneWidget);
     expect(find.text('Landskab'), findsOneWidget);
-    expect(find.byType(SettingsCheckMarkButton), findsOneWidget);
+    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Ugeplan section', (WidgetTester tester) async {
@@ -127,7 +126,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Bruger indstillinger'), findsOneWidget);
-    expect(find.text(user.name + ' indstillinger'), findsOneWidget);
+    expect(find.text(user.displayName + ' indstillinger'), findsOneWidget);
   });
 
   testWidgets('Farver på ugeplan button changes screen',
