@@ -77,7 +77,7 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: dk.aau.cs.giraf.weekplanner
-          releaseFile: build/app/outputs/bundle/release/weekplanner.aab
+          releaseFile: build/app/outputs/bundle/release/app-release.aab
 
   # iOS Build and Upload
   build-and-test-ios:
