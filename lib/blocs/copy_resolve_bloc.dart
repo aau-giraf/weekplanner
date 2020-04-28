@@ -27,7 +27,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
 
   /// Takes the content of the bloc and create a new weekplan
   /// and copies it to the chosen citizens
-  void copyContent(
+  Future<bool> copyContent(
       BuildContext context,
       WeekModel oldWeekModel,
       CopyWeekplanBloc copyBloc,
@@ -46,7 +46,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
     if (numberOfConflicts > 0) {
       _displayConflictDialog(context, newWeekModel.weekNumber,
               newWeekModel.weekYear, numberOfConflicts, currentUser)
-          .then((toOverwrite) {
+          .then((bool toOverwrite) {
         if (toOverwrite) {
           copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
         }
@@ -55,6 +55,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
       copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
       _returnToSelectorScreen(context, currentUser);
     }
+    return true;
   }
 
   Future<bool> _displayConflictDialog(BuildContext context, int weekNumber,

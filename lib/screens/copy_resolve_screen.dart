@@ -1,17 +1,11 @@
-import 'dart:async';
-
 import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
-import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
-import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
 /// Screen for creating a new weekplan.
@@ -51,7 +45,7 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        _bloc.copyContent(
+        await _bloc.copyContent(
             context, weekModel, copyBloc, currentUser, forThisCitizen);
       },
     );
