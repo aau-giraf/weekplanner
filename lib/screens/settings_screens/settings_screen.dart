@@ -13,6 +13,7 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 import 'package:weekplanner/widgets/settings_widgets/settings_theme_display_box.dart';
 
 import '../../di.dart';
+import 'completed_activity_icon_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
@@ -46,31 +47,33 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildThemeSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
-      stream: _settingsBloc.settings,
+        stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
-        if(settingsSnapshot.hasData) {
-          final SettingsModel settingsModel = settingsSnapshot.data;
-          return SettingsSection('Tema', <SettingsSectionItem>[
-            SettingsArrowButton('Farver på ugeplan',
-                    () =>
-                    Routes.push(
-                        context, ColorThemeSelectorScreen(user: _user)
-                    ).then((Object object) =>
+          if(settingsSnapshot.hasData) {
+            final SettingsModel settingsModel = settingsSnapshot.data;
+            return SettingsSection('Tema', <SettingsSectionItem>[
+              SettingsArrowButton('Farver på ugeplan',
+                      () =>
+                      Routes.push(
+                          context, ColorThemeSelectorScreen(user: _user)
+                      ).then((Object object) =>
                           _settingsBloc.loadSettings(_user)),
-                titleTrailing: ThemeBox.fromHexValues(
-                    settingsModel.weekDayColors[0].hexColor,
-                    settingsModel.weekDayColors[1].hexColor
-                )
-            ),
-            SettingsArrowButton('Tegn for udførelse', () {})
-          ]);
-        }else{
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+                  titleTrailing: ThemeBox.fromHexValues(
+                      settingsModel.weekDayColors[0].hexColor,
+                      settingsModel.weekDayColors[1].hexColor
+                  )
+              ),
+              SettingsArrowButton('Tegn for udførelse',
+                      () => Routes.push(context,
+                          CompletedActivityIconScreen(_user)))
+            ]);
+          }else{
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         }
-      }
     );
   }
 
