@@ -3,6 +3,7 @@ name: CI
 on: [push]
 
 jobs:
+  # Android Build and Upload
   build-and-test-android:
     name: Android on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -37,7 +38,27 @@ jobs:
         with:
           name: Giraf Weekplanner
           path: build/app/outputs/bundle/release/app-release.aab
+  deploy-to-playstore:
+    if: github.ref == 'refs/heads/master'
+    needs: build-and-test-android
+    name: Upload to Google Play Store
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v1.0.0
+        with:
+          # Artifact name
+          name: Giraf Weekplanner
+          # Destination path
+          path: build/bundle/weekplanner.aab
+      - name: Publish
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: dk.aau.cs.giraf.weekplanner
+          releaseFile: build/bundle/weekplanner.aab
 
+  # iOS Build and Upload
   build-and-test-ios:
     name: iOS on macos-latest
     runs-on: macos-latest
@@ -56,33 +77,25 @@ jobs:
         name: Linter
       - run: flutter test
         name: Tests
-      - run: flutter build ios --release --no-codesign --build-number=$GITHUB_RUN_NUMBER
+      - run: |
+          flutter build ios --no-codesign  --build-number=$GITHUB_RUN_NUMBER
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
         name: Build for iOS
-
-  deploy-to-playstore:
-    if: github.ref == 'refs/heads/master'
-    needs: build-and-test-android
-    name: Upload to Play Store
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v1.0.0
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1.0.0
         with:
-          # Artifact name
-          name: Giraf Weekplanner
-          # Destination path
-          path: build/apk/weekplanner.apk
-      - name: Publish
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJson: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          packageName: dk.aau.cs.giraf.weekplanner
-          releaseFile: build/bundle/weekplanner.aab
+          name: Giraf Weekplanner iOS
+          path: build/ios/iphoneos/app.ipa
 
   deploy-to-appstore:
     if: github.ref == 'refs/heads/master'
     needs: build-and-test-ios
-    name: Android on Ubuntu
+    name: Upload to Apple AppStore
     runs-on: macos-latest
     steps:
       - name: Download artifact
@@ -91,10 +104,10 @@ jobs:
           # Artifact name
           name: Giraf Weekplanner
           # Destination path
-          path: build/bundle/weekplanner.aab
+          path: build/ios/app.ipa
       - uses: apple-actions/upload-testflight-build@v1
         with:
-          app-path: 'path/to/application.ipa'
+          app-path: 'build/ios/app.ipa'
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
