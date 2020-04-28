@@ -110,9 +110,9 @@ jobs:
       - run: flutter test
         name: Tests
       - run: |
-          flutter build ios --release --no-codesign --build-number GITHUB_RUN_NUMBER
+          flutter build ios --release --no-codesign --build-number $GITHUB_RUN_NUMBER
           cd ios
-          export FLUTTER_BUILD_NUMBER=$GITHUB_RUN_NUMBER
+          agvtool new-version $GITHUB_RUN_NUMBER
           xcodebuild -workspace Runner.xcworkspace \
                      -scheme Runner \
                      -sdk iphoneos \
