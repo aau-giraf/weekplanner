@@ -1,6 +1,10 @@
 name: CI
 
 on: [push]
+env:
+  flutter_channel: 'stable'
+  flutter_version: '1.12.13+hotfix.9'
+  java_version: '12.x'
 
 jobs:
   # Android Build and Upload
@@ -10,15 +14,29 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            flutter_path: /opt/hostedtoolcache/flutter
+          - os: macos-latest
+            flutter_path: /Users/runner/hostedtoolcache/flutter
+          - os: windows-latest
+            flutter_path: ${{ env.USERPROFILE }}\\hostedtoolcache\\flutter
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '12.x'
+          java-version: ${{ env.java_version }}
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ matrix.flutter_path }}
+          key: ${{ runner.os }}-flutter
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "1.12.x"
-          channel: 'stable'
+          flutter-version: ${{ env.flutter_version }}
+          channel: ${{ env.flutter_channel }}
+          path: ${{ matrix.flutter_path }}
       - run: flutter pub get
         name: Get dependencies
 
@@ -66,11 +84,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '12.x'
+          java-version: ${{ env.java_version }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "1.12.x"
-          channel: 'stable'
+          flutter-version: ${{ env.flutter_version }}
+          channel: ${{ env.flutter_channel }}
       - uses: Apple-Actions/import-codesign-certs@v1
         with:
           p12-file-base64: ${{ secrets.APPSTORE_P12_BASE64 }}
