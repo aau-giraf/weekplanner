@@ -110,6 +110,7 @@ jobs:
       - run: flutter test
         name: Tests
       - run: |
+          flutter build ios --release --no-codesign
           cd ios
           xcodebuild -workspace Runner.xcworkspace \
                      -scheme Runner \
