@@ -110,14 +110,17 @@ jobs:
       - run: flutter test
         name: Tests
       - run: |
-          xcodebuild -exportArchive \
-                     -archivePath $PWD/build/Runner.xcarchive -exportOptionsPlist exportOptions.plist -exportPath $PWD/build/Runner.ipa
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace \
+                     -scheme Runner \
+                     -sdk iphoneos \
+                     -configuration Release archive \
+                     -archivePath $PWD/build/Runner.xcarchive
 
           xcodebuild -exportArchive \
-                     -sdk iphoneos \
-                     -archivePath build/ios/iphoneos/Runner.app \
-                     -exportPath build/ios/iphoneos/ \
-                     -exportOptionsPlist ios/Runner/ExportOptions.plist
+                     -archivePath $PWD/build/Runner.xcarchive \
+                     -exportOptionsPlist ios/Runner/ExportOptions.plist \
+                     -exportPath $PWD/build/Runner.ipa
 
         name: Build for iOS
         env:
