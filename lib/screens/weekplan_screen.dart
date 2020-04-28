@@ -8,6 +8,7 @@ import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -22,6 +23,7 @@ import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/style/standard_week_colors.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -771,28 +773,25 @@ class WeekplanScreen extends StatelessWidget {
                           theme.GirafColors.transparentGrey, context);
                       } else if (snapshot.data.completeMark ==
                           CompleteMark.Removed) {
-                        if (weekday.day.index == 0) {
-                          return completedActivityColor(
-                            theme.GirafColors.mondayColor, context);
-                        } else if (weekday.day.index == 1) {
-                          return completedActivityColor(
-                            theme.GirafColors.tuesdayColor, context);
-                        } else if (weekday.day.index == 2) {
-                          return completedActivityColor(
-                            theme.GirafColors.wednesdayColor, context);
-                        } else if (weekday.day.index == 3) {
-                          return completedActivityColor(
-                            theme.GirafColors.thursdayColor, context);
-                        } else if (weekday.day.index == 4) {
-                          return completedActivityColor(
-                            theme.GirafColors.fridayColor, context);
-                        } else if (weekday.day.index == 5) {
-                          return completedActivityColor(
-                            theme.GirafColors.saturdayColor, context);
-                        } else {
-                          return completedActivityColor(
-                            theme.GirafColors.sundayColor, context);
-                        }
+                        return StreamBuilder<SettingsModel>(
+                          stream: _settingsBloc.settings,
+                          builder: (BuildContext buildContext,
+                              AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                            Color c;
+
+                            if (settingsSnapshot.data == null) {
+                              c = Color(int.parse(WeekplanColorTheme.
+                                  blueWhiteColorSetting()[weekday.day.index].
+                                  hexColor.replaceFirst('#', '0xff')));
+                            } else {
+                              c = Color(int.parse(settingsSnapshot.
+                              data.weekDayColors[weekday.day.index].hexColor.
+                                  replaceFirst('#', '0xff')));
+                            }
+
+                            return completedActivityColor(c, context);
+                          },
+                        );
                       } else {
                         return const Center(
                           child: CircularProgressIndicator(),
