@@ -29,7 +29,7 @@ jobs:
         name: Linter
       - run: flutter test
         name: Tests
-      - run: flutter build appbundle
+      - run: flutter build appbundle --build-number=$GITHUB_RUN_NUMBER
         env:
           GIRAF_KEYSTORE_PASSWORD: ${{ secrets.GIRAF_KEYSTORE_PASSWORD }}
         name: Build appbundle for Play Store
@@ -78,7 +78,7 @@ jobs:
       - run: flutter test
         name: Tests
       - run: |
-          flutter build ios --no-codesign  --build-number=$GITHUB_RUN_NUMBER
+          flutter build ios --no-codesign --build-number=$GITHUB_RUN_NUMBER
           cd build/ios/iphoneos
           mkdir Payload
           cd Payload
