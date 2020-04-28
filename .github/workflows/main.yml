@@ -20,7 +20,7 @@ jobs:
           - os: macos-latest
             flutter_path: /Users/runner/hostedtoolcache/flutter
           - os: windows-latest
-            flutter_path: '%USERPROFILE%\\hostedtoolcache\\flutter'
+            flutter_path: '%USERPROFILE%\hostedtoolcache\flutter'
 
     steps:
       - uses: actions/checkout@v2
