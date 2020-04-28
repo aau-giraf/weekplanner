@@ -110,8 +110,9 @@ jobs:
       - run: flutter test
         name: Tests
       - run: |
-          flutter build ios --release --no-codesign
+          flutter build ios --release --no-codesign --build-number GITHUB_RUN_NUMBER
           cd ios
+          export FLUTTER_BUILD_NUMBER=$GITHUB_RUN_NUMBER
           xcodebuild -workspace Runner.xcworkspace \
                      -scheme Runner \
                      -sdk iphoneos \
@@ -124,8 +125,6 @@ jobs:
                      -exportPath $PWD/build/Runner.ipa
 
         name: Build for iOS
-        env:
-          FLUTTER_BUILD_NUMBER: ${{ env.GITHUB_RUN_NUMBER }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v1.0.0
         with:
