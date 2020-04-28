@@ -111,18 +111,17 @@ jobs:
         name: Tests
       - run: |
           flutter build ios --release --build-number=$GITHUB_RUN_NUMBER
-          cd build/ios/iphoneos
-          mkdir Payload
-          cd Payload
-          ln -s ../Runner.app
-          cd ..
-          zip -r app.ipa Payload
+          xcodebuild -exportArchive \
+                     -archivePath build/ios/iphoneos/Runner.app \
+                     -exportPath build/ios/iphoneos/ \
+                     -exportOptionsPlist ios/Runner/ExportOptions.plist
+
         name: Build for iOS
       - name: Upload Artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           name: Giraf Weekplanner iOS
-          path: build/ios/iphoneos/app.ipa
+          path: build/ios/iphoneos/Runner.ipa
 
   deploy-to-appstore:
     if: github.ref == 'refs/heads/feature/appstore-ios'
@@ -136,10 +135,10 @@ jobs:
           # Artifact name
           name: Giraf Weekplanner
           # Destination path
-          path: build/ios/app.ipa
+          path: build/ios/iphoneos/Runner.ipa
       - uses: Apple-Actions/upload-testflight-build@master
         with:
-          app-path: 'build/ios/app.ipa'
+          app-path: 'build/ios/iphoneos/Runner.ipa'
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
