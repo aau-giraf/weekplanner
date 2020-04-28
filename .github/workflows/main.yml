@@ -144,5 +144,6 @@ jobs:
         with:
           name: Giraf Weekplanner iOS
           path: ios/build/Runner.ipa
-      - run: xcrun altool --upload-app --file ios/build/Runner.ipa --type ios --username $APPSTORE_USERNAME --password $APPSTORE_PASSWORD
+      - run: xcrun altool --upload-app --file ios/build/Runner.ipa --type ios --username "$APPSTORE_USERNAME" --password "$APPSTORE_PASSWORD"
         name: Upload IPA
+ƒ
