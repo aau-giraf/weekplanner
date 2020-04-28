@@ -32,15 +32,17 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
-Map<String, WeekModel> map = Map();
+Map<String, WeekModel> map = <String, WeekModel>{};
 class MockWeekApi extends Mock implements WeekApi {
 
+  @override
   Observable<WeekModel> update(String id, int year, int weekNumber,
     WeekModel week) {
     map[id] = week;
     return Observable<WeekModel>.just(week);
   }
 
+  @override
   Observable<WeekModel> get(String id, int year, int weekNumber) {
     // return null so there are no conflicts
     return Observable<WeekModel>.just(null);
@@ -61,7 +63,7 @@ void main() {
     bloc = CopyWeekplanBloc(api);
     user = UsernameModel(name: 'Hans', role: Role.Citizen.toString(), id: '1');
     weekplan1 = WeekModel(
-      thumbnail: null, name: "weekplan1", weekYear: 2020, weekNumber: 32);
+      thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
   });
 
   test('toggleMarkedUserModel', async((DoneFn done) {

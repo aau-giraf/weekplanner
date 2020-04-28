@@ -19,6 +19,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   final Api _api;
 
   /// Copies weekplan to all selected citizens
+  // ignore: avoid_void_async
   void copyWeekplan(WeekModel weekModel, UsernameModel currentUser,
       bool forThisCitizen) async {
 
@@ -40,7 +41,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   /// Returns a list of all users which already have a weekplan in the same week
   Future<List<UsernameModel>> getConflictingUsers(
       List<UsernameModel> users, WeekModel weekModel) async {
-    List<UsernameModel> conflictingUsers = <UsernameModel>[];
+    final List<UsernameModel> conflictingUsers = <UsernameModel>[];
     for (UsernameModel user in users) {
       if (await isConflictingUser(user, weekModel)) {
         conflictingUsers.add(user);
@@ -52,9 +53,9 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   /// Checks if any user has a conflicting weekplan
   Future<int> numberOfConflictingUsers(WeekModel weekModel,
       UsernameModel currentUser, bool forThisCitizen) async {
-    List<UsernameModel> users =
+    final List<UsernameModel> users =
         forThisCitizen ? <UsernameModel>[currentUser] : _markedUserModels.value;
-    List<UsernameModel> conflictingUsers =
+    final List<UsernameModel> conflictingUsers =
         await getConflictingUsers(users, weekModel);
     return conflictingUsers.length;
   }
@@ -63,7 +64,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   Future<bool> isConflictingUser(
       UsernameModel user, WeekModel weekModel) async {
     bool daysAreEmpty = true;
-    WeekModel response = await _api.week
+    final WeekModel response = await _api.week
         .get(user.id, weekModel.weekYear, weekModel.weekNumber)
         .first;
 

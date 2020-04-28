@@ -38,7 +38,7 @@ class EditWeekPlanScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        WeekModel result = await _bloc.editWeekPlan(
+        final WeekModel result = await _bloc.editWeekPlan(
             screenContext: context,
             oldWeekModel: weekModel,
             selectorBloc: selectorBloc);

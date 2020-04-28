@@ -54,7 +54,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                     child: Expanded(child: _buildWeekplanGridview(context))),
                   Row(
                     children: <Widget>[
-                      Spacer(flex: 1),
+                      const Spacer(flex: 1),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -68,7 +68,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Spacer(flex: 1),
+                      const Spacer(flex: 1),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -78,7 +78,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                               _bloc
                                 .numberOfConflictingUsers(
                                 _copiedWeekModel, _currentUser, false)
-                                .then((conflicts) {
+                                .then((int conflicts) {
                                 if (conflicts > 0) {
                                   _showConflictDialog(context, conflicts);
                                 } else {
@@ -94,7 +94,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                             icon: const ImageIcon(
                               AssetImage('assets/icons/accept.png')))),
                       ),
-                      Spacer(flex: 1),
+                      const Spacer(flex: 1),
                     ],
                   )
                 ],
@@ -159,7 +159,7 @@ class CopyToCitizensScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return Giraf3ButtonDialog(
           title: 'Kopiér konflikt',
-          description: 'Der er ${conflicts} konflikter!',
+          description: 'Der er $conflicts konflikter!',
           option1Text: 'Ændr',
           option1OnPressed: () {
             Routes.pop(context);
