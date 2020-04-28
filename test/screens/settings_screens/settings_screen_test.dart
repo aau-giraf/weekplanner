@@ -19,16 +19,7 @@ import 'package:weekplanner/screens/settings_screens/color_theme_selection_scree
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
-SettingsModel mockSettings3 = SettingsModel(
-  orientation: null,
-  completeMark: null,
-  cancelMark: null,
-  defaultTimer: null,
-  theme: null,
-  nrOfDaysToDisplay: 1,
-  weekDayColors: MockUserApi.createWeekDayColors(),
-  lockTimerControl: false,
-);
+SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -39,7 +30,7 @@ class MockUserApi extends Mock implements UserApi {
 
   @override
   Observable<SettingsModel> getSettings(String id) {
-    return Observable<SettingsModel>.just(mockSettings3);
+    return Observable<SettingsModel>.just(mockSettings);
   }
 
   static List<WeekdayColorModel> createWeekDayColors() {
@@ -75,8 +66,19 @@ void main() {
     api = Api('any');
     api.user = MockUserApi();
 
+    mockSettings = SettingsModel(
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      defaultTimer: null,
+      theme: null,
+      nrOfDaysToDisplay: 1,
+      weekDayColors: MockUserApi.createWeekDayColors(),
+      lockTimerControl: false,
+    );
+
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings3);
+      return Observable<SettingsModel>.just(mockSettings);
     });
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
