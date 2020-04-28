@@ -61,7 +61,8 @@ class CitizenAvatar extends StatelessWidget {
                             child: AutoSizeText(
                               displaynameModel.displayName.length <= 15
                                   ? displaynameModel.displayName
-                                  : displaynameModel.displayName.substring(0, 14) + '..',
+                                  : displaynameModel.displayName
+                                                    .substring(0, 14) + '..',
                               key: const Key('WidgetText'),
                               style:
                               TextStyle(fontSize: _isTablet(query) ? 30.0 : 20),

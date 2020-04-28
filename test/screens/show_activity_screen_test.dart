@@ -128,8 +128,11 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
           lastEdit: null))
 ];
 
-final DisplayNameModel mockUser = DisplayNameModel(id: '42',
-    displayName: "mockUser", role: null);
+final DisplayNameModel mockUser = DisplayNameModel(
+  id: '42',
+  displayName: 'mockUser',
+  role: null
+);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {

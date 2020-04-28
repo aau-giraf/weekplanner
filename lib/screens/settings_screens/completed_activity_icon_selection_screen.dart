@@ -1,6 +1,6 @@
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -14,18 +14,18 @@ import '../../di.dart';
 /// Screen where the icon for completed activity can be chosen
 class CompletedActivityIconScreen extends StatelessWidget {
   /// Constructor
-  CompletedActivityIconScreen(UsernameModel user) : _user = user {
+  CompletedActivityIconScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
 
-  final UsernameModel _user;
+  final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: _user.name + ': indstillinger',
+          title: _user.displayName + ': indstillinger',
         ),
         body: StreamBuilder<SettingsModel>(
             stream: _settingsBloc.settings,

@@ -47,8 +47,11 @@ void main() {
 
   WeekModel week;
 
-  final DisplayNameModel user =
-  DisplayNameModel(role: Role.Guardian.toString(), displayName: 'User', id: '1');
+  final DisplayNameModel user = DisplayNameModel(
+    role: Role.Guardian.toString(),
+    displayName: 'User',
+    id: '1'
+  );
 
   final List<ActivityModel> mockActivities = <ActivityModel>[
     ActivityModel(
@@ -258,8 +261,11 @@ void main() {
 
   test('Checks if marked activities are deleted from a users weekplan',
       async((DoneFn done) {
-    final DisplayNameModel user =
-    DisplayNameModel(role: Role.Citizen.toString(), displayName: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+      role: Role.Citizen.toString(),
+      displayName: 'User',
+      id: '1'
+    );
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -308,8 +314,11 @@ void main() {
 
   test('Checks if marked activities are copied to a new day',
       async((DoneFn done) {
-    final DisplayNameModel user =
-    DisplayNameModel(role: Role.Citizen.toString(), displayName: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+      role: Role.Citizen.toString(),
+      displayName: 'User',
+      id: '1'
+    );
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -624,7 +633,7 @@ void main() {
         expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
         expect(find.byKey(const Key('SelectAllButton')), findsNWidgets(2));
         expect(find.byKey(const Key('DeselectAllButton')), findsNWidgets(2));
-        
+
         weekplanBloc.addActivity(mockActivities.first, 0);
         weekplanBloc.addActivity(mockActivities.last, 0);
         await tester.pump();
@@ -640,4 +649,3 @@ void main() {
         expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
       });
 }
-

@@ -14,7 +14,10 @@ class MockScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: CitizenAvatar(displaynameModel: usernameModel, onPressed: callback),
+        child: CitizenAvatar(
+          displaynameModel: usernameModel,
+          onPressed: callback
+        ),
       ),
     );
   }

@@ -1,7 +1,4 @@
 import 'package:api_client/models/displayname_model.dart';
-import 'package:http/http.dart' as http;
-import 'package:api_client/http/http.dart';
-import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
