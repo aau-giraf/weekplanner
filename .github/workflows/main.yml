@@ -142,13 +142,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v1.0.0
         with:
-          # Artifact name
-          name: Giraf Weekplanner
-          # Destination path
+          name: Giraf Weekplanner iOS
           path: ios/build/Runner.ipa
-      - uses: Apple-Actions/upload-testflight-build@master
-        with:
-          app-path: 'ios/build/Runner.ipa'
-          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+      - run: altool --upload-app --file ios/build/Runner.ipa --type ios --username $APPSTORE_USERNAME --password $APPSTORE_PASSWORD
+        name: Upload IPA
