@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
@@ -14,7 +14,7 @@ class EditWeekPlanScreen extends StatelessWidget {
   /// Screen for editing a weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   EditWeekPlanScreen({
-    @required UsernameModel user,
+    @required DisplayNameModel user,
     @required this.weekModel,
     @required this.selectorBloc,
   }) : _bloc = di.getDependency<EditWeekplanBloc>() {

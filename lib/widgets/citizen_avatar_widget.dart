@@ -1,16 +1,16 @@
 import 'dart:math';
 
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 /// Citizen avatar used for choose citizen screen
 class CitizenAvatar extends StatelessWidget {
   /// Constructor for the citizens avatar
-  const CitizenAvatar({this.usernameModel, this.onPressed});
+  const CitizenAvatar({this.displaynameModel, this.onPressed});
 
   /// Usermodel for displaying a user
-  final UsernameModel usernameModel;
+  final DisplayNameModel displaynameModel;
 
   /// Callback when pressed
   final VoidCallback onPressed;
@@ -59,9 +59,10 @@ class CitizenAvatar extends StatelessWidget {
                           ),
                           child: Center(
                             child: AutoSizeText(
-                              usernameModel.name.length <= 15
-                                  ? usernameModel.name
-                                  : usernameModel.name.substring(0, 14) + '..',
+                              displaynameModel.displayName.length <= 15
+                                  ? displaynameModel.displayName
+                                  : displaynameModel.displayName
+                                                    .substring(0, 14) + '..',
                               key: const Key('WidgetText'),
                               style:
                               TextStyle(fontSize: _isTablet(query) ? 30.0 : 20),

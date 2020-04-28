@@ -1,7 +1,7 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:mockito/mockito.dart';
@@ -24,8 +24,8 @@ void main() {
       accessLevel: null,
       imageUrl: 'http://any.tld',
       imageHash: null);
-  final UsernameModel mockUser =
-      UsernameModel(name: 'User', id: '1', role: null);
+  final DisplayNameModel mockUser =
+  DisplayNameModel(displayName: 'User', id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,
@@ -34,7 +34,7 @@ void main() {
       weekYear: 2019);
 
   WeekplansBloc mockWeekplanSelector;
-  
+
   setUp(() {
     api = Api('any');
     api.week = MockWeekApi();
@@ -72,6 +72,31 @@ void main() {
 
   test('Should save the new weekplan', async(
     (DoneFn done) {
+      bloc.onTitleChanged.add('Ugeplan');
+      bloc.onYearChanged.add('2019');
+      bloc.onWeekNumberChanged.add('42');
+      bloc.onThumbnailChanged.add(mockThumbnail);
+      bloc
+          .saveWeekplan(
+              screenContext: null,
+              existingWeekPlans: mockWeekplanSelector.weekNameModels)
+          .then(
+        (WeekModel w) {
+          verify(api.week.update(any, any, any, any));
+          done();
+        },
+      );
+    },
+  ));
+
+  test('Should save the new weekplan even when there are no existing', async(
+    (DoneFn done) {
+      when(api.week.getNames(any)).thenAnswer(
+          (_) => Observable<List<WeekNameModel>>.just(<WeekNameModel>[]));
+
+      mockWeekplanSelector = WeekplansBloc(api);
+      mockWeekplanSelector.load(mockUser);
+
       bloc.onTitleChanged.add('Ugeplan');
       bloc.onYearChanged.add('2019');
       bloc.onWeekNumberChanged.add('42');

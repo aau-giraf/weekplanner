@@ -1,5 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/cancel_mark_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
@@ -8,7 +9,6 @@ import 'package:api_client/models/enums/orientation_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -25,7 +25,7 @@ class MockUserApi extends Mock implements UserApi {
         department: 3,
         role: Role.Guardian,
         roleName: 'Guardian',
-        screenName: 'Kurt',
+        displayName: 'Kurt',
         username: 'SpaceLord69',
     ));
   }
@@ -35,16 +35,16 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   SettingsBloc settingsBloc;
   Api api;
-  final UsernameModel user = UsernameModel(
+  final DisplayNameModel user = DisplayNameModel(
     role: Role.Citizen.toString(),
-    name: 'Citizen',
+    displayName: 'Citizen',
     id: '1'
   );
   final SettingsModel settings = SettingsModel(
       orientation: Orientation.Portrait,
       completeMark: CompleteMark.Checkmark,
       cancelMark: CancelMark.Cross,
-      defaultTimer: DefaultTimer.AnalogClock,
+      defaultTimer: DefaultTimer.PieChart,
       timerSeconds: 1,
       activitiesCount: 1,
       theme: GirafTheme.GirafYellow,
@@ -108,6 +108,7 @@ void main() {
     });
 
     settingsBloc.updateSettings(user.id, settings);
+    settingsBloc.loadSettings(user);
   }));
 
   test('Should dispose stream', async((DoneFn done) {

@@ -1,8 +1,8 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
@@ -70,8 +70,8 @@ final WeekModel mockWeek = WeekModel(
     weekNumber: 1,
     weekYear: 2019);
 
-final UsernameModel mockUser =
-    UsernameModel(name: 'test', role: 'test', id: 'test');
+final DisplayNameModel mockUser =
+DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
 
 WeekplansBloc mockWeekplanSelector;
 
@@ -342,6 +342,37 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('WeekNumberTextFieldKey')), '20');
     mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
+
+    expect(savedWeekplan, true);
+  });
+
+  testWidgets('Week plan is created even when there are no existing plans',
+      (WidgetTester tester) async {
+    when(api.week.getNames(any)).thenAnswer(
+        (_) => Observable<List<WeekNameModel>>.just(<WeekNameModel>[]));
+
+    mockWeekplanSelector = WeekplansBloc(api);
+    mockWeekplanSelector.load(mockUser);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: NewWeekplanScreen(
+          user: mockUser,
+          existingWeekPlans: mockWeekplanSelector.weekNameModels,
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.enterText(
+        find.byKey(const Key('WeekTitleTextFieldKey')), 'Test');
+    await tester.enterText(
+        find.byKey(const Key('WeekYearTextFieldKey')), '2020');
+    await tester.enterText(
+        find.byKey(const Key('WeekNumberTextFieldKey')), '20');
+    mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
+
     await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
 
     expect(savedWeekplan, true);

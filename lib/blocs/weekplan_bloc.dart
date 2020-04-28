@@ -1,8 +1,8 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -42,7 +42,7 @@ class WeekplanBloc extends BlocBase {
       BehaviorSubject<bool>.seeded(false);
 
   /// Sink to set the currently chosen week
-  void loadWeek(WeekModel week, UsernameModel user) {
+  void loadWeek(WeekModel week, DisplayNameModel user) {
     _api.week
         .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
@@ -82,7 +82,7 @@ class WeekplanBloc extends BlocBase {
   /// set the marked activities as canceled
   void cancelMarkedActivities() {
     final WeekModel week = _userWeek.value.week;
-    final UsernameModel user = _userWeek.value.user;
+    final DisplayNameModel user = _userWeek.value.user;
 
     for (ActivityModel activity in _markedActivities.value) {
       activity.state = ActivityState.Canceled;
@@ -100,7 +100,7 @@ class WeekplanBloc extends BlocBase {
   /// Delete the marked activities when the trash button is clicked
   void deleteMarkedActivities() {
     final WeekModel week = _userWeek.value.week;
-    final UsernameModel user = _userWeek.value.user;
+    final DisplayNameModel user = _userWeek.value.user;
 
     for (WeekdayModel weekday in week.days) {
       weekday.activities.removeWhere(
@@ -119,7 +119,7 @@ class WeekplanBloc extends BlocBase {
   /// Copies the marked activities to the given days
   void copyMarkedActivities(List<bool> days) {
     final WeekModel week = _userWeek.value.week;
-    final UsernameModel user = _userWeek.value.user;
+    final DisplayNameModel user = _userWeek.value.user;
 
     for (int dayOfWeek = 0; dayOfWeek < days.length; dayOfWeek++) {
       if (days[dayOfWeek]) {
@@ -183,7 +183,7 @@ class WeekplanBloc extends BlocBase {
   /// Adds an activity to the given day.
   void addActivity(ActivityModel activity, int day) {
     final WeekModel week = _userWeek.value.week;
-    final UsernameModel user = _userWeek.value.user;
+    final DisplayNameModel user = _userWeek.value.user;
 
     week.days[day].activities.add(activity);
     _api.week
@@ -202,7 +202,7 @@ class WeekplanBloc extends BlocBase {
   void reorderActivities(
       ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
     final WeekModel week = _userWeek.value.week;
-    final UsernameModel user = _userWeek.value.user;
+    final DisplayNameModel user = _userWeek.value.user;
 
     // Removed from dayFrom, the day the pictogram is dragged from
     int dayLength = week.days[dayFrom.index].activities.length;
@@ -230,7 +230,7 @@ class WeekplanBloc extends BlocBase {
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(week, user));
+      _userWeek.add(UserWeekModel(newWeek, user));
     });
   }
 

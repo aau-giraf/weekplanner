@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class NewWeekplanScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
   NewWeekplanScreen({
-    @required UsernameModel user,
+    @required DisplayNameModel user,
     @required this.existingWeekPlans,
   }) : _bloc = di.getDependency<NewWeekplanBloc>() {
     _bloc.initialize(user);
