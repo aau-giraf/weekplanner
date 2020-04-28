@@ -72,35 +72,34 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekplanGridview(BuildContext context) {
     return StreamBuilder<List<WeekModel>>(
-        initialData: const <WeekModel>[],
+        initialData: <WeekModel>[WeekModel(name: 'Tilføj ugeplan')],
         stream: _weekBloc.weekModels,
         builder: (BuildContext context,
             AsyncSnapshot<List<WeekModel>> weekplansSnapshot) {
-          if (weekplansSnapshot.data == null) {
-            return Container();
-          } else {
-            return StreamBuilder<List<WeekModel>>(
-                stream: _weekBloc.markedWeekModels,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
-                  return GridView.count(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      crossAxisCount: MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? 4
-                          : 3,
-                      crossAxisSpacing:
-                          MediaQuery.of(context).size.width / 100 * 1.5,
-                      mainAxisSpacing:
-                          MediaQuery.of(context).size.width / 100 * 1.5,
-                      children:
-                          weekplansSnapshot.data.map((WeekModel weekplan) {
-                        return _buildWeekPlanSelector(context, weekplan,
-                            markedWeeksSnapshot.data.contains(weekplan));
-                      }).toList());
-                });
-          }
+          return StreamBuilder<List<WeekModel>>(
+              stream: _weekBloc.markedWeekModels,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
+                return GridView.count(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    crossAxisCount: MediaQuery.of(context).orientation ==
+                            Orientation.landscape
+                        ? 4
+                        : 3,
+                    crossAxisSpacing:
+                        MediaQuery.of(context).size.width / 100 * 1.5,
+                    mainAxisSpacing:
+                        MediaQuery.of(context).size.width / 100 * 1.5,
+                    children: weekplansSnapshot.data.map((WeekModel weekplan) {
+                      return _buildWeekPlanSelector(
+                        context,
+                        weekplan,
+                        markedWeeksSnapshot.hasData &&
+                            markedWeeksSnapshot.data.contains(weekplan),
+                      );
+                    }).toList());
+              });
         });
   }
 

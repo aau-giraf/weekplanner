@@ -26,11 +26,14 @@ class SettingsSection extends StatelessWidget {
     final Container _titleContainer = Container(
       width: double.infinity,
       color: theme.GirafColors.lightGrey,
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
