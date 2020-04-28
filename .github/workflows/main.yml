@@ -3,7 +3,7 @@ name: CI
 on: [push]
 env:
   flutter_channel: 'stable'
-  flutter_version: '1.12.13+hotfix.9'
+  flutter_version: '1.12.x'
   java_version: '12.x'
 
 jobs:
