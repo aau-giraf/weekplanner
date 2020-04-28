@@ -69,9 +69,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
       Container(
         color: Colors.grey,
         child:
-          Text(
-              "Overståede uger",
-              style: TextStyle(fontWeight: FontWeight.bold),
+          const AutoSizeText(
+            "Overståede uger",
+            style: const TextStyle(fontSize: 18),
+            maxLines: 1,
+            minFontSize: 14,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
           ),
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.fromLTRB(10.0, 3, 0, 3),
