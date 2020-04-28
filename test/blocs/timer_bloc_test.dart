@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -36,19 +38,8 @@ void main() {
     api.activity = mockActivityApi;
     timerMock = TimerBloc(api);
 
-    TestWidgetsFlutterBinding.ensureInitialized();
-
     di.clearAll();
     di.registerDependency<TimerBloc>((_) => timerMock);
-  });
-
-  tearDown(() {
-    api = null;
-    mockActivityApi = null;
-    timerMock = null;
-    activityModel = null;
-
-    di.clearAll();
   });
 
   test('Testing if timer is added to an acitivty without a timer already',
@@ -154,8 +145,8 @@ void main() {
           expect(m, TimerRunningMode.running);
           done();
         });
-
         timerMock.load(activityModel, user: mockUser);
+        sleep(const Duration(milliseconds: 10));
 
         timerMock.initTimer();
       })
@@ -215,6 +206,7 @@ void main() {
         done();
       }
     });
+    sleep(const Duration(milliseconds: 10));
 
     timerMock.playTimer();
   }));

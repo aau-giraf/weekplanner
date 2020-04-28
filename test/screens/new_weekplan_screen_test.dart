@@ -347,37 +347,6 @@ void main() {
     expect(savedWeekplan, true);
   });
 
-  testWidgets('Week plan is created even when there are no existing plans',
-      (WidgetTester tester) async {
-    when(api.week.getNames(any)).thenAnswer(
-        (_) => Observable<List<WeekNameModel>>.just(<WeekNameModel>[]));
-
-    mockWeekplanSelector = WeekplansBloc(api);
-    mockWeekplanSelector.load(mockUser);
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: NewWeekplanScreen(
-          user: mockUser,
-          existingWeekPlans: mockWeekplanSelector.weekNameModels,
-        ),
-      ),
-    );
-
-    await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('WeekTitleTextFieldKey')), 'Test');
-    await tester.enterText(
-        find.byKey(const Key('WeekYearTextFieldKey')), '2020');
-    await tester.enterText(
-        find.byKey(const Key('WeekNumberTextFieldKey')), '20');
-    mockBloc.onThumbnailChanged.add(mockWeek.thumbnail);
-
-    await tester.tap(find.byKey(const Key('NewWeekplanSaveBtnKey')));
-
-    expect(savedWeekplan, true);
-  });
-
   testWidgets('Should show overwrite dialog if trying to overwrite',
       (WidgetTester tester) async {
     await tester.pumpWidget(

@@ -7,12 +7,10 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Screen for uploading a [PictogramModel] to the server
-/// Generic type I used for mocks in testing
 class UploadImageFromPhone extends StatelessWidget {
   /// Default constructor
   UploadImageFromPhone({Key key}) : super(key: key);
@@ -24,6 +22,9 @@ class UploadImageFromPhone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _uploadFromGallery.pictogram.listen((PictogramModel p) {
+      Routes.pop(context, p);
+    });
     return Scaffold(
       appBar: GirafAppBar(title: 'Tilføj fra galleri'),
       body: StreamBuilder<bool>(
@@ -31,12 +32,12 @@ class UploadImageFromPhone extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return snapshot.hasData && snapshot.data
                 ? const LoadingSpinnerWidget()
-                : _buildBody(context);
+                : _buildBody();
           }),
     );
   }
 
-  Padding _buildBody(BuildContext context) {
+  Padding _buildBody() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       child: Column(
@@ -44,13 +45,13 @@ class UploadImageFromPhone extends StatelessWidget {
         children: <Widget>[
           _buildDefaultText(),
           _buildImageBox(),
-          _buildInputField(context),
+          _buildInputField(),
         ],
       ),
     );
   }
 
-  Column _buildInputField(BuildContext context) {
+  Column _buildInputField() {
     return Column(
       children: <Widget>[
         Row(
@@ -94,16 +95,9 @@ class UploadImageFromPhone extends StatelessWidget {
           width: 250,
           height: 50,
           child: GirafButton(
-            key: const Key('SavePictogramButtonKey'),
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-            text: 'Gem',
-            onPressed: () {
-              _uploadFromGallery.createPictogram().listen((PictogramModel p) {
-                Routes.pop(context, p);
-              }, onError: (Object error) {
-                _showUploadError(context);
-              });
-            },
+            text: 'Gem billede',
+            onPressed: _uploadFromGallery.createPictogram,
             isEnabledStream: _uploadFromGallery.isInputValid,
           ),
         ),
@@ -140,19 +134,6 @@ class UploadImageFromPhone extends StatelessWidget {
                     ? _displayImage(snapshot.data)
                     : _displayIfNoImage()),
       ),
-    );
-  }
-
-  void _showUploadError(BuildContext context) {
-    showDialog<Center>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const GirafNotifyDialog(
-          title: 'Fejl',
-          description: 'Upload af pictogram fejlede.',
-        );
-      },
     );
   }
 
