@@ -122,7 +122,7 @@ jobs:
           xcodebuild -exportArchive \
                      -archivePath $PWD/build/Runner.xcarchive \
                      -exportOptionsPlist Runner/ExportOptions.plist \
-                     -exportPath $PWD/build/Runner.ipa
+                     -exportPath $PWD/build/ipa
 
         name: Build for iOS
         env:
@@ -131,7 +131,7 @@ jobs:
         uses: actions/upload-artifact@v1.0.0
         with:
           name: Giraf Weekplanner iOS
-          path: ios/build/Runner.ipa
+          path: ios/build/ipa
 
   deploy-to-appstore:
     if: github.ref == 'refs/heads/feature/appstore-ios'
@@ -143,6 +143,7 @@ jobs:
         uses: actions/download-artifact@v1.0.0
         with:
           name: Giraf Weekplanner iOS
-          path: ios/build/Runner.ipa
-      - run: xcrun altool --upload-app --file ios/build/Runner.ipa --type ios --username "${{ secrets.APPSTORE_USERNAME }}" --password "${{ secrets.APPSTORE_PASSWORD }}"
+          path: ios/build/ipa
+      - run: ls -alh ios/build/ipa
+      - run: xcrun altool --upload-app --file ios/build/ipa/Runner.ipa --type ios --username "${{ secrets.APPSTORE_USERNAME }}" --password "${{ secrets.APPSTORE_PASSWORD }}"
         name: Upload IPA
