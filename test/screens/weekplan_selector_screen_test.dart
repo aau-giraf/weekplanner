@@ -23,7 +23,6 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/copy_resolve_screen.dart';
-import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';

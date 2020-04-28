@@ -17,7 +17,6 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 import 'edit_weekplan_screen_test.dart';
 

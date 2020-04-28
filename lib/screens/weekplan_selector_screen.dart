@@ -40,7 +40,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (waitAndUpdate){
-      Future.delayed(Duration(milliseconds: 500), () {
+      // ignore: always_specify_types
+      Future.delayed(const Duration(milliseconds: 500), () {
         _weekBloc.notifyUpdate();
       });
     }

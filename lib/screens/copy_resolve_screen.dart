@@ -9,6 +9,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
 
 /// Screen for creating a new weekplan.
+// ignore: must_be_immutable
 class CopyResolveScreen extends StatelessWidget {
   /// Screen for creating a new weekplan.
   /// Requires a [UsernameModel] to be able to save the new weekplan.
@@ -19,7 +20,7 @@ class CopyResolveScreen extends StatelessWidget {
     this.copyBloc,
   }) : _bloc = di.getDependency<CopyResolveBloc>() {
     _bloc.initializeCopyResolverBloc(currentUser, weekModel);
-    copyBloc ??= di.getDependency<CopyWeekplanBloc>();
+    copyBloc = di.getDependency<CopyWeekplanBloc>();
   }
 
   final CopyResolveBloc _bloc;
@@ -28,7 +29,7 @@ class CopyResolveScreen extends StatelessWidget {
   final bool forThisCitizen;
 
   /// An instance of the copyWeekplanBloc.
-  CopyWeekplanBloc copyBloc;
+  CopyWeekplanBloc copyBloc = di.getDependency<CopyWeekplanBloc>();
 
   /// The user that is being copied from
   final UsernameModel currentUser;
