@@ -54,7 +54,7 @@ jobs:
       - name: Publish
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: dk.aau.cs.giraf.weekplanner
           releaseFile: build/bundle/weekplanner.aab
 
