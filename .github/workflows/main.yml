@@ -28,8 +28,8 @@ jobs:
         name: Linter
       - run: flutter test
         name: Tests
-      - run: flutter build apk
-        name: Build APK
+      - run: flutter build appbundle
+        name: Build appbundle for Play Store
 
   build-and-test-ios:
     name: iOS on ${{ matrix.os }}
