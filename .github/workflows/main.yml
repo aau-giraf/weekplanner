@@ -106,7 +106,7 @@ jobs:
       - run: flutter test
         name: Tests
       - run: |
-          flutter build ios --build-number=$GITHUB_RUN_NUMBER
+          flutter build ios --release --build-number=$GITHUB_RUN_NUMBER
           cd build/ios/iphoneos
           mkdir Payload
           cd Payload
