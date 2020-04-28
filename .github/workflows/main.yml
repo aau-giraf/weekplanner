@@ -130,7 +130,7 @@ jobs:
         uses: actions/upload-artifact@v1.0.0
         with:
           name: Giraf Weekplanner iOS
-          path: build/ios/iphoneos/Runner.ipa
+          path: ios/build/Runner.ipa
 
   deploy-to-appstore:
     if: github.ref == 'refs/heads/feature/appstore-ios'
@@ -144,10 +144,10 @@ jobs:
           # Artifact name
           name: Giraf Weekplanner
           # Destination path
-          path: build/ios/iphoneos/Runner.ipa
+          path: ios/build/Runner.ipa
       - uses: Apple-Actions/upload-testflight-build@master
         with:
-          app-path: 'build/ios/iphoneos/Runner.ipa'
+          app-path: 'ios/build/Runner.ipa'
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
