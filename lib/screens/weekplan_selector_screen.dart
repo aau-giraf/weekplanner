@@ -8,6 +8,8 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/copy_resolve_screen.dart';
+import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
@@ -16,6 +18,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -23,7 +26,7 @@ import '../style/custom_color.dart' as theme;
 class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
-  WeekplanSelectorScreen(this._user)
+  WeekplanSelectorScreen(this._user, {this.waitAndUpdate = false})
       : _weekBloc = di.getDependency<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
@@ -31,8 +34,18 @@ class WeekplanSelectorScreen extends StatelessWidget {
   final WeekplansBloc _weekBloc;
   final UsernameModel _user;
 
+  /// Bool that tells whether the bloc should update after a while
+  final bool waitAndUpdate;
+
   @override
   Widget build(BuildContext context) {
+    if (waitAndUpdate){
+      // ignore: always_specify_types
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _weekBloc.notifyUpdate();
+      });
+    }
+
     return Scaffold(
         appBar: GirafAppBar(
           title: _user.name,
@@ -59,34 +72,35 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   Widget _buildWeekplanGridview(BuildContext context) {
     return StreamBuilder<List<WeekModel>>(
-        initialData: <WeekModel>[WeekModel(name: 'Tilføj ugeplan')],
+        initialData: const <WeekModel>[],
         stream: _weekBloc.weekModels,
         builder: (BuildContext context,
             AsyncSnapshot<List<WeekModel>> weekplansSnapshot) {
-          return StreamBuilder<List<WeekModel>>(
-              stream: _weekBloc.markedWeekModels,
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
-                return GridView.count(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    crossAxisCount: MediaQuery.of(context).orientation ==
-                            Orientation.landscape
-                        ? 4
-                        : 3,
-                    crossAxisSpacing:
-                        MediaQuery.of(context).size.width / 100 * 1.5,
-                    mainAxisSpacing:
-                        MediaQuery.of(context).size.width / 100 * 1.5,
-                    children: weekplansSnapshot.data.map((WeekModel weekplan) {
-                      return _buildWeekPlanSelector(
-                        context,
-                        weekplan,
-                        markedWeeksSnapshot.hasData &&
-                            markedWeeksSnapshot.data.contains(weekplan),
-                      );
-                    }).toList());
-              });
+          if (weekplansSnapshot.data == null) {
+            return Container();
+          } else {
+            return StreamBuilder<List<WeekModel>>(
+                stream: _weekBloc.markedWeekModels,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
+                  return GridView.count(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      crossAxisCount: MediaQuery.of(context).orientation ==
+                              Orientation.landscape
+                          ? 4
+                          : 3,
+                      crossAxisSpacing:
+                          MediaQuery.of(context).size.width / 100 * 1.5,
+                      mainAxisSpacing:
+                          MediaQuery.of(context).size.width / 100 * 1.5,
+                      children:
+                          weekplansSnapshot.data.map((WeekModel weekplan) {
+                        return _buildWeekPlanSelector(context, weekplan,
+                            markedWeeksSnapshot.data.contains(weekplan));
+                      }).toList());
+                });
+          }
         });
   }
 
@@ -246,8 +260,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
                       isEnabled: false,
-                      isEnabledStream: _weekBloc.editingIsValidStream(),
+                      isEnabledStream: _weekBloc.onlyOneModelMarkedStream(),
                       onPressed: () => _pushEditWeekPlan(context)),
+                  BottomAppBarButton(
+                      buttonText: 'Kopiér',
+                      buttonKey: 'CopyWeekplanButton',
+                      assetPath: 'assets/icons/copy.png',
+                      isEnabled: false,
+                      isEnabledStream: _weekBloc.onlyOneModelMarkedStream(),
+                      dialogFunction: _buildCopyDialog),
                   BottomAppBarButton(
                       buttonText: 'Slet',
                       buttonKey: 'DeleteActivtiesButton',
@@ -271,6 +292,39 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
+  }
+
+  ///Builds dialog box to select where to copy weekplan or cancel
+  Future<Center> _buildCopyDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Giraf3ButtonDialog(
+            title: 'Kopiér ugeplaner',
+            description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
+            option1Text: 'Anden borger',
+            option1OnPressed: () {
+              Routes.push(
+                  context,
+                  CopyToCitizensScreen(
+                      _weekBloc.getMarkedWeekModels()[0], _user));
+            },
+            option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+            option2Text: 'Denne borger',
+            option2OnPressed: () {
+              Routes.push(
+                context,
+                CopyResolveScreen(
+                  currentUser: _user,
+                  weekModel: _weekBloc.getMarkedWeekModels()[0],
+                  forThisCitizen: true,
+                )
+              );
+            },
+            option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+          );
+        });
   }
 
   /// Builds dialog box to confirm/cancel deletion

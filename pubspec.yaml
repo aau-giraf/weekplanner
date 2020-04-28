@@ -24,7 +24,6 @@ dependencies:
   image: ^2.0.7
   quiver: '>=2.0.0 <3.0.0'
   mutex: ^1.0.1
-  material_design_icons_flutter: ^3.2.3895
   audioplayers:
 
 dev_dependencies:

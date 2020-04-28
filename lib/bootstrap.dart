@@ -2,8 +2,8 @@ import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
-import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -18,6 +18,8 @@ import 'package:weekplanner/di.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
+
+import 'blocs/copy_resolve_bloc.dart';
 
 /// Bootstrap the project
 class Bootstrap {
@@ -62,10 +64,6 @@ class Bootstrap {
       return NewWeekplanBloc(i.getDependency<Api>());
     });
 
-    di.registerSingleton<NewCitizenBloc>((Injector i) {
-      return NewCitizenBloc(i.getDependency<Api>());
-    });
-
     di.registerDependency<EditWeekplanBloc>((Injector i) {
       return EditWeekplanBloc(i.getDependency<Api>());
     });
@@ -93,5 +91,14 @@ class Bootstrap {
     di.registerDependency<TimerBloc>((Injector i) {
       return TimerBloc(i.getDependency<Api>());
     });
+
+    di.registerDependency<CopyWeekplanBloc>((Injector i) {
+      return CopyWeekplanBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency<CopyResolveBloc>((Injector i) {
+      return CopyResolveBloc(i.getDependency<Api>());
+    });
+
   }
 }

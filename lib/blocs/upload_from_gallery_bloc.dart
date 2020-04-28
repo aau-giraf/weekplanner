@@ -25,9 +25,14 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Publishes the accessLevel for the pictogram
   Observable<String> get accessLevel => _accessString.stream;
 
+  /// The latest uploaded pictogram
+  Observable<PictogramModel> get pictogram => _pictogram.stream;
+
   /// Publishes if the input fields are filled
   Observable<bool> get isInputValid => _isInputValid.stream;
 
+  final PublishSubject<PictogramModel> _pictogram =
+      PublishSubject<PictogramModel>();
   final BehaviorSubject<bool> _isInputValid =
       BehaviorSubject<bool>.seeded(false);
   final BehaviorSubject<File> _file = BehaviorSubject<File>();
@@ -51,8 +56,7 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null && _pictogramName != null &&
-        _pictogramName.isNotEmpty) {
+    if (_file.value != null && _pictogramName.isNotEmpty) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
@@ -91,21 +95,23 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
-  Observable<PictogramModel> createPictogram() {
+  void createPictogram() {
     _isUploading.add(true);
-    return _api.pictogram
+    _api.pictogram
         .create(PictogramModel(
       accessLevel: _accessLevel,
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {
       return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
-    }).map((PictogramModel pictogram) {
+    }).listen((PictogramModel pictogram) {
+      // TODO(scarress):  add proper succeses handling, https://github.com/aau-giraf/weekplanner/issues/245
       _isUploading.add(false);
-      return pictogram;
-    }).doOnError((Object error, StackTrace trace) {
+      _pictogram.add(pictogram);
+    }, onError: (Object error) {
+      // TODO(scarress):  add error handling, https://github.com/aau-giraf/weekplanner/issues/245
       _isUploading.add(false);
-    }).take(1);
+    });
   }
 
   @override
