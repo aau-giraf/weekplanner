@@ -29,6 +29,8 @@ jobs:
       - run: flutter test
         name: Tests
       - run: flutter build appbundle
+        env:
+          GIRAF_KEYSTORE_PASSWORD: ${{ secrets.GIRAF_KEYSTORE_PASSWORD }}
         name: Build appbundle for Play Store
 
   build-and-test-ios:
