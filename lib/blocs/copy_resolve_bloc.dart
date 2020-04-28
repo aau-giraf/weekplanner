@@ -40,7 +40,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
     newWeekModel.name = super.titleController.value;
     newWeekModel.weekYear = int.parse(super.yearController.value);
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
-    int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
+    final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
         newWeekModel, currentUser, forThisCitizen);
 
     if (numberOfConflicts > 0) {
@@ -70,7 +70,8 @@ class CopyResolveBloc extends NewWeekplanBloc {
             description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
                 ', år: $year) hos $numberOfConflicts af borgerne. '
                 'Vil du overskrive '
-                '${numberOfConflicts == 1 ? "denne ugeplan" : "disse ugeplaner"} ?',
+                '${numberOfConflicts == 1 ? "denne ugeplan" :
+                      "disse ugeplaner"} ?',
             confirmButtonText: 'Ja',
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),

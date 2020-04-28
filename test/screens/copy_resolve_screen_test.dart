@@ -31,7 +31,9 @@ void main() {
     final WeekModel weekplan1 = WeekModel(
         thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
     await tester.pumpWidget(MaterialApp(
-        home: CopyResolveScreen(currentUser: mockUser, weekModel: weekplan1)));
+        home: CopyResolveScreen(currentUser: mockUser,
+            weekModel: weekplan1,
+            forThisCitizen: false)));
     expect(find.byType(CopyResolveScreen), findsOneWidget);
   });
 }
