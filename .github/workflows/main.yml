@@ -120,7 +120,7 @@ jobs:
 
           xcodebuild -exportArchive \
                      -archivePath $PWD/build/Runner.xcarchive \
-                     -exportOptionsPlist ios/Runner/ExportOptions.plist \
+                     -exportOptionsPlist Runner/ExportOptions.plist \
                      -exportPath $PWD/build/Runner.ipa
 
         name: Build for iOS
