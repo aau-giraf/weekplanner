@@ -38,12 +38,10 @@ class SettingsBloc extends BlocBase {
   }
 
   /// Update an existing settingsModel
-  void updateSettings(String userId, SettingsModel settingsModel) {
-    _api.user
-        .updateSettings(userId, settingsModel)
-        .listen((SettingsModel updated) {
-      _settings.add(updated);
-    });
+  Observable<SettingsModel> updateSettings(
+      String userId, SettingsModel settingsModel) {
+    return _api.user
+        .updateSettings(userId, settingsModel);
   }
 
   /// Set the theme to be used
