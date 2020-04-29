@@ -27,8 +27,7 @@ class PictogramText extends StatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
-            // TODO(klogeat): Bind this boolean to the real settings value
-            const bool hasPictogramText = false;
+            final bool hasPictogramText = settingsSnapshot.data.pictogramText;
             if (hasPictogramText) {
               final String pictogramText = _pictogram.title.toUpperCase();
               return SizedBox(

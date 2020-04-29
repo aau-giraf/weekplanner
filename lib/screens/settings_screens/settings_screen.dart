@@ -100,7 +100,16 @@ class SettingsScreen extends StatelessWidget {
                         : 'Mandag til søndag'),
               ),
               SettingsCheckMarkButton.fromBoolean(
-                  false, 'Piktogram tekst er synlig', () {}),
+                  settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
+                  settingsModel.pictogramText = !settingsModel.pictogramText;
+                  _settingsBloc.updateSettings(
+                      _user.id, settingsModel)
+                      .listen((SettingsModel response) {
+                    if (response != null) {
+                      _settingsBloc.loadSettings(_user);
+                    }
+                  });
+              }),
             ]);
           } else {
             return const Center(
