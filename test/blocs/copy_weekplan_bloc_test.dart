@@ -1,9 +1,9 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,16 +19,16 @@ class MockUserApi extends Mock implements UserApi {
       department: 3,
       role: Role.Guardian,
       roleName: 'Guardian',
-      screenName: 'Kurt',
+      displayName: 'Kurt',
       username: 'SpaceLord69'));
   }
 
   @override
-  Observable<List<UsernameModel>> getCitizens(String id) {
-    final List<UsernameModel> output = <UsernameModel>[];
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
+  Observable<List<DisplayNameModel>> getCitizens(String id) {
+    final List<DisplayNameModel> output = <DisplayNameModel>[];
+    output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
 
-    return Observable<List<UsernameModel>>.just(output);
+    return Observable<List<DisplayNameModel>>.just(output);
   }
 }
 
@@ -54,14 +54,15 @@ class MockWeekApi extends Mock implements WeekApi {
 void main() {
   CopyWeekplanBloc bloc;
   Api api;
-  UsernameModel user;
+  DisplayNameModel user;
   WeekModel weekplan1;
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
     api.week = MockWeekApi();
     bloc = CopyWeekplanBloc(api);
-    user = UsernameModel(name: 'Hans', role: Role.Citizen.toString(), id: '1');
+    user = DisplayNameModel(
+        displayName: 'Hans', role: Role.Citizen.toString(), id: '1');
     weekplan1 = WeekModel(
       thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
   });
@@ -69,7 +70,7 @@ void main() {
   test('toggleMarkedUserModel', async((DoneFn done) {
     bloc.toggleMarkedUserModel(user);
 
-    bloc.markedUserModels.listen((List<UsernameModel> response) {
+    bloc.markedUserModels.listen((List<DisplayNameModel> response) {
       expect(response.contains(user), true);
     });
     done();
@@ -79,18 +80,18 @@ void main() {
     'copies the weekplan to the citizens', async((DoneFn done) {
 
     for (int i = 0; i < 10; i++) {
-      final UsernameModel user = UsernameModel(
-        name: 'Hans', role: Role.Citizen.toString(), id: i.toString());
+      final DisplayNameModel user = DisplayNameModel(
+        displayName: 'Hans', role: Role.Citizen.toString(), id: i.toString());
       bloc.toggleMarkedUserModel(user);
-      bloc.markedUserModels.listen((List<UsernameModel> markedUsers) {
+      bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
         expect(markedUsers.contains(user), true);
       });
     }
 
     bloc.copyWeekplan(weekplan1, user, false);
 
-    bloc.markedUserModels.listen((List<UsernameModel> markedUsers) {
-      for (UsernameModel user in markedUsers){
+    bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
+      for (DisplayNameModel user in markedUsers){
         expect(map.containsKey(user.id), true);
         expect(map[user.id], weekplan1);
       }

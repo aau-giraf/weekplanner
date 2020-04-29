@@ -426,8 +426,8 @@ void main() {
     bool editingIsValid;
 
     final StreamSubscription<bool> listenForValid1 =
-        bloc.onlyOneModelMarkedStream().listen((bool b) {
-      expect(b, true);
+    bloc.onlyOneModelMarkedStream().listen((bool b) {
+      editingIsValid = b;
     });
 
     await tester.tap(find.byKey(Key(weekModel1.name)));

@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
@@ -32,7 +32,7 @@ class CopyResolveScreen extends StatelessWidget {
   CopyWeekplanBloc copyBloc = di.getDependency<CopyWeekplanBloc>();
 
   /// The user that is being copied from
-  final UsernameModel currentUser;
+  final DisplayNameModel currentUser;
 
   /// The weekModel that is being copied
   final WeekModel weekModel;
@@ -61,3 +61,4 @@ class CopyResolveScreen extends StatelessWidget {
     );
   }
 }
+

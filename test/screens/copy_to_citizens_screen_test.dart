@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,13 +28,13 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
-  Observable<List<UsernameModel>> getCitizens(String id) {
-    final List<UsernameModel> output = <UsernameModel>[];
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
-    output.add(UsernameModel(name: 'test1', role: 'test1', id: id));
-    return Observable<List<UsernameModel>>.just(output);
+  Observable<List<DisplayNameModel>> getCitizens(String id) {
+    final List<DisplayNameModel> output = <DisplayNameModel>[];
+    output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
+    output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
+    output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
+    output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
+    return Observable<List<DisplayNameModel>>.just(output);
   }
 }
 
@@ -82,7 +82,7 @@ void main() {
     await tester.pumpWidget(
         MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
     await tester.pumpAndSettle();
-    bloc.citizen.listen((List<UsernameModel> response) {
+    bloc.citizen.listen((List<DisplayNameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
       done.complete(true);
     });

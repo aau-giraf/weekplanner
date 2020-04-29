@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
@@ -21,7 +21,7 @@ class CopyToCitizensScreen extends StatelessWidget {
 
   final CopyWeekplanBloc _bloc = di.getDependency<CopyWeekplanBloc>();
   final WeekModel _copiedWeekModel;
-  final UsernameModel _currentUser;
+  final DisplayNameModel _currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -111,21 +111,21 @@ class CopyToCitizensScreen extends StatelessWidget {
       MediaQuery
         .of(context)
         .orientation == Orientation.portrait;
-    return StreamBuilder<List<UsernameModel>>(
-      initialData: const <UsernameModel>[],
+    return StreamBuilder<List<DisplayNameModel>>(
+      initialData: const <DisplayNameModel>[],
       stream: _bloc.citizen,
       builder: (BuildContext context,
-        AsyncSnapshot<List<UsernameModel>> usersSnapshot) {
+        AsyncSnapshot<List<DisplayNameModel>> usersSnapshot) {
         if (usersSnapshot.data == null) {
           return Container();
         } else {
-          return StreamBuilder<List<UsernameModel>>(
+          return StreamBuilder<List<DisplayNameModel>>(
             stream: _bloc.markedUserModels,
             builder: (BuildContext context,
-              AsyncSnapshot<List<UsernameModel>> markedUsersSnapshot) {
+              AsyncSnapshot<List<DisplayNameModel>> markedUsersSnapshot) {
               return GridView.count(
                 crossAxisCount: portrait ? 2 : 4,
-                children: usersSnapshot.data.map((UsernameModel user) {
+                children: usersSnapshot.data.map((DisplayNameModel user) {
                   return _buildUserSelector(context, user,
                     markedUsersSnapshot.data.contains(user));
                 }).toList());
@@ -134,10 +134,10 @@ class CopyToCitizensScreen extends StatelessWidget {
       });
   }
 
-  Widget _buildUserSelector(BuildContext context, UsernameModel user,
+  Widget _buildUserSelector(BuildContext context, DisplayNameModel user,
     bool isMarked) {
     final CitizenAvatar avatar = CitizenAvatar(
-      usernameModel: user,
+      displaynameModel: user,
       onPressed: () => _bloc.toggleMarkedUserModel(user));
 
     if (isMarked) {

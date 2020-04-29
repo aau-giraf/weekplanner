@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,8 +26,8 @@ void main() {
   });
 
   testWidgets('Renders CopyResolveScreen', (WidgetTester tester) async {
-    final UsernameModel mockUser =
-        UsernameModel(name: 'test', role: 'test', id: 'test');
+    final DisplayNameModel mockUser =
+      DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
     final WeekModel weekplan1 = WeekModel(
         thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
     await tester.pumpWidget(MaterialApp(

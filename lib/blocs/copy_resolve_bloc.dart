@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/api/api.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
@@ -16,7 +16,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
 
   /// This method should always be called before using the bloc, because
   /// it fills out the initial values of the week model object
-  void initializeCopyResolverBloc(UsernameModel user, WeekModel weekModel) {
+  void initializeCopyResolverBloc(DisplayNameModel user, WeekModel weekModel) {
     super.initialize(user);
     // We just take the values out of the week model and put into our sink
     super.onTitleChanged.add(weekModel.name);
@@ -31,7 +31,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
       BuildContext context,
       WeekModel oldWeekModel,
       CopyWeekplanBloc copyBloc,
-      UsernameModel currentUser,
+      DisplayNameModel currentUser,
       bool forThisCitizen) async {
     final WeekModel newWeekModel = WeekModel();
     newWeekModel.days = oldWeekModel.days;
@@ -59,7 +59,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
   }
 
   Future<bool> _displayConflictDialog(BuildContext context, int weekNumber,
-      int year, int numberOfConflicts, UsernameModel currentUser) {
+      int year, int numberOfConflicts, DisplayNameModel currentUser) {
     final Completer<bool> dialogCompleter = Completer<bool>();
     showDialog<Center>(
         context: context,
@@ -89,7 +89,7 @@ class CopyResolveBloc extends NewWeekplanBloc {
     return dialogCompleter.future;
   }
 
-  void _returnToSelectorScreen(BuildContext context, UsernameModel user) {
+  void _returnToSelectorScreen(BuildContext context, DisplayNameModel user) {
     Routes.goHome(context);
     Routes.push(context, WeekplanSelectorScreen(user, waitAndUpdate: true));
   }
