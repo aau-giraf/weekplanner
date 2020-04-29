@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -31,7 +31,7 @@ class NewWeekplanBloc extends BlocBase {
   /// This field is used to get the userId. Accessed in
   /// [edit_weekplan_bloc].
   @protected
-  UsernameModel weekUser;
+  DisplayNameModel weekUser;
 
   /// This field controls the title input field
   @protected
@@ -102,7 +102,7 @@ class NewWeekplanBloc extends BlocBase {
   /// Resets the bloc if it already contains information from the last time it
   /// was used. Switches user to the one provided.
   /// This method should always be called before using the bloc.
-  void initialize(UsernameModel user) {
+  void initialize(DisplayNameModel user) {
     if (weekUser != null) {
       resetBloc();
     }

@@ -1,7 +1,7 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 
@@ -20,10 +20,10 @@ class ActivityBloc extends BlocBase {
 
   final Api _api;
   ActivityModel _activityModel;
-  UsernameModel _user;
+  DisplayNameModel _user;
 
   /// Loads the ActivityModel and the GirafUser.
-  void load(ActivityModel activityModel, UsernameModel user) {
+  void load(ActivityModel activityModel, DisplayNameModel user) {
     _activityModel = activityModel;
     _user = user;
     _activityModelStream.add(activityModel);
