@@ -44,7 +44,7 @@ void main() {
       orientation: Orientation.Portrait,
       completeMark: CompleteMark.Checkmark,
       cancelMark: CancelMark.Cross,
-      defaultTimer: DefaultTimer.AnalogClock,
+      defaultTimer: DefaultTimer.PieChart,
       timerSeconds: 1,
       activitiesCount: 1,
       theme: GirafTheme.GirafYellow,

@@ -17,6 +17,9 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
+
+SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -27,50 +30,25 @@ class MockUserApi extends Mock implements UserApi {
 
   @override
   Observable<SettingsModel> getSettings(String id) {
-    final SettingsModel settingsModel = SettingsModel(
-        orientation: null,
-        completeMark: null,
-        cancelMark: null,
-        defaultTimer: null,
-        theme: null,
-        nrOfDaysToDisplay: 1,
-        weekDayColors: createWeekDayColors()
-    );
-
-    return Observable<SettingsModel>.just(settingsModel);
+    return Observable<SettingsModel>.just(mockSettings);
   }
 
-
-  static List<WeekdayColorModel>createWeekDayColors() {
+  static List<WeekdayColorModel> createWeekDayColors() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Monday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Tuesday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Wednesday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Thursday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Friday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Saturday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Sunday
-    ));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Monday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Tuesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Wednesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Thursday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Friday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Saturday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Sunday));
 
     return weekDayColors;
   }
@@ -78,6 +56,7 @@ class MockUserApi extends Mock implements UserApi {
 
 void main() {
   Api api;
+  SettingsBloc settingsBloc;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
@@ -87,10 +66,25 @@ void main() {
     api = Api('any');
     api.user = MockUserApi();
 
+    mockSettings = SettingsModel(
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      defaultTimer: null,
+      theme: null,
+      nrOfDaysToDisplay: 1,
+      weekDayColors: MockUserApi.createWeekDayColors(),
+      lockTimerControl: false,
+    );
+
+    when(api.user.updateSettings(any, any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
+
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-
+    settingsBloc = SettingsBloc(api);
+    di.registerDependency<SettingsBloc>((_) => settingsBloc);
   });
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {
@@ -139,5 +133,36 @@ void main() {
     await tester.tap(find.text('Farver på ugeplan'));
     await tester.pumpAndSettle();
     expect(find.byType(ColorThemeSelectorScreen), findsOneWidget);
+  });
+
+  testWidgets('Settings has TimerControl checkbox without an checkmark',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
+            widget.text == 'Lås tidsstyring'),
+        findsOneWidget);
+  });
+
+  testWidgets('Tapping the TimerControl checkbox changes the current value',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
+
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+        widget.current == 2 &&
+        widget.text == 'Lås tidsstyring'));
+    await tester.pump();
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+            widget.current == 1 &&
+            widget.text == 'Lås tidsstyring'),
+        findsOneWidget);
   });
 }
