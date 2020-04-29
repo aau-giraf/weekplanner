@@ -39,8 +39,8 @@ class NewCitizenScreen extends StatelessWidget {
                       border: const OutlineInputBorder(borderSide:
                       BorderSide()),
                       labelText: 'Navn',
-                      errorText: (snapshot?.data == false) ?
-                      'Navn skal udfyldes' : null,
+                      errorText: (snapshot?.data == true) ?
+                      null : 'Navn skal udfyldes',
                   ),
                   onChanged: _bloc.onDisplayNameChange.add,
                 );
@@ -57,9 +57,9 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Brugernavn',
-                    errorText: (snapshot?.data == false) ?
-                    'Brugernavn må ikke indeholde mellemrum eller være tom'
-                        : null,
+                    errorText: (snapshot?.data == true) ?
+                    null :
+                    'Brugernavn må ikke indeholde mellemrum eller være tom',
                   ),
                   onChanged: _bloc.onUsernameChange.add,
                 );
@@ -76,8 +76,8 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Kodeord',
-                    errorText: (snapshot?.data == false) ?
-                    'Kodeord må ikke indeholde mellemrum eller være tom' : null,
+                    errorText: (snapshot?.data == true) ?
+                    null : 'Kodeord må ikke indeholde mellemrum eller være tom',
                   ),
                   onChanged: _bloc.onPasswordChange.add,
                   obscureText: true,
@@ -95,8 +95,8 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Gentag kodeord',
-                    errorText: (snapshot?.data == false) ?
-                    'Kodeord skal være ens' : null,
+                    errorText: (snapshot?.data == true) ?
+                    null : 'Kodeord skal være ens',
                   ),
                   onChanged: _bloc.onPasswordVerifyChange.add,
                   obscureText: true,
