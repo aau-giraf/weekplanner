@@ -57,7 +57,7 @@ jobs:
           name: Giraf Weekplanner
           path: build/app/outputs/bundle/release
   deploy-to-playstore:
-    if: github.ref == 'refs/heads/feature/appstore-ios'
+    if: github.ref == 'refs/heads/master'
     needs: build-and-test-android
     name: Upload to Google Play Store
     runs-on: ubuntu-latest
@@ -137,7 +137,7 @@ jobs:
           path: ios/build/ipa
 
   deploy-to-appstore:
-    if: github.ref == 'refs/heads/feature/appstore-ios'
+    if: github.ref == 'refs/heads/master'
     needs: build-and-test-ios
     name: Upload to Apple AppStore
     runs-on: macos-latest
