@@ -4,18 +4,19 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 
+import 'package:weekplanner/di.dart';
+
 /// This is a widget used to create text under the pictograms
 class PictogramText extends StatelessWidget {
   /// Constructor
-  const PictogramText(this._pictogram, this._settingsBloc,
-      {this.minFontSize = 100});
+  PictogramText(this._pictogram, {this.minFontSize = 100});
 
   /// The pictogram to build the text for
   final PictogramModel _pictogram;
 
   /// The settings bloc which we get the settings from, you need to make sure
   /// you have loaded settings into it before hand otherwise text is never build
-  final SettingsBloc _settingsBloc;
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   /// Determines the minimum font size that text can scale down to
   final double minFontSize;
