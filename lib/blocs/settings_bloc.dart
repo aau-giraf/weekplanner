@@ -40,7 +40,6 @@ class SettingsBloc extends BlocBase {
   /// Update an existing settingsModel
   Observable<SettingsModel> updateSettings(
       String userId, SettingsModel settingsModel) {
-    _settings.add(settingsModel);
     return _api.user
         .updateSettings(userId, settingsModel);
   }
