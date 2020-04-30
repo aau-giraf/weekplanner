@@ -722,7 +722,7 @@ class WeekplanScreen extends StatelessWidget {
                   _buildTimerIcon(context, activities[index]),
                 ],
               ),
-              PictogramText(activities[index].pictogram),
+              PictogramText(activities[index].pictogram, _user),
             ],
           ),
         ));

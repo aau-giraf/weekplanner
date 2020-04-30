@@ -1,3 +1,4 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -9,7 +10,11 @@ import 'package:weekplanner/di.dart';
 /// This is a widget used to create text under the pictograms
 class PictogramText extends StatelessWidget {
   /// Constructor
-  PictogramText(this._pictogram, {this.minFontSize = 100});
+  PictogramText(this._pictogram, this._user, {this.minFontSize = 100}) {
+    _settingsBloc.loadSettings(_user);
+  }
+
+  final DisplayNameModel _user;
 
   /// The pictogram to build the text for
   final PictogramModel _pictogram;
