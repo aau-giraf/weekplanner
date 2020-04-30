@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="girafBackground">#E2A029</color>
+    <color name="ic_launcher_background">#E2A029</color>
+
     <!-- Theme applied to the Android Window while the process is starting -->
     <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <!-- Show a splash screen on the activity. Automatically removed when
