@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -10,17 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
-import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 
-import '../blocs/pictogram_bloc_test.dart';
-import '../screens/settings_screens/settings_screen_test.dart';
-import '../test_image.dart';
 
 SettingsModel mockSettings;
 
@@ -80,7 +73,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(Container), findsOneWidget);
-    expect(find.text('SomeTitle'), findsNothing);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsNothing);
   });
 
   testWidgets('Pictogram text is displayed when true',
@@ -91,6 +85,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
-    //expect(find.text('SomeTitle'), findsOneWidget);
+    final String title =  pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
   });
 }
