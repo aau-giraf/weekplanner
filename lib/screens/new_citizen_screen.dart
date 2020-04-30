@@ -98,8 +98,8 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Gentag kodeord',
-                    errorText: (snapshot?.data == false) ?
-                    'Kodeord skal være ens' : null,
+                    errorText: (snapshot?.data == true) ?
+                    null : 'Kodeord skal være ens',
                   ),
                   onChanged: _bloc.onPasswordVerifyChange.add,
                   obscureText: true,
