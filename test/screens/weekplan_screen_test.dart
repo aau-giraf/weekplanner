@@ -22,6 +22,8 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 
@@ -44,6 +46,7 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   WeekplanBloc weekplanBloc;
   Api api;
+  AuthBloc authBloc;
 
   WeekModel week;
 
@@ -112,11 +115,13 @@ void main() {
     when(api.user.getSettings(user.id)).thenAnswer((_) =>
         BehaviorSubject<SettingsModel>());
 
+    authBloc = AuthBloc(api);
+
     weekplanBloc = WeekplanBloc(api);
     di.clearAll();
     di.registerDependency<WeekplanBloc>((_) => weekplanBloc);
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<AuthBloc>((_) =>  AuthBloc(api));
+    di.registerDependency<AuthBloc>((_) =>  authBloc);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
   });
 
@@ -648,4 +653,35 @@ void main() {
         await tester.pump();
         expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
       });
+
+
+  testWidgets('When showing one day, it doesnt fill the whole screen', 
+    (WidgetTester tester) async {
+        week = WeekModel(
+            thumbnail: PictogramModel(
+                imageUrl: null,
+                imageHash: null,
+                accessLevel: null,
+                title: null,
+                id: null,
+                lastEdit: null),
+            days: <WeekdayModel>[
+                WeekdayModel(
+                    activities: <ActivityModel>[], 
+                    day: Weekday.Monday),
+            ],
+            name: 'Week',   
+            weekNumber: 1,
+            weekYear: 2019);
+
+        final WeekplanScreen weekplanScreen = WeekplanScreen(week, user);
+            
+        await tester.pumpWidget(MaterialApp(home:weekplanScreen));
+        await tester.pumpAndSettle();
+
+        authBloc.setMode(WeekplanMode.citizen);
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('SingleWeekdayRow')), findsNWidgets(1));
+    });
 }

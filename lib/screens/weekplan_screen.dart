@@ -313,6 +313,7 @@ class WeekplanScreen extends StatelessWidget {
                   }
                   if (weekDays.length == 1) {
                     return Row(
+                      key: const Key('SingleWeekdayRow'),
                       children: <Widget>[
                         const Spacer(flex: 2,),
                         weekDays.first,
