@@ -151,7 +151,8 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
-                child: Text('Vælg billede til ugeplan', style: _style.apply(color: Colors.red)),
+                child: Text('Vælg billede til ugeplan',
+                    style: _style.apply(color: Colors.red)),
               ),
               Expanded(child: Image.asset('assets/icons/galleryBig.png')),
             ],
