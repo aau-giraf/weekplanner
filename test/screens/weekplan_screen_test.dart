@@ -23,7 +23,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -106,17 +108,17 @@ void main() {
   ];
 
   final SettingsModel mockSettings = SettingsModel(
-    orientation: orientation.Orientation.Portrait,
-    completeMark: CompleteMark.Checkmark,
-    cancelMark: CancelMark.Cross,
-    defaultTimer: DefaultTimer.PieChart,
-    timerSeconds: 1,
-    activitiesCount: 1,
-    theme: GirafTheme.GirafYellow,
-    nrOfDaysToDisplay: 1,
-    weekDayColors: createWeekDayColors(),
-    lockTimerControl: false,
-  );
+      orientation: orientation.Orientation.Portrait,
+      completeMark: CompleteMark.Checkmark,
+      cancelMark: CancelMark.Cross,
+      defaultTimer: DefaultTimer.PieChart,
+      timerSeconds: 1,
+      activitiesCount: 1,
+      theme: GirafTheme.GirafYellow,
+      nrOfDaysToDisplay: 1,
+      weekDayColors: createWeekDayColors(),
+      lockTimerControl: false,
+      pictogramText: false);
 
   final WeekModel weekWithAllDays = WeekModel(
       thumbnail: PictogramModel(
@@ -168,9 +170,8 @@ void main() {
       return Observable<WeekModel>.just(week);
     });
 
-    when(api.user.getSettings(any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings);
-    });
+    when(api.user.getSettings(user.id))
+        .thenAnswer((_) => BehaviorSubject<SettingsModel>());
 
     authBloc = AuthBloc(api);
 
@@ -705,9 +706,11 @@ void main() {
 
   testWidgets('When showing one day, it doesnt fill the whole screen',
       (WidgetTester tester) async {
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
 
-   week = weekWithAllDays;
-
+    week = weekWithAllDays;
 
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(week, user);
@@ -720,6 +723,10 @@ void main() {
 
   testWidgets('When showing 5 days, it does fill the whole screen',
       (WidgetTester tester) async {
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
+
     mockSettings.nrOfDaysToDisplay = 5;
 
     week = weekWithAllDays;
