@@ -306,6 +306,7 @@ void main() {
 
   test('PasswordVerification is null, but password is missing',
       async((DoneFn done) {
+        bloc.onPasswordChange.add('');
         bloc.onPasswordVerifyChange.add(null);
         bloc.validPasswordVerificationStream.listen((bool isValid) {
           expect(isValid, isNotNull);
