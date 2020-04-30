@@ -1,4 +1,5 @@
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -65,7 +66,15 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                   'Tegn for udførelse',
                   () =>
-                      Routes.push(context, CompletedActivityIconScreen(_user)))
+                      Routes.push(context, CompletedActivityIconScreen(_user))
+                      .then(
+                          (Object object) => _settingsBloc.loadSettings(_user)),
+                  titleTrailing: Text(settingsModel.completeMark == 
+                  CompleteMark.Checkmark ? 'Flueben' : 
+                    settingsModel.completeMark == CompleteMark.MovedRight ? 
+                    'Lav aktiviteten grå' : 
+                    'Fjern aktiviteten for borgeren')
+                  )
             ]);
           } else {
             return const Center(
