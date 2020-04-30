@@ -49,7 +49,8 @@ void main() {
       activitiesCount: 1,
       theme: GirafTheme.GirafYellow,
       nrOfDaysToDisplay: 1,
-      weekDayColors: null
+      weekDayColors: null,
+      pictogramText: false,
   );
 
   final SettingsModel updatedSettings = SettingsModel(
@@ -62,6 +63,7 @@ void main() {
       theme: GirafTheme.GirafYellow,
       nrOfDaysToDisplay: 2,
       weekDayColors: null,
+      pictogramText: true,
   );
 
   setUp(() {
@@ -101,6 +103,7 @@ void main() {
     settings.theme = GirafTheme.GirafYellow;
     settings.nrOfDaysToDisplay = 2;
     settings.weekDayColors = null;
+    settings.pictogramText = true;
     settingsBloc.settings.listen((SettingsModel response) {
       expect(response, isNotNull);
       expect(response.toJson(), equals(settings.toJson()));
