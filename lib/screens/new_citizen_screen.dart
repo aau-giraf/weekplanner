@@ -40,7 +40,7 @@ class NewCitizenScreen extends StatelessWidget {
                       BorderSide()),
                       labelText: 'Navn',
                       errorText: (snapshot?.data == false) &&
-                          _bloc.displayNameController.value != null?
+                          _bloc.displayNameController.value != null ?
                       'Navn skal udfyldes' : null,
                   ),
                   onChanged: _bloc.onDisplayNameChange.add,
