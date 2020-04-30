@@ -12,20 +12,38 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:async_test/async_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
-class MockWeekApi extends Mock implements WeekApi {}
+SettingsModel mockSettings;
+WeekModel week;
+
+
+class MockWeekApi extends Mock implements WeekApi {
+
+  @override
+  Observable<WeekModel> get(String id, int year, int weekNumber) {
+    return Observable<WeekModel>.just(week);
+  }
+
+  @override
+  Observable<WeekModel> update(String id, int year, int weekNumber,
+      WeekModel weekInput) {
+    week = weekInput;
+    return Observable<WeekModel>.just(week);
+  }
+}
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -39,13 +57,18 @@ class MockUserApi extends Mock implements UserApi {
       username: 'SpaceLord69',
     ));
   }
+
+  @override
+  Observable<SettingsModel> getSettings(String id) {
+    return Observable<SettingsModel>.just(mockSettings);
+  }
+
 }
 
 void main() {
   WeekplanBloc weekplanBloc;
   Api api;
 
-  WeekModel week;
 
   final DisplayNameModel user = DisplayNameModel(
     role: Role.Guardian.toString(),
@@ -81,6 +104,18 @@ void main() {
   ];
 
   setUp(() {
+    mockSettings = SettingsModel(
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      defaultTimer: null,
+      theme: null,
+      nrOfDaysToDisplay: 1,
+      weekDayColors: null,
+      lockTimerControl: false,
+      pictogramText: false,
+    );
+
     week = WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
@@ -101,16 +136,6 @@ void main() {
 
     api.user = MockUserApi();
     api.week = MockWeekApi();
-    when(api.week.update(any, any, any, any)).thenAnswer((Invocation inv) {
-      return Observable<WeekModel>.just(inv.positionalArguments[3]);
-    });
-
-    when(api.week.get(any, any, any)).thenAnswer((Invocation inv) {
-      return Observable<WeekModel>.just(week);
-    });
-
-    when(api.user.getSettings(user.id)).thenAnswer((_) =>
-        BehaviorSubject<SettingsModel>());
 
     weekplanBloc = WeekplanBloc(api);
     di.clearAll();
@@ -118,6 +143,20 @@ void main() {
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
     di.registerDependency<AuthBloc>((_) =>  AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
+    di.registerDependency<TimerBloc>((_) => TimerBloc(api));
+  });
+
+  testWidgets('Screen renders', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home:WeekplanScreen(week, user)));
+    await tester.pumpAndSettle();
+    expect(find.byType(WeekplanScreen), findsOneWidget);
+  });
+
+  testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home:WeekplanScreen(week, user)));
+    await tester.pumpAndSettle();
+    expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Marks all and unmarks all activities for a given day',
