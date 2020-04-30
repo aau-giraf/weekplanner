@@ -73,7 +73,7 @@ class SettingsScreen extends StatelessWidget {
                   CompleteMark.Checkmark ? 'Flueben' : 
                     settingsModel.completeMark == CompleteMark.MovedRight ? 
                     'Lav aktiviteten grå' : 
-                    'Fjern aktiviteten for borgeren')
+                    'Fjern aktiviteten')
                   )
             ]);
           } else {
