@@ -184,12 +184,6 @@ class WeekplansBloc extends BlocBase {
     }
     _editMode.add(!_editMode.value);
   }
-
-  /// This stream checks that you have only marked one week model
-  Observable<bool> editingIsValidStream() {
-    return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
-  }
-
   @override
   void dispose() {
     _weekModel.close();
