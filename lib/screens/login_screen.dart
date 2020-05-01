@@ -66,16 +66,16 @@ class LoginScreenState extends State<LoginScreen> {
 
             // Checking username/password
             if (!loginStatus) {
-              creatingNotifyDialog('Forkert brugernavn og/eller adgangskode', 'WrongUsernameOrPassword');
+              creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.', 'WrongUsernameOrPassword');
             }
           } else {
             creatingNotifyDialog('Der er i øjeblikket'
-                ' ikke forbindelse til severen', 'NoConnectionToServer');
+                ' ikke forbindelse til serveren.', 'NoConnectionToServer');
           }
         });
       } else {
         creatingNotifyDialog('Der er ingen forbindelse'
-            ' til internettet', 'NoConnectionToInternet');
+            ' til internettet.', 'NoConnectionToInternet');
       }
     });
   }

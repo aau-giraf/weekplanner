@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/standard_week_colors.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
@@ -34,9 +35,8 @@ class ColorThemeSelectorScreen extends StatelessWidget {
                 final SettingsModel _settingsModel = settingsSnapshot.data;
                 return ListView(
                   children: <Widget>[
-                    SettingsSection(
-                        'Farvetema', _createSettingList(_settingsModel)
-                    ),
+                    SettingsSection('Farvetema',
+                        _createSettingList(_settingsModel, context)),
                   ],
                 );
               } else {
@@ -47,33 +47,43 @@ class ColorThemeSelectorScreen extends StatelessWidget {
             }));
   }
 
-  List<SettingsSectionItem> _createSettingList(SettingsModel _settingsModel) {
-
+  List<SettingsSectionItem> _createSettingList(
+      SettingsModel _settingsModel, BuildContext context) {
     final List<SettingsSectionItem> settingsList = <SettingsSectionItem>[];
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme.standardColorSetting(),
-        _settingsModel.weekDayColors , 'Standard', () {
-      _settingsModel.weekDayColors =
-          WeekplanColorTheme.standardColorSetting();
-      _settingsBloc.updateSettings(_user.id, _settingsModel);
-
+        _settingsModel.weekDayColors,
+        'Standard', () {
+      _settingsModel.weekDayColors = WeekplanColorTheme.standardColorSetting();
+      _settingsBloc.updateSettings(_user.id, _settingsModel).take(1).listen(
+            (SettingsModel settings) {
+          Routes.pop(context, settings);
+        },
+      );
     }));
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme.blueWhiteColorSetting(),
-        _settingsModel.weekDayColors, 'Blå/Hvid', () {
-      _settingsModel.weekDayColors =
-          WeekplanColorTheme.blueWhiteColorSetting();
-      _settingsBloc.updateSettings(_user.id, _settingsModel);
+        _settingsModel.weekDayColors,
+        'Blå/Hvid', () {
+      _settingsModel.weekDayColors = WeekplanColorTheme.blueWhiteColorSetting();
+      _settingsBloc.updateSettings(_user.id, _settingsModel).take(1).listen(
+            (SettingsModel settings) {
+          Routes.pop(context, settings);
+        },
+      );
     }));
-
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme.greyWhiteColorSetting(),
-        _settingsModel.weekDayColors, 'Grå/Hvid', () {
-      _settingsModel.weekDayColors =
-          WeekplanColorTheme.greyWhiteColorSetting();
-      _settingsBloc.updateSettings(_user.id, _settingsModel);
+        _settingsModel.weekDayColors,
+        'Grå/Hvid', () {
+      _settingsModel.weekDayColors = WeekplanColorTheme.greyWhiteColorSetting();
+      _settingsBloc.updateSettings(_user.id, _settingsModel).take(1).listen(
+        (SettingsModel settings) {
+          Routes.pop(context, settings);
+        },
+      );
     }));
 
     return settingsList;
