@@ -39,8 +39,9 @@ class NewCitizenScreen extends StatelessWidget {
                       border: const OutlineInputBorder(borderSide:
                       BorderSide()),
                       labelText: 'Navn',
-                      errorText: (snapshot?.data == true) ?
-                      null : 'Navn skal udfyldes',
+                      errorText: (snapshot?.data == false) &&
+                          _bloc.displayNameController.value != null ?
+                      'Navn skal udfyldes' : null,
                   ),
                   onChanged: _bloc.onDisplayNameChange.add,
                 );
@@ -57,9 +58,10 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Brugernavn',
-                    errorText: (snapshot?.data == true) ?
-                    null :
-                    'Brugernavn må ikke indeholde mellemrum eller være tom',
+                    errorText: (snapshot?.data == false) &&
+                        _bloc.usernameController.value != null ?
+                    'Brugernavn må ikke indeholde mellemrum eller være tom'
+                        : null,
                   ),
                   onChanged: _bloc.onUsernameChange.add,
                 );
@@ -76,8 +78,9 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Kodeord',
-                    errorText: (snapshot?.data == true) ?
-                    null : 'Kodeord må ikke indeholde mellemrum eller være tom',
+                    errorText: (snapshot?.data == false) &&
+                        _bloc.passwordController.value != null ?
+                    'Kodeord må ikke indeholde mellemrum eller være tom' : null,
                   ),
                   onChanged: _bloc.onPasswordChange.add,
                   obscureText: true,

@@ -30,6 +30,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+import 'package:weekplanner/widgets/pictogram_text.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -315,7 +316,18 @@ class WeekplanScreen extends StatelessWidget {
                       }
                     }
                   }
-                  return Row(children: weekDays);
+                  if (weekDays.length == 1) {
+                    return Row(
+                      key: const Key('SingleWeekdayRow'),
+                      children: <Widget>[
+                        const Spacer(flex: 2,),
+                        weekDays.first,
+                        const Spacer(flex: 2,)
+                      ],
+                    );
+                  } else {
+                    return Row(children: weekDays);
+                  }
                 },
               );
             }
@@ -712,20 +724,26 @@ class WeekplanScreen extends StatelessWidget {
     ActivityState activityState,
   ) {
     return Container(
+        color: theme.GirafColors.white,
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: FittedBox(
-          child: Stack(
-            alignment: AlignmentDirectional.topEnd,
+          child: Column(
             children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width,
-                child: FittedBox(
-                  child: _getPictogram(activities[index]),
-                ),
+              Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    child: FittedBox(
+                      child: _getPictogram(activities[index]),
+                    ),
+                  ),
+                  _buildActivityStateIcon(context, activityState, weekday),
+                  _buildTimerIcon(context, activities[index]),
+                ],
               ),
-              _buildActivityStateIcon(context, activityState, weekday),
-              _buildTimerIcon(context, activities[index]),
+              PictogramText(activities[index].pictogram, _user),
             ],
           ),
         ));

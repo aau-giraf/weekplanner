@@ -202,6 +202,7 @@ final SettingsModel mockSettings = SettingsModel(
   nrOfDaysToDisplay: 1,
   weekDayColors: null,
   lockTimerControl: false,
+  pictogramText: false,
 );
 
 final SettingsModel mockSettings2 = SettingsModel(
@@ -215,6 +216,7 @@ final SettingsModel mockSettings2 = SettingsModel(
   nrOfDaysToDisplay: 1,
   weekDayColors: null,
   lockTimerControl: true,
+  pictogramText: false,
 );
 
 void main() {

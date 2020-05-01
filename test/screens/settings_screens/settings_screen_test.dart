@@ -33,6 +33,12 @@ class MockUserApi extends Mock implements UserApi {
     return Observable<SettingsModel>.just(mockSettings);
   }
 
+  @override
+  Observable<SettingsModel> updateSettings(String id, SettingsModel settings) {
+    mockSettings = settings;
+    return Observable<SettingsModel>.just(mockSettings);
+  }
+
   static List<WeekdayColorModel> createWeekDayColors() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
     weekDayColors
@@ -75,15 +81,13 @@ void main() {
       nrOfDaysToDisplay: 1,
       weekDayColors: MockUserApi.createWeekDayColors(),
       lockTimerControl: false,
+      pictogramText: false,
     );
-
-    when(api.user.updateSettings(any, any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings);
-    });
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     settingsBloc = SettingsBloc(api);
+    settingsBloc.loadSettings(user);
     di.registerDependency<SettingsBloc>((_) => settingsBloc);
   });
 
@@ -133,6 +137,19 @@ void main() {
     await tester.tap(find.text('Farver på ugeplan'));
     await tester.pumpAndSettle();
     expect(find.byType(ColorThemeSelectorScreen), findsOneWidget);
+  });
+
+  testWidgets('Piktogram tekst knap opdaterer indstillinger',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+
+    expect(false, mockSettings.pictogramText);
+
+    await tester.tap(find.text('Piktogram tekst er synlig'));
+    await tester.pumpAndSettle();
+
+    expect(true, mockSettings.pictogramText);
   });
 
   testWidgets('Settings has TimerControl checkbox without an checkmark',
