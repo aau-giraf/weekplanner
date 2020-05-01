@@ -39,7 +39,8 @@ class NewCitizenScreen extends StatelessWidget {
                       border: const OutlineInputBorder(borderSide:
                       BorderSide()),
                       labelText: 'Navn',
-                      errorText: (snapshot?.data == false) ?
+                      errorText: (snapshot?.data == false) &&
+                          _bloc.displayNameController.value != null ?
                       'Navn skal udfyldes' : null,
                   ),
                   onChanged: _bloc.onDisplayNameChange.add,
@@ -57,7 +58,8 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Brugernavn',
-                    errorText: (snapshot?.data == false) ?
+                    errorText: (snapshot?.data == false) &&
+                        _bloc.usernameController.value != null ?
                     'Brugernavn må ikke indeholde mellemrum eller være tom'
                         : null,
                   ),
@@ -76,7 +78,8 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Kodeord',
-                    errorText: (snapshot?.data == false) ?
+                    errorText: (snapshot?.data == false) &&
+                        _bloc.passwordController.value != null ?
                     'Kodeord må ikke indeholde mellemrum eller være tom' : null,
                   ),
                   onChanged: _bloc.onPasswordChange.add,
@@ -95,8 +98,8 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Gentag kodeord',
-                    errorText: (snapshot?.data == false) ?
-                    'Kodeord skal være ens' : null,
+                    errorText: (snapshot?.data == true) ?
+                    null : 'Kodeord skal være ens',
                   ),
                   onChanged: _bloc.onPasswordVerifyChange.add,
                   obscureText: true,

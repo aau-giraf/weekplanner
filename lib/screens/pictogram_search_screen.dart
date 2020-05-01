@@ -82,9 +82,7 @@ class PictogramSearch extends StatelessWidget {
                 icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                 text: 'Tilføj fra galleri',
                 onPressed: () async {
-                  final PictogramModel newActivity =
-                      await Routes.push(context, UploadImageFromPhone());
-					  Routes.pop(context, newActivity);
+                  await Routes.push(context, UploadImageFromPhone());
                 },
               ),
             ],

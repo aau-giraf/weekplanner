@@ -72,7 +72,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 decoration: InputDecoration(
                     labelText: 'Titel',
                     errorText:
-                        (snapshot?.data == false) ? 'Titel skal angives' : null,
+                        (snapshot?.data == true) ? null : 'Titel skal angives',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
               );
             }));
@@ -94,9 +94,9 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'År',
-                    errorText: (snapshot?.data == false)
-                        ? 'År skal angives som fire cifre'
-                        : null,
+                    errorText: (snapshot?.data == true)
+                        ? null
+                        : 'År skal angives som fire cifre',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
               );
             }));
@@ -118,9 +118,9 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 style: _style,
                 decoration: InputDecoration(
                     labelText: 'Ugenummer',
-                    errorText: (snapshot?.data == false)
-                        ? 'Ugenummer skal være mellem 1 og 53'
-                        : null,
+                    errorText: (snapshot?.data == true)
+                        ? null
+                        : 'Ugenummer skal være mellem 1 og 53',
                     border: const OutlineInputBorder(borderSide: BorderSide())),
               );
             }));
@@ -151,7 +151,8 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
-                child: Text('Vælg billede til ugeplan', style: _style),
+                child: Text('Vælg billede til ugeplan',
+                    style: _style.apply(color: Colors.red)),
               ),
               Expanded(child: Image.asset('assets/icons/galleryBig.png')),
             ],
