@@ -6,6 +6,7 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -296,13 +297,15 @@ class WeekplanScreen extends StatelessWidget {
                     weekDays.clear();
                     for (int i = 0; i < _daysToDisplay; i++) {
                       // Get color from the citizen's chosen color theme
-                      final String hexColor = _settingsModel
-                          .getWeekdayColor(Weekday.values[_weekdayCounter])
+                      final String dayColor = _settingsModel.weekDayColors
+                          .where((WeekdayColorModel w) =>
+                              w.day == Weekday.values[_weekdayCounter])
+                          .single
                           .hexColor
                           .replaceFirst('#', '0xff');
                       weekDays.add(Expanded(
                           child: Card(
-                              color: Color(int.parse(hexColor)),
+                              color: Color(int.parse(dayColor)),
                               child: _day(
                                   weekModel.days[_weekdayCounter], context))));
                       if (_weekdayCounter == 6) {
@@ -333,10 +336,11 @@ class WeekplanScreen extends StatelessWidget {
         buildDaySelectorButtons(context, weekday),
         buildDayActivities(weekday.activities, weekday),
         Container(
-          padding: EdgeInsets.symmetric(horizontal:
-          MediaQuery.of(context).orientation == Orientation.portrait ?
-          MediaQuery.of(context).size.width * 0.01 :
-          MediaQuery.of(context).size.height * 0.01),
+          padding: EdgeInsets.symmetric(
+              horizontal:
+                  MediaQuery.of(context).orientation == Orientation.portrait
+                      ? MediaQuery.of(context).size.width * 0.01
+                      : MediaQuery.of(context).size.height * 0.01),
           child: ButtonTheme(
             child: SizedBox(
               width: double.infinity,
@@ -374,46 +378,46 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   ///Builds the selector buttons day
-  Container buildDaySelectorButtons(BuildContext context, WeekdayModel weekDay)
-  {
-    return Container (
+  Container buildDaySelectorButtons(
+      BuildContext context, WeekdayModel weekDay) {
+    return Container(
         child: StreamBuilder<WeekplanMode>(
-          stream: _authBloc.mode,
-          initialData: WeekplanMode.guardian,
-          builder: (BuildContext context,
-          AsyncSnapshot<WeekplanMode> snapshot) {
-            return Visibility(
-              visible: snapshot.data == WeekplanMode.guardian,
-              child: StreamBuilder<bool>(
-                stream: _weekplanBloc.editMode,
-                initialData: false,
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  if (snapshot.data) {
+      stream: _authBloc.mode,
+      initialData: WeekplanMode.guardian,
+      builder: (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
+        return Visibility(
+          visible: snapshot.data == WeekplanMode.guardian,
+          child: StreamBuilder<bool>(
+            stream: _weekplanBloc.editMode,
+            initialData: false,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.data) {
                 return Container(
-                  child: Column(
-                      children: <Widget>[
-                        GirafButton(
-                          text: 'Vælg alle',
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          height: 35,
-                          width: 110,
-                          key: const Key('SelectAllButton'), onPressed: () {
-                            markAllDayActivities(weekDay);},
-                        ),
-                        const SizedBox(height: 3.5),
-                        GirafButton(
-                          text: 'Fravælg alle',
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          height: 35,
-                          width: 110,
-                          key: const Key('DeselectAllButton'), onPressed: () {
-                          unmarkAllDayActivities(weekDay);
-                        },
-                        ),
-                      ]
-                  ),
+                  child: Column(children: <Widget>[
+                    GirafButton(
+                      text: 'Vælg alle',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      height: 35,
+                      width: 110,
+                      key: const Key('SelectAllButton'),
+                      onPressed: () {
+                        markAllDayActivities(weekDay);
+                      },
+                    ),
+                    const SizedBox(height: 3.5),
+                    GirafButton(
+                      text: 'Fravælg alle',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      height: 35,
+                      width: 110,
+                      key: const Key('DeselectAllButton'),
+                      onPressed: () {
+                        unmarkAllDayActivities(weekDay);
+                      },
+                    ),
+                  ]),
                 );
               } else {
                 return Container(width: 0.0, height: 0.0);
@@ -515,9 +519,10 @@ class WeekplanScreen extends StatelessWidget {
       return Container(
           key: const Key('isSelectedKey'),
           margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          decoration:
-            BoxDecoration(border: Border.all(color: Colors.black,
-                width: MediaQuery.of(context).size.width * 0.1)),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: Colors.black,
+                  width: MediaQuery.of(context).size.width * 0.1)),
           child: _buildActivityCard(
             context,
             activities,
@@ -581,12 +586,12 @@ class WeekplanScreen extends StatelessWidget {
           onDragEnd: (DraggableDetails details) =>
               _weekplanBloc.setActivityPlaceholderVisible(false),
           feedback: Container(
-              height: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.width * 0.4 :
-              MediaQuery.of(context).size.height * 0.4,
-              width: MediaQuery.of(context).orientation==Orientation.portrait ?
-              MediaQuery.of(context).size.width * 0.4 :
-              MediaQuery.of(context).size.height * 0.4,
+              height: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? MediaQuery.of(context).size.width * 0.4
+                  : MediaQuery.of(context).size.height * 0.4,
+              width: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? MediaQuery.of(context).size.width * 0.4
+                  : MediaQuery.of(context).size.height * 0.4,
               child: _pictogramIconStack(context, index, weekday, inEditMode)),
         );
       },
@@ -651,8 +656,12 @@ class WeekplanScreen extends StatelessWidget {
                                 onTap: () {
                                   if (modeSnapshot.data ==
                                       WeekplanMode.guardian) {
-                                    handleOnTapActivity(inEditMode, isMarked,
-                                        false, weekday.activities, index,
+                                    handleOnTapActivity(
+                                        inEditMode,
+                                        isMarked,
+                                        false,
+                                        weekday.activities,
+                                        index,
                                         context);
                                   } else {
                                     handleOnTapActivity(false, false, true,
@@ -663,8 +672,8 @@ class WeekplanScreen extends StatelessWidget {
                                     (modeSnapshot.data == WeekplanMode.guardian)
                                         ? buildIsMarked(isMarked, context,
                                             weekday, weekday.activities, index)
-                                        : buildIsMarked(false, context,
-                                            weekday, weekday.activities, index),
+                                        : buildIsMarked(false, context, weekday,
+                                            weekday.activities, index),
                               ),
                             ));
                       } else {
@@ -723,17 +732,16 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Creates a cover for a completed activity, if choosing to not display them
-  Container completedActivityColor (Color dayColor, BuildContext context) {
+  Container completedActivityColor(Color dayColor, BuildContext context) {
     return Container(
-      color: dayColor,
-      height: MediaQuery.of(context).size.width,
-      width: MediaQuery.of(context).size.width
-    );
+        color: dayColor,
+        height: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width);
   }
 
   /// Build activity state icon.
-  Widget _buildActivityStateIcon(BuildContext context, ActivityState state,
-      WeekdayModel weekday) {
+  Widget _buildActivityStateIcon(
+      BuildContext context, ActivityState state, WeekdayModel weekday) {
     switch (state) {
       case ActivityState.Completed:
         return StreamBuilder<WeekplanMode>(
@@ -752,64 +760,66 @@ class WeekplanScreen extends StatelessWidget {
                   );
                 } else if (role == WeekplanMode.citizen) {
                   return StreamBuilder<SettingsModel>(
-                    stream: _settingsBloc.settings,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<SettingsModel> snapshot) {
-                      if (!snapshot.hasData ||
-                          snapshot.data.completeMark == null) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.data.completeMark ==
-                          CompleteMark.Checkmark) {
-                        return Icon(
-                          Icons.check,
-                          key: const Key('IconComplete'),
-                          color: theme.GirafColors.green,
-                          size: MediaQuery.of(context).size.width,
-                        );
-                      } else if (snapshot.data.completeMark ==
-                          CompleteMark.MovedRight) {
-                        return completedActivityColor(
-                          theme.GirafColors.transparentGrey, context);
-                      } else if (snapshot.data.completeMark ==
-                          CompleteMark.Removed) {
-                        return StreamBuilder<SettingsModel>(
-                          stream: _settingsBloc.settings,
-                          builder: (BuildContext buildContext,
-                              AsyncSnapshot<SettingsModel> settingsSnapshot) {
-                            Color c;
+                      stream: _settingsBloc.settings,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<SettingsModel> snapshot) {
+                        if (!snapshot.hasData ||
+                            snapshot.data.completeMark == null) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.data.completeMark ==
+                            CompleteMark.Checkmark) {
+                          return Icon(
+                            Icons.check,
+                            key: const Key('IconComplete'),
+                            color: theme.GirafColors.green,
+                            size: MediaQuery.of(context).size.width,
+                          );
+                        } else if (snapshot.data.completeMark ==
+                            CompleteMark.MovedRight) {
+                          return completedActivityColor(
+                              theme.GirafColors.transparentGrey, context);
+                        } else if (snapshot.data.completeMark ==
+                            CompleteMark.Removed) {
+                          return StreamBuilder<SettingsModel>(
+                            stream: _settingsBloc.settings,
+                            builder: (BuildContext buildContext,
+                                AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                              Color c;
 
-                            if (settingsSnapshot.data == null) {
-                              c = Color(int.parse(WeekplanColorTheme.
-                                  blueWhiteColorSetting()[weekday.day.index].
-                                  hexColor.replaceFirst('#', '0xff')));
-                            } else {
-                              c = Color(int.parse(settingsSnapshot.
-                              data.weekDayColors[weekday.day.index].hexColor.
-                                  replaceFirst('#', '0xff')));
-                            }
+                              if (settingsSnapshot.data == null) {
+                                c = Color(int.parse(
+                                    WeekplanColorTheme.blueWhiteColorSetting()[
+                                            weekday.day.index]
+                                        .hexColor
+                                        .replaceFirst('#', '0xff')));
+                              } else {
+                                c = Color(int.parse(settingsSnapshot.data
+                                    .weekDayColors[weekday.day.index].hexColor
+                                    .replaceFirst('#', '0xff')));
+                              }
 
-                            return completedActivityColor(c, context);
-                          },
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                  });
+                              return completedActivityColor(c, context);
+                            },
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      });
                 } else {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
-            } else {
+              } else {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-            }
-        });
+              }
+            });
 
       case ActivityState.Canceled:
         return Icon(
@@ -828,50 +838,47 @@ class WeekplanScreen extends StatelessWidget {
     final TimerBloc timerBloc = di.getDependency<TimerBloc>();
     timerBloc.load(activity, user: _user);
     return StreamBuilder<bool>(
-      stream: timerBloc.timerIsInstantiated,
-      builder: (BuildContext streamContext,
-          AsyncSnapshot<bool> timerSnapshot) {
-        if (timerSnapshot.hasData && timerSnapshot.data) {
-          // Activities that are not overlayed.
-          if (activity.state != ActivityState.Completed) {
-            return _buildTimerAssetIcon();
-          }
-          // Activities that are overlayed.
-          return StreamBuilder<WeekplanMode>(
-              stream: _authBloc.mode,
-              builder: (BuildContext roleContext,
-                  AsyncSnapshot<WeekplanMode> role) {
-                if (role.data == WeekplanMode.guardian) {
-                  return const ImageIcon(
-                    AssetImage('assets/icons/redcircle.png'),
-                    color: theme.GirafColors.red,
-                    size: 250,
-                  );
-                } else {
-                  return StreamBuilder<SettingsModel>(
-                      stream: _settingsBloc.settings,
-                      builder: (BuildContext settingsContext,
-                          AsyncSnapshot<SettingsModel> settings) {
-                        if (!settings.hasData ||
-                            settings.data.completeMark !=
-                                CompleteMark.Removed) {
-                          return const ImageIcon(
-                            AssetImage('assets/icons/redcircle.png'),
-                            color: theme.GirafColors.red,
-                            size: 250,
-                          );
-                        }
+        stream: timerBloc.timerIsInstantiated,
+        builder:
+            (BuildContext streamContext, AsyncSnapshot<bool> timerSnapshot) {
+          if (timerSnapshot.hasData && timerSnapshot.data) {
+            // Activities that are not overlayed.
+            if (activity.state != ActivityState.Completed) {
+              return _buildTimerAssetIcon();
+            }
+            // Activities that are overlayed.
+            return StreamBuilder<WeekplanMode>(
+                stream: _authBloc.mode,
+                builder: (BuildContext roleContext,
+                    AsyncSnapshot<WeekplanMode> role) {
+                  if (role.data == WeekplanMode.guardian) {
+                    return const ImageIcon(
+                      AssetImage('assets/icons/redcircle.png'),
+                      color: theme.GirafColors.red,
+                      size: 250,
+                    );
+                  } else {
+                    return StreamBuilder<SettingsModel>(
+                        stream: _settingsBloc.settings,
+                        builder: (BuildContext settingsContext,
+                            AsyncSnapshot<SettingsModel> settings) {
+                          if (!settings.hasData ||
+                              settings.data.completeMark !=
+                                  CompleteMark.Removed) {
+                            return const ImageIcon(
+                              AssetImage('assets/icons/redcircle.png'),
+                              color: theme.GirafColors.red,
+                              size: 250,
+                            );
+                          }
 
-                        return Container();
-                      }
-                  );
-                }
-              }
-          );
-        }
-        return Container();
-      }
-    );
+                          return Container();
+                        });
+                  }
+                });
+          }
+          return Container();
+        });
   }
 
   /// Build timer icon.
