@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -393,29 +391,77 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
   });
 
-  testWidgets('Test editing is valid', (WidgetTester tester) async {
+  testWidgets('Test edit failure dialog with zero selected',
+    (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-    bool editingIsValid;
 
-    final StreamSubscription<bool> listenForValid1 =
-    bloc.editingIsValidStream().listen((bool b) {
-      editingIsValid = b;
-    });
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('EditButtonKey')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fejl'), findsOneWidget);
+    expect(find.text('Markér en uge for at redigere den'), findsOneWidget);
+  });
+
+  testWidgets('Test edit failure dialog with multiple selected',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
-    expect(editingIsValid, true);
-
     await tester.tap(find.byKey(Key(weekModel2.name)));
     await tester.pumpAndSettle();
 
-    expect(editingIsValid, false);
+    await tester.tap(find.byKey(const Key('EditButtonKey')));
+    await tester.pumpAndSettle();
 
-    listenForValid1.cancel();
+    expect(find.text('Fejl'), findsOneWidget);
+    expect(find.text('Der kan kun redigeres en uge ad gangen'), findsOneWidget);
+
+  });
+
+  testWidgets('Test edit no error dialog with one selected',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('EditButtonKey')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fejl'), findsNothing);
+  });
+
+  testWidgets('Test delete failure when none selected',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fejl'), findsOneWidget);
+    expect(find.text('Der skal markeres mindst én uge for at slette'),
+    findsOneWidget);
+
   });
 }
