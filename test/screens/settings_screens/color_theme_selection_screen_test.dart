@@ -1,0 +1,195 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/settings_model.dart';
+import 'package:api_client/models/weekday_color_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/di.dart';
+import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_colorThemeButton.dart';
+
+class MockUserApi extends Mock implements UserApi {
+  @override
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(
+        GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
+  }
+
+  @override
+  Observable<SettingsModel> getSettings(String id) {
+    return Observable<SettingsModel>.just(mockSettings);
+  }
+
+  static List<WeekdayColorModel> createWeekDayColors() {
+    final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Monday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Tuesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Wednesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Thursday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Friday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Saturday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Sunday));
+
+    return weekDayColors;
+  }
+}
+
+SettingsModel mockSettings;
+
+void main() {
+  Api api;
+  SettingsBloc settingsBloc;
+
+  final DisplayNameModel user = DisplayNameModel(
+      displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
+
+  setUp(() {
+    api = Api('any');
+    api.user = MockUserApi();
+    settingsBloc = SettingsBloc(api);
+
+    mockSettings = SettingsModel(
+        orientation: null,
+        completeMark: null,
+        cancelMark: null,
+        defaultTimer: null,
+        theme: null,
+        nrOfDaysToDisplay: 1,
+        pictogramText: false,
+        weekDayColors: MockUserApi.createWeekDayColors(),
+        lockTimerControl: false);
+
+    when(api.user.updateSettings(any, any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
+
+    di.clearAll();
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<SettingsBloc>((_) => settingsBloc);
+  });
+
+  testWidgets('Renders  ColorThemeSelectorScreen', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(user: user)));
+    expect(find.byType(ColorThemeSelectorScreen), findsOneWidget);
+  });
+
+  testWidgets('Has GirafAppBar', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(user: user)));
+    expect(find.byType(GirafAppBar), findsOneWidget);
+  });
+
+  testWidgets('Has three SettingsColorThemeCheckMarkButton',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(user: user)));
+    await tester.pumpAndSettle();
+    expect(find.byType(SettingsColorThemeCheckMarkButton), findsNWidgets(3));
+  });
+
+  testWidgets('The correct initial settings are loaded',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: ColorThemeSelectorScreen(user: user)));
+
+    settingsBloc.settings.listen((SettingsModel response) {
+      expect(response, isNotNull);
+
+      final List<WeekdayColorModel> expectedList =
+          MockUserApi.createWeekDayColors();
+
+      for (int i = 0; i < response.weekDayColors.length; i++) {
+        expect(response.weekDayColors[i].hexColor == expectedList[i].hexColor,
+            isTrue);
+        expect(response.weekDayColors[i].day == expectedList[i].day, isTrue);
+      }
+    });
+  });
+
+  testWidgets('The standard color theme button works',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsArrowButton && widget.text == 'Farver på ugeplan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsColorThemeCheckMarkButton &&
+        !widget.hasCheckMark() &&
+        widget.text == 'Standard'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Farver på ugeplan'));
+    await tester.pumpAndSettle();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsColorThemeCheckMarkButton &&
+            widget.hasCheckMark() &&
+            widget.text == 'Standard'),
+        findsOneWidget);
+  });
+
+  testWidgets('The blue white color theme button works',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsArrowButton && widget.text == 'Farver på ugeplan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsColorThemeCheckMarkButton &&
+        !widget.hasCheckMark() &&
+        widget.text == 'Blå/Hvid'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Farver på ugeplan'));
+    await tester.pumpAndSettle();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsColorThemeCheckMarkButton &&
+            widget.hasCheckMark() &&
+            widget.text == 'Blå/Hvid'),
+        findsOneWidget);
+  });
+
+  testWidgets('The grey white color theme button works',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsArrowButton && widget.text == 'Farver på ugeplan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsColorThemeCheckMarkButton &&
+        !widget.hasCheckMark() &&
+        widget.text == 'Grå/Hvid'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Farver på ugeplan'));
+    await tester.pumpAndSettle();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsColorThemeCheckMarkButton &&
+            widget.hasCheckMark() &&
+            widget.text == 'Grå/Hvid'),
+        findsOneWidget);
+  });
+}

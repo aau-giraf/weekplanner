@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/timer_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
@@ -18,7 +18,7 @@ class TimerBloc extends BlocBase {
   final Api _api;
 
   ActivityModel _activityModel;
-  UsernameModel _user;
+  DisplayNameModel _user;
 
   /// Stream for the progress of the timer.
   Observable<double> get timerProgressStream => _timerProgressStream.stream;
@@ -54,11 +54,11 @@ class TimerBloc extends BlocBase {
       fixedPlayer: _volumePlayer
   );
 
-  final String _audioFile = 'dingSound.mp3';
+  final String _audioFile = 'dingSound.wav';
   final int _updatePeriod = 1000;
 
   /// Loads the activity that should be used in the timerBloc
-  void load(ActivityModel activity, {UsernameModel user}) {
+  void load(ActivityModel activity, {DisplayNameModel user}) {
     _activityModel = activity;
 
     if (user != null) {
@@ -97,7 +97,8 @@ class TimerBloc extends BlocBase {
             milliseconds: _activityModel.timer.fullLength -
                 _activityModel.timer.progress));
         // Checks if the timer is running
-        if (_activityModel.timer.startTime.isBefore(DateTime.now()) &&
+        if ((_activityModel.timer.startTime.isBefore(DateTime.now()) ||
+            _activityModel.timer.startTime.isAtSameMomentAs(DateTime.now())) &&
             DateTime.now().isBefore(endTime) &&
             !_activityModel.timer.paused) {
           _timerRunningModeStream.add(TimerRunningMode.running);

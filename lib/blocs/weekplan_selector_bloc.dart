@@ -1,5 +1,5 @@
 import 'package:api_client/api/api.dart';
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -38,7 +38,7 @@ class WeekplansBloc extends BlocBase {
       BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
-  UsernameModel _user;
+  DisplayNameModel _user;
 
   /// To control adding an extra result for creating a new [WeekModel]
   /// for the weekplan_selector_screen.
@@ -49,7 +49,7 @@ class WeekplansBloc extends BlocBase {
   ///  for adding a new [WeekModel].
 
   /// The result are published in [_weekNameModelsList].
-  void load(UsernameModel user, [bool addWeekplan = false]) {
+  void load(DisplayNameModel user, [bool addWeekplan = false]) {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
@@ -184,12 +184,6 @@ class WeekplansBloc extends BlocBase {
     }
     _editMode.add(!_editMode.value);
   }
-
-  /// This stream checks that you have only marked one week model
-  Observable<bool> editingIsValidStream() {
-    return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
-  }
-
   @override
   void dispose() {
     _weekModel.close();

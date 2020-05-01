@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -29,13 +30,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   final WeekplansBloc _weekBloc;
-  final UsernameModel _user;
+  final DisplayNameModel _user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(
-          title: _user.name,
+          title: _user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
             AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
             AppBarIcon.logout: () {},
@@ -245,8 +246,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
-                      isEnabled: false,
-                      isEnabledStream: _weekBloc.editingIsValidStream(),
                       onPressed: () => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
                       buttonText: 'Slet',
@@ -261,6 +260,21 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   void _pushEditWeekPlan(BuildContext context) {
+    final int markedCount = _weekBloc.getNumberOfMarkedWeekModels();
+    if( markedCount != 1) {
+      final String description = markedCount > 1 ?
+        'Der kan kun redigeres en uge ad gangen' :
+        'Markér en uge for at redigere den';
+      showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl',
+              description: description);
+      });
+      return;
+    }
     Routes.push<WeekModel>(
       context,
       EditWeekPlanScreen(
@@ -275,6 +289,17 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildDeletionDialog(BuildContext context) {
+    if(_weekBloc.getNumberOfMarkedWeekModels() == 0) {
+      return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+              title: 'Fejl',
+              description: 'Der skal markeres mindst én uge for at slette');
+      });
+    }
+
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,

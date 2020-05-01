@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import '../style/custom_color.dart' as theme;
@@ -13,6 +14,8 @@ class GirafButton extends StatefulWidget {
   const GirafButton({
     Key key,
     this.text,
+    this.fontSize = 20,
+    this.fontWeight = FontWeight.normal,
     this.icon,
     this.width,
     this.height = 40.0,
@@ -24,6 +27,9 @@ class GirafButton extends StatefulWidget {
   /// The text placed at the center of the button.
   final String text;
 
+  /// The size of the text
+  final double fontSize;
+
   /// The icon placed next to the text on the button.
   final ImageIcon icon;
 
@@ -32,6 +38,9 @@ class GirafButton extends StatefulWidget {
 
   /// The height of the button.
   final double height;
+
+  /// The typeface thickness to use when painting the text (e.g., bold)
+  final FontWeight fontWeight;
 
   /// The function to be called when the button is pressed.
   /// The function must be a void funtion with no input parameters.
@@ -160,8 +169,8 @@ class _GirafButtonState extends State<GirafButton> {
   }
 
   Widget _buildWidgetsOnButton() {
-    const TextStyle textStyle =
-        TextStyle(color: theme.GirafColors.black, fontSize: 20);
+    final TextStyle textStyle = TextStyle(color: theme.GirafColors.black,
+        fontSize: widget.fontSize, fontWeight: widget.fontWeight);
 
     if (widget.text != null && widget.icon != null) {
       return Row(
@@ -179,9 +188,10 @@ class _GirafButtonState extends State<GirafButton> {
       );
     } else if (widget.text != null) {
       return Center(
-          child: Text(
-        widget.text,
-        style: textStyle,
+          child: AutoSizeText(
+            widget.text,
+            style: textStyle,
+            minFontSize: 5,
       ));
     } else if (widget.icon != null) {
       return Center(

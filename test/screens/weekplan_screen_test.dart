@@ -2,20 +2,35 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/cancel_mark_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:async_test/async_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
+import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
 
 class MockWeekApi extends Mock implements WeekApi {}
 
@@ -27,20 +42,94 @@ class MockUserApi extends Mock implements UserApi {
       department: 3,
       role: Role.Guardian,
       roleName: 'Guardian',
-      screenName: 'Kurt',
+      displayName: 'Kurt',
       username: 'SpaceLord69',
     ));
   }
 }
 
+List<WeekdayColorModel> createWeekDayColors() {
+  return <WeekdayColorModel>[
+    WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
+    WeekdayColorModel(day: Weekday.Monday, hexColor: '0xff999999'),
+    WeekdayColorModel(day: Weekday.Saturday, hexColor: '0xffeeeeee'),
+    WeekdayColorModel(day: Weekday.Tuesday, hexColor: '0xffaaaaaa'),
+    WeekdayColorModel(day: Weekday.Thursday, hexColor: '0xffcccccc'),
+    WeekdayColorModel(day: Weekday.Sunday, hexColor: '0xffffffff'),
+    WeekdayColorModel(day: Weekday.Wednesday, hexColor: '0xffbbbbbb'),
+  ];
+}
+
 void main() {
   WeekplanBloc weekplanBloc;
   Api api;
+  AuthBloc authBloc;
 
   WeekModel week;
 
-  final UsernameModel user =
-      UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+  final DisplayNameModel user = DisplayNameModel(
+      role: Role.Guardian.toString(), displayName: 'User', id: '1');
+
+  final List<ActivityModel> mockActivities = <ActivityModel>[
+    ActivityModel(
+        id: 1234,
+        state: ActivityState.Normal,
+        order: 0,
+        isChoiceBoard: false,
+        pictogram: PictogramModel(
+            id: 25,
+            title: 'grå',
+            accessLevel: AccessLevel.PUBLIC,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null)),
+    ActivityModel(
+        id: 1381,
+        state: ActivityState.Normal,
+        order: 0,
+        isChoiceBoard: false,
+        pictogram: PictogramModel(
+            id: 25,
+            title: 'grå',
+            accessLevel: AccessLevel.PUBLIC,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null))
+  ];
+
+  final SettingsModel mockSettings = SettingsModel(
+      orientation: orientation.Orientation.Portrait,
+      completeMark: CompleteMark.Checkmark,
+      cancelMark: CancelMark.Cross,
+      defaultTimer: DefaultTimer.PieChart,
+      timerSeconds: 1,
+      activitiesCount: 1,
+      theme: GirafTheme.GirafYellow,
+      nrOfDaysToDisplay: 1,
+      weekDayColors: createWeekDayColors(),
+      lockTimerControl: false,
+      pictogramText: false);
+
+  final WeekModel weekWithAllDays = WeekModel(
+      thumbnail: PictogramModel(
+          imageUrl: null,
+          imageHash: null,
+          accessLevel: null,
+          title: null,
+          id: null,
+          lastEdit: null),
+      days: <WeekdayModel>[
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Saturday),
+        WeekdayModel(activities: <ActivityModel>[], day: Weekday.Sunday),
+      ],
+      name: 'Week',
+      weekNumber: 1,
+      weekYear: 2020);
 
   setUp(() {
     week = WeekModel(
@@ -71,7 +160,17 @@ void main() {
       return Observable<WeekModel>.just(week);
     });
 
+    when(api.user.getSettings(user.id))
+        .thenAnswer((_) => BehaviorSubject<SettingsModel>());
+
+    authBloc = AuthBloc(api);
+
     weekplanBloc = WeekplanBloc(api);
+    di.clearAll();
+    di.registerDependency<WeekplanBloc>((_) => weekplanBloc);
+    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
+    di.registerDependency<AuthBloc>((_) => authBloc);
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
   });
 
   test('Loads a weekplan for the weekplan view', async((DoneFn done) {
@@ -215,8 +314,8 @@ void main() {
 
   test('Checks if marked activities are deleted from a users weekplan',
       async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+        role: Role.Citizen.toString(), displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -265,8 +364,8 @@ void main() {
 
   test('Checks if marked activities are copied to a new day',
       async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+        role: Role.Citizen.toString(), displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -347,8 +446,8 @@ void main() {
   }));
 
   test('Checks if marked activities are marked as cancel', async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+        role: Role.Citizen.toString(), displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -452,8 +551,8 @@ void main() {
   }));
 
   test('Adds an activity to a given weekplan', async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+        role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
     final ActivityModel activity = ActivityModel(
         order: null,
@@ -566,4 +665,124 @@ void main() {
 
     weekplanBloc.loadWeek(week, user);
   }));
+
+  testWidgets('Marks all and unmarks all activities for a given day',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('Rediger'), findsOneWidget);
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+    expect(find.byKey(const Key('SelectAllButton')), findsNWidgets(2));
+    expect(find.byKey(const Key('DeselectAllButton')), findsNWidgets(2));
+
+    weekplanBloc.addActivity(mockActivities.first, 0);
+    weekplanBloc.addActivity(mockActivities.last, 0);
+    await tester.pump();
+
+    ///checking that the select all activities button works
+    await tester.tap(find.byKey(const Key('SelectAllButton')).first);
+    await tester.pump();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 2);
+
+    ///checking that the Deselect all activities button works
+    await tester.tap(find.byKey(const Key('DeselectAllButton')).first);
+    await tester.pump();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+  });
+
+  testWidgets('When showing one day, it doesnt fill the whole screen',
+      (WidgetTester tester) async {
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
+
+    week = weekWithAllDays;
+
+    authBloc.setMode(WeekplanMode.citizen);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(week, user);
+
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('SingleWeekdayRow')), findsOneWidget);
+  });
+
+  testWidgets('When showing 5 days, it does fill the whole screen',
+      (WidgetTester tester) async {
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
+
+    mockSettings.nrOfDaysToDisplay = 5;
+
+    week = weekWithAllDays;
+
+    authBloc.setMode(WeekplanMode.citizen);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(week, user);
+
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
+    mockSettings.nrOfDaysToDisplay = 5;
+  });
+
+  testWidgets(
+      'Week day colors should be in correct order regardless of order in DB',
+      (WidgetTester tester) async {
+    mockSettings.nrOfDaysToDisplay = 7;
+
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
+
+    week.days = <WeekdayModel>[
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Saturday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Sunday)
+    ];
+
+    authBloc.setMode(WeekplanMode.citizen);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week, user)));
+    await tester.pumpAndSettle();
+
+    for (WeekdayColorModel dayColor in mockSettings.weekDayColors) {
+      expectColorDayMatch(dayColor.day, dayColor.hexColor);
+    }
+  });
+}
+
+void expectColorDayMatch(Weekday day, String color) {
+  String dayString = '';
+  if (day == Weekday.Monday) {
+    dayString = 'Mandag';
+  } else if (day == Weekday.Tuesday) {
+    dayString = 'Tirsdag';
+  } else if (day == Weekday.Wednesday) {
+    dayString = 'Onsdag';
+  } else if (day == Weekday.Thursday) {
+    dayString = 'Torsdag';
+  } else if (day == Weekday.Friday) {
+    dayString = 'Fredag';
+  } else if (day == Weekday.Saturday) {
+    dayString = 'Lørdag';
+  } else {
+    dayString = 'Søndag';
+  }
+
+  final Finder findColor = find.byWidgetPredicate((Widget widget) =>
+      widget is Card && widget.color == Color(int.parse(color)));
+  final Finder findTitle = find.byWidgetPredicate(
+      (Widget widget) => widget is Card && widget.key == Key(dayString));
+
+  expect(find.descendant(of: findColor, matching: findTitle), findsOneWidget);
 }
