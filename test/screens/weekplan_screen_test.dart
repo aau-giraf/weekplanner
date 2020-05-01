@@ -49,23 +49,15 @@ class MockUserApi extends Mock implements UserApi {
 }
 
 List<WeekdayColorModel> createWeekDayColors() {
-  final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
-  weekDayColors
-      .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Monday));
-  weekDayColors
-      .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Tuesday));
-  weekDayColors
-      .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Wednesday));
-  weekDayColors
-      .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Thursday));
-  weekDayColors
-      .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Friday));
-  weekDayColors
-      .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Saturday));
-  weekDayColors
-      .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Sunday));
-
-  return weekDayColors;
+  return <WeekdayColorModel>[
+    WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
+    WeekdayColorModel(day: Weekday.Monday, hexColor: '0xff999999'),
+    WeekdayColorModel(day: Weekday.Saturday, hexColor: '0xffeeeeee'),
+    WeekdayColorModel(day: Weekday.Tuesday, hexColor: '0xffaaaaaa'),
+    WeekdayColorModel(day: Weekday.Thursday, hexColor: '0xffcccccc'),
+    WeekdayColorModel(day: Weekday.Sunday, hexColor: '0xffffffff'),
+    WeekdayColorModel(day: Weekday.Wednesday, hexColor: '0xffbbbbbb'),
+  ];
 }
 
 void main() {
@@ -738,4 +730,59 @@ void main() {
     expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
     mockSettings.nrOfDaysToDisplay = 5;
   });
+
+  testWidgets(
+      'Week day colors should be in correct order regardless of order in DB',
+      (WidgetTester tester) async {
+    mockSettings.nrOfDaysToDisplay = 7;
+
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
+
+    week.days = <WeekdayModel>[
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Saturday),
+      WeekdayModel(activities: <ActivityModel>[], day: Weekday.Sunday)
+    ];
+
+    authBloc.setMode(WeekplanMode.citizen);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(week, user)));
+    await tester.pumpAndSettle();
+
+    for (WeekdayColorModel dayColor in mockSettings.weekDayColors) {
+      expectColorDayMatch(dayColor.day, dayColor.hexColor);
+    }
+  });
+}
+
+void expectColorDayMatch(Weekday day, String color) {
+  String dayString = '';
+  if (day == Weekday.Monday) {
+    dayString = 'Mandag';
+  } else if (day == Weekday.Tuesday) {
+    dayString = 'Tirsdag';
+  } else if (day == Weekday.Wednesday) {
+    dayString = 'Onsdag';
+  } else if (day == Weekday.Thursday) {
+    dayString = 'Torsdag';
+  } else if (day == Weekday.Friday) {
+    dayString = 'Fredag';
+  } else if (day == Weekday.Saturday) {
+    dayString = 'Lørdag';
+  } else {
+    dayString = 'Søndag';
+  }
+
+  final Finder findColor = find.byWidgetPredicate((Widget widget) =>
+      widget is Card && widget.color == Color(int.parse(color)));
+  final Finder findTitle = find.byWidgetPredicate(
+      (Widget widget) => widget is Card && widget.key == Key(dayString));
+
+  expect(find.descendant(of: findColor, matching: findTitle), findsOneWidget);
 }

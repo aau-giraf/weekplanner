@@ -6,6 +6,7 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -297,12 +298,15 @@ class WeekplanScreen extends StatelessWidget {
                     weekDays.clear();
                     for (int i = 0; i < _daysToDisplay; i++) {
                       // Get color from the citizen's chosen color theme
-                      final String hexColor = _settingsModel
-                          .weekDayColors[_weekdayCounter].hexColor
+                      final String dayColor = _settingsModel.weekDayColors
+                          .where((WeekdayColorModel w) =>
+                              w.day == Weekday.values[_weekdayCounter])
+                          .single
+                          .hexColor
                           .replaceFirst('#', '0xff');
                       weekDays.add(Expanded(
                           child: Card(
-                              color: Color(int.parse(hexColor)),
+                              color: Color(int.parse(dayColor)),
                               child: _day(
                                   weekModel.days[_weekdayCounter], context))));
                       if (_weekdayCounter == 6) {
@@ -316,9 +320,9 @@ class WeekplanScreen extends StatelessWidget {
                     return Row(
                       key: const Key('SingleWeekdayRow'),
                       children: <Widget>[
-                        const Spacer(flex: 2,),
+                        const Spacer(flex: 2),
                         weekDays.first,
-                        const Spacer(flex: 2,)
+                        const Spacer(flex: 2),
                       ],
                     );
                   } else {
