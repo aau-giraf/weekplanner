@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
@@ -46,19 +48,23 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        await _bloc.copyContent(
-            context, weekModel, copyBloc, currentUser, forThisCitizen);
+        _bloc
+            .copyContent(
+                context, weekModel, copyBloc, currentUser, forThisCitizen)
+            .then((bool done) {
+          if (done) {
+            Routes.goHome(context);
+            Routes.push(context,
+                WeekplanSelectorScreen(currentUser));
+          }
+        });
       },
     );
 
     return Scaffold(
       appBar: GirafAppBar(title: 'Ny ugeplan'),
       body: InputFieldsWeekPlan(
-        bloc: _bloc,
-        button: saveButton,
-        weekModel: weekModel
-      ),
+          bloc: _bloc, button: saveButton, weekModel: weekModel),
     );
   }
 }
-

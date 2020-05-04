@@ -33,6 +33,8 @@ class CopyResolveBloc extends NewWeekplanBloc {
       CopyWeekplanBloc copyBloc,
       DisplayNameModel currentUser,
       bool forThisCitizen) async {
+
+    Completer done = Completer<bool>();
     final WeekModel newWeekModel = WeekModel();
     newWeekModel.days = oldWeekModel.days;
 
@@ -47,15 +49,28 @@ class CopyResolveBloc extends NewWeekplanBloc {
       _displayConflictDialog(context, newWeekModel.weekNumber,
               newWeekModel.weekYear, numberOfConflicts, currentUser)
           .then((bool toOverwrite) {
+            print(toOverwrite);
         if (toOverwrite) {
-          copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
+          copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen)
+          .then((List<bool> dones) {
+            if (dones.any((b) => false)){
+              done.complete(false);
+            }
+            done.complete(true);
+          });
         }
       });
     } else {
-      copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen);
-      _returnToSelectorScreen(context, currentUser);
+      copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen)
+        .then((List<bool> dones) {
+        if (dones.any((b) => false)){
+          done.complete(false);
+        }
+        done.complete(true);
+      });
     }
-    return true;
+
+    return done.future;
   }
 
   Future<bool> _displayConflictDialog(BuildContext context, int weekNumber,
@@ -78,7 +93,6 @@ class CopyResolveBloc extends NewWeekplanBloc {
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
             confirmOnPressed: () {
               dialogCompleter.complete(true);
-              _returnToSelectorScreen(context, currentUser);
             },
             cancelOnPressed: () {
               dialogCompleter.complete(false);
@@ -89,8 +103,4 @@ class CopyResolveBloc extends NewWeekplanBloc {
     return dialogCompleter.future;
   }
 
-  void _returnToSelectorScreen(BuildContext context, DisplayNameModel user) {
-    Routes.goHome(context);
-    Routes.push(context, WeekplanSelectorScreen(user, waitAndUpdate: true));
-  }
 }

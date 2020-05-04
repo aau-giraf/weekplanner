@@ -26,7 +26,7 @@ import '../style/custom_color.dart' as theme;
 class WeekplanSelectorScreen extends StatelessWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
-  WeekplanSelectorScreen(this._user, {this.waitAndUpdate = false})
+  WeekplanSelectorScreen(this._user)
       : _weekBloc = di.getDependency<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
@@ -34,18 +34,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
   final WeekplansBloc _weekBloc;
   final DisplayNameModel _user;
 
-  /// Bool that tells whether the bloc should update after a while
-  final bool waitAndUpdate;
 
   @override
   Widget build(BuildContext context) {
-    if (waitAndUpdate){
-      // ignore: always_specify_types
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _weekBloc.notifyUpdate();
-      });
-    }
-
     return Scaffold(
         appBar: GirafAppBar(
           title: _user.displayName,

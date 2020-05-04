@@ -21,7 +21,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
 
   /// Copies weekplan to all selected citizens
   // ignore: avoid_void_async
-  void copyWeekplan(WeekModel weekModel, DisplayNameModel currentUser,
+  Future<List<bool>> copyWeekplan(WeekModel weekModel, DisplayNameModel currentUser,
       bool forThisCitizen) async {
 
     List<DisplayNameModel> users = <DisplayNameModel>[];
@@ -31,12 +31,20 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
       users = _markedUserModels.value;
     }
 
+    List<Future<bool>> callFutures = <Future<bool>>[];
     for (DisplayNameModel user in users) {
+      Completer callCompleter = Completer<bool>();
       _api.week
           .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
           .take(1)
-          .listen((WeekModel weekModel) {});
+          .listen((WeekModel weekModel) {
+            bool done = weekModel != null;
+            callCompleter.complete(done);
+          });
+
+      callFutures.add(callCompleter.future);
     }
+    return Future.wait(callFutures);
   }
 
   /// Returns a list of all users which already have a weekplan in the same week

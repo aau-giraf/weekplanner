@@ -175,10 +175,12 @@ class CopyToCitizensScreen extends StatelessWidget {
           option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
           option2Text: 'Overskriv',
           option2OnPressed: () {
-            _bloc.copyWeekplan(_copiedWeekModel, _currentUser, false);
-            Routes.goHome(context);
-            Routes.push(context,
-              WeekplanSelectorScreen(_currentUser, waitAndUpdate: true));
+            _bloc.copyWeekplan(_copiedWeekModel, _currentUser, false)
+              .then((_) {
+              Routes.goHome(context);
+              Routes.push(context,
+                WeekplanSelectorScreen(_currentUser));
+            });
           },
           option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
         );
