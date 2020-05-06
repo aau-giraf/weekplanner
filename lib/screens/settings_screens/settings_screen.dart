@@ -6,6 +6,7 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
@@ -41,6 +42,7 @@ class SettingsScreen extends StatelessWidget {
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
         _buildTimerSection(context),
+        _buildTimeRepresentationSettings(context),
         _buildUserSettings()
       ],
     );

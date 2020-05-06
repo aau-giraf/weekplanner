@@ -54,10 +54,12 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
       );
     } else {
       String _imagePath;
-      if (timer == DefaultTimer.AnalogClock) {
+      if (timer == DefaultTimer.PieChart) {
         _imagePath = 'assets/icons/piechart.png';
       } else if (timer == DefaultTimer.Hourglass) {
         _imagePath = 'assets/icons/hourglass_icon.png';
+      } else if (timer == DefaultTimer.Numeric) {
+      _imagePath = 'assets/icons/countdowntimer.png';
       }
       checkBoxButton = ListTile(
           title: Text(text),
