@@ -42,7 +42,6 @@ void main() {
     di.registerDependency<TimerBloc>((_) => timerMock);
   });
 
-<<<<<<< HEAD
   tearDown(() {
     api = null;
     mockActivityApi = null;
@@ -51,7 +50,7 @@ void main() {
 
     di.clearAll();
   });
-=======
+  
   ActivityModel createActivityModel(int fullLength, int progress,
       {bool paused = false}) {
     return ActivityModel(
@@ -107,7 +106,6 @@ void main() {
     });
     done();
   }));
->>>>>>> 0098970... added tests to settingsscreen and timerbloc
 
   test('Testing if timer is added to an acitivty without a timer already',
       async((DoneFn done) {
@@ -224,21 +222,12 @@ void main() {
             progress: 1),
         isChoiceBoard: false);
 
-<<<<<<< HEAD
         timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
           expect(m, TimerRunningMode.running);
           done();
         });
 
         timerMock.load(activityModel, user: mockUser);
-=======
-    timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
-      expect(m, TimerRunningMode.running);
-      done();
-    });
-    timerMock.load(activityModel, user: mockUser);
-    sleep(const Duration(milliseconds: 10));
->>>>>>> 0098970... added tests to settingsscreen and timerbloc
 
     timerMock.initTimer();
   }));
