@@ -151,7 +151,6 @@ class WeekplansBloc extends BlocBase {
         return a.weekYear.compareTo(b.weekYear);
       }
     });
-
     return list;
   }
 
