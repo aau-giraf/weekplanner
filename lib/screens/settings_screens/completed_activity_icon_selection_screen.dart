@@ -44,21 +44,29 @@ class CompletedActivityIconScreen extends StatelessWidget {
                               _settingsModel.completeMark =
                                   CompleteMark.Removed;
                               _settingsBloc.updateSettings(_user.id,
-                                _settingsModel);
+                                _settingsModel).listen((SettingsModel model) {
+                                  _settingsBloc.loadSettings(_user);
+                              });
                           }),
                       SettingsCheckMarkButton(
                           1,
                           _settingsModel.completeMark.index,
                           'Flueben', () {
                         _settingsModel.completeMark = CompleteMark.Checkmark;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel);
+                        _settingsBloc.updateSettings(_user.id, _settingsModel).
+                            listen((SettingsModel model) {
+                              _settingsBloc.loadSettings(_user);
+                        });
                       }),
                       SettingsCheckMarkButton(
                           2,
                           _settingsModel.completeMark.index,
                           'Lav aktiviteten grå', () {
                         _settingsModel.completeMark = CompleteMark.MovedRight;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel);
+                        _settingsBloc.updateSettings(_user.id, _settingsModel).
+                            listen((SettingsModel model) {
+                              _settingsBloc.loadSettings(_user);
+                        });
                       }),
                     ]),
                   ],

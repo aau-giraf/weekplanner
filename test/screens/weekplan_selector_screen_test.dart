@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -75,15 +73,6 @@ void main() {
       weekNumber: 1,
       weekYear: 2020);
 
-  final WeekModel weekModel1Copy = WeekModel(
-      name: 'weekModel1',
-      thumbnail: pictogramModel,
-      days: <WeekdayModel>[
-        WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
-      ],
-      weekNumber: 3,
-      weekYear: 2020);
-
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
     final WeekNameModel weekNameModel =
@@ -100,14 +89,6 @@ void main() {
     when(weekApi.get('testId',
         weekNameModel.weekYear, weekNameModel.weekNumber))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
-
-    when(api.week.update(any, any, any, any)).thenAnswer((_) {
-      weekNameModelList.add(WeekNameModel(
-          name: weekModel1Copy.name,
-          weekNumber: weekModel1Copy.weekNumber,
-          weekYear: weekModel1Copy.weekYear));
-      return Observable<WeekModel>.just(weekModel1Copy);
-    });
 
     when(weekApi.get(
             'testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
@@ -417,34 +398,78 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
   });
 
-  testWidgets('Test editing is valid', (WidgetTester tester) async {
+  testWidgets('Test edit failure dialog with zero selected',
+    (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-    bool editingIsValid;
 
-    final StreamSubscription<bool> listenForValid1 =
-    bloc.onlyOneModelMarkedStream().listen((bool b) {
-      editingIsValid = b;
-    });
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('EditButtonKey')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fejl'), findsOneWidget);
+    expect(find.text('Markér en uge for at redigere den'), findsOneWidget);
+  });
+
+  testWidgets('Test edit failure dialog with multiple selected',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.pumpAndSettle();
 
-    final StreamSubscription<bool> listenForValid2 =
-        bloc.onlyOneModelMarkedStream().listen((bool b) {
-      expect(b, false);
-    });
-    listenForValid2.cancel();
-
     await tester.tap(find.byKey(Key(weekModel2.name)));
     await tester.pumpAndSettle();
 
-    expect(editingIsValid, false);
+    await tester.tap(find.byKey(const Key('EditButtonKey')));
+    await tester.pumpAndSettle();
 
-    listenForValid1.cancel();
+    expect(find.text('Fejl'), findsOneWidget);
+    expect(find.text('Der kan kun redigeres en uge ad gangen'), findsOneWidget);
+
+  });
+
+  testWidgets('Test edit no error dialog with one selected',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('EditButtonKey')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fejl'), findsNothing);
+  });
+
+  testWidgets('Test delete failure when none selected',
+          (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fejl'), findsOneWidget);
+    expect(find.text('Der skal markeres mindst én uge for at slette'),
+    findsOneWidget);
+
   });
 
   testWidgets('Test BottomAppBar buttons exist', (WidgetTester tester) async {

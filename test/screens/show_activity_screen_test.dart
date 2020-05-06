@@ -3,10 +3,16 @@ import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
+import 'package:api_client/models/enums/cancel_mark_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
+import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
+import 'package:api_client/models/timer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -30,27 +36,15 @@ import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
 class MockUserApi extends Mock implements UserApi {
-
   @override
   Observable<GirafUserModel> me() {
     return Observable<GirafUserModel>.just(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
-  }
-
-  @override
-  Observable<SettingsModel> getSettings(String id) {
-    final SettingsModel settingsModel = SettingsModel(
-      orientation: null,
-      completeMark: null,
-      cancelMark: null,
-      defaultTimer: null,
-      theme: null,
-    );
-    return Observable<SettingsModel>.just(settingsModel);
   }
 }
 
@@ -95,7 +89,6 @@ class MockActivityApi extends Mock implements ActivityApi {
   }
 }
 
-
 final WeekModel mockWeek = WeekModel(
     weekYear: 2018,
     weekNumber: 21,
@@ -128,11 +121,8 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
           lastEdit: null))
 ];
 
-final DisplayNameModel mockUser = DisplayNameModel(
-  id: '42',
-  displayName: 'mockUser',
-  role: null
-);
+final DisplayNameModel mockUser =
+    DisplayNameModel(id: '42', displayName: 'mockUser', role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {
@@ -161,6 +151,73 @@ ActivityModel makeNewActivityModel() {
           lastEdit: null));
 }
 
+ActivityModel mockActivityModelWithTimer() {
+  return ActivityModel(
+      id: 1381,
+      state: ActivityState.Normal,
+      order: 0,
+      isChoiceBoard: false,
+      pictogram: PictogramModel(
+          id: 25,
+          title: 'grå',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      timer: TimerModel(
+          startTime: DateTime.now(),
+          progress: 0,
+          fullLength: const Duration(seconds: 5).inMilliseconds,
+          paused: true));
+}
+
+ActivityModel mockActivityModelWithCompletedTimer() {
+  return ActivityModel(
+      id: 1381,
+      state: ActivityState.Normal,
+      order: 0,
+      isChoiceBoard: false,
+      pictogram: PictogramModel(
+          id: 25,
+          title: 'grå',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      timer: TimerModel(
+          startTime: DateTime.now(),
+          progress: const Duration(seconds: 5).inMilliseconds,
+          fullLength: const Duration(seconds: 5).inMilliseconds,
+          paused: true));
+}
+
+final SettingsModel mockSettings = SettingsModel(
+  orientation: orientation.Orientation.Portrait,
+  completeMark: CompleteMark.Checkmark,
+  cancelMark: CancelMark.Cross,
+  defaultTimer: DefaultTimer.PieChart,
+  timerSeconds: 1,
+  activitiesCount: 1,
+  theme: GirafTheme.GirafYellow,
+  nrOfDaysToDisplay: 1,
+  weekDayColors: null,
+  lockTimerControl: false,
+  pictogramText: false,
+);
+
+final SettingsModel mockSettings2 = SettingsModel(
+  orientation: orientation.Orientation.Portrait,
+  completeMark: CompleteMark.Checkmark,
+  cancelMark: CancelMark.Cross,
+  defaultTimer: DefaultTimer.PieChart,
+  timerSeconds: 1,
+  activitiesCount: 1,
+  theme: GirafTheme.GirafYellow,
+  nrOfDaysToDisplay: 1,
+  weekDayColors: null,
+  lockTimerControl: true,
+  pictogramText: false,
+);
 
 void main() {
   ActivityBloc bloc;
@@ -173,11 +230,16 @@ void main() {
     when(weekApi.update(
             mockUser.id, mockWeek.weekYear, mockWeek.weekNumber, mockWeek))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
+
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings);
+    });
   }
 
   setUp(() {
     api = Api('any');
     weekApi = MockWeekApi();
+    api.user = MockUserApi();
     api.week = weekApi;
     api.activity = MockActivityApi();
     authBloc = AuthBloc(api);
@@ -197,28 +259,28 @@ void main() {
   });
 
   testWidgets('renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Activity pictogram is rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump(Duration.zero);
 
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
   });
 
   testWidgets('ButtonBar is rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
@@ -227,8 +289,8 @@ void main() {
   testWidgets('Cancel activity button is rendered in guardian mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsOneWidget);
@@ -237,8 +299,8 @@ void main() {
   testWidgets('Complete activity button is NOT rendered in guardian mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('CompleteStateToggleButton')), findsNothing);
@@ -247,8 +309,8 @@ void main() {
   testWidgets('Cancel activity button is NOT rendered in citizen mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsNothing);
@@ -257,8 +319,8 @@ void main() {
   testWidgets('Activity has checkmark icon when completed',
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
@@ -267,8 +329,8 @@ void main() {
   testWidgets('Activity has cancel icon when canceled',
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
@@ -277,8 +339,8 @@ void main() {
   testWidgets('Activity has no checkmark when Normal',
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
@@ -288,8 +350,8 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -301,8 +363,8 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
@@ -315,8 +377,8 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Completed;
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -353,8 +415,8 @@ void main() {
     expect(find.byKey(const Key('TimerButtonRow')), findsNothing);
   });
 
-  Future<void> _openTimePickerAndConfirm(WidgetTester tester,
-      int seconds, int minutes, int hours) async {
+  Future<void> _openTimePickerAndConfirm(
+      WidgetTester tester, int seconds, int minutes, int hours) async {
     await tester.tap(find.byKey(const Key('AddTimerButtonKey')));
     await tester.pump();
     await tester.enterText(
@@ -513,11 +575,11 @@ void main() {
   });
 
   testWidgets('Timer not visivle when activity cancelled',
-          (WidgetTester tester) async{
+      (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
 
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
 
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
 
@@ -527,45 +589,147 @@ void main() {
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
   });
 
+  testWidgets('Test that play button appears when timer is complete',
+      (WidgetTester tester) async {
+    final Completer<bool> checkCompleted = Completer<bool>();
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpAndSettle();
+    await _openTimePickerAndConfirm(tester, 1, 0, 0);
+    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+    sleep(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    final StreamSubscription<TimerRunningMode> listenForCompleted =
+        timerBloc.timerRunningMode.listen((TimerRunningMode m) {
+      expect(m, TimerRunningMode.completed);
+      checkCompleted.complete();
+    });
+    await checkCompleted.future;
+    listenForCompleted.cancel();
+
+    expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
+  });
+
+  testWidgets('Test that restart dialog pops up when timer is restarted',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpAndSettle();
+    await _openTimePickerAndConfirm(tester, 1, 0, 0);
+    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+    sleep(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('TimerRestartDialogKey')), findsOneWidget);
+  });
+
+  testWidgets('Only have a play button for timer when lockTimerControl is true',
+      (WidgetTester tester) async {
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings2);
+    });
+    await tester.runAsync(() async {
+      authBloc.setMode(WeekplanMode.citizen);
+      await tester.pumpWidget(
+          MaterialApp(home: MockScreen(mockActivityModelWithTimer())));
+
+      await tester.pumpAndSettle();
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/play.png') &&
+              widget.key == const Key('TimerPlayButtonKey')),
+          findsOneWidget);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/pause.png') &&
+              widget.key == const Key('TimerPauseButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
+              widget.key == const Key('TimerStopButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image ==
+                  const AssetImage('assets/icons/delete.png') &&
+              widget.key == const Key('TimerDeleteButtonKey')),
+          findsNothing);
+      await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/play.png') &&
+              widget.key == const Key('TimerPlayButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/pause.png') &&
+              widget.key == const Key('TimerPauseButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
+              widget.key == const Key('TimerStopButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image ==
+                  const AssetImage('assets/icons/delete.png') &&
+              widget.key == const Key('TimerDeleteButtonKey')),
+          findsNothing);
+    });
+  });
+
   testWidgets(
-      'Test that play button appears when timer is complete',
-          (WidgetTester tester) async {
-            final Completer<bool> checkCompleted = Completer<bool>();
-        await tester
-            .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
-        await tester.pumpAndSettle();
-        await _openTimePickerAndConfirm(tester, 1, 0, 0);
-        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-        sleep(const Duration(seconds: 2));
-        await tester.pumpAndSettle(const Duration(seconds: 2));
+      'No buttons for timer when an activity with a completed timer is chosen',
+      (WidgetTester tester) async {
+    when(api.user.getSettings(any)).thenAnswer((_) {
+      return Observable<SettingsModel>.just(mockSettings2);
+    });
+    await tester.runAsync(() async {
+      authBloc.setMode(WeekplanMode.citizen);
+      await tester.pumpWidget(
+          MaterialApp(home: MockScreen(mockActivityModelWithCompletedTimer())));
+      await tester.pumpAndSettle();
 
-        final StreamSubscription<TimerRunningMode> listenForCompleted =
-            timerBloc.timerRunningMode.listen((TimerRunningMode m) {
-              expect(m, TimerRunningMode.completed);
-              checkCompleted.complete();
-            });
-        await checkCompleted.future;
-        listenForCompleted.cancel();
-
-        expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
-      }
-  );
-
-  testWidgets(
-      'Test that restart dialog pops up when timer is restarted',
-          (WidgetTester tester) async {
-        await tester
-            .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
-        await tester.pumpAndSettle();
-        await _openTimePickerAndConfirm(tester, 1, 0, 0);
-        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-        sleep(const Duration(seconds: 2));
-        await tester.pumpAndSettle(const Duration(seconds: 2));
-        await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-        await tester.pumpAndSettle();
-
-        expect(find.byKey(const Key('TimerRestartDialogKey')),
-            findsOneWidget);
-      }
-  );
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/play.png') &&
+              widget.key == const Key('TimerPlayButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/pause.png') &&
+              widget.key == const Key('TimerPauseButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
+              widget.key == const Key('TimerStopButtonKey')),
+          findsNothing);
+      expect(
+          find.byWidgetPredicate((Widget widget) =>
+              widget is GirafButton &&
+              widget.icon.image ==
+                  const AssetImage('assets/icons/delete.png') &&
+              widget.key == const Key('TimerDeleteButtonKey')),
+          findsNothing);
+    });
+  });
 }

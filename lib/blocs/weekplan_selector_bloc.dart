@@ -195,10 +195,4 @@ class WeekplansBloc extends BlocBase {
     _weekModel.close();
     _weekNameModelsList.close();
   }
-
-  void notifyUpdate() {
-    _api.week.getNames(_user.id).listen((List<WeekNameModel> weekNames) {
-      _weekNameModelsList.add(weekNames);
-    }, onError: (Object exception) => getAllWeekInfo(null));
-  }
 }

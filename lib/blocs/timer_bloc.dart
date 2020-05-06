@@ -54,7 +54,7 @@ class TimerBloc extends BlocBase {
       fixedPlayer: _volumePlayer
   );
 
-  final String _audioFile = 'dingSound.mp3';
+  final String _audioFile = 'dingSound.wav';
   final int _updatePeriod = 1000;
 
   /// Loads the activity that should be used in the timerBloc

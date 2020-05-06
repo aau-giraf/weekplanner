@@ -5,8 +5,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: develop
-      resolved-ref: d23bf00b89fbfa084759aad5d3472cfa7a108be7
+      ref: master
+      resolved-ref: "890f5f849ad9fb340b1fba22ab926a69adbdfb96"
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"
@@ -201,7 +201,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.7"
+    version: "1.6.5"
   path_provider_macos:
     dependency: transitive
     description:
@@ -271,7 +271,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.7"
+    version: "0.5.5"
   shared_preferences_macos:
     dependency: transitive
     description:
@@ -286,13 +286,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  shared_preferences_web:
-    dependency: transitive
-    description:
-      name: shared_preferences_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2+4"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -398,4 +391,4 @@ packages:
     version: "3.5.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13 <2.0.0"

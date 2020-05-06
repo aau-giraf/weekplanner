@@ -40,16 +40,17 @@ void main() {
     displayName: 'Citizen',
     id: '1'
   );
-  final SettingsModel settings = SettingsModel(
+  SettingsModel settings = SettingsModel(
       orientation: Orientation.Portrait,
       completeMark: CompleteMark.Checkmark,
       cancelMark: CancelMark.Cross,
-      defaultTimer: DefaultTimer.Numeric,
+      defaultTimer: DefaultTimer.PieChart,
       timerSeconds: 1,
       activitiesCount: 1,
       theme: GirafTheme.GirafYellow,
       nrOfDaysToDisplay: 1,
-      weekDayColors: null
+      weekDayColors: null,
+      pictogramText: false,
   );
 
   final SettingsModel updatedSettings = SettingsModel(
@@ -62,18 +63,21 @@ void main() {
       theme: GirafTheme.GirafYellow,
       nrOfDaysToDisplay: 2,
       weekDayColors: null,
+      pictogramText: true,
   );
 
   setUp(() {
     api = Api('any');
-
     api.user = MockUserApi();
 
+    // Mocks the api call to get settings
     when(api.user.getSettings(any)).thenAnswer((Invocation inv) {
       return Observable<SettingsModel>.just(settings);
     });
 
+    // Mocks the api call to update settings
     when(api.user.updateSettings(any, any)).thenAnswer((Invocation inv) {
+      settings = updatedSettings;
       return Observable<SettingsModel>.just(updatedSettings);
     });
 
@@ -92,18 +96,9 @@ void main() {
   }));
 
   test('Can update settings', async((DoneFn done) {
-    settings.orientation = Orientation.Landscape;
-    settings.completeMark = CompleteMark.MovedRight;
-    settings.cancelMark = CancelMark.Removed;
-    settings.defaultTimer = DefaultTimer.Hourglass;
-    settings.timerSeconds = 2;
-    settings.activitiesCount = 3;
-    settings.theme = GirafTheme.GirafYellow;
-    settings.nrOfDaysToDisplay = 2;
-    settings.weekDayColors = null;
-    settingsBloc.settings.listen((SettingsModel response) {
-      expect(response, isNotNull);
-      expect(response.toJson(), equals(settings.toJson()));
+    settingsBloc.settings.listen((SettingsModel loadedSettings) {
+      expect(loadedSettings, isNotNull);
+      expect(loadedSettings.toJson(), equals(updatedSettings.toJson()));
       done();
     });
 
