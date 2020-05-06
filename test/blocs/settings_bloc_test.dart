@@ -1,5 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/cancel_mark_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
@@ -8,7 +9,6 @@ import 'package:api_client/models/enums/orientation_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -25,7 +25,7 @@ class MockUserApi extends Mock implements UserApi {
         department: 3,
         role: Role.Guardian,
         roleName: 'Guardian',
-        screenName: 'Kurt',
+        displayName: 'Kurt',
         username: 'SpaceLord69',
     ));
   }
@@ -35,21 +35,22 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   SettingsBloc settingsBloc;
   Api api;
-  final UsernameModel user = UsernameModel(
+  final DisplayNameModel user = DisplayNameModel(
     role: Role.Citizen.toString(),
-    name: 'Citizen',
+    displayName: 'Citizen',
     id: '1'
   );
-  final SettingsModel settings = SettingsModel(
+  SettingsModel settings = SettingsModel(
       orientation: Orientation.Portrait,
       completeMark: CompleteMark.Checkmark,
       cancelMark: CancelMark.Cross,
-      defaultTimer: DefaultTimer.AnalogClock,
+      defaultTimer: DefaultTimer.PieChart,
       timerSeconds: 1,
       activitiesCount: 1,
       theme: GirafTheme.GirafYellow,
       nrOfDaysToDisplay: 1,
-      weekDayColors: null
+      weekDayColors: null,
+      pictogramText: false,
   );
 
   final SettingsModel updatedSettings = SettingsModel(
@@ -62,18 +63,21 @@ void main() {
       theme: GirafTheme.GirafYellow,
       nrOfDaysToDisplay: 2,
       weekDayColors: null,
+      pictogramText: true,
   );
 
   setUp(() {
     api = Api('any');
-
     api.user = MockUserApi();
 
+    // Mocks the api call to get settings
     when(api.user.getSettings(any)).thenAnswer((Invocation inv) {
       return Observable<SettingsModel>.just(settings);
     });
 
+    // Mocks the api call to update settings
     when(api.user.updateSettings(any, any)).thenAnswer((Invocation inv) {
+      settings = updatedSettings;
       return Observable<SettingsModel>.just(updatedSettings);
     });
 
@@ -92,22 +96,14 @@ void main() {
   }));
 
   test('Can update settings', async((DoneFn done) {
-    settings.orientation = Orientation.Landscape;
-    settings.completeMark = CompleteMark.MovedRight;
-    settings.cancelMark = CancelMark.Removed;
-    settings.defaultTimer = DefaultTimer.Hourglass;
-    settings.timerSeconds = 2;
-    settings.activitiesCount = 3;
-    settings.theme = GirafTheme.GirafYellow;
-    settings.nrOfDaysToDisplay = 2;
-    settings.weekDayColors = null;
-    settingsBloc.settings.listen((SettingsModel response) {
-      expect(response, isNotNull);
-      expect(response.toJson(), equals(settings.toJson()));
+    settingsBloc.settings.listen((SettingsModel loadedSettings) {
+      expect(loadedSettings, isNotNull);
+      expect(loadedSettings.toJson(), equals(updatedSettings.toJson()));
       done();
     });
 
     settingsBloc.updateSettings(user.id, settings);
+    settingsBloc.loadSettings(user);
   }));
 
   test('Should dispose stream', async((DoneFn done) {

@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
@@ -43,10 +43,10 @@ class ChooseCitizenScreen extends StatelessWidget {
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                child: StreamBuilder<List<UsernameModel>>(
+                child: StreamBuilder<List<DisplayNameModel>>(
                   stream: _bloc.citizen,
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<UsernameModel>> snapshot) {
+                      AsyncSnapshot<List<DisplayNameModel>> snapshot) {
                     if (snapshot.connectionState != ConnectionState.waiting) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(
@@ -76,11 +76,11 @@ class ChooseCitizenScreen extends StatelessWidget {
 
   /// Builds the list of citizens together with the "add citizen" button
   List<Widget> _buildCitizenSelectionList(BuildContext context,
-    AsyncSnapshot<List<UsernameModel>> snapshot) {
+    AsyncSnapshot<List<DisplayNameModel>> snapshot) {
     final List<Widget> list = snapshot.data
-        .map<Widget>((UsernameModel user) =>
+        .map<Widget>((DisplayNameModel user) =>
         CitizenAvatar(
-            usernameModel: user,
+            displaynameModel: user,
             onPressed:  () => Routes.push(context,
                 WeekplanSelectorScreen(user)))).toList();
 

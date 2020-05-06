@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 
 /// Collection of user and its week.
@@ -10,5 +10,5 @@ class UserWeekModel {
   final WeekModel week;
 
   /// The citizen
-  final UsernameModel user;
+  final DisplayNameModel user;
 }

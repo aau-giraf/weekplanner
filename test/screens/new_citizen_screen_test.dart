@@ -23,7 +23,8 @@ class MockNewCitizenBloc extends NewCitizenBloc {
   @override
   Observable<GirafUserModel> createCitizen() {
     return api.account
-        .register('mockUserName', 'password', departmentId: null, role: null);
+        .register('mockUserName', 'password', 'mockDisplayName',
+        departmentId: null, role: null);
   }
 
   @override
@@ -54,7 +55,7 @@ class MockUserApi extends Mock implements UserApi {
         department: 1,
         role: Role.Guardian,
         roleName: 'Guardian',
-        screenName: 'Kirsten Birgit',
+        displayName: 'Kirsten Birgit',
         username: 'kb7913'));
   }
 }

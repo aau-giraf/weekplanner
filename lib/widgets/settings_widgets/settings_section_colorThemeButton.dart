@@ -8,18 +8,19 @@ import '../../style/custom_color.dart' as theme;
 class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
   /// Constructor
   const SettingsColorThemeCheckMarkButton(
-      this._expected, this._current, this._text, this._callback);
+      this._expected, this._current, this.text, this._callback);
 
   final List<WeekdayColorModel> _expected, _current;
 
-  final String _text;
+  /// Text on button
+  final String text;
 
   final VoidCallback _callback;
 
   @override
   Widget build(BuildContext context) {
     Widget trailing;
-    if (_shouldHaveCheckMark()) {
+    if (hasCheckMark()) {
       trailing = Icon(Icons.check, color: theme.GirafColors.black);
     } else {
       trailing = null;
@@ -29,7 +30,7 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
       title: Row(
         children: <Widget>[
           ThemeBox.fromHexValues(_expected[0].hexColor, _expected[1].hexColor),
-          Text(_text),
+          Text(text),
         ],
       ),
       trailing: trailing,
@@ -37,23 +38,19 @@ class SettingsColorThemeCheckMarkButton extends SettingsSectionItem {
     );
   }
 
-  bool _shouldHaveCheckMark() {
-    if (_expected == null || _current == null) {
-      return false;
-    }
-
-    if (_expected.length != _current.length) {
-      return false;
-    }
-
-    for (int i = 0; i < _expected.length; i++) {
-      if (_expected[i].hexColor != _current[i].hexColor) {
-        return false;
+  /// Checks if the button has been chosen
+  bool hasCheckMark() {
+    if (_expected != null &&
+        _current != null &&
+        _expected.length == _current.length) {
+      for (int i = 0; i < _expected.length; i++) {
+        if (_expected[i].hexColor != _current[i].hexColor ||
+            _expected[i].day != _current[i].day) {
+          return false;
+        }
       }
-      if (_expected[i].day != _current[i].day) {
-        return false;
-      }
+      return true;
     }
-    return true;
+    return false;
   }
 }

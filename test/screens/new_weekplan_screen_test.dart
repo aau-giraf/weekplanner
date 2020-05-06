@@ -1,11 +1,8 @@
-import 'package:http/http.dart' as http;
-import 'package:api_client/http/http.dart';
-import 'package:api_client/api/api_exception.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
@@ -73,8 +70,8 @@ final WeekModel mockWeek = WeekModel(
     weekNumber: 1,
     weekYear: 2019);
 
-final UsernameModel mockUser =
-    UsernameModel(name: 'test', role: 'test', id: 'test');
+final DisplayNameModel mockUser =
+DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
 
 WeekplansBloc mockWeekplanSelector;
 
@@ -353,17 +350,7 @@ void main() {
   testWidgets('Week plan is created even when there are no existing plans',
       (WidgetTester tester) async {
     when(api.week.getNames(any)).thenAnswer(
-      (_) => Observable<List<WeekNameModel>>.error(ApiException(Response(
-          http.Response(
-              '{"success":false,"errorKey":"NoWeekScheduleFound"'
-              '"errorProperties":[]}',
-              200),
-          <String, dynamic>{
-            'success': 'false',
-            'errorKey': 'NoWeekScheduleFound',
-            'errorProperties': <List<dynamic>>[]
-          }))),
-    );
+        (_) => Observable<List<WeekNameModel>>.just(<WeekNameModel>[]));
 
     mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);

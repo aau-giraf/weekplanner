@@ -2,12 +2,12 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:async_test/async_test.dart';
@@ -27,7 +27,7 @@ class MockUserApi extends Mock implements UserApi {
         department: 3,
         role: Role.Guardian,
         roleName: 'Guardian',
-        screenName: 'Kurt',
+        displayName: 'Kurt',
         username: 'SpaceLord69'));
   }
 }
@@ -38,8 +38,12 @@ void main() {
 
   WeekModel week;
 
-  final UsernameModel user =
-      UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+  final DisplayNameModel user =
+  DisplayNameModel(
+    role: Role.Guardian.toString(),
+    displayName: 'User',
+    id: '1'
+  );
 
   setUp(() {
     week = WeekModel(
@@ -215,8 +219,11 @@ void main() {
 
   test('Checks if marked activities are deleted from a users weekplan',
       async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+      role: Role.Citizen.toString(),
+      displayName: 'User',
+      id: '1'
+    );
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -265,8 +272,11 @@ void main() {
 
   test('Checks if marked activities are copied to a new day',
       async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+      role: Role.Citizen.toString(),
+      displayName: 'User',
+      id: '1'
+    );
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -347,8 +357,11 @@ void main() {
   }));
 
   test('Checks if marked activities are marked as cancel', async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Citizen.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+      role: Role.Citizen.toString(),
+      displayName: 'User',
+      id: '1'
+    );
 
     final ActivityModel activity = ActivityModel(
         pictogram: PictogramModel(
@@ -452,8 +465,11 @@ void main() {
   }));
 
   test('Adds an activity to a given weekplan', async((DoneFn done) {
-    final UsernameModel user =
-        UsernameModel(role: Role.Guardian.toString(), name: 'User', id: '1');
+    final DisplayNameModel user = DisplayNameModel(
+      role: Role.Guardian.toString(),
+      displayName: 'User',
+      id: '1'
+    );
 
     final ActivityModel activity = ActivityModel(
         order: null,

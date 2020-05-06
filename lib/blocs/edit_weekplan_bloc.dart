@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/api/api.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
@@ -13,7 +13,7 @@ class EditWeekplanBloc extends NewWeekplanBloc {
 
   /// This method should always be called before using the bloc, because
   /// it fills out the initial values of the week model object
-  void initializeEditBloc(UsernameModel user, WeekModel weekModel) {
+  void initializeEditBloc(DisplayNameModel user, WeekModel weekModel) {
     super.initialize(user);
     // We just take the values out of the week model and put into our sink
     super.onTitleChanged.add(weekModel.name);

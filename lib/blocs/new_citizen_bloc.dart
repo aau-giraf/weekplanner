@@ -56,6 +56,7 @@ class NewCitizenBloc extends BlocBase {
   /// Updates the current user(guardian)
   /// Necessary to call in case another user logs in without terminating the app
   void initialize() {
+    resetBloc();
     _api.user.me().listen((GirafUserModel user) {
       _user = user;
     });
@@ -66,7 +67,7 @@ class NewCitizenBloc extends BlocBase {
     return _api.account.register(
         usernameController.value,
         passwordController.value,
-        displayName: displayNameController.value,
+        displayNameController.value,
         departmentId: _user.department,
         role: Role.Citizen
     );

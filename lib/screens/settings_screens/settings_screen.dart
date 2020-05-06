@@ -1,5 +1,6 @@
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
@@ -13,16 +14,16 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 import 'package:weekplanner/widgets/settings_widgets/settings_theme_display_box.dart';
 
 import '../../di.dart';
+import 'completed_activity_icon_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
 class SettingsScreen extends StatelessWidget {
-
   /// Constructor
-  SettingsScreen(UsernameModel user) : _user = user{
+  SettingsScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
 
-  final UsernameModel _user;
+  final DisplayNameModel _user;
 
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
@@ -39,6 +40,7 @@ class SettingsScreen extends StatelessWidget {
         _buildThemeSection(context),
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
+        _buildTimerSection(context),
         _buildUserSettings()
       ],
     );
@@ -46,32 +48,40 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildThemeSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
-      stream: _settingsBloc.settings,
+        stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
-        if(settingsSnapshot.hasData) {
-          final SettingsModel settingsModel = settingsSnapshot.data;
-          return SettingsSection('Tema', <SettingsSectionItem>[
-            SettingsArrowButton('Farver på ugeplan',
-                    () =>
-                    Routes.push(
-                        context, ColorThemeSelectorScreen(user: _user)
-                    ).then((Object object) =>
-                          _settingsBloc.loadSettings(_user)),
-                titleTrailing: ThemeBox.fromHexValues(
-                    settingsModel.weekDayColors[0].hexColor,
-                    settingsModel.weekDayColors[1].hexColor
-                )
-            ),
-            SettingsArrowButton('Tegn for udførelse', () {})
-          ]);
-        }else{
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      }
-    );
+          if (settingsSnapshot.hasData) {
+            final SettingsModel settingsModel = settingsSnapshot.data;
+            return SettingsSection('Tema', <SettingsSectionItem>[
+              SettingsArrowButton(
+                  'Farver på ugeplan',
+                  () => Routes.push(
+                          context, ColorThemeSelectorScreen(user: _user))
+                      .then(
+                          (Object object) => _settingsBloc.loadSettings(_user)),
+                  titleTrailing: ThemeBox.fromHexValues(
+                      settingsModel.weekDayColors[0].hexColor,
+                      settingsModel.weekDayColors[1].hexColor)),
+              SettingsArrowButton(
+                  'Tegn for udførelse',
+                  () =>
+                      Routes.push(context, CompletedActivityIconScreen(_user))
+                      .then(
+                          (Object object) => _settingsBloc.loadSettings(_user)),
+                  titleTrailing: Text(settingsModel.completeMark == 
+                  CompleteMark.Checkmark ? 'Flueben' : 
+                    settingsModel.completeMark == CompleteMark.MovedRight ? 
+                    'Lav aktiviteten grå' : 
+                    'Fjern aktiviteten')
+                  )
+            ]);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 
   Widget _buildOrientationSection() {
@@ -81,18 +91,73 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildWeekPlanSection(BuildContext context) {
-    return SettingsSection('Ugeplan', <SettingsSectionItem>[
-      SettingsArrowButton(
-          'Antal dage', () => Routes.push(context, NumberOfDaysScreen(_user))),
-      // TODO(klogeat): bind to correct settings value when API is merged
-      SettingsCheckMarkButton.fromBoolean(
-          false, 'Piktogram tekst er synlig', () {}),
-    ]);
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            final SettingsModel settingsModel = settingsSnapshot.data;
+            return SettingsSection('Ugeplan', <SettingsSectionItem>[
+              SettingsArrowButton(
+                'Antal dage',
+                () => Routes.push(context, NumberOfDaysScreen(_user))
+                    .then((Object object) => _settingsBloc.loadSettings(_user)),
+                titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
+                    ? 'En dag'
+                    : settingsModel.nrOfDaysToDisplay == 5
+                        ? 'Mandag til fredag'
+                        : 'Mandag til søndag'),
+              ),
+              SettingsCheckMarkButton.fromBoolean(
+                  settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
+                  settingsModel.pictogramText = !settingsModel.pictogramText;
+                  _settingsBloc.updateSettings(
+                      _user.id, settingsModel)
+                      .listen((SettingsModel response) {
+                    if (response != null) {
+                      _settingsBloc.loadSettings(_user);
+                    }
+                  });
+              }),
+            ]);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+  }
+
+  Widget _buildTimerSection(BuildContext context) {
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            final SettingsModel _settingsModel = settingsSnapshot.data;
+            return SettingsSection('Tid', <SettingsSectionItem>[
+              SettingsCheckMarkButton.fromBoolean(
+                  _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
+                _settingsModel.lockTimerControl =
+                    !_settingsModel.lockTimerControl;
+                _settingsBloc
+                    .updateSettings(_user.id, _settingsModel)
+                    .listen((SettingsModel response) {
+                  _settingsBloc.loadSettings(_user);
+                });
+              })
+            ]);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 
   Widget _buildUserSettings() {
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-      SettingsArrowButton(_user.name + ' indstillinger', () {}),
+      SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
     ]);
   }
 }

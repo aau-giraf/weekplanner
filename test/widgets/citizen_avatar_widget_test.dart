@@ -1,4 +1,4 @@
-import 'package:api_client/models/username_model.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
@@ -7,14 +7,17 @@ class MockScreen extends StatelessWidget {
   MockScreen({@required this.callback});
 
   final VoidCallback callback;
-  final UsernameModel usernameModel =
-      UsernameModel(name: 'Testname', role: 'Guardian', id: '2');
+  final DisplayNameModel usernameModel =
+  DisplayNameModel(displayName: 'Testname', role: 'Guardian', id: '2');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: CitizenAvatar(usernameModel: usernameModel, onPressed: callback),
+        child: CitizenAvatar(
+          displaynameModel: usernameModel,
+          onPressed: callback
+        ),
       ),
     );
   }

@@ -1,10 +1,10 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/username_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,6 +17,9 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
+
+SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -27,49 +30,31 @@ class MockUserApi extends Mock implements UserApi {
 
   @override
   Observable<SettingsModel> getSettings(String id) {
-    final SettingsModel settingsModel = SettingsModel(
-        orientation: null,
-        completeMark: null,
-        cancelMark: null,
-        defaultTimer: null,
-        theme: null,
-        weekDayColors: createWeekDayColors()
-    );
-
-    return Observable<SettingsModel>.just(settingsModel);
+    return Observable<SettingsModel>.just(mockSettings);
   }
 
+  @override
+  Observable<SettingsModel> updateSettings(String id, SettingsModel settings) {
+    mockSettings = settings;
+    return Observable<SettingsModel>.just(mockSettings);
+  }
 
-  static List<WeekdayColorModel>createWeekDayColors() {
+  static List<WeekdayColorModel> createWeekDayColors() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Monday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Tuesday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Wednesday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Thursday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Friday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Saturday
-    ));
-    weekDayColors.add(WeekdayColorModel(
-        hexColor: '#FF0000',
-        day: Weekday.Sunday
-    ));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Monday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Tuesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Wednesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Thursday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Friday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Saturday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Sunday));
 
     return weekDayColors;
   }
@@ -77,19 +62,33 @@ class MockUserApi extends Mock implements UserApi {
 
 void main() {
   Api api;
+  SettingsBloc settingsBloc;
 
-  final UsernameModel user = UsernameModel(
-      name: 'Anders And', id: '101', role: Role.Guardian.toString());
+  final DisplayNameModel user = DisplayNameModel(
+      displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
 
   setUp(() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
 
+    mockSettings = SettingsModel(
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      defaultTimer: null,
+      theme: null,
+      nrOfDaysToDisplay: 1,
+      weekDayColors: MockUserApi.createWeekDayColors(),
+      lockTimerControl: false,
+      pictogramText: false,
+    );
+
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-
+    settingsBloc = SettingsBloc(api);
+    settingsBloc.loadSettings(user);
+    di.registerDependency<SettingsBloc>((_) => settingsBloc);
   });
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {
@@ -113,20 +112,22 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Orientering'), findsOneWidget);
     expect(find.text('Landskab'), findsOneWidget);
-    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Ugeplan section', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
     expect(find.text('Ugeplan'), findsOneWidget);
     expect(find.text('Antal dage'), findsOneWidget);
+    expect(find.text('En dag'), findsOneWidget);
+    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Brugerindstillinger section',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     expect(find.text('Bruger indstillinger'), findsOneWidget);
-    expect(find.text(user.name + ' indstillinger'), findsOneWidget);
+    expect(find.text(user.displayName + ' indstillinger'), findsOneWidget);
   });
 
   testWidgets('Farver på ugeplan button changes screen',
@@ -136,5 +137,49 @@ void main() {
     await tester.tap(find.text('Farver på ugeplan'));
     await tester.pumpAndSettle();
     expect(find.byType(ColorThemeSelectorScreen), findsOneWidget);
+  });
+
+  testWidgets('Piktogram tekst knap opdaterer indstillinger',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+
+    expect(false, mockSettings.pictogramText);
+
+    await tester.tap(find.text('Piktogram tekst er synlig'));
+    await tester.pumpAndSettle();
+
+    expect(true, mockSettings.pictogramText);
+  });
+
+  testWidgets('Settings has TimerControl checkbox without an checkmark',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
+            widget.text == 'Lås tidsstyring'),
+        findsOneWidget);
+  });
+
+  testWidgets('Tapping the TimerControl checkbox changes the current value',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pump();
+
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+        widget.current == 2 &&
+        widget.text == 'Lås tidsstyring'));
+    await tester.pump();
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+            widget.current == 1 &&
+            widget.text == 'Lås tidsstyring'),
+        findsOneWidget);
   });
 }

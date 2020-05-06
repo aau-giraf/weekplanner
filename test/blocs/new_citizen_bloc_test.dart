@@ -17,7 +17,7 @@ class MockUserApi extends Mock implements UserApi {
         department: 1,
         role: Role.Guardian,
         roleName: 'Guardian',
-        screenName: 'Kirsten Birgit',
+        displayName: 'Kirsten Birgit',
         username: 'kb7913'));
   }
 }
@@ -31,7 +31,7 @@ void main() {
       department: 1,
       role: Role.Citizen,
       roleName: 'Citizen',
-      screenName: 'Birgit',
+      displayName: 'Birgit',
       username: 'b1337');
 
   setUp(() {
@@ -43,7 +43,7 @@ void main() {
 
 
     when(api.account.register(
-        any, any, displayName: anyNamed('displayName'),
+        any, any, any,
         departmentId: anyNamed('departmentId'), role:  anyNamed('role')))
         .thenAnswer((_) {
       return Observable<GirafUserModel>.just(user);
@@ -56,7 +56,7 @@ void main() {
     bloc.onUsernameChange.add(user.username);
     bloc.onPasswordChange.add('1234');
     bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.createCitizen();
 
     verify(bloc.createCitizen());
@@ -67,7 +67,7 @@ void main() {
     bloc.onUsernameChange.add(user.username);
     bloc.onPasswordChange.add('1234');
     bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -91,7 +91,7 @@ void main() {
     bloc.onUsernameChange.add(user.username);
     bloc.onPasswordChange.add('1234');
     bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.resetBloc();
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
@@ -104,7 +104,7 @@ void main() {
     bloc.onUsernameChange.add(user.username);
     bloc.onPasswordChange.add('1224');
     bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -116,7 +116,7 @@ void main() {
     bloc.onUsernameChange.add(user.username);
     bloc.onPasswordChange.add('1234');
     bloc.onPasswordVerifyChange.add('1224');
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -128,7 +128,7 @@ void main() {
     bloc.onUsernameChange.add('my username');
     bloc.onPasswordChange.add('1234');
     bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -152,7 +152,7 @@ void main() {
     bloc.onUsernameChange.add('');
     bloc.onPasswordChange.add('1234');
     bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.allInputsAreValidStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, false);
@@ -215,7 +215,7 @@ void main() {
   }));
 
   test('Display name validation', async((DoneFn done) {
-    bloc.onDisplayNameChange.add(user.screenName);
+    bloc.onDisplayNameChange.add(user.displayName);
     bloc.validDisplayNameStream.listen((bool isValid) {
       expect(isValid, isNotNull);
       expect(isValid, true);
@@ -306,6 +306,7 @@ void main() {
 
   test('PasswordVerification is null, but password is missing',
       async((DoneFn done) {
+        bloc.onPasswordChange.add('');
         bloc.onPasswordVerifyChange.add(null);
         bloc.validPasswordVerificationStream.listen((bool isValid) {
           expect(isValid, isNotNull);
