@@ -141,8 +141,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildWeekplanCard(
-      BuildContext context, WeekModel weekplan, PictogramImageBloc bloc, bool current) {
+  Widget _buildWeekplanCard(BuildContext context, WeekModel weekplan,
+      PictogramImageBloc bloc, bool current) {
     return StreamBuilder<bool>(
         stream: _weekBloc.editMode,
         builder:
