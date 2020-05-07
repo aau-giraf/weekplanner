@@ -743,7 +743,14 @@ class WeekplanScreen extends StatelessWidget {
                   _buildTimerIcon(context, activities[index]),
                 ],
               ),
-              PictogramText(activities[index].pictogram, _user),
+
+              StreamBuilder<ActivityModel>(
+                stream: null,
+                builder: (context, snapshot) {
+                  return PictogramText(activities[index], _user);
+                }
+              ),
+
             ],
           ),
         ));
