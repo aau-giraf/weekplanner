@@ -4,7 +4,6 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -44,7 +43,8 @@ class TimerBloc extends BlocBase {
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 
-  /// Behavior subject for the progress of the timer in hours, minutes and seconds.
+  /// Behavior subject for the progress of the timer in
+  ///  hours, minutes and seconds.
   final BehaviorSubject<List<int>> _timerProgressNumeric =
       BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
 

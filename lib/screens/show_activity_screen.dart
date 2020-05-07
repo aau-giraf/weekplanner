@@ -1,4 +1,5 @@
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -13,14 +14,14 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/timer_widgets/timer_countdown.dart';
-import 'package:weekplanner/screens/timer_widgets/timer_hourglass.dart';
-import 'package:weekplanner/screens/timer_widgets/timer_piechart.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_countdown.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_hourglass.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_piechart.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Screen to show information about an activity, and change the state of it.
@@ -52,7 +53,7 @@ class ShowActivityScreen extends StatelessWidget {
     _timerBloc.load(_activity, user: _girafUser);
     _timerBloc.initTimer();
 
-    ///Used to check if the keyboard is visible
+    /// Used to check if the keyboard is visible
     return buildScreenFromOrientation(orientation, context);
   }
 
@@ -216,35 +217,28 @@ class ShowActivityScreen extends StatelessWidget {
   /// The widget to show, in the case that a timer has been initiated,
   /// showing the progression for the timer in both citizen and guardian mode.
   Widget _timerIsInitiatedWidget() {
-    return FittedBox(
-      key: const Key('TimerInitKey'),
-      child: StreamBuilder<double>(
-        stream: _timerBloc.timerProgressStream,
-        builder: (BuildContext timerProgressContext,
-            AsyncSnapshot<double> timerProgressSnapshot) {
-          return Container(
-            decoration: const ShapeDecoration(
-                shape: CircleBorder(
-                    side: BorderSide(
-                        color: theme.GirafColors.black, width: 0.5))),
-            child: CircleAvatar(
-              backgroundColor: theme.GirafColors.red,
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: CircularProgressIndicator(
-                  strokeWidth: 30,
-                  value: timerProgressSnapshot.hasData
-                      ? timerProgressSnapshot.data
-                      : 0.0,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                      theme.GirafColors.white),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          Widget _returnWidget;
+
+          if (settingsSnapshot.hasData) {
+            if (settingsSnapshot.data.defaultTimer == DefaultTimer.PieChart) {
+              _returnWidget = TimerPiechart(_timerBloc);
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Hourglass) {
+              _returnWidget = TimerHourglass(_timerBloc);
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Numeric) {
+              _returnWidget = TimerCountdown(_timerBloc);
+            }
+          } else {
+            _returnWidget = const CircularProgressIndicator();
+          }
+
+          return _returnWidget;
+        });
   }
 
   /// The widget to show, in the case that a timer has not been initiated

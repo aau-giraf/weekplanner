@@ -9,7 +9,7 @@ class TimerPiechart extends StatelessWidget {
     _timerBloc = timerBloc;
   }
 
-  ///
+   /// Bloc for timer logic
   TimerBloc _timerBloc;
 
   @override

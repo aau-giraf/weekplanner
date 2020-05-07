@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import '../../style/custom_color.dart' as theme;
 
+/// Class for drawing a timer hourglass
 class TimerHourglass extends StatelessWidget {
-  /// COMMENT ME
+  /// Constructor
   TimerHourglass(TimerBloc timerBloc) {
     _timerBloc = timerBloc;
   }
 
+   /// Bloc for timer logic
   TimerBloc _timerBloc;
 
   /// Builds an hourglass representing the progress of a timer in
@@ -53,20 +55,20 @@ LayoutBuilder _drawHourglass(AsyncSnapshot<double> timerProgressSnapshot) {
             Container(
               height: _topBoxHeight(constraints, timerProgressSnapshot),
               width: constraints.maxWidth,
-              // white
-              color: Colors.white,
+              // Change color for debug. White is default.
+              color: theme.GirafColors.white,
             ),
             Container(
               height: _middleBoxHeight(constraints, timerProgressSnapshot),
               width: constraints.maxWidth,
-              // Transparent
+              // Change color for debug. Transparent is default.
               color: Colors.transparent,
             ),
             Container(
                 height: _bottomBoxHeight(constraints, timerProgressSnapshot),
                 width: constraints.maxWidth,
-                // white
-                color: Colors.white),
+                // Change color for debug. White is default.
+                color: theme.GirafColors.white),
           ],
         ),
         Image(

@@ -12,9 +12,9 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 
 import '../../di.dart';
 
-///Class
+/// Screen responsible for changeing which timer to show a citizen
 class TimeRepresentationScreen extends StatelessWidget {
-  ///Constructor
+  /// Constructor
   TimeRepresentationScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
@@ -71,7 +71,7 @@ class TimeRepresentationScreen extends StatelessWidget {
                             Routes.pop(context);
                           }
                         });
-                      }, DefaultTimer.Hourglass)
+                      }, DefaultTimer.Numeric)
                     ]),
                   ],
                 );
