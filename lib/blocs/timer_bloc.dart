@@ -49,7 +49,8 @@ class TimerBloc extends BlocBase {
       BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
 
   /// Stream for the progress of the timer in minutes and seconds.
-  /// The array streamed contains minutes at index 0 and seconds at index 1.
+  /// The array streamed contains hours at index 0, 
+  /// minutes at index 1 and seconds at index 2.
   Stream<List<int>> get timerProgressNumeric => _timerProgressNumeric.stream;
 
   CountdownTimer _countDown;
