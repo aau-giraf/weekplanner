@@ -82,6 +82,7 @@ class CopyResolveScreen extends StatelessWidget {
       body: InputFieldsWeekPlan(
           bloc: _bloc, button: saveButton, weekModel: weekModel),
     );
+
   }
 
   Future<bool> _displayConflictDialog(BuildContext context, int weekNumber,
