@@ -1,3 +1,4 @@
+import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -32,9 +33,11 @@ import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
 
+// TODO(): overvej at mocke auth bloc, men tror ikke det bliver nødvendigt.
+
 WeekModel mockWeek;
 SettingsModel mockSettings;
-
+List<ActivityModel> mockActivities;
 
 class MockWeekApi extends Mock implements WeekApi {
   @override
@@ -75,6 +78,26 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
+
+// TODO(eneder17): få tjekket vi ikke bruger add() nogle steder
+//  fordi så skal den også mockes
+class MockActivityApi extends Mock implements ActivityApi {
+  @override
+  Observable<ActivityModel> update(ActivityModel activity, String userId) {
+    final int amtActivities = mockActivities.length;
+
+    //We look for the activity with the same id, and update.
+    for(int i = 0; i < amtActivities; i++) {
+      if(activity.id == mockActivities[i].id) {
+        mockActivities[i] = activity;
+        return Observable<ActivityModel>.just(mockActivities[i]);
+      }
+    }
+    // Else we just return the activity put in as input
+    return BehaviorSubject<ActivityModel>.seeded(activity);
+  }
+}
+
 List<WeekdayColorModel> createWeekDayColors() {
   return <WeekdayColorModel>[
     WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
@@ -86,7 +109,6 @@ List<WeekdayColorModel> createWeekDayColors() {
     WeekdayColorModel(day: Weekday.Wednesday, hexColor: '0xffbbbbbb'),
   ];
 }
-
 
 WeekModel createInitialMockWeek(){
   return WeekModel(
@@ -127,18 +149,10 @@ SettingsModel createInitialMockSettings() {
 
 }
 
-
-void main() {
-  WeekplanBloc weekplanBloc;
-  Api api;
-  AuthBloc authBloc;
-
-  final DisplayNameModel user = DisplayNameModel(
-      role: Role.Guardian.toString(), displayName: 'User', id: '1');
-
-  final List<ActivityModel> mockActivities = <ActivityModel>[
+List<ActivityModel> createInitialMockActivities(){
+  return <ActivityModel>[
     ActivityModel(
-        id: 1234,
+        id: 0,
         state: ActivityState.Normal,
         order: 0,
         isChoiceBoard: false,
@@ -150,7 +164,7 @@ void main() {
             imageUrl: null,
             lastEdit: null)),
     ActivityModel(
-        id: 1381,
+        id: 1,
         state: ActivityState.Normal,
         order: 0,
         isChoiceBoard: false,
@@ -162,19 +176,32 @@ void main() {
             imageUrl: null,
             lastEdit: null))
   ];
+}
+
+void main() {
+  WeekplanBloc weekplanBloc;
+  Api api;
+  AuthBloc authBloc;
+
+  final DisplayNameModel user = DisplayNameModel(
+      role: Role.Guardian.toString(), displayName: 'User', id: '1');
+
+
 
   setUp(() {
     api = Api('any');
 
-    // Binding the user api to the mock api and giving it initial setting values
-    api.user = MockUserApi();
-    mockSettings = createInitialMockSettings();
-    api.user.updateSettings(user.id, mockSettings);
 
-    // Binding the week api to the mock api and giving it initial week values
-    api.week = MockWeekApi();
+    // Setting initial values for all the mock objects
+    mockSettings = createInitialMockSettings();
     mockWeek = createInitialMockWeek();
-    api.week.update(user.id, 2020, 1, mockWeek);
+    mockActivities = createInitialMockActivities();
+
+
+    api.user = MockUserApi();
+    api.week = MockWeekApi();
+    api.activity = MockActivityApi();
+
 
     authBloc = AuthBloc(api);
 
