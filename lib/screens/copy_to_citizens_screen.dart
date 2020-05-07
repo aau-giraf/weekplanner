@@ -79,16 +79,16 @@ class CopyToCitizensScreen extends StatelessWidget {
                                 .numberOfConflictingUsers(
                                 _copiedWeekModel, _currentUser, false)
                                 .then((int conflicts) {
-                                if (conflicts > 0) {
-                                  _showConflictDialog(context, conflicts);
-                                } else {
-                                  _bloc.copyWeekplan(_copiedWeekModel,
-                                    _currentUser, false);
-                                  Routes.goHome(context);
-                                  Routes.push(context,
-                                    WeekplanSelectorScreen(_currentUser));
-                                  _showCopySuccessDialog(context);
-                                }
+                                  if (conflicts > 0) {
+                                    _showConflictDialog(context, conflicts);
+                                  } else {
+                                    _bloc.copyWeekplan(_copiedWeekModel,
+                                      _currentUser, false);
+                                    Routes.goHome(context);
+                                    Routes.push(context,
+                                      WeekplanSelectorScreen(_currentUser));
+                                    _showCopySuccessDialog(context);
+                                  }
                               });
                             },
                             icon: const ImageIcon(

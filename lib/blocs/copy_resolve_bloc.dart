@@ -1,12 +1,6 @@
-import 'dart:async';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:flutter/material.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/week_model.dart';
-import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
-import 'package:weekplanner/screens/weekplan_selector_screen.dart';
-import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
-import '../routes.dart';
 import 'new_weekplan_bloc.dart';
 
 /// This bloc has logic needed for the CopyResolveScreen
@@ -25,16 +19,8 @@ class CopyResolveBloc extends NewWeekplanBloc {
     super.onThumbnailChanged.add(weekModel.thumbnail);
   }
 
-  /// Takes the content of the bloc and create a new weekplan
-  /// and copies it to the chosen citizens
-  Future<bool> copyContent(
-      BuildContext context,
-      WeekModel oldWeekModel,
-      CopyWeekplanBloc copyBloc,
-      DisplayNameModel currentUser,
-      bool forThisCitizen) async {
-
-    Completer done = Completer<bool>();
+  /// This method is used to get the new week model based on the input fields
+  WeekModel createNewWeekmodel(WeekModel oldWeekModel) {
     final WeekModel newWeekModel = WeekModel();
     newWeekModel.days = oldWeekModel.days;
 
@@ -42,65 +28,8 @@ class CopyResolveBloc extends NewWeekplanBloc {
     newWeekModel.name = super.titleController.value;
     newWeekModel.weekYear = int.parse(super.yearController.value);
     newWeekModel.weekNumber = int.parse(super.weekNoController.value);
-    final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
-        newWeekModel, currentUser, forThisCitizen);
 
-    if (numberOfConflicts > 0) {
-      _displayConflictDialog(context, newWeekModel.weekNumber,
-              newWeekModel.weekYear, numberOfConflicts, currentUser)
-          .then((bool toOverwrite) {
-            print(toOverwrite);
-        if (toOverwrite) {
-          copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen)
-          .then((List<bool> dones) {
-            if (dones.any((b) => false)){
-              done.complete(false);
-            }
-            done.complete(true);
-          });
-        }
-      });
-    } else {
-      copyBloc.copyWeekplan(newWeekModel, currentUser, forThisCitizen)
-        .then((List<bool> dones) {
-        if (dones.any((b) => false)){
-          done.complete(false);
-        }
-        done.complete(true);
-      });
-    }
-
-    return done.future;
-  }
-
-  Future<bool> _displayConflictDialog(BuildContext context, int weekNumber,
-      int year, int numberOfConflicts, DisplayNameModel currentUser) {
-    final Completer<bool> dialogCompleter = Completer<bool>();
-    showDialog<Center>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext dialogContext) {
-          return GirafConfirmDialog(
-            key: const Key('OverwriteCopyDialogKey'),
-            title: 'Lav ny ugeplan til at kopiere',
-            description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
-                ', år: $year) hos $numberOfConflicts af borgerne. '
-                'Vil du overskrive '
-                '${numberOfConflicts == 1 ? "denne ugeplan" :
-                      "disse ugeplaner"} ?',
-            confirmButtonText: 'Ja',
-            confirmButtonIcon:
-                const ImageIcon(AssetImage('assets/icons/accept.png')),
-            confirmOnPressed: () {
-              dialogCompleter.complete(true);
-            },
-            cancelOnPressed: () {
-              dialogCompleter.complete(false);
-            },
-          );
-        });
-
-    return dialogCompleter.future;
+    return newWeekModel;
   }
 
 }

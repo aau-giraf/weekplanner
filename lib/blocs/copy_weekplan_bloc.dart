@@ -12,8 +12,8 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   CopyWeekplanBloc(this._api) : super(_api);
 
   /// The stream that emits the marked activities
-  Stream<List<DisplayNameModel>> get markedUserModels
-      => _markedUserModels.stream;
+  Stream<List<DisplayNameModel>> get markedUserModels =>
+      _markedUserModels.stream;
 
   final BehaviorSubject<List<DisplayNameModel>> _markedUserModels =
       BehaviorSubject<List<DisplayNameModel>>.seeded(<DisplayNameModel>[]);
@@ -21,9 +21,8 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
 
   /// Copies weekplan to all selected citizens
   // ignore: avoid_void_async
-  Future<List<bool>> copyWeekplan(WeekModel weekModel, DisplayNameModel currentUser,
-      bool forThisCitizen) async {
-
+  Future<List<bool>> copyWeekplan(WeekModel weekModel,
+      DisplayNameModel currentUser, bool forThisCitizen) async {
     List<DisplayNameModel> users = <DisplayNameModel>[];
     if (forThisCitizen) {
       users.add(currentUser);
@@ -35,12 +34,12 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     for (DisplayNameModel user in users) {
       Completer callCompleter = Completer<bool>();
       _api.week
-          .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
-          .take(1)
-          .listen((WeekModel weekModel) {
-            bool done = weekModel != null;
-            callCompleter.complete(done);
-          });
+        .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
+        .take(1)
+        .listen((WeekModel weekModel) {
+          bool done = weekModel != null;
+          callCompleter.complete(done);
+        });
 
       callFutures.add(callCompleter.future);
     }
@@ -62,9 +61,10 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   /// Checks if any user has a conflicting weekplan
   Future<int> numberOfConflictingUsers(WeekModel weekModel,
       DisplayNameModel currentUser, bool forThisCitizen) async {
-    final List<DisplayNameModel> users =
-        forThisCitizen ? <DisplayNameModel>[currentUser]
-            : _markedUserModels.value;
+    final List<DisplayNameModel> users = forThisCitizen
+        ? <DisplayNameModel>[currentUser]
+        : _markedUserModels.value;
+
     final List<DisplayNameModel> conflictingUsers =
         await getConflictingUsers(users, weekModel);
     return conflictingUsers.length;
@@ -74,10 +74,13 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   Future<bool> isConflictingUser(
       DisplayNameModel user, WeekModel weekModel) async {
     bool daysAreEmpty = true;
-    final WeekModel response = await _api.week
-        .get(user.id, weekModel.weekYear, weekModel.weekNumber)
-        .first;
 
+    final WeekModel response = await _api.week
+        .get(user.id, weekModel.weekYear, weekModel.weekNumber).first;
+
+    if(response.days == null){
+      return false;
+    }
     for (WeekdayModel weekDay in response.days) {
       daysAreEmpty = daysAreEmpty && weekDay.activities.isEmpty;
     }
@@ -87,8 +90,8 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
 
   /// Adds a new marked week model to the stream
   void toggleMarkedUserModel(DisplayNameModel user) {
-    final List<DisplayNameModel> localMarkedUserModels
-        = _markedUserModels.value;
+    final List<DisplayNameModel> localMarkedUserModels =
+        _markedUserModels.value;
     if (localMarkedUserModels.contains(user)) {
       localMarkedUserModels.remove(user);
     } else {

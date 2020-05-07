@@ -15,6 +15,7 @@ import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -248,8 +249,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
-                      isEnabled: false,
-                      isEnabledStream: _weekBloc.onlyOneModelMarkedStream(),
                       onPressed: () => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
                       buttonText: 'Kopiér',
