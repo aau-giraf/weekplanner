@@ -5,12 +5,10 @@ import '../../style/custom_color.dart' as theme;
 /// Class for drawing a timer piechart
 class TimerPiechart extends StatelessWidget {
   /// Constructor
-  TimerPiechart(TimerBloc timerBloc) {
-    _timerBloc = timerBloc;
-  }
+  const TimerPiechart(this._timerBloc);
 
    /// Bloc for timer logic
-  TimerBloc _timerBloc;
+  final TimerBloc _timerBloc;
 
   @override
   Widget build(BuildContext context) {

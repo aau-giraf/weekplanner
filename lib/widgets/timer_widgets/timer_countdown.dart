@@ -5,12 +5,12 @@ import '../../style/custom_color.dart' as theme;
 /// Class for drawing a timer, Countdown timer
 class TimerCountdown extends StatelessWidget {
   /// Constructor
-  TimerCountdown(TimerBloc timerBloc) {
-    _timerBloc = timerBloc;
-  }
+  const TimerCountdown(this._timerBloc);
 
   /// Bloc for timer logic
-  TimerBloc _timerBloc;
+  final TimerBloc _timerBloc;
+
+  
 
   @override
   Widget build(BuildContext context) {

@@ -5,12 +5,10 @@ import '../../style/custom_color.dart' as theme;
 /// Class for drawing a timer hourglass
 class TimerHourglass extends StatelessWidget {
   /// Constructor
-  TimerHourglass(TimerBloc timerBloc) {
-    _timerBloc = timerBloc;
-  }
+  const TimerHourglass(this._timerBloc);
 
    /// Bloc for timer logic
-  TimerBloc _timerBloc;
+    final TimerBloc _timerBloc;
 
   /// Builds an hourglass representing the progress of a timer in
   /// an activity screen
