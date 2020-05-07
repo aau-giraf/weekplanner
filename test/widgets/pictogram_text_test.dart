@@ -94,7 +94,6 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: PictogramText(pictogramModel, user)));
     await tester.pumpAndSettle();
-    //authBloc.setMode(WeekplanMode.citizen);
 
     expect(find.byType(AutoSizeText), findsOneWidget);
     final String title = pictogramModel.title;
