@@ -6,10 +6,8 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
@@ -18,22 +16,15 @@ class PictogramText extends StatelessWidget {
   /// Constructor
   PictogramText(this._activity, this._user, {this.minFontSize = 100}) {
     _settingsBloc.loadSettings(_user);
-    _activityBloc.load(_activity, _user);
-    _pictogram = _activity.pictogram;
   }
 
   final ActivityModel _activity;
 
   final DisplayNameModel _user;
 
-  /// The pictogram to build the text for
-  PictogramModel _pictogram;
-
   /// The settings bloc which we get the settings from, you need to make sure
   /// you have loaded settings into it before hand otherwise text is never build
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
   /// The authentication bloc that we get the current mode from (guardian/citizen)
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
@@ -43,6 +34,7 @@ class PictogramText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PictogramModel _pictogram = _activity.pictogram;
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
         builder: (BuildContext context,
@@ -51,10 +43,12 @@ class PictogramText extends StatelessWidget {
               stream: _settingsBloc.settings,
               builder: (BuildContext context,
                   AsyncSnapshot<SettingsModel> settingsSnapshot) {
-                if (settingsSnapshot.hasData) {
+                if (settingsSnapshot.hasData && weekModeSnapshot.hasData) {
                   final bool hasPictogramText =
                       settingsSnapshot.data.pictogramText;
-                  if (_isGuardianMode(weekModeSnapshot) || hasPictogramText) {
+                  if (_isGuardianMode(weekModeSnapshot) ||
+                      (hasPictogramText &&
+                          _activityVisible(settingsSnapshot))) {
                     final String pictogramText = _pictogram.title.toUpperCase();
                     return _buildPictogramText(context, pictogramText);
                   }
@@ -71,14 +65,13 @@ class PictogramText extends StatelessWidget {
     return false;
   }
 
-  SizedBox _buildPictogramText(BuildContext context, String pictogramText){
+  SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width / 4,
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal:
-              MediaQuery.of(context).size.width * 0.05),
+              horizontal: MediaQuery.of(context).size.width * 0.05),
           child: AutoSizeText(
             pictogramText,
             minFontSize: minFontSize,
@@ -86,9 +79,13 @@ class PictogramText extends StatelessWidget {
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 150),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 150),
           ),
         ));
+  }
+
+  bool _activityVisible(AsyncSnapshot<SettingsModel> settingsSnapshot) {
+    return !(settingsSnapshot.data.completeMark == CompleteMark.Removed &&
+        _activity.state == ActivityState.Completed);
   }
 }

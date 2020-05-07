@@ -1,5 +1,7 @@
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -34,6 +37,7 @@ class MockUserApi extends Mock implements UserApi {
 void main() {
   Api api;
   SettingsBloc settingsBloc;
+  ActivityBloc activityBloc;
   AuthBloc authBloc;
 
   final DisplayNameModel user = DisplayNameModel(
@@ -46,6 +50,13 @@ void main() {
       accessLevel: null,
       imageUrl: 'http://any.tld',
       imageHash: null);
+
+  final ActivityModel activityModel = ActivityModel(
+      id: 1,
+      pictogram: pictogramModel,
+      order: null,
+      state: ActivityState.Normal,
+      isChoiceBoard: null);
 
   setUp(() {
     di.clearAll();
@@ -65,7 +76,9 @@ void main() {
 
     api.user = MockUserApi();
     settingsBloc = SettingsBloc(api);
+    activityBloc = ActivityBloc(api);
     di.registerDependency<SettingsBloc>((_) => settingsBloc);
+    di.registerDependency<ActivityBloc>((_) => activityBloc);
 
     authBloc = AuthBloc(api);
     di.registerDependency<AuthBloc>((_) => authBloc);
@@ -78,7 +91,7 @@ void main() {
     authBloc.setMode(WeekplanMode.citizen);
 
     await tester
-        .pumpWidget(MaterialApp(home: PictogramText(pictogramModel, user)));
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
     await tester.pumpAndSettle();
 
     expect(find.byType(Container), findsOneWidget);
@@ -92,7 +105,7 @@ void main() {
     authBloc.setMode(WeekplanMode.citizen);
 
     await tester
-        .pumpWidget(MaterialApp(home: PictogramText(pictogramModel, user)));
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
     await tester.pumpAndSettle();
     //authBloc.setMode(WeekplanMode.citizen);
 
@@ -107,7 +120,7 @@ void main() {
     authBloc.setMode(WeekplanMode.guardian);
 
     await tester
-        .pumpWidget(MaterialApp(home: PictogramText(pictogramModel, user)));
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
@@ -121,7 +134,7 @@ void main() {
     authBloc.setMode(WeekplanMode.guardian);
 
     await tester
-        .pumpWidget(MaterialApp(home: PictogramText(pictogramModel, user)));
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
