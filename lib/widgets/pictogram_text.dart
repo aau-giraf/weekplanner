@@ -7,9 +7,11 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
 /// This is a widget used to create text under the pictograms
 class PictogramText extends StatelessWidget {
@@ -33,43 +35,28 @@ class PictogramText extends StatelessWidget {
 
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
+  /// The authentication bloc that we get the current mode from (guardian/citizen)
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+
   /// Determines the minimum font size that text can scale down to
   final double minFontSize;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<SettingsModel>(
-        stream: _settingsBloc.settings,
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
         builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
-          return StreamBuilder<ActivityModel>(
-              stream: _activityBloc.activityModelStream,
+            AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+          return StreamBuilder<SettingsModel>(
+              stream: _settingsBloc.settings,
               builder: (BuildContext context,
-                  AsyncSnapshot<ActivityModel> activitySnapshot) {
-                if (settingsSnapshot.hasData &&
-                    _activityVisible(activitySnapshot, settingsSnapshot)) {
+                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                if (settingsSnapshot.hasData) {
                   final bool hasPictogramText =
                       settingsSnapshot.data.pictogramText;
-                  if (hasPictogramText) {
+                  if (_isGuardianMode(weekModeSnapshot) || hasPictogramText) {
                     final String pictogramText = _pictogram.title.toUpperCase();
-                    return SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 4,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  MediaQuery.of(context).size.width * 0.05),
-                          child: AutoSizeText(
-                            pictogramText,
-                            minFontSize: minFontSize,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            // creates a ... postfix if text is too long
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 150),
-                          ),
-                        ));
+                    return _buildPictogramText(context, pictogramText);
                   }
                 }
                 return Container(width: 0, height: 0);
@@ -77,9 +64,31 @@ class PictogramText extends StatelessWidget {
         });
   }
 
-  bool _activityVisible(AsyncSnapshot<ActivityModel> activitySnapshot,
-      AsyncSnapshot<SettingsModel> settingsSnapshot) {
-    return !(settingsSnapshot.data.completeMark == CompleteMark.Removed &&
-        activitySnapshot.data.state == ActivityState.Completed);
+  bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+    if (weekModeSnapshot.data == WeekplanMode.guardian) {
+      return true;
+    }
+    return false;
+  }
+
+  SizedBox _buildPictogramText(BuildContext context, String pictogramText){
+    return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width / 4,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal:
+              MediaQuery.of(context).size.width * 0.05),
+          child: AutoSizeText(
+            pictogramText,
+            minFontSize: minFontSize,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            // creates a ... postfix if text overflows
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 150),
+          ),
+        ));
   }
 }
