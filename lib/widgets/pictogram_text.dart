@@ -46,24 +46,7 @@ class PictogramText extends StatelessWidget {
                       settingsSnapshot.data.pictogramText;
                   if (_isGuardianMode(weekModeSnapshot) || hasPictogramText) {
                     final String pictogramText = _pictogram.title.toUpperCase();
-                    return SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 4,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  MediaQuery.of(context).size.width * 0.05),
-                          child: AutoSizeText(
-                            pictogramText,
-                            minFontSize: minFontSize,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            // creates a ... postfix if text overflows
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 150),
-                          ),
-                        ));
+                    _buildPictogramText(context, pictogramText);
                   }
                 }
                 return Container(width: 0, height: 0);
@@ -76,5 +59,26 @@ class PictogramText extends StatelessWidget {
       return true;
     }
     return false;
+  }
+
+  Widget _buildPictogramText(BuildContext context, String pictogramText){
+    return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width / 4,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal:
+              MediaQuery.of(context).size.width * 0.05),
+          child: AutoSizeText(
+            pictogramText,
+            minFontSize: minFontSize,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            // creates a ... postfix if text overflows
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 150),
+          ),
+        ));
   }
 }
