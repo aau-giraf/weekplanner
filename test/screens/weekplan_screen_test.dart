@@ -1,5 +1,6 @@
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -78,7 +79,6 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
-
 // TODO(eneder17): få tjekket vi ikke bruger add() nogle steder
 //  fordi så skal den også mockes
 class MockActivityApi extends Mock implements ActivityApi {
@@ -94,7 +94,16 @@ class MockActivityApi extends Mock implements ActivityApi {
       }
     }
     // Else we just return the activity put in as input
-    return BehaviorSubject<ActivityModel>.seeded(activity);
+    return Observable<ActivityModel>.just(activity);
+  }
+}
+
+class MockPictogramApi extends Mock implements PictogramApi {
+  @override
+  Observable<Image> getImage(int id) {
+    final Image mockImage = Image(image: null);
+
+    return Observable<Image>.just(mockImage);
   }
 }
 
@@ -187,21 +196,17 @@ void main() {
       role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
 
-
   setUp(() {
     api = Api('any');
-
 
     // Setting initial values for all the mock objects
     mockSettings = createInitialMockSettings();
     mockWeek = createInitialMockWeek();
     mockActivities = createInitialMockActivities();
 
-
     api.user = MockUserApi();
     api.week = MockWeekApi();
     api.activity = MockActivityApi();
-
 
     authBloc = AuthBloc(api);
 
@@ -214,8 +219,7 @@ void main() {
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<TimerBloc>((_) => TimerBloc(api));
 
-
-    //authBloc.setMode(WeekplanMode.guardian);
+    authBloc.setMode(WeekplanMode.guardian);
   });
 
   testWidgets('Marks all and unmarks all activities for a given day',
