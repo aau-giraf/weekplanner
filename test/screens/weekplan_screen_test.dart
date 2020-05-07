@@ -35,6 +35,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
+import '../test_image.dart';
 
 // TODO(): overvej at mocke auth bloc, men tror ikke det bliver nødvendigt.
 
@@ -103,9 +104,8 @@ class MockActivityApi extends Mock implements ActivityApi {
 class MockPictogramApi extends Mock implements PictogramApi {
   @override
   Observable<Image> getImage(int id) {
-    const Image mockImage = Image(
-        image: AssetImage('assets/icons/pause.png'));
-
+    //We take the sample image from the test_image.dart file
+    final Image mockImage = sampleImage;
     return Observable<Image>.just(mockImage);
   }
 }
