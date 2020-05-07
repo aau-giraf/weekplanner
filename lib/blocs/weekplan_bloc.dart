@@ -194,6 +194,24 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
+  /// Deletes activity.
+  void deleteActivity(ActivityModel activity, int day) {
+    final WeekModel week = _userWeek.value.week;
+    final DisplayNameModel user = _userWeek.value.user;
+
+    for (int i = 0; i < week.days[day].activities.length; i++) {
+      if (week.days[day].activities[i].hashCode == activity.hashCode) {
+        week.days[day].activities.removeAt(i);
+      }
+    }
+
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel newWeek) {
+      _userWeek.add(UserWeekModel(newWeek, user));
+    });
+  }
+
   /// Returns the number of marked activities
   int getNumberOfMarkedActivities() {
     return _markedActivities.value.length;
