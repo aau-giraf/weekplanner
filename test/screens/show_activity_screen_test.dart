@@ -132,7 +132,7 @@ class MockScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShowActivityScreen(activity, mockUser);
+    return ShowActivityScreen(activity, null, null, mockUser);
   }
 }
 
@@ -260,19 +260,25 @@ void main() {
 
   testWidgets('renders', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Activity pictogram is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump(Duration.zero);
 
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
@@ -280,7 +286,9 @@ void main() {
 
   testWidgets('ButtonBar is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump();
 
     expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
@@ -290,7 +298,9 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsOneWidget);
@@ -300,7 +310,9 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump();
 
     expect(find.byKey(const Key('CompleteStateToggleButton')), findsNothing);
@@ -310,7 +322,9 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsNothing);
@@ -320,7 +334,9 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
@@ -330,7 +346,9 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
@@ -340,7 +358,9 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
@@ -351,7 +371,9 @@ void main() {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -364,7 +386,9 @@ void main() {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
@@ -378,7 +402,9 @@ void main() {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
@@ -574,12 +600,14 @@ void main() {
     });
   });
 
-  testWidgets('Timer not visivle when activity cancelled',
+  testWidgets('Timer not visible when activity cancelled',
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
 
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+        MaterialApp(
+            home: ShowActivityScreen(mockActivity, null, null, mockUser)
+        ));
 
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
 
