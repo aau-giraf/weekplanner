@@ -724,36 +724,39 @@ class WeekplanScreen extends StatelessWidget {
     ActivityState activityState,
   ) {
     return Container(
-        color: theme.GirafColors.white,
-        margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        child: FittedBox(
-          child: Column(
-            children: <Widget>[
-              Stack(
-                alignment: AlignmentDirectional.topEnd,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.width,
-                    child: FittedBox(
-                      child: _getPictogram(activities[index]),
-                    ),
+      color: theme.GirafColors.white,
+      margin: EdgeInsets.all(MediaQuery
+          .of(context)
+          .size
+          .width * 0.02),
+      child: FittedBox(
+        child: Column(
+          children: <Widget>[
+            Stack(
+              alignment: AlignmentDirectional.topEnd,
+              children: <Widget>[
+                SizedBox(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  child: FittedBox(
+                    child: _getPictogram(activities[index]),
                   ),
-                  _buildActivityStateIcon(context, activityState, weekday),
-                  _buildTimerIcon(context, activities[index]),
-                ],
-              ),
-
-              StreamBuilder<ActivityModel>(
-                stream: null,
-                builder: (context, snapshot) {
-                  return PictogramText(activities[index], _user);
-                }
-              ),
-
-            ],
-          ),
-        ));
+                ),
+                _buildActivityStateIcon(context, activityState, weekday),
+                _buildTimerIcon(context, activities[index]),
+              ],
+            ),
+            PictogramText(activities[index], _user),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Creates a cover for a completed activity, if choosing to not display them
