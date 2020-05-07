@@ -519,8 +519,7 @@ class WeekplanScreen extends StatelessWidget {
       }
     } else if (!(activities[index].state == ActivityState.Completed &&
         isCitizen)) {
-      Routes.push(context, ShowActivityScreen(activities[index], _user))
-          .then((Object object) => _weekplanBloc.loadWeek(_week, _user));
+      Routes.push(context, ShowActivityScreen(activities[index], _user));
     }
   }
 
