@@ -23,7 +23,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
@@ -207,6 +209,7 @@ void main() {
     api.user = MockUserApi();
     api.week = MockWeekApi();
     api.activity = MockActivityApi();
+    api.pictogram = MockPictogramApi();
 
     authBloc = AuthBloc(api);
 
@@ -218,6 +221,8 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<TimerBloc>((_) => TimerBloc(api));
+    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
+    di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
 
     authBloc.setMode(WeekplanMode.guardian);
   });
