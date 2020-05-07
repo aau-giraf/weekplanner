@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/timer_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
@@ -217,15 +219,16 @@ class TimerBloc extends BlocBase {
     }
   }
 
-  /// Deletes the timer from the activity and updates is database.
-  void deleteTimer() {
+  /// Deletes the timer from the activity and updates its database.
+  void deleteTimer(WeekModel weekModel, Weekday weekDay) {
     _resetCounterAndStopwatch();
     _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
 
-    _api.activity
-        .update(_activityModel, _user.id)
-        .listen((ActivityModel activity) {});
+    // Done this way to ensure the activity isn't deleted when updating.
+    _api.activity.delete(_activityModel.id, _user.id);
+    _api.activity.add(_activityModel, _user.id,
+        weekModel.name, weekModel.weekYear, weekModel.weekNumber, weekDay);
   }
 
   void _resetCounterAndStopwatch() {
