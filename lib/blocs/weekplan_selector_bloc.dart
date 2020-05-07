@@ -85,16 +85,11 @@ class WeekplansBloc extends BlocBase {
 
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
-    final Observable<List<WeekModel>> getWeekPlans = weekDetails.isEmpty
-      ? Observable.empty() : weekDetails.length == 1
-      ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
-      : Observable.combineLatestList(weekDetails);
+    final Observable<List<WeekModel>> getWeekPlans =
+      reformatWeekDetailsToObservableList(weekDetails);
 
     final Observable<List<WeekModel>> getOldWeekPlans =
-      oldWeekDetails.isEmpty ? Observable.empty() :
-      oldWeekDetails.length == 1 ?
-      oldWeekDetails[0].map((WeekModel plan) => <WeekModel>[plan]) :
-      Observable.combineLatestList(oldWeekDetails);
+      reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
       .take(1)
@@ -109,7 +104,20 @@ class WeekplansBloc extends BlocBase {
       .listen(_oldWeekModel.add);
   }
 
-  // Makes API calls to get the week details
+  /// Reformats [weekDetails] and [oldWeekDetails] in to an Observable List
+  Observable<List<WeekModel>> reformatWeekDetailsToObservableList
+      (List<Observable<WeekModel>> details){
+      return details.isEmpty ? Observable.empty() :
+        details.length == 1 ?
+        details[0].map((WeekModel plan) => <WeekModel>[plan]) :
+        Observable.combineLatestList(details);
+  }
+
+
+
+  /// Makes API calls to get the weekplan details
+  /// Old weekplans are stored in [oldWeekDetails]
+  /// and current/upcoming weekplans are stored in [weekDetails]
   void getWeekDetails(
     List<WeekNameModel> weekPlanNames,
     List<Observable<WeekModel>> weekDetails,
@@ -128,7 +136,7 @@ class WeekplansBloc extends BlocBase {
     }
   }
 
-  // Function that returns the current week number
+  /// Returns the current week number
   int getCurrentWeekNum(){
     final int dayOfYear = DateTime.now().difference(
         DateTime(DateTime.now().year, 1, 1)).inDays;
@@ -155,7 +163,7 @@ class WeekplansBloc extends BlocBase {
     return list;
   }
 
-  // Checks if a week is in the past/expired
+  /// Checks if a week is in the past/expired
   bool isWeekDone(WeekNameModel weekPlan){
     final int currentYear = DateTime.now().year;
     final int currentWeek = getCurrentWeekNum();
