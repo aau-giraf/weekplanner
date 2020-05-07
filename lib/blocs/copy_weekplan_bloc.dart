@@ -30,14 +30,14 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
       users = _markedUserModels.value;
     }
 
-    List<Future<bool>> callFutures = <Future<bool>>[];
+    final List<Future<bool>> callFutures = <Future<bool>>[];
     for (DisplayNameModel user in users) {
-      Completer callCompleter = Completer<bool>();
+      final Completer<bool> callCompleter = Completer<bool>();
       _api.week
         .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
         .take(1)
         .listen((WeekModel weekModel) {
-          bool done = weekModel != null;
+          final bool done = weekModel != null;
           callCompleter.complete(done);
         });
 

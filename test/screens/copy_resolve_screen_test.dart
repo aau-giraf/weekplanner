@@ -70,8 +70,8 @@ void main() {
     when(api.week.update('testId', 2020, 3, any)).thenAnswer((
       Invocation answer) {
 
-      WeekModel inputWeek = answer.positionalArguments[3];
-      WeekNameModel weekNameModel = WeekNameModel(
+      final WeekModel inputWeek = answer.positionalArguments[3];
+      final WeekNameModel weekNameModel = WeekNameModel(
         name: inputWeek.name,
         weekYear: 2020,
         weekNumber: 3
@@ -83,7 +83,7 @@ void main() {
 
     when(api.week.get('testId', 2020, 3)).thenAnswer((_) {
       for (WeekNameModel week in weekNameModelList){
-        bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
+        final bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
         if (isEqual){
           return Observable<WeekModel>.just(weekplan1Copy);
         }

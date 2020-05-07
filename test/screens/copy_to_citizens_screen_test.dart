@@ -46,13 +46,13 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
-final Map<String, WeekModel> map = Map();
+final Map<String, WeekModel> map = <String, WeekModel>{};
 bool hasConflict = false;
 
 class MockWeekApi extends Mock implements WeekApi {
   @override
   Observable<WeekModel> get(String id, int year, int weekNumber) {
-    WeekModel weekModel = WeekModel(days: <WeekdayModel>[
+    final WeekModel weekModel = WeekModel(days: <WeekdayModel>[
       WeekdayModel(
           day: Weekday.Monday, activities: <ActivityModel>[
             ActivityModel(
@@ -78,10 +78,10 @@ class MockWeekApi extends Mock implements WeekApi {
 }
 
 final DisplayNameModel user1 =
-    DisplayNameModel(id: 'testId', displayName: "testName", role: 'testRole');
+    DisplayNameModel(id: 'testId', displayName: 'testName', role: 'testRole');
 
 final DisplayNameModel user2 = DisplayNameModel(
-    id: 'test2Id', displayName: "test2Name", role: 'test2Role');
+    id: 'test2Id', displayName: 'test2Name', role: 'test2Role');
 
 final WeekModel emptyWeekmodel = WeekModel(days: <WeekdayModel>[]);
 

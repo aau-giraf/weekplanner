@@ -22,9 +22,11 @@ void main() {
 
 
   test('Test createNewWeekmodel', async((DoneFn done) {
+    // ignore: invalid_use_of_protected_member
     bloc.weekNoController.add('24');
-    bloc.weekNoController.listen((value) {
-      WeekModel newWeekModel = bloc.createNewWeekmodel(oldWeekmodel);
+    // ignore: invalid_use_of_protected_member
+    bloc.weekNoController.listen((_) {
+      final WeekModel newWeekModel = bloc.createNewWeekmodel(oldWeekmodel);
       expect(newWeekModel.weekNumber == 24, isTrue);
       done();
     });
