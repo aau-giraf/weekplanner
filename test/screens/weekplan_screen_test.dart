@@ -101,7 +101,8 @@ class MockActivityApi extends Mock implements ActivityApi {
 class MockPictogramApi extends Mock implements PictogramApi {
   @override
   Observable<Image> getImage(int id) {
-    final Image mockImage = Image(image: null);
+    const Image mockImage = Image(
+        image: AssetImage('assets/icons/pause.png'));
 
     return Observable<Image>.just(mockImage);
   }
