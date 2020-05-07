@@ -192,7 +192,6 @@ void main() {
   WeekplanBloc weekplanBloc;
   Api api;
   AuthBloc authBloc;
-
   final DisplayNameModel user = DisplayNameModel(
       role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
@@ -266,9 +265,6 @@ void main() {
       (WidgetTester tester) async {
 
     mockSettings.nrOfDaysToDisplay = 5;
-    /*SettingsModel newSettings = createInitialMockSettings();
-    newSettings.nrOfDaysToDisplay = 5;
-    api.user.updateSettings(user.id, newSettings);*/
     authBloc.setMode(WeekplanMode.citizen);
 
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
