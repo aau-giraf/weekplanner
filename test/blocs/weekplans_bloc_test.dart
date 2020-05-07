@@ -228,16 +228,12 @@ void main() {
 
   test('Check if the week models are sorted by date', async((DoneFn done) {
     final List<WeekModel> correctList = <WeekModel>[
-      weekModel5, weekModel4, weekModel1, weekModel3, weekModel2
+      weekModel5, weekModel4, weekModel1
     ];
 
-    weekNameModelList.add(weekNameModel2);
-    weekNameModelList.add(weekNameModel3);
     weekNameModelList.add(weekNameModel4);
     weekNameModelList.add(weekNameModel5);
 
-    weekModelList.add(weekModel2);
-    weekModelList.add(weekModel3);
     weekModelList.add(weekModel4);
     weekModelList.add(weekModel5);
 
