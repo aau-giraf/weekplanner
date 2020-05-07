@@ -29,11 +29,6 @@ class MockUserApi extends Mock implements UserApi {
   Observable<SettingsModel> getSettings(String id) {
     return Observable<SettingsModel>.just(mockSettings);
   }
-
-  @override
-  Observable<GirafUserModel> update(GirafUserModel id) {
-    return null;
-  }
 }
 
 void main() {
