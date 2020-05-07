@@ -46,7 +46,7 @@ class PictogramText extends StatelessWidget {
                       settingsSnapshot.data.pictogramText;
                   if (_isGuardianMode(weekModeSnapshot) || hasPictogramText) {
                     final String pictogramText = _pictogram.title.toUpperCase();
-                    _buildPictogramText(context, pictogramText);
+                    return _buildPictogramText(context, pictogramText);
                   }
                 }
                 return Container(width: 0, height: 0);
@@ -61,7 +61,7 @@ class PictogramText extends StatelessWidget {
     return false;
   }
 
-  Widget _buildPictogramText(BuildContext context, String pictogramText){
+  SizedBox _buildPictogramText(BuildContext context, String pictogramText){
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width / 4,
