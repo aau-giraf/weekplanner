@@ -51,7 +51,7 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        WeekModel newWeekModel = _bloc.createNewWeekmodel(weekModel);
+        final WeekModel newWeekModel = _bloc.createNewWeekmodel(weekModel);
 
         final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
             newWeekModel, currentUser, forThisCitizen);
@@ -78,11 +78,10 @@ class CopyResolveScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: GirafAppBar(title: 'Ny ugeplan'),
+      appBar: GirafAppBar(title: 'Kopier ugeplan'),
       body: InputFieldsWeekPlan(
           bloc: _bloc, button: saveButton, weekModel: weekModel),
     );
-
   }
 
   Future<bool> _displayConflictDialog(BuildContext context, int weekNumber,
@@ -98,7 +97,9 @@ class CopyResolveScreen extends StatelessWidget {
             description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
                 ', år: $year) hos $numberOfConflicts af borgerne. '
                 'Vil du overskrive '
-                '${numberOfConflicts == 1 ? "denne ugeplan" : "disse ugeplaner"} ?',
+                '${numberOfConflicts == 1
+                  ? "denne ugeplan"
+                  : "disse ugeplaner"} ?',
             confirmButtonText: 'Ja',
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
