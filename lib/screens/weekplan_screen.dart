@@ -1,7 +1,6 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -13,9 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
@@ -24,13 +21,12 @@ import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
-import 'package:weekplanner/style/standard_week_colors.dart';
+import 'package:weekplanner/widgets/activity_card.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
-import 'package:weekplanner/widgets/pictogram_text.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -535,16 +531,9 @@ class WeekplanScreen extends StatelessWidget {
               border: Border.all(
                   color: Colors.black,
                   width: MediaQuery.of(context).size.width * 0.1)),
-          child: _buildActivityCard(
-            context,
-            activities,
-            index,
-            weekday,
-            activities[index].state,
-          ));
+          child: ActivityCard(activities[index], weekday, _user));
     } else {
-      return _buildActivityCard(
-          context, activities, index, weekday, activities[index].state);
+      return ActivityCard(activities[index], weekday, _user);
     }
   }
 
@@ -697,214 +686,6 @@ class WeekplanScreen extends StatelessWidget {
               }),
         ],
       ),
-    );
-  }
-
-  Widget _getPictogram(ActivityModel activity) {
-    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
-    bloc.loadPictogramById(activity.pictogram.id);
-    return StreamBuilder<Image>(
-      stream: bloc.image,
-      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-        if (snapshot.data == null) {
-          return const CircularProgressIndicator();
-        }
-        return Container(
-            child: snapshot.data, key: const Key('PictogramImage'));
-      },
-    );
-  }
-
-  /// Builds card that displays the activity
-  Container _buildActivityCard(
-    BuildContext context,
-    List<ActivityModel> activities,
-    int index,
-    WeekdayModel weekday,
-    ActivityState activityState,
-  ) {
-    return Container(
-        color: theme.GirafColors.white,
-        margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        child: FittedBox(
-          child: Column(
-            children: <Widget>[
-              Stack(
-                alignment: AlignmentDirectional.topEnd,
-                children: <Widget>[
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.width,
-                    child: FittedBox(
-                      child: _getPictogram(activities[index]),
-                    ),
-                  ),
-                  _buildActivityStateIcon(context, activityState, weekday),
-                  _buildTimerIcon(context, activities[index]),
-                ],
-              ),
-              PictogramText(activities[index].pictogram, _user),
-            ],
-          ),
-        ));
-  }
-
-  /// Creates a cover for a completed activity, if choosing to not display them
-  Container completedActivityColor(Color dayColor, BuildContext context) {
-    return Container(
-        color: dayColor,
-        height: MediaQuery.of(context).size.width,
-        width: MediaQuery.of(context).size.width);
-  }
-
-  /// Build activity state icon.
-  Widget _buildActivityStateIcon(
-      BuildContext context, ActivityState state, WeekdayModel weekday) {
-    switch (state) {
-      case ActivityState.Completed:
-        return StreamBuilder<WeekplanMode>(
-            stream: _authBloc.mode,
-            builder: (BuildContext context,
-                AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-              if (weekModeSnapshot.hasData) {
-                final WeekplanMode role = weekModeSnapshot.data;
-
-                if (role == WeekplanMode.guardian) {
-                  return Icon(
-                    Icons.check,
-                    key: const Key('IconComplete'),
-                    color: theme.GirafColors.green,
-                    size: MediaQuery.of(context).size.width,
-                  );
-                } else if (role == WeekplanMode.citizen) {
-                  return StreamBuilder<SettingsModel>(
-                      stream: _settingsBloc.settings,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<SettingsModel> snapshot) {
-                        if (!snapshot.hasData ||
-                            snapshot.data.completeMark == null) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (snapshot.data.completeMark ==
-                            CompleteMark.Checkmark) {
-                          return Icon(
-                            Icons.check,
-                            key: const Key('IconComplete'),
-                            color: theme.GirafColors.green,
-                            size: MediaQuery.of(context).size.width,
-                          );
-                        } else if (snapshot.data.completeMark ==
-                            CompleteMark.MovedRight) {
-                          return completedActivityColor(
-                              theme.GirafColors.transparentGrey, context);
-                        } else if (snapshot.data.completeMark ==
-                            CompleteMark.Removed) {
-                          return StreamBuilder<SettingsModel>(
-                            stream: _settingsBloc.settings,
-                            builder: (BuildContext buildContext,
-                                AsyncSnapshot<SettingsModel> settingsSnapshot) {
-                              Color c;
-
-                              if (settingsSnapshot.data == null) {
-                                c = Color(int.parse(
-                                    WeekplanColorTheme.blueWhiteColorSetting()[
-                                            weekday.day.index]
-                                        .hexColor
-                                        .replaceFirst('#', '0xff')));
-                              } else {
-                                c = Color(int.parse(settingsSnapshot.data
-                                    .weekDayColors[weekday.day.index].hexColor
-                                    .replaceFirst('#', '0xff')));
-                              }
-
-                              return completedActivityColor(c, context);
-                            },
-                          );
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      });
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            });
-
-      case ActivityState.Canceled:
-        return Icon(
-          Icons.clear,
-          key: const Key('IconCanceled'),
-          color: theme.GirafColors.red,
-          size: MediaQuery.of(context).size.width,
-        );
-      default:
-        return Container();
-    }
-  }
-
-  /// Builds timer icon depending on activity has timer.
-  Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
-    final TimerBloc timerBloc = di.getDependency<TimerBloc>();
-    timerBloc.load(activity, user: _user);
-    return StreamBuilder<bool>(
-        stream: timerBloc.timerIsInstantiated,
-        builder:
-            (BuildContext streamContext, AsyncSnapshot<bool> timerSnapshot) {
-          if (timerSnapshot.hasData && timerSnapshot.data) {
-            // Activities that are not overlayed.
-            if (activity.state != ActivityState.Completed) {
-              return _buildTimerAssetIcon();
-            }
-            // Activities that are overlayed.
-            return StreamBuilder<WeekplanMode>(
-                stream: _authBloc.mode,
-                builder: (BuildContext roleContext,
-                    AsyncSnapshot<WeekplanMode> role) {
-                  if (role.data == WeekplanMode.guardian) {
-                    return const ImageIcon(
-                      AssetImage('assets/icons/redcircle.png'),
-                      color: theme.GirafColors.red,
-                      size: 250,
-                    );
-                  } else {
-                    return StreamBuilder<SettingsModel>(
-                        stream: _settingsBloc.settings,
-                        builder: (BuildContext settingsContext,
-                            AsyncSnapshot<SettingsModel> settings) {
-                          if (!settings.hasData ||
-                              settings.data.completeMark !=
-                                  CompleteMark.Removed) {
-                            return const ImageIcon(
-                              AssetImage('assets/icons/redcircle.png'),
-                              color: theme.GirafColors.red,
-                              size: 250,
-                            );
-                          }
-
-                          return Container();
-                        });
-                  }
-                });
-          }
-          return Container();
-        });
-  }
-
-  /// Build timer icon.
-  ImageIcon _buildTimerAssetIcon() {
-    return const ImageIcon(
-      AssetImage('assets/icons/redcircle.png'),
-      color: theme.GirafColors.red,
-      size: 250,
     );
   }
 

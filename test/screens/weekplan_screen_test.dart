@@ -35,10 +35,11 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
+import 'package:weekplanner/widgets/activity_card.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../test_image.dart';
 
-// TODO(): overvej at mocke auth bloc, men tror ikke det bliver nødvendigt.
+// TODO(eneder17): overvej at mocke auth bloc, tror ikke det bliver nødvendigt.
 
 WeekModel mockWeek;
 SettingsModel mockSettings;
@@ -275,6 +276,26 @@ void main() {
     expect(currentEditMode, true);
   });
 
+  testWidgets('No activity cards when no activities are added',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+    // After tapping the button edit mode should be true
+    expect(find.byType(ActivityCard), findsNothing);
+  });
+
+  testWidgets('Each activity card gets an activity card',
+          (WidgetTester tester) async {
+    // We add an activity to monday and one to tuesday
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    mockWeek.days[1].activities.add(mockActivities[1]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // After tapping the button edit mode should be true
+    expect(find.byType(ActivityCard), findsNWidgets(2));
+  });
+
   testWidgets('Has 7 select all buttons',
           (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
@@ -342,7 +363,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: weekplanScreen));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
-    //TODO: mangler check på der laves 5 dage istedet.
+    // TODO(eneder17): mangler check på der laves 5 dage istedet.
   });
 
   testWidgets(
