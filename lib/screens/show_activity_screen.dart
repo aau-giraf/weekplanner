@@ -1,5 +1,7 @@
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -23,7 +25,8 @@ import '../style/custom_color.dart' as theme;
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(this._activity, this._girafUser, {Key key})
+  ShowActivityScreen(this._activity, this._week, this._weekDay, this._girafUser,
+      {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(_activity, _girafUser);
@@ -32,6 +35,8 @@ class ShowActivityScreen extends StatelessWidget {
 
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
+  final WeekModel _week;
+  final Weekday _weekDay;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
@@ -419,7 +424,7 @@ class ShowActivityScreen extends StatelessWidget {
                     confirmButtonIcon:
                         const ImageIcon(AssetImage('assets/icons/delete.png')),
                     confirmOnPressed: () {
-                      _timerBloc.deleteTimer();
+                      _timerBloc.deleteTimer(_week, _weekDay);
                       Routes.pop(context);
                     },
                   );
