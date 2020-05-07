@@ -85,7 +85,8 @@ class WeekplansBloc extends BlocBase {
 
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
-    final Observable<List<WeekModel>> getWeekPlans = weekDetails.length < 2
+    final Observable<List<WeekModel>> getWeekPlans = weekDetails.isEmpty
+      ? Observable.empty() : weekDetails.length == 1
       ? weekDetails[0].map((WeekModel plan) => <WeekModel>[plan])
       : Observable.combineLatestList(weekDetails);
 
