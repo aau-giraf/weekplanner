@@ -510,8 +510,7 @@ class WeekplanScreen extends StatelessWidget {
 
   /// Handles tap on an activity
   void handleOnTapActivity(bool inEditMode, bool isMarked, bool isCitizen,
-      List<ActivityModel> activities, int index, Weekday weekDay,
-      BuildContext context) {
+      List<ActivityModel> activities, int index, BuildContext context) {
     if (inEditMode) {
       if (isMarked) {
         _weekplanBloc.removeMarkedActivity(activities[index]);
@@ -520,8 +519,7 @@ class WeekplanScreen extends StatelessWidget {
       }
     } else if (!(activities[index].state == ActivityState.Completed &&
         isCitizen)) {
-      Routes.push(context, ShowActivityScreen(activities[index], _week, weekDay,
-          _user));
+      Routes.push(context, ShowActivityScreen(activities[index], _user));
     }
   }
 
@@ -675,12 +673,10 @@ class WeekplanScreen extends StatelessWidget {
                                         false,
                                         weekday.activities,
                                         index,
-                                        weekday.day,
                                         context);
                                   } else {
                                     handleOnTapActivity(false, false, true,
-                                        weekday.activities, index, weekday.day,
-                                        context);
+                                        weekday.activities, index, context);
                                   }
                                 },
                                 child:
