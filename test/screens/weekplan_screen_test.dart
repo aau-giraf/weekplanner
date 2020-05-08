@@ -39,6 +39,7 @@ import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
 import 'package:weekplanner/widgets/activity_card.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/pictogram_text.dart';
 import '../test_image.dart';
 
 // TODO(eneder17): overvej at mocke auth bloc, tror ikke det bliver nødvendigt.
@@ -174,7 +175,7 @@ List<ActivityModel> createInitialMockActivities(){
         isChoiceBoard: false,
         pictogram: PictogramModel(
             id: 25,
-            title: 'grå',
+            title: 'PictogramTitle1',
             accessLevel: AccessLevel.PUBLIC,
             imageHash: null,
             imageUrl: null,
@@ -186,7 +187,7 @@ List<ActivityModel> createInitialMockActivities(){
         isChoiceBoard: false,
         pictogram: PictogramModel(
             id: 25,
-            title: 'grå',
+            title: 'PictogramTitle2',
             accessLevel: AccessLevel.PUBLIC,
             imageHash: null,
             imageUrl: null,
@@ -412,7 +413,6 @@ void main() {
   });
 
 
-
   testWidgets('Has 7 select all buttons',
           (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
@@ -460,7 +460,7 @@ void main() {
     expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
   });
 
-  testWidgets('When showing one day, one one weekday row is created',
+  testWidgets('When showing one day, one weekday row is created',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
@@ -517,6 +517,27 @@ void main() {
       expectColorDayMatch(dayColor.day, dayColor.hexColor);
     }
   });
+
+  testWidgets('Pictogram text renders when settings are set to display '
+      'pictogram text', (WidgetTester tester) async{
+
+    // Enable the setting that displays pictogram text
+    mockSettings.pictogramText = true;
+
+    // Add an activity to the week we want to look at in the weekPlan screen
+    mockWeek.days[4].activities.add(mockActivities[0]);
+
+    // Build the weekPlan screen
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PictogramText), findsOneWidget);
+
+    // Get the title of the activity
+    final String title = mockActivities[0].pictogram.title;
+
+    expect(find.text(title.toUpperCase()), findsOneWidget);
+  });
 }
 
 void expectColorDayMatch(Weekday day, String color) {
@@ -544,3 +565,5 @@ void expectColorDayMatch(Weekday day, String color) {
 
   expect(find.descendant(of: findColor, matching: findTitle), findsOneWidget);
 }
+
+
