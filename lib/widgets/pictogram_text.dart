@@ -42,9 +42,10 @@ class PictogramText extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<SettingsModel> settingsSnapshot) {
                 if (settingsSnapshot.hasData) {
-                  final bool hasPictogramText =
+                  final bool pictogramTextIsEnabled =
                       settingsSnapshot.data.pictogramText;
-                  if (_isGuardianMode(weekModeSnapshot) || hasPictogramText) {
+                  if (_isGuardianMode(weekModeSnapshot) ||
+                      pictogramTextIsEnabled) {
                     final String pictogramText = _pictogram.title.toUpperCase();
                     return _buildPictogramText(context, pictogramText);
                   }
@@ -61,14 +62,13 @@ class PictogramText extends StatelessWidget {
     return false;
   }
 
-  SizedBox _buildPictogramText(BuildContext context, String pictogramText){
+  SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width / 4,
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal:
-              MediaQuery.of(context).size.width * 0.05),
+              horizontal: MediaQuery.of(context).size.width * 0.05),
           child: AutoSizeText(
             pictogramText,
             minFontSize: minFontSize,
@@ -76,8 +76,7 @@ class PictogramText extends StatelessWidget {
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 150),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 150),
           ),
         ));
   }
