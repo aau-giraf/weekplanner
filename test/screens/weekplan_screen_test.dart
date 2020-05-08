@@ -303,17 +303,38 @@ void main() {
     expect(find.byType(ActivityCard), findsNWidgets(2));
   });
 
-  testWidgets('Tapping an activity outside edit mode enter activity screen',
+  testWidgets('Tapping activity when not in edit mode pushes activity screen',
           (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
-
     await tester.tap(find.byType(ActivityCard));
     await tester.pumpAndSettle();
     expect(find.byType(ShowActivityScreen), findsOneWidget);
   });
+
+  testWidgets('Tapping activity in edit mode selects/deselects it',
+          (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    //We enter edit mode.
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 1);
+
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+    expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
+  });
+
 
   testWidgets('Cancel/Copy/Delete buttons not build when edit mode is false',
           (WidgetTester tester) async {
