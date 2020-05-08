@@ -122,7 +122,7 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
 ];
 
 final DisplayNameModel mockUser =
-DisplayNameModel(id: '42', displayName: 'mockUser', role: null);
+  DisplayNameModel(id: '42', displayName: 'mockUser', role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {
@@ -287,7 +287,7 @@ void main() {
   });
 
   testWidgets('Cancel activity button is rendered in guardian mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     await tester.pumpWidget(
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
@@ -297,7 +297,7 @@ void main() {
   });
 
   testWidgets('Complete activity button is NOT rendered in guardian mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     await tester.pumpWidget(
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
@@ -307,7 +307,7 @@ void main() {
   });
 
   testWidgets('Cancel activity button is NOT rendered in citizen mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     await tester.pumpWidget(
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
@@ -317,7 +317,7 @@ void main() {
   });
 
   testWidgets('Activity has checkmark icon when completed',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
@@ -327,7 +327,7 @@ void main() {
   });
 
   testWidgets('Activity has cancel icon when canceled',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
     await tester.pumpWidget(
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
@@ -337,7 +337,7 @@ void main() {
   });
 
   testWidgets('Activity has no checkmark when Normal',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
@@ -347,7 +347,7 @@ void main() {
   });
 
   testWidgets('Activity is set to completed and an activity checkmark is shown',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(
@@ -360,7 +360,7 @@ void main() {
   });
 
   testWidgets('Activity is set to canceled and an activity cross is shown',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Normal;
     await tester.pumpWidget(
@@ -374,7 +374,7 @@ void main() {
   });
 
   testWidgets('Activity is set to normal and no activity mark is shown',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Completed;
     await tester.pumpWidget(
@@ -396,7 +396,7 @@ void main() {
   });
 
   testWidgets('Test that timer box is not shown in citizen mode.',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
@@ -405,7 +405,7 @@ void main() {
   });
 
   testWidgets('Test rendering of content of non-initialized timer box',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pump();
@@ -522,24 +522,24 @@ void main() {
   });
 
   testWidgets('Test that timerbloc registers the timer initlization',
-          (WidgetTester tester) async {
-        final Completer<bool> done = Completer<bool>();
-        await tester
-            .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
-        await tester.pumpAndSettle();
-        final StreamSubscription<bool> listenForFalse =
-        timerBloc.timerIsInstantiated.listen((bool init) {
-          expect(init, isFalse);
-          done.complete();
-        });
-        await done.future;
-        listenForFalse.cancel();
-        await tester.pumpAndSettle();
-        await _openTimePickerAndConfirm(tester, 3, 2, 1);
-        timerBloc.timerIsInstantiated.listen((bool init) {
-          expect(init, isTrue);
-        });
-      });
+      (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+    await tester
+        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpAndSettle();
+    final StreamSubscription<bool> listenForFalse =
+    timerBloc.timerIsInstantiated.listen((bool init) {
+      expect(init, isFalse);
+      done.complete();
+    });
+    await done.future;
+    listenForFalse.cancel();
+    await tester.pumpAndSettle();
+    await _openTimePickerAndConfirm(tester, 3, 2, 1);
+    timerBloc.timerIsInstantiated.listen((bool init) {
+      expect(init, isTrue);
+    });
+  });
 
   testWidgets(
       'Test that timerbloc knows whether the timer is running or paused',
