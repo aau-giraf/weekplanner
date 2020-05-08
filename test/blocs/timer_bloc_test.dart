@@ -4,9 +4,7 @@ import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/timer_model.dart';
-import 'package:api_client/models/week_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -305,11 +303,7 @@ void main() {
         isChoiceBoard: false);
 
     timerMock.load(activityModel, user: mockUser);
-    timerMock.deleteTimer(WeekModel(
-        name: 'Test',
-        weekYear: 2000,
-        weekNumber: 1),
-      Weekday.Monday);
+    timerMock.deleteTimer();
 
     expect(activityModel.timer, isNull);
     timerMock.timerIsInstantiated.listen((bool b) {
