@@ -122,7 +122,7 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
 ];
 
 final DisplayNameModel mockUser =
-  DisplayNameModel(id: '42', displayName: 'mockUser', role: null);
+    DisplayNameModel(id: '42', displayName: 'mockUser', role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {
@@ -528,7 +528,7 @@ void main() {
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
     await tester.pumpAndSettle();
     final StreamSubscription<bool> listenForFalse =
-    timerBloc.timerIsInstantiated.listen((bool init) {
+        timerBloc.timerIsInstantiated.listen((bool init) {
       expect(init, isFalse);
       done.complete();
     });
@@ -551,7 +551,7 @@ void main() {
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     final StreamSubscription<TimerRunningMode> listenForNotInitialized =
-    timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+        timerBloc.timerRunningMode.listen((TimerRunningMode running) {
       expect(running, TimerRunningMode.not_initialized);
       checkNotRun.complete();
     });
@@ -561,7 +561,7 @@ void main() {
     await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
     await tester.pumpAndSettle();
     final StreamSubscription<TimerRunningMode> listenForRunningTrue =
-    timerBloc.timerRunningMode.listen((TimerRunningMode running) {
+        timerBloc.timerRunningMode.listen((TimerRunningMode running) {
       expect(running, TimerRunningMode.running);
       checkRunning.complete();
     });
@@ -601,7 +601,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     final StreamSubscription<TimerRunningMode> listenForCompleted =
-    timerBloc.timerRunningMode.listen((TimerRunningMode m) {
+        timerBloc.timerRunningMode.listen((TimerRunningMode m) {
       expect(m, TimerRunningMode.completed);
       checkCompleted.complete();
     });
@@ -639,7 +639,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/play.png') &&
               widget.key == const Key('TimerPlayButtonKey')),
           findsOneWidget);
@@ -651,13 +651,13 @@ void main() {
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
               widget.key == const Key('TimerStopButtonKey')),
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image ==
                   const AssetImage('assets/icons/delete.png') &&
               widget.key == const Key('TimerDeleteButtonKey')),
@@ -667,25 +667,25 @@ void main() {
 
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/play.png') &&
               widget.key == const Key('TimerPlayButtonKey')),
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/pause.png') &&
               widget.key == const Key('TimerPauseButtonKey')),
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
               widget.key == const Key('TimerStopButtonKey')),
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image ==
                   const AssetImage('assets/icons/delete.png') &&
               widget.key == const Key('TimerDeleteButtonKey')),
