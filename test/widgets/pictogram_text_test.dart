@@ -1,3 +1,4 @@
+import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -5,6 +6,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +17,8 @@ import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
-
-import '../screens/edit_weekplan_screen_test.dart';
 
 SettingsModel mockSettings;
 
@@ -90,101 +87,130 @@ void main() {
 
   testWidgets(
       'Pictogram text is not displayed when false and not in guardian mode',
-          (WidgetTester tester) async {
-        mockSettings.pictogramText = false;
-        authBloc.setMode(WeekplanMode.citizen);
-
-        await tester
-            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Container), findsOneWidget);
-        final String title = pictogramModel.title;
-        expect(find.text(title.toUpperCase()), findsNothing);
-      });
-
-  testWidgets('Pictogram text is displayed when true and not in guardian mode',
-          (WidgetTester tester) async {
-        mockSettings.pictogramText = true;
-        authBloc.setMode(WeekplanMode.citizen);
-
-        await tester
-            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
-        await tester.pumpAndSettle();
-        //authBloc.setMode(WeekplanMode.citizen);
-
-        expect(find.byType(AutoSizeText), findsOneWidget);
-        final String title = pictogramModel.title;
-        expect(find.text(title.toUpperCase()), findsOneWidget);
-      });
-
-  testWidgets('Pictogram text is displayed when true and in guardian mode',
-          (WidgetTester tester) async {
-        mockSettings.pictogramText = true;
-        authBloc.setMode(WeekplanMode.guardian);
-
-        await tester
-            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(AutoSizeText), findsOneWidget);
-        final String title = pictogramModel.title;
-        expect(find.text(title.toUpperCase()), findsOneWidget);
-      });
-
-  testWidgets('Pictogram text is displayed when false and in guardian mode',
-          (WidgetTester tester) async {
-        mockSettings.pictogramText = false;
-        authBloc.setMode(WeekplanMode.guardian);
-
-        await tester
-            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(AutoSizeText), findsOneWidget);
-        final String title = pictogramModel.title;
-        expect(find.text(title.toUpperCase()), findsOneWidget);
-      });
-
-  testWidgets(
-      'Pictogram text is removed for citizen when activities are set to'
-          'be removed when completed and activty is completed',
-          (WidgetTester tester) async {
-
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.Removed;
-        activityModel.state = ActivityState.Completed;
-
-        await tester
-            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
-
-        expect(find.byType(Container), findsOneWidget);
-        final String title = pictogramModel.title;
-        expect(find.text(title.toUpperCase()), findsNothing);
-      });
-
-  testWidgets(
-      'Pictogram text exists for citizen when completed activity setting is '
-          'not "removed" ', (
-      WidgetTester tester) async {
-
+      (WidgetTester tester) async {
+    mockSettings.pictogramText = false;
     authBloc.setMode(WeekplanMode.citizen);
-    mockSettings.completeMark = CompleteMark.Checkmark;
-    activityModel.state = ActivityState.Completed;
 
     await tester
         .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
 
+    expect(find.byType(Container), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsNothing);
+  });
+
+  testWidgets('Pictogram text is displayed when true and not in guardian mode',
+      (WidgetTester tester) async {
+    mockSettings.pictogramText = true;
+    authBloc.setMode(WeekplanMode.citizen);
+
+    await tester
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
+    //authBloc.setMode(WeekplanMode.citizen);
+
+    expect(find.byType(AutoSizeText), findsOneWidget);
     final String title = pictogramModel.title;
     expect(find.text(title.toUpperCase()), findsOneWidget);
   });
 
-  testWidgets('Pictogram text exist for Guardian no matter what setting is '
-      'selected for completed activity', (WidgetTester tester) async{
+  testWidgets('Pictogram text is displayed when true and in guardian mode',
+      (WidgetTester tester) async {
+    mockSettings.pictogramText = true;
+    authBloc.setMode(WeekplanMode.guardian);
+
     await tester
         .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
 
+    expect(find.byType(AutoSizeText), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
+  });
+
+  testWidgets('Pictogram text is displayed when false and in guardian mode',
+      (WidgetTester tester) async {
+    mockSettings.pictogramText = false;
+    authBloc.setMode(WeekplanMode.guardian);
+
+    await tester
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AutoSizeText), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
+  });
+
+  testWidgets(
+      'Pictogram text is removed for citizen when the activity is complete '
+      'and activities are set to be removed when completed',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Removed;
+    mockSettings.pictogramText = true;
+    activityModel.state = ActivityState.Completed;
 
+    await tester
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Container), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsNothing);
+  });
+
+  testWidgets(
+      'Pictogram text is displayed for citizen when activities are set to be'
+          'removed when completed but the activity itself is not complete',
+          (WidgetTester tester) async {
+        authBloc.setMode(WeekplanMode.citizen);
+        mockSettings.completeMark = CompleteMark.Removed;
+        mockSettings.pictogramText = true;
+        activityModel.state = ActivityState.Normal;
+
+        await tester
+            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(AutoSizeText), findsOneWidget);
+        final String title = pictogramModel.title;
+        expect(find.text(title.toUpperCase()), findsOneWidget);
+      });
+
+  testWidgets(
+      'Pictogram text is removed for citizen when the activity is complete '
+          'and activities are not set to be removed when completed',
+          (WidgetTester tester) async {
+        authBloc.setMode(WeekplanMode.citizen);
+        mockSettings.completeMark = CompleteMark.MovedRight;
+        mockSettings.pictogramText = true;
+        activityModel.state = ActivityState.Completed;
+
+        await tester
+            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(AutoSizeText), findsOneWidget);
+        final String title = pictogramModel.title;
+        expect(find.text(title.toUpperCase()), findsOneWidget);
+      });
+
+  testWidgets(
+      'Pictogram text displayed for Guardians no matter what setting is '
+      'selected for completed activity', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockSettings.completeMark = CompleteMark.Removed;
+    mockSettings.pictogramText = true;
+    activityModel.state = ActivityState.Completed;
+
+    await tester
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AutoSizeText), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
   });
 }
