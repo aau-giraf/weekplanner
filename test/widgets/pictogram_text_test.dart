@@ -86,7 +86,7 @@ void main() {
   });
 
   testWidgets(
-      'Pictogram text is not displayed when false and not in guardian mode',
+      'Pictogram text is not displayed when false and in Citizen mode',
       (WidgetTester tester) async {
     mockSettings.pictogramText = false;
     authBloc.setMode(WeekplanMode.citizen);
@@ -100,7 +100,7 @@ void main() {
     expect(find.text(title.toUpperCase()), findsNothing);
   });
 
-  testWidgets('Pictogram text is displayed when true and not in guardian mode',
+  testWidgets('Pictogram text is displayed when true and in Citizen mode',
       (WidgetTester tester) async {
     mockSettings.pictogramText = true;
     authBloc.setMode(WeekplanMode.citizen);
@@ -108,7 +108,6 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
     await tester.pumpAndSettle();
-    //authBloc.setMode(WeekplanMode.citizen);
 
     expect(find.byType(AutoSizeText), findsOneWidget);
     final String title = pictogramModel.title;
