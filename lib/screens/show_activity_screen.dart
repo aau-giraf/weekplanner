@@ -23,8 +23,7 @@ import '../style/custom_color.dart' as theme;
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(this._activity, this._girafUser,
-      {Key key})
+  ShowActivityScreen(this._activity, this._girafUser, {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(_activity, _girafUser);
