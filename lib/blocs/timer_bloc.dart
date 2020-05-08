@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/timer_model.dart';
-import 'package:api_client/models/week_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
