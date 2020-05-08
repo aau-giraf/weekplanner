@@ -1,14 +1,12 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -26,20 +24,16 @@ import '../style/custom_color.dart' as theme;
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(this._activity, this._week, this._weekDay, this._girafUser,
+  ShowActivityScreen(this._activity, this._girafUser,
       {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictogram);
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
-    _weekBloc.loadWeek(_week, _girafUser);
-
   }
 
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
-  final WeekModel _week;
-  final Weekday _weekDay;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
@@ -47,7 +41,6 @@ class ShowActivityScreen extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final WeekplanBloc _weekBloc = di.getDependency<WeekplanBloc>();
 
   /// Text style used for title.
   final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
@@ -428,10 +421,7 @@ class ShowActivityScreen extends StatelessWidget {
                     confirmButtonIcon:
                         const ImageIcon(AssetImage('assets/icons/delete.png')),
                     confirmOnPressed: () {
-                      _activity.timer = null;
-                      _timerBloc.deleteTimer(_week, _weekDay);
-                      _weekBloc.deleteActivity(_activity, _weekDay.index);
-                      _weekBloc.addActivity(_activity, _weekDay.index);
+                      _timerBloc.deleteTimer();
                       Routes.pop(context);
                     },
                   );
