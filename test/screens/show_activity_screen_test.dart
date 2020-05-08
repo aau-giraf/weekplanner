@@ -56,7 +56,7 @@ class MockAuth extends Mock implements AuthBloc {
   @override
   Observable<WeekplanMode> get mode => _mode.stream;
   final BehaviorSubject<WeekplanMode> _mode =
-  BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
+      BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
   @override
   String loggedInUsername = 'Graatand';
