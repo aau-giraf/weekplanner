@@ -220,15 +220,12 @@ class TimerBloc extends BlocBase {
   }
 
   /// Deletes the timer from the activity and updates its database.
-  void deleteTimer(WeekModel weekModel, Weekday weekDay) {
+  void deleteTimer() {
     _resetCounterAndStopwatch();
     _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
-
-    // Done this way to ensure the activity isn't deleted when updating.
-    _api.activity.delete(_activityModel.id, _user.id);
-    _api.activity.add(_activityModel, _user.id,
-        weekModel.name, weekModel.weekYear, weekModel.weekNumber, weekDay);
+    
+    _api.activity.update(_activityModel, _user.id);
   }
 
   void _resetCounterAndStopwatch() {
