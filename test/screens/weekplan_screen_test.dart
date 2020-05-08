@@ -46,8 +46,6 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import '../test_image.dart';
 
-// TODO(eneder17): overvej at mocke auth bloc, tror ikke det bliver nødvendigt.
-
 WeekModel mockWeek;
 SettingsModel mockSettings;
 List<ActivityModel> mockActivities;
@@ -66,7 +64,7 @@ class MockWeekApi extends Mock implements WeekApi {
   }
 }
 
-class MockAcountApi extends Mock implements AccountApi {
+class MockAccountApi extends Mock implements AccountApi {
 
   @override
   Observable<bool> login(String username, String password) {
