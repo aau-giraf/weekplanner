@@ -33,9 +33,11 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
 import 'package:weekplanner/widgets/activity_card.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import '../test_image.dart';
 
@@ -258,7 +260,6 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
-
     bool currentEditMode = false;
     weekplanBloc.editMode.listen((bool editMode) {
       currentEditMode = editMode;
@@ -274,6 +275,14 @@ void main() {
     });
     // After tapping the button edit mode should be true
     expect(currentEditMode, true);
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+    weekplanBloc.editMode.listen((bool editMode) {
+      currentEditMode = editMode;
+    });
+    // After tapping the button agian it should be false
+    expect(currentEditMode, false);
   });
 
   testWidgets('No activity cards when no activities are added',
@@ -284,7 +293,7 @@ void main() {
     expect(find.byType(ActivityCard), findsNothing);
   });
 
-  testWidgets('Each activity card gets an activity card',
+  testWidgets('Each added activity gets an activity card',
           (WidgetTester tester) async {
     // We add an activity to monday and one to tuesday
     mockWeek.days[0].activities.add(mockActivities[0]);
@@ -295,6 +304,114 @@ void main() {
     // After tapping the button edit mode should be true
     expect(find.byType(ActivityCard), findsNWidgets(2));
   });
+
+  testWidgets('Tapping an activity outside edit mode enter activity screen',
+          (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+    expect(find.byType(ShowActivityScreen), findsOneWidget);
+  });
+
+  testWidgets('Cancel/Copy/Delete buttons not build when edit mode is false',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byWidgetPredicate((Widget widget) =>
+      widget is BottomAppBarButton &&
+      widget.buttonText == 'Aflys' &&
+      widget.buttonKey == 'CancelActivtiesButton'),
+    findsNothing);
+
+    expect(find.byWidgetPredicate((Widget widget) =>
+      widget is BottomAppBarButton &&
+      widget.buttonText == 'Kopier' &&
+      widget.buttonKey == 'CopyActivtiesButton'),
+    findsNothing);
+
+    expect(find.byWidgetPredicate((Widget widget) =>
+      widget is BottomAppBarButton &&
+      widget.buttonText == 'Slet' &&
+      widget.buttonKey == 'DeleteActivtiesButton'),
+    findsNothing);
+  });
+
+  testWidgets('Cancel/Copy/Delete buttons are built when edit mode is true',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    expect(find.byWidgetPredicate((Widget widget) =>
+      widget is BottomAppBarButton &&
+      widget.buttonText == 'Aflys' &&
+      widget.buttonKey == 'CancelActivtiesButton'),
+    findsOneWidget);
+
+    expect(find.byWidgetPredicate((Widget widget) =>
+      widget is BottomAppBarButton &&
+      widget.buttonText == 'Kopier' &&
+      widget.buttonKey == 'CopyActivtiesButton'),
+    findsOneWidget);
+
+    expect(find.byWidgetPredicate((Widget widget) =>
+      widget is BottomAppBarButton &&
+      widget.buttonText == 'Slet' &&
+      widget.buttonKey == 'DeleteActivtiesButton'),
+    findsOneWidget);
+  });
+
+  testWidgets('Cancel/Copy/Delete are disabled when no activites are selected',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    /*Finder finder = find.byWidgetPredicate((Widget widget) =>
+        widget is BottomAppBarButton &&
+        widget.buttonText == 'Aflys' &&
+        widget.buttonKey == 'CancelActivtiesButton' &&
+        widget.isEnabledStream.listen(
+          (bool isEnabled) => prinisEnabled)
+    );*/
+
+
+    //expect(finder, findsOneWidget);
+
+    /*expect(find.byWidgetPredicate((Widget widget) =>
+      widget is BottomAppBarButton &&
+      widget.buttonText == 'Slet' &&
+      widget.buttonKey == 'DeleteActivtiesButton' &&
+      widget.isEnabledStream
+    ),
+        findsOneWidget);
+    */
+  });
+
+  testWidgets('Cancel activity button opens dialog when activity is selected',
+          (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    expect(true, false); //NOT DONE TEST
+  });
+
+
 
   testWidgets('Has 7 select all buttons',
           (WidgetTester tester) async {
@@ -343,7 +460,7 @@ void main() {
     expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
   });
 
-  testWidgets('When showing one day, it doesnt fill the whole screen',
+  testWidgets('When showing one day, one one weekday row is created',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
@@ -354,7 +471,7 @@ void main() {
     expect(find.byKey(const Key('SingleWeekdayRow')), findsOneWidget);
   });
 
-  testWidgets('When showing 5 days, it does fill the whole screen',
+  testWidgets('When showing 5 days, 5 weekday columns are created',
       (WidgetTester tester) async {
     mockSettings.nrOfDaysToDisplay = 5;
     authBloc.setMode(WeekplanMode.citizen);
@@ -363,7 +480,19 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: weekplanScreen));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
-    // TODO(eneder17): mangler check på der laves 5 dage istedet.
+    expect(find.byType(Column), findsNWidgets(5));
+  });
+
+  testWidgets('When showing 7 days, 7 weekday columns are created',
+          (WidgetTester tester) async {
+    mockSettings.nrOfDaysToDisplay = 7;
+    authBloc.setMode(WeekplanMode.citizen);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
+    expect(find.byType(Column), findsNWidgets(7));
   });
 
   testWidgets(

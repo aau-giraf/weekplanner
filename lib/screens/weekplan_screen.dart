@@ -276,7 +276,9 @@ class WeekplanScreen extends StatelessWidget {
                         child: _day(weekModel.days[i], context))));
               }
               return Row(children: weekDays);
-            } else if (role == WeekplanMode.citizen) {
+            }
+
+            else if (role == WeekplanMode.citizen) {
               return StreamBuilder<SettingsModel>(
                 stream: _settingsBloc.settings,
                 builder: (BuildContext context,
