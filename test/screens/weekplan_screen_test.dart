@@ -466,7 +466,8 @@ void main() {
     findsOneWidget);
   });
 
-  testWidgets('Copy activity button opens dialog when activity is selected',
+  // TODO(eneder17): test functinality of these three buttons and rename tests
+  testWidgets('Copy activity button works when activity is selected',
           (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
