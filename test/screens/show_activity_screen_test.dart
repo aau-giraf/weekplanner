@@ -645,7 +645,7 @@ void main() {
           findsOneWidget);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/pause.png') &&
               widget.key == const Key('TimerPauseButtonKey')),
           findsNothing);
@@ -707,25 +707,25 @@ void main() {
 
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/play.png') &&
               widget.key == const Key('TimerPlayButtonKey')),
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/pause.png') &&
               widget.key == const Key('TimerPauseButtonKey')),
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
               widget.key == const Key('TimerStopButtonKey')),
           findsNothing);
       expect(
           find.byWidgetPredicate((Widget widget) =>
-          widget is GirafButton &&
+              widget is GirafButton &&
               widget.icon.image ==
                   const AssetImage('assets/icons/delete.png') &&
               widget.key == const Key('TimerDeleteButtonKey')),
