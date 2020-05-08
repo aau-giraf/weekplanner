@@ -226,7 +226,7 @@ void main() {
     api.week = MockWeekApi();
     api.activity = MockActivityApi();
     api.pictogram = MockPictogramApi();
-    api.account = MockAcountApi();
+    api.account = MockAccountApi();
 
     authBloc = AuthBloc(api);
 
