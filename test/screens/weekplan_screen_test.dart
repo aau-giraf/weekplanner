@@ -1,3 +1,4 @@
+import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
@@ -63,6 +64,15 @@ class MockWeekApi extends Mock implements WeekApi {
     mockWeek = weekInput;
     return Observable<WeekModel>.just(mockWeek);
   }
+}
+
+class MockAcountApi extends Mock implements AccountApi {
+
+  @override
+  Observable<bool> login(String username, String password) {
+    return Observable<bool>.just(true);
+  }
+
 }
 
 class MockUserApi extends Mock implements UserApi {
@@ -218,6 +228,7 @@ void main() {
     api.week = MockWeekApi();
     api.activity = MockActivityApi();
     api.pictogram = MockPictogramApi();
+    api.account = MockAcountApi();
 
     authBloc = AuthBloc(api);
 
@@ -335,7 +346,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
   });
-
 
   testWidgets('Cancel/Copy/Delete buttons not build when edit mode is false',
           (WidgetTester tester) async {
