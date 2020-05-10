@@ -158,11 +158,11 @@ class ShowActivityScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Card(
-                    key: const Key('OverallTimerBoxKey'),
+                    key: const Key('OverallChoiceboardKey'),
                     child: Column(children: <Widget>[
                       // The title of the timer widget
                       Center(
-                          key: const Key('TimerTitleKey'),
+                          key: const Key('ChoiceboardTitleKey'),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text('KNAP!!',
