@@ -1,4 +1,6 @@
+import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -7,8 +9,6 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -18,6 +18,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+
 import '../style/custom_color.dart' as theme;
 
 /// Screen to show information about an activity, and change the state of it.
@@ -80,19 +81,22 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity.
   List<Widget> buildScreen(BuildContext context) {
-    return <Widget>[
-      Expanded(
-        flex: 6,
-        child: Center(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: buildActivity(context),
-            ),
+    final List<Widget> list = <Widget>[];
+    list.add(Expanded(
+      flex: 6,
+      child: Center(
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: buildActivity(context),
           ),
         ),
       ),
+    ));
+
+    // All the buttons excluding the activity itself
+    final List<Widget> buttons = <Widget>[
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
           builder: (BuildContext context,
@@ -101,13 +105,81 @@ class ShowActivityScreen extends StatelessWidget {
                     activitySnapshot.data.state == ActivityState.Canceled)
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
-          })
+          }),
+      //_buildChoiceBoardButton(context),
     ];
+
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.landscape) {
+      list.add(Column(
+        children: buttons,
+      ));
+    } else if (orientation == Orientation.portrait) {
+      list.add(
+        Row(
+          children: buttons,
+        ),
+      );
+    }
+    return list;
   }
 
   Container _resetTimerAndBuildEmptyContainer() {
     _timerBloc.stopTimer();
     return Container(width: 0, height: 0);
+  }
+
+  /// Builds the timer widget.
+  StreamBuilder<WeekplanMode> _buildChoiceBoardButton(BuildContext context) {
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext modeContext,
+            AsyncSnapshot<WeekplanMode> modeSnapshot) {
+          return Expanded(
+            flex: 4,
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Card(
+                    key: const Key('OverallTimerBoxKey'),
+                    child: Column(children: <Widget>[
+                      // The title of the timer widget
+                      Center(
+                          key: const Key('TimerTitleKey'),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('KNAP!!',
+                                style: titleTextStyle,
+                                textAlign: TextAlign.center),
+                          )),
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: IconButton(
+                            icon: AspectRatio(
+                              aspectRatio: 1,
+                              child: FittedBox(
+                                child: Icon(
+                                  Icons.add,
+                                  color: theme.GirafColors.black,
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              //TODO: something
+                            },
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   /// Builds the timer widget.
