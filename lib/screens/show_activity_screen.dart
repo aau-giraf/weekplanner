@@ -51,23 +51,28 @@ class ShowActivityScreen extends StatelessWidget {
     _timerBloc.initTimer();
 
     ///Used to check if the keyboard is visible
-    return buildScreenFromOrientation(orientation, context);
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
+          return buildScreenFromOrientation(
+              orientation, context, snapshot.data);
+        });
   }
 
   /// Build the activity screens in a row or column
   /// depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(
-      Orientation orientation, BuildContext context) {
+      Orientation orientation, BuildContext context, WeekplanMode mode) {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
       childContainer = Column(
-        children: buildScreen(context),
+        children: buildScreen(context, mode),
       );
     } else if (orientation == Orientation.landscape) {
       childContainer = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: buildScreen(context),
+        children: buildScreen(context, mode),
       );
     }
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
@@ -80,7 +85,7 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the activity.
-  List<Widget> buildScreen(BuildContext context) {
+  List<Widget> buildScreen(BuildContext context, WeekplanMode mode) {
     final List<Widget> list = <Widget>[];
     list.add(Expanded(
       flex: 6,
@@ -96,7 +101,8 @@ class ShowActivityScreen extends StatelessWidget {
     ));
 
     // All the buttons excluding the activity itself
-    final List<Widget> buttons = <Widget>[
+    final List<Widget> buttons = <Widget>[];
+    buttons.add(
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
           builder: (BuildContext context,
@@ -106,20 +112,29 @@ class ShowActivityScreen extends StatelessWidget {
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
-      //_buildChoiceBoardButton(context),
-    ];
+    );
+
+    if (mode == WeekplanMode.guardian) {
+      print('listen');
+      buttons.add(_buildChoiceBoardButton(context));
+    }
 
     final Orientation orientation = MediaQuery.of(context).orientation;
-    if (orientation == Orientation.landscape) {
-      list.add(Column(
-        children: buttons,
-      ));
-    } else if (orientation == Orientation.portrait) {
-      list.add(
-        Row(
+
+    if (buttons.length == 1) {
+      list.add(buttons.elementAt(0));
+    } else {
+      if (orientation == Orientation.landscape) {
+        list.add(Column(
           children: buttons,
-        ),
-      );
+        ));
+      } else if (orientation == Orientation.portrait) {
+        list.add(
+          Row(
+            children: buttons,
+          ),
+        );
+      }
     }
     return list;
   }
