@@ -140,7 +140,7 @@ void main() {
   });
 
   testWidgets(
-      'Test whether the it copies to citizesn when pressing the accept key',
+      'Test whether it copies to citizens when pressing the accept button',
       (WidgetTester tester) async {
     await tester.pumpWidget(
         MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
