@@ -17,7 +17,8 @@ class PrivacyInformationScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       decoration: myBoxDecoration(),
                       child: RichText(text: TextSpan(
-                        style: TextStyle(color: theme.GirafColors.black, fontFamily: 'Quicksand'),
+                        style: TextStyle(color: theme.GirafColors.black,
+                            fontFamily: 'Quicksand'),
                         children: <TextSpan>[
                           TextSpan(
                               text: 'Oplysninger om vores behandling '
