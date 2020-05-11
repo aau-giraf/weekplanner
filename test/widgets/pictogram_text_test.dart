@@ -192,7 +192,7 @@ void main() {
   });
 
   testWidgets(
-      'Pictogram text is removed for citizen when the activity is complete '
+      'Pictogram text is displayed for citizen when the activity is complete '
       'and activities are not set to be removed when completed',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
