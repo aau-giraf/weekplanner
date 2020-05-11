@@ -1,6 +1,9 @@
 import 'package:api_client/api_client.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/cancel_mark_enum.dart';
+import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
@@ -20,6 +23,7 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/activity_card.dart';
@@ -29,7 +33,6 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
-
 import '../mock_data.dart';
 
 void main() {
@@ -525,6 +528,51 @@ void main() {
 
     authBloc.mode
         .listen((WeekplanMode mode) => expect(mode, WeekplanMode.guardian));
+  });
+
+  testWidgets('Add Activity buttons work', (WidgetTester tester) async {
+    mockSettings.nrOfDaysToDisplay = 7;
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(RaisedButton), findsNWidgets(7));
+
+    await tester.tap(find.byType(RaisedButton).first);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PictogramSearch), findsOneWidget);
+  });
+
+  testWidgets('Finished activities displayed correctly',
+      (WidgetTester tester) async {
+    mockSettings.completeMark = CompleteMark.Checkmark;
+    mockSettings.cancelMark = CancelMark.Cross;
+    mockSettings.pictogramText = true;
+
+    mockActivities[0].state = ActivityState.Completed;
+    mockActivities[1].state = ActivityState.Canceled;
+
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    // Cancelled activity with a cross
+    mockWeek.days[1].activities.add(mockActivities[1]);
+    // Activity with a timer
+    mockWeek.days[2].activities.add(mockActivities[2]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Find checkmark icon by key
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+    // Find cross icon by key
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+
+    // Find timer icon
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is ImageIcon &&
+            widget.image == const AssetImage('assets/icons/redcircle.png')),
+        findsOneWidget);
   });
 }
 
