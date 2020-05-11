@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
@@ -175,6 +177,19 @@ class WeekplansBloc extends BlocBase {
   /// Returns all the marked week models.
   List<WeekModel> getMarkedWeekModels() {
     return _markedWeekModels.value;
+  }
+
+  /// Returns an updated version of the Weekmodel that is marked
+  Future<WeekModel> getMarkedWeekModel() async {
+    assert(_markedWeekModels.value.length == 1);
+    WeekModel marked = _markedWeekModels.value[0];
+
+    Completer<WeekModel> completer = Completer<WeekModel>();
+    _api.week
+        .get(_user.id, marked.weekYear, marked.weekNumber)
+        .listen((WeekModel weekModel) => completer.complete(weekModel));
+
+    return completer.future;
   }
 
   /// Toggles edit mode
