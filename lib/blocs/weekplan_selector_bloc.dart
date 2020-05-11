@@ -214,7 +214,7 @@ class WeekplansBloc extends BlocBase {
           .listen((bool deleted) {
         if (deleted) {
           // Checks if its an old or upcoming weekplan
-          if(localWeekModels.contains(weekModel)){
+          if(localWeekModels != null && localWeekModels.contains(weekModel)){
             localWeekModels.remove(weekModel);
             _weekModel.add(localWeekModels);
           } else {
