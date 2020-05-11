@@ -179,12 +179,12 @@ class WeekplansBloc extends BlocBase {
     return _markedWeekModels.value;
   }
 
-  /// Returns an updated version of the Weekmodel that is marked
+  /// Returns an updated version of the week model that is marked
   Future<WeekModel> getMarkedWeekModel() async {
     assert(_markedWeekModels.value.length == 1);
-    WeekModel marked = _markedWeekModels.value[0];
+    final WeekModel marked = _markedWeekModels.value[0];
 
-    Completer<WeekModel> completer = Completer<WeekModel>();
+    final Completer<WeekModel> completer = Completer<WeekModel>();
     _api.week
         .get(_user.id, marked.weekYear, marked.weekNumber)
         .listen((WeekModel weekModel) => completer.complete(weekModel));
