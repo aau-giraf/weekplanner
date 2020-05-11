@@ -110,6 +110,7 @@ class WeekplansBloc extends BlocBase {
   /// Reformats [weekDetails] and [oldWeekDetails] in to an Observable List
   Observable<List<WeekModel>> reformatWeekDetailsToObservableList
       (List<Observable<WeekModel>> details){
+      // ignore: always_specify_types
       return details.isEmpty ? Observable.empty() :
         details.length == 1 ?
         details[0].map((WeekModel plan) => <WeekModel>[plan]) :
