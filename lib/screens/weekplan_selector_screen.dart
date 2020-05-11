@@ -8,11 +8,14 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/copy_resolve_screen.dart';
+import 'package:weekplanner/screens/copy_to_citizens_screen.dart';
 import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -248,6 +251,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
                       onPressed: () => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
+                      buttonText: 'Kopiér',
+                      buttonKey: 'CopyWeekplanButton',
+                      assetPath: 'assets/icons/copy.png',
+                      isEnabled: false,
+                      isEnabledStream: _weekBloc.onlyOneModelMarkedStream(),
+                      dialogFunction: _buildCopyDialog),
+                  BottomAppBarButton(
                       buttonText: 'Slet',
                       buttonKey: 'DeleteActivtiesButton',
                       assetPath: 'assets/icons/delete.png',
@@ -285,6 +295,45 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
+  }
+
+  ///Builds dialog box to select where to copy weekplan or cancel
+  Future<Center> _buildCopyDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Giraf3ButtonDialog(
+            title: 'Kopiér ugeplaner',
+            description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
+            option1Text: 'Anden borger',
+            option1OnPressed: () {
+              _weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
+
+                Routes.push(
+                  context,
+                  CopyToCitizensScreen(
+                    weekmodel, _user));
+
+              });
+            },
+            option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+            option2Text: 'Denne borger',
+            option2OnPressed: () {
+              _weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
+                Routes.push(
+                  context,
+                  CopyResolveScreen(
+                    currentUser: _user,
+                    weekModel: weekmodel,
+                    forThisCitizen: true,
+                  )
+                );
+              });
+            },
+            option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+          );
+        });
   }
 
   /// Builds dialog box to confirm/cancel deletion
