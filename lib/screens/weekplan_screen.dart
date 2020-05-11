@@ -289,6 +289,7 @@ class WeekplanScreen extends StatelessWidget {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
+                    _weekdayCounter = 0;
                     // If the option of showing 1 day is chosen the
                     // _weekdayCounter must start from today's date
                     if (_daysToDisplay == 1) {
