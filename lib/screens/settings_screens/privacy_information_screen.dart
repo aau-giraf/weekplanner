@@ -18,20 +18,19 @@ class PrivacyInformationScreen extends StatelessWidget {
                       margin: const EdgeInsets.all(30.0),
                       padding: const EdgeInsets.all(10.0),
                       decoration: myBoxDecoration(),
-                      child: RichText(text: TextSpan(
+                      child: RichText(text: const TextSpan(
                         style: TextStyle(color: theme.GirafColors.black,
                             fontFamily: 'Quicksand'),
-                        // ignore: prefer_const_literals_to_create_immutables
                         children: <TextSpan>[
-                          const TextSpan(
+                          TextSpan(
                               text: 'Oplysninger om vores behandling '
                                   'af dine personoplysninger mv.''\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: '1. Vi er den dataansvarlige '
                                   '– hvordan kontakter du os?' '\n' '\n',
                               style: TextStyle(fontSize: 30.09)),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Girafs Venner er dataansvarlig for '
                                   'behandlingen af de personoplysninger, '
                                   'som vi har modtaget om dig. '
@@ -49,12 +48,12 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   '   \u2022 '
                                   'Mail: ulrik@cs.aau.dk' '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: '2. Formålene med og retsgrundlaget for '
                                   'behandlingen af dine '
                                   'personoplysninger' '\n' '\n',
                               style: TextStyle(fontSize: 30.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Vi behandler dine '
                                   'personoplysninger til følgende '
                                   'formål:' '\n' '\n'
@@ -95,11 +94,11 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'et kommunikationsværktøj.' '\n'
                                   '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: '3. Kategorier af '
                                   'personoplysninger' '\n' '\n',
                               style: TextStyle(fontSize: 30.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Vi behandler følgende '
                                   'kategorier af personoplysninger '
                                   'om dig:' '\n'
@@ -109,22 +108,22 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'personoplysninger'
                                   '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: '4. Hvor dine '
                                   'personoplysninger stammer '
                                   'fra' '\n' '\n',
                               style: TextStyle(fontSize: 30.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Personoplysningerne stammer '
                                   'fra registreringen af brugeren '
                                   'i applikationen.' '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: '5. Opbevaring af '
                                   'dine personoplysninger' '\n'
                                   '\n',
                               style: TextStyle(fontSize: 30.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Personlige oplysninger '
                                   'slettes 1 år efter, at '
                                   'brugeren er erklæret inaktiv,'
@@ -135,13 +134,13 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'af manglende anvendelse af '
                                   'systemet.' '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: '6. Retten til at '
                                   'trække samtykke tilbage'
                                   '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
                               )),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Du har til enhver tid ret '
                                   'til at trække dit samtykke tilbage. '
                                   'Dette kan du gøre ved at kontakte '
@@ -159,9 +158,9 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'derfor først virkning '
                                   'fra dette tidspunkt.' '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(text: '7. Dine rettigheder' '\n' '\n',
+                          TextSpan(text: '7. Dine rettigheder' '\n' '\n',
                               style: TextStyle(fontSize: 30.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Du har efter '
                                   'databeskyttelsesforordningen en '
                                   'række rettigheder i '
@@ -185,7 +184,7 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'oplysninger om dig selv '
                                   'rettet.' '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: '   \u2022 '
                                   'Ret til sletning. I særlige'
                                   ' tilfælde har du ret til at '
@@ -239,10 +238,10 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'som du finder på '
                                   'www.datatilsynet.dk.' '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
-                          const TextSpan(text: '8. Klage til Datatilsynet'
+                          TextSpan(text: '8. Klage til Datatilsynet'
                               '\n' '\n',
                               style: TextStyle(fontSize: 30.0)),
-                          const TextSpan(
+                          TextSpan(
                               text: 'Du har ret til at '
                                   'indgive en klage til Datatilsynet, '
                                   'hvis du er utilfreds med '
@@ -260,7 +259,7 @@ class PrivacyInformationScreen extends StatelessWidget {
                 ])
         ));
   }
-
+/// Box to make it look nicer
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
       border: Border.all(
