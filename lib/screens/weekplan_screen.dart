@@ -289,6 +289,7 @@ class WeekplanScreen extends StatelessWidget {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
+                    _weekdayCounter = 0;
                     // If the option of showing 1 day is chosen the
                     // _weekdayCounter must start from today's date
                     if (_daysToDisplay == 1) {
@@ -296,7 +297,6 @@ class WeekplanScreen extends StatelessWidget {
                     }
                     // Adding the selected number of days to weekDays
                     weekDays.clear();
-                    _weekdayCounter = 0;
                     for (int i = 0; i < _daysToDisplay; i++) {
                       // Get color from the citizen's chosen color theme
                       final String dayColor = _settingsModel.weekDayColors
