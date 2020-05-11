@@ -58,9 +58,10 @@ class MockData {
     authBloc.setMode(WeekplanMode.guardian);
     weekplanBloc = WeekplanBloc(api);
     di.clearAll();
+    // We register the dependencies needed to build different widgets
+    di.registerDependency<AuthBloc>((_) => authBloc);
     di.registerDependency<WeekplanBloc>((_) => weekplanBloc);
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<AuthBloc>((_) => authBloc);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<TimerBloc>((_) => TimerBloc(api));
@@ -76,8 +77,9 @@ class MockData {
   DisplayNameModel mockUser;
 
   Api api;
-  WeekplanBloc weekplanBloc;
+
   AuthBloc authBloc;
+  WeekplanBloc weekplanBloc;
 
   WeekModel createInitialMockWeek() {
     return WeekModel(
