@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/style/custom_color.dart' as theme;
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
+/// Screen where the user see their legal rights
 class PrivacyInformationScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
