@@ -115,7 +115,6 @@ class ShowActivityScreen extends StatelessWidget {
     );
 
     if (mode == WeekplanMode.guardian) {
-      print('listen');
       buttons.add(_buildChoiceBoardButton(context));
     }
 
