@@ -34,9 +34,6 @@ void main() {
   Api api;
   SettingsBloc settingsBloc;
 
-  final DisplayNameModel user = DisplayNameModel(
-      displayName: 'Hans Hansen', id: '12', role: Role.Guardian.toString());
-
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
