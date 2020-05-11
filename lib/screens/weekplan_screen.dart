@@ -271,7 +271,7 @@ class WeekplanScreen extends StatelessWidget {
                     child: WeekplanDayColumn(
                   dayOfTheWeek: Weekday.values[i],
                   color: defaultWeekColors[i],
-                  week: weekModel,
+                  weekplanBloc: _weekplanBloc,
                   user: _user,
                 )));
               }
@@ -305,7 +305,7 @@ class WeekplanScreen extends StatelessWidget {
                           child: WeekplanDayColumn(
                         dayOfTheWeek: Weekday.values[_weekdayCounter],
                         color: Color(int.parse(dayColor)),
-                        week: weekModel,
+                        weekplanBloc: _weekplanBloc,
                         user: _user,
                       )));
                       if (_weekdayCounter == 6) {
