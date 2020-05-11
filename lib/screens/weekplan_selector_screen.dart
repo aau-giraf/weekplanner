@@ -65,7 +65,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
     return Container(
         child: Column(children: <Widget>[
       Container(
-          child: Expanded(flex: 7, child: _buildWeekplanGridview
+          child: Expanded(flex: 75,child: _buildWeekplanGridview
             (context, weekModels, true)),
       ),
       Container(
@@ -82,7 +82,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
-      Expanded(flex: 3, child: _buildWeekplanGridview(context, oldWeekModels, false))
+      Expanded(flex: 25, child:
+          Container(
+              child: _buildWeekplanGridview(context, oldWeekModels, false))),
+
     ]));
   }
 
@@ -102,14 +105,18 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 return GridView.count(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
-                    crossAxisCount: MediaQuery.of(context).orientation ==
-                            Orientation.landscape
-                        ? 4
-                        : 3,
+                    crossAxisCount:
+                        current ?
+                            MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                                ? 4
+                                : 3
+                        :   1,
                     crossAxisSpacing:
                         MediaQuery.of(context).size.width / 100 * 1.5,
                     mainAxisSpacing:
                         MediaQuery.of(context).size.width / 100 * 1.5,
+                    scrollDirection: current ? Axis.vertical : Axis.horizontal,
                     children: weekplansSnapshot.data.map((WeekModel weekplan) {
                       return _buildWeekPlanSelector(
                         context,
@@ -136,9 +143,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(color: theme.GirafColors.black, width: 15),
           ),
-          child: _buildWeekplanCard(context, weekplan, bloc, current));
+          child: _buildWeekplanCard(context, weekplan, bloc, current,
+              ));
     } else {
-      return _buildWeekplanCard(context, weekplan, bloc, current);
+      return Container(
+          child: _buildWeekplanCard(context, weekplan, bloc, current,
+              ));
     }
   }
 
@@ -161,7 +171,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     child: Column(
                   children: <Widget>[
                     Expanded(
-                      flex: 4,
                       child: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraint) {
                         if (weekplan.thumbnail != null) {
