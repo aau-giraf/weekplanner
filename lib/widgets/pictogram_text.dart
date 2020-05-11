@@ -56,10 +56,7 @@ class PictogramText extends StatelessWidget {
   }
 
   bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-    if (weekModeSnapshot.data == WeekplanMode.guardian) {
-      return true;
-    }
-    return false;
+     return weekModeSnapshot.data == WeekplanMode.guardian;
   }
 
   SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
