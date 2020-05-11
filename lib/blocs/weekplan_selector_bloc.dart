@@ -15,7 +15,7 @@ class WeekplansBloc extends BlocBase {
   ///to be used when getting the [WeekModel].
   Stream<List<WeekNameModel>> get weekNameModels => _weekNameModelsList.stream;
 
-  /// This is a stream where all the [WeekModel] are put in,
+  /// This is a stream where all the FUTURE [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get weekModels => _weekModel.stream;
@@ -32,6 +32,9 @@ class WeekplansBloc extends BlocBase {
   final BehaviorSubject<List<WeekModel>> _oldWeekModel =
   BehaviorSubject<List<WeekModel>>();
 
+  /// This is a stream where all the OLD [WeekModel] are put in,
+  /// and this is the stream to listen to,
+  /// when wanting information about weekplans.
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
   final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =

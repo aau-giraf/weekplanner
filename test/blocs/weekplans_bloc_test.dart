@@ -82,18 +82,19 @@ void main() {
   });
 
   test('Should be able to load weekplans for a user', async((DoneFn done) {
+
     bloc.weekNameModels.listen((List<WeekNameModel> response) {
       expect(response, isNotNull);
       expect(response, equals(weekNameModelList));
     });
 
-    bloc.weekModels.listen((List<WeekModel> response) {
+    bloc.oldWeekModels.listen((List<WeekModel> response) {
       expect(response, isNotNull);
       expect(response, equals(weekModelList));
       done();
     });
 
-    bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
+    bloc.load(mockUser);
   }));
 
   test('Should dispose weekModels stream', async((DoneFn done) {
