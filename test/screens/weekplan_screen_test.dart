@@ -318,7 +318,6 @@ void main() {
         findsOneWidget);
   });
 
-  // TODO(eneder17): test functinality of these three buttons and rename tests
   testWidgets('Copy activity button opens dialog when activity is selected',
       (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
