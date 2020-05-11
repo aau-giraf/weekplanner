@@ -12,8 +12,8 @@ import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/style/standard_week_colors.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
-import '../di.dart';
-import '../style/custom_color.dart' as theme;
+import '../../di.dart';
+import '../../style/custom_color.dart' as theme;
 
 /// Widget used for activities in the weekplan screen.
 class ActivityCard extends StatelessWidget {
