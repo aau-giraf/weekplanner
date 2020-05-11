@@ -230,6 +230,7 @@ class MockActivityApi extends Mock implements ActivityApi {
   Observable<ActivityModel> add(ActivityModel activity, String userId,
       String weekplanName, int weekYear, int weekNumber, Weekday weekDay) {
     _mockActivities.add(activity);
+    return Observable<ActivityModel>.just(activity);
   }
 }
 

@@ -43,10 +43,6 @@ class WeekplanDayColumn extends StatelessWidget {
   /// User that we need to get settings for
   final DisplayNameModel user;
 
-  /// Variable used to store the week we are currently working on gotten from
-  /// the stream
-  WeekModel _week;
-
   /// Week plan bloc us which is needed as input because it needs to be the
   /// same as the one for the weekplan screen so di does not work.
   final WeekplanBloc weekplanBloc;
@@ -60,11 +56,11 @@ class WeekplanDayColumn extends StatelessWidget {
       stream: weekplanBloc.userWeek,
       builder: (BuildContext context, AsyncSnapshot<UserWeekModel> snapshot) {
         if(snapshot.hasData) {
-          _week = snapshot.data.week;
+          final WeekModel _week = snapshot.data.week;
 
           return Card(
               color: color,
-              child: _day(_week.days[dayOfTheWeek.index], context));
+              child: _day(_week, context));
         } else {
             return const Center(child: CircularProgressIndicator());
         }
@@ -72,14 +68,15 @@ class WeekplanDayColumn extends StatelessWidget {
     );
   }
 
-  Column _day(WeekdayModel weekday, BuildContext context) {
+  Column _day(WeekModel week, BuildContext context) {
+    final WeekdayModel weekday = week.days[dayOfTheWeek.index];
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         _translateWeekDay(weekday.day),
         _buildDaySelectorButtons(context, weekday),
-        _buildDayActivities(weekday.activities, weekday),
-        _buildAddActivityButton(weekday, context)
+        _buildDayActivities(weekday.activities, week),
+        _buildAddActivityButton(week, context)
       ],
     );
   }
@@ -203,7 +200,9 @@ class WeekplanDayColumn extends StatelessWidget {
 
   /// Builds a day's activities
   StreamBuilder<List<ActivityModel>> _buildDayActivities(
-      List<ActivityModel> activities, WeekdayModel weekday) {
+      List<ActivityModel> activities, WeekModel week) {
+    final WeekdayModel weekday = week.days[dayOfTheWeek.index];
+
     return StreamBuilder<List<ActivityModel>>(
         stream: weekplanBloc.markedActivities,
         builder: (BuildContext context,
@@ -236,10 +235,10 @@ class WeekplanDayColumn extends StatelessWidget {
                                 AsyncSnapshot<WeekplanMode> snapshot) {
                               if (snapshot.data == WeekplanMode.guardian) {
                                 return _dragTargetPictogram(
-                                    index, weekday, editModeSnapshot.data);
+                                    index, week, editModeSnapshot.data);
                               }
                               return _pictogramIconStack(context, index,
-                                  weekday, editModeSnapshot.data);
+                                  week, editModeSnapshot.data);
                             });
                       }
                     },
@@ -278,7 +277,9 @@ class WeekplanDayColumn extends StatelessWidget {
 
   // Returns the draggable pictograms, which also function as drop targets.
   DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
-      int index, WeekdayModel weekday, bool inEditMode) {
+      int index, WeekModel week, bool inEditMode) {
+    final WeekdayModel weekday = week.days[dayOfTheWeek.index];
+
     return DragTarget<Tuple2<ActivityModel, Weekday>>(
       key: const Key('DragTarget'),
       builder: (BuildContext context,
@@ -288,10 +289,10 @@ class WeekplanDayColumn extends StatelessWidget {
           data: Tuple2<ActivityModel, Weekday>(
               weekday.activities[index], weekday.day),
           dragAnchor: DragAnchor.pointer,
-          child: _pictogramIconStack(context, index, weekday, inEditMode),
+          child: _pictogramIconStack(context, index, week, inEditMode),
           childWhenDragging: Opacity(
               opacity: 0.5,
-              child: _pictogramIconStack(context, index, weekday, inEditMode)),
+              child: _pictogramIconStack(context, index, week, inEditMode)),
           onDragStarted: () =>
               weekplanBloc.setActivityPlaceholderVisible(true),
           onDragCompleted: () =>
@@ -305,7 +306,7 @@ class WeekplanDayColumn extends StatelessWidget {
               width: MediaQuery.of(context).orientation == Orientation.portrait
                   ? MediaQuery.of(context).size.width * 0.4
                   : MediaQuery.of(context).size.height * 0.4,
-              child: _pictogramIconStack(context, index, weekday, inEditMode)),
+              child: _pictogramIconStack(context, index, week, inEditMode)),
         );
       },
       onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
@@ -321,9 +322,12 @@ class WeekplanDayColumn extends StatelessWidget {
 
   // Returning a widget that stacks a pictogram and an status icon
   FittedBox _pictogramIconStack(
-      BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
-    final bool isMarked =
-      weekplanBloc.isActivityMarked(weekday.activities[index]);
+      BuildContext context, int index, WeekModel week, bool inEditMode) {
+    final WeekdayModel weekday = week.days[dayOfTheWeek.index];
+    final ActivityModel currActivity = weekday.activities[index];
+
+    final bool isMarked = weekplanBloc.isActivityMarked(currActivity);
+
 
     return FittedBox(
       child: Stack(
@@ -365,7 +369,7 @@ class WeekplanDayColumn extends StatelessWidget {
                             child: Container(
                               child: GestureDetector(
                                 key: Key(weekday.day.index.toString() +
-                                    weekday.activities[index].id.toString()),
+                                    currActivity.id.toString()),
                                 onTap: () {
                                   if (modeSnapshot.data ==
                                       WeekplanMode.guardian) {
@@ -375,10 +379,18 @@ class WeekplanDayColumn extends StatelessWidget {
                                         false,
                                         weekday.activities,
                                         index,
-                                        context);
+                                        context,
+                                        week
+                                    );
                                   } else {
-                                    _handleOnTapActivity(false, false, true,
-                                        weekday.activities, index, context);
+                                    _handleOnTapActivity(
+                                        false,
+                                        false,
+                                        true,
+                                        weekday.activities,
+                                        index,
+                                        context,
+                                        week);
                                   }
                                 },
                                 child:
@@ -403,7 +415,8 @@ class WeekplanDayColumn extends StatelessWidget {
 
   /// Handles tap on an activity
   void _handleOnTapActivity(bool inEditMode, bool isMarked, bool isCitizen,
-      List<ActivityModel> activities, int index, BuildContext context) {
+      List<ActivityModel> activities, int index, BuildContext context,
+      WeekModel week) {
     if (inEditMode) {
       if (isMarked) {
         weekplanBloc.removeMarkedActivity(activities[index]);
@@ -413,7 +426,7 @@ class WeekplanDayColumn extends StatelessWidget {
     } else if (!(activities[index].state == ActivityState.Completed &&
         isCitizen)) {
       Routes.push(context, ShowActivityScreen(activities[index], user))
-          .then((Object object) => weekplanBloc.loadWeek(_week, user));
+          .then((Object object) => weekplanBloc.loadWeek(week, user));
     }
   }
 
@@ -434,7 +447,9 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
-  Container _buildAddActivityButton(WeekdayModel weekday, BuildContext context) {
+  Container _buildAddActivityButton(WeekModel week, BuildContext context){
+    final WeekdayModel weekday = week.days[dayOfTheWeek.index];
+
     return Container(
         padding: EdgeInsets.symmetric(
         horizontal:
@@ -467,7 +482,7 @@ class WeekplanDayColumn extends StatelessWidget {
                                       state: ActivityState.Active,
                                       isChoiceBoard: false),
                                   weekday.day.index);
-                              weekplanBloc.loadWeek(_week, user);
+                              weekplanBloc.loadWeek(week, user);
                             }
                           });
                     }),
