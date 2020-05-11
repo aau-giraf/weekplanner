@@ -321,7 +321,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
             option2Text: 'Denne borger',
             option2OnPressed: () {
               _weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
-
                 Routes.push(
                   context,
                   CopyResolveScreen(
