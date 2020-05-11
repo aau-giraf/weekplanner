@@ -25,7 +25,8 @@ class PrivacyInformationScreen extends StatelessWidget {
                           TextSpan(
                               text: 'Oplysninger om vores behandling '
                                   'af dine personoplysninger mv.''\n' '\n',
-                              style: TextStyle(fontSize: 20.0)),
+                              style: TextStyle(fontSize: 20.0,
+                                  fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: '1. Vi er den dataansvarlige '
                                   '– hvordan kontakter du os?' '\n' '\n',
