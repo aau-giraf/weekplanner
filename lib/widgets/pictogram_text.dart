@@ -58,6 +58,10 @@ class PictogramText extends StatelessWidget {
         });
   }
 
+  bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+    return weekModeSnapshot.data == WeekplanMode.guardian;
+  }
+
   SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
     return SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -81,9 +85,5 @@ class PictogramText extends StatelessWidget {
       AsyncSnapshot<SettingsModel> settingsSnapshot) {
     return settingsSnapshot.data.completeMark == CompleteMark.Removed &&
         _activity.state == ActivityState.Completed;
-  }
-
-  bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-    return weekModeSnapshot.data == WeekplanMode.guardian;
   }
 }
