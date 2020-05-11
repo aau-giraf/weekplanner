@@ -210,8 +210,9 @@ void main() {
   });
 
   testWidgets(
-      'Pictogram text displayed for Guardians no matter what setting is '
-      'selected for completed activity', (WidgetTester tester) async {
+      'Pictogram text is still displayed for Guardians when the activity is '
+          'completed and activities are set to be removed when complete',
+          (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockSettings.completeMark = CompleteMark.Removed;
     mockSettings.pictogramText = true;
