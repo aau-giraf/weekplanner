@@ -103,7 +103,7 @@ class WeekplansBloc extends BlocBase {
     getOldWeekPlans
       .take(1)
       .map((List<WeekModel> plans) => plans)
-      .map(_sortWeekPlans)
+      .map(_sortOldWeekPlans)
       .listen(_oldWeekModel.add);
   }
 
@@ -153,6 +153,7 @@ class WeekplansBloc extends BlocBase {
     return weekNum;
   }
 
+  /// Upcoming weekplans is sorted in ascending order
   List<WeekModel> _sortWeekPlans(List<WeekModel> list) {
     list.sort((WeekModel a, WeekModel b) {
       if (a.name == 'Tilføj ugeplan') {
@@ -166,6 +167,21 @@ class WeekplansBloc extends BlocBase {
     });
     return list;
   }
+
+  /// Old weekplans needs to be sorted in descending order
+  List<WeekModel> _sortOldWeekPlans(List<WeekModel> list) {
+    list.sort((WeekModel a, WeekModel b) {
+      if (a.weekYear == b.weekYear) {
+        return b.weekNumber.compareTo(a.weekNumber);
+      } else {
+        return b.weekYear.compareTo(a.weekYear);
+      }
+    });
+    return list;
+  }
+
+
+
 
   /// Checks if a week is in the past/expired
   bool isWeekDone(WeekNameModel weekPlan){
