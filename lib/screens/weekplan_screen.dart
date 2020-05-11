@@ -726,10 +726,7 @@ class WeekplanScreen extends StatelessWidget {
   ) {
     return Container(
       color: theme.GirafColors.white,
-      margin: EdgeInsets.all(MediaQuery
-          .of(context)
-          .size
-          .width * 0.02),
+      margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
       child: FittedBox(
         child: Column(
           children: <Widget>[
@@ -737,14 +734,8 @@ class WeekplanScreen extends StatelessWidget {
               alignment: AlignmentDirectional.topEnd,
               children: <Widget>[
                 SizedBox(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
                   child: FittedBox(
                     child: _getPictogram(activities[index]),
                   ),
