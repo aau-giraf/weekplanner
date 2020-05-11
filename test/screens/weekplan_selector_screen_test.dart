@@ -98,8 +98,8 @@ void main() {
         (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     when(weekApi.get(
-            'testId', weekNameModel.weekYear, weekNameModel.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+      'testId', weekNameModel.weekYear, weekNameModel.weekNumber))
+      .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.get(
             'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber))
@@ -107,6 +107,10 @@ void main() {
     when(weekApi.get(
             'testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel2));
+
+    when(weekApi.get(
+      'testId', weekModel1.weekYear, weekModel1.weekNumber))
+      .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.update(
             'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber, any))
