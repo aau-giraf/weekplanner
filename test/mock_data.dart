@@ -94,13 +94,13 @@ class MockData {
 
   List<WeekdayColorModel> _createWeekDayColors() {
     return <WeekdayColorModel>[
-      WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
       WeekdayColorModel(day: Weekday.Monday, hexColor: '0xff999999'),
-      WeekdayColorModel(day: Weekday.Saturday, hexColor: '0xffeeeeee'),
       WeekdayColorModel(day: Weekday.Tuesday, hexColor: '0xffaaaaaa'),
-      WeekdayColorModel(day: Weekday.Thursday, hexColor: '0xffcccccc'),
-      WeekdayColorModel(day: Weekday.Sunday, hexColor: '0xffffffff'),
       WeekdayColorModel(day: Weekday.Wednesday, hexColor: '0xffbbbbbb'),
+      WeekdayColorModel(day: Weekday.Thursday, hexColor: '0xffcccccc'),
+      WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
+      WeekdayColorModel(day: Weekday.Saturday, hexColor: '0xffeeeeee'),
+      WeekdayColorModel(day: Weekday.Sunday, hexColor: '0xffffffff'),
     ];
   }
 

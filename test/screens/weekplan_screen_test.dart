@@ -26,13 +26,14 @@ import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
-import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
+import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../mock_data.dart';
 
@@ -170,6 +171,22 @@ void main() {
     expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
   });
 
+  testWidgets('Marking activity in edit mode renders a black box around it',
+      (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
+  });
+
   testWidgets('Cancel/Copy/Delete buttons not build when edit mode is false',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
@@ -273,23 +290,6 @@ void main() {
         findsNothing);
   });
 
-  testWidgets('Marking activity in edit mode works',
-      (WidgetTester tester) async {
-
-    mockWeek.days[0].activities.add(mockActivities[0]);
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byType(ActivityCard));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
-  });
-
   testWidgets('Cancel activity button opens dialog when activity is selected',
       (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
@@ -373,8 +373,7 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Canceling an activity works',
-          (WidgetTester tester) async {
+  testWidgets('Canceling an activity works', (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
@@ -386,23 +385,22 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
         widget is BottomAppBarButton &&
         widget.buttonText == 'Aflys' &&
         widget.buttonKey == 'CancelActivtiesButton'));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('IconCanceled')), findsNothing);
-    
+
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
   });
 
-  testWidgets('Copying an activity works',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
+  testWidgets('Copying an activity works', (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
@@ -419,7 +417,7 @@ void main() {
 
     // Tapping copy activities button
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
         widget.buttonText == 'Kopier' &&
         widget.buttonKey == 'CopyActivtiesButton'));
     await tester.pumpAndSettle();
@@ -434,9 +432,8 @@ void main() {
     expect(mockWeek.days[1].activities.length, 1);
   });
 
-  testWidgets('Deleting an activity works',
-          (WidgetTester tester) async {
-        mockWeek.days[0].activities.add(mockActivities[0]);
+  testWidgets('Deleting an activity works', (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
@@ -452,7 +449,7 @@ void main() {
 
     // Tapping copy activities button
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
-    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
         widget.buttonText == 'Slet' &&
         widget.buttonKey == 'DeleteActivtiesButton'));
     await tester.pumpAndSettle();
@@ -528,7 +525,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: weekplanScreen));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
-    expect(find.byType(Column), findsNWidgets(5));
+    expect(find.byType(WeekplanDayColumn), findsNWidgets(5));
   });
 
   testWidgets('When showing 7 days, 7 weekday columns are created',
@@ -540,13 +537,23 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: weekplanScreen));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
-    expect(find.byType(Column), findsNWidgets(7));
+    expect(find.byType(WeekplanDayColumn), findsNWidgets(7));
   });
 
   testWidgets(
       'Week day colors should be in correct order regardless of order in DB',
       (WidgetTester tester) async {
     mockSettings.nrOfDaysToDisplay = 7;
+    mockSettings.weekDayColors = <WeekdayColorModel>[
+      WeekdayColorModel(day: Weekday.Saturday, hexColor: '0xffeeeeee'),
+      WeekdayColorModel(day: Weekday.Tuesday, hexColor: '0xffaaaaaa'),
+      WeekdayColorModel(day: Weekday.Wednesday, hexColor: '0xffbbbbbb'),
+      WeekdayColorModel(day: Weekday.Monday, hexColor: '0xff999999'),
+      WeekdayColorModel(day: Weekday.Thursday, hexColor: '0xffcccccc'),
+      WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
+      WeekdayColorModel(day: Weekday.Sunday, hexColor: '0xffffffff'),
+    ];
+
     mockWeek.days = <WeekdayModel>[
       WeekdayModel(activities: <ActivityModel>[], day: Weekday.Monday),
       WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
@@ -681,6 +688,73 @@ void main() {
             widget.image == const AssetImage('assets/icons/redcircle.png')),
         findsOneWidget);
   });
+
+  testWidgets('Weekday colors are used when in citizen mode',
+      (WidgetTester tester) async {
+    mockSettings.nrOfDaysToDisplay = 7;
+
+    authBloc.setMode(WeekplanMode.citizen);
+    final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+    await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+    await tester.pumpAndSettle();
+
+    final List<WeekdayColorModel> expectedColors = mockSettings.weekDayColors;
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is WeekplanDayColumn &&
+            widget.dayOfTheWeek == Weekday.Monday &&
+            widget.color == getColorFromWeekdayColorModel(expectedColors[0])),
+        findsOneWidget);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is WeekplanDayColumn &&
+            widget.dayOfTheWeek == Weekday.Tuesday &&
+            widget.color == getColorFromWeekdayColorModel(expectedColors[1])),
+        findsOneWidget);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is WeekplanDayColumn &&
+            widget.dayOfTheWeek == Weekday.Wednesday &&
+            widget.color == getColorFromWeekdayColorModel(expectedColors[2])),
+        findsOneWidget);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is WeekplanDayColumn &&
+            widget.dayOfTheWeek == Weekday.Thursday &&
+            widget.color == getColorFromWeekdayColorModel(expectedColors[3])),
+        findsOneWidget);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is WeekplanDayColumn &&
+            widget.dayOfTheWeek == Weekday.Friday &&
+            widget.color == getColorFromWeekdayColorModel(expectedColors[4])),
+        findsOneWidget);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is WeekplanDayColumn &&
+            widget.dayOfTheWeek == Weekday.Saturday &&
+            widget.color == getColorFromWeekdayColorModel(expectedColors[5])),
+        findsOneWidget);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is WeekplanDayColumn &&
+            widget.dayOfTheWeek == Weekday.Sunday &&
+            widget.color == getColorFromWeekdayColorModel(expectedColors[6])),
+        findsOneWidget);
+  });
+}
+
+Color getColorFromWeekdayColorModel(WeekdayColorModel weekdayColorModel) {
+  final String hexColor = weekdayColorModel.hexColor;
+  hexColor.replaceFirst('#', '0xff');
+
+  return Color(int.parse(hexColor));
 }
 
 void expectColorDayMatch(Weekday day, String color) {

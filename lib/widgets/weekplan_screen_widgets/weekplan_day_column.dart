@@ -26,15 +26,15 @@ import 'activity_card.dart';
 class WeekplanDayColumn extends StatelessWidget {
   /// Constructor
   WeekplanDayColumn(
-      {@required this.weekDayNumber,
+      {@required this.dayOfTheWeek,
       @required this.color,
       @required this.week,
       @required this.user}) {
     _settingsBloc.loadSettings(user);
   }
 
-  /// The number of the day of the week i.e. 0 for monday.
-  final int weekDayNumber;
+  /// The day of the week
+  final Weekday dayOfTheWeek;
 
   /// The color that the column should be painted
   final Color color;
@@ -42,6 +42,7 @@ class WeekplanDayColumn extends StatelessWidget {
   /// The entire weekmodel storing all information about the week
   final WeekModel week;
 
+  /// User that we need to get settings for
   final DisplayNameModel user;
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
@@ -50,7 +51,8 @@ class WeekplanDayColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(color: color, child: _day(week.days[weekDayNumber], context));
+    return Card(
+        color: color, child: _day(week.days[dayOfTheWeek.index], context));
   }
 
   Column _day(WeekdayModel weekday, BuildContext context) {

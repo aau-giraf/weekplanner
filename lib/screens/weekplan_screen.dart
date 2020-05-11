@@ -263,7 +263,7 @@ class WeekplanScreen extends StatelessWidget {
               for (int i = 0; i < weekModel.days.length; i++) {
                 weekDays.add(Expanded(
                     child: WeekplanDayColumn(
-                  weekDayNumber: i,
+                  dayOfTheWeek: Weekday.values[i],
                   color: defaultWeekColors[i],
                   week: weekModel,
                   user: _user,
@@ -296,7 +296,7 @@ class WeekplanScreen extends StatelessWidget {
                           .replaceFirst('#', '0xff');
                       weekDays.add(Expanded(
                           child: WeekplanDayColumn(
-                        weekDayNumber: _weekdayCounter,
+                        dayOfTheWeek: Weekday.values[_weekdayCounter],
                         color: Color(int.parse(dayColor)),
                         week: weekModel,
                         user: _user,
