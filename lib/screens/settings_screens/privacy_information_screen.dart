@@ -267,6 +267,7 @@ class PrivacyInformationScreen extends StatelessWidget {
                 ])
         ));
   }
+
 /// Box to make it look nicer
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
