@@ -18,6 +18,7 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
+import 'package:api_client/models/timer_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -68,7 +69,6 @@ class MockData {
     di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
     di.registerDependency<CopyActivitiesBloc>((_) => CopyActivitiesBloc());
-
   }
 
   WeekModel mockWeek;
@@ -156,7 +156,24 @@ class MockData {
               accessLevel: AccessLevel.PUBLIC,
               imageHash: null,
               imageUrl: null,
-              lastEdit: null))
+              lastEdit: null)),
+      ActivityModel(
+          id: 2,
+          state: ActivityState.Normal,
+          order: 0,
+          isChoiceBoard: false,
+          pictogram: PictogramModel(
+              id: 25,
+              title: 'PictogramTitle3',
+              accessLevel: AccessLevel.PUBLIC,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null),
+          timer: TimerModel(
+              startTime: DateTime(2020),
+              progress: 0,
+              fullLength: 10,
+              paused: true))
     ];
   }
 }
