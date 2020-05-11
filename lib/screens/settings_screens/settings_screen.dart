@@ -173,15 +173,15 @@ class SettingsScreen extends StatelessWidget {
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
-            return SettingsSection('Privatliv', <SettingsSectionItem>[
-              SettingsArrowButton(
-                'Privatlivsinformationer',
-                    () =>
-                    Routes.push(context, PrivacyInformationScreen())
-                        .then((Object object) =>
-                        _settingsBloc.loadSettings(_user)),
-              ),
-            ]);
+          return SettingsSection('Privatliv', <SettingsSectionItem>[
+            SettingsArrowButton(
+              'Privatlivsinformationer',
+                  () =>
+                      Routes.push(context, PrivacyInformationScreen())
+                          .then((Object object) =>
+                          _settingsBloc.loadSettings(_user)),
+            ),
+          ]);
 
         });
   }

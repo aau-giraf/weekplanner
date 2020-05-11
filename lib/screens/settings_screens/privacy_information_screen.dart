@@ -22,11 +22,10 @@ class PrivacyInformationScreen extends StatelessWidget {
                         children: <TextSpan>[
                           TextSpan(
                               text: 'Oplysninger om vores behandling af dine personoplysninger mv.''\n' '\n',
-                             style: TextStyle( fontWeight: FontWeight.bold)),
+                             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: '1. Vi er den dataansvarlige – hvordan kontakter du os?' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Girafs Venner er dataansvarlig for behandlingen af de personoplysninger, som vi har modtaget om dig. Du finder vores kontaktoplysninger nedenfor.' '\n' '\n',
@@ -46,7 +45,6 @@ class PrivacyInformationScreen extends StatelessWidget {
                           TextSpan(
                               text: '2. Formålene med og retsgrundlaget for behandlingen af dine personoplysninger' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Vi behandler dine personoplysninger til følgende formål:' '\n' '\n',
@@ -63,7 +61,6 @@ class PrivacyInformationScreen extends StatelessWidget {
                           TextSpan(
                               text: '3. Kategorier af personoplysninger' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Vi behandler følgende kategorier af personoplysninger om dig:' '\n'
@@ -75,7 +72,6 @@ class PrivacyInformationScreen extends StatelessWidget {
                           TextSpan(
                               text: '4. Hvor dine personoplysninger stammer fra' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Personoplysningerne stammer fra registreringen af brugeren i applikationen.' '\n' '\n',
@@ -83,7 +79,6 @@ class PrivacyInformationScreen extends StatelessWidget {
                           TextSpan(
                               text: '5. Opbevaring af dine personoplysninger' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Personlige oplysninger slettes 1 år efter, at brugeren er erklæret inaktiv, hvilket afhængigt af institutionen enten kan være et aktivt valg foretaget af institutionen eller som resultat af manglende anvendelse af systemet.' '\n' '\n',
@@ -91,14 +86,12 @@ class PrivacyInformationScreen extends StatelessWidget {
                           TextSpan(
                               text: '6. Retten til at trække samtykke tilbage' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Du har til enhver tid ret til at trække dit samtykke tilbage. Dette kan du gøre ved at kontakte os på de kontaktoplysninger, der fremgår ovenfor i punkt 1. Hvis du vælger at trække dit samtykke tilbage, påvirker det ikke lovligheden af vores behandling af dine personoplysninger på baggrund af dit tidligere meddelte samtykke og op til tidspunktet for tilbagetrækningen. Hvis du tilbagetrækker dit samtykke, har det derfor først virkning fra dette tidspunkt.' '\n' '\n',
                               style: TextStyle(fontSize: 20.0)),
                           TextSpan(text: '7. Dine rettigheder' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Du har efter databeskyttelsesforordningen en række rettigheder i forhold til vores behandling af oplysninger om dig. Hvis du vil gøre brug af dine rettigheder skal du kontakte os.' '\n' '\n',
@@ -129,7 +122,6 @@ class PrivacyInformationScreen extends StatelessWidget {
                               style: TextStyle(fontSize: 20.0)),
                           TextSpan(text: '8. Klage til Datatilsynet' '\n' '\n',
                               style: TextStyle(fontSize: 30.0,
-                                  decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Du har ret til at indgive en klage til Datatilsynet, hvis du er utilfreds med den måde, vi behandler dine personoplysninger på. Du finder Datatilsynets kontaktoplysninger på www.datatilsynet.dk.' '\n' '\n',
