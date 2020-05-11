@@ -31,6 +31,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   final WeekplansBloc _weekBloc;
   final DisplayNameModel _user;
+  GlobalKey currentCardsKey;
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +65,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     return Container(
         child: Column(children: <Widget>[
-      Container(
-          child: Expanded(flex: 75,child: _buildWeekplanGridview
-            (context, weekModels, true)),
-      ),
+      Expanded(flex: 75, child: _buildWeekplanGridview
+        (context, weekModels, true)),
       Container(
         color: Colors.grey,
         child:
@@ -83,8 +82,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
       Expanded(flex: 25, child:
-          Container(
-              child: _buildWeekplanGridview(context, oldWeekModels, false))),
+              _buildWeekplanGridview(context, oldWeekModels, false)),
 
     ]));
   }
@@ -92,7 +90,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekplanGridview(
       BuildContext context, Stream<List<WeekModel>> weekModels, bool current) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
-    if(!current){ initial = List<WeekModel>(); }
+    if(!current) { initial = <WeekModel>[]; }
     return StreamBuilder<List<WeekModel>>(
         initialData: initial,
         stream: weekModels,
@@ -106,17 +104,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
                     crossAxisCount:
-                        current ?
                             MediaQuery.of(context).orientation ==
                                 Orientation.landscape
                                 ? 4
-                                : 3
-                        :   1,
+                                : 3,
+
                     crossAxisSpacing:
                         MediaQuery.of(context).size.width / 100 * 1.5,
                     mainAxisSpacing:
                         MediaQuery.of(context).size.width / 100 * 1.5,
-                    scrollDirection: current ? Axis.vertical : Axis.horizontal,
                     children: weekplansSnapshot.data.map((WeekModel weekplan) {
                       return _buildWeekPlanSelector(
                         context,
@@ -146,9 +142,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
           child: _buildWeekplanCard(context, weekplan, bloc, current,
               ));
     } else {
-      return Container(
-          child: _buildWeekplanCard(context, weekplan, bloc, current,
-              ));
+      return _buildWeekplanCard(context, weekplan, bloc, current,
+          );
     }
   }
 
