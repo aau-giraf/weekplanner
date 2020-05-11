@@ -57,7 +57,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconAddTimer(callback));
         break;
       case AppBarIcon.back:
-        _iconsToAdd.add(_createIconBack(callback));
+        _iconsToAdd.add(_createIconBack(context));
         break;
       case AppBarIcon.burgerMenu:
         _iconsToAdd.add(_createIconBurgermenu(callback));
@@ -143,11 +143,13 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  IconButton _createIconBack(VoidCallback callback) {
+  IconButton _createIconBack(BuildContext context) {
     return IconButton(
       icon: Image.asset('assets/icons/back.png'),
       tooltip: 'Tilbage',
-      onPressed: callback,
+      onPressed: () {
+        Routes.pop(context);
+      },
     );
   }
 

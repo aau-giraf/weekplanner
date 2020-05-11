@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
@@ -177,6 +179,19 @@ class WeekplansBloc extends BlocBase {
     return _markedWeekModels.value;
   }
 
+  /// Returns an updated version of the week model that is marked
+  Future<WeekModel> getMarkedWeekModel() async {
+    assert(_markedWeekModels.value.length == 1);
+    final WeekModel marked = _markedWeekModels.value[0];
+
+    final Completer<WeekModel> completer = Completer<WeekModel>();
+    _api.week
+        .get(_user.id, marked.weekYear, marked.weekNumber)
+        .listen((WeekModel weekModel) => completer.complete(weekModel));
+
+    return completer.future;
+  }
+
   /// Toggles edit mode
   void toggleEditMode() {
     if (_editMode.value) {
@@ -184,6 +199,12 @@ class WeekplansBloc extends BlocBase {
     }
     _editMode.add(!_editMode.value);
   }
+
+  /// This stream checks that you have only marked one week model
+  Observable<bool> onlyOneModelMarkedStream() {
+    return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
+  }
+
   @override
   void dispose() {
     _weekModel.close();

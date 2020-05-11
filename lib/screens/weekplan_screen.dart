@@ -13,6 +13,10 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
+import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
+import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/style/standard_week_colors.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -63,7 +67,12 @@ class WeekplanScreen extends StatelessWidget {
                         AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                         AppBarIcon.changeToCitizen: () {},
                         AppBarIcon.logout: () {},
+                        AppBarIcon.settings: () =>
+                            Routes.push<WeekModel>(context,
+                            SettingsScreen(_user)).then((WeekModel newWeek) =>
+                                _settingsBloc.loadSettings(_user)),
                       }
+
                     : <AppBarIcon, VoidCallback>{
                         AppBarIcon.changeToGuardian: () {}
                       },
@@ -279,6 +288,7 @@ class WeekplanScreen extends StatelessWidget {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
+                    _weekdayCounter = 0;
                     // If the option of showing 1 day is chosen the
                     // _weekdayCounter must start from today's date
                     if (_daysToDisplay == 1) {
