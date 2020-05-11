@@ -224,25 +224,37 @@ class WeekplansBloc extends BlocBase {
         }
       });
     }
-
     clearMarkedWeekModels();
   }
 
-  /// This method deletes the given week model from the database
+  /// This method deletes the given week model from the database after checking
+  /// if its an old weekplan or an upcomming
   void deleteWeekModel(WeekModel weekModel) {
     final List<WeekModel> localWeekModels = _weekModel.value;
+    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value;
 
-    if (localWeekModels.contains(weekModel)) {
-      _api.week
-          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
-          .listen((bool deleted) {
-        if (deleted) {
-          localWeekModels.remove(weekModel);
-          _weekModel.add(localWeekModels);
-        }
-      });
+    if (localWeekModels != null && localWeekModels.contains(weekModel)) {
+      deleteWeek(localWeekModels, weekModel);
+    }
+    else if (oldLocalWeekModels != null &&
+        oldLocalWeekModels.contains(weekModel)){
+      deleteWeek(oldLocalWeekModels, weekModel);
     }
   }
+
+  /// This method deletes the given week model from the database
+  void deleteWeek(List<WeekModel> weekModels, WeekModel weekModel){
+    _api.week
+        .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+        .listen((bool deleted) {
+      if (deleted) {
+        weekModels.remove(weekModel);
+        _weekModel.add(weekModels);
+      }
+    });
+  }
+
+
 
   /// Returns the number of marked week models
   int getNumberOfMarkedWeekModels() {
