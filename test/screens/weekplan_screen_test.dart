@@ -1,3 +1,4 @@
+import 'package:api_client/api_client.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -8,8 +9,16 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
@@ -24,7 +33,6 @@ import 'package:weekplanner/widgets/pictogram_text.dart';
 import '../mock_data.dart';
 
 void main() {
-  MockData mockData;
   WeekModel mockWeek;
   SettingsModel mockSettings;
   List<ActivityModel> mockActivities;
@@ -33,13 +41,29 @@ void main() {
   AuthBloc authBloc;
 
   setUp(() {
+    MockData mockData;
     mockData = MockData();
     mockWeek = mockData.mockWeek;
     mockSettings = mockData.mockSettings;
     mockActivities = mockData.mockActivities;
     user = mockData.mockUser;
-    weekplanBloc = mockData.weekplanBloc;
-    authBloc = mockData.authBloc;
+
+    final Api api = mockData.mockApi;
+    authBloc = AuthBloc(api);
+    authBloc.setMode(WeekplanMode.guardian);
+    weekplanBloc = WeekplanBloc(api);
+
+    di.clearAll();
+    // We register the dependencies needed to build different widgets
+    di.registerDependency<AuthBloc>((_) => authBloc);
+    di.registerDependency<WeekplanBloc>((_) => weekplanBloc);
+    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
+    di.registerDependency<TimerBloc>((_) => TimerBloc(api));
+    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
+    di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
+    di.registerDependency<CopyActivitiesBloc>((_) => CopyActivitiesBloc());
   });
 
   testWidgets('WeekplanScreen renders', (WidgetTester tester) async {

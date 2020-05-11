@@ -24,51 +24,26 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:weekplanner/blocs/activity_bloc.dart';
-import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/blocs/copy_activities_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/blocs/timer_bloc.dart';
-import 'package:weekplanner/blocs/toolbar_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_bloc.dart';
-import 'package:weekplanner/di.dart';
-import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
 import 'test_image.dart';
 
+/// Mock data that can be used for tests
 class MockData {
+  /// Constructor
   MockData() {
-    mockWeek = createInitialMockWeek();
-    mockSettings = createInitialMockSettings();
-    mockActivities = createInitialMockActivities();
+    mockWeek = _createInitialMockWeek();
+    mockSettings = _createInitialMockSettings();
+    mockActivities = _createInitialMockActivities();
     mockUser = DisplayNameModel(
         role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
-    api = Api('any');
+    mockApi = Api('any');
 
-    api.week = MockWeekApi(mockWeek);
-    api.user = MockUserApi(mockSettings);
-    api.activity = MockActivityApi(mockActivities);
-    api.pictogram = MockPictogramApi();
-    api.account = MockAccountApi();
-
-    authBloc = AuthBloc(api);
-    authBloc.setMode(WeekplanMode.guardian);
-    weekplanBloc = WeekplanBloc(api);
-    di.clearAll();
-    // We register the dependencies needed to build different widgets
-    di.registerDependency<AuthBloc>((_) => authBloc);
-    di.registerDependency<WeekplanBloc>((_) => weekplanBloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<TimerBloc>((_) => TimerBloc(api));
-    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
-    di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
-    di.registerDependency<CopyActivitiesBloc>((_) => CopyActivitiesBloc());
-
+    mockApi.week = MockWeekApi(mockWeek);
+    mockApi.user = MockUserApi(mockSettings);
+    mockApi.activity = MockActivityApi(mockActivities);
+    mockApi.pictogram = MockPictogramApi();
+    mockApi.account = MockAccountApi();
   }
 
   WeekModel mockWeek;
@@ -76,12 +51,9 @@ class MockData {
   List<ActivityModel> mockActivities;
   DisplayNameModel mockUser;
 
-  Api api;
+  Api mockApi;
 
-  AuthBloc authBloc;
-  WeekplanBloc weekplanBloc;
-
-  WeekModel createInitialMockWeek() {
+  WeekModel _createInitialMockWeek() {
     return WeekModel(
         thumbnail: PictogramModel(
             imageUrl: null,
@@ -104,7 +76,7 @@ class MockData {
         weekYear: 2020);
   }
 
-  SettingsModel createInitialMockSettings() {
+  SettingsModel _createInitialMockSettings() {
     return SettingsModel(
         orientation: orientation.Orientation.Portrait,
         completeMark: CompleteMark.Checkmark,
@@ -114,12 +86,12 @@ class MockData {
         activitiesCount: 1,
         theme: GirafTheme.GirafYellow,
         nrOfDaysToDisplay: 1,
-        weekDayColors: createWeekDayColors(),
+        weekDayColors: _createWeekDayColors(),
         lockTimerControl: false,
         pictogramText: false);
   }
 
-  List<WeekdayColorModel> createWeekDayColors() {
+  List<WeekdayColorModel> _createWeekDayColors() {
     return <WeekdayColorModel>[
       WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
       WeekdayColorModel(day: Weekday.Monday, hexColor: '0xff999999'),
@@ -131,7 +103,7 @@ class MockData {
     ];
   }
 
-  List<ActivityModel> createInitialMockActivities() {
+  List<ActivityModel> _createInitialMockActivities() {
     return <ActivityModel>[
       ActivityModel(
           id: 0,
