@@ -44,62 +44,11 @@ class PictogramText extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<SettingsModel> settingsSnapshot) {
                 if (settingsSnapshot.hasData && weekModeSnapshot.hasData) {
-                  final bool hasPictogramText =
-                      settingsSnapshot.data.pictogramText;
-                  if (_isGuardianMode(weekModeSnapshot) ||
-                      (hasPictogramText &&
-                          _activityVisible(settingsSnapshot))) {
-                    final String pictogramText = _pictogram.title.toUpperCase();
-                    return _buildPictogramText(context, pictogramText);
-                  }
-                }
-                return Container(width: 0, height: 0);
-              });
-        });
-  }
-
-  bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-    if (weekModeSnapshot.data == WeekplanMode.guardian) {
-      return true;
-    }
-    return false;
-  }
-
-  SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
-    return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width / 4,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.05),
-          child: AutoSizeText(
-            pictogramText,
-            minFontSize: minFontSize,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            // creates a ... postfix if text overflows
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 150),
-          ),
-        ));
-  }
-
-  bool _activityVisible(AsyncSnapshot<SettingsModel> settingsSnapshot) {
-    return !(settingsSnapshot.data.completeMark == CompleteMark.Removed &&
-        _activity.state == ActivityState.Completed);
-    return StreamBuilder<WeekplanMode>(
-        stream: _authBloc.mode,
-        builder: (BuildContext context,
-            AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          return StreamBuilder<SettingsModel>(
-              stream: _settingsBloc.settings,
-              builder: (BuildContext context,
-                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
-                if (settingsSnapshot.hasData) {
                   final bool pictogramTextIsEnabled =
                       settingsSnapshot.data.pictogramText;
                   if (_isGuardianMode(weekModeSnapshot) ||
-                      pictogramTextIsEnabled) {
+                      (pictogramTextIsEnabled &&
+                          !_activityIsRemovedFromWeekplan(settingsSnapshot))) {
                     final String pictogramText = _pictogram.title.toUpperCase();
                     return _buildPictogramText(context, pictogramText);
                   }
@@ -107,10 +56,6 @@ class PictogramText extends StatelessWidget {
                 return Container(width: 0, height: 0);
               });
         });
-  }
-
-  bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-     return weekModeSnapshot.data == WeekplanMode.guardian;
   }
 
   SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
@@ -130,5 +75,15 @@ class PictogramText extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 150),
           ),
         ));
+  }
+
+  bool _activityIsRemovedFromWeekplan(
+      AsyncSnapshot<SettingsModel> settingsSnapshot) {
+    return settingsSnapshot.data.completeMark == CompleteMark.Removed &&
+        _activity.state == ActivityState.Completed;
+  }
+
+  bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
+    return weekModeSnapshot.data == WeekplanMode.guardian;
   }
 }

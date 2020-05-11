@@ -18,7 +18,6 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 
 SettingsModel mockSettings;
@@ -86,8 +85,7 @@ void main() {
     di.registerDependency<AuthBloc>((_) => authBloc);
   });
 
-  testWidgets(
-      'Pictogram text is not displayed when false and in Citizen mode',
+  testWidgets('Pictogram text is not displayed when false and in Citizen mode',
       (WidgetTester tester) async {
     mockSettings.pictogramText = false;
     authBloc.setMode(WeekplanMode.citizen);
@@ -121,7 +119,7 @@ void main() {
     authBloc.setMode(WeekplanMode.guardian);
 
     await tester
-        .pumpWidget(MaterialApp(home: PictogramText(pictogramModel, user)));
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
@@ -160,7 +158,7 @@ void main() {
   testWidgets(
       'Pictogram text is removed for citizen when the activity is complete '
       'and activities are set to be removed when completed',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Removed;
     mockSettings.pictogramText = true;
@@ -177,39 +175,39 @@ void main() {
 
   testWidgets(
       'Pictogram text is displayed for citizen when activities are set to be'
-          'removed when completed but the activity itself is not complete',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.Removed;
-        mockSettings.pictogramText = true;
-        activityModel.state = ActivityState.Normal;
+      'removed when completed but the activity itself is not complete',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Removed;
+    mockSettings.pictogramText = true;
+    activityModel.state = ActivityState.Normal;
 
-        await tester
-            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
-        await tester.pumpAndSettle();
+    await tester
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
 
-        expect(find.byType(AutoSizeText), findsOneWidget);
-        final String title = pictogramModel.title;
-        expect(find.text(title.toUpperCase()), findsOneWidget);
-      });
+    expect(find.byType(AutoSizeText), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
+  });
 
   testWidgets(
       'Pictogram text is removed for citizen when the activity is complete '
-          'and activities are not set to be removed when completed',
-          (WidgetTester tester) async {
-        authBloc.setMode(WeekplanMode.citizen);
-        mockSettings.completeMark = CompleteMark.MovedRight;
-        mockSettings.pictogramText = true;
-        activityModel.state = ActivityState.Completed;
+      'and activities are not set to be removed when completed',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.MovedRight;
+    mockSettings.pictogramText = true;
+    activityModel.state = ActivityState.Completed;
 
-        await tester
-            .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
-        await tester.pumpAndSettle();
+    await tester
+        .pumpWidget(MaterialApp(home: PictogramText(activityModel, user)));
+    await tester.pumpAndSettle();
 
-        expect(find.byType(AutoSizeText), findsOneWidget);
-        final String title = pictogramModel.title;
-        expect(find.text(title.toUpperCase()), findsOneWidget);
-      });
+    expect(find.byType(AutoSizeText), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
+  });
 
   testWidgets(
       'Pictogram text displayed for Guardians no matter what setting is '
