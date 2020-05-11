@@ -43,13 +43,15 @@ class WeekplanDayColumn extends StatelessWidget {
   /// User that we need to get settings for
   final DisplayNameModel user;
 
+  /// Variable used to store the week we are currently working on gotten from
+  /// the stream
   WeekModel _week;
 
+  /// Week plan bloc us which is needed as input because it needs to be the
+  /// same as the one for the weekplan screen so di does not work.
+  final WeekplanBloc weekplanBloc;
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-
-  /// Week plan bloc used to store info about current week plan
-  final WeekplanBloc weekplanBloc;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override

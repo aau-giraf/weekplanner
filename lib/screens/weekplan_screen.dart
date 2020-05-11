@@ -302,12 +302,14 @@ class WeekplanScreen extends StatelessWidget {
                           .hexColor
                           .replaceFirst('#', '0xff');
                       weekDays.add(Expanded(
-                          child: WeekplanDayColumn(
-                        dayOfTheWeek: Weekday.values[_weekdayCounter],
-                        color: Color(int.parse(dayColor)),
-                        weekplanBloc: _weekplanBloc,
-                        user: _user,
-                      )));
+                        child: WeekplanDayColumn(
+                          dayOfTheWeek: Weekday.values[_weekdayCounter],
+                          color: Color(int.parse(dayColor)),
+                          weekplanBloc: _weekplanBloc,
+                          user: _user,
+                          )
+                        )
+                      );
                       if (_weekdayCounter == 6) {
                         _weekdayCounter = 0;
                       } else {
