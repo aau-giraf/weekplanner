@@ -38,7 +38,7 @@ LayoutBuilder _drawHourglass(AsyncSnapshot<double> timerProgressSnapshot) {
     return Stack(
       children: <Widget>[
         Image(
-            image: const AssetImage('assets/hourglass_sand.png'),
+            image: const AssetImage('assets/timer/hourglass_sand.png'),
             width: constraints.maxWidth),
         Column(
           children: <Widget>[
@@ -70,7 +70,7 @@ LayoutBuilder _drawHourglass(AsyncSnapshot<double> timerProgressSnapshot) {
           ],
         ),
         Image(
-          image: const AssetImage('assets/hourglass.png'),
+          image: const AssetImage('assets/timer/hourglass.png'),
           width: constraints.maxWidth,
         ),
       ],
@@ -79,7 +79,7 @@ LayoutBuilder _drawHourglass(AsyncSnapshot<double> timerProgressSnapshot) {
 }
 
 Image _drawDoneHourglass() {
-  return const Image(image: AssetImage('assets/hourglass_done.png'));
+  return const Image(image: AssetImage('assets/timer/hourglass_done.png'));
 }
 
 double _offsetBoxHeight(BoxConstraints constraints) {

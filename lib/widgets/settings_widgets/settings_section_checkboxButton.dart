@@ -11,9 +11,8 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
       [this.timer]);
 
   /// Constructor to create CheckMarkButton from a boolean value
-  factory SettingsCheckMarkButton.fromBoolean(bool shouldBeChecked,
-      String text,
-      VoidCallback callback){
+  factory SettingsCheckMarkButton.fromBoolean(
+      bool shouldBeChecked, String text, VoidCallback callback) {
     if (shouldBeChecked) {
       return SettingsCheckMarkButton(1, 1, text, callback);
     }
@@ -55,11 +54,11 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
     } else {
       String _imagePath;
       if (timer == DefaultTimer.PieChart) {
-        _imagePath = 'assets/icons/piechart.png';
+        _imagePath = 'assets/timer/piechart_icon.png';
       } else if (timer == DefaultTimer.Hourglass) {
-        _imagePath = 'assets/icons/hourglass_icon.png';
+        _imagePath = 'assets/timer/hourglass_icon.png';
       } else if (timer == DefaultTimer.Numeric) {
-      _imagePath = 'assets/icons/countdowntimer.png';
+        _imagePath = 'assets/timer/countdowntimer_icon.png';
       }
       checkBoxButton = ListTile(
           title: Text(text),

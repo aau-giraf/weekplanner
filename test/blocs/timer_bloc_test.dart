@@ -292,7 +292,7 @@ void main() {
 
   test(
       'Testing when timer is paused, the progress is '
-      'upadated and the stream shows false', async((DoneFn done) {
+      'updated and the stream shows false', async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,

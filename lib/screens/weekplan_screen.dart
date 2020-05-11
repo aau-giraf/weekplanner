@@ -2,6 +2,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -900,12 +901,32 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   /// Build timer icon.
-  ImageIcon _buildTimerAssetIcon() {
-    return const ImageIcon(
-      AssetImage('assets/icons/redcircle.png'),
-      color: theme.GirafColors.red,
-      size: 250,
-    );
+  Widget _buildTimerAssetIcon() {
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          String _iconPath;
+
+          if (settingsSnapshot.hasData) {
+            if (settingsSnapshot.data.defaultTimer == DefaultTimer.PieChart) {
+              _iconPath = 'assets/timer/piechart_icon.png';
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Hourglass) {
+              _iconPath = 'assets/timer/hourglass_icon.png';
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Numeric) {
+              _iconPath = 'assets/timer/countdowntimer_icon.png';
+            }
+          } else {
+            return const CircularProgressIndicator();
+          }
+          return Image(
+            image: AssetImage(_iconPath),
+            height: 250,
+            width: 250,
+          );
+        });
   }
 
   Card _translateWeekDay(Weekday day) {

@@ -181,10 +181,10 @@ class SettingsScreen extends StatelessWidget {
                     width: 50,
                     height: 50,
                     image: AssetImage(userTimer == DefaultTimer.PieChart
-                        ? 'assets/icons/piechart.png'
+                        ? 'assets/timer/piechart_icon.png'
                         : userTimer == DefaultTimer.Hourglass
-                            ? 'assets/icons/hourglass_icon.png'
-                            : 'assets/icons/countdowntimer.png')),
+                            ? 'assets/timer/hourglass_icon.png'
+                            : 'assets/timer/countdowntimer_icon.png')),
               )
             ]);
           } else {
