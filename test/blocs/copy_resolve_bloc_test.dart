@@ -30,6 +30,5 @@ void main() {
       expect(newWeekModel.weekNumber == 24, isTrue);
       done();
     });
-
   }));
 }
