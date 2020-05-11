@@ -18,6 +18,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 
 SettingsModel mockSettings;
@@ -117,6 +118,20 @@ void main() {
   testWidgets('Pictogram text is displayed when true and in guardian mode',
       (WidgetTester tester) async {
     mockSettings.pictogramText = true;
+    authBloc.setMode(WeekplanMode.guardian);
+
+    await tester
+        .pumpWidget(MaterialApp(home: PictogramText(pictogramModel, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AutoSizeText), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
+  });
+
+  testWidgets('Pictogram text is displayed when false and in guardian mode',
+      (WidgetTester tester) async {
+    mockSettings.pictogramText = false;
     authBloc.setMode(WeekplanMode.guardian);
 
     await tester
