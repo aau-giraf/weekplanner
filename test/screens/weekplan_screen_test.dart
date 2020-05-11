@@ -273,6 +273,23 @@ void main() {
         findsNothing);
   });
 
+  testWidgets('Marking activity in edit mode works',
+      (WidgetTester tester) async {
+
+    mockWeek.days[0].activities.add(mockActivities[0]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
+  });
+
   testWidgets('Cancel activity button opens dialog when activity is selected',
       (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
@@ -302,7 +319,7 @@ void main() {
   });
 
   // TODO(eneder17): test functinality of these three buttons and rename tests
-  testWidgets('Copy activity button works when activity is selected',
+  testWidgets('Copy activity button opens dialog when activity is selected',
       (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
@@ -355,6 +372,96 @@ void main() {
         find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog && widget.title == 'Slet aktiviteter'),
         findsOneWidget);
+  });
+
+  testWidgets('Canceling an activity works',
+          (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    await tester.tap(find.byType(ActivityCard).first);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
+        widget.buttonText == 'Aflys' &&
+        widget.buttonKey == 'CancelActivtiesButton'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsNothing);
+    
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+  });
+
+  testWidgets('Copying an activity works',
+          (WidgetTester tester) async {
+        mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(mockWeek.days[0].activities.length, 1);
+    expect(mockWeek.days[1].activities.length, 0);
+
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    // Selecting an activity
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+
+    // Tapping copy activities button
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    widget is BottomAppBarButton &&
+        widget.buttonText == 'Kopier' &&
+        widget.buttonKey == 'CopyActivtiesButton'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('TueCheckbox')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('DialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(mockWeek.days[0].activities.length, 1);
+    expect(mockWeek.days[1].activities.length, 1);
+  });
+
+  testWidgets('Deleting an activity works',
+          (WidgetTester tester) async {
+        mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(mockWeek.days[0].activities.length, 1);
+
+    // Toggle edit mode by pressing the edit mode button
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    // Selecting an activity
+    await tester.tap(find.byType(ActivityCard));
+    await tester.pumpAndSettle();
+
+    // Tapping copy activities button
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    widget is BottomAppBarButton &&
+        widget.buttonText == 'Slet' &&
+        widget.buttonKey == 'DeleteActivtiesButton'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(mockWeek.days[0].activities.length, 0);
   });
 
   testWidgets('Has 7 select all buttons', (WidgetTester tester) async {
