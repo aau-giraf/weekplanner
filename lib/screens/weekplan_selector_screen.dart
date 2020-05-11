@@ -166,6 +166,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                     child: Column(
                   children: <Widget>[
                     Expanded(
+                      flex: 4,
                       child: LayoutBuilder(builder:
                           (BuildContext context, BoxConstraints constraint) {
                         if (weekplan.thumbnail != null) {
