@@ -205,8 +205,6 @@ class MockUserApi extends Mock implements UserApi {
   }
 }
 
-// TODO(eneder17): få tjekket vi ikke bruger add() nogle steder
-//  fordi så skal den også mockes
 class MockActivityApi extends Mock implements ActivityApi {
   MockActivityApi(this._mockActivities);
 
@@ -226,6 +224,12 @@ class MockActivityApi extends Mock implements ActivityApi {
     }
     // Else we just return the activity put in as input
     return Observable<ActivityModel>.just(activity);
+  }
+
+  @override
+  Observable<ActivityModel> add(ActivityModel activity, String userId,
+      String weekplanName, int weekYear, int weekNumber, Weekday weekDay) {
+    _mockActivities.add(activity);
   }
 }
 
