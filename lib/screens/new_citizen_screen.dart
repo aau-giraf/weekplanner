@@ -39,9 +39,9 @@ class NewCitizenScreen extends StatelessWidget {
                       border: const OutlineInputBorder(borderSide:
                       BorderSide()),
                       labelText: 'Navn',
-                      errorText: (snapshot?.data == false) &&
+                      errorText: (snapshot?.data == true) &&
                           _bloc.displayNameController.value != null ?
-                      'Navn skal udfyldes' : null,
+                          null : 'Navn skal udfyldes',
                   ),
                   onChanged: _bloc.onDisplayNameChange.add,
                 );
@@ -58,10 +58,10 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Brugernavn',
-                    errorText: (snapshot?.data == false) &&
+                    errorText: (snapshot?.data == true) &&
                         _bloc.usernameController.value != null ?
-                    'Brugernavn må ikke indeholde mellemrum eller være tom'
-                        : null,
+                        null :
+                        'Brugernavn må ikke indeholde mellemrum eller være tom',
                   ),
                   onChanged: _bloc.onUsernameChange.add,
                 );
@@ -78,9 +78,10 @@ class NewCitizenScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(borderSide: BorderSide()),
                     labelText: 'Kodeord',
-                    errorText: (snapshot?.data == false) &&
+                    errorText: (snapshot?.data == true) &&
                         _bloc.passwordController.value != null ?
-                    'Kodeord må ikke indeholde mellemrum eller være tom' : null,
+                        null :
+                        'Kodeord må ikke indeholde mellemrum eller være tom',
                   ),
                   onChanged: _bloc.onPasswordChange.add,
                   obscureText: true,
