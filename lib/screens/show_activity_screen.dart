@@ -120,9 +120,9 @@ class ShowActivityScreen extends StatelessWidget {
 
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    if (buttons.length == 1) {
+    /* if (buttons.length == 1) {
       list.add(buttons.elementAt(0));
-    } else {
+    } else */ {
       if (orientation == Orientation.landscape) {
         list.add(Column(
           children: buttons,
@@ -182,7 +182,7 @@ class ShowActivityScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () {
-                              //TODO: something
+                              
                             },
                           ),
                         ),
