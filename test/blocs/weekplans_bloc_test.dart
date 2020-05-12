@@ -225,20 +225,30 @@ void main() {
   }));
 
   test('Check if the week models are sorted by date', async((DoneFn done) {
-    final List<WeekModel> correctList = <WeekModel>[
-      weekModel5, weekModel4, weekModel1
+    final List<WeekModel> correctListOld = <WeekModel>[
+      weekModel1, weekModel4, weekModel5
+    ];
+    final List<WeekModel> correctListUpcoming = <WeekModel>[
+      weekModel3, weekModel2
     ];
 
+    weekNameModelList.add(weekNameModel2);
+    weekNameModelList.add(weekNameModel3);
     weekNameModelList.add(weekNameModel4);
     weekNameModelList.add(weekNameModel5);
 
+    weekModelList.add(weekModel2);
+    weekModelList.add(weekModel3);
     weekModelList.add(weekModel4);
     weekModelList.add(weekModel5);
 
     bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
 
+    bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
+      expect(correctListOld, oldWeekModels);
+    });
     bloc.weekModels.listen((List<WeekModel>weekModels) {
-      expect(correctList, weekModels);
+      expect(correctListUpcoming, weekModels);
     });
     done();
   }));
