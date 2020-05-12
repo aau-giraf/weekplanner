@@ -74,15 +74,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
         color: Colors.grey,
         child:
           const AutoSizeText(
-            "Overståede uger",
-            style: const TextStyle(fontSize: 18),
+            'Overståede uger',
+            style: TextStyle(fontSize: 18),
             maxLines: 1,
             minFontSize: 14,
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
           ),
         alignment: Alignment.centerLeft,
-        padding: EdgeInsets.fromLTRB(10.0, 3, 0, 3),
+        padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
       Expanded(flex: 25, child:
               _buildWeekplanGridview(context, oldWeekModels, false)),
@@ -93,7 +93,9 @@ class WeekplanSelectorScreen extends StatelessWidget {
   Widget _buildWeekplanGridview(
       BuildContext context, Stream<List<WeekModel>> weekModels, bool current) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
-    if(!current) { initial = <WeekModel>[]; }
+    if(!current) {
+      initial = <WeekModel>[];
+    }
     return StreamBuilder<List<WeekModel>>(
         initialData: initial,
         stream: weekModels,
