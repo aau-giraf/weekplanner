@@ -32,6 +32,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+import 'package:weekplanner/widgets/weekplanner_choiceboard_selector.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -518,17 +519,29 @@ class WeekplanScreen extends StatelessWidget {
   /// Handles tap on an activity
   void handleOnTapActivity(bool inEditMode, bool isMarked, bool isCitizen,
       List<ActivityModel> activities, int index, BuildContext context) {
+      ///TODO: HUSK AT SLETTE DENNE LINJE NÅR BACKEND VIRKER
+      activities[index].isChoiceBoard = true;
+      build(context);
     if (inEditMode) {
       if (isMarked) {
         _weekplanBloc.removeMarkedActivity(activities[index]);
       } else {
         _weekplanBloc.addMarkedActivity(activities[index]);
       }
+    } else if(activities[index].isChoiceBoard && isCitizen) {
+      showDialog<Center>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return WeekplannerChoiceboardSelector(activities[index]);
+          });
+
     } else if (!(activities[index].state == ActivityState.Completed &&
         isCitizen)) {
       Routes.push(context, ShowActivityScreen(activities[index], _user))
           .then((Object object) => _weekplanBloc.loadWeek(_week, _user));
     }
+
   }
 
   /// Builds activity card with a status icon if it is marked
