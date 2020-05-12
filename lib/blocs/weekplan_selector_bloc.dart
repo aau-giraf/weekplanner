@@ -180,9 +180,6 @@ class WeekplansBloc extends BlocBase {
     return list;
   }
 
-
-
-
   /// Checks if a week is in the past/expired
   bool isWeekDone(WeekNameModel weekPlan){
     final int currentYear = DateTime.now().year;
@@ -270,8 +267,6 @@ class WeekplansBloc extends BlocBase {
       }
     });
   }
-
-
 
   /// Returns the number of marked week models
   int getNumberOfMarkedWeekModels() {
