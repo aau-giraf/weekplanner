@@ -169,6 +169,14 @@ void main() {
         findsOneWidget);
   });
 
+  testWidgets('Should have a "Overståede uger" bar',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+
+    expect(find.text('Overståede uger'), findsOneWidget);
+  });
+
   testWidgets('Should have two GridView Widgets', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
