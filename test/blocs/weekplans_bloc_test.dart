@@ -244,6 +244,7 @@ void main() {
     done();
   }));
 
+
   test('Test marked week models', async((DoneFn done) {
     final List<WeekModel> correctMarked = <WeekModel>[
       weekModel1, weekModel2, weekModel3
@@ -263,6 +264,41 @@ void main() {
     expect(bloc.isWeekDone(weekNameModel4), true);
     expect(bloc.isWeekDone(weekNameModel5), true);
     done();
+  }));
+
+  test('Weekplans should be split into old and upcoming', async((DoneFn done){
+    weekNameModelList.add(weekNameModel2);
+    weekNameModelList.add(weekNameModel3);
+    weekNameModelList.add(weekNameModel4);
+    weekNameModelList.add(weekNameModel5);
+
+    weekModelList.add(weekModel2);
+    weekModelList.add(weekModel3);
+    weekModelList.add(weekModel4);
+    weekModelList.add(weekModel5);
+
+    bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
+
+    bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
+      expect(oldWeekModels.contains(weekModel1), true);
+      expect(oldWeekModels.contains(weekModel2), false);
+      expect(oldWeekModels.contains(weekModel3), false);
+      expect(oldWeekModels.contains(weekModel4), true);
+      expect(oldWeekModels.contains(weekModel5), true);
+    });
+
+    bloc.weekModels.listen((List<WeekModel>weekModels) {
+      expect(weekModels.contains(weekModel1), false);
+      expect(weekModels.contains(weekModel2), true);
+      expect(weekModels.contains(weekModel3), true);
+      expect(weekModels.contains(weekModel4), false);
+      expect(weekModels.contains(weekModel5), false);
+    });
+
+    done();
+
+
+
   }));
 
 }
