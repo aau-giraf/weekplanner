@@ -17,7 +17,7 @@ class WeekplansBloc extends BlocBase {
   ///to be used when getting the [WeekModel].
   Stream<List<WeekNameModel>> get weekNameModels => _weekNameModelsList.stream;
 
-  /// This is a stream where all the FUTURE [WeekModel] are put in,
+  /// This is a stream where all the future [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get weekModels => _weekModel.stream;
@@ -34,7 +34,7 @@ class WeekplansBloc extends BlocBase {
   final BehaviorSubject<List<WeekModel>> _oldWeekModel =
   BehaviorSubject<List<WeekModel>>();
 
-  /// This is a stream where all the OLD [WeekModel] are put in,
+  /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
@@ -109,7 +109,7 @@ class WeekplansBloc extends BlocBase {
       .listen(_oldWeekModel.add);
   }
 
-  /// Reformats [weekDetails] and [oldWeekDetails] in to an Observable List
+  /// Reformats [weekDetails] and [oldWeekDetails] into an Observable List
   Observable<List<WeekModel>> reformatWeekDetailsToObservableList
       (List<Observable<WeekModel>> details){
       // ignore: always_specify_types
@@ -127,6 +127,7 @@ class WeekplansBloc extends BlocBase {
     List<Observable<WeekModel>> weekDetails,
     List<Observable<WeekModel>> oldWeekDetails){
 
+    // Loops through all weekplans and sort them into old and upcoming weekplans
     for (WeekNameModel weekPlanName in weekPlanNames) {
       if(isWeekDone(weekPlanName)) {
         oldWeekDetails.add(_api.week
@@ -142,11 +143,14 @@ class WeekplansBloc extends BlocBase {
 
   /// Returns the current week number
   int getCurrentWeekNum(){
+    const int daysInWeek = 7;
+    const int daysOffset = 6;
+
     final int dayOfYear = DateTime.now().difference(
         DateTime(DateTime.now().year, 1, 1)).inDays;
     final int dayOfWeek = DateTime.now().weekday;
     final int dowJan1 = DateTime(DateTime.now().year, 1, 1).weekday;
-    int weekNum = ((dayOfYear + 6) / 7).round();
+    int weekNum = ((dayOfYear + daysOffset) / daysInWeek).round();
     if(dayOfWeek < dowJan1){
       weekNum++;
     }
@@ -185,8 +189,7 @@ class WeekplansBloc extends BlocBase {
     final int currentYear = DateTime.now().year;
     final int currentWeek = getCurrentWeekNum();
 
-    if (weekPlan.weekYear < currentYear ||
-       (weekPlan.weekYear == currentYear && weekPlan.weekNumber < currentWeek)){
+    if (weekPlan.weekYear <= currentYear && weekPlan.weekNumber < currentWeek){
       return true;
     }
     return false;
@@ -242,7 +245,7 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// This method deletes the given week model from the database after checking
-  /// if its an old weekplan or an upcomming
+  /// if it's an old weekplan or an upcoming
   void deleteWeekModel(WeekModel weekModel) {
     final List<WeekModel> localWeekModels = _weekModel.value;
     final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value;
@@ -251,7 +254,7 @@ class WeekplansBloc extends BlocBase {
       deleteWeek(localWeekModels, weekModel);
     }
     else if (oldLocalWeekModels != null &&
-        oldLocalWeekModels.contains(weekModel)){
+      oldLocalWeekModels.contains(weekModel)){
       deleteWeek(oldLocalWeekModels, weekModel);
     }
   }

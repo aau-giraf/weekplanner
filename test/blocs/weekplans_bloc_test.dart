@@ -80,7 +80,6 @@ void main() {
   });
 
   test('Should be able to load weekplans for a user', async((DoneFn done) {
-
     bloc.weekNameModels.listen((List<WeekNameModel> response) {
       expect(response, isNotNull);
       expect(response, equals(weekNameModelList));
@@ -243,7 +242,6 @@ void main() {
     });
     done();
   }));
-
 
   test('Test marked week models', async((DoneFn done) {
     final List<WeekModel> correctMarked = <WeekModel>[

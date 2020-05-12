@@ -90,9 +90,10 @@ class WeekplanSelectorScreen extends StatelessWidget {
   }
 
   Widget _buildWeekplanGridview(
-      BuildContext context, Stream<List<WeekModel>> weekModels, bool current) {
+      BuildContext context, Stream<List<WeekModel>> weekModels,
+      bool isUpcomingWeekplan) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
-    if(!current) {
+    if(!isUpcomingWeekplan) {
       initial = <WeekModel>[];
     }
     return StreamBuilder<List<WeekModel>>(
@@ -123,7 +124,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                         weekplan,
                         markedWeeksSnapshot.hasData &&
                             markedWeeksSnapshot.data.contains(weekplan),
-                        current
+                        isUpcomingWeekplan
                       );
                     }).toList());
               });

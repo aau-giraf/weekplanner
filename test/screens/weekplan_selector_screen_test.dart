@@ -356,7 +356,6 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
-
     expect(find.text(nameWeekModel1), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));

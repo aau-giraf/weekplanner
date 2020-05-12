@@ -32,7 +32,7 @@ void main() {
       days: null,
       name: 'Week',
       weekNumber: 1,
-      weekYear: 2021);
+      weekYear: DateTime.now().year + 1);
 
   setUp(() {
     api = Api('any');
