@@ -1,6 +1,7 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -13,6 +14,8 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
+import 'package:weekplanner/widgets/choiceboard_widgets/choice_board.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -182,7 +185,10 @@ class ShowActivityScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              PictogramModel pictogram =
+                                  await Routes.push(context, PictogramSearch());
+                            },
                           ),
                         ),
                       ),
@@ -256,6 +262,11 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
+    List<PictogramModel> hej = <PictogramModel>[];
+    hej.add(_activity.pictogram);
+    hej.add(_activity.pictogram); // TODO: Slet
+    hej.add(_activity.pictogram);
+
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
@@ -278,9 +289,10 @@ class ShowActivityScreen extends StatelessWidget {
                             alignment: AlignmentDirectional.center,
                             children: <Widget>[
                               SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.width,
-                                  child: buildLoadPictogramImage()),
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width,
+                                child: buildLoadPictogramImage(),
+                              ),
                               _buildActivityStateIcon(
                                   context, snapshot.data.state),
                             ],
@@ -622,16 +634,9 @@ class ShowActivityScreen extends StatelessWidget {
       stream: _pictoImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         return FittedBox(
-            child: Stack(children: <Widget>[
-              snapshot.data,
-              const Positioned(
-                top: 0,
-                right: 0,
-                child: GirafButton(
-                  text: 'Slet',
-                ),
-              ),
-            ]),
+            child: Container(
+              child: snapshot.data,
+            ),
             // Key is used for testing the widget.
             key: Key(_activity.id.toString()));
       },
