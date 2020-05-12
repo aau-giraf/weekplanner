@@ -122,7 +122,8 @@ class ShowActivityScreen extends StatelessWidget {
 
     /* if (buttons.length == 1) {
       list.add(buttons.elementAt(0));
-    } else */ {
+    } else */
+    {
       if (orientation == Orientation.landscape) {
         list.add(Column(
           children: buttons,
@@ -181,9 +182,7 @@ class ShowActivityScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            onPressed: () {
-                              
-                            },
+                            onPressed: () {},
                           ),
                         ),
                       ),
@@ -623,7 +622,16 @@ class ShowActivityScreen extends StatelessWidget {
       stream: _pictoImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         return FittedBox(
-            child: Container(child: snapshot.data),
+            child: Stack(children: <Widget>[
+              snapshot.data,
+              const Positioned(
+                top: 0,
+                right: 0,
+                child: GirafButton(
+                  text: 'Slet',
+                ),
+              ),
+            ]),
             // Key is used for testing the widget.
             key: Key(_activity.id.toString()));
       },
