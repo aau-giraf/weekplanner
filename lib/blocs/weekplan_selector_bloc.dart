@@ -119,8 +119,6 @@ class WeekplansBloc extends BlocBase {
         Observable.combineLatestList(details);
   }
 
-
-
   /// Makes API calls to get the weekplan details
   /// Old weekplans are stored in [oldWeekDetails]
   /// and current/upcoming weekplans are stored in [weekDetails]
