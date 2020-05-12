@@ -49,7 +49,7 @@ class TimerBloc extends BlocBase {
       BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
 
   /// Stream for the progress of the timer in minutes and seconds.
-  /// The array streamed contains hours at index 0, 
+  /// The array streamed contains hours at index 0,
   /// minutes at index 1 and seconds at index 2.
   Stream<List<int>> get timerProgressNumeric => _timerProgressNumeric.stream;
 
@@ -127,7 +127,8 @@ class TimerBloc extends BlocBase {
                 _activityModel.timer.progress));
         // Checks if the timer is running
         if ((_activityModel.timer.startTime.isBefore(DateTime.now()) ||
-            _activityModel.timer.startTime.isAtSameMomentAs(DateTime.now())) &&
+                _activityModel.timer.startTime
+                    .isAtSameMomentAs(DateTime.now())) &&
             DateTime.now().isBefore(endTime) &&
             !_activityModel.timer.paused) {
           _timerRunningModeStream.add(TimerRunningMode.running);
@@ -149,10 +150,10 @@ class TimerBloc extends BlocBase {
                   _activityModel.timer.fullLength *
                   (_activityModel.timer.fullLength -
                       _activityModel.timer.progress)));
-          if (_countDown != null) {
-            _timerProgressNumeric
-                .add(_durationToTimestamp(_countDown.remaining));
-          }
+
+          _timerProgressNumeric.add(_durationToTimestamp(Duration(
+              milliseconds: _activityModel.timer.fullLength -
+                  _activityModel.timer.progress)));
 
           if (_activityModel.timer.progress >=
               _activityModel.timer.fullLength) {
@@ -257,9 +258,8 @@ class TimerBloc extends BlocBase {
       _activityModel.timer.progress = 0;
       _timerRunningModeStream.add(TimerRunningMode.stopped);
       _timerProgressStream.add(0);
-      if (_countDown != null) {
-        _timerProgressNumeric.add(_durationToTimestamp(_countDown.remaining));
-      }
+      _timerProgressNumeric.add(_durationToTimestamp(
+          Duration(milliseconds: _activityModel.timer.fullLength)));
 
       _api.activity
           .update(_activityModel, _user.id)

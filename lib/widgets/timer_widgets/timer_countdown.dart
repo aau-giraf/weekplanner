@@ -10,8 +10,6 @@ class TimerCountdown extends StatelessWidget {
   /// Bloc for timer logic
   final TimerBloc _timerBloc;
 
-  
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<int>>(
@@ -32,13 +30,10 @@ class TimerCountdown extends StatelessWidget {
   /// Formats the complete snapshot properly to display as time left
   /// of the timer.
   String _formatTime(List<int> time) {
-    const int _paddingSize = 2;
-    time[0].round();
-    time[1].round();
-    time[2].round();
-    final String _hours = time[0].toString().padLeft(_paddingSize, '0');
-    final String _minutes = time[1].toString().padLeft(_paddingSize, '0');
-    final String _seconds = time[2].toString().padLeft(_paddingSize, '0');
+    const int _padding = 2;
+    final String _hours = time[0].round().toString().padLeft(_padding, '0');
+    final String _minutes = time[1].round().toString().padLeft(_padding, '0');
+    final String _seconds = time[2].round().toString().padLeft(_padding, '0');
     return '$_hours:$_minutes:$_seconds';
   }
 }
