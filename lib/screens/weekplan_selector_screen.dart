@@ -34,7 +34,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   final WeekplansBloc _weekBloc;
   final DisplayNameModel _user;
-  GlobalKey currentCardsKey;
 
   @override
   Widget build(BuildContext context) {
