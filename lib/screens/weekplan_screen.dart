@@ -528,7 +528,7 @@ class WeekplanScreen extends StatelessWidget {
       } else {
         _weekplanBloc.addMarkedActivity(activities[index]);
       }
-    } else if(activities[index].isChoiceBoard && isCitizen) {
+    } else if(activities[index].isChoiceBoard && isCitizen && !(activities[index].state == ActivityState.Canceled)) {
       showDialog<Center>(
           context: context,
           barrierDismissible: false,
