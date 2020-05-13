@@ -2,6 +2,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -10,17 +11,22 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/style/custom_color.dart';
 
 /// This is a widget used to create text under the pictograms
 class PictogramText extends StatelessWidget {
   /// Constructor
-  PictogramText(this._activity, this._user, {this.minFontSize = 100}) {
+  PictogramText(this._activity, this._user,
+      {this.dayOfWeek, this.minFontSize = 100}) {
     _settingsBloc.loadSettings(_user);
   }
 
   final ActivityModel _activity;
 
   final DisplayNameModel _user;
+
+  /// Used to get the color of the day on the weekplan
+  final Weekday dayOfWeek;
 
   /// The settings bloc which we get the settings from, you need to make sure
   /// you have loaded settings into it before hand otherwise text is never build
@@ -44,12 +50,14 @@ class PictogramText extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<SettingsModel> settingsSnapshot) {
                 if (settingsSnapshot.hasData && weekModeSnapshot.hasData) {
-                  final bool pictogramTextIsEnabled =
-                      settingsSnapshot.data.pictogramText;
-                  if (_isGuardianMode(weekModeSnapshot) ||
-                      (pictogramTextIsEnabled &&
-                          !_activityIsRemovedFromWeekplan(settingsSnapshot))) {
+                  final WeekplanMode weekMode = weekModeSnapshot.data;
+                  final SettingsModel settings = settingsSnapshot.data;
+                  final bool pictogramTextIsEnabled = settings.pictogramText;
+                  if (_isGuardianMode(weekMode) || pictogramTextIsEnabled) {
                     final String pictogramText = _pictogram.title.toUpperCase();
+                    if (_shouldPictogramTextBeHidden(settings, weekMode)) {
+                      return _buildEmptyBox(context, settings);
+                    }
                     return _buildPictogramText(context, pictogramText);
                   }
                 }
@@ -58,8 +66,8 @@ class PictogramText extends StatelessWidget {
         });
   }
 
-  bool _isGuardianMode(AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-    return weekModeSnapshot.data == WeekplanMode.guardian;
+  bool _isGuardianMode(WeekplanMode weekMode) {
+    return weekMode == WeekplanMode.guardian;
   }
 
   SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
@@ -81,9 +89,28 @@ class PictogramText extends StatelessWidget {
         ));
   }
 
-  bool _activityIsRemovedFromWeekplan(
-      AsyncSnapshot<SettingsModel> settingsSnapshot) {
-    return settingsSnapshot.data.completeMark == CompleteMark.Removed &&
-        _activity.state == ActivityState.Completed;
+  bool _shouldPictogramTextBeHidden(
+      SettingsModel settings, WeekplanMode userMode) {
+    if (userMode == WeekplanMode.guardian) {
+      return false;
+    } else if (settings.completeMark == CompleteMark.Removed &&
+        _activity.state == ActivityState.Completed) {
+      return true;
+    }
+    return false;
+  }
+
+  SizedBox _buildEmptyBox(BuildContext context, SettingsModel settings) {
+    Color color;
+    if (dayOfWeek == null) {
+      color = GirafColors.white;
+    } else {
+      color = Color(int.parse(settings.weekDayColors[dayOfWeek.index].hexColor
+          .replaceFirst('#', '0xff')));
+    }
+    return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width / 4,
+        child: Container(color: color));
   }
 }

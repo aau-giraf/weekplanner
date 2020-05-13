@@ -56,7 +56,7 @@ class ActivityCard extends StatelessWidget {
                   _buildTimerIcon(context, _activity),
                 ],
               ),
-              PictogramText(_activity, _user),
+              PictogramText(_activity, _user, dayOfWeek: _weekday.day),
             ],
           ),
         ));
