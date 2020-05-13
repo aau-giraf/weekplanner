@@ -202,7 +202,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
     if (inEditMode) {
       _weekBloc.toggleMarkedWeekModel(weekplan);
     } else {
-      Routes.push(context, WeekplanScreen(weekplan, _user));
+      Routes.push(context, WeekplanScreen(weekplan, _user))
+          .then((_) => _weekBloc.load(_user, true));
     }
   }
 
@@ -271,18 +272,16 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   void _pushEditWeekPlan(BuildContext context) {
     final int markedCount = _weekBloc.getNumberOfMarkedWeekModels();
-    if( markedCount != 1) {
-      final String description = markedCount > 1 ?
-        'Der kan kun redigeres en uge ad gangen' :
-        'Markér en uge for at redigere den';
+    if (markedCount != 1) {
+      final String description = markedCount > 1
+          ? 'Der kan kun redigeres en uge ad gangen'
+          : 'Markér en uge for at redigere den';
       showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return GirafNotifyDialog(
-              title: 'Fejl',
-              description: description);
-      });
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return GirafNotifyDialog(title: 'Fejl', description: description);
+          });
       return;
     }
     Routes.push<WeekModel>(
@@ -309,12 +308,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
             option1Text: 'Anden borger',
             option1OnPressed: () {
               _weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
-
-                Routes.push(
-                  context,
-                  CopyToCitizensScreen(
-                    weekmodel, _user));
-
+                Routes.push(context, CopyToCitizensScreen(weekmodel, _user));
               });
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
@@ -322,13 +316,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
             option2OnPressed: () {
               _weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
                 Routes.push(
-                  context,
-                  CopyResolveScreen(
-                    currentUser: _user,
-                    weekModel: weekmodel,
-                    forThisCitizen: true,
-                  )
-                );
+                    context,
+                    CopyResolveScreen(
+                      currentUser: _user,
+                      weekModel: weekmodel,
+                      forThisCitizen: true,
+                    ));
               });
             },
             option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
@@ -338,15 +331,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildDeletionDialog(BuildContext context) {
-    if(_weekBloc.getNumberOfMarkedWeekModels() == 0) {
+    if (_weekBloc.getNumberOfMarkedWeekModels() == 0) {
       return showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return const GirafNotifyDialog(
-              title: 'Fejl',
-              description: 'Der skal markeres mindst én uge for at slette');
-      });
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl',
+                description: 'Der skal markeres mindst én uge for at slette');
+          });
     }
 
     return showDialog<Center>(

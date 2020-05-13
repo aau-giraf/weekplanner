@@ -17,7 +17,9 @@ import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/copy_resolve_screen.dart';
@@ -82,14 +84,24 @@ void main() {
       weekNumber: 3,
       weekYear: 2020);
 
+  final WeekModel mockWeekModel = WeekModel(
+      name: 'mockWeekModelName',
+      thumbnail: pictogramModel,
+      days: <WeekdayModel>[
+        WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[]),
+      ],
+      weekNumber: 40,
+      weekYear: 2022);
+
   final WeekModel emptyWeekmodel = WeekModel(days: <WeekdayModel>[]);
+
+  final WeekNameModel weekNameModel =
+      WeekNameModel(name: 'name', weekNumber: 1, weekYear: 1);
+  final WeekNameModel weekNameModel2 =
+      WeekNameModel(name: 'name2', weekNumber: 2, weekYear: 2);
 
   void setupApiCalls() {
     final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
-    final WeekNameModel weekNameModel =
-        WeekNameModel(name: 'name', weekNumber: 1, weekYear: 1);
-    final WeekNameModel weekNameModel2 =
-        WeekNameModel(name: 'name2', weekNumber: 2, weekYear: 2);
 
     weekNameModelList.add(weekNameModel);
     weekNameModelList.add(weekNameModel2);
@@ -98,8 +110,8 @@ void main() {
         (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
 
     when(weekApi.get(
-      'testId', weekNameModel.weekYear, weekNameModel.weekNumber))
-      .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+            'testId', weekNameModel.weekYear, weekNameModel.weekNumber))
+        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi.get(
             'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber))
@@ -108,9 +120,12 @@ void main() {
             'testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel2));
 
+    when(weekApi.get('testId', weekModel1.weekYear, weekModel1.weekNumber))
+        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+
     when(weekApi.get(
-      'testId', weekModel1.weekYear, weekModel1.weekNumber))
-      .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+            'testId', mockWeekModel.weekYear, mockWeekModel.weekNumber))
+        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeekModel));
 
     when(weekApi.update(
             'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber, any))
@@ -137,7 +152,7 @@ void main() {
     setupApiCalls();
 
     di.clearAll();
-    di.registerSingleton<WeekplansBloc>((_) => bloc);
+    di.registerDependency<WeekplansBloc>((_) => bloc);
     di.registerDependency<EditWeekplanBloc>((_) => editBloc);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
@@ -145,6 +160,8 @@ void main() {
     di.registerDependency<CopyResolveBloc>((_) => CopyResolveBloc(api));
     di.registerDependency<CopyWeekplanBloc>((_) => CopyWeekplanBloc(api));
     editBloc = EditWeekplanBloc(api);
+    di.registerDependency<WeekplanBloc>((_) => WeekplanBloc(api));
+    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
   });
   //endregion
 
@@ -573,7 +590,6 @@ void main() {
   testWidgets(
       'Test if when pressing “kopier her” a copy is made '
       'and the CopyResolverScreen comes up', (WidgetTester tester) async {
-
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
@@ -591,5 +607,40 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(CopyResolveScreen), findsOneWidget);
+  });
+
+  testWidgets(
+      'Should have the newest weekplans going '
+      'from weekplanScreen to weekplanSelectorScreen',
+      (WidgetTester tester) async {
+    final List<WeekNameModel> mockWeekNameModelList = <WeekNameModel>[];
+    mockWeekNameModelList.add(weekNameModel);
+    mockWeekNameModelList.add(weekNameModel2);
+
+    when(weekApi.getNames('testId')).thenAnswer((_) =>
+        BehaviorSubject<List<WeekNameModel>>.seeded(mockWeekNameModelList));
+
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+    expect(find.byKey(Key(mockWeekModel.name)), findsNothing);
+    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
+
+    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.pumpAndSettle();
+
+    mockWeekNameModelList.add(WeekNameModel(
+        name: 'test',
+        weekNumber: mockWeekModel.weekNumber,
+        weekYear: mockWeekModel.weekYear));
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
+    expect(find.byKey(Key(mockWeekModel.name)), findsOneWidget);
+    expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
   });
 }
