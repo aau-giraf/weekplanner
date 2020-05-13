@@ -1,6 +1,8 @@
 # Weekplanner
 
 ![Build Status](https://github.com/aau-giraf/weekplanner/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/aau-giraf/weekplanner/branch/develop/graph/badge.svg)](https://codecov.io/gh/aau-giraf/weekplanner)
+
 
 This is the ongoing project on moving from Xamarin to Flutter.
 
