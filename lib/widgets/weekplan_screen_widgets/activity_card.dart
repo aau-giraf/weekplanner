@@ -32,9 +32,49 @@ class ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ActivityState _activityState = _activity.state;
+    _activity.isChoiceBoard = true;
+    if(!_activity.isChoiceBoard) {
+      return Container(
+          color: theme.GirafColors.white,
+          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+          child: FittedBox(
+            child: Column(
+              children: <Widget>[
+                Stack(
+                  alignment: AlignmentDirectional.topEnd,
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width ,
+                      height: MediaQuery.of(context).size.width ,
+                      child: FittedBox(
+                        child: _getPictogram(_activity),
+                      ),
+                    ),
+                    _buildActivityStateIcon(context, _activityState, _weekday),
+                    _buildTimerIcon(context, _activity),
+                  ],
+                ),
+                PictogramText(_activity.pictogram, _user),
+              ],
+            ),
+          ));
+    } else {
+     return buildChoiceboardAcivityCard(context);
+    }
+
+  }
+
+  ///This function builds the activity card
+  Widget buildChoiceboardAcivityCard(BuildContext context) {
+    final ActivityState _activityState = _activity.state;
+    List<Widget> pictograms = [ _getPictogram(_activity), _getPictogram(_activity), _getPictogram(_activity), _getPictogram(_activity) ];
 
     return Container(
-        color: theme.GirafColors.white,
+        decoration: BoxDecoration(
+          color: theme.GirafColors.white,
+            border: Border.all(
+                color: Colors.black,
+                width: MediaQuery.of(context).size.width * 0.01)),
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: FittedBox(
           child: Column(
@@ -43,10 +83,18 @@ class ActivityCard extends StatelessWidget {
                 alignment: AlignmentDirectional.topEnd,
                 children: <Widget>[
                   SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width ,
+                    height: MediaQuery.of(context).size.width ,
                     child: FittedBox(
-                      child: _getPictogram(_activity),
+                      child: Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
+                              child: returnGridView(pictograms)),
+                        ],
+                      )
                     ),
                   ),
                   _buildActivityStateIcon(context, _activityState, _weekday),
@@ -59,7 +107,35 @@ class ActivityCard extends StatelessWidget {
         ));
   }
 
-  Widget _getPictogram(ActivityModel activity) {
+  ///Returns the correct gridview
+  Center returnGridView(List<Widget> list) {
+    if (list.length == 1) {
+      return Center(
+        child: GridView.count(
+          crossAxisCount: 1,
+          children: list,
+        ),
+      );
+    } else if (list.length == 2) {
+      return Center(
+        child: GridView.count(
+          childAspectRatio: 0.5,
+          crossAxisCount: 2,
+          children: list,
+        ),
+      );
+    } else {
+      return Center(
+        child: GridView.count(
+          crossAxisCount: 2,
+          children: list,
+        ),
+      );
+    }
+  }
+
+
+    Widget _getPictogram(ActivityModel activity) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     bloc.loadPictogramById(activity.pictogram.id);
     return StreamBuilder<Image>(
