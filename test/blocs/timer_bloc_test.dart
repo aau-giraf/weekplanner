@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -50,6 +51,62 @@ void main() {
 
     di.clearAll();
   });
+  
+  ActivityModel createActivityModel(int fullLength, int progress,
+      {bool paused = false}) {
+    return ActivityModel(
+        id: 1,
+        pictogram: null,
+        order: 1,
+        state: ActivityState.Normal,
+        timer: TimerModel(
+            startTime: DateTime.now(),
+            fullLength: fullLength,
+            paused: paused,
+            progress: progress),
+        isChoiceBoard: false);
+  }
+
+  test('Testing timerProgressNumeric progress is reset when timer is stopped',
+      async((DoneFn done) {
+    activityModel = createActivityModel(100, 20);
+    timerMock.load(activityModel, user: mockUser);
+    timerMock.playTimer();
+    timerMock.stopTimer();
+
+    timerMock.timerProgressNumeric.listen((List<int> t) {
+      expect(t, <int>[0, 0, 0]);
+    });
+
+    done();
+  }));
+
+  test('Testing timerProgressNumeric progress is reset when timer is deleted',
+      async((DoneFn done) {
+    timerMock.load(createActivityModel(100, 20), user: mockUser);
+    timerMock.playTimer();
+    timerMock.deleteTimer();
+
+    timerMock.timerProgressNumeric.listen((List<int> t) {
+      expect(t, <int>[0, 0, 0]);
+    });
+
+    done();
+  }));
+
+  test('Testing timerProgressNumeric is streamed when timer is played',
+      async((DoneFn done) {
+    timerMock.load(createActivityModel(5000, 0), user: mockUser);
+    timerMock.timerProgressNumeric.listen((List<int> t) {
+      int i = 0;
+      i += 1;
+      if (i == 5) {
+        final bool tIsPositive = t[0] > 0 || t[1] > 0 || t[2] > 0;
+        expect(tIsPositive, true);
+      }
+    });
+    done();
+  }));
 
   test('Testing if timer is added to an acitivty without a timer already',
       async((DoneFn done) {
@@ -67,6 +124,22 @@ void main() {
     });
 
     timerMock.load(activityModel, user: mockUser);
+  }));
+
+  test('Testing if timerProgressNumeric is updated, if timer is paused',
+      async((DoneFn done) {
+    activityModel = createActivityModel(4000, 1, paused: true);
+    timerMock.load(activityModel, user: mockUser);
+    timerMock.initTimer();
+
+    timerMock.timerProgressNumeric.skip(2).listen((List<int> t) {
+      expect(t, <int>[0, 0, 3]);
+    });
+    timerMock.playTimer();
+    sleep(const Duration(seconds: 1));
+    timerMock.pauseTimer();
+
+    done();
   }));
 
   test('Testing if timer is not added to an acitivty with a timer already',
@@ -131,24 +204,24 @@ void main() {
       expect(b, isTrue);
       done();
     });
-    
+
     timerMock.load(activityModel, user: mockUser);
     timerMock.initTimer();
   }));
 
   test('Testing timer is instantiated when timer is not paused',
       async((DoneFn done) {
-        activityModel = ActivityModel(
-          id: 1,
-          pictogram: null,
-          order: 1,
-          state: ActivityState.Normal,
-          timer: TimerModel(
+    activityModel = ActivityModel(
+        id: 1,
+        pictogram: null,
+        order: 1,
+        state: ActivityState.Normal,
+        timer: TimerModel(
             startTime: DateTime.now(),
             fullLength: 1000,
             paused: false,
             progress: 1),
-          isChoiceBoard: false);
+        isChoiceBoard: false);
 
         timerMock.timerRunningMode.skip(1).listen((TimerRunningMode m) {
           expect(m, TimerRunningMode.running);
@@ -157,9 +230,8 @@ void main() {
 
         timerMock.load(activityModel, user: mockUser);
 
-        timerMock.initTimer();
-      })
-  );
+    timerMock.initTimer();
+  }));
 
   test('Testing if timer is paused the progress is updated',
       async((DoneFn done) {
@@ -192,7 +264,6 @@ void main() {
 
   test('Testing when timer is played the progress is streamed',
       async((DoneFn done) {
-
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,
@@ -221,7 +292,7 @@ void main() {
 
   test(
       'Testing when timer is paused, the progress is '
-      'upadated and the stream shows false', async((DoneFn done) {
+      'updated and the stream shows false', async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
         pictogram: null,

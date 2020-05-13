@@ -32,7 +32,7 @@ void main() {
       days: null,
       name: 'Week',
       weekNumber: 1,
-      weekYear: 2019);
+      weekYear: DateTime.now().year + 1);
 
   setUp(() {
     api = Api('any');
@@ -91,8 +91,9 @@ void main() {
   }));
 
   test('Should save the weekplan with new week number', async((DoneFn done) {
+    final String year = (DateTime.now().year + 1).toString();
     bloc.onTitleChanged.add('Week');
-    bloc.onYearChanged.add('2019');
+    bloc.onYearChanged.add(year);
     bloc.onWeekNumberChanged.add('42');
     bloc.onThumbnailChanged.add(mockThumbnail);
     bloc

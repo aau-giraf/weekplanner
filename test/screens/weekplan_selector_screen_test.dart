@@ -169,12 +169,20 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Should have a GridView Widget', (WidgetTester tester) async {
+  testWidgets('Should have a "Overståede uger" bar',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+
+    expect(find.text('Overståede uger'), findsOneWidget);
+  });
+
+  testWidgets('Should have two GridView Widgets', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GridView),
-        findsOneWidget);
+        findsNWidgets(2));
   });
 
   testWidgets('Weekmodels exist with the expected names',

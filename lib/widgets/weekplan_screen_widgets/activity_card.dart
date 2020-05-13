@@ -2,6 +2,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ import '../../style/custom_color.dart' as theme;
 class ActivityCard extends StatelessWidget {
 
   /// Constructor
-  ActivityCard(this._activity, this._weekday, this._user) {
+  ActivityCard(this._activity, this._weekday, this._user){
     _settingsBloc.loadSettings(_user);
   }
 
@@ -194,11 +195,7 @@ class ActivityCard extends StatelessWidget {
                 builder: (BuildContext roleContext,
                     AsyncSnapshot<WeekplanMode> role) {
                   if (role.data == WeekplanMode.guardian) {
-                    return const ImageIcon(
-                      AssetImage('assets/icons/redcircle.png'),
-                      color: theme.GirafColors.red,
-                      size: 250,
-                    );
+                    return _buildTimerAssetIcon();
                   } else {
                     return StreamBuilder<SettingsModel>(
                         stream: _settingsBloc.settings,
@@ -207,11 +204,7 @@ class ActivityCard extends StatelessWidget {
                           if (!settings.hasData ||
                               settings.data.completeMark !=
                                   CompleteMark.Removed) {
-                            return const ImageIcon(
-                              AssetImage('assets/icons/redcircle.png'),
-                              color: theme.GirafColors.red,
-                              size: 250,
-                            );
+                            return _buildTimerAssetIcon();
                           }
 
                           return Container();
@@ -224,12 +217,32 @@ class ActivityCard extends StatelessWidget {
   }
 
   /// Build timer icon.
-  ImageIcon _buildTimerAssetIcon() {
-    return const ImageIcon(
-      AssetImage('assets/icons/redcircle.png'),
-      color: theme.GirafColors.red,
-      size: 250,
-    );
+  Widget _buildTimerAssetIcon() {
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          String _iconPath;
+
+          if (settingsSnapshot.hasData) {
+            if (settingsSnapshot.data.defaultTimer == DefaultTimer.PieChart) {
+              _iconPath = 'assets/timer/piechart_icon.png';
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Hourglass) {
+              _iconPath = 'assets/timer/hourglass_icon.png';
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Numeric) {
+              _iconPath = 'assets/timer/countdowntimer_icon.png';
+            }
+          } else {
+            return const CircularProgressIndicator();
+          }
+          return Image(
+            image: AssetImage(_iconPath),
+            height: 250,
+            width: 250,
+          );
+        });
   }
 
 }
