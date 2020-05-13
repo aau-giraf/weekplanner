@@ -21,6 +21,7 @@ import '../../di.dart';
 import '../../routes.dart';
 import '../../style/custom_color.dart' as theme;
 import '../giraf_button_widget.dart';
+import '../weekplanner_choiceboard_selector.dart';
 import 'activity_card.dart';
 
 /// Widget used to create a single column in the weekplan screen.
@@ -417,18 +418,29 @@ class WeekplanDayColumn extends StatelessWidget {
   void _handleOnTapActivity(bool inEditMode, bool isMarked, bool isCitizen,
       List<ActivityModel> activities, int index, BuildContext context,
       WeekModel week) {
+    ///TODO: HUSK AT SLETTE DENNE LINJE NÅR BACKEND VIRKER
+    activities[index].isChoiceBoard = true;
+    build(context);
     if (inEditMode) {
       if (isMarked) {
         weekplanBloc.removeMarkedActivity(activities[index]);
       } else {
         weekplanBloc.addMarkedActivity(activities[index]);
       }
+    } else if(activities[index].isChoiceBoard && isCitizen && !(activities[index].state == ActivityState.Canceled)) {
+      showDialog<Center>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return WeekplannerChoiceboardSelector(activities[index]);
+          });
     } else if (!(activities[index].state == ActivityState.Completed &&
         isCitizen)) {
       Routes.push(context, ShowActivityScreen(activities[index], user))
           .then((Object object) => weekplanBloc.loadWeek(week, user));
     }
   }
+
 
   /// Builds activity card with a status icon if it is marked
   StatelessWidget _buildIsMarked(bool isMarked, BuildContext context,
