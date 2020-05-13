@@ -4,6 +4,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/cancel_mark_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
@@ -662,6 +663,7 @@ void main() {
     mockSettings.completeMark = CompleteMark.Checkmark;
     mockSettings.cancelMark = CancelMark.Cross;
     mockSettings.pictogramText = true;
+    mockSettings.defaultTimer = DefaultTimer.PieChart;
 
     mockActivities[0].state = ActivityState.Completed;
     mockActivities[1].state = ActivityState.Canceled;
@@ -684,8 +686,8 @@ void main() {
     // Find timer icon
     expect(
         find.byWidgetPredicate((Widget widget) =>
-            widget is ImageIcon &&
-            widget.image == const AssetImage('assets/icons/redcircle.png')),
+            widget is Image &&
+            widget.image == const AssetImage('assets/timer/piechart_icon.png')),
         findsOneWidget);
   });
 
