@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 
 import 'choice_board_part.dart';
 
-/// class that defines a Choiceboard
+/// class that defines a ChoiceBoard
 class ChoiceBoard extends StatelessWidget {
   /// Constructor for ChoiceBoard widget
   const ChoiceBoard(this._pictograms, this._user);
 
+  // TODO: Ændre dette til at være selve aktiviteten, når api_client har fået lister
   final List<PictogramModel> _pictograms;
 
   final DisplayNameModel _user;
@@ -22,10 +23,11 @@ class ChoiceBoard extends StatelessWidget {
     }
 
     return GridView.count(
+        physics: const NeverScrollableScrollPhysics(), // disables scrolling
         crossAxisCount: 2,
         children: List<Widget>.generate(
           _parts.length,
-          (index) {
+          (int index) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(

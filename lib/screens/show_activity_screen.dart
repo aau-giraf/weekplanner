@@ -291,14 +291,14 @@ class ShowActivityScreen extends StatelessWidget {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.width,
-                                child: buildLoadPictogramImage(),
+                                child: ChoiceBoard(hej, _girafUser), // buildLoadPictogramImage(),
                               ),
                               _buildActivityStateIcon(
                                   context, snapshot.data.state),
                             ],
                           ),
-                          PictogramText(_activity.pictogram, _girafUser,
-                              minFontSize: 50),
+                   //       PictogramText(_activity.pictogram, _girafUser,
+                   //           minFontSize: 50),
                         ],
                       );
                     }))),
