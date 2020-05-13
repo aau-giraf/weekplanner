@@ -14,13 +14,13 @@ class DeletePictogramFromChoiceboardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GirafButton(
-      width: MediaQuery.of(context).size.width * 0.10,
       height: MediaQuery.of(context).size.height * 0.07,
       text: 'Slet',
       onPressed: () {
         //TODO: Use block to delete the _pictogramModel
       },
       fontSize: 40,
+      icon: const ImageIcon(AssetImage('assets/icons/delete.png')),
     );
   }
 }
