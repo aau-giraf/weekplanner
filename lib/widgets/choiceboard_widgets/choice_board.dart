@@ -22,16 +22,22 @@ class ChoiceBoard extends StatelessWidget {
     }
 
     return GridView.count(
-      crossAxisCount: 2,
-      children:
-
-      List<Container>.generate(
-       _parts.length,
-       (index) {
-        return Container(
-        child: _parts[index],
-        );
-       },
-       ));
+        crossAxisCount: 2,
+        children: List<Widget>.generate(
+          _parts.length,
+          (index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                  color: Colors.black,
+                  width: 2,
+                )),
+                child: _parts[index],
+              ),
+            );
+          },
+        ));
   }
 }

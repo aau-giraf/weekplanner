@@ -27,23 +27,20 @@ class ChoiceBoardPart extends StatelessWidget {
       stream: _pictogramImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.hasData) {
-          return Container(
-            decoration: BoxDecoration(
-                border: Border.all(
-              color: Colors.black,
-                  width: 2
-            )),
-            child: FittedBox(
-              child: Stack(children: <Widget>[
-                snapshot.data,
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: DeletePictogramFromChoiceboardButton(_pictogramModel),
+          return FittedBox(
+            child: Stack(
+                children: <Widget>[
+              snapshot.data,
+              Positioned(
+                top: 5,
+                right: 5,
+                child: DeletePictogramFromChoiceboardButton(
+                    _pictogramModel
                 ),
-              ]),
-              // Key is used for testing the widget.
+              ),
+            ]
             ),
+            // Key is used for testing the widget.
           );
         } else {
           return Container(); // shit
