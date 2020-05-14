@@ -72,9 +72,11 @@ class SettingsScreen extends StatelessWidget {
                       settingsModel.weekDayColors[1].hexColor)),
               SettingsArrowButton(
                   'Tegn for udførelse',
-                      () => Routes.push(context, CompletedActivityIconScreen(_user))
+                      () => Routes.push(context,
+                          CompletedActivityIconScreen(_user))
                           .then(
-                              (Object object) => _settingsBloc.loadSettings(_user)),
+                              (Object object) =>
+                                  _settingsBloc.loadSettings(_user)),
                   titleTrailing: Text(settingsModel.completeMark ==
                       CompleteMark.Checkmark
                       ? 'Flueben'
