@@ -146,8 +146,12 @@ class ActivityCard extends StatelessWidget {
             );
           }
           else if (settings.completeMark == CompleteMark.MovedRight) {
-            return _completedActivityColor(
-                theme.GirafColors.transparentGrey, context);
+            return  Container(
+                key: const Key('GreyOutBox'),
+                color:  theme.GirafColors.transparentGrey,
+                height: MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width
+            );
           }
           else if (settings.completeMark == CompleteMark.Removed) {
             //This case should be handled by _shouldActivityBeVisible
@@ -167,12 +171,7 @@ class ActivityCard extends StatelessWidget {
     }
   }
 
-  Container _completedActivityColor(Color dayColor, BuildContext context) {
-    return Container(
-        color: dayColor,
-        height: MediaQuery.of(context).size.width,
-        width: MediaQuery.of(context).size.width);
-  }
+
 
   Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
     final TimerBloc timerBloc = di.getDependency<TimerBloc>();
