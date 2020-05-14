@@ -1,6 +1,7 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_countdown.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_hourglass.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_piechart.dart';
 
 import '../style/custom_color.dart' as theme;
 
