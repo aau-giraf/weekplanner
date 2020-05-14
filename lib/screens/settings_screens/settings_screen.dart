@@ -15,7 +15,6 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_butt
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_theme_display_box.dart';
-
 import '../../di.dart';
 import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
 import 'completed_activity_icon_selection_screen.dart';
@@ -63,25 +62,25 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                   'Farver på ugeplan',
                       () =>
-                      Routes.push(
-                          context, ColorThemeSelectorScreen(user: _user))
-                          .then(
-                              (Object object) =>
-                              _settingsBloc.loadSettings(_user)),
+                          Routes.push(
+                              context, ColorThemeSelectorScreen(user: _user))
+                              .then(
+                                  (Object object) =>
+                                      _settingsBloc.loadSettings(_user)),
                   titleTrailing: ThemeBox.fromHexValues(
                       settingsModel.weekDayColors[0].hexColor,
                       settingsModel.weekDayColors[1].hexColor)),
               SettingsArrowButton(
                   'Tegn for udførelse',
-                  () => Routes.push(context, CompletedActivityIconScreen(_user))
-                      .then(
-                          (Object object) => _settingsBloc.loadSettings(_user)),
+                      () => Routes.push(context, CompletedActivityIconScreen(_user))
+                          .then(
+                              (Object object) => _settingsBloc.loadSettings(_user)),
                   titleTrailing: Text(settingsModel.completeMark ==
-                          CompleteMark.Checkmark
+                      CompleteMark.Checkmark
                       ? 'Flueben'
                       : settingsModel.completeMark == CompleteMark.MovedRight
-                          ? 'Lav aktiviteten grå'
-                          : 'Fjern aktiviteten'))
+                      ? 'Lav aktiviteten grå'
+                      : 'Fjern aktiviteten'))
             ]);
           } else {
             return const Center(
@@ -108,9 +107,9 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                 'Antal dage',
                     () =>
-                    Routes.push(context, NumberOfDaysScreen(_user))
-                        .then((Object object) =>
-                        _settingsBloc.loadSettings(_user)),
+                        Routes.push(context, NumberOfDaysScreen(_user))
+                            .then((Object object) =>
+                            _settingsBloc.loadSettings(_user)),
                 titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
                     ? 'En dag'
                     : settingsModel.nrOfDaysToDisplay == 5
@@ -170,7 +169,7 @@ class SettingsScreen extends StatelessWidget {
     ]);
   }
 
-    Widget _buildPrivacySection() {
+  Widget _buildPrivacySection() {
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
@@ -186,10 +185,10 @@ class SettingsScreen extends StatelessWidget {
           ]);
 
         });
-    }
+  }
 
-   Widget _buildTimeRepresentationSettings(BuildContext context) {
-     return StreamBuilder<SettingsModel>(
+  Widget _buildTimeRepresentationSettings(BuildContext context) {
+    return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
@@ -199,16 +198,17 @@ class SettingsScreen extends StatelessWidget {
             return SettingsSection('Tidsrepræsentation', <SettingsSectionItem>[
               SettingsArrowButton(
                 'Indstillinger for tidsrepræsentation',
-                () => Routes.push(context, TimeRepresentationScreen(_user))
-                    .then((Object object) => _settingsBloc.loadSettings(_user)),
+                    () => Routes.push(context, TimeRepresentationScreen(_user))
+                        .then((Object object) =>
+                        _settingsBloc.loadSettings(_user)),
                 titleTrailing: Image(
                     width: 50,
                     height: 50,
                     image: AssetImage(userTimer == DefaultTimer.PieChart
                         ? 'assets/timer/piechart_icon.png'
                         : userTimer == DefaultTimer.Hourglass
-                            ? 'assets/timer/hourglass_icon.png'
-                            : 'assets/timer/countdowntimer_icon.png')),
+                        ? 'assets/timer/hourglass_icon.png'
+                        : 'assets/timer/countdowntimer_icon.png')),
               )
             ]);
           } else {
