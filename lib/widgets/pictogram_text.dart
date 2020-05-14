@@ -100,7 +100,7 @@ class PictogramText extends StatelessWidget {
     return false;
   }
 
-  Container _buildEmptyBox(BuildContext context, SettingsModel settings) {
+  Widget _buildEmptyBox(BuildContext context, SettingsModel settings) {
     Color color;
     if (dayOfWeek == null) {
       color = GirafColors.white;

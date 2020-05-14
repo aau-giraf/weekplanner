@@ -37,7 +37,6 @@ class ActivityCard extends StatelessWidget {
     final ActivityState _activityState = _activity.state;
 
     return Container(
-        color: theme.GirafColors.white,
         margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
         child: FittedBox(
           child: Column(
