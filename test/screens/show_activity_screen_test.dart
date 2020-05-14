@@ -112,13 +112,15 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null))
+      pictograms: <PictogramModel>[
+        PictogramModel(
+            id: 25,
+            title: 'grå',
+            accessLevel: AccessLevel.PUBLIC,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null)
+      ])
 ];
 
 final DisplayNameModel mockUser =
@@ -142,13 +144,15 @@ ActivityModel makeNewActivityModel() {
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null));
+      pictograms: <PictogramModel>[
+        PictogramModel(
+            id: 25,
+            title: 'grå',
+            accessLevel: AccessLevel.PUBLIC,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null)
+      ]);
 }
 
 ActivityModel mockActivityModelWithTimer() {
@@ -157,13 +161,15 @@ ActivityModel mockActivityModelWithTimer() {
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null),
+      pictograms: <PictogramModel>[
+        PictogramModel(
+            id: 25,
+            title: 'grå',
+            accessLevel: AccessLevel.PUBLIC,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null)
+      ],
       timer: TimerModel(
           startTime: DateTime.now(),
           progress: 0,
@@ -177,13 +183,15 @@ ActivityModel mockActivityModelWithCompletedTimer() {
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null),
+      pictograms: <PictogramModel>[
+        PictogramModel(
+            id: 25,
+            title: 'grå',
+            accessLevel: AccessLevel.PUBLIC,
+            imageHash: null,
+            imageUrl: null,
+            lastEdit: null)
+      ],
       timer: TimerModel(
           startTime: DateTime.now(),
           progress: const Duration(seconds: 5).inMilliseconds,

@@ -489,7 +489,8 @@ class WeekplanDayColumn extends StatelessWidget {
                               weekplanBloc.addActivity(
                                   ActivityModel(
                                       id: newPictogram.id,
-                                      pictogram: newPictogram,
+                                      pictograms: <PictogramModel>
+                                                  [newPictogram],
                                       order: weekday.activities.length,
                                       state: ActivityState.Active,
                                       isChoiceBoard: false),

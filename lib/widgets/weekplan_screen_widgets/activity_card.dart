@@ -59,7 +59,7 @@ class ActivityCard extends StatelessWidget {
                     _buildTimerIcon(context, _activity),
                   ],
                 ),
-                PictogramText(_activity.pictogram, _user),
+                PictogramText(_activity.pictograms.first, _user),
               ],
             ),
           ));
@@ -106,7 +106,7 @@ class ActivityCard extends StatelessWidget {
                   _buildTimerIcon(context, _activity),
                 ],
               ),
-              PictogramText(_activity.pictogram, _user),
+              PictogramText(_activity.pictograms.first, _user),
             ],
           ),
         ));
@@ -142,7 +142,7 @@ class ActivityCard extends StatelessWidget {
 
     Widget _getPictogram(ActivityModel activity) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
-    bloc.loadPictogramById(activity.pictogram.id);
+    bloc.loadPictogramById(activity.pictograms.first.id);
     return StreamBuilder<Image>(
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {

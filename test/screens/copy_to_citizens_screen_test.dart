@@ -56,7 +56,7 @@ class MockWeekApi extends Mock implements WeekApi {
       WeekdayModel(
           day: Weekday.Monday, activities: <ActivityModel>[
             ActivityModel(
-              pictogram: null,
+              pictograms: null,
               order: 1,
               state: null,
               isChoiceBoard: false,

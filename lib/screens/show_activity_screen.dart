@@ -33,7 +33,7 @@ class ShowActivityScreen extends StatelessWidget {
   /// Constructor
   ShowActivityScreen(this._activity, this._girafUser, {Key key})
       : super(key: key) {
-    _pictoImageBloc.load(_activity.pictogram);
+    _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
   }
@@ -266,10 +266,6 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
-    List<PictogramModel> hej = <PictogramModel>[];
-    hej.add(_activity.pictogram);
-    hej.add(_activity.pictogram); // TODO: Slet
-    hej.add(_activity.pictogram);
 
     return Card(
         child: Column(children: <Widget>[
@@ -295,7 +291,7 @@ class ShowActivityScreen extends StatelessWidget {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.width,
-                                child: ChoiceBoard(hej, _girafUser), // buildLoadPictogramImage(),
+                                child: buildLoadPictogramImage(),
                               ),
                               _buildActivityStateIcon(
                                   context, snapshot.data.state),

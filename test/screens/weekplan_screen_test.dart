@@ -590,7 +590,7 @@ void main() {
     expect(find.byType(PictogramText), findsOneWidget);
 
     // Get the title of the activity
-    final String title = mockActivities[0].pictogram.title;
+    final String title = mockActivities[0].pictograms.first.title;
 
     expect(find.text(title.toUpperCase()), findsOneWidget);
   });
