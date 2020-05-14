@@ -9,6 +9,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
@@ -50,6 +51,7 @@ class WeekplanDayColumn extends StatelessWidget {
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -430,8 +432,8 @@ class WeekplanDayColumn extends StatelessWidget {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return WeekplannerChoiceboardSelector(activities[index]);
-          });
+            return WeekplannerChoiceboardSelector(activities[index], _activityBloc, user);
+          }).then((Object object) => weekplanBloc.loadWeek(week, user));
     } else if (!(activities[index].state == ActivityState.Completed &&
         isCitizen)) {
       Routes.push(context, ShowActivityScreen(activities[index], user))

@@ -54,7 +54,7 @@ class ChoiceBoardPart extends StatelessWidget {
             ],
           );
         } else {
-          return Container(); // shit
+          return Container();
         }
       },
     );

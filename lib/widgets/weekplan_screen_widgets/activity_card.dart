@@ -3,6 +3,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class ActivityCard extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.width,
                       child: FittedBox(
-                        child: _getPictogram(_activity),
+                        child: _getPictogram(_activity.pictograms.first),
                       ),
                     ),
                     _buildActivityStateIcon(context, _activityState, _weekday),
@@ -66,13 +67,10 @@ class ActivityCard extends StatelessWidget {
   ///This function builds the activity card
   Widget buildChoiceboardAcivityCard(BuildContext context) {
     final ActivityState _activityState = _activity.state;
-    List<Widget> pictograms = [
-      _getPictogram(_activity),
-      _getPictogram(_activity),
-      _getPictogram(_activity),
-      _getPictogram(_activity)
-    ];
-
+    List<Widget> pictograms = [];
+    for(int i = 0; i < _activity.pictograms.length; i++){
+      pictograms.add(_getPictogram(_activity.pictograms[i]));
+    }
     return Container(
         decoration: BoxDecoration(
             color: theme.GirafColors.white,
@@ -137,9 +135,9 @@ class ActivityCard extends StatelessWidget {
     }
   }
 
-  Widget _getPictogram(ActivityModel activity) {
+  Widget _getPictogram(PictogramModel _pictogram) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
-    bloc.loadPictogramById(activity.pictograms.first.id);
+    bloc.loadPictogramById(_pictogram.id);
     return StreamBuilder<Image>(
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {

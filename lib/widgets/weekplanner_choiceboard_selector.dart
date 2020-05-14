@@ -1,9 +1,13 @@
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
@@ -17,10 +21,19 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 class WeekplannerChoiceboardSelector extends StatelessWidget {
   ///Constructor
   WeekplannerChoiceboardSelector(
-        this._activity
-      );
+    this._activity,
+    this._bloc,
+    this._user,
+  ) {
+    _bloc.load(_activity, _user);
+  }
+
 
   final ActivityModel _activity;
+
+  final DisplayNameModel _user;
+
+  final ActivityBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +45,15 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
             color: theme.GirafColors.transparentDarkGrey, width: 5.0),
         title: const Center(
             child: GirafTitleHeader(
-              title: 'Vælg aktivitet',
-            )),
+          title: 'Vælg aktivitet',
+        )),
         content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.all(10.0),
-              child: displayPictograms(context)
-            ),
+                padding: const EdgeInsets.all(10.0),
+                child: displayPictograms(context)),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -50,7 +62,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                   child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
                       child: GirafButton(
-                        key: const Key('TimePickerDialogCancelButton'),
+                        key: const Key('ChoiceBoardDialogCancelButton'),
                         onPressed: () => Routes.pop(context),
                         icon: const ImageIcon(
                             AssetImage('assets/icons/cancel.png')),
@@ -64,9 +76,9 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
     );
   }
 
-  Widget _getPictogram(ActivityModel activity) {
+  Widget _getPictogram(PictogramModel pictogram) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
-    bloc.loadPictogramById(activity.pictograms.first.id);
+    bloc.loadPictogramById(pictogram.id);
     return StreamBuilder<Image>(
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
@@ -81,11 +93,14 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   /// This is a function
   Widget displayPictograms(BuildContext context) {
-    List<Widget> pictograms = [_getPictogram(_activity), _getPictogram(_activity), _getPictogram(_activity), _getPictogram(_activity)];
+    List<Widget> pictograms = <Widget>[];
+    for (int i = 0; i < _activity.pictograms.length; i++) {
+      pictograms.add(_getPictogram(_activity.pictograms[i]));
+    }
 
-    List<Widget> temp = [ ];
+    List<Widget> temp = [];
 
-    for(int i = 0; i < pictograms.length; i++) {
+    for (int i = 0; i < pictograms.length; i++) {
       temp.add(displayPictogram(context, pictograms, i));
     }
 
@@ -96,36 +111,40 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
     );
   }
 
-  Widget displayPictogram(BuildContext context, List<Widget> pictograms, int index) {
+  Widget displayPictogram(
+      BuildContext context, List<Widget> pictograms, int index) {
     return GestureDetector(
-      onTap: () {
-        selectedPictogramFromChoiceBoard(context, pictograms, index);
-      },
-      child: Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width / 5,
-        maxHeight: MediaQuery.of(context).size.height / 1.2,
-      ),
-      decoration: BoxDecoration(
-          border: Border.all(
-              color: theme.GirafColors.blueBorderColor, width: 1)),
-      child: pictograms[index],
-    )
-    );
+        onTap: () {
+          selectedPictogramFromChoiceBoard(context, pictograms, index);
+        },
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width / 5,
+            maxHeight: MediaQuery.of(context).size.height / 1.2,
+          ),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: theme.GirafColors.blueBorderColor, width: 1)),
+          child: pictograms[index],
+        ));
   }
 
-  Widget selectedPictogramFromChoiceBoard(BuildContext context, List<Widget> pictograms, int index) {
+  Widget selectedPictogramFromChoiceBoard(
+      BuildContext context, List<Widget> pictograms, int index) {
     _activity.isChoiceBoard = false;
-    print(index);
+    List<PictogramModel> _pictogramModels = <PictogramModel>[
+      _activity.pictograms[index]
+    ];
+    _activity.pictograms = _pictogramModels;
+    _bloc.update();
 
-    List<Widget> selectedPictogram = [pictograms[index]];
+    //print(index);
+
+    //List<Widget> selectedPictogram = [pictograms[index]];
 
     ///TODO: Når backendvirker implementer dette
     ///_activity.pictogram = selectedPictogram;
 
     Routes.pop(context);
   }
-
-
-
 }

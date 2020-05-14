@@ -172,9 +172,20 @@ class ShowActivityScreen extends StatelessWidget {
                           key: const Key('ChoiceboardTitleKey'),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text('KNAP!!',
-                                style: titleTextStyle,
-                                textAlign: TextAlign.center),
+                            child: StreamBuilder<ActivityModel>(
+                                stream: _activityBloc.activityModelStream,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<ActivityModel>
+                                        activitySnapshot) {
+                                  if(activitySnapshot.data.isChoiceBoard){
+                                    return  Text('Tilføj aktivitet',
+                                    style: titleTextStyle,
+                                    textAlign: TextAlign.center);
+                                  } else{
+                                  return Text('Tilføj Choiceboard',
+                                      style: titleTextStyle,
+                                      textAlign: TextAlign.center);
+                                }}),
                           )),
                       Expanded(
                         child: AspectRatio(
@@ -190,11 +201,17 @@ class ShowActivityScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () async {
-                              PictogramModel pictogram =
-                                  await Routes.push(context, PictogramSearch());
-                              _activity.isChoiceBoard = true;
-                              _activity.pictograms.add(pictogram);
-                              _activityBloc.update();
+                              await Routes.push(context, PictogramSearch())
+                                  .then((Object object) {
+                                if (object is PictogramModel) {
+                                  final PictogramModel newPictogram = object;
+                                  _activity.isChoiceBoard = true;
+                                  _activity.pictograms.add(newPictogram);
+                                  print('Updating');
+                                  _activityBloc.update();
+                                  print('Updated');
+                                }
+                              });
                             },
                           ),
                         ),
@@ -294,8 +311,7 @@ class ShowActivityScreen extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.width,
                                 child: _activity.isChoiceBoard
-                                    ? ChoiceBoard(
-                                        _activity, _activityBloc)
+                                    ? ChoiceBoard(_activity, _activityBloc)
                                     : buildLoadPictogramImage(),
                               ),
                               _buildActivityStateIcon(
@@ -304,7 +320,8 @@ class ShowActivityScreen extends StatelessWidget {
                           ),
                           Visibility(
                             visible: !_activity.isChoiceBoard,
-                            child: PictogramText(_activity.pictograms.first, _girafUser,
+                            child: PictogramText(
+                                _activity.pictograms.first, _girafUser,
                                 minFontSize: 50),
                           ),
                         ],
