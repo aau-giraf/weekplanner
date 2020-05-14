@@ -192,6 +192,9 @@ class ShowActivityScreen extends StatelessWidget {
                             onPressed: () async {
                               PictogramModel pictogram =
                                   await Routes.push(context, PictogramSearch());
+                              _activity.isChoiceBoard = true;
+                              _activity.pictograms.add(pictogram);
+                              _activityBloc.update();
                             },
                           ),
                         ),
@@ -266,7 +269,6 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
-
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
@@ -291,14 +293,20 @@ class ShowActivityScreen extends StatelessWidget {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.width,
-                                child: buildLoadPictogramImage(),
+                                child: _activity.isChoiceBoard
+                                    ? ChoiceBoard(
+                                        _activity.pictograms, _girafUser)
+                                    : buildLoadPictogramImage(),
                               ),
                               _buildActivityStateIcon(
                                   context, snapshot.data.state),
                             ],
                           ),
-                   //       PictogramText(_activity.pictogram, _girafUser,
-                   //           minFontSize: 50),
+                          Visibility(
+                            visible: !_activity.isChoiceBoard,
+                            child: PictogramText(_activity.pictograms.first, _girafUser,
+                                minFontSize: 50),
+                          ),
                         ],
                       );
                     }))),

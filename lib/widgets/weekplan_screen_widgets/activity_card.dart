@@ -18,11 +18,8 @@ import '../../style/custom_color.dart' as theme;
 
 /// Widget used for activities in the weekplan screen.
 class ActivityCard extends StatelessWidget {
-
-  
-
   /// Constructor
-  ActivityCard(this._activity, this._weekday, this._user){
+  ActivityCard(this._activity, this._weekday, this._user) {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -33,12 +30,10 @@ class ActivityCard extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
-
   @override
   Widget build(BuildContext context) {
     final ActivityState _activityState = _activity.state;
-    _activity.isChoiceBoard = true;
-    if(!_activity.isChoiceBoard) {
+    if (!_activity.isChoiceBoard) {
       return Container(
           color: theme.GirafColors.white,
           margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
@@ -49,8 +44,8 @@ class ActivityCard extends StatelessWidget {
                   alignment: AlignmentDirectional.topEnd,
                   children: <Widget>[
                     SizedBox(
-                      width: MediaQuery.of(context).size.width ,
-                      height: MediaQuery.of(context).size.width ,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width,
                       child: FittedBox(
                         child: _getPictogram(_activity),
                       ),
@@ -59,24 +54,28 @@ class ActivityCard extends StatelessWidget {
                     _buildTimerIcon(context, _activity),
                   ],
                 ),
-                PictogramText(_activity.pictograms.first, _user),
+               PictogramText(_activity.pictograms.first, _user),
               ],
             ),
           ));
     } else {
-     return buildChoiceboardAcivityCard(context);
+      return buildChoiceboardAcivityCard(context);
     }
-
   }
 
   ///This function builds the activity card
   Widget buildChoiceboardAcivityCard(BuildContext context) {
     final ActivityState _activityState = _activity.state;
-    List<Widget> pictograms = [ _getPictogram(_activity), _getPictogram(_activity), _getPictogram(_activity), _getPictogram(_activity) ];
+    List<Widget> pictograms = [
+      _getPictogram(_activity),
+      _getPictogram(_activity),
+      _getPictogram(_activity),
+      _getPictogram(_activity)
+    ];
 
     return Container(
         decoration: BoxDecoration(
-          color: theme.GirafColors.white,
+            color: theme.GirafColors.white,
             border: Border.all(
                 color: Colors.black,
                 width: MediaQuery.of(context).size.width * 0.01)),
@@ -88,19 +87,18 @@ class ActivityCard extends StatelessWidget {
                 alignment: AlignmentDirectional.topEnd,
                 children: <Widget>[
                   SizedBox(
-                    width: MediaQuery.of(context).size.width ,
-                    height: MediaQuery.of(context).size.width ,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
                     child: FittedBox(
-                      child: Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                              child: returnGridView(pictograms)),
-                        ],
-                      )
-                    ),
+                        child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: <Widget>[
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                            child: returnGridView(pictograms)),
+                      ],
+                    )),
                   ),
                   _buildActivityStateIcon(context, _activityState, _weekday),
                   _buildTimerIcon(context, _activity),
@@ -139,8 +137,7 @@ class ActivityCard extends StatelessWidget {
     }
   }
 
-
-    Widget _getPictogram(ActivityModel activity) {
+  Widget _getPictogram(ActivityModel activity) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     bloc.loadPictogramById(activity.pictograms.first.id);
     return StreamBuilder<Image>(
@@ -206,7 +203,7 @@ class ActivityCard extends StatelessWidget {
                               if (settingsSnapshot.data == null) {
                                 c = Color(int.parse(
                                     WeekplanColorTheme.blueWhiteColorSetting()[
-                                    weekday.day.index]
+                                            weekday.day.index]
                                         .hexColor
                                         .replaceFirst('#', '0xff')));
                               } else {
@@ -322,5 +319,4 @@ class ActivityCard extends StatelessWidget {
           );
         });
   }
-
 }

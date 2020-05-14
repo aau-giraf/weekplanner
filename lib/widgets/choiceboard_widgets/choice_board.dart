@@ -9,7 +9,6 @@ class ChoiceBoard extends StatelessWidget {
   /// Constructor for ChoiceBoard widget
   const ChoiceBoard(this._pictograms, this._user);
 
-  // TODO: Ændre dette til at være selve aktiviteten, når api_client har fået lister
   final List<PictogramModel> _pictograms;
 
   final DisplayNameModel _user;

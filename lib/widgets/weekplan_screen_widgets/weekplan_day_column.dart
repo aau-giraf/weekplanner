@@ -418,8 +418,6 @@ class WeekplanDayColumn extends StatelessWidget {
   void _handleOnTapActivity(bool inEditMode, bool isMarked, bool isCitizen,
       List<ActivityModel> activities, int index, BuildContext context,
       WeekModel week) {
-    ///TODO: HUSK AT SLETTE DENNE LINJE NÅR BACKEND VIRKER
-    activities[index].isChoiceBoard = true;
     build(context);
     if (inEditMode) {
       if (isMarked) {

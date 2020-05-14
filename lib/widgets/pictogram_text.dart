@@ -46,7 +46,7 @@ class PictogramText extends StatelessWidget {
                       settingsSnapshot.data.pictogramText;
                   if (_isGuardianMode(weekModeSnapshot) ||
                       pictogramTextIsEnabled) {
-                    final String pictogramText = _pictogram.title.toUpperCase();
+                    final String pictogramText =  _pictogram.id.toString(); //_pictogram.title.toUpperCase();
                     return _buildPictogramText(context, pictogramText);
                   }
                 }
