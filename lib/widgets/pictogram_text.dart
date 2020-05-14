@@ -100,7 +100,7 @@ class PictogramText extends StatelessWidget {
     return false;
   }
 
-  SizedBox _buildEmptyBox(BuildContext context, SettingsModel settings) {
+  Container _buildEmptyBox(BuildContext context, SettingsModel settings) {
     Color color;
     if (dayOfWeek == null) {
       color = GirafColors.white;
@@ -108,9 +108,9 @@ class PictogramText extends StatelessWidget {
       color = Color(int.parse(settings.weekDayColors[dayOfWeek.index].hexColor
           .replaceFirst('#', '0xff')));
     }
-    return SizedBox(
+    return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width / 4,
-        child: Container(color: color));
+        color: color);
   }
 }
