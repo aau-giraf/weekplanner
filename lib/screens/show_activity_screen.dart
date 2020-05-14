@@ -1,5 +1,8 @@
+import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -8,12 +11,12 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/pictogram_search_screen.dart';
+import 'package:weekplanner/widgets/choiceboard_widgets/choice_board.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -22,6 +25,7 @@ import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_countdown.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_hourglass.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_piechart.dart';
+
 import '../style/custom_color.dart' as theme;
 
 /// Screen to show information about an activity, and change the state of it.
@@ -53,24 +57,29 @@ class ShowActivityScreen extends StatelessWidget {
     _timerBloc.load(_activity, user: _girafUser);
     _timerBloc.initTimer();
 
-    /// Used to check if the keyboard is visible
-    return buildScreenFromOrientation(orientation, context);
+    ///Used to check if the keyboard is visible
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
+          return buildScreenFromOrientation(
+              orientation, context, snapshot.data);
+        });
   }
 
   /// Build the activity screens in a row or column
   /// depending on the orientation of the device.
   Scaffold buildScreenFromOrientation(
-      Orientation orientation, BuildContext context) {
+      Orientation orientation, BuildContext context, WeekplanMode mode) {
     Widget childContainer;
 
     if (orientation == Orientation.portrait) {
       childContainer = Column(
-        children: buildScreen(context),
+        children: buildScreen(context, mode),
       );
     } else if (orientation == Orientation.landscape) {
       childContainer = Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: buildScreen(context),
+        children: buildScreen(context, mode),
       );
     }
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
@@ -83,20 +92,24 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the activity.
-  List<Widget> buildScreen(BuildContext context) {
-    return <Widget>[
-      Expanded(
-        flex: 6,
-        child: Center(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: buildActivity(context),
-            ),
+  List<Widget> buildScreen(BuildContext context, WeekplanMode mode) {
+    final List<Widget> list = <Widget>[];
+    list.add(Expanded(
+      flex: 6,
+      child: Center(
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: buildActivity(context),
           ),
         ),
       ),
+    ));
+
+    // All the buttons excluding the activity itself
+    final List<Widget> buttons = <Widget>[];
+    buttons.add(
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
           builder: (BuildContext context,
@@ -105,13 +118,91 @@ class ShowActivityScreen extends StatelessWidget {
                     activitySnapshot.data.state == ActivityState.Canceled)
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
-          })
-    ];
+          }),
+    );
+
+    if (mode == WeekplanMode.guardian) {
+      buttons.add(_buildChoiceBoardButton(context));
+    }
+
+    final Orientation orientation = MediaQuery.of(context).orientation;
+
+    /* if (buttons.length == 1) {
+      list.add(buttons.elementAt(0));
+    } else */
+    {
+      if (orientation == Orientation.landscape) {
+        list.add(Column(
+          children: buttons,
+        ));
+      } else if (orientation == Orientation.portrait) {
+        list.add(
+          Row(
+            children: buttons,
+          ),
+        );
+      }
+    }
+    return list;
   }
 
   Container _resetTimerAndBuildEmptyContainer() {
     _timerBloc.stopTimer();
     return Container(width: 0, height: 0);
+  }
+
+  /// Builds the timer widget.
+  StreamBuilder<WeekplanMode> _buildChoiceBoardButton(BuildContext context) {
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext modeContext,
+            AsyncSnapshot<WeekplanMode> modeSnapshot) {
+          return Expanded(
+            flex: 4,
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Card(
+                    key: const Key('OverallChoiceboardKey'),
+                    child: Column(children: <Widget>[
+                      // The title of the timer widget
+                      Center(
+                          key: const Key('ChoiceboardTitleKey'),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('KNAP!!',
+                                style: titleTextStyle,
+                                textAlign: TextAlign.center),
+                          )),
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: IconButton(
+                            icon: AspectRatio(
+                              aspectRatio: 1,
+                              child: FittedBox(
+                                child: Icon(
+                                  Icons.add,
+                                  color: theme.GirafColors.black,
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              PictogramModel pictogram =
+                                  await Routes.push(context, PictogramSearch());
+                            },
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   /// Builds the timer widget.
@@ -175,6 +266,11 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
+    List<PictogramModel> hej = <PictogramModel>[];
+    hej.add(_activity.pictogram);
+    hej.add(_activity.pictogram); // TODO: Slet
+    hej.add(_activity.pictogram);
+
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
@@ -197,15 +293,16 @@ class ShowActivityScreen extends StatelessWidget {
                             alignment: AlignmentDirectional.center,
                             children: <Widget>[
                               SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.width,
-                                  child: buildLoadPictogramImage()),
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width,
+                                child: ChoiceBoard(hej, _girafUser), // buildLoadPictogramImage(),
+                              ),
                               _buildActivityStateIcon(
                                   context, snapshot.data.state),
                             ],
                           ),
-                          PictogramText(_activity.pictogram, _girafUser,
-                              minFontSize: 50),
+                   //       PictogramText(_activity.pictogram, _girafUser,
+                   //           minFontSize: 50),
                         ],
                       );
                     }))),
@@ -534,7 +631,9 @@ class ShowActivityScreen extends StatelessWidget {
       stream: _pictoImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         return FittedBox(
-            child: Container(child: snapshot.data),
+            child: Container(
+              child: snapshot.data,
+            ),
             // Key is used for testing the widget.
             key: Key(_activity.id.toString()));
       },
