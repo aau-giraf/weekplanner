@@ -129,7 +129,7 @@ class WeekplanBloc extends BlocBase {
           // and make sure it is added at as the last activity of the day.
           final ActivityModel newActivity = ActivityModel(
               id: activity.id,
-              pictogram: activity.pictogram,
+              pictograms: activity.pictograms,
               order: _getMaxOrder(week.days[dayOfWeek].activities),
               isChoiceBoard: false,
               state: ActivityState.Normal);

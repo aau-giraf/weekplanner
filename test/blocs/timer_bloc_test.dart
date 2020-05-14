@@ -56,7 +56,7 @@ void main() {
       {bool paused = false}) {
     return ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -112,7 +112,7 @@ void main() {
       async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: null,
@@ -146,7 +146,7 @@ void main() {
       async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -165,7 +165,7 @@ void main() {
       async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: null,
@@ -190,7 +190,7 @@ void main() {
   test('Testing timer starts running if its already set', async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -213,7 +213,7 @@ void main() {
       async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -237,7 +237,7 @@ void main() {
       async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -266,7 +266,7 @@ void main() {
       async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -295,7 +295,7 @@ void main() {
       'updated and the stream shows false', async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -329,7 +329,7 @@ void main() {
       async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(
@@ -363,7 +363,7 @@ void main() {
       'stream is false', async((DoneFn done) {
     activityModel = ActivityModel(
         id: 1,
-        pictogram: null,
+        pictograms: null,
         order: 1,
         state: ActivityState.Normal,
         timer: TimerModel(

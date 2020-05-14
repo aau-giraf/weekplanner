@@ -111,37 +111,43 @@ class MockData {
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: false,
-          pictogram: PictogramModel(
-              id: 25,
-              title: 'PictogramTitle1',
-              accessLevel: AccessLevel.PUBLIC,
-              imageHash: null,
-              imageUrl: null,
-              lastEdit: null)),
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle1',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ]),
       ActivityModel(
           id: 1,
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: false,
-          pictogram: PictogramModel(
-              id: 25,
-              title: 'PictogramTitle2',
-              accessLevel: AccessLevel.PUBLIC,
-              imageHash: null,
-              imageUrl: null,
-              lastEdit: null)),
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle2',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ]),
       ActivityModel(
           id: 2,
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: false,
-          pictogram: PictogramModel(
-              id: 25,
-              title: 'PictogramTitle3',
-              accessLevel: AccessLevel.PUBLIC,
-              imageHash: null,
-              imageUrl: null,
-              lastEdit: null),
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle3',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ],
           timer: TimerModel(
               startTime: DateTime(2020),
               progress: 0,
