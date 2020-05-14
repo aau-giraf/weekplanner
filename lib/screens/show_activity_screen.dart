@@ -310,35 +310,28 @@ class ShowActivityScreen extends StatelessWidget {
   /// The widget to show, in the case that a timer has been initiated,
   /// showing the progression for the timer in both citizen and guardian mode.
   Widget _timerIsInitiatedWidget() {
-    return FittedBox(
-      key: const Key('TimerInitKey'),
-      child: StreamBuilder<double>(
-        stream: _timerBloc.timerProgressStream,
-        builder: (BuildContext timerProgressContext,
-            AsyncSnapshot<double> timerProgressSnapshot) {
-          return Container(
-            decoration: const ShapeDecoration(
-                shape: CircleBorder(
-                    side: BorderSide(
-                        color: theme.GirafColors.black, width: 0.5))),
-            child: CircleAvatar(
-              backgroundColor: theme.GirafColors.red,
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: CircularProgressIndicator(
-                  strokeWidth: 30,
-                  value: timerProgressSnapshot.hasData
-                      ? timerProgressSnapshot.data
-                      : 0.0,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                      theme.GirafColors.white),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          Widget _returnWidget;
+
+          if (settingsSnapshot.hasData) {
+            if (settingsSnapshot.data.defaultTimer == DefaultTimer.PieChart) {
+              _returnWidget = TimerPiechart(_timerBloc);
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Hourglass) {
+              _returnWidget = TimerHourglass(_timerBloc);
+            } else if (settingsSnapshot.data.defaultTimer ==
+                DefaultTimer.Numeric) {
+              _returnWidget = TimerCountdown(_timerBloc);
+            }
+          } else {
+            _returnWidget = const CircularProgressIndicator();
+          }
+
+          return _returnWidget;
+        });
   }
 
   /// The widget to show, in the case that a timer has not been initiated

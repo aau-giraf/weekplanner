@@ -1,11 +1,13 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
@@ -14,6 +16,7 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart'
 import 'package:weekplanner/widgets/settings_widgets/settings_theme_display_box.dart';
 
 import '../../di.dart';
+import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
 import 'completed_activity_icon_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
@@ -41,6 +44,7 @@ class SettingsScreen extends StatelessWidget {
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
         _buildTimerSection(context),
+        _buildTimeRepresentationSettings(context),
         _buildUserSettings()
       ],
     );
@@ -65,16 +69,15 @@ class SettingsScreen extends StatelessWidget {
                       settingsModel.weekDayColors[1].hexColor)),
               SettingsArrowButton(
                   'Tegn for udførelse',
-                  () =>
-                      Routes.push(context, CompletedActivityIconScreen(_user))
+                  () => Routes.push(context, CompletedActivityIconScreen(_user))
                       .then(
                           (Object object) => _settingsBloc.loadSettings(_user)),
-                  titleTrailing: Text(settingsModel.completeMark == 
-                  CompleteMark.Checkmark ? 'Flueben' : 
-                    settingsModel.completeMark == CompleteMark.MovedRight ? 
-                    'Lav aktiviteten grå' : 
-                    'Fjern aktiviteten')
-                  )
+                  titleTrailing: Text(settingsModel.completeMark ==
+                          CompleteMark.Checkmark
+                      ? 'Flueben'
+                      : settingsModel.completeMark == CompleteMark.MovedRight
+                          ? 'Lav aktiviteten grå'
+                          : 'Fjern aktiviteten'))
             ]);
           } else {
             return const Center(
@@ -110,14 +113,14 @@ class SettingsScreen extends StatelessWidget {
               ),
               SettingsCheckMarkButton.fromBoolean(
                   settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
-                  settingsModel.pictogramText = !settingsModel.pictogramText;
-                  _settingsBloc.updateSettings(
-                      _user.id, settingsModel)
-                      .listen((SettingsModel response) {
-                    if (response != null) {
-                      _settingsBloc.loadSettings(_user);
-                    }
-                  });
+                settingsModel.pictogramText = !settingsModel.pictogramText;
+                _settingsBloc
+                    .updateSettings(_user.id, settingsModel)
+                    .listen((SettingsModel response) {
+                  if (response != null) {
+                    _settingsBloc.loadSettings(_user);
+                  }
+                });
               }),
             ]);
           } else {
@@ -159,5 +162,36 @@ class SettingsScreen extends StatelessWidget {
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
       SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
     ]);
+  }
+
+  Widget _buildTimeRepresentationSettings(BuildContext context) {
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            final DefaultTimer userTimer = settingsSnapshot.data.defaultTimer;
+
+            return SettingsSection('Tidsrepræsentation', <SettingsSectionItem>[
+              SettingsArrowButton(
+                'Indstillinger for tidsrepræsentation',
+                () => Routes.push(context, TimeRepresentationScreen(_user))
+                    .then((Object object) => _settingsBloc.loadSettings(_user)),
+                titleTrailing: Image(
+                    width: 50,
+                    height: 50,
+                    image: AssetImage(userTimer == DefaultTimer.PieChart
+                        ? 'assets/timer/piechart_icon.png'
+                        : userTimer == DefaultTimer.Hourglass
+                            ? 'assets/timer/hourglass_icon.png'
+                            : 'assets/timer/countdowntimer_icon.png')),
+              )
+            ]);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 }

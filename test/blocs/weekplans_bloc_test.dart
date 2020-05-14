@@ -85,13 +85,13 @@ void main() {
       expect(response, equals(weekNameModelList));
     });
 
-    bloc.weekModels.listen((List<WeekModel> response) {
+    bloc.oldWeekModels.listen((List<WeekModel> response) {
       expect(response, isNotNull);
       expect(response, equals(weekModelList));
       done();
     });
 
-    bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
+    bloc.load(mockUser);
   }));
 
   test('Should dispose weekModels stream', async((DoneFn done) {
@@ -225,8 +225,11 @@ void main() {
   }));
 
   test('Check if the week models are sorted by date', async((DoneFn done) {
-    final List<WeekModel> correctList = <WeekModel>[
-      weekModel5, weekModel4, weekModel1, weekModel3, weekModel2
+    final List<WeekModel> correctListOld = <WeekModel>[
+      weekModel1, weekModel4, weekModel5
+    ];
+    final List<WeekModel> correctListUpcoming = <WeekModel>[
+      weekModel3, weekModel2
     ];
 
     weekNameModelList.add(weekNameModel2);
@@ -241,8 +244,11 @@ void main() {
 
     bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
 
+    bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
+      expect(correctListOld, oldWeekModels);
+    });
     bloc.weekModels.listen((List<WeekModel>weekModels) {
-      expect(correctList, weekModels);
+      expect(correctListUpcoming, weekModels);
     });
     done();
   }));
@@ -258,4 +264,49 @@ void main() {
     expect(bloc.getMarkedWeekModels(), correctMarked);
     done();
   }));
+
+  test('Check if a week is done', async((DoneFn done) {
+    expect(bloc.isWeekDone(weekNameModel1), true);
+    expect(bloc.isWeekDone(weekNameModel2), false);
+    expect(bloc.isWeekDone(weekNameModel3), false);
+    expect(bloc.isWeekDone(weekNameModel4), true);
+    expect(bloc.isWeekDone(weekNameModel5), true);
+    done();
+  }));
+
+  test('Weekplans should be split into old and upcoming', async((DoneFn done){
+    weekNameModelList.add(weekNameModel2);
+    weekNameModelList.add(weekNameModel3);
+    weekNameModelList.add(weekNameModel4);
+    weekNameModelList.add(weekNameModel5);
+
+    weekModelList.add(weekModel2);
+    weekModelList.add(weekModel3);
+    weekModelList.add(weekModel4);
+    weekModelList.add(weekModel5);
+
+    bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
+
+    bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
+      expect(oldWeekModels.contains(weekModel1), true);
+      expect(oldWeekModels.contains(weekModel2), false);
+      expect(oldWeekModels.contains(weekModel3), false);
+      expect(oldWeekModels.contains(weekModel4), true);
+      expect(oldWeekModels.contains(weekModel5), true);
+    });
+
+    bloc.weekModels.listen((List<WeekModel>weekModels) {
+      expect(weekModels.contains(weekModel1), false);
+      expect(weekModels.contains(weekModel2), true);
+      expect(weekModels.contains(weekModel3), true);
+      expect(weekModels.contains(weekModel4), false);
+      expect(weekModels.contains(weekModel5), false);
+    });
+
+    done();
+
+
+
+  }));
+
 }
