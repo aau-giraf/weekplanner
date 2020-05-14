@@ -131,7 +131,7 @@ class WeekplanBloc extends BlocBase {
               id: activity.id,
               pictograms: activity.pictograms,
               order: _getMaxOrder(week.days[dayOfWeek].activities),
-              isChoiceBoard: false,
+              isChoiceBoard: activity.isChoiceBoard,
               state: ActivityState.Normal);
 
           // Add the copy to the specified day

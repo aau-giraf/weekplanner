@@ -295,7 +295,7 @@ class ShowActivityScreen extends StatelessWidget {
                                 height: MediaQuery.of(context).size.width,
                                 child: _activity.isChoiceBoard
                                     ? ChoiceBoard(
-                                        _activity.pictograms, _girafUser)
+                                        _activity, _activityBloc)
                                     : buildLoadPictogramImage(),
                               ),
                               _buildActivityStateIcon(
