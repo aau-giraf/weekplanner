@@ -46,7 +46,7 @@ class ChoiceBoardPart extends StatelessWidget {
                 top: 5,
                 right: 5,
                 child:
-                    DeletePictogramFromChoiceboardButton(_pictogramModel, () {
+                    DeletePictogramFromChoiceboardButton(() {
                   _bloc.load(_activity, _user);
                   _activity.pictograms.remove(_pictogramModel);
                   if (_activity.pictograms.length == 1) {

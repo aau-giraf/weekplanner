@@ -1,6 +1,4 @@
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:weekplanner/blocs/activity_bloc.dart';
 
 import '../giraf_button_widget.dart';
 
@@ -8,10 +6,8 @@ import '../giraf_button_widget.dart';
 /// with [pictogramId] when pressed
 class DeletePictogramFromChoiceboardButton extends StatelessWidget {
   /// Constructor
-  const DeletePictogramFromChoiceboardButton(
-      this._pictogramModel, this._callback);
+  const DeletePictogramFromChoiceboardButton(this._callback);
 
-  final PictogramModel _pictogramModel;
   final VoidCallback _callback;
 
   @override
