@@ -2,9 +2,7 @@ import 'package:api_client/api_client.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/enums/cancel_mark_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
-import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
@@ -508,6 +506,8 @@ void main() {
 
   testWidgets('When showing one day, one weekday row is created',
       (WidgetTester tester) async {
+    mockSettings.nrOfDaysToDisplay = 1;
+
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
 
@@ -658,37 +658,144 @@ void main() {
     expect(find.byType(PictogramSearch), findsOneWidget);
   });
 
-  testWidgets('Finished activities displayed correctly',
+  testWidgets('Completed activities displayed correctly in Guardian Mode',
       (WidgetTester tester) async {
-    mockSettings.completeMark = CompleteMark.Checkmark;
-    mockSettings.cancelMark = CancelMark.Cross;
-    mockSettings.pictogramText = true;
-    mockSettings.defaultTimer = DefaultTimer.PieChart;
-
     mockActivities[0].state = ActivityState.Completed;
-    mockActivities[1].state = ActivityState.Canceled;
 
     // Added the activity that is completed with checkmark
     mockWeek.days[0].activities.add(mockActivities[0]);
-    // Cancelled activity with a cross
-    mockWeek.days[1].activities.add(mockActivities[1]);
-    // Activity with a timer
-    mockWeek.days[2].activities.add(mockActivities[2]);
 
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
     // Find checkmark icon by key
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-    // Find cross icon by key
+  });
+
+
+  testWidgets('Cancelled activities displayed correctly in Guardian Mode',
+          (WidgetTester tester) async {
+    mockActivities[0].state = ActivityState.Canceled;
+
+    // Added Cancelled activity with a cross
+    mockWeek.days[0].activities.add(mockActivities[0]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Find cross (cancelled) icon by key
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+  });
+
+  testWidgets('Timer icon displayed correctly in Guardian Mode',
+          (WidgetTester tester) async {
+    // Activity with a timer
+    mockWeek.days[0].activities.add(mockActivities[2]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
 
     // Find timer icon
     expect(
         find.byWidgetPredicate((Widget widget) =>
-            widget is Image &&
+        widget is Image &&
             widget.image == const AssetImage('assets/timer/piechart_icon.png')),
         findsOneWidget);
+  });
+
+
+  testWidgets('Check mark completed activty mode works in Citizen Mode',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Checkmark;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Find checkmark icon by key
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
+
+  testWidgets('Greyed out completed activty mode works in Citizen Mode',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.MovedRight;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Find greyed out box by key
+    expect(find.byWidgetPredicate((Widget widget) =>
+        widget is Container &&
+        widget.key == const Key('GreyOutBox')),
+    findsOneWidget);
+  });
+
+  testWidgets('Remove completed activty mode works in Citizen Mode',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Removed;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Check that the opacity of the activity card is set to zero.
+    expect(find.byWidgetPredicate((Widget widget) =>
+        widget is Opacity &&
+        widget.opacity == 0.0),
+    findsOneWidget);
+  });
+
+  testWidgets('Not completede activites are not hidden',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Removed;
+    mockActivities[0].state = ActivityState.Normal;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Check that the opacity of the activity card is set to zero.
+    expect(find.byWidgetPredicate((Widget widget) =>
+    widget is Opacity &&
+        widget.opacity == 1.0),
+        findsOneWidget);
+  });
+
+  testWidgets('Check mark completed activty mode works in Citizen Mode',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.completeMark = CompleteMark.Checkmark;
+    mockActivities[0].state = ActivityState.Completed;
+    // Added the activity that is completed with checkmark
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Find checkmark icon by key
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
+
+  testWidgets('Cancelled activities displayed correctly in Citizen Mode',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockActivities[0].state = ActivityState.Canceled;
+
+    // Added Cancelled activity with a cross
+    mockWeek.days[0].activities.add(mockActivities[0]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    // Find cross (cancelled) icon by key
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
   });
 
   testWidgets('Weekday colors are used when in citizen mode',

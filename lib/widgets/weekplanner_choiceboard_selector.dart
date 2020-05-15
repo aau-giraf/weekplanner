@@ -3,20 +3,14 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/models/activity_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
-import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
-import '../style/custom_color.dart' as theme;
-import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import '../style/custom_color.dart' as theme;
 
 import 'giraf_confirm_dialog.dart';
 
@@ -98,29 +92,29 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   /// This is a function
   Widget displayPictograms(BuildContext context) {
-    List<Widget> pictograms = <Widget>[];
+    final List<Widget> pictograms = <Widget>[];
     for (int i = 0; i < _activity.pictograms.length; i++) {
       pictograms.add(_getPictogram(_activity.pictograms[i]));
     }
 
-    List<Widget> temp = [];
+    final List<Widget> pictogramImages = <Widget>[];
 
     for (int i = 0; i < pictograms.length; i++) {
-      temp.add(displayPictogram(context, pictograms, i));
+      pictogramImages.add(_displayPictogram(context, pictograms, i));
     }
 
     return Container(
       child: Row(
-        children: temp,
+        children: pictogramImages,
       ),
     );
   }
-
-  Widget displayPictogram(
+  
+  Widget _displayPictogram(
       BuildContext context, List<Widget> pictograms, int index) {
     return GestureDetector(
         onTap: () {
-          selectedPictogramFromChoiceBoard(context, pictograms, index)
+          _selectedPictogramFromChoiceBoard(context, pictograms, index)
               .then((_) {
             Routes.pop(context);
           });
@@ -137,7 +131,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
         ));
   }
 
-  Future<Center> selectedPictogramFromChoiceBoard(
+  Future<Center> _selectedPictogramFromChoiceBoard(
       BuildContext context, List<Widget> pictograms, int index) {
     return showDialog<Center>(
         barrierDismissible: false,
@@ -152,13 +146,13 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
               confirmOnPressed: () {
                 _activity.isChoiceBoard = false;
-                List<PictogramModel> _pictogramModels = <PictogramModel>[
+                final List<PictogramModel> _pictogramModels = <PictogramModel>[
                   _activity.pictograms[index]
                 ];
                 _activity.pictograms = _pictogramModels;
 
                 _bloc.update();
-                _bloc.activityModelStream.skip(1).take(1).listen((_){
+                _bloc.activityModelStream.skip(1).take(1).listen((_) {
                   _weekplanBloc.loadWeek(_week, _user);
                   Routes.pop(context);
                 });

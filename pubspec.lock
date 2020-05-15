@@ -4,8 +4,8 @@ packages:
   api_client:
     dependency: "direct main"
     description:
-      path: "/Users/tobiasdybdahl/AndroidStudioProjects/api_client"
-      relative: false
+      path: "../api_client"
+      relative: true
     source: path
     version: "0.0.1"
   archive:
