@@ -234,9 +234,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   final PictogramModel newPictogram = object;
                                   _activity.isChoiceBoard = true;
                                   _activity.pictograms.add(newPictogram);
-                                  print('Updating');
                                   _activityBloc.update();
-                                  print('Updated');
                                 }
                               });
                             },

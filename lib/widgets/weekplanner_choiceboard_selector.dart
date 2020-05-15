@@ -1,5 +1,6 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -23,14 +24,15 @@ import 'giraf_confirm_dialog.dart';
 class WeekplannerChoiceboardSelector extends StatelessWidget {
   ///Constructor
   WeekplannerChoiceboardSelector(
-    this._activity,
-    this._bloc,
-    this._user,
-  ) {
+      this._activity, this._bloc, this._user, this._weekplanBloc, this._week) {
     _bloc.load(_activity, _user);
   }
 
   final ActivityModel _activity;
+
+  final WeekplanBloc _weekplanBloc;
+
+  final WeekModel _week;
 
   final DisplayNameModel _user;
 
@@ -38,40 +40,42 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: AlertDialog(
-        contentPadding: const EdgeInsets.all(0.0),
-        titlePadding: const EdgeInsets.all(0.0),
-        shape: Border.all(
-            color: theme.GirafColors.transparentDarkGrey, width: 5.0),
-        title: const Center(
-            child: GirafTitleHeader(
-          title: 'Vælg aktivitet',
-        )),
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-                padding: const EdgeInsets.all(10.0),
-                child: displayPictograms(context)),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
-                      child: GirafButton(
-                        key: const Key('ChoiceBoardDialogCancelButton'),
-                        onPressed: () => Routes.pop(context),
-                        icon: const ImageIcon(
-                            AssetImage('assets/icons/cancel.png')),
-                      )),
-                ),
-              ],
-            ),
-          ],
+    return Center(
+      child: SingleChildScrollView(
+        child: AlertDialog(
+          contentPadding: const EdgeInsets.all(0.0),
+          titlePadding: const EdgeInsets.all(0.0),
+          shape: Border.all(
+              color: theme.GirafColors.transparentDarkGrey, width: 5.0),
+          title: const Center(
+              child: GirafTitleHeader(
+            title: 'Vælg aktivitet',
+          )),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: displayPictograms(context)),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
+                        child: GirafButton(
+                          key: const Key('ChoiceBoardDialogCancelButton'),
+                          onPressed: () => Routes.pop(context),
+                          icon: const ImageIcon(
+                              AssetImage('assets/icons/cancel.png')),
+                        )),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -117,7 +121,9 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
     return GestureDetector(
         onTap: () {
           selectedPictogramFromChoiceBoard(context, pictograms, index)
-              .then((_) => Routes.pop(context));
+              .then((_) {
+            Routes.pop(context);
+          });
         },
         child: Container(
           constraints: BoxConstraints(
@@ -150,11 +156,15 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                   _activity.pictograms[index]
                 ];
                 _activity.pictograms = _pictogramModels;
+
                 _bloc.update();
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  _weekplanBloc.loadWeek(_week, _user);
+                  Routes.pop(context);
+                });
                 // Closes the dialog box
-                Routes.pop(context);
               },
-              cancelOnPressed:() {});
+              cancelOnPressed: () {});
         });
 
     build(context);

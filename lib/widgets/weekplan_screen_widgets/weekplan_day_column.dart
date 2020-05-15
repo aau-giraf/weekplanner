@@ -435,7 +435,7 @@ class WeekplanDayColumn extends StatelessWidget {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return WeekplannerChoiceboardSelector(
-                activities[index], _activityBloc, user);
+                activities[index], _activityBloc, user, weekplanBloc, week);
           }).then((Object object) => weekplanBloc.loadWeek(week, user));
     } else if (!(activities[index].state == ActivityState.Completed &&
         isCitizen)) {
