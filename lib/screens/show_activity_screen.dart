@@ -204,7 +204,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   context, snapshot.data.state),
                             ],
                           ),
-                          PictogramText(_activity.pictogram, _girafUser,
+                          PictogramText(_activity, _girafUser,
                               minFontSize: 50),
                         ],
                       );

@@ -441,9 +441,9 @@ class WeekplanDayColumn extends StatelessWidget {
               border: Border.all(
                   color: Colors.black,
                   width: MediaQuery.of(context).size.width * 0.1)),
-          child: ActivityCard(activities[index], weekday, user));
+          child: ActivityCard(activities[index], user));
     } else {
-      return ActivityCard(activities[index], weekday, user);
+      return ActivityCard(activities[index], user);
     }
   }
 

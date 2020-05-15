@@ -39,7 +39,6 @@ class MockData {
         role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
     mockApi = Api('any');
-
     mockApi.week = MockWeekApi(mockWeek);
     mockApi.user = MockUserApi(mockSettings);
     mockApi.activity = MockActivityApi(mockActivities);
@@ -86,7 +85,7 @@ class MockData {
         timerSeconds: 1,
         activitiesCount: 1,
         theme: GirafTheme.GirafYellow,
-        nrOfDaysToDisplay: 1,
+        nrOfDaysToDisplay: 7,
         weekDayColors: _createWeekDayColors(),
         lockTimerControl: false,
         pictogramText: false);
