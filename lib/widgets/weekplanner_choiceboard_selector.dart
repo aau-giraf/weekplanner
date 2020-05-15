@@ -158,24 +158,14 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                 _activity.pictograms = _pictogramModels;
 
                 _bloc.update();
-                Future.delayed(const Duration(milliseconds: 500), () {
+                _bloc.activityModelStream.skip(1).take(1).listen((_){
                   _weekplanBloc.loadWeek(_week, _user);
                   Routes.pop(context);
                 });
+
                 // Closes the dialog box
               },
               cancelOnPressed: () {});
         });
-
-    build(context);
-
-    //print(index);
-
-    //List<Widget> selectedPictogram = [pictograms[index]];
-
-    ///TODO: Når backendvirker implementer dette
-    ///_activity.pictogram = selectedPictogram;
-
-    Routes.pop(context);
   }
 }
