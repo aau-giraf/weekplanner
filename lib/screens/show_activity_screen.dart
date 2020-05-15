@@ -2,6 +2,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,7 @@ class ShowActivityScreen extends StatelessWidget {
   List<Widget> buildScreen(BuildContext context, WeekplanMode mode) {
     final List<Widget> list = <Widget>[];
     list.add(Expanded(
-      flex: 6,
+      flex: 2,
       child: Center(
         child: AspectRatio(
           aspectRatio: 1,
@@ -121,34 +122,57 @@ class ShowActivityScreen extends StatelessWidget {
           }),
     );
 
-    if (mode == WeekplanMode.guardian) {
-      buttons.add(_buildChoiceBoardButton(context));
-    }
+    buttons.add(StreamBuilder<ActivityModel>(
+        stream: _activityBloc.activityModelStream,
+        builder: (BuildContext context,
+            AsyncSnapshot<ActivityModel> activitySnapshot) {
+          return StreamBuilder<WeekplanMode>(
+              stream: _authBloc.mode,
+              builder: (BuildContext context,
+                  AsyncSnapshot<WeekplanMode> authSnapshot) {
+                if (authSnapshot.hasData &&
+                    activitySnapshot.hasData &&
+                    authSnapshot.data != WeekplanMode.citizen &&
+                    activitySnapshot.data.state != ActivityState.Canceled) {
+                  return _buildChoiceBoardButton(context);
+                } else {
+                  return _buildEmptyContainer();
+                }
+              });
+        }));
 
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-    /* if (buttons.length == 1) {
-      list.add(buttons.elementAt(0));
-    } else */
-    {
+
       if (orientation == Orientation.landscape) {
-        list.add(Column(
-          children: buttons,
+        list.add(Expanded(
+          child: Column(
+            children: buttons,
+          ),
         ));
       } else if (orientation == Orientation.portrait) {
         list.add(
-          Row(
-            children: buttons,
+          Expanded(
+            child: Row(
+              children: buttons,
+            ),
           ),
         );
       }
-    }
+
     return list;
   }
 
   Container _resetTimerAndBuildEmptyContainer() {
     _timerBloc.stopTimer();
     return Container(width: 0, height: 0);
+  }
+
+  Container _buildEmptyContainer() {
+    return Container(
+      width: 0,
+      height: 0,
+    );
   }
 
   /// Builds the timer widget.
