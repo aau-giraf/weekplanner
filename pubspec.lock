@@ -4,9 +4,11 @@ packages:
   api_client:
     dependency: "direct main"
     description:
-      path: "../api_client"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "890f5f849ad9fb340b1fba22ab926a69adbdfb96"
+      url: "https://github.com/aau-giraf/api_client.git"
+    source: git
     version: "0.0.1"
   archive:
     dependency: transitive
