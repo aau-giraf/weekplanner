@@ -35,31 +35,24 @@ class ActivityCard extends StatelessWidget {
         stream: _authBloc.mode,
         builder: (BuildContext context,
             AsyncSnapshot<WeekplanMode> weekModeSnapshot) {
-          if (weekModeSnapshot.hasData) {
-            final WeekplanMode weekMode = weekModeSnapshot.data;
-            return StreamBuilder<SettingsModel>(
-                stream: _settingsBloc.settings,
-                builder: (BuildContext context,
-                    AsyncSnapshot<SettingsModel> settingsSnapshot) {
-                    if(settingsSnapshot.hasData) {
-                        final SettingsModel settings = settingsSnapshot.data;
-                        return _buildActivityCard(context, weekMode, settings);
-                    } else {
-                        return const Center(child: CircularProgressIndicator());
-                    }
-            });
-          } else {
-               return const Center(child: CircularProgressIndicator());
-          }
+          return StreamBuilder<SettingsModel>(
+              stream: _settingsBloc.settings,
+              builder: (BuildContext context,
+                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                return _buildActivityCard(context, weekModeSnapshot,
+                    settingsSnapshot);
+              });
     });
   }
 
-  Widget _buildActivityCard(BuildContext context, WeekplanMode weekMode,
-      SettingsModel settings){
+  Widget _buildActivityCard(BuildContext context,
+      AsyncSnapshot<WeekplanMode> weekModeSnapShot,
+      AsyncSnapshot<SettingsModel> settingsSnapShot){
     final ActivityState _activityState = _activity.state;
 
     return Opacity(
-      opacity: _shouldActivityBeVisible(weekMode, settings) ? 1.0 : 0,
+      opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
+          ? 1.0 : 0,
       child: Container(
           color: theme.GirafColors.white,
           margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
@@ -76,8 +69,8 @@ class ActivityCard extends StatelessWidget {
                         child: _getPictogram(_activity),
                       ),
                     ),
-                    _buildActivityStateIcon(context, _activityState, weekMode,
-                        settings),
+                    _buildActivityStateIcon(context, _activityState,
+                        weekModeSnapShot, settingsSnapShot),
                     _buildTimerIcon(context, _activity),
                   ],
                 ),
@@ -88,12 +81,17 @@ class ActivityCard extends StatelessWidget {
     );
   }
 
-  bool _shouldActivityBeVisible(WeekplanMode weekMode, SettingsModel settings) {
-    if(settings != null || weekMode != null) {
-      if (weekMode == WeekplanMode.citizen &&
-          settings.completeMark == CompleteMark.Removed &&
-          _activity.state == ActivityState.Completed) {
-        return false;
+  bool _shouldActivityBeVisible(AsyncSnapshot<WeekplanMode> weekModeSnapShot,
+      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+    if(weekModeSnapShot.hasData && settingsSnapShot.hasData) {
+      final WeekplanMode weekMode = weekModeSnapShot.data;
+      final SettingsModel settings = settingsSnapShot.data;
+      if(settings != null || weekMode != null) {
+        if (weekMode == WeekplanMode.citizen &&
+            settings.completeMark == CompleteMark.Removed &&
+            _activity.state == ActivityState.Completed) {
+          return false;
+        }
       }
     }
     return true;
@@ -116,59 +114,69 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _buildActivityStateIcon(
-      BuildContext context, ActivityState state, WeekplanMode role,
-      SettingsModel settings) {
-    switch (state) {
-      case ActivityState.Completed:
-        if (role == WeekplanMode.guardian) {
-          return Icon(
-            Icons.check,
-            key: const Key('IconComplete'),
-            color: theme.GirafColors.green,
-            size: MediaQuery.of(context).size.width,
-          );
-        }
-        else if (role == WeekplanMode.citizen) {
-          if (settings.completeMark == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          else if (settings.completeMark == CompleteMark.Checkmark) {
+      BuildContext context, ActivityState state,
+      AsyncSnapshot<WeekplanMode> weekModeSnapShot,
+      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+
+
+    if(weekModeSnapShot.hasData && settingsSnapShot.hasData) {
+      final WeekplanMode role = weekModeSnapShot.data;
+      final SettingsModel settings = settingsSnapShot.data;
+
+      switch (state) {
+        case ActivityState.Completed:
+          if (role == WeekplanMode.guardian) {
             return Icon(
               Icons.check,
               key: const Key('IconComplete'),
               color: theme.GirafColors.green,
-              size: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              size: MediaQuery.of(context).size.width,
             );
           }
-          else if (settings.completeMark == CompleteMark.MovedRight) {
-            return  Container(
-                key: const Key('GreyOutBox'),
-                color:  theme.GirafColors.transparentGrey,
-                height: MediaQuery.of(context).size.width,
-                width: MediaQuery.of(context).size.width
-            );
+          else if (role == WeekplanMode.citizen) {
+            if (settings.completeMark == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            else if (settings.completeMark == CompleteMark.Checkmark) {
+              return Icon(
+                Icons.check,
+                key: const Key('IconComplete'),
+                color: theme.GirafColors.green,
+                size: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+              );
+            }
+            else if (settings.completeMark == CompleteMark.MovedRight) {
+              return  Container(
+                  key: const Key('GreyOutBox'),
+                  color:  theme.GirafColors.transparentGrey,
+                  height: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width
+              );
+            }
+            else if (settings.completeMark == CompleteMark.Removed) {
+              //This case should be handled by _shouldActivityBeVisible
+              return Container(width: 0, height: 0,);
+            }
           }
-          else if (settings.completeMark == CompleteMark.Removed) {
-            //This case should be handled by _shouldActivityBeVisible
-            return Container(width: 0, height: 0,);
-          }
-        }
-        return const Center(child: CircularProgressIndicator());
-      case ActivityState.Canceled:
-        return Icon(
-          Icons.clear,
-          key: const Key('IconCanceled'),
-          color: theme.GirafColors.red,
-          size: MediaQuery.of(context).size.width,
-        );
-      default:
-        return Container();
+          return const Center(child: CircularProgressIndicator());
+        case ActivityState.Canceled:
+          return Icon(
+            Icons.clear,
+            key: const Key('IconCanceled'),
+            color: theme.GirafColors.red,
+            size: MediaQuery.of(context).size.width,
+          );
+        default:
+          return Container(width: 0, height: 0,);
+      }
     }
+    //If no settings/role have been loaded then we just make an empty overlay
+    return Container(width: 0, height: 0,);
   }
 
 
@@ -181,32 +189,7 @@ class ActivityCard extends StatelessWidget {
         builder:
             (BuildContext streamContext, AsyncSnapshot<bool> timerSnapshot) {
           if (timerSnapshot.hasData && timerSnapshot.data) {
-            // Activities that are not overlayed.
-            if (activity.state != ActivityState.Completed) {
-              return _buildTimerAssetIcon();
-            }
-            // Activities that are overlayed.
-            return StreamBuilder<WeekplanMode>(
-                stream: _authBloc.mode,
-                builder: (BuildContext roleContext,
-                    AsyncSnapshot<WeekplanMode> role) {
-                  if (role.data == WeekplanMode.guardian) {
-                    return _buildTimerAssetIcon();
-                  } else {
-                    return StreamBuilder<SettingsModel>(
-                        stream: _settingsBloc.settings,
-                        builder: (BuildContext settingsContext,
-                            AsyncSnapshot<SettingsModel> settings) {
-                          if (!settings.hasData ||
-                              settings.data.completeMark !=
-                                  CompleteMark.Removed) {
-                            return _buildTimerAssetIcon();
-                          }
-
-                          return Container();
-                        });
-                  }
-                });
+            return _buildTimerAssetIcon();
           }
           return Container();
         });
