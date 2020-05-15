@@ -12,14 +12,17 @@ import 'delete_pictogram_from_choice_board_button.dart';
 /// Class that defines a pictogram and a button to delete it
 class ChoiceBoardPart extends StatelessWidget {
   /// Constructor for ChoiceBoard-part widget.
-  ChoiceBoardPart(this._pictogramModel, this._bloc, this._activity) {
+  ChoiceBoardPart(
+      this._pictogramModel, this._bloc, this._activity, this._user) {
     _pictogramImageBloc.load(_pictogramModel);
   }
 
   final PictogramImageBloc _pictogramImageBloc =
-  di.getDependency<PictogramImageBloc>();
+      di.getDependency<PictogramImageBloc>();
 
   final PictogramModel _pictogramModel;
+
+  final DisplayNameModel _user;
 
   final ActivityModel _activity;
 
@@ -42,8 +45,9 @@ class ChoiceBoardPart extends StatelessWidget {
               Positioned(
                 top: 5,
                 right: 5,
-                child: DeletePictogramFromChoiceboardButton(
-                    _pictogramModel, () {
+                child:
+                    DeletePictogramFromChoiceboardButton(_pictogramModel, () {
+                  _bloc.load(_activity, _user);
                   _activity.pictograms.remove(_pictogramModel);
                   if (_activity.pictograms.length == 1) {
                     _activity.isChoiceBoard = false;

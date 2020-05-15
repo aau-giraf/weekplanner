@@ -17,6 +17,8 @@ import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 
+import 'giraf_confirm_dialog.dart';
+
 ///This is a class
 class WeekplannerChoiceboardSelector extends StatelessWidget {
   ///Constructor
@@ -27,7 +29,6 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   ) {
     _bloc.load(_activity, _user);
   }
-
 
   final ActivityModel _activity;
 
@@ -115,7 +116,8 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
       BuildContext context, List<Widget> pictograms, int index) {
     return GestureDetector(
         onTap: () {
-          selectedPictogramFromChoiceBoard(context, pictograms, index);
+          selectedPictogramFromChoiceBoard(context, pictograms, index)
+              .then((_) => Routes.pop(context));
         },
         child: Container(
           constraints: BoxConstraints(
@@ -129,14 +131,33 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
         ));
   }
 
-  Widget selectedPictogramFromChoiceBoard(
+  Future<Center> selectedPictogramFromChoiceBoard(
       BuildContext context, List<Widget> pictograms, int index) {
-    _activity.isChoiceBoard = false;
-    List<PictogramModel> _pictogramModels = <PictogramModel>[
-      _activity.pictograms[index]
-    ];
-    _activity.pictograms = _pictogramModels;
-    _bloc.update();
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+              title: 'Vælg aktivitet',
+              description: 'Vil du vælge aktiviteten ' +
+                  _activity.pictograms[index].title,
+              confirmButtonText: 'Ja',
+              confirmButtonIcon:
+                  const ImageIcon(AssetImage('assets/icons/accept.png')),
+              confirmOnPressed: () {
+                _activity.isChoiceBoard = false;
+                List<PictogramModel> _pictogramModels = <PictogramModel>[
+                  _activity.pictograms[index]
+                ];
+                _activity.pictograms = _pictogramModels;
+                _bloc.update();
+                // Closes the dialog box
+                Routes.pop(context);
+              },
+              cancelOnPressed:() {});
+        });
+
+    build(context);
 
     //print(index);
 

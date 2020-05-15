@@ -177,15 +177,17 @@ class ShowActivityScreen extends StatelessWidget {
                                 builder: (BuildContext context,
                                     AsyncSnapshot<ActivityModel>
                                         activitySnapshot) {
-                                  if(activitySnapshot.data.isChoiceBoard){
-                                    return  Text('Tilføj aktivitet',
-                                    style: titleTextStyle,
-                                    textAlign: TextAlign.center);
-                                  } else{
-                                  return Text('Tilføj Choiceboard',
-                                      style: titleTextStyle,
-                                      textAlign: TextAlign.center);
-                                }}),
+                                  if (activitySnapshot.hasData &&
+                                      activitySnapshot.data.isChoiceBoard) {
+                                    return Text('Tilføj aktivitet',
+                                        style: titleTextStyle,
+                                        textAlign: TextAlign.center);
+                                  } else {
+                                    return Text('Tilføj Choiceboard',
+                                        style: titleTextStyle,
+                                        textAlign: TextAlign.center);
+                                  }
+                                }),
                           )),
                       Expanded(
                         child: AspectRatio(
@@ -204,6 +206,7 @@ class ShowActivityScreen extends StatelessWidget {
                               await Routes.push(context, PictogramSearch())
                                   .then((Object object) {
                                 if (object is PictogramModel) {
+                                  _activityBloc.load(_activity, _girafUser);
                                   final PictogramModel newPictogram = object;
                                   _activity.isChoiceBoard = true;
                                   _activity.pictograms.add(newPictogram);
@@ -311,7 +314,8 @@ class ShowActivityScreen extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.width,
                                 child: _activity.isChoiceBoard
-                                    ? ChoiceBoard(_activity, _activityBloc)
+                                    ? ChoiceBoard(
+                                        _activity, _activityBloc, _girafUser)
                                     : buildLoadPictogramImage(),
                               ),
                               _buildActivityStateIcon(

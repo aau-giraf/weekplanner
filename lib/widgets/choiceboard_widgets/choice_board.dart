@@ -9,9 +9,11 @@ import 'choice_board_part.dart';
 /// class that defines a ChoiceBoard
 class ChoiceBoard extends StatelessWidget {
   /// Constructor for ChoiceBoard widget
-  const ChoiceBoard(this._activity, this._bloc);
+  const ChoiceBoard(this._activity, this._bloc, this._user);
 
   final ActivityModel _activity;
+
+  final DisplayNameModel _user;
 
   final ActivityBloc _bloc;
 
@@ -20,11 +22,11 @@ class ChoiceBoard extends StatelessWidget {
     final List<ChoiceBoardPart> _parts = <ChoiceBoardPart>[];
 
     for (int i = 0; i < _activity.pictograms.length; i++) {
-      _parts.add(ChoiceBoardPart(_activity.pictograms[i], _bloc, _activity));
+      _parts.add(
+          ChoiceBoardPart(_activity.pictograms[i], _bloc, _activity, _user));
     }
 
     return GridView.count(
-        physics: const NeverScrollableScrollPhysics(), // disables scrolling
         crossAxisCount: 2,
         children: List<Widget>.generate(
           _parts.length,
