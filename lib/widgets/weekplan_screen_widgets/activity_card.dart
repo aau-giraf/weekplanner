@@ -51,35 +51,55 @@ class ActivityCard extends StatelessWidget {
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
     final ActivityState _activityState = _activity.state;
     if (!_activity.isChoiceBoard) {
-      return Container(
-          color: theme.GirafColors.white,
-          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          child: FittedBox(
-            child: Column(
-              children: <Widget>[
-                Stack(
-                  alignment: AlignmentDirectional.topEnd,
-                  children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      child: FittedBox(
-                        child: _getPictogram(_activity.pictograms.first),
+      return Opacity(
+        opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
+        ? 1.0 : 0,
+        child: Container(
+            color: theme.GirafColors.white,
+            margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+            child: FittedBox(
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    alignment: AlignmentDirectional.topEnd,
+                    children: <Widget>[
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width,
+                        child: FittedBox(
+                          child: _getPictogram(_activity.pictograms.first),
+                        ),
                       ),
-                    ),
-                    _buildActivityStateIcon(context, _activityState,
-                        weekModeSnapShot, settingsSnapShot),
-                    _buildTimerIcon(context, _activity),
-                  ],
-                ),
-                PictogramText(_activity, _user),
-              ],
-            ),
-          ));
+                      _buildActivityStateIcon(context, _activityState,
+                          weekModeSnapShot, settingsSnapShot),
+                      _buildTimerIcon(context, _activity),
+                    ],
+                  ),
+                  PictogramText(_activity, _user),
+                ],
+              ),
+            )),
+      );
     } else {
       return buildChoiceboardAcivityCard(
           context, weekModeSnapShot, settingsSnapShot);
     }
+  }
+
+  bool _shouldActivityBeVisible(AsyncSnapshot<WeekplanMode> weekModeSnapShot,
+      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+    if(weekModeSnapShot.hasData && settingsSnapShot.hasData) {
+      final WeekplanMode weekMode = weekModeSnapShot.data;
+      final SettingsModel settings = settingsSnapShot.data;
+      if(settings != null || weekMode != null) {
+        if (weekMode == WeekplanMode.citizen &&
+            settings.completeMark == CompleteMark.Removed &&
+            _activity.state == ActivityState.Completed) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   ///This function builds the activity card
