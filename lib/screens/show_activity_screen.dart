@@ -142,22 +142,21 @@ class ShowActivityScreen extends StatelessWidget {
 
     final Orientation orientation = MediaQuery.of(context).orientation;
 
-
-      if (orientation == Orientation.landscape) {
-        list.add(Expanded(
-          child: Column(
+    if (orientation == Orientation.landscape) {
+      list.add(Expanded(
+        child: Column(
+          children: buttons,
+        ),
+      ));
+    } else if (orientation == Orientation.portrait) {
+      list.add(
+        Expanded(
+          child: Row(
             children: buttons,
           ),
-        ));
-      } else if (orientation == Orientation.portrait) {
-        list.add(
-          Expanded(
-            child: Row(
-              children: buttons,
-            ),
-          ),
-        );
-      }
+        ),
+      );
+    }
 
     return list;
   }
@@ -174,7 +173,7 @@ class ShowActivityScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the timer widget.
+  /// Builds the AddChoiceBoardButton widget.
   StreamBuilder<WeekplanMode> _buildChoiceBoardButton(BuildContext context) {
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
@@ -188,7 +187,7 @@ class ShowActivityScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Card(
-                    key: const Key('OverallChoiceboardKey'),
+                    key: const Key('AddChoiceBoardButtonKey'),
                     child: Column(children: <Widget>[
                       // The title of the timer widget
                       Center(
@@ -202,11 +201,11 @@ class ShowActivityScreen extends StatelessWidget {
                                         activitySnapshot) {
                                   if (activitySnapshot.hasData &&
                                       activitySnapshot.data.isChoiceBoard) {
-                                    return Text('Tilføj aktivitet',
+                                    return Text('Tilføj Aktivitet',
                                         style: titleTextStyle,
                                         textAlign: TextAlign.center);
                                   } else {
-                                    return Text('Tilføj Choiceboard',
+                                    return Text('Tilføj ChoiceBoard',
                                         style: titleTextStyle,
                                         textAlign: TextAlign.center);
                                   }

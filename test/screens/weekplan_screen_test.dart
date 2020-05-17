@@ -4,6 +4,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
@@ -40,6 +41,7 @@ void main() {
   WeekModel mockWeek;
   SettingsModel mockSettings;
   List<ActivityModel> mockActivities;
+  List<PictogramModel> mockPictograms;
   DisplayNameModel user;
   WeekplanBloc weekplanBloc;
   AuthBloc authBloc;
@@ -50,6 +52,7 @@ void main() {
     mockWeek = mockData.mockWeek;
     mockSettings = mockData.mockSettings;
     mockActivities = mockData.mockActivities;
+    mockPictograms = mockData.mockPictograms;
     user = mockData.mockUser;
 
     final Api api = mockData.mockApi;
@@ -74,6 +77,37 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
     expect(find.byType(WeekplanScreen), findsOneWidget);
+  });
+
+  testWidgets('ChoiceBoard shows in weekplan', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockActivities[0].state = ActivityState.Normal;
+    mockActivities[0].isChoiceBoard = true;
+    mockActivities[0].pictograms = mockPictograms;
+    mockWeek.days[0].activities.add(mockActivities[0]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('WeekPlanScreenChoiceBoard')), findsOneWidget);
+  });
+
+  testWidgets('Activity selector pops up when choiceBoard activity is tapped',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockActivities[0].state = ActivityState.Normal;
+    mockActivities[0].isChoiceBoard = true;
+    mockActivities[0].pictograms = mockPictograms;
+    mockWeek.days[0].activities.add(mockActivities[0]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('WeekPlanScreenChoiceBoard')));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.byKey(const Key('ChoiceBoardActivitySelector')), findsOneWidget);
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
@@ -672,9 +706,8 @@ void main() {
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
-
   testWidgets('Cancelled activities displayed correctly in Guardian Mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     mockActivities[0].state = ActivityState.Canceled;
 
     // Added Cancelled activity with a cross
@@ -688,7 +721,7 @@ void main() {
   });
 
   testWidgets('Timer icon displayed correctly in Guardian Mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     // Activity with a timer
     mockWeek.days[0].activities.add(mockActivities[2]);
 
@@ -698,14 +731,13 @@ void main() {
     // Find timer icon
     expect(
         find.byWidgetPredicate((Widget widget) =>
-        widget is Image &&
+            widget is Image &&
             widget.image == const AssetImage('assets/timer/piechart_icon.png')),
         findsOneWidget);
   });
 
-
   testWidgets('Check mark completed activty mode works in Citizen Mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Checkmark;
     mockActivities[0].state = ActivityState.Completed;
@@ -719,7 +751,7 @@ void main() {
   });
 
   testWidgets('Greyed out completed activty mode works in Citizen Mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.MovedRight;
     mockActivities[0].state = ActivityState.Completed;
@@ -729,14 +761,14 @@ void main() {
     await tester.pumpAndSettle();
 
     // Find greyed out box by key
-    expect(find.byWidgetPredicate((Widget widget) =>
-        widget is Container &&
-        widget.key == const Key('GreyOutBox')),
-    findsOneWidget);
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is Container && widget.key == const Key('GreyOutBox')),
+        findsOneWidget);
   });
 
   testWidgets('Remove completed activty mode works in Citizen Mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Removed;
     mockActivities[0].state = ActivityState.Completed;
@@ -746,14 +778,14 @@ void main() {
     await tester.pumpAndSettle();
 
     // Check that the opacity of the activity card is set to zero.
-    expect(find.byWidgetPredicate((Widget widget) =>
-        widget is Opacity &&
-        widget.opacity == 0.0),
-    findsOneWidget);
+    expect(
+        find.byWidgetPredicate(
+            (Widget widget) => widget is Opacity && widget.opacity == 0.0),
+        findsOneWidget);
   });
 
   testWidgets('Not completede activites are not hidden',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Removed;
     mockActivities[0].state = ActivityState.Normal;
@@ -763,14 +795,14 @@ void main() {
     await tester.pumpAndSettle();
 
     // Check that the opacity of the activity card is set to zero.
-    expect(find.byWidgetPredicate((Widget widget) =>
-    widget is Opacity &&
-        widget.opacity == 1.0),
+    expect(
+        find.byWidgetPredicate(
+            (Widget widget) => widget is Opacity && widget.opacity == 1.0),
         findsOneWidget);
   });
 
   testWidgets('Check mark completed activty mode works in Citizen Mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Checkmark;
     mockActivities[0].state = ActivityState.Completed;
@@ -784,7 +816,7 @@ void main() {
   });
 
   testWidgets('Cancelled activities displayed correctly in Citizen Mode',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivities[0].state = ActivityState.Canceled;
 

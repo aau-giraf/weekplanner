@@ -1,25 +1,25 @@
+import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
-import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
-import 'package:weekplanner/di.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import '../style/custom_color.dart' as theme;
 
+import '../style/custom_color.dart' as theme;
 import 'giraf_confirm_dialog.dart';
 
 ///This is a class
 class WeekplannerChoiceboardSelector extends StatelessWidget {
   ///Constructor
-  WeekplannerChoiceboardSelector(
-      this._activity, this._bloc, this._user, this._weekplanBloc, this._week) {
-    _bloc.load(_activity, _user);
+  WeekplannerChoiceboardSelector(this._activity, this._activityBloc, this._user,
+      this._weekplanBloc, this._week) {
+    _activityBloc.load(_activity, _user);
   }
 
   final ActivityModel _activity;
@@ -30,12 +30,13 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   final DisplayNameModel _user;
 
-  final ActivityBloc _bloc;
+  final ActivityBloc _activityBloc;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
+        key: const Key('ChoiceBoardActivitySelector'),
         child: AlertDialog(
           contentPadding: const EdgeInsets.all(0.0),
           titlePadding: const EdgeInsets.all(0.0),
@@ -105,11 +106,12 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
     return Container(
       child: Row(
+        key: const Key('SelectorPictogram'),
         children: pictogramImages,
       ),
     );
   }
-  
+
   Widget _displayPictogram(
       BuildContext context, List<Widget> pictograms, int index) {
     return GestureDetector(
@@ -138,6 +140,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return GirafConfirmDialog(
+              key: const Key('PictogramSelectorConfirmDialog'),
               title: 'Vælg aktivitet',
               description: 'Vil du vælge aktiviteten ' +
                   _activity.pictograms[index].title,
@@ -151,12 +154,11 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                 ];
                 _activity.pictograms = _pictogramModels;
 
-                _bloc.update();
-                _bloc.activityModelStream.skip(1).take(1).listen((_) {
+                _activityBloc.update();
+                _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
                   _weekplanBloc.loadWeek(_week, _user);
                   Routes.pop(context);
                 });
-
                 // Closes the dialog box
               },
               cancelOnPressed: () {});

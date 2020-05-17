@@ -31,6 +31,7 @@ class ChoiceBoardPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Image>(
+      key: const Key('ChoiceBoardPart'),
       stream: _pictogramImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
         if (snapshot.hasData) {
@@ -46,7 +47,7 @@ class ChoiceBoardPart extends StatelessWidget {
                 top: 5,
                 right: 5,
                 child:
-                    DeletePictogramFromChoiceboardButton(() {
+                    DeletePictogramFromChoiceBoardButton(() {
                   _bloc.load(_activity, _user);
                   _activity.pictograms.remove(_pictogramModel);
                   if (_activity.pictograms.length == 1) {

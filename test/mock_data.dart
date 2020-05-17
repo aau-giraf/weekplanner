@@ -35,6 +35,7 @@ class MockData {
     mockWeek = _createInitialMockWeek();
     mockSettings = _createInitialMockSettings();
     mockActivities = _createInitialMockActivities();
+    mockPictograms = _createInitialMockPictograms();
     mockUser = DisplayNameModel(
         role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
@@ -49,6 +50,7 @@ class MockData {
   WeekModel mockWeek;
   SettingsModel mockSettings;
   List<ActivityModel> mockActivities;
+  List<PictogramModel> mockPictograms;
   DisplayNameModel mockUser;
 
   Api mockApi;
@@ -100,6 +102,39 @@ class MockData {
       WeekdayColorModel(day: Weekday.Friday, hexColor: '0xffdddddd'),
       WeekdayColorModel(day: Weekday.Saturday, hexColor: '0xffeeeeee'),
       WeekdayColorModel(day: Weekday.Sunday, hexColor: '0xffffffff'),
+    ];
+  }
+
+  List<PictogramModel> _createInitialMockPictograms() {
+    return <PictogramModel>[
+      PictogramModel(
+          id: 25,
+          title: 'grå',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      PictogramModel(
+          id: 26,
+          title: 'blå',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      PictogramModel(
+          id: 27,
+          title: 'giraf-farvet',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      PictogramModel(
+          id: 28,
+          title: 'orange',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
     ];
   }
 

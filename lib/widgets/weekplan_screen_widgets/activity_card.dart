@@ -53,7 +53,8 @@ class ActivityCard extends StatelessWidget {
     if (!_activity.isChoiceBoard) {
       return Opacity(
         opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
-        ? 1.0 : 0,
+            ? 1.0
+            : 0,
         child: Container(
             color: theme.GirafColors.white,
             margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
@@ -88,10 +89,10 @@ class ActivityCard extends StatelessWidget {
 
   bool _shouldActivityBeVisible(AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
-    if(weekModeSnapShot.hasData && settingsSnapShot.hasData) {
+    if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
       final WeekplanMode weekMode = weekModeSnapShot.data;
       final SettingsModel settings = settingsSnapShot.data;
-      if(settings != null || weekMode != null) {
+      if (settings != null || weekMode != null) {
         if (weekMode == WeekplanMode.citizen &&
             settings.completeMark == CompleteMark.Removed &&
             _activity.state == ActivityState.Completed) {
@@ -133,6 +134,7 @@ class ActivityCard extends StatelessWidget {
                       alignment: AlignmentDirectional.center,
                       children: <Widget>[
                         SizedBox(
+                            key: const Key('WeekPlanScreenChoiceBoard'),
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.width,
                             child: returnGridView(pictograms)),

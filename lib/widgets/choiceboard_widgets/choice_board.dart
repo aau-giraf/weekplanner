@@ -26,6 +26,7 @@ class ChoiceBoard extends StatelessWidget {
     }
 
     return GridView.count(
+        key: const Key('ChoiceBoard'),
         crossAxisCount: 2,
         children: List<Widget>.generate(
           _parts.length,
