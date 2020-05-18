@@ -28,7 +28,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../test_image.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
@@ -552,8 +552,8 @@ void main() {
   });
 
   testWidgets(
-      'Test that “kopier” button is only available '
-      'when having marked a single weekplan', (WidgetTester tester) async {
+      'Test that “Kopier” button shows a dialog '
+      'when no weekplans have been marked', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
@@ -561,25 +561,48 @@ void main() {
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
-    final GirafButton button =
-        tester.widget<GirafButton>(find.byKey(const Key('CopyWeekplanButton')));
-
-    expectLater(button.isEnabledStream, emits(false));
-
-    await tester.tap(find.byKey(Key(weekModel1.name)));
+    await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
     await tester.pumpAndSettle();
 
-    expectLater(button.isEnabledStream, emits(true));
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is GirafNotifyDialog &&
+            widget.title == 'Fejl' &&
+            widget.description ==
+                'Der skal markeres præcis én uge for at kopiere'),
+        findsOneWidget);
+  });
 
+  testWidgets(
+      'Test that “Kopier” button shows a dialog '
+      'when more than one weekplan have been marked',
+      (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(Key(weekModel1.name)));
     await tester.tap(find.byKey(Key(weekModel2.name)));
     await tester.pumpAndSettle();
 
-    expectLater(button.isEnabledStream, emits(false));
+    await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+        widget is GirafNotifyDialog &&
+            widget.title == 'Fejl' &&
+            widget.description ==
+                'Der skal markeres præcis én uge for at kopiere'),
+        findsOneWidget);
   });
 
   testWidgets(
       'Test if a dialog appears when pressing "kopier" and '
-      'test if the dialog has the right buttons aswel',
+      'test if the dialog has the right buttons aswell',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
