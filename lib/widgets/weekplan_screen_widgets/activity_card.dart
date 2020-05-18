@@ -82,7 +82,7 @@ class ActivityCard extends StatelessWidget {
             )),
       );
     } else {
-      return buildChoiceboardAcivityCard(
+      return buildChoiceBoardActivityCard(
           context, weekModeSnapShot, settingsSnapShot);
     }
   }
@@ -104,7 +104,7 @@ class ActivityCard extends StatelessWidget {
   }
 
   ///This function builds the activity card
-  Widget buildChoiceboardAcivityCard(
+  Widget buildChoiceBoardActivityCard(
       BuildContext context,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
