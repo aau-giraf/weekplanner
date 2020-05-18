@@ -2,7 +2,6 @@ import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
-import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -31,8 +30,6 @@ class MockCopyResolveBloc extends CopyResolveBloc {
   @override
   Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
 }
-
-final WeekModel emptyWeekmodel = WeekModel(days: <WeekdayModel>[]);
 
 final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
 final WeekNameModel weekNameModel =
@@ -88,7 +85,8 @@ void main() {
           return Observable<WeekModel>.just(weekplan1Copy);
         }
       }
-      return Observable<WeekModel>.just(emptyWeekmodel);
+      return Observable<WeekModel>.just(WeekModel(
+        thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
     });
 
     when(api.week
