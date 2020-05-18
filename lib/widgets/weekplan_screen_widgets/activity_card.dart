@@ -3,6 +3,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -11,14 +12,14 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+
 import '../../di.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Widget used for activities in the weekplan screen.
 class ActivityCard extends StatelessWidget {
-
   /// Constructor
-  ActivityCard(this._activity, this._user){
+  ActivityCard(this._activity, this._user) {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -27,7 +28,6 @@ class ActivityCard extends StatelessWidget {
   final DisplayNameModel _user;
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,54 +39,60 @@ class ActivityCard extends StatelessWidget {
               stream: _settingsBloc.settings,
               builder: (BuildContext context,
                   AsyncSnapshot<SettingsModel> settingsSnapshot) {
-                return _buildActivityCard(context, weekModeSnapshot,
-                    settingsSnapshot);
+                return _buildActivityCard(
+                    context, weekModeSnapshot, settingsSnapshot);
               });
-    });
+        });
   }
 
-  Widget _buildActivityCard(BuildContext context,
+  Widget _buildActivityCard(
+      BuildContext context,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
-      AsyncSnapshot<SettingsModel> settingsSnapShot){
+      AsyncSnapshot<SettingsModel> settingsSnapShot) {
     final ActivityState _activityState = _activity.state;
-
-    return Opacity(
-      opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
-          ? 1.0 : 0,
-      child: Container(
-          color: theme.GirafColors.white,
-          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          child: FittedBox(
-            child: Column(
-              children: <Widget>[
-                Stack(
-                  alignment: AlignmentDirectional.topEnd,
-                  children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      child: FittedBox(
-                        child: _getPictogram(_activity),
+    if (!_activity.isChoiceBoard) {
+      return Opacity(
+        opacity: _shouldActivityBeVisible(weekModeSnapShot, settingsSnapShot)
+            ? 1.0
+            : 0,
+        child: Container(
+            color: theme.GirafColors.white,
+            margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+            child: FittedBox(
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    alignment: AlignmentDirectional.topEnd,
+                    children: <Widget>[
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width,
+                        child: FittedBox(
+                          child: _getPictogram(_activity.pictograms.first),
+                        ),
                       ),
-                    ),
-                    _buildActivityStateIcon(context, _activityState,
-                        weekModeSnapShot, settingsSnapShot),
-                    _buildTimerIcon(context, _activity),
-                  ],
-                ),
-                PictogramText(_activity, _user),
-              ],
-            ),
-          )),
-    );
+                      _buildActivityStateIcon(context, _activityState,
+                          weekModeSnapShot, settingsSnapShot),
+                      _buildTimerIcon(context, _activity),
+                    ],
+                  ),
+                  PictogramText(_activity, _user),
+                ],
+              ),
+            )),
+      );
+    } else {
+      return buildChoiceBoardActivityCard(
+          context, weekModeSnapShot, settingsSnapShot);
+    }
   }
 
   bool _shouldActivityBeVisible(AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
-    if(weekModeSnapShot.hasData && settingsSnapShot.hasData) {
+    if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
       final WeekplanMode weekMode = weekModeSnapShot.data;
       final SettingsModel settings = settingsSnapShot.data;
-      if(settings != null || weekMode != null) {
+      if (settings != null || weekMode != null) {
         if (weekMode == WeekplanMode.citizen &&
             settings.completeMark == CompleteMark.Removed &&
             _activity.state == ActivityState.Completed) {
@@ -97,10 +103,84 @@ class ActivityCard extends StatelessWidget {
     return true;
   }
 
+  ///This function builds the activity card
+  Widget buildChoiceBoardActivityCard(
+      BuildContext context,
+      AsyncSnapshot<WeekplanMode> weekModeSnapShot,
+      AsyncSnapshot<SettingsModel> settingsSnapShot) {
+    final ActivityState _activityState = _activity.state;
+    final List<Widget> pictograms = <Widget>[];
+    for (int i = 0; i < _activity.pictograms.length; i++) {
+      pictograms.add(_getPictogram(_activity.pictograms[i]));
+    }
+    return Container(
+        decoration: BoxDecoration(
+            color: theme.GirafColors.white,
+            border: Border.all(
+                color: Colors.black,
+                width: MediaQuery.of(context).size.width * 0.01)),
+        margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+        child: FittedBox(
+          child: Column(
+            children: <Widget>[
+              Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    child: FittedBox(
+                        child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: <Widget>[
+                        SizedBox(
+                            key: const Key('WeekPlanScreenChoiceBoard'),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                            child: returnGridView(pictograms)),
+                      ],
+                    )),
+                  ),
+                  _buildActivityStateIcon(context, _activityState,
+                      weekModeSnapShot, settingsSnapShot),
+                  _buildTimerIcon(context, _activity),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
 
-  Widget _getPictogram(ActivityModel activity) {
+  ///Returns the correct gridview
+  Center returnGridView(List<Widget> list) {
+    if (list.length == 1) {
+      return Center(
+        child: GridView.count(
+          crossAxisCount: 1,
+          children: list,
+        ),
+      );
+    } else if (list.length == 2) {
+      return Center(
+        child: GridView.count(
+          childAspectRatio: 0.5,
+          crossAxisCount: 2,
+          children: list,
+        ),
+      );
+    } else {
+      return Center(
+        child: GridView.count(
+          crossAxisCount: 2,
+          children: list,
+        ),
+      );
+    }
+  }
+
+  Widget _getPictogram(PictogramModel _pictogram) {
     final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
-    bloc.loadPictogramById(activity.pictogram.id);
+    bloc.loadPictogramById(_pictogram.id);
     return StreamBuilder<Image>(
       stream: bloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
@@ -114,12 +194,11 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _buildActivityStateIcon(
-      BuildContext context, ActivityState state,
+      BuildContext context,
+      ActivityState state,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
-
-
-    if(weekModeSnapShot.hasData && settingsSnapShot.hasData) {
+    if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
       final WeekplanMode role = weekModeSnapShot.data;
       final SettingsModel settings = settingsSnapShot.data;
 
@@ -132,35 +211,30 @@ class ActivityCard extends StatelessWidget {
               color: theme.GirafColors.green,
               size: MediaQuery.of(context).size.width,
             );
-          }
-          else if (role == WeekplanMode.citizen) {
+          } else if (role == WeekplanMode.citizen) {
             if (settings.completeMark == null) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            }
-            else if (settings.completeMark == CompleteMark.Checkmark) {
+            } else if (settings.completeMark == CompleteMark.Checkmark) {
               return Icon(
                 Icons.check,
                 key: const Key('IconComplete'),
                 color: theme.GirafColors.green,
-                size: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                size: MediaQuery.of(context).size.width,
               );
-            }
-            else if (settings.completeMark == CompleteMark.MovedRight) {
-              return  Container(
+            } else if (settings.completeMark == CompleteMark.MovedRight) {
+              return Container(
                   key: const Key('GreyOutBox'),
-                  color:  theme.GirafColors.transparentGrey,
+                  color: theme.GirafColors.transparentGrey,
                   height: MediaQuery.of(context).size.width,
-                  width: MediaQuery.of(context).size.width
-              );
-            }
-            else if (settings.completeMark == CompleteMark.Removed) {
+                  width: MediaQuery.of(context).size.width);
+            } else if (settings.completeMark == CompleteMark.Removed) {
               //This case should be handled by _shouldActivityBeVisible
-              return Container(width: 0, height: 0,);
+              return Container(
+                width: 0,
+                height: 0,
+              );
             }
           }
           return const Center(child: CircularProgressIndicator());
@@ -172,14 +246,18 @@ class ActivityCard extends StatelessWidget {
             size: MediaQuery.of(context).size.width,
           );
         default:
-          return Container(width: 0, height: 0,);
+          return Container(
+            width: 0,
+            height: 0,
+          );
       }
     }
     //If no settings/role have been loaded then we just make an empty overlay
-    return Container(width: 0, height: 0,);
+    return Container(
+      width: 0,
+      height: 0,
+    );
   }
-
-
 
   Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
     final TimerBloc timerBloc = di.getDependency<TimerBloc>();
@@ -223,5 +301,4 @@ class ActivityCard extends StatelessWidget {
           );
         });
   }
-
 }

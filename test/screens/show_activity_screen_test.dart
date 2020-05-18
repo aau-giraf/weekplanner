@@ -1,18 +1,27 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:api_client/api/activity_api.dart';
+import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/cancel_mark_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/enums/orientation_enum.dart' as orientation;
-import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/timer_model.dart';
+import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -24,14 +33,6 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/models/enums/access_level_enum.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/enums/weekday_enum.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/week_model.dart';
-import 'package:api_client/models/weekday_model.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -89,17 +90,42 @@ class MockActivityApi extends Mock implements ActivityApi {
   }
 }
 
+final List<PictogramModel> mockPictograms = <PictogramModel>[
+  PictogramModel(
+      id: 25,
+      title: 'grå',
+      accessLevel: AccessLevel.PUBLIC,
+      imageHash: null,
+      imageUrl: null,
+      lastEdit: null),
+  PictogramModel(
+      id: 26,
+      title: 'blå',
+      accessLevel: AccessLevel.PUBLIC,
+      imageHash: null,
+      imageUrl: null,
+      lastEdit: null),
+  PictogramModel(
+      id: 27,
+      title: 'giraf-farvet',
+      accessLevel: AccessLevel.PUBLIC,
+      imageHash: null,
+      imageUrl: null,
+      lastEdit: null),
+  PictogramModel(
+      id: 28,
+      title: 'orange',
+      accessLevel: AccessLevel.PUBLIC,
+      imageHash: null,
+      imageUrl: null,
+      lastEdit: null),
+];
+
 final WeekModel mockWeek = WeekModel(
     weekYear: 2018,
     weekNumber: 21,
     name: 'Uge 1',
-    thumbnail: PictogramModel(
-        id: 25,
-        title: 'grå',
-        accessLevel: AccessLevel.PUBLIC,
-        imageHash: null,
-        imageUrl: null,
-        lastEdit: null),
+    thumbnail: mockPictograms.first,
     days: mockWeekdayModels);
 
 final List<WeekdayModel> mockWeekdayModels = <WeekdayModel>[
@@ -112,13 +138,7 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null))
+      pictograms: <PictogramModel>[mockPictograms.first])
 ];
 
 final DisplayNameModel mockUser =
@@ -142,13 +162,7 @@ ActivityModel makeNewActivityModel() {
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null));
+      pictograms: <PictogramModel>[mockPictograms.first]);
 }
 
 ActivityModel mockActivityModelWithTimer() {
@@ -157,13 +171,7 @@ ActivityModel mockActivityModelWithTimer() {
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null),
+      pictograms: <PictogramModel>[mockPictograms.first],
       timer: TimerModel(
           startTime: DateTime.now(),
           progress: 0,
@@ -177,13 +185,7 @@ ActivityModel mockActivityModelWithCompletedTimer() {
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictogram: PictogramModel(
-          id: 25,
-          title: 'grå',
-          accessLevel: AccessLevel.PUBLIC,
-          imageHash: null,
-          imageUrl: null,
-          lastEdit: null),
+      pictograms: <PictogramModel>[mockPictograms.first],
       timer: TimerModel(
           startTime: DateTime.now(),
           progress: const Duration(seconds: 5).inMilliseconds,
@@ -386,6 +388,134 @@ void main() {
     await tester.pump();
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
     expect(find.byKey(const Key('IconCanceled')), findsNothing);
+  });
+
+  testWidgets('Add ChoiceBoard button is visible in guardian mode',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsOneWidget);
+  });
+
+  testWidgets('Add ChoiceBoard button is not visible in citizen mode',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsNothing);
+  });
+
+  testWidgets(
+      'Add ChoiceBoard button is not visible if the activity is cancelled',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.state = ActivityState.Canceled;
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsNothing);
+  });
+
+  testWidgets('Add ChoiceBoard button is visible if the activity is normal',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.state = ActivityState.Normal;
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsOneWidget);
+  });
+
+  testWidgets(
+      'ChoiceBoard-button text is "Tilføj ChoiceBoard" when not a ChoiceBoard',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = false;
+    mockActivity.state = ActivityState.Normal;
+
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('Tilføj ChoiceBoard'), findsOneWidget);
+  });
+
+  testWidgets(
+      'ChoiceBoard-button text is "Tilføj Aktivitet" when is ChoiceBoard',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = true;
+    mockActivity.state = ActivityState.Normal;
+
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('Tilføj Aktivitet'), findsOneWidget);
+  });
+
+  testWidgets('No ChoiceBoardParts when not a ChoiceBoard',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = false;
+    mockActivity.state = ActivityState.Normal;
+    mockActivity.pictograms = <PictogramModel>[mockPictograms.first];
+
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('ChoiceBoardPart')), findsNothing);
+  });
+
+  testWidgets('2 ChoiceBoardParts when activity has 2 pictograms',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = true;
+    mockActivity.state = ActivityState.Normal;
+    mockActivity.pictograms = mockPictograms.sublist(0, 2); // 2 parts in list
+
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(2));
+  });
+
+  testWidgets('3 ChoiceBoardParts when activity has 3 pictograms',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = true;
+    mockActivity.state = ActivityState.Normal;
+    mockActivity.pictograms = mockPictograms.sublist(0, 3); // 3 parts in list
+
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(3));
+  });
+
+  testWidgets('4 ChoiceBoardParts when activity has 4 pictograms',
+      (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = true;
+    mockActivity.state = ActivityState.Normal;
+    mockActivity.pictograms = mockPictograms;
+
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+
+    expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(4));
   });
 
   testWidgets('Test if timer box is shown.', (WidgetTester tester) async {

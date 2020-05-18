@@ -91,13 +91,15 @@ void main() {
   test('Adds an activity to a list of marked activities', async((DoneFn done) {
     // Create an ActivityModel, to add to the list of marked activites.
     final ActivityModel activityModel = ActivityModel(
-        pictogram: PictogramModel(
+        pictograms: <PictogramModel>[
+          PictogramModel(
             accessLevel: null,
             id: null,
             imageHash: null,
             imageUrl: null,
             lastEdit: null,
-            title: 'test'),
+            title: 'test')
+        ],
         id: 1,
         isChoiceBoard: null,
         order: null,
@@ -118,26 +120,30 @@ void main() {
   test('Removes an activity to a list of marked activities',
       async((DoneFn done) {
     final ActivityModel firstActivityModel = ActivityModel(
-        pictogram: PictogramModel(
+        pictograms: <PictogramModel>[
+          PictogramModel(
             accessLevel: null,
             id: null,
             imageHash: null,
             imageUrl: null,
             lastEdit: null,
-            title: 'test'),
+            title: 'test')
+        ],
         id: 1,
         isChoiceBoard: null,
         order: null,
         state: null);
 
     final ActivityModel secondActivityModel = ActivityModel(
-        pictogram: PictogramModel(
-            accessLevel: null,
-            id: null,
-            imageHash: null,
-            imageUrl: null,
-            lastEdit: null,
-            title: 'test123'),
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
         id: 2,
         isChoiceBoard: null,
         order: null,
@@ -160,13 +166,15 @@ void main() {
 
   test('Clears list of marked activities', async((DoneFn done) {
     weekplanBloc.addMarkedActivity(ActivityModel(
-        pictogram: PictogramModel(
+        pictograms: <PictogramModel>[
+          PictogramModel(
             accessLevel: null,
             id: null,
             imageHash: null,
             imageUrl: null,
             lastEdit: null,
-            title: 'test'),
+            title: 'test')
+        ],
         id: 123,
         isChoiceBoard: null,
         order: null,
@@ -185,13 +193,15 @@ void main() {
   test('Checks if the activity is in the list of marked activities',
       async((DoneFn done) {
     final ActivityModel activity = ActivityModel(
-        pictogram: PictogramModel(
-            accessLevel: null,
-            id: null,
-            imageHash: null,
-            imageUrl: null,
-            lastEdit: null,
-            title: 'test123'),
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
         id: 2,
         isChoiceBoard: null,
         order: null,
@@ -226,13 +236,15 @@ void main() {
     );
 
     final ActivityModel activity = ActivityModel(
-        pictogram: PictogramModel(
-            accessLevel: null,
-            id: null,
-            imageHash: null,
-            imageUrl: null,
-            lastEdit: null,
-            title: 'test123'),
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
         id: 2,
         isChoiceBoard: null,
         order: null,
@@ -279,13 +291,15 @@ void main() {
     );
 
     final ActivityModel activity = ActivityModel(
-        pictogram: PictogramModel(
-            accessLevel: null,
-            id: null,
-            imageHash: null,
-            imageUrl: null,
-            lastEdit: null,
-            title: 'test123'),
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
         id: 2,
         isChoiceBoard: null,
         order: null,
@@ -364,26 +378,30 @@ void main() {
     );
 
     final ActivityModel activity = ActivityModel(
-        pictogram: PictogramModel(
-            accessLevel: null,
-            id: null,
-            imageHash: null,
-            imageUrl: null,
-            lastEdit: null,
-            title: 'test123'),
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
         id: 2,
         isChoiceBoard: null,
         order: null,
         state: ActivityState.Normal);
 
     final ActivityModel newActivity = ActivityModel(
-        pictogram: PictogramModel(
-            accessLevel: null,
-            id: null,
-            imageHash: null,
-            imageUrl: null,
-            lastEdit: null,
-            title: 'test123'),
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
         id: 2,
         isChoiceBoard: null,
         order: null,
@@ -476,7 +494,7 @@ void main() {
         isChoiceBoard: null,
         state: null,
         id: null,
-        pictogram: null);
+        pictograms: null);
 
     weekplanBloc.userWeek.take(1).flatMap((_) {
       weekplanBloc.addActivity(activity, 0);
@@ -513,10 +531,10 @@ void main() {
         weekYear: 2019);
 
     final ActivityModel modelToMove = ActivityModel(
-        id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
+        id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
     week.days[0].activities.add(modelToMove);
     week.days[1].activities.add(ActivityModel(
-        id: 2, pictogram: null, order: 0, state: null, isChoiceBoard: false));
+        id: 2, pictograms: null, order: 0, state: null, isChoiceBoard: false));
 
     weekplanBloc.userWeek.take(1).flatMap((_) {
       weekplanBloc.reorderActivities(
@@ -553,15 +571,15 @@ void main() {
         weekYear: 2019);
 
     final ActivityModel modelToMove = ActivityModel(
-        id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
+        id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
 
     week.days[0].activities.add(modelToMove);
 
     week.days[0].activities.add(ActivityModel(
-        id: 2, pictogram: null, order: 1, state: null, isChoiceBoard: false));
+        id: 2, pictograms: null, order: 1, state: null, isChoiceBoard: false));
 
     week.days[0].activities.add(ActivityModel(
-        id: 3, pictogram: null, order: 2, state: null, isChoiceBoard: false));
+        id: 3, pictograms: null, order: 2, state: null, isChoiceBoard: false));
 
     weekplanBloc.userWeek.take(1).flatMap((_) {
       weekplanBloc.reorderActivities(
@@ -598,7 +616,7 @@ void main() {
 
     // Creating the activity that will be added
     final ActivityModel testActivity = ActivityModel(
-        id: 1, pictogram: null, order: 0, state: null, isChoiceBoard: false);
+        id: 1, pictograms: null, order: 0, state: null, isChoiceBoard: false);
 
     weekplanBloc.addMarkedActivity(testActivity);
 

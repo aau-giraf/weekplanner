@@ -33,7 +33,7 @@ class PictogramText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PictogramModel _pictogram = _activity.pictogram;
+    final PictogramModel _pictogram = _activity.pictograms.first;
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
         builder: (BuildContext context,

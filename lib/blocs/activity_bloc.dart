@@ -52,8 +52,8 @@ class ActivityBloc extends BlocBase {
     _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activityModel) {
-      _activityModelStream.add(activityModel);
       _activityModel = activityModel;
+      _activityModelStream.add(activityModel);
     });
   }
 

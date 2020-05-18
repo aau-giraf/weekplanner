@@ -54,7 +54,7 @@ void main() {
 
   final ActivityModel activityModel = ActivityModel(
       id: 1,
-      pictogram: pictogramModel,
+      pictograms: <PictogramModel>[pictogramModel],
       order: null,
       state: ActivityState.Normal,
       isChoiceBoard: null);

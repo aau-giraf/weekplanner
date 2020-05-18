@@ -35,6 +35,7 @@ class MockData {
     mockWeek = _createInitialMockWeek();
     mockSettings = _createInitialMockSettings();
     mockActivities = _createInitialMockActivities();
+    mockPictograms = _createInitialMockPictograms();
     mockUser = DisplayNameModel(
         role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
@@ -49,6 +50,7 @@ class MockData {
   WeekModel mockWeek;
   SettingsModel mockSettings;
   List<ActivityModel> mockActivities;
+  List<PictogramModel> mockPictograms;
   DisplayNameModel mockUser;
 
   Api mockApi;
@@ -103,6 +105,39 @@ class MockData {
     ];
   }
 
+  List<PictogramModel> _createInitialMockPictograms() {
+    return <PictogramModel>[
+      PictogramModel(
+          id: 25,
+          title: 'grå',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      PictogramModel(
+          id: 26,
+          title: 'blå',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      PictogramModel(
+          id: 27,
+          title: 'giraf-farvet',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+      PictogramModel(
+          id: 28,
+          title: 'orange',
+          accessLevel: AccessLevel.PUBLIC,
+          imageHash: null,
+          imageUrl: null,
+          lastEdit: null),
+    ];
+  }
+
   List<ActivityModel> _createInitialMockActivities() {
     return <ActivityModel>[
       ActivityModel(
@@ -110,37 +145,43 @@ class MockData {
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: false,
-          pictogram: PictogramModel(
-              id: 25,
-              title: 'PictogramTitle1',
-              accessLevel: AccessLevel.PUBLIC,
-              imageHash: null,
-              imageUrl: null,
-              lastEdit: null)),
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle1',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ]),
       ActivityModel(
           id: 1,
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: false,
-          pictogram: PictogramModel(
-              id: 25,
-              title: 'PictogramTitle2',
-              accessLevel: AccessLevel.PUBLIC,
-              imageHash: null,
-              imageUrl: null,
-              lastEdit: null)),
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle2',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ]),
       ActivityModel(
           id: 2,
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: false,
-          pictogram: PictogramModel(
-              id: 25,
-              title: 'PictogramTitle3',
-              accessLevel: AccessLevel.PUBLIC,
-              imageHash: null,
-              imageUrl: null,
-              lastEdit: null),
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle3',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ],
           timer: TimerModel(
               startTime: DateTime(2020),
               progress: 0,
