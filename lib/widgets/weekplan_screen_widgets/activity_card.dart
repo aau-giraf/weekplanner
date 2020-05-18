@@ -157,6 +157,7 @@ class ActivityCard extends StatelessWidget {
     if (list.length == 1) {
       return Center(
         child: GridView.count(
+          physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 1,
           children: list,
         ),
@@ -164,6 +165,7 @@ class ActivityCard extends StatelessWidget {
     } else if (list.length == 2) {
       return Center(
         child: GridView.count(
+          physics: const NeverScrollableScrollPhysics(),
           childAspectRatio: 0.5,
           crossAxisCount: 2,
           children: list,
@@ -172,6 +174,7 @@ class ActivityCard extends StatelessWidget {
     } else {
       return Center(
         child: GridView.count(
+          physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 2,
           children: list,
         ),
