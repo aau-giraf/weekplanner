@@ -32,8 +32,6 @@ class MockCopyResolveBloc extends CopyResolveBloc {
   Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
 }
 
-final WeekModel emptyWeekmodel = WeekModel(days: <WeekdayModel>[]);
-
 final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
 final WeekNameModel weekNameModel =
 WeekNameModel(name: 'weekplan1', weekNumber: 2020, weekYear: 32);
@@ -88,7 +86,8 @@ void main() {
           return Observable<WeekModel>.just(weekplan1Copy);
         }
       }
-      return Observable<WeekModel>.just(emptyWeekmodel);
+      return Observable<WeekModel>.just(WeekModel(
+        thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
     });
 
     when(api.week
