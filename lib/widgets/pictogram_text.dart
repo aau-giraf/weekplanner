@@ -12,8 +12,7 @@ import 'package:weekplanner/models/enums/weekplan_mode.dart';
 /// This is a widget used to create text under the pictograms
 class PictogramText extends StatelessWidget {
   /// Constructor
-  PictogramText(this._activity, this._user,
-      {this.minFontSize = 100}) {
+  PictogramText(this._activity, this._user, {this.minFontSize = 100}) {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -46,9 +45,13 @@ class PictogramText extends StatelessWidget {
                   final WeekplanMode weekMode = weekModeSnapshot.data;
                   final SettingsModel settings = settingsSnapshot.data;
                   final bool pictogramTextIsEnabled = settings.pictogramText;
-                  if (_isGuardianMode(weekMode) || pictogramTextIsEnabled) {
+                  if (_activity.isChoiceBoard == false &&
+                      (_isGuardianMode(weekMode) || pictogramTextIsEnabled)) {
                     final String pictogramText = _pictogram.title.toUpperCase();
                     return _buildPictogramText(context, pictogramText);
+                  } else if (_activity.isChoiceBoard &&
+                      (_isGuardianMode(weekMode) || pictogramTextIsEnabled)) {
+                    return _buildPictogramText(context, 'ChoiceBoard');
                   }
                 }
                 return Container(width: 0, height: 0);

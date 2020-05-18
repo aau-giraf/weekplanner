@@ -146,6 +146,7 @@ class ActivityCard extends StatelessWidget {
                   _buildTimerIcon(context, _activity),
                 ],
               ),
+              PictogramText(_activity, _user),
             ],
           ),
         ));
