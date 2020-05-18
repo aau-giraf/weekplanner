@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
@@ -162,6 +163,7 @@ void main() {
     editBloc = EditWeekplanBloc(api);
     di.registerDependency<WeekplanBloc>((_) => WeekplanBloc(api));
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
+    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
   });
   //endregion
 
