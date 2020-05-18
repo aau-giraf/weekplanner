@@ -300,8 +300,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       buttonText: 'Kopiér',
                       buttonKey: 'CopyWeekplanButton',
                       assetPath: 'assets/icons/copy.png',
-                      isEnabled: false,
-                      isEnabledStream: _weekBloc.onlyOneModelMarkedStream(),
                       dialogFunction: _buildCopyDialog),
                   BottomAppBarButton(
                       buttonText: 'Slet',
@@ -343,6 +341,16 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   ///Builds dialog box to select where to copy weekplan or cancel
   Future<Center> _buildCopyDialog(BuildContext context) {
+    if (_weekBloc.getNumberOfMarkedWeekModels() != 1) {
+      return showDialog<Center>(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return const GirafNotifyDialog(
+                title: 'Fejl',
+                description: 'Der skal markeres præcis én uge for at kopiere');
+          });
+    }
     return showDialog<Center>(
         barrierDismissible: false,
         context: context,
