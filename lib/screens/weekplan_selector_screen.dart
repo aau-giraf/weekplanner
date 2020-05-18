@@ -67,7 +67,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
     return Container(
         child: Column(children: <Widget>[
-      Expanded(flex: 75, child: _buildWeekplanGridview
+      Expanded(flex: 65, child: _buildWeekplanGridview
         (context, weekModels, true)),
       Container(
         color: Colors.grey,
@@ -83,7 +83,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
-      Expanded(flex: 25, child:
+      Expanded(flex: 35, child:
               _buildWeekplanGridview(context, oldWeekModels, false)),
 
     ]));
