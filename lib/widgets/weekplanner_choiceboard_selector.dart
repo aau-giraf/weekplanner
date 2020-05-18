@@ -3,6 +3,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
@@ -101,7 +102,9 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
     final List<Widget> pictogramImages = <Widget>[];
 
     for (int i = 0; i < pictograms.length; i++) {
-      pictogramImages.add(_displayPictogram(context, pictograms, i));
+      pictogramImages.add(
+        _displayPictogram(context, pictograms, i),
+      );
     }
 
     return Container(
@@ -114,23 +117,29 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   Widget _displayPictogram(
       BuildContext context, List<Widget> pictograms, int index) {
-    return GestureDetector(
-        onTap: () {
-          _selectedPictogramFromChoiceBoard(context, pictograms, index)
-              .then((_) {
-            Routes.pop(context);
-          });
-        },
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width / 5,
-            maxHeight: MediaQuery.of(context).size.height / 1.2,
-          ),
-          decoration: BoxDecoration(
-              border: Border.all(
-                  color: theme.GirafColors.blueBorderColor, width: 1)),
-          child: pictograms[index],
-        ));
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.2,
+      width: MediaQuery.of(context).size.height * 0.2,
+      child: FittedBox(
+        child: GestureDetector(
+            onTap: () {
+              _selectedPictogramFromChoiceBoard(context, pictograms, index)
+                  .then((_) {
+                Routes.pop(context);
+              });
+            },
+            child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: double.infinity,
+                maxHeight: double.infinity,
+              ),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: theme.GirafColors.blueBorderColor, width: 1)),
+              child: pictograms[index],
+            )),
+      ),
+    );
   }
 
   Future<Center> _selectedPictogramFromChoiceBoard(
