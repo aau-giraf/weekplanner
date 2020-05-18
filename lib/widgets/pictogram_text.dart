@@ -45,13 +45,14 @@ class PictogramText extends StatelessWidget {
                   final WeekplanMode weekMode = weekModeSnapshot.data;
                   final SettingsModel settings = settingsSnapshot.data;
                   final bool pictogramTextIsEnabled = settings.pictogramText;
-                  if (_activity.isChoiceBoard == false &&
-                      (_isGuardianMode(weekMode) || pictogramTextIsEnabled)) {
-                    final String pictogramText = _pictogram.title.toUpperCase();
-                    return _buildPictogramText(context, pictogramText);
-                  } else if (_activity.isChoiceBoard &&
-                      (_isGuardianMode(weekMode) || pictogramTextIsEnabled)) {
-                    return _buildPictogramText(context, 'ChoiceBoard');
+                  if (_isGuardianMode(weekMode) || pictogramTextIsEnabled) {
+                    if (_activity.isChoiceBoard) {
+                      return _buildPictogramText(context, 'ChoiceBoard');
+                    } else {
+                      final String pictogramText = _pictogram.title.toUpperCase();
+                      return _buildPictogramText(context, pictogramText);
+                    }
+                  }
                   }
                 }
                 return Container(width: 0, height: 0);
