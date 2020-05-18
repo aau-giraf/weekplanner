@@ -111,7 +111,11 @@ class ActivityCard extends StatelessWidget {
     final ActivityState _activityState = _activity.state;
     final List<Widget> pictograms = <Widget>[];
     for (int i = 0; i < _activity.pictograms.length; i++) {
-      pictograms.add(_getPictogram(_activity.pictograms[i]));
+      pictograms.add(
+        SizedBox.expand(
+          child: FittedBox(child: _getPictogram(_activity.pictograms[i])),
+        ),
+      );
     }
     return Container(
         decoration: BoxDecoration(
@@ -154,32 +158,28 @@ class ActivityCard extends StatelessWidget {
 
   ///Returns the correct gridview
   Center returnGridView(List<Widget> list) {
-    if (list.length == 1) {
-      return Center(
-        child: GridView.count(
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 1,
-          children: list,
+    return Center(
+      child: GridView.count(
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        children: List<Widget>.generate(
+          list.length,
+          (int index) {
+            return Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                  color: Colors.black,
+                  width: 5,
+                )),
+                child: list[index],
+              ),
+            );
+          },
         ),
-      );
-    } else if (list.length == 2) {
-      return Center(
-        child: GridView.count(
-          physics: const NeverScrollableScrollPhysics(),
-          childAspectRatio: 0.5,
-          crossAxisCount: 2,
-          children: list,
-        ),
-      );
-    } else {
-      return Center(
-        child: GridView.count(
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          children: list,
-        ),
-      );
-    }
+      ),
+    );
   }
 
   Widget _getPictogram(PictogramModel _pictogram) {
