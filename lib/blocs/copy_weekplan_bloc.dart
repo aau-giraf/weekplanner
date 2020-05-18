@@ -89,9 +89,9 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     ///Checks whether the name of the week model is different from the default
     /// created when no week exists
     if(daysAreEmpty) {
-      int weekYear = weekModel.weekYear;
-      int weekNumber = weekModel.weekNumber;
-      daysAreEmpty = response.name.compareTo("$weekYear - $weekNumber") == 0;
+      final int weekYear = weekModel.weekYear;
+      final int weekNumber = weekModel.weekNumber;
+      daysAreEmpty = response.name.compareTo('$weekYear - $weekNumber') == 0;
     }
 
     return !daysAreEmpty;
