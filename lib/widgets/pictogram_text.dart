@@ -49,10 +49,10 @@ class PictogramText extends StatelessWidget {
                     if (_activity.isChoiceBoard) {
                       return _buildPictogramText(context, 'ChoiceBoard');
                     } else {
-                      final String pictogramText = _pictogram.title.toUpperCase();
+                      final String pictogramText =
+                          _pictogram.title.toUpperCase();
                       return _buildPictogramText(context, pictogramText);
                     }
-                  }
                   }
                 }
                 return Container(width: 0, height: 0);
