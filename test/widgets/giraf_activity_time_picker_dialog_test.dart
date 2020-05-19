@@ -13,13 +13,15 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 ActivityModel _activityModel = ActivityModel(
     id: 1,
-    pictogram: PictogramModel(
-        accessLevel: AccessLevel.PUBLIC,
-        id: 1,
-        imageHash: 'testHash',
-        imageUrl: 'http://any.tld',
-        lastEdit: DateTime.now(),
-        title: 'testTitle'),
+    pictograms: <PictogramModel>[
+      PictogramModel(
+          accessLevel: AccessLevel.PUBLIC,
+          id: 1,
+          imageHash: 'testHash',
+          imageUrl: 'http://any.tld',
+          lastEdit: DateTime.now(),
+          title: 'testTitle')
+    ],
     order: 1,
     state: ActivityState.Normal,
     isChoiceBoard: true);

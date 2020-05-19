@@ -28,7 +28,7 @@ void main() {
 
   final ActivityModel mockActivity = ActivityModel(
       id: 1,
-      pictogram: null,
+      pictograms: null,
       order: 0,
       state: ActivityState.Normal,
       isChoiceBoard: false);
