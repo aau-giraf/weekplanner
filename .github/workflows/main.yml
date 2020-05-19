@@ -47,9 +47,9 @@ jobs:
         name: Linter
       - run: flutter test --coverage
         name: Tests
-      - name: Upload coverage to Codecov  
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
-      - run: flutter build appbundle --release --build-number=$GITHUB_RUN_NUMBER
+      - run: flutter build appbundle --release --build-number ${{ github.run_id }}
         env:
           GIRAF_KEYSTORE_PASSWORD: ${{ secrets.GIRAF_KEYSTORE_PASSWORD }}
         name: Build appbundle for Play Store
@@ -115,9 +115,9 @@ jobs:
       - run: flutter test
         name: Tests
       - run: |
-          flutter build ios --release --no-codesign --build-number $GITHUB_RUN_NUMBER
+          flutter build ios --release --no-codesign --build-number ${{ github.run_id }}
           cd ios
-          agvtool new-version $GITHUB_RUN_NUMBER
+          agvtool new-version ${{ github.run_id }}
           xcodebuild -workspace Runner.xcworkspace \
                      -scheme Runner \
                      -sdk iphoneos \
@@ -131,7 +131,7 @@ jobs:
 
         name: Build for iOS
         env:
-          FLUTTER_BUILD_NUMBER: ${{ github.run_number }}
+          FLUTTER_BUILD_NUMBER: ${{ github.run_id }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v1.0.0
         with:
