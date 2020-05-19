@@ -81,8 +81,17 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     if(response.days == null){
       return false;
     }
+
     for (WeekdayModel weekDay in response.days) {
       daysAreEmpty = daysAreEmpty && weekDay.activities.isEmpty;
+    }
+
+    ///Checks whether the name of the week model is different from the default
+    /// created when no week exists
+    if(daysAreEmpty) {
+      final int weekYear = weekModel.weekYear;
+      final int weekNumber = weekModel.weekNumber;
+      daysAreEmpty = response.name.compareTo('$weekYear - $weekNumber') == 0;
     }
 
     return !daysAreEmpty;

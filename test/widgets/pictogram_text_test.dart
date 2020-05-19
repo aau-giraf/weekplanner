@@ -57,7 +57,7 @@ void main() {
       pictograms: <PictogramModel>[pictogramModel],
       order: null,
       state: ActivityState.Normal,
-      isChoiceBoard: null);
+      isChoiceBoard: false);
 
   setUp(() {
     di.clearAll();

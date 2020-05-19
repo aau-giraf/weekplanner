@@ -66,7 +66,9 @@ class MockWeekApi extends Mock implements WeekApi {
     ]);
     return hasConflict
         ? Observable<WeekModel>.just(weekModel)
-        : Observable<WeekModel>.just(emptyWeekmodel);
+        : Observable<WeekModel>.just(WeekModel(
+        thumbnail: null, name: '$year - $weekNumber', weekYear: year,
+        weekNumber: weekNumber));
   }
 
   @override
@@ -82,8 +84,6 @@ final DisplayNameModel user1 =
 
 final DisplayNameModel user2 = DisplayNameModel(
     id: 'test2Id', displayName: 'test2Name', role: 'test2Role');
-
-final WeekModel emptyWeekmodel = WeekModel(days: <WeekdayModel>[]);
 
 void main() {
   CopyWeekplanBloc bloc;
