@@ -626,7 +626,7 @@ void main() {
     // Get the title of the activity
     final String title = mockActivities[0].pictograms.first.title;
 
-    expect(find.text(title.toUpperCase()), findsOneWidget);
+    expect(find.text(title[0].toUpperCase() + title.substring(1).toLowerCase()), findsOneWidget);
   });
 
   testWidgets('Changing to Citizen works', (WidgetTester tester) async {
