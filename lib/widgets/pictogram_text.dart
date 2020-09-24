@@ -65,16 +65,20 @@ class PictogramText extends StatelessWidget {
   }
 
   SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
+    // count the amount of words by splitting by the spaces and count the result
+    // if theres only 1 word then max lines is 1 else the max lines is 2
+    final int textLines =
+        pictogramText.split(RegExp('\\s+')).length > 1 ? 2 : 1;
     return SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width / 4,
+        height: null,
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: AutoSizeText(
             pictogramText,
             minFontSize: minFontSize,
-            maxLines: 2,
+            maxLines: textLines,
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
