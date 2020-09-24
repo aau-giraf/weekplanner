@@ -32,9 +32,7 @@ class ToolbarBloc extends BlocBase {
     _iconsToAdd = <IconButton>[];
 
     // Assigns a map to icons, if icons is null.
-    icons ??= <AppBarIcon, VoidCallback>{
-      AppBarIcon.logout: () {}
-    };
+    icons ??= <AppBarIcon, VoidCallback>{AppBarIcon.logout: () {}};
 
     for (AppBarIcon icon in icons.keys) {
       _addIconButton(_iconsToAdd, icon, icons[icon], context);
@@ -102,7 +100,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconSave(callback));
         break;
       case AppBarIcon.search:
-        _iconsToAdd.add(_createIconSearch(callback));
+        _iconsToAdd.add(_createIconSearch(context));
         break;
       case AppBarIcon.settings:
         _iconsToAdd.add(_createIconSettings(callback));
@@ -221,7 +219,7 @@ class ToolbarBloc extends BlocBase {
   }
 
   /// Return the dialog of the popup.
-  Alert createPopupDialog(BuildContext context){
+  Alert createPopupDialog(BuildContext context) {
     /// Password controller for passing information from a text field
     /// to the authenticator.
     final TextEditingController passwordCtrl = TextEditingController();
@@ -234,9 +232,7 @@ class ToolbarBloc extends BlocBase {
             RichText(
               text: TextSpan(
                 text: 'Logget ind som ',
-                style: DefaultTextStyle
-                    .of(context)
-                    .style,
+                style: DefaultTextStyle.of(context).style,
                 children: <TextSpan>[
                   TextSpan(
                       text: _authBloc.loggedInUsername,
@@ -262,16 +258,16 @@ class ToolbarBloc extends BlocBase {
             // be tapped than each 2 seconds.
             onPressed: _clickable
                 ? () {
-              if (_clickable) {
-                _clickable = false;
-                loginFromPopUp(context, _authBloc.loggedInUsername,
-                    passwordCtrl.value.text);
-                // Timer makes it clicable again after 2 seconds.
-                Timer(const Duration(milliseconds: 2000), () {
-                  _clickable = true;
-                });
-              }
-            }
+                    if (_clickable) {
+                      _clickable = false;
+                      loginFromPopUp(context, _authBloc.loggedInUsername,
+                          passwordCtrl.value.text);
+                      // Timer makes it clicable again after 2 seconds.
+                      Timer(const Duration(milliseconds: 2000), () {
+                        _clickable = true;
+                      });
+                    }
+                  }
                 : null,
             child: const Text(
               'Bekræft',
@@ -371,11 +367,16 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  IconButton _createIconSearch(VoidCallback callback) {
+  IconButton _createIconSearch(BuildContext context) {
     return IconButton(
       icon: Image.asset('assets/icons/search.png'),
       tooltip: 'Søg',
-      onPressed: callback,
+      onPressed: () {
+        showSearch<dynamic>(
+          context: context,
+          delegate: CustomSearchDelegate(),
+        );
+      },
     );
   }
 
@@ -462,5 +463,50 @@ class ToolbarBloc extends BlocBase {
   @override
   void dispose() {
     _visibleButtons.close();
+  }
+}
+
+/// Search delegate for search bar
+class CustomSearchDelegate extends SearchDelegate<dynamic> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    if (query.length < 3) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: const Text('Search term must be longer than two letters.'),
+          )
+        ],
+      );
+    }
+    //TODO: Add subscription to the search service
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Column();
   }
 }
