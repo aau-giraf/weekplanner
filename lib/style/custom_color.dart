@@ -73,6 +73,9 @@ class GirafColors {
   /// Border color for button disabled gradient
   static const Color gradientDisabledBorder = Color(0xA68A6E00);
 
+  /// Color for error messages (Same as dart standard)
+  static const Color errorColor = Color(0xFFD32F2F);
+
   /// Color for the loading spinner
   static const Color loadingColor = Color.fromRGBO(255, 157, 0, 0.8);
 
@@ -117,5 +120,4 @@ class GirafColors {
 
   /// Grey[350] color
   static const Color lightGrey = Color(0xFFD6D6D6);
-
 }
