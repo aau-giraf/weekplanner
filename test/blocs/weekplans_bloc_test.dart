@@ -46,7 +46,8 @@ void main() {
     weekNameModelList.add(weekNameModel1);
 
     when(weekApi.getNames('test')).thenAnswer(
-            (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+            (_) => BehaviorSubject<List<WeekNameModel>>
+                .seeded(weekNameModelList));
 
     when(weekApi
         .get('test', weekNameModel1.weekYear, weekNameModel1.weekNumber))
@@ -193,7 +194,8 @@ void main() {
             .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
 
         when(weekApi.getNames(mockUser.id)).thenAnswer(
-                (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+                (_) => BehaviorSubject<List<WeekNameModel>>
+                    .seeded(weekNameModelList));
 
         bloc.load(mockUser);
         bloc.toggleMarkedWeekModel(weekModel1);
@@ -226,7 +228,8 @@ void main() {
     bloc.toggleEditMode();
   }));
 
-  //test('Check if the week models are sorted by date', async((DoneFn done) async
+  //test('Check if the week models are sorted by date', async((DoneFn done)
+  // async
   //{
   //  final List<WeekModel> correctListOld = <WeekModel>[
   //    weekModel1, weekModel4, weekModel5
@@ -245,7 +248,8 @@ void main() {
   //  weekModelList.add(weekModel4);
   //  weekModelList.add(weekModel5);
 //
-  //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
+  //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test',
+  //  id: 'test'));
 //
   //  bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
   //    expect(correctListOld, oldWeekModels);
@@ -288,7 +292,8 @@ void main() {
   //  weekModelList.add(weekModel4);
   //  weekModelList.add(weekModel5);
 //
-  //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test', id: 'test'));
+  //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test',
+  //  id: 'test'));
 //
   //  bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
   //    expect(oldWeekModels.contains(weekModel1), true);
