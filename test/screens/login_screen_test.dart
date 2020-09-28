@@ -235,6 +235,7 @@ void main() {
         await tester.tap(find.byKey(const Key('LoginBtnKey')));
         await tester.pump();
         expect(find.byType(GirafNotifyDialog), findsOneWidget);
-        expect(find.byKey(const Key('WrongUsernameOrPassword')), findsOneWidget);
+        expect(find.byKey(const Key('WrongUsernameOrPassword')),
+            findsOneWidget);
       });
 }
