@@ -16,7 +16,7 @@ class NewCitizenScreen extends StatelessWidget {
   }
 
   final NewCitizenBloc _bloc;
-  BuildContext _errorContext;
+  BuildContext _errorContext; //used to give the error handler a context
   @override
   Widget build(BuildContext context) {
     _errorContext = context;
@@ -136,6 +136,7 @@ class NewCitizenScreen extends StatelessWidget {
     );
   }
 
+  /// exception handler to handle web_api exceptions
   void apiErrorHandler(Object error) {
     if (error is ApiException) {
       ApiException apiError = error;
