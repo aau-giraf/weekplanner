@@ -4,6 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -118,7 +119,7 @@ class WeekplansBloc extends BlocBase {
       List<Observable<WeekModel>> details) {
     // ignore: always_specify_types
     return details.isEmpty
-        ? Observable.empty()
+        ? Observable<WeekModel>.empty()
         : details.length == 1
             ? details[0].map((WeekModel plan) => <WeekModel>[plan])
             : Observable.combineLatestList(details);

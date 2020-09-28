@@ -100,7 +100,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconSave(callback));
         break;
       case AppBarIcon.search:
-        _iconsToAdd.add(_createIconSearch(context));
+        _iconsToAdd.add(_createIconSearch(callback));
         break;
       case AppBarIcon.settings:
         _iconsToAdd.add(_createIconSettings(callback));
@@ -367,16 +367,11 @@ class ToolbarBloc extends BlocBase {
     );
   }
 
-  IconButton _createIconSearch(BuildContext context) {
+  IconButton _createIconSearch(VoidCallback callback) {
     return IconButton(
       icon: Image.asset('assets/icons/search.png'),
       tooltip: 'Søg',
-      onPressed: () {
-        showSearch<dynamic>(
-          context: context,
-          delegate: CustomSearchDelegate(),
-        );
-      },
+      onPressed: callback,
     );
   }
 
@@ -463,50 +458,5 @@ class ToolbarBloc extends BlocBase {
   @override
   void dispose() {
     _visibleButtons.close();
-  }
-}
-
-/// Search delegate for search bar
-class CustomSearchDelegate extends SearchDelegate<dynamic> {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      )
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    if (query.length < 3) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: const Text('Search term must be longer than two letters.'),
-          )
-        ],
-      );
-    }
-    //TODO: Add subscription to the search service
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Column();
   }
 }
