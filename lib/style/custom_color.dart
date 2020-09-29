@@ -62,7 +62,7 @@ class GirafColors {
   static const Color gradientPressedOrange = Color(0xFFFF9D00);
 
   /// Border color for button pressed gradient
-  static const Color gradientPressedBorder = Color(0x66493700);
+  static const Color gradientPressedBorder = Color(0xFF493700);
 
   /// Yellow color for button disabled gradient
   static const Color gradientDisabledYellow = Color(0x66FFCD59);
