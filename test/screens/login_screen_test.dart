@@ -115,23 +115,23 @@ void main() {
     di.clearAll();
     di.registerDependency<AuthBloc>((_) => bloc);
     di.registerDependency<ChooseCitizenBloc>(
-        (_) => ChooseCitizenBloc(Api('Any')));
+            (_) => ChooseCitizenBloc(Api('Any')));
   });
 
   testWidgets('Has Auto-Login button in DEBUG mode',
-      (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
-    expect(find.byKey(const Key('AutoLoginKey')), findsOneWidget);
-  });
+          (WidgetTester tester) async {
+        environment.setContent(debugEnvironments);
+        await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+        expect(find.byKey(const Key('AutoLoginKey')), findsOneWidget);
+      });
 
   testWidgets('Has NO Auto-Login button in PRODUCTION mode',
-      (WidgetTester tester) async {
-    environment.setContent(prodEnvironments);
-    final LoginScreen loginScreen = LoginScreen();
-    await tester.pumpWidget(MaterialApp(home: loginScreen));
-    expect(find.byKey(const Key('AutoLoginKey')), findsNothing);
-  });
+          (WidgetTester tester) async {
+        environment.setContent(prodEnvironments);
+        final LoginScreen loginScreen = LoginScreen();
+        await tester.pumpWidget(MaterialApp(home: loginScreen));
+        expect(find.byKey(const Key('AutoLoginKey')), findsNothing);
+      });
 
   testWidgets('Renders LoginScreen (DEBUG)', (WidgetTester tester) async {
     environment.setContent(debugEnvironments);
@@ -146,46 +146,47 @@ void main() {
   });
 
   testWidgets('Auto-Login fills username if pressed',
-      (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
-    await tester.tap(find.byKey(const Key('AutoLoginKey')));
-    expect(find.text('Graatand'), findsOneWidget);
-  });
+          (WidgetTester tester) async {
+        environment.setContent(debugEnvironments);
+        await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
+        await tester.tap(find.byKey(const Key('AutoLoginKey')));
+        expect(find.text('Graatand'), findsOneWidget);
+      });
 
   testWidgets('Auto-Login fills password if pressed',
-      (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
-    await tester.tap(find.byKey(const Key('AutoLoginKey')));
-    expect(find.text('password'), findsOneWidget);
-  });
+          (WidgetTester tester) async {
+        environment.setContent(debugEnvironments);
+        await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
+        await tester.tap(find.byKey(const Key('AutoLoginKey')));
+        expect(find.text('password'), findsOneWidget);
+      });
 
   testWidgets('Auto-Login fills username and password if pressed',
-      (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
-    await tester.tap(find.byKey(const Key('AutoLoginKey')));
-    expect(find.text('Graatand'), findsOneWidget);
-    expect(find.text('password'), findsOneWidget);
-  });
+          (WidgetTester tester) async {
+        environment.setContent(debugEnvironments);
+        await tester.pumpWidget(MaterialApp(home: MockLoginScreenAutoLogin()));
+        await tester.tap(find.byKey(const Key('AutoLoginKey')));
+        expect(find.text('Graatand'), findsOneWidget);
+        expect(find.text('password'), findsOneWidget);
+      });
 
   testWidgets('Auto-Login does not fill username if not pressed',
-      (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
-    expect(find.text('Graatand'), findsNothing);
-  });
+          (WidgetTester tester) async {
+        environment.setContent(debugEnvironments);
+        await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+        expect(find.text('Graatand'), findsNothing);
+      });
 
   testWidgets('Auto-Login does not fill password if not pressed',
-      (WidgetTester tester) async {
-    environment.setContent(debugEnvironments);
-    await tester.pumpWidget(MaterialApp(home: LoginScreen()));
-    expect(find.text('password'), findsNothing);
-  });
+          (WidgetTester tester) async {
+        environment.setContent(debugEnvironments);
+        await tester.pumpWidget(MaterialApp(home: LoginScreen()));
+        expect(find.text('password'), findsNothing);
+      });
 
   testWidgets('Logging in works (PROD)', (WidgetTester tester) async {
     environment.setContent(prodEnvironments);
+    final Completer<bool> done = Completer<bool>();
 
     await tester.pumpWidget(MaterialApp(home: LoginScreen()));
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
@@ -196,7 +197,9 @@ void main() {
     bloc.loggedIn.listen((bool success) async {
       await tester.pump();
       expect(success, equals(true));
+      done.complete();
     });
+    await done.future;
   });
 
   testWidgets('Logging in works (DEBUG)', (WidgetTester tester) async {
@@ -219,19 +222,20 @@ void main() {
 
   testWidgets(
       'Logging in with wrong information should show a GirafNotifyDialog',
-      (WidgetTester tester) async {
-    environment.setContent(prodEnvironments);
+          (WidgetTester tester) async {
+        environment.setContent(prodEnvironments);
 
-    await tester.pumpWidget(MaterialApp(home: MockLoginScreen()));
-    await tester.pump();
-    await tester.enterText(
-        find.byKey(const Key('UsernameKey')), 'SomeWrongUsername');
-    await tester.enterText(
-        find.byKey(const Key('PasswordKey')), 'SomeWrongPassword');
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('LoginBtnKey')));
-    await tester.pump();
-    expect(find.byType(GirafNotifyDialog), findsOneWidget);
-    expect(find.byKey(const Key('WrongUsernameOrPassword')), findsOneWidget);
-  });
+        await tester.pumpWidget(MaterialApp(home: MockLoginScreen()));
+        await tester.pump();
+        await tester.enterText(
+            find.byKey(const Key('UsernameKey')), 'SomeWrongUsername');
+        await tester.enterText(
+            find.byKey(const Key('PasswordKey')), 'SomeWrongPassword');
+        await tester.pump();
+        await tester.tap(find.byKey(const Key('LoginBtnKey')));
+        await tester.pump();
+        expect(find.byType(GirafNotifyDialog), findsOneWidget);
+        expect(find.byKey(const Key('WrongUsernameOrPassword')),
+            findsOneWidget);
+      });
 }

@@ -41,12 +41,12 @@ void main() {
   });
 
   testWidgets('takes PictogramModel and VoidCallback',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(PictogramImage(
-      pictogram: pictogramModel,
-      onPressed: () {},
-    ));
-  });
+          (WidgetTester tester) async {
+        await tester.pumpWidget(PictogramImage(
+          pictogram: pictogramModel,
+          onPressed: () {},
+        ));
+      });
 
   testWidgets('loads renders given image', (WidgetTester tester) async {
     await tester.pumpWidget(PictogramImage(
@@ -60,10 +60,13 @@ void main() {
 
     expect(f, findsNothing);
 
+    final Completer<bool> waiter = Completer<bool>();
     bloc.image.listen(expectAsync1((Image image) async {
       await tester.pump();
       expect(f, findsOneWidget);
+      waiter.complete();
     }));
+    await waiter.future;
   });
 
   testWidgets('triggers callback on tap', (WidgetTester tester) async {
@@ -84,7 +87,6 @@ void main() {
       await tester.pump();
       await tester.tap(f);
     }));
-
     await done.future;
   });
 
@@ -100,9 +102,12 @@ void main() {
 
     expect(f, findsOneWidget);
 
+    final Completer<bool> waiter = Completer<bool>();
     bloc.image.listen(expectAsync1((Image image) async {
       await tester.pump();
       expect(f, findsNothing);
+      waiter.complete();
     }));
+    await waiter.future;
   });
 }
