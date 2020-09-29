@@ -65,10 +65,6 @@ class PictogramText extends StatelessWidget {
   }
 
   SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
-    // count the amount of words by splitting by the spaces and count the result
-    // if theres only 1 word then max lines is 1 else the max lines is 2
-    final int textLines =
-        pictogramText.split(RegExp('\\s+')).length > 1 ? 2 : 1;
     return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: null,
@@ -78,12 +74,43 @@ class PictogramText extends StatelessWidget {
           child: AutoSizeText(
             pictogramText,
             minFontSize: minFontSize,
-            maxLines: textLines,
+            maxLines: textLines(pictogramText, context),
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 150),
           ),
         ));
+  }
+}
+
+/// Try to calculate the actual size of the text, with the size of the screen
+/// accounted for
+double textWidth(String text, BuildContext context) {
+  return (TextPainter(
+          text: TextSpan(
+              text: text,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 120)),
+          maxLines: 1,
+          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+          textDirection: TextDirection.ltr)
+        ..layout())
+      .size
+      .width;
+}
+
+/// Counts the amount of words by splitting by the spaces and count the result
+/// if theres only 1 word then max lines is 1 else the max lines is 2
+int textLines(String pictogramText, BuildContext context) {
+  if (pictogramText.split(RegExp('\\s+')).length > 1) {
+    return 2;
+  } else {
+    if (textWidth(pictogramText, context) >=
+        MediaQuery.of(context).size.width) {
+      return 2;
+    } else {
+      return 1;
+    }
   }
 }
