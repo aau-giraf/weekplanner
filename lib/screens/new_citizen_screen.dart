@@ -59,6 +59,8 @@ class NewCitizenScreen extends StatelessWidget {
                       errorText: (snapshot?.data == true) &&
                               _bloc.usernameController.value != null
                           ? null
+                          // cant make it shorter because of the string
+                          // ignore: lines_longer_than_80_chars
                           : 'Brugernavn må ikke indeholde mellemrum eller være tom',
                     ),
                     onChanged: _bloc.onUsernameChange.add,
@@ -79,6 +81,8 @@ class NewCitizenScreen extends StatelessWidget {
                       errorText: (snapshot?.data == true) &&
                               _bloc.passwordController.value != null
                           ? null
+                          // cant make it shorter because of the string
+                          // ignore: lines_longer_than_80_chars
                           : 'Kodeord må ikke indeholde mellemrum eller være tom',
                     ),
                     onChanged: _bloc.onPasswordChange.add,
@@ -129,7 +133,7 @@ class NewCitizenScreen extends StatelessWidget {
                         barrierDismissible: false,
                         context: context,
                         builder: (BuildContext context) {
-                          ApiException apiError = error;
+                          final ApiException apiError = error;
                           return GirafNotifyDialog(
                               title: 'Fejl',
                               description: apiError.errorMessage,
