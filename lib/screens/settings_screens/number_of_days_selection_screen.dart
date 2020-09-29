@@ -50,6 +50,18 @@ class NumberOfDaysScreen extends StatelessWidget {
                             });
                           }),
                       SettingsCheckMarkButton(
+                          2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
+                              () {
+                            _settingsModel.nrOfDaysToDisplay = 2;
+                            _settingsBloc.updateSettings(
+                                _user.id, _settingsModel)
+                                .listen((SettingsModel response) {
+                              if (response != null) {
+                                Routes.pop(context);
+                              }
+                            });
+                          }),
+                      SettingsCheckMarkButton(
                           5,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til fredag', () {
