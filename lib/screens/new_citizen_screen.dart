@@ -16,10 +16,8 @@ class NewCitizenScreen extends StatelessWidget {
   }
 
   final NewCitizenBloc _bloc;
-  BuildContext _errorContext; //used to give the error handler a context
   @override
   Widget build(BuildContext context) {
-    _errorContext = context;
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny borger',
@@ -125,7 +123,18 @@ class NewCitizenScreen extends StatelessWidget {
                         Routes.pop<GirafUserModel>(context, response);
                         _bloc.resetBloc();
                       }
-                    }).onError(apiErrorHandler);
+                    }).onError((Object error) => showDialog<Center>(
+
+                        /// exception handler to handle web_api exceptions
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          ApiException apiError = error;
+                          return GirafNotifyDialog(
+                              title: 'Fejl',
+                              description: apiError.errorMessage,
+                              key: Key(apiError.errorKey.toString()));
+                        }));
                   },
                 ),
               ),
@@ -134,21 +143,5 @@ class NewCitizenScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  /// exception handler to handle web_api exceptions
-  void apiErrorHandler(Object error) {
-    if (error is ApiException) {
-      ApiException apiError = error;
-      showDialog<Center>(
-          barrierDismissible: false,
-          context: _errorContext,
-          builder: (BuildContext context) {
-            return GirafNotifyDialog(
-                title: 'Fejl',
-                description: apiError.errorMessage,
-                key: Key(apiError.errorKey.toString()));
-          });
-    }
   }
 }
