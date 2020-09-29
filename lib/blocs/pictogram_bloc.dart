@@ -66,6 +66,10 @@ class PictogramBloc extends BlocBase {
     });
   }
 
+  void delete(PictogramModel pm){
+
+  }
+
   @override
   void dispose() {
     _pictograms.close();
