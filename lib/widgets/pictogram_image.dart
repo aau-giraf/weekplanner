@@ -3,6 +3,8 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import '../routes.dart';
 
 /// Widget for rendering pictogram models as images
 class PictogramImage extends StatelessWidget {
@@ -27,14 +29,37 @@ class PictogramImage extends StatelessWidget {
   /// every press of the image
   final VoidCallback onPressed;
 
-  void deletePic(){
-    _bloc.delete(pictogram);
-  }
-  
   final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
   final Widget _loading = Center(
       child: Container(
-          width: 100, height: 100, child: const CircularProgressIndicator()));
+          width: 100, height: 100, child: const CircularProgressIndicator()
+      )
+  );
+
+  void deletePic(){
+    _bloc.delete(pictogram);
+  }
+
+  Future<Center> _confirmDeleteDialog(
+      BuildContext context
+      ){
+    return showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return GirafConfirmDialog(
+              title: 'Slet piktogram',
+              description: 'Vil du slette det markerede piktogram?',
+              confirmButtonText: 'Slet',
+              confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
+              confirmOnPressed: (){
+                deletePic();
+                Routes.pop(context);
+              }
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +75,10 @@ class PictogramImage extends StatelessWidget {
                     (BuildContext context, AsyncSnapshot<Image> snapshot) =>
                         snapshot.data ?? _loading),
               GirafButton(
-                onPressed: deletePic,
+                onPressed: () {_confirmDeleteDialog(context);},
                 icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
-                text: 'Slet!!!!',
+                text: 'Slet',
+                isEnabled: false,
               )
             ]
             )
