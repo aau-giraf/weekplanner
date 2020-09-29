@@ -19,7 +19,7 @@ class Routes {
   /// initialRoute.
   static void goHome(BuildContext context) {
     Navigator.of(context).popUntil((Route<dynamic> route) {
-      return route.isFirst;
+      return route.settings.isInitialRoute;
     });
   }
 }
