@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Widget for rendering pictogram models as images
 class PictogramImage extends StatelessWidget {
@@ -25,6 +26,10 @@ class PictogramImage extends StatelessWidget {
   /// The provided callback function which will be called on
   /// every press of the image
   final VoidCallback onPressed;
+
+  void deletePic(){
+    _bloc.delete(pictogram);
+  }
   
   final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
   final Widget _loading = Center(
@@ -38,11 +43,21 @@ class PictogramImage extends StatelessWidget {
       child: Card(
         child: FittedBox(
             fit: BoxFit.contain,
-            child: StreamBuilder<Image>(
+            child: Stack(
+            children: <Widget>[StreamBuilder<Image>(
                 stream: _bloc.image,
                 builder:
                     (BuildContext context, AsyncSnapshot<Image> snapshot) =>
-                        snapshot.data ?? _loading)),
+                        snapshot.data ?? _loading),
+              GirafButton(
+                onPressed: deletePic,
+                icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                text: 'Slet!!!!',
+              )
+            ]
+            )
+      ),
+
       ),
     );
   }
