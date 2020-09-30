@@ -61,7 +61,7 @@ class NewCitizenScreen extends StatelessWidget {
                           ? null
                           // cant make it shorter because of the string
                           // ignore: lines_longer_than_80_chars
-                          : 'Brugernavn må ikke indeholde mellemrum eller være tom',
+                          : 'Brugernavn er tom eller indeholder et ugyldigt tegn',
                     ),
                     onChanged: _bloc.onUsernameChange.add,
                   );
