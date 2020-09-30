@@ -1,7 +1,9 @@
 import 'package:api_client/api/api_exception.dart';
+
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/routes.dart';
@@ -14,6 +16,8 @@ class NewCitizenScreen extends StatelessWidget {
   NewCitizenScreen() : _bloc = di.getDependency<NewCitizenBloc>() {
     _bloc.initialize();
   }
+
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   final NewCitizenBloc _bloc;
   @override
@@ -136,7 +140,7 @@ class NewCitizenScreen extends StatelessWidget {
                           final ApiException apiError = error;
                           return GirafNotifyDialog(
                               title: 'Fejl',
-                              description: apiError.errorMessage,
+                              description: _translator.getErrorMessage(error),
                               key: Key(apiError.errorKey.toString()));
                         }));
                   },
