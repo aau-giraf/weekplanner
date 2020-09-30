@@ -1,5 +1,4 @@
 import 'package:api_client/api/api_exception.dart';
-
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
@@ -131,18 +130,8 @@ class NewCitizenScreen extends StatelessWidget {
                         Routes.pop<GirafUserModel>(context, response);
                         _bloc.resetBloc();
                       }
-                    }).onError((Object error) => showDialog<Center>(
-
-                        /// exception handler to handle web_api exceptions
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          final ApiException apiError = error;
-                          return GirafNotifyDialog(
-                              title: 'Fejl',
-                              description: _translator.getErrorMessage(error),
-                              key: Key(apiError.errorKey.toString()));
-                        }));
+                    }).onError((Object error) =>
+                        _translator.catchApiError(error, context));
                   },
                 ),
               ),

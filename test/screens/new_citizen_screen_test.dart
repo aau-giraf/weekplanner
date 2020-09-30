@@ -1,5 +1,11 @@
+import 'package:api_client/api/account_api.dart';
+import 'package:api_client/api_client.dart';
+import 'package:api_client/persistence/persistence_client.dart';
+import 'package:http/http.dart' as http;
 import 'package:api_client/api/api.dart';
+import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/http/http.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
@@ -14,18 +20,62 @@ import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
+class MockAccountApi extends AccountApi {
+  MockAccountApi(PersistenceClient persist)
+      : super(HttpClient(baseUrl: null, persist: persist), persist);
+
+  @override
+  Observable<GirafUserModel> register(
+      String username, String password, String displayName,
+      {@required int departmentId, @required Role role}) {
+    final Map<String, dynamic> body = <String, dynamic>{
+      'username': username,
+      'displayName': displayName,
+      'password': password,
+      'department': departmentId,
+      'id': '2',
+      'role': 2,
+      'roleName': '' + role.toString().split('.').last,
+    };
+
+    if (username == 'alreadyExists') {
+      final http.Response mockHttpResponse = http.Response(
+          // ignore: lines_longer_than_80_chars
+          'message: User already exists, details: A user with the given username already exists, errorKey: UserAlreadyExists',
+          401);
+      final Observable<Response> mockResponse =
+          Observable<Response>.fromFuture(futureMockResponse(mockHttpResponse));
+      return mockResponse.map((Response res) => throw ApiException(res));
+    }
+    return Observable<GirafUserModel>.fromFuture(createMockUserModel(body));
+  }
+
+  Future<Response> futureMockResponse(http.Response response) async {
+    return Response(response, <String, dynamic>{
+      'message': 'User already exists',
+      'details': 'A user with the given username already exists',
+      'errorKey': 'UserAlreadyExists'
+    });
+  }
+
+  // ignore: missing_return
+  Future<GirafUserModel> createMockUserModel(Map<String, dynamic> body) async {
+    return GirafUserModel.fromJson(body);
+  }
+}
+
+class MockApi extends Api {
+  MockApi(String baseUrl) : super(baseUrl) {
+    account = MockAccountApi(PersistenceClient());
+    user = MockUserApi();
+  }
+}
+
 class MockNewCitizenBloc extends NewCitizenBloc {
   MockNewCitizenBloc(this.api) : super(api);
 
   bool acceptAllInputs = true;
   Api api;
-
-  @override
-  Observable<GirafUserModel> createCitizen() {
-    return api.account
-        .register('mockUserName', 'password', 'mockDisplayName',
-        departmentId: null, role: null);
-  }
 
   @override
   Observable<bool> get validDisplayNameStream =>
@@ -65,7 +115,7 @@ void main() {
   MockNewCitizenBloc mockNewCitizenBloc;
 
   setUp(() {
-    api = Api('any');
+    api = MockApi('any');
     mockNewCitizenBloc = MockNewCitizenBloc(api);
 
     di.clearAll();
@@ -142,5 +192,39 @@ void main() {
             .widget<GirafButton>(find.byKey(const Key('saveButton')))
             .isEnabled,
         isFalse);
+  });
+
+  testWidgets('"Brugernavnet eksisterer allerede" error message',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    await tester.enterText(
+        find.byKey(const Key('displayNameField')), 'mockDisplayName');
+    await tester.enterText(
+        find.byKey(const Key('usernameField')), 'alreadyExists');
+    await tester.enterText(find.byKey(const Key('passwordField')), 'password');
+    await tester.enterText(
+        find.byKey(const Key('passwordVerifyField')), 'password');
+
+    await tester.tap(find.byKey(const Key('saveButton')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
+  });
+  testWidgets('New user so, no error message should appear',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    await tester.enterText(
+        find.byKey(const Key('displayNameField')), 'mockDisplayName');
+    await tester.enterText(find.byKey(const Key('usernameField')), 'NewUser');
+    await tester.enterText(find.byKey(const Key('passwordField')), 'password');
+    await tester.enterText(
+        find.byKey(const Key('passwordVerifyField')), 'password');
+
+    await tester.tap(find.byKey(const Key('saveButton')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
   });
 }
