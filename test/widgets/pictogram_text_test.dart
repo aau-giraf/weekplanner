@@ -109,8 +109,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
-    final String title = pictogramModel.title;
-    expect(find.text(title.toUpperCase()), findsOneWidget);
+    expect(find.text('Sometitle'), findsOneWidget);
   });
 
   testWidgets('Pictogram text is displayed when true and in guardian mode',
@@ -123,8 +122,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
-    final String title = pictogramModel.title;
-    expect(find.text(title.toUpperCase()), findsOneWidget);
+    expect(find.text('Sometitle'), findsOneWidget);
   });
 
   testWidgets('Pictogram text is displayed when false and in guardian mode',
@@ -137,7 +135,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
-    final String title = pictogramModel.title;
-    expect(find.text(title.toUpperCase()), findsOneWidget);
+    expect(find.text('Sometitle'), findsOneWidget);
   });
 }
