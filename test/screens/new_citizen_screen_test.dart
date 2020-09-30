@@ -20,10 +20,14 @@ import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
+/// Mock Account Api needed to insert errors int othe datastream from a place
+/// where listen().onError could catch it
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
       : super(HttpClient(baseUrl: null, persist: persist), persist);
 
+  /// override of the register function, which returns an error
+  /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
   @override
   Observable<GirafUserModel> register(
       String username, String password, String displayName,
@@ -50,6 +54,7 @@ class MockAccountApi extends AccountApi {
     return Observable<GirafUserModel>.fromFuture(createMockUserModel(body));
   }
 
+  /// Creates the Error for the stream
   Future<Response> futureMockResponse(http.Response response) async {
     return Response(response, <String, dynamic>{
       'message': 'User already exists',
@@ -58,12 +63,13 @@ class MockAccountApi extends AccountApi {
     });
   }
 
-  // ignore: missing_return
+  /// Creates the model for the stream
   Future<GirafUserModel> createMockUserModel(Map<String, dynamic> body) async {
     return GirafUserModel.fromJson(body);
   }
 }
 
+/// Mock api needed to chance the UserApi to MockUserApi
 class MockApi extends Api {
   MockApi(String baseUrl) : super(baseUrl) {
     account = MockAccountApi(PersistenceClient());
