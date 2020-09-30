@@ -224,13 +224,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
     if (weekplan.thumbnail != null) {
       handleOnTapWeekPlan(inEditMode, weekplan, context);
     } else {
-      handleOnTapWeekPlanAdd(inEditMode, context);
+      handleOnTapWeekPlanAdd(context);
     }
   }
 
   /// Handles on tap on a add new weekplan card
-  void handleOnTapWeekPlanAdd(bool inEditMode, BuildContext context) {
-    if (!inEditMode) {
+  void handleOnTapWeekPlanAdd(BuildContext context) {
       Routes.push<WeekModel>(
         context,
         NewWeekplanScreen(
@@ -238,7 +237,6 @@ class WeekplanSelectorScreen extends StatelessWidget {
           existingWeekPlans: _weekBloc.weekNameModels,
         ),
       ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
-    }
   }
 
   /// Handles on tap on a weekplan card
