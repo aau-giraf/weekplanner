@@ -77,6 +77,12 @@ void main() {
     expect(find.text('Vis kun i dag'), findsOneWidget);
   });
 
+  testWidgets('Has option, Vis Vis to dage', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
+    await tester.pumpAndSettle();
+    expect(find.text('Vis Vis to dage'), findsOneWidget);
+  });
+
   testWidgets('Has option, Vis mandag til fredag', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
