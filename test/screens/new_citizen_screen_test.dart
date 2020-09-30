@@ -47,19 +47,35 @@ class MockAccountApi extends AccountApi {
           // ignore: lines_longer_than_80_chars
           'message: User already exists, details: A user with the given username already exists, errorKey: UserAlreadyExists',
           401);
-      final Observable<Response> mockResponse =
-          Observable<Response>.fromFuture(futureMockResponse(mockHttpResponse));
+      final Observable<Response> mockResponse = Observable<Response>.fromFuture(
+          userAlreadyExistsResponse(mockHttpResponse));
+      return mockResponse.map((Response res) => throw ApiException(res));
+    } else if (username == 'defaultError') {
+      final http.Response mockHttpResponse = http.Response(
+          // ignore: lines_longer_than_80_chars
+          'message: something went wrong, details: unexpected error, errorKey: Error',
+          401);
+      final Observable<Response> mockResponse = Observable<Response>.fromFuture(
+          unexpectedErrorResponse(mockHttpResponse));
       return mockResponse.map((Response res) => throw ApiException(res));
     }
     return Observable<GirafUserModel>.fromFuture(createMockUserModel(body));
   }
 
   /// Creates the Error for the stream
-  Future<Response> futureMockResponse(http.Response response) async {
+  Future<Response> userAlreadyExistsResponse(http.Response response) async {
     return Response(response, <String, dynamic>{
       'message': 'User already exists',
       'details': 'A user with the given username already exists',
       'errorKey': 'UserAlreadyExists'
+    });
+  }
+
+  Future<Response> unexpectedErrorResponse(http.Response response) async {
+    return Response(response, <String, dynamic>{
+      'message': 'something went wrong',
+      'details': 'unexpected error',
+      'errorKey': 'Error'
     });
   }
 
@@ -232,5 +248,22 @@ void main() {
     await tester.tap(find.byKey(const Key('saveButton')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
+  });
+  testWidgets('Unexpected error from the api_client',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    await tester.enterText(
+        find.byKey(const Key('displayNameField')), 'mockDisplayName');
+    await tester.enterText(
+        find.byKey(const Key('usernameField')), 'defaultError');
+    await tester.enterText(find.byKey(const Key('passwordField')), 'password');
+    await tester.enterText(
+        find.byKey(const Key('passwordVerifyField')), 'password');
+
+    await tester.tap(find.byKey(const Key('saveButton')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
   });
 }
