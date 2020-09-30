@@ -1,6 +1,5 @@
 import 'package:api_client/models/enums/error_key.dart';
 import 'package:api_client/api/api_exception.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
