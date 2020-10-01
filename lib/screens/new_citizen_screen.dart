@@ -1,9 +1,8 @@
-import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -14,6 +13,8 @@ class NewCitizenScreen extends StatelessWidget {
   NewCitizenScreen() : _bloc = di.getDependency<NewCitizenBloc>() {
     _bloc.initialize();
   }
+
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   final NewCitizenBloc _bloc;
   @override
@@ -127,18 +128,8 @@ class NewCitizenScreen extends StatelessWidget {
                         Routes.pop<GirafUserModel>(context, response);
                         _bloc.resetBloc();
                       }
-                    }).onError((Object error) => showDialog<Center>(
-
-                        /// exception handler to handle web_api exceptions
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          final ApiException apiError = error;
-                          return GirafNotifyDialog(
-                              title: 'Fejl',
-                              description: apiError.errorMessage,
-                              key: Key(apiError.errorKey.toString()));
-                        }));
+                    }).onError((Object error) =>
+                        _translator.catchApiError(error, context));
                   },
                 ),
               ),
