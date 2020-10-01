@@ -100,7 +100,10 @@ class NewCitizenBloc extends BlocBase {
         if (input == null || input.isEmpty) {
           sink.add(false);
         } else {
-          sink.add(!input.contains(' '));
+          //Regular Expression to check if the username contains
+          //only all letters, numbers, underscore and/or hyphen.
+          sink.add(input.contains(RegExp(r'^[A-ZÆØÅ0-9_-]*$',
+            caseSensitive : false)));
         }
       });
 
