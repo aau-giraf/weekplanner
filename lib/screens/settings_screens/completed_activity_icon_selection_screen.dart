@@ -10,6 +10,8 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxBu
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
 
 import '../../di.dart';
+import 'package:weekplanner/routes.dart';
+
 
 /// Screen where the icon for completed activity can be chosen
 class CompletedActivityIconScreen extends StatelessWidget {
@@ -46,6 +48,9 @@ class CompletedActivityIconScreen extends StatelessWidget {
                               _settingsBloc.updateSettings(_user.id,
                                 _settingsModel).listen((SettingsModel model) {
                                   _settingsBloc.loadSettings(_user);
+                                  if(model != null){
+                                    Routes.pop(context);
+                                  }
                               });
                           }),
                       SettingsCheckMarkButton(
@@ -56,6 +61,9 @@ class CompletedActivityIconScreen extends StatelessWidget {
                         _settingsBloc.updateSettings(_user.id, _settingsModel).
                             listen((SettingsModel model) {
                               _settingsBloc.loadSettings(_user);
+                              if(model != null){
+                                Routes.pop(context);
+                              }
                         });
                       }),
                       SettingsCheckMarkButton(
@@ -66,6 +74,9 @@ class CompletedActivityIconScreen extends StatelessWidget {
                         _settingsBloc.updateSettings(_user.id, _settingsModel).
                             listen((SettingsModel model) {
                               _settingsBloc.loadSettings(_user);
+                              if(model != null){
+                                Routes.pop(context);
+                              }
                         });
                       }),
                     ]),
