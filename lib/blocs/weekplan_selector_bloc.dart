@@ -326,10 +326,19 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Sets [_searchResults] to the found elements of [_weekModel].
-  void onSearch(String searchQuery) {
-    print('Searching...');
-
-    print('Results should be set now');
+  Future<List<WeekModel>> onSearch(String searchQuery) async {
+    final List<WeekModel> allModels = <WeekModel>[];
+    final List<WeekModel> foundModels = <WeekModel>[];
+    await weekModels.first.then((List<WeekModel> wm) => {
+          // ignore: avoid_function_literals_in_foreach_calls
+          wm.forEach((WeekModel element) {
+            allModels.add(element);
+          })
+        });
+    foundModels.addAll(
+        allModels.where((WeekModel element) => element.name == searchQuery));
+    print(foundModels);
+    return foundModels;
   }
   //}
 

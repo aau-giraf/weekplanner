@@ -28,6 +28,7 @@ dependencies:
   mutex: ^1.0.1
   material_design_icons_flutter: ^3.2.3895
   audioplayers:
+  flappy_search_bar: ^1.7.2
 
 dev_dependencies:
   async_test:

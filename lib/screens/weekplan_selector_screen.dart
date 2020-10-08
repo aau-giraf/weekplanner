@@ -1,6 +1,7 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -57,9 +58,10 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           appBarIcons: <AppBarIcon, VoidCallback>{
             AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
             AppBarIcon.search: () {
-              showSearch<dynamic>(
-                  context: context,
-                  delegate: WeekplanSearchDelegate(_user, _weekBloc, this));
+              _weekBloc.toggleSearch();
+              // showSearch<dynamic>(
+              //     context: context,
+              //     delegate: WeekplanSearchDelegate(_user, _weekBloc, this));
             },
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
@@ -85,25 +87,32 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       BuildContext context, Stream<List<WeekModel>> weekModels,
       [Stream<List<WeekModel>> oldWeekModels]) {
     return Container(
-        child: Column(children: <Widget>[
-      // StreamBuilder<bool>(
-      //     stream: _weekBloc.searchMode,
-      //     initialData: false,
-      //     builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-      //       return Visibility(
-      //           visible: snapshot.data,
-      //           child: TextFormField(
-      //             decoration: const InputDecoration(
-      //               prefixIcon: Icon(Icons.search),
-      //             ),
-      //             textCapitalization: TextCapitalization.sentences,
-      //          onFieldSubmitted: (String value) => _weekBloc.onSearch(value),
-      //           ));
-      //     }),
-      Expanded(
-          flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+        child: ListView(children: <Widget>[
+      StreamBuilder<bool>(
+          stream: _weekBloc.searchMode,
+          initialData: true,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return Visibility(
+                visible: snapshot.data,
+                child: Container(
+                    height: MediaQuery.of(context).size.height * 0.145,
+                    // ignore: always_specify_types
+                    child: SearchBar(
+                        onSearch: _weekBloc.onSearch,
+                        onItemFound: (WeekModel weekplan, int index) {
+                          return ListTile(
+                            title: Text(weekplan.name),
+                            subtitle: Text(weekplan.weekNumber.toString() +
+                                ', ' +
+                                weekplan.weekYear.toString()),
+                          );
+                        })));
+          }),
       Container(
-        color: Colors.grey,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: _buildWeekplanGridview(context, weekModels, true)),
+      Container(
+        color: theme.GirafColors.grey,
         child: const AutoSizeText(
           'Overståede uger',
           style: TextStyle(fontSize: 18),
@@ -115,8 +124,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
-      Expanded(
-          flex: 5,
+      Container(
+          height: MediaQuery.of(context).size.height * 0.5,
           child: _buildWeekplanGridview(context, oldWeekModels, false)),
     ]));
   }
@@ -137,11 +146,12 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
                 return GridView.count(
+                    scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
                     crossAxisCount: MediaQuery.of(context).orientation ==
                             Orientation.landscape
-                        ? 4
+                        ? 1
                         : 3,
                     crossAxisSpacing:
                         MediaQuery.of(context).size.width / 100 * 1.5,
@@ -264,13 +274,13 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(BuildContext context) {
-      Routes.push<WeekModel>(
-        context,
-        NewWeekplanScreen(
-          user: _user,
-          existingWeekPlans: _weekBloc.weekNameModels,
-        ),
-      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
+    Routes.push<WeekModel>(
+      context,
+      NewWeekplanScreen(
+        user: _user,
+        existingWeekPlans: _weekBloc.weekNameModels,
+      ),
+    ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
   }
 
   /// Handles on tap on a weekplan card
