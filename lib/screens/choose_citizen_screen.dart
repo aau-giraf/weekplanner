@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/models/displayname_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,13 @@ import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// The screen to choose a citizen
-class ChooseCitizenScreen extends StatelessWidget {
+class ChooseCitizenScreen extends StatefulWidget {
+  @override
+  _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState();
+}
+
+class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
+
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
 
   @override
@@ -85,7 +93,7 @@ class ChooseCitizenScreen extends StatelessWidget {
                 WeekplanSelectorScreen(user)))).toList();
 
     list.insert(0, FlatButton(
-      onPressed: () { Routes.push(context, NewCitizenScreen());},
+      onPressed: () async{ await Routes.push(context, NewCitizenScreen());},
       child: Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: Column(
