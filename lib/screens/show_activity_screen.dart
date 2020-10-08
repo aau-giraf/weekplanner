@@ -49,7 +49,7 @@ class ShowActivityScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Text style used for title.
-  final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
+  final TextStyle titleTextStyle = const TextStyle(fontSize: 23);
 
   @override
   Widget build(BuildContext context) {
@@ -185,11 +185,24 @@ class ShowActivityScreen extends StatelessWidget {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),  
                   child: Card(
                     key: const Key('AddChoiceBoardButtonKey'),
+                    child: InkWell(
+                    onTap: () async {
+                              await Routes.push(context, PictogramSearch())
+                                  .then((Object object) {
+                                if (object is PictogramModel) {
+                                  _activityBloc.load(_activity, _girafUser);
+                                  final PictogramModel newPictogram = object;
+                                  _activity.isChoiceBoard = true;
+                                  _activity.pictograms.add(newPictogram);
+                                  _activityBloc.update();
+                                }
+                              });
+                            },
                     child: Column(children: <Widget>[
-                      // The title of the timer widget
+                      // The title of the choiceBoard widget
                       Center(
                           key: const Key('ChoiceboardTitleKey'),
                           child: Padding(
@@ -214,9 +227,6 @@ class ShowActivityScreen extends StatelessWidget {
                       Expanded(
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child: IconButton(
-                            icon: AspectRatio(
-                              aspectRatio: 1,
                               child: FittedBox(
                                 child: Icon(
                                   Icons.add,
@@ -224,24 +234,11 @@ class ShowActivityScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            onPressed: () async {
-                              await Routes.push(context, PictogramSearch())
-                                  .then((Object object) {
-                                if (object is PictogramModel) {
-                                  _activityBloc.load(_activity, _girafUser);
-                                  final PictogramModel newPictogram = object;
-                                  _activity.isChoiceBoard = true;
-                                  _activity.pictograms.add(newPictogram);
-                                  _activityBloc.update();
-                                }
-                              });
-                            },
-                          ),
-                        ),
                       ),
                     ]),
                   ),
                 ),
+              ),
               ),
             ),
           );
@@ -274,7 +271,12 @@ class ShowActivityScreen extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(20),
                           child: Card(
-                            key: const Key('OverallTimerBoxKey'),
+                            child: Material(
+                            child: InkWell(
+                              key: const Key('OverallTimerBoxKey'),
+                             onTap: () {!timerInitSnapshot.data ?
+                              _buildTimerDialog(overallContext) : null;
+                              },
                             child: Column(children: <Widget>[
                               // The title of the timer widget
                               Center(
@@ -298,12 +300,14 @@ class ShowActivityScreen extends StatelessWidget {
                                   modeSnapshot)
                             ]),
                           ),
-                        ),
+                          ),
+                          ),
                       ),
                     ),
                   ),
-                );
-              });
+                ),
+              );
+            });
         });
   }
 
@@ -395,14 +399,9 @@ class ShowActivityScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(0),
               child: Container(
-                  child: IconButton(
-                      key: const Key('AddTimerButtonKey'),
-                      icon: const ImageIcon(
-                          AssetImage('assets/icons/addTimerHighRes.png')),
-                      onPressed: () {
-                        _buildTimerDialog(overallContext);
-                      })),
-            ))
+                  child: const ImageIcon(AssetImage('assets/icons/addTimerHighRes.png')),
+                  key: const Key('AddTimerButtonKey'),                     
+            )))
         : Container(
             key: const Key('TimerNotInitCitizenKey'),
           );
