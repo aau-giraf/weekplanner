@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
@@ -95,8 +92,8 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
     list.insert(0, FlatButton(
       onPressed: () async {
-        final result =  await Routes.push(context, NewCitizenScreen());
-        DisplayNameModel newUser = DisplayNameModel.fromGirafUser(result);
+        final Object result =  await Routes.push(context, NewCitizenScreen());
+        final DisplayNameModel newUser = DisplayNameModel.fromGirafUser(result);
         list.add(CitizenAvatar(
               displaynameModel: newUser,
               onPressed: () => Routes.push(context,
