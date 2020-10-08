@@ -24,13 +24,27 @@ import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Screen to select a weekplan for a given user
-class WeekplanSelectorScreen extends StatelessWidget {
+class WeekplanSelectorScreen extends StatefulWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
   WeekplanSelectorScreen(this._user)
       : _weekBloc = di.getDependency<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
+
+  @override
+  _WeekplanSelectorScreenState createState() =>
+      _WeekplanSelectorScreenState(_user, _weekBloc);
+
+  final WeekplansBloc _weekBloc;
+  final DisplayNameModel _user;
+}
+
+@override
+class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
+  /// Constructor for weekplan selector screen.
+  /// Requires a user to load weekplans
+  _WeekplanSelectorScreenState(this._user, this._weekBloc);
 
   final WeekplansBloc _weekBloc;
   final DisplayNameModel _user;
@@ -42,7 +56,11 @@ class WeekplanSelectorScreen extends StatelessWidget {
           title: _user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
             AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-            AppBarIcon.search: () => _weekBloc.toggleSearch(),
+            AppBarIcon.search: () {
+              showSearch<dynamic>(
+                  context: context,
+                  delegate: WeekplanSearchDelegate(_user, _weekBloc, this));
+            },
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
                 Routes.push(context, SettingsScreen(_user))
@@ -59,15 +77,29 @@ class WeekplanSelectorScreen extends StatelessWidget {
             }
           },
         ),
-        body: _buildWeekplanColumnview(context));
+        body: _buildWeekplanColumnview(
+            context, _weekBloc.weekModels, _weekBloc.oldWeekModels));
   }
 
-  Widget _buildWeekplanColumnview(BuildContext context) {
-    final Stream<List<WeekModel>> weekModels = _weekBloc.weekModels;
-    final Stream<List<WeekModel>> oldWeekModels = _weekBloc.oldWeekModels;
-
+  Widget _buildWeekplanColumnview(
+      BuildContext context, Stream<List<WeekModel>> weekModels,
+      [Stream<List<WeekModel>> oldWeekModels]) {
     return Container(
         child: Column(children: <Widget>[
+      // StreamBuilder<bool>(
+      //     stream: _weekBloc.searchMode,
+      //     initialData: false,
+      //     builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+      //       return Visibility(
+      //           visible: snapshot.data,
+      //           child: TextFormField(
+      //             decoration: const InputDecoration(
+      //               prefixIcon: Icon(Icons.search),
+      //             ),
+      //             textCapitalization: TextCapitalization.sentences,
+      //          onFieldSubmitted: (String value) => _weekBloc.onSearch(value),
+      //           ));
+      //     }),
       Expanded(
           flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
       Container(
@@ -416,6 +448,77 @@ class WeekplanSelectorScreen extends StatelessWidget {
                 // Closes the dialog box
                 Routes.pop(context);
               });
+        });
+  }
+}
+
+/// Search delegate for searching through streams containing lists of weekmodels
+class WeekplanSearchDelegate extends SearchDelegate<dynamic> {
+  /// Constructor for the search delegate
+  ///
+  /// This allows the delegate to acces the data the callee has access to
+  WeekplanSearchDelegate(this._user, this._weekBloc, this._state);
+
+  final WeekplansBloc _weekBloc;
+  final DisplayNameModel _user;
+  final _WeekplanSelectorScreenState _state;
+
+  /// The result picked by the user after searching.
+  WeekModel selectedResult;
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return <Widget>[
+      Visibility(
+          visible: query != null && query.isNotEmpty,
+          child: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              query = '';
+            },
+          ))
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    if (selectedResult != null) {
+      _state._buildWeekPlanSelector(context, selectedResult, true,
+          selectedResult.weekNumber > _weekBloc.getCurrentWeekNum());
+    }
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    List<WeekModel> suggestionList;
+    _weekBloc.weekModels.first.then((List<WeekModel> wml) => {
+          suggestionList
+              .addAll(wml.where((WeekModel e) => e.name.contains(query)))
+        });
+    return ListView.builder(
+        itemCount: suggestionList != null ? suggestionList.length : 0,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(
+              suggestionList[index].name,
+            ),
+            onTap: () {
+              selectedResult = suggestionList[index];
+              showResults(context);
+            },
+          );
         });
   }
 }

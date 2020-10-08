@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -26,6 +26,9 @@ class WeekplansBloc extends BlocBase {
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
 
+  /// The stream that emits whether the searchbar is visible or not
+  Stream<bool> get searchMode => _search.stream;
+
   /// The stream that emits the marked activities
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
@@ -35,8 +38,8 @@ class WeekplansBloc extends BlocBase {
   final BehaviorSubject<List<WeekModel>> _oldWeekModel =
       BehaviorSubject<List<WeekModel>>();
 
-  BehaviorSubject<List<WeekModel>> _searchResults =
-      BehaviorSubject<List<WeekModel>>();
+  // final BehaviorSubject<List<WeekModel>> _searchResults =
+  //     BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
@@ -54,6 +57,9 @@ class WeekplansBloc extends BlocBase {
 
   final Api _api;
   DisplayNameModel _user;
+
+  /// Variable for regulating the height of the appbar
+  Size appBarHeight = Size.fromHeight(53.0);
 
   /// To control adding an extra result for creating a new [WeekModel]
   /// for the weekplan_selector_screen.
@@ -312,19 +318,20 @@ class WeekplansBloc extends BlocBase {
   /// Toggles searchbar visibility
   void toggleSearch() {
     _search.add(!_search.value);
-  }
-
-  /// Returns and displays search results
-  void onSearch(String searchQuery) {
-    final int _weekNumber = int.parse(searchQuery);
-    if (_weekNumber != null) {
-      _searchResults = _weekModel.stream.map((List<WeekModel> event) => event
-          .where((WeekModel element) => element.weekNumber == _weekNumber));
+    if (appBarHeight == const Size.fromHeight(53.0)) {
+      appBarHeight = const Size.fromHeight(104.0);
     } else {
-      _searchResults = _weekModel.stream.map((List<WeekModel> event) => event
-          .where((WeekModel element) => element.name.contains(searchQuery)));
+      appBarHeight = const Size.fromHeight(53.0);
     }
   }
+
+  /// Sets [_searchResults] to the found elements of [_weekModel].
+  void onSearch(String searchQuery) {
+    print('Searching...');
+
+    print('Results should be set now');
+  }
+  //}
 
   /// This stream checks that you have only marked one week model
   Observable<bool> onlyOneModelMarkedStream() {
