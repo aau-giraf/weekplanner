@@ -83,11 +83,6 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     );
   }
 
-  FutureOr OnGoBack(){
-    _bloc.updateBloc();
-    setState(() {});
-  }
-
   /// Builds the list of citizens together with the "add citizen" button
   List<Widget> _buildCitizenSelectionList(BuildContext context,
     AsyncSnapshot<List<DisplayNameModel>> snapshot) {
@@ -108,7 +103,9 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                   WeekplanSelectorScreen(newUser))
           )
         );
-        OnGoBack();
+        ///Update the screen with the new citizen
+        _bloc.updateBloc();
+        setState(() {});
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 30),
