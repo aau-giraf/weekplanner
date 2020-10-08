@@ -39,7 +39,7 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   final DisplayNameModel _girafUser;
-  final ActivityModel _activity;
+  ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
@@ -632,6 +632,7 @@ class ShowActivityScreen extends StatelessWidget {
                           key: const Key('CancelStateToggleButton'),
                           onPressed: () {
                             _activityBloc.cancelActivity();
+                            _activity = _activityBloc.getActivity();
                           },
                           text: activitySnapshot.data.state !=
                                   ActivityState.Canceled
