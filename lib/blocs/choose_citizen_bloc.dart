@@ -8,6 +8,14 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 class ChooseCitizenBloc extends BlocBase {
   /// Default Constructor
   ChooseCitizenBloc(this._api) {
+    updateBloc();
+  }
+
+  /// The stream holding the citizens
+  Stream<List<DisplayNameModel>> get citizen => _citizens.stream;
+
+  ///
+  void updateBloc(){
     _api.user.me().flatMap((GirafUserModel user) {
 
       return _api.user.getCitizens(user.id);
@@ -16,9 +24,6 @@ class ChooseCitizenBloc extends BlocBase {
       _citizens.add(citizens);
     });
   }
-
-  /// The stream holding the citizens
-  Stream<List<DisplayNameModel>> get citizen => _citizens.stream;
 
   final Api _api;
   final BehaviorSubject<List<DisplayNameModel>> _citizens =

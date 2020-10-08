@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
@@ -82,6 +83,11 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     );
   }
 
+  FutureOr OnGoBack(){
+    _bloc.updateBloc();
+    setState(() {});
+  }
+
   /// Builds the list of citizens together with the "add citizen" button
   List<Widget> _buildCitizenSelectionList(BuildContext context,
     AsyncSnapshot<List<DisplayNameModel>> snapshot) {
@@ -93,7 +99,17 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                 WeekplanSelectorScreen(user)))).toList();
 
     list.insert(0, FlatButton(
-      onPressed: () async{ await Routes.push(context, NewCitizenScreen());},
+      onPressed: () async {
+        final result =  await Routes.push(context, NewCitizenScreen());
+        DisplayNameModel newUser = DisplayNameModel.fromGirafUser(result);
+        list.add(CitizenAvatar(
+              displaynameModel: newUser,
+              onPressed: () => Routes.push(context,
+                  WeekplanSelectorScreen(newUser))
+          )
+        );
+        OnGoBack();
+      },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: Column(
