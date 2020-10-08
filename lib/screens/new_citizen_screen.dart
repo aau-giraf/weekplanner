@@ -1,6 +1,8 @@
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
+import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
@@ -15,8 +17,8 @@ class NewCitizenScreen extends StatelessWidget {
   }
 
   final ApiErrorTranslater _translator = ApiErrorTranslater();
-
   final NewCitizenBloc _bloc;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
