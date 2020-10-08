@@ -113,6 +113,8 @@ class SettingsScreen extends StatelessWidget {
                             _settingsBloc.loadSettings(_user)),
                 titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
                     ? 'En dag'
+                    : settingsModel.nrOfDaysToDisplay == 2
+                    ? 'To dage'
                     : settingsModel.nrOfDaysToDisplay == 5
                     ? 'Mandag til fredag'
                     : 'Mandag til søndag'),

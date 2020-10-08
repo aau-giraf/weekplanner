@@ -160,6 +160,18 @@ void main() {
     done();
   }));
 
+  test('All inputs are not valid - username', async((DoneFn done) {
+    bloc.onUsernameChange.add('!!PeterMadsen??');
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.displayName);
+    bloc.allInputsAreValidStream.listen((bool isValid) {
+      expect(isValid, isNotNull);
+      expect(isValid, false);
+    });
+    done();
+  }));
+
   test('Username validation', async((DoneFn done) {
     bloc.onUsernameChange.add(user.username);
     bloc.validUsernameStream.listen((bool isValid) {
