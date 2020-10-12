@@ -228,7 +228,7 @@ class ShowActivityScreen extends StatelessWidget {
                               await Routes.push(context, PictogramSearch())
                                   .then((Object object) {
                                 if (object is PictogramModel) {
-                                  _activityBloc.load(_activity, _girafUser);
+                                  _activityBloc.load(_activity,_girafUser);
                                   final PictogramModel newPictogram = object;
                                   _activity.isChoiceBoard = true;
                                   _activity.pictograms.add(newPictogram);
@@ -632,6 +632,7 @@ class ShowActivityScreen extends StatelessWidget {
                           key: const Key('CancelStateToggleButton'),
                           onPressed: () {
                             _activityBloc.cancelActivity();
+                            _activity.state = _activityBloc.getActivity().state;
                           },
                           text: activitySnapshot.data.state !=
                                   ActivityState.Canceled
