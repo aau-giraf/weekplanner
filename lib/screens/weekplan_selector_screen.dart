@@ -29,8 +29,7 @@ import '../style/custom_color.dart' as theme;
 class WeekplanSelectorScreen extends StatefulWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
-  WeekplanSelectorScreen(this._user)
-      : _weekBloc = di.getDependency<WeekplansBloc>() {
+  WeekplanSelectorScreen(this._user) : _weekBloc = di.get<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
 
@@ -105,6 +104,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         onSearch: _weekBloc.onSearch,
                         onItemFound: (WeekModel weekplan, int index) {
                           return ListTile(
+                            // ignore: always_specify_types
                             onTap: () => {
                               _weekBloc.toggleSearch(),
                               handleOnTapWeekPlan(false, weekplan, context)
@@ -154,38 +154,44 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               stream: _weekBloc.markedWeekModels,
               builder: (BuildContext context,
                   AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
-                return GridView(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? 1
-                          : 3,
-                      crossAxisSpacing:
-                          MediaQuery.of(context).size.width / 100 * 1.5,
-                      mainAxisSpacing:
-                          MediaQuery.of(context).size.width / 100 * 1.5,
-                    ),
-                    scrollDirection: MediaQuery.of(context).orientation ==
-                            Orientation.landscape
-                        ? Axis.horizontal
-                        : Axis.vertical,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    children: weekplansSnapshot.data.map((WeekModel weekplan) {
-                      return _buildWeekPlanSelector(
-                          context,
-                          weekplan,
-                          markedWeeksSnapshot.hasData &&
-                              markedWeeksSnapshot.data.contains(weekplan),
-                          isUpcomingWeekplan);
-                    }).toList());
+                return MediaQuery.of(context).orientation ==
+                        Orientation.portrait
+                    ? GridView.count(
+                        crossAxisCount: 3,
+                        crossAxisSpacing:
+                            MediaQuery.of(context).size.width / 100 * 1.5,
+                        mainAxisSpacing:
+                            MediaQuery.of(context).size.width / 100 * 1.5,
+                        children:
+                            weekplansSnapshot.data.map((WeekModel weekplan) {
+                          return _buildWeekPlanSelector(
+                              context,
+                              weekplan,
+                              markedWeeksSnapshot.hasData &&
+                                  markedWeeksSnapshot.data.contains(weekplan),
+                              isUpcomingWeekplan);
+                        }).toList(),
+                      )
+                    : ListView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        children:
+                            weekplansSnapshot.data.map((WeekModel weekplan) {
+                          return _buildWeekPlanSelector(
+                              context,
+                              weekplan,
+                              markedWeeksSnapshot.hasData &&
+                                  markedWeeksSnapshot.data.contains(weekplan),
+                              isUpcomingWeekplan);
+                        }).toList());
               });
         });
   }
 
   Widget _buildWeekPlanSelector(
       BuildContext context, WeekModel weekplan, bool isMarked, bool current) {
-    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    final PictogramImageBloc bloc = di.get<PictogramImageBloc>();
 
     if (weekplan.thumbnail != null) {
       bloc.loadPictogramById(weekplan.thumbnail.id);
@@ -259,16 +265,19 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                           : Expanded(child: LayoutBuilder(builder:
                               (BuildContext context,
                                   BoxConstraints constraints) {
-                              return AutoSizeText(
-                                'Uge: ${weekplan.weekNumber}      '
-                                'År: ${weekplan.weekYear}',
-                                key: const Key('weekYear'),
-                                style: const TextStyle(fontSize: 18),
-                                maxLines: 1,
-                                minFontSize: 14,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              );
+                              return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: AutoSizeText(
+                                    'Uge: ${weekplan.weekNumber}      '
+                                    'År: ${weekplan.weekYear}',
+                                    key: const Key('weekYear'),
+                                    style: const TextStyle(fontSize: 18),
+                                    maxLines: 1,
+                                    minFontSize: 14,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ));
                             })),
                     )
                   ],
@@ -470,77 +479,6 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 // Closes the dialog box
                 Routes.pop(context);
               });
-        });
-  }
-}
-
-/// Search delegate for searching through streams containing lists of weekmodels
-class WeekplanSearchDelegate extends SearchDelegate<dynamic> {
-  /// Constructor for the search delegate
-  ///
-  /// This allows the delegate to acces the data the callee has access to
-  WeekplanSearchDelegate(this._user, this._weekBloc, this._state);
-
-  final WeekplansBloc _weekBloc;
-  final DisplayNameModel _user;
-  final _WeekplanSelectorScreenState _state;
-
-  /// The result picked by the user after searching.
-  WeekModel selectedResult;
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return <Widget>[
-      Visibility(
-          visible: query != null && query.isNotEmpty,
-          child: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              query = '';
-            },
-          ))
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    if (selectedResult != null) {
-      _state._buildWeekPlanSelector(context, selectedResult, true,
-          selectedResult.weekNumber > _weekBloc.getCurrentWeekNum());
-    }
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    List<WeekModel> suggestionList;
-    _weekBloc.weekModels.first.then((List<WeekModel> wml) => {
-          suggestionList
-              .addAll(wml.where((WeekModel e) => e.name.contains(query)))
-        });
-    return ListView.builder(
-        itemCount: suggestionList != null ? suggestionList.length : 0,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(
-              suggestionList[index].name,
-            ),
-            onTap: () {
-              selectedResult = suggestionList[index];
-              showResults(context);
-            },
-          );
         });
   }
 }

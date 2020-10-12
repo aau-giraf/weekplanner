@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -57,9 +56,6 @@ class WeekplansBloc extends BlocBase {
 
   final Api _api;
   DisplayNameModel _user;
-
-  /// Variable for regulating the height of the appbar
-  Size appBarHeight = Size.fromHeight(53.0);
 
   /// To control adding an extra result for creating a new [WeekModel]
   /// for the weekplan_selector_screen.
@@ -318,11 +314,6 @@ class WeekplansBloc extends BlocBase {
   /// Toggles searchbar visibility
   void toggleSearch() {
     _search.add(!_search.value);
-    if (appBarHeight == const Size.fromHeight(53.0)) {
-      appBarHeight = const Size.fromHeight(104.0);
-    } else {
-      appBarHeight = const Size.fromHeight(53.0);
-    }
   }
 
   /// Sets [_searchResults] to the found elements of [_weekModel].
@@ -330,6 +321,7 @@ class WeekplansBloc extends BlocBase {
     final List<WeekModel> allModels = <WeekModel>[];
     final List<WeekModel> foundModels = <WeekModel>[];
     await weekModels.first
+        // ignore: always_specify_types
         .then((List<WeekModel> wm) => {
               // ignore: avoid_function_literals_in_foreach_calls
               wm.forEach((WeekModel element) {
@@ -337,6 +329,7 @@ class WeekplansBloc extends BlocBase {
               })
             })
         .then((_) => oldWeekModels.first
+            // ignore: always_specify_types
             .then((List<WeekModel> wm) => {
                   // ignore: avoid_function_literals_in_foreach_calls
                   wm.forEach((WeekModel element) {
