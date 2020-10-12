@@ -321,7 +321,7 @@ class WeekplansBloc extends BlocBase {
     final List<WeekModel> allModels = <WeekModel>[];
     final List<WeekModel> foundModels = <WeekModel>[];
     await weekModels.first
-        // ignore: always_specify_types
+        // ignore: sdk_version_set_literal, always_specify_types
         .then((List<WeekModel> wm) => {
               // ignore: avoid_function_literals_in_foreach_calls
               wm.forEach((WeekModel element) {
@@ -329,7 +329,7 @@ class WeekplansBloc extends BlocBase {
               })
             })
         .then((_) => oldWeekModels.first
-            // ignore: always_specify_types
+            // ignore: sdk_version_set_literal, always_specify_types
             .then((List<WeekModel> wm) => {
                   // ignore: avoid_function_literals_in_foreach_calls
                   wm.forEach((WeekModel element) {

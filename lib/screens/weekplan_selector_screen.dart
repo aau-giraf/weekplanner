@@ -105,7 +105,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         onSearch: _weekBloc.onSearch,
                         onItemFound: (WeekModel weekplan, int index) {
                           return ListTile(
-                            // ignore: always_specify_types
+                            // ignore: sdk_version_set_literal, always_specify_types
                             onTap: () => {
                               _weekBloc.toggleSearch(),
                               handleOnTapWeekPlan(false, weekplan, context)
