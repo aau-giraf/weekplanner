@@ -29,7 +29,8 @@ import '../style/custom_color.dart' as theme;
 class WeekplanSelectorScreen extends StatefulWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
-  WeekplanSelectorScreen(this._user) : _weekBloc = di.get<WeekplansBloc>() {
+  WeekplanSelectorScreen(this._user)
+      : _weekBloc = di.getDependency<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
 
@@ -191,7 +192,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   Widget _buildWeekPlanSelector(
       BuildContext context, WeekModel weekplan, bool isMarked, bool current) {
-    final PictogramImageBloc bloc = di.get<PictogramImageBloc>();
+    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
 
     if (weekplan.thumbnail != null) {
       bloc.loadPictogramById(weekplan.thumbnail.id);
