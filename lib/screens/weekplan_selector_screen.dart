@@ -2,6 +2,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
+import 'package:flappy_search_bar/search_bar_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -95,21 +96,29 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             return Visibility(
                 visible: snapshot.data,
                 child: Container(
-                    height: MediaQuery.of(context).size.height * 0.145,
+                    height: MediaQuery.of(context).size.height,
                     // ignore: always_specify_types
                     child: SearchBar(
+                        cancellationWidget: const Text('Annuller'),
+                        onCancelled: () => _weekBloc.toggleSearch(),
+                        searchBarStyle: const SearchBarStyle(),
                         onSearch: _weekBloc.onSearch,
                         onItemFound: (WeekModel weekplan, int index) {
                           return ListTile(
+                            onTap: () => {
+                              _weekBloc.toggleSearch(),
+                              handleOnTapWeekPlan(false, weekplan, context)
+                            },
                             title: Text(weekplan.name),
-                            subtitle: Text(weekplan.weekNumber.toString() +
-                                ', ' +
+                            subtitle: Text('Uge ' +
+                                weekplan.weekNumber.toString() +
+                                ', år ' +
                                 weekplan.weekYear.toString()),
                           );
                         })));
           }),
       Container(
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: _buildWeekplanGridview(context, weekModels, true)),
       Container(
         color: theme.GirafColors.grey,
@@ -125,7 +134,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
       Container(
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: _buildWeekplanGridview(context, oldWeekModels, false)),
     ]));
   }
@@ -145,18 +154,23 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               stream: _weekBloc.markedWeekModels,
               builder: (BuildContext context,
                   AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
-                return GridView.count(
-                    scrollDirection: Axis.horizontal,
+                return GridView(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).orientation ==
+                              Orientation.landscape
+                          ? 1
+                          : 3,
+                      crossAxisSpacing:
+                          MediaQuery.of(context).size.width / 100 * 1.5,
+                      mainAxisSpacing:
+                          MediaQuery.of(context).size.width / 100 * 1.5,
+                    ),
+                    scrollDirection: MediaQuery.of(context).orientation ==
+                            Orientation.landscape
+                        ? Axis.horizontal
+                        : Axis.vertical,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
-                    crossAxisCount: MediaQuery.of(context).orientation ==
-                            Orientation.landscape
-                        ? 1
-                        : 3,
-                    crossAxisSpacing:
-                        MediaQuery.of(context).size.width / 100 * 1.5,
-                    mainAxisSpacing:
-                        MediaQuery.of(context).size.width / 100 * 1.5,
                     children: weekplansSnapshot.data.map((WeekModel weekplan) {
                       return _buildWeekPlanSelector(
                           context,
