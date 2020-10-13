@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-/// Font sizes for the GIRAF project.
+s/// Font sizes for the GIRAF project.
 
 class GirafFont
 {
