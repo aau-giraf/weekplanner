@@ -48,7 +48,7 @@ void main() {
       thumbnail: null, name: 'weekplan2', weekYear: 2020, weekNumber: 33);
 
   final WeekModel weekplan1Copy = WeekModel(
-      thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 3);
+      thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 50);
 
   MockCopyResolveBloc bloc;
   Api api;
@@ -64,25 +64,25 @@ void main() {
     api = Api('any');
     api.week = MockWeekApi();
 
-    when(api.week.update('testId', 2020, 3, any))
+    when(api.week.update('testId', 2020, 50, any))
         .thenAnswer((Invocation answer) {
       final WeekModel inputWeek = answer.positionalArguments[3];
       final WeekNameModel weekNameModel =
-          WeekNameModel(name: inputWeek.name, weekYear: 2020, weekNumber: 3);
+          WeekNameModel(name: inputWeek.name, weekYear: 2020, weekNumber: 50);
 
       weekNameModelList.add(weekNameModel);
       return Observable<WeekModel>.just(weekplan1);
     });
 
-    when(api.week.get('testId', 2020, 3)).thenAnswer((_) {
+    when(api.week.get('testId', 2020, 50)).thenAnswer((_) {
       for (WeekNameModel week in weekNameModelList) {
-        final bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
+        final bool isEqual = week.weekYear == 2020 && week.weekNumber == 50;
         if (isEqual) {
           return Observable<WeekModel>.just(weekplan1Copy);
         }
       }
       return Observable<WeekModel>.just(WeekModel(
-          thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
+          thumbnail: null, name: '2020 - 50', weekYear: 2020, weekNumber: 50));
     });
 
     when(api.week
@@ -134,9 +134,9 @@ void main() {
     expect(find.text(weekplan1.name), findsOneWidget);
 
     await tester.enterText(
-        find.byKey(const Key('WeekNumberTextFieldKey')), '3');
+        find.byKey(const Key('WeekNumberTextFieldKey')), '50');
     await tester.pumpAndSettle();
-    expect(find.text('3'), findsOneWidget);
+    expect(find.text('50'), findsOneWidget);
 
     expect(find.byKey(const Key('CopyResolveSaveButton')), findsOneWidget);
     await tester.tap(find.byKey(const Key('CopyResolveSaveButton')));
@@ -144,7 +144,7 @@ void main() {
 
     expect(find.byType(WeekplanSelectorScreen), findsOneWidget);
 
-    expect(find.text('Uge: 3      År: 2020'), findsOneWidget);
+    expect(find.text('Uge: 50      År: 2020'), findsOneWidget);
     expect(find.text('weekplan1'), findsNWidgets(2));
   });
 }
