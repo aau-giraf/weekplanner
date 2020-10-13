@@ -14,6 +14,7 @@ import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -74,7 +75,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         child:
           const AutoSizeText(
             'Overståede uger',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: GirafFont.small),
             maxLines: 1,
             minFontSize: 14,
             textAlign: TextAlign.center,
@@ -188,7 +189,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                         (BuildContext context, BoxConstraints constraints) {
                       return AutoSizeText(
                         weekplan.name,
-                        style: const TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: GirafFont.small),
                         maxLines: 1,
                         minFontSize: 14,
                         textAlign: TextAlign.center,
@@ -205,7 +206,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                                 'Uge: ${weekplan.weekNumber}      '
                                 'År: ${weekplan.weekYear}',
                                 key: const Key('weekYear'),
-                                style: const TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: GirafFont.small),
                                 maxLines: 1,
                                 minFontSize: 14,
                                 textAlign: TextAlign.center,
