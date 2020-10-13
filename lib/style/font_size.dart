@@ -1,4 +1,4 @@
-s/// Font sizes for the GIRAF project.
+/// Font sizes for the GIRAF project.
 
 class GirafFont
 {
