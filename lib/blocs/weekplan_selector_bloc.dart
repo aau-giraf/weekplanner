@@ -116,7 +116,7 @@ class WeekplansBloc extends BlocBase {
       return details.isEmpty ? Stream.empty() :
         details.length == 1 ?
         details[0].map((WeekModel plan) => <WeekModel>[plan]) :
-        RxDart.Rx.combineLatestList<dynamic>(details);
+        RxDart.Rx.combineLatestList(details);
   }
 
   /// Makes API calls to get the weekplan details
@@ -174,7 +174,7 @@ class WeekplansBloc extends BlocBase {
 
   /// Old weekplans needs to be sorted in descending order
   List<WeekModel> _sortOldWeekPlans(List<WeekModel> list) {
-    list.sort((WeekModel a, WeekModel b) {
+    list.toList().sort((WeekModel a, WeekModel b) {
       if (a.weekYear == b.weekYear) {
         return b.weekNumber.compareTo(a.weekNumber);
       } else {
@@ -224,7 +224,7 @@ class WeekplansBloc extends BlocBase {
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
     final List<WeekModel> localWeekModels = _weekModel.value;
-    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value;
+    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value.toList();
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week

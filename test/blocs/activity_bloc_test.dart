@@ -52,9 +52,11 @@ void main() {
   void setupApiCalls() {
     when(weekApi.update(mockUser.id, mockWeekModel.weekYear,
             mockWeekModel.weekNumber, mockWeekModel))
-        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(mockWeekModel));
+        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>
+        .seeded(mockWeekModel));
     when(activityApi.update(mockActivity, mockUser.id))
-        .thenAnswer((_) => RxDart.BehaviorSubject<ActivityModel>.seeded(mockActivity));
+        .thenAnswer((_) => RxDart.BehaviorSubject<ActivityModel>
+        .seeded(mockActivity));
   }
 
   setUp(() {
