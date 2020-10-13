@@ -678,4 +678,25 @@ void main() {
     expect(find.byKey(Key(mockWeekModel.name)), findsOneWidget);
     expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
   });
+
+  testWidgets('Search for weekplan', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: WeekplanSelectorScreen(mockUser),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Søg'));
+    await tester.pumpAndSettle();
+
+    // await tester.tap(find.byKey(Key('WeekplanSearchBar')));
+    // await tester.pumpAndSettle();
+
+    // await tester.showKeyboard(find.byKey(Key('WeekplanSearchBar')));
+    // await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), nameWeekModel2);
+    await tester.pumpAndSettle();
+
+    expect(find.text('nr:0'), findsOneWidget);
+  });
 }

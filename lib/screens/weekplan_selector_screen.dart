@@ -59,12 +59,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           title: _user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
             AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
-            AppBarIcon.search: () {
-              _weekBloc.toggleSearch();
-              // showSearch<dynamic>(
-              //     context: context,
-              //     delegate: WeekplanSearchDelegate(_user, _weekBloc, this));
-            },
+            AppBarIcon.search: () => _weekBloc.toggleSearch(),
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
                 Routes.push(context, SettingsScreen(_user))
@@ -100,12 +95,14 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                     height: MediaQuery.of(context).size.height / 2,
                     // ignore: always_specify_types
                     child: SearchBar(
+                        key: const Key('WeekplanSearchBar'),
                         cancellationWidget: const Text('Annuller'),
                         onCancelled: () => _weekBloc.toggleSearch(),
                         searchBarStyle: const SearchBarStyle(),
                         onSearch: _weekBloc.onSearch,
                         onItemFound: (WeekModel weekplan, int index) {
                           return ListTile(
+                            key: Key('nr:' + index.toString()),
                             // ignore: sdk_version_set_literal, always_specify_types
                             onTap: () => {
                               _weekBloc.toggleSearch(),
