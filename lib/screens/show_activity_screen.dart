@@ -49,7 +49,7 @@ class ShowActivityScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Text style used for title.
-  final TextStyle titleTextStyle = const TextStyle(fontSize: 23);
+  final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
 
   @override
   Widget build(BuildContext context) {
