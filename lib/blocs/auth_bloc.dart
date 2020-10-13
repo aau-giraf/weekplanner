@@ -1,5 +1,5 @@
 import 'package:api_client/api/api.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 
@@ -18,11 +18,12 @@ class AuthBloc extends BlocBase {
   Stream<bool> get loggedIn => _loggedIn.stream;
 
   /// Start with providing false as the logged in status
-  final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
+  final RxDart.BehaviorSubject<bool> _loggedIn
+  = RxDart.BehaviorSubject<bool>.seeded(false);
 
   /// Reflect the current clearence level of the user
-  final BehaviorSubject<WeekplanMode> _mode =
-  BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
+  final RxDart.BehaviorSubject<WeekplanMode> _mode =
+  RxDart.BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
   /// The stream that emits the current clearance level
   Stream<WeekplanMode> get mode => _mode.stream;
@@ -30,8 +31,8 @@ class AuthBloc extends BlocBase {
   /// Stream that streams status of last login attemp from popup.
   Stream<bool> get loginAttempt =>_loginAttempt.stream;
 
-  final BehaviorSubject<bool> _loginAttempt =
-  BehaviorSubject<bool>.seeded(false);
+  final RxDart.BehaviorSubject<bool> _loginAttempt =
+  RxDart.BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
   void authenticate(String username, String password) {
@@ -61,7 +62,7 @@ class AuthBloc extends BlocBase {
 
   /// Logs the currently logged in user out
   void logout() {
-    _api.account.logout().listen((_) {
+    _api.account.logout().listen((dynamic _) {
       _loggedIn.add(false);
     });
   }

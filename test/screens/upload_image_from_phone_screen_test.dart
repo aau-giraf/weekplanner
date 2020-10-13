@@ -8,7 +8,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
@@ -37,8 +37,8 @@ class MockUploadFromGalleryBloc extends UploadFromGalleryBloc {
   @override
   Stream<bool> get isInputValid => _isInputValid.stream;
 
-  final BehaviorSubject<bool> _isInputValid =
-      BehaviorSubject<bool>.seeded(false);
+  final RxDart.BehaviorSubject<bool> _isInputValid =
+      RxDart.BehaviorSubject<bool>.seeded(false);
 
   void setInputIsValid(bool b) {
     _isInputValid.add(b);

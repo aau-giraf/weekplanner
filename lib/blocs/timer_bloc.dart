@@ -5,7 +5,7 @@ import 'package:api_client/models/timer_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
@@ -30,23 +30,23 @@ class TimerBloc extends BlocBase {
   /// Stream for checking if the timer is instantiated.
   Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
 
-  /// BehaviorSubject for the progress of the timer.
-  final BehaviorSubject<double> _timerProgressStream =
-      BehaviorSubject<double>.seeded(0.0);
+  /// RxDart.BehaviorSubject for the progress of the timer.
+  final RxDart.BehaviorSubject<double> _timerProgressStream =
+      RxDart.BehaviorSubject<double>.seeded(0.0);
 
-  /// BehaviorSubject for to check if timer is running.
-  final BehaviorSubject<TimerRunningMode> _timerRunningModeStream =
-      BehaviorSubject<TimerRunningMode>.seeded(
+  /// RxDart.BehaviorSubject for to check if timer is running.
+  final RxDart.BehaviorSubject<TimerRunningMode> _timerRunningModeStream =
+      RxDart.BehaviorSubject<TimerRunningMode>.seeded(
           TimerRunningMode.not_initialized);
 
-  /// BehaviorSubject for to check if timer is instantiated.
-  final BehaviorSubject<bool> _timerInstantiatedStream =
-      BehaviorSubject<bool>.seeded(false);
+  /// RxDart.BehaviorSubject for to check if timer is instantiated.
+  final RxDart.BehaviorSubject<bool> _timerInstantiatedStream =
+      RxDart.BehaviorSubject<bool>.seeded(false);
 
   /// Behavior subject for the progress of the timer in
   ///  hours, minutes and seconds.
-  final BehaviorSubject<List<int>> _timerProgressNumeric =
-      BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
+  final RxDart.BehaviorSubject<List<int>> _timerProgressNumeric =
+      RxDart.BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
 
   /// Stream for the progress of the timer in minutes and seconds.
   /// The array streamed contains hours at index 0,

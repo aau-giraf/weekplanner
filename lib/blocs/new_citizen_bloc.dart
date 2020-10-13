@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 ///This bloc is used by a guardian to instantiate a new citizen.
@@ -16,17 +16,17 @@ class NewCitizenBloc extends BlocBase {
   GirafUserModel _user;
 
    /// This field controls the display name input field
-  final BehaviorSubject<String> displayNameController =
-      BehaviorSubject<String>();
+  final RxDart.BehaviorSubject<String> displayNameController =
+      RxDart.BehaviorSubject<String>();
    /// This field controls the username input field
-  final BehaviorSubject<String> usernameController =
-      BehaviorSubject<String>();
+  final RxDart.BehaviorSubject<String> usernameController =
+      RxDart.BehaviorSubject<String>();
    /// This field controls the password input field
-  final BehaviorSubject<String> passwordController =
-      BehaviorSubject<String>();
+  final RxDart.BehaviorSubject<String> passwordController =
+      RxDart.BehaviorSubject<String>();
    /// This field controls the password verification input field
-  final BehaviorSubject<String> passwordVerifyController =
-      BehaviorSubject<String>();
+  final RxDart.BehaviorSubject<String> passwordVerifyController =
+      RxDart.BehaviorSubject<String>();
 
   /// Handles when the entered display name is changed.
   Sink<String> get onDisplayNameChange => displayNameController.sink;
@@ -48,8 +48,9 @@ class NewCitizenBloc extends BlocBase {
       passwordController.stream.transform(_passwordValidation);
   /// Validation stream for password validation
   Stream<bool> get validPasswordVerificationStream =>
-      Rx.combineLatest2<String, String, bool>
-        (passwordController.startWith(''), passwordVerifyController,
+      RxDart.Rx.combineLatest2<String, String, bool>
+        (passwordController.hasValue ? passwordController : ''
+          , passwordVerifyController,
               (String a, String b) => a == b);
 
 
@@ -74,7 +75,7 @@ class NewCitizenBloc extends BlocBase {
   }
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>
-      Rx.combineLatest4<bool, bool, bool, bool, bool>(
+      RxDart.Rx.combineLatest4<bool, bool, bool, bool, bool>(
           validDisplayNameStream,
           validUsernameStream,
           validPasswordStream,

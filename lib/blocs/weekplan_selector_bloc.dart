@@ -4,7 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// WeekplansBloc to get weekplans for a user
@@ -28,24 +28,24 @@ class WeekplansBloc extends BlocBase {
   /// The stream that emits the marked activities
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
-  final BehaviorSubject<List<WeekModel>> _weekModel =
-      BehaviorSubject<List<WeekModel>>();
+  final RxDart.BehaviorSubject<List<WeekModel>> _weekModel =
+      RxDart.BehaviorSubject<List<WeekModel>>();
 
-  final BehaviorSubject<List<WeekModel>> _oldWeekModel =
-  BehaviorSubject<List<WeekModel>>();
+  final RxDart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
+  RxDart.BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
-  final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-      BehaviorSubject<List<WeekNameModel>>();
+  final RxDart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
+      RxDart.BehaviorSubject<List<WeekNameModel>>();
 
-  final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
+  final RxDart.BehaviorSubject<bool> _editMode = RxDart.BehaviorSubject<bool>.seeded(false);
 
-  final BehaviorSubject<List<WeekModel>> _markedWeekModels =
-      BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
+  final RxDart.BehaviorSubject<List<WeekModel>> _markedWeekModels =
+      RxDart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
   DisplayNameModel _user;
@@ -116,7 +116,7 @@ class WeekplansBloc extends BlocBase {
       return details.isEmpty ? Stream.empty() :
         details.length == 1 ?
         details[0].map((WeekModel plan) => <WeekModel>[plan]) :
-        Rx.combineLatestList(details);
+        RxDart.Rx.combineLatestList<dynamic>(details);
   }
 
   /// Makes API calls to get the weekplan details

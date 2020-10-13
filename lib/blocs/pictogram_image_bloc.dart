@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
@@ -17,7 +17,7 @@ class PictogramImageBloc extends BlocBase {
   /// Provides loaded pictogram-images
   Stream<Image> get image => _image.stream;
 
-  final BehaviorSubject<Image> _image = BehaviorSubject<Image>();
+  final RxDart.BehaviorSubject<Image> _image = RxDart.BehaviorSubject<Image>();
 
   final Api _api;
 
@@ -46,7 +46,7 @@ class PictogramImageBloc extends BlocBase {
 
         _image.add(_cache[id]);
       } else {
-        Rx.retry<Image>(() {
+        RxDart.Rx.retry<Image>(() {
           return _api.pictogram.getImage(id);
         }, 3)
             .listen(

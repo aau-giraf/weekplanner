@@ -8,7 +8,7 @@ import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
@@ -87,7 +87,7 @@ void main() {
     savedWeekplan = false;
 
     when(api.pictogram.getImage(mockPictogram.id))
-        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
+        .thenAnswer((_) => RxDart.BehaviorSubject<Image>.seeded(sampleImage));
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
       savedWeekplan = true;

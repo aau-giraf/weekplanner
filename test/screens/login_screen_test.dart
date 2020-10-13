@@ -4,7 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -75,7 +75,7 @@ class MockLoginScreenAutoLogin extends LoginScreen {
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
   Stream<bool> get loggedIn => _loggedIn.stream;
-  final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
+  final RxDart.BehaviorSubject<bool> _loggedIn = RxDart.BehaviorSubject<bool>.seeded(false);
 
   @override
   String loggedInUsername;

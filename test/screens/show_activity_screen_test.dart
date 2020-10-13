@@ -25,7 +25,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -52,12 +52,12 @@ class MockUserApi extends Mock implements UserApi {
 class MockAuth extends Mock implements AuthBloc {
   @override
   Stream<bool> get loggedIn => _loggedIn.stream;
-  final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(true);
+  final RxDart.BehaviorSubject<bool> _loggedIn = RxDart.BehaviorSubject<bool>.seeded(true);
 
   @override
   Stream<WeekplanMode> get mode => _mode.stream;
-  final BehaviorSubject<WeekplanMode> _mode =
-      BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
+  final RxDart.BehaviorSubject<WeekplanMode> _mode =
+      RxDart.BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
   @override
   String loggedInUsername = 'Graatand';
@@ -86,7 +86,7 @@ class MockAuth extends Mock implements AuthBloc {
 class MockActivityApi extends Mock implements ActivityApi {
   @override
   Stream<ActivityModel> update(ActivityModel activity, String userId) {
-    return BehaviorSubject<ActivityModel>.seeded(activity);
+    return RxDart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
 }
 
@@ -231,7 +231,7 @@ void main() {
   void setupApiCalls() {
     when(weekApi.update(
             mockUser.id, mockWeek.weekYear, mockWeek.weekNumber, mockWeek))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
+        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(mockWeek));
 
     when(api.user.getSettings(any)).thenAnswer((_) {
       return Stream<SettingsModel>.value(mockSettings);

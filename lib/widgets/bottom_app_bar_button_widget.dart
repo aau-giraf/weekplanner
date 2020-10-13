@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Creates a button in the ButtomAppBar.

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
@@ -23,8 +23,8 @@ class PictogramBloc extends BlocBase {
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
 
-  final BehaviorSubject<List<PictogramModel>> _pictograms =
-      BehaviorSubject<List<PictogramModel>>();
+  final RxDart.BehaviorSubject<List<PictogramModel>> _pictograms =
+      RxDart.BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
   Timer _debounceTimer;

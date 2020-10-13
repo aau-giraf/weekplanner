@@ -4,7 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:image/image.dart';
 
@@ -28,13 +28,13 @@ class UploadFromGalleryBloc extends BlocBase {
   /// Publishes if the input fields are filled
   Stream<bool> get isInputValid => _isInputValid.stream;
 
-  final BehaviorSubject<bool> _isInputValid =
-      BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<File> _file = BehaviorSubject<File>();
-  final BehaviorSubject<String> _accessString =
-      BehaviorSubject<String>.seeded('Offentlig');
-  final BehaviorSubject<bool> _isUploading =
-      BehaviorSubject<bool>.seeded(false);
+  final RxDart.BehaviorSubject<bool> _isInputValid =
+      RxDart.BehaviorSubject<bool>.seeded(false);
+  final RxDart.BehaviorSubject<File> _file = RxDart.BehaviorSubject<File>();
+  final RxDart.BehaviorSubject<String> _accessString =
+      RxDart.BehaviorSubject<String>.seeded('Offentlig');
+  final RxDart.BehaviorSubject<bool> _isUploading =
+      RxDart.BehaviorSubject<bool>.seeded(false);
 
   AccessLevel _accessLevel = AccessLevel.PUBLIC;
 

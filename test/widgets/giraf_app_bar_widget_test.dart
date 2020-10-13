@@ -3,7 +3,7 @@ import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -18,7 +18,7 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 class MockAuth extends Mock implements AuthBloc {
   @override
   Stream<bool> get loggedIn => _loggedIn.stream;
-  final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(true);
+  final RxDart.BehaviorSubject<bool> _loggedIn = RxDart.BehaviorSubject<bool>.seeded(true);
 
   @override
   String loggedInUsername = 'Graatand';

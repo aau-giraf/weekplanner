@@ -1,4 +1,4 @@
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// Bloc to keep track of which checkboxes are marked
@@ -9,8 +9,8 @@ class CopyActivitiesBloc extends BlocBase {
   /// Stream of marked checkboxes
   Stream<List<bool>> get checkboxValues => _checkboxValues.stream;
 
-  final BehaviorSubject<List<bool>> _checkboxValues =
-      BehaviorSubject<List<bool>>.seeded(List<bool>.filled(7, false));
+  final RxDart.BehaviorSubject<List<bool>> _checkboxValues =
+      RxDart.BehaviorSubject<List<bool>>.seeded(List<bool>.filled(7, false));
 
   /// Toggles the state of a checkbox field
   void toggleCheckboxState(int index) {

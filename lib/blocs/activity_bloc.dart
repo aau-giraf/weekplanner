@@ -1,6 +1,6 @@
 
 import 'package:api_client/models/displayname_model.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/api/api.dart';
@@ -15,9 +15,9 @@ class ActivityBloc extends BlocBase {
   /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
-  /// BehaviorSubject for the updated ActivityModel.
-  final BehaviorSubject<ActivityModel> _activityModelStream =
-      BehaviorSubject<ActivityModel>();
+  /// RxDart.BehaviorSubject for the updated ActivityModel.
+  final RxDart.BehaviorSubject<ActivityModel> _activityModelStream =
+      RxDart.BehaviorSubject<ActivityModel>();
 
   final Api _api;
   ActivityModel _activityModel;

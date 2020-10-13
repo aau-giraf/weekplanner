@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/di.dart';
@@ -18,8 +18,8 @@ class ToolbarBloc extends BlocBase {
   /// If the confirm button in popup is clickable.
   bool _clickable = true;
 
-  final BehaviorSubject<List<IconButton>> _visibleButtons =
-      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+  final RxDart.BehaviorSubject<List<IconButton>> _visibleButtons =
+      RxDart.BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   /// The current visibility of the edit-button.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;

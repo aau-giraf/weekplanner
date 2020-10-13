@@ -5,7 +5,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 
@@ -44,31 +44,31 @@ void main() {
     weekNameModelList.add(weekNameModel1);
 
     when(weekApi.getNames('test')).thenAnswer(
-            (_) => BehaviorSubject<List<WeekNameModel>>
+            (_) => RxDart.BehaviorSubject<List<WeekNameModel>>
                 .seeded(weekNameModelList));
 
     when(weekApi
         .get('test', weekNameModel1.weekYear, weekNameModel1.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
     when(weekApi
         .get('test', weekNameModel2.weekYear, weekNameModel2.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel2));
+        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(weekModel2));
 
     when(weekApi
         .get('test', weekNameModel3.weekYear, weekNameModel3.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel3));
+        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(weekModel3));
 
     when(weekApi
         .get('test', weekNameModel4.weekYear, weekNameModel4.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel4));
+        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(weekModel4));
 
     when(weekApi
         .get('test', weekNameModel5.weekYear, weekNameModel5.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel5));
+        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(weekModel5));
 
     when(weekApi.delete(mockUser.id, any, any))
-        .thenAnswer((_) => BehaviorSubject<bool>.seeded(true));
+        .thenAnswer((_) => RxDart.BehaviorSubject<bool>.seeded(true));
   }
 
   setUp(() {
@@ -189,10 +189,10 @@ void main() {
         ];
         when(weekApi.get(
             mockUser.id, weekNameModel1.weekYear, weekNameModel1.weekNumber))
-            .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+            .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>.seeded(weekModel1));
 
         when(weekApi.getNames(mockUser.id)).thenAnswer(
-                (_) => BehaviorSubject<List<WeekNameModel>>
+                (_) => RxDart.BehaviorSubject<List<WeekNameModel>>
                     .seeded(weekNameModelList));
 
         bloc.load(mockUser);
