@@ -2,7 +2,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// Bloc to get settings for a user
@@ -21,14 +21,14 @@ class SettingsBloc extends BlocBase {
 
   /// List of available themes
   Stream<List<GirafTheme>> get themeList => _themeList.stream;
-  final RxDart.BehaviorSubject<List<GirafTheme>> _themeList =
-      RxDart.BehaviorSubject<List<GirafTheme>>.seeded(<GirafTheme>[]);
+  final rx_dart.BehaviorSubject<List<GirafTheme>> _themeList =
+      rx_dart.BehaviorSubject<List<GirafTheme>>.seeded(<GirafTheme>[]);
 
-  final RxDart.BehaviorSubject<GirafTheme> _theme =
-      RxDart.BehaviorSubject<GirafTheme>.seeded(null);
+  final rx_dart.BehaviorSubject<GirafTheme> _theme =
+      rx_dart.BehaviorSubject<GirafTheme>.seeded(null);
 
-  final RxDart.BehaviorSubject<SettingsModel> _settings =
-      RxDart.BehaviorSubject<SettingsModel>();
+  final rx_dart.BehaviorSubject<SettingsModel> _settings =
+      rx_dart.BehaviorSubject<SettingsModel>();
 
   /// Load the settings for a user
   void loadSettings(DisplayNameModel user) {

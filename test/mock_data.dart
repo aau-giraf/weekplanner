@@ -24,7 +24,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+
 
 import 'test_image.dart';
 

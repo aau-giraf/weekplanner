@@ -8,7 +8,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
@@ -35,23 +35,23 @@ class NewWeekplanBloc extends BlocBase {
 
   /// This field controls the title input field
   @protected
-  final RxDart.BehaviorSubject<String> titleController =
-  RxDart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String> titleController =
+  rx_dart.BehaviorSubject<String>();
 
   /// This field controls the year no input field
   @protected
-  final RxDart.BehaviorSubject<String> yearController =
-  RxDart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String> yearController =
+  rx_dart.BehaviorSubject<String>();
 
   /// This field controls the week no input field
   @protected
-  final RxDart.BehaviorSubject<String> weekNoController =
-  RxDart.BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String> weekNoController =
+  rx_dart.BehaviorSubject<String>();
 
   /// This field controls the pictogram input field
   @protected
-  final RxDart.BehaviorSubject<PictogramModel> thumbnailController =
-  RxDart.BehaviorSubject<PictogramModel>();
+  final rx_dart.BehaviorSubject<PictogramModel> thumbnailController =
+  rx_dart.BehaviorSubject<PictogramModel>();
 
   /// Handles when the entered title is changed.
   Sink<String> get onTitleChanged => titleController.sink;
@@ -64,7 +64,7 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Emits a [WeekNameModel] when it has a title, year, and week.
   /// If any input is invalid, emits null.
-  Stream<WeekNameModel> get newWeekPlan => RxDart.Rx.combineLatest4(
+  Stream<WeekNameModel> get newWeekPlan => rx_dart.Rx.combineLatest4(
       allInputsAreValidStream,
       titleController.stream,
       yearController.stream,
@@ -94,7 +94,7 @@ class NewWeekplanBloc extends BlocBase {
 
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>
-      RxDart.Rx.combineLatest4<bool, bool, bool, PictogramModel, bool>(
+      rx_dart.Rx.combineLatest4<bool, bool, bool, PictogramModel, bool>(
               validTitleStream,
               validYearStream,
               validWeekNumberStream,

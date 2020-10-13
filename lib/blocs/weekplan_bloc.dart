@@ -5,7 +5,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
@@ -34,13 +34,14 @@ class WeekplanBloc extends BlocBase {
 
   /// The API
   final Api _api;
-  final RxDart.BehaviorSubject<bool> _editMode = RxDart.BehaviorSubject<bool>.seeded(false);
-  final RxDart.BehaviorSubject<List<ActivityModel>> _markedActivities =
-      RxDart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
-  final RxDart.BehaviorSubject<UserWeekModel> _userWeek =
-      RxDart.BehaviorSubject<UserWeekModel>();
-  final RxDart.BehaviorSubject<bool> _activityPlaceholderVisible =
-      RxDart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _editMode
+  = rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<List<ActivityModel>> _markedActivities =
+      rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+  final rx_dart.BehaviorSubject<UserWeekModel> _userWeek =
+      rx_dart.BehaviorSubject<UserWeekModel>();
+  final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Sink to set the currently chosen week
   void loadWeek(WeekModel week, DisplayNameModel user) {

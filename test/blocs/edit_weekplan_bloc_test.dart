@@ -5,7 +5,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:async_test/async_test.dart';
@@ -60,7 +60,7 @@ void main() {
     );
 
     when(api.week.delete(mockUser.id, mockWeek.weekYear, mockWeek.weekNumber))
-        .thenAnswer((_) => RxDart.BehaviorSubject<bool>.seeded(true));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
     mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);

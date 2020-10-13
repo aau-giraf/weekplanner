@@ -2,7 +2,7 @@ import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,10 +52,10 @@ void main() {
   void setupApiCalls() {
     when(weekApi.update(mockUser.id, mockWeekModel.weekYear,
             mockWeekModel.weekNumber, mockWeekModel))
-        .thenAnswer((_) => RxDart.BehaviorSubject<WeekModel>
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
         .seeded(mockWeekModel));
     when(activityApi.update(mockActivity, mockUser.id))
-        .thenAnswer((_) => RxDart.BehaviorSubject<ActivityModel>
+        .thenAnswer((_) => rx_dart.BehaviorSubject<ActivityModel>
         .seeded(mockActivity));
   }
 

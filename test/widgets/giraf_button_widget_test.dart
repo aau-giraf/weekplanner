@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 const ImageIcon acceptIcon = ImageIcon(AssetImage('assets/icons/accept.png'));
 
 class MockScreen extends StatelessWidget {
-  final RxDart.BehaviorSubject<bool> isPressed = RxDart.BehaviorSubject<bool>.seeded(false);
-  final RxDart.BehaviorSubject<bool> btnEnabled = RxDart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> isPressed = rx_dart.BehaviorSubject<bool>
+      .seeded(false);
+  final rx_dart.BehaviorSubject<bool> btnEnabled = rx_dart.BehaviorSubject<bool>
+      .seeded(false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

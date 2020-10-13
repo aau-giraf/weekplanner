@@ -4,7 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// WeekplansBloc to get weekplans for a user
@@ -28,24 +28,25 @@ class WeekplansBloc extends BlocBase {
   /// The stream that emits the marked activities
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
-  final RxDart.BehaviorSubject<List<WeekModel>> _weekModel =
-      RxDart.BehaviorSubject<List<WeekModel>>();
+  final rx_dart.BehaviorSubject<List<WeekModel>> _weekModel =
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
-  final RxDart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
-  RxDart.BehaviorSubject<List<WeekModel>>();
+  final rx_dart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
+  rx_dart.BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
-  final RxDart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-      RxDart.BehaviorSubject<List<WeekNameModel>>();
+  final rx_dart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
+      rx_dart.BehaviorSubject<List<WeekNameModel>>();
 
-  final RxDart.BehaviorSubject<bool> _editMode = RxDart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _editMode
+  = rx_dart.BehaviorSubject<bool>.seeded(false);
 
-  final RxDart.BehaviorSubject<List<WeekModel>> _markedWeekModels =
-      RxDart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
+  final rx_dart.BehaviorSubject<List<WeekModel>> _markedWeekModels =
+      rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
   DisplayNameModel _user;
@@ -113,10 +114,10 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> reformatWeekDetailsToObservableList
       (List<Stream<WeekModel>> details){
       // ignore: always_specify_types
-      return details.isEmpty ? Stream.empty() :
+      return details.isEmpty ? const Stream.empty() :
         details.length == 1 ?
         details[0].map((WeekModel plan) => <WeekModel>[plan]) :
-        RxDart.Rx.combineLatestList(details);
+        rx_dart.Rx.combineLatestList(details);
   }
 
   /// Makes API calls to get the weekplan details

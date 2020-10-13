@@ -12,7 +12,6 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
 import 'package:weekplanner/blocs/settings_bloc.dart';
 
 class MockSettingsApi extends Mock implements UserApi {}

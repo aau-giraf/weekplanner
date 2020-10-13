@@ -3,7 +3,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
 /// Bloc to copy a weekplan to other users
@@ -15,8 +15,9 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
   Stream<List<DisplayNameModel>> get markedUserModels =>
       _markedUserModels.stream;
 
-  final RxDart.BehaviorSubject<List<DisplayNameModel>> _markedUserModels =
-      RxDart.BehaviorSubject<List<DisplayNameModel>>.seeded(<DisplayNameModel>[]);
+  final rx_dart.BehaviorSubject<List<DisplayNameModel>> _markedUserModels =
+      rx_dart.BehaviorSubject<List<DisplayNameModel>>
+          .seeded(<DisplayNameModel>[]);
   final Api _api;
 
   /// Copies weekplan to all selected citizens

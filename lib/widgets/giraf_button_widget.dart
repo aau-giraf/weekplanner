@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart' as RxDart;
 import '../style/custom_color.dart' as theme;
 
 /// A button for the Giraf application.
