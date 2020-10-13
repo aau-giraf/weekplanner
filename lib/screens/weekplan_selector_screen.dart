@@ -206,7 +206,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
                                 'Uge: ${weekplan.weekNumber}      '
                                 'År: ${weekplan.weekYear}',
                                 key: const Key('weekYear'),
-                                style: const TextStyle(fontSize: GirafFont.small),
+                                style: const TextStyle(fontSize:
+                                GirafFont.small),
                                 maxLines: 1,
                                 minFontSize: 14,
                                 textAlign: TextAlign.center,
