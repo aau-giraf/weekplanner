@@ -122,7 +122,6 @@ class WeekplanBloc extends BlocBase {
     final WeekModel week = _userWeek.value.week;
     final DisplayNameModel user = _userWeek.value.user;
 
-    //_getMaxOrder(week.days[dayOfWeek].activities),
     for (int dayOfWeek = 0; dayOfWeek < days.length; dayOfWeek++) {
       if (days[dayOfWeek]) {
         for (ActivityModel activity in _markedActivities.value) {
