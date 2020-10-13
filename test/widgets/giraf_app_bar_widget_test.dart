@@ -17,7 +17,7 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 /// Mocked authbloc by the use of Mockito
 class MockAuth extends Mock implements AuthBloc {
   @override
-  Observable<bool> get loggedIn => _loggedIn.stream;
+  Stream<bool> get loggedIn => _loggedIn.stream;
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(true);
 
   @override

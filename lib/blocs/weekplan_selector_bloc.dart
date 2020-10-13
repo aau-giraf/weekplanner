@@ -84,16 +84,16 @@ class WeekplansBloc extends BlocBase {
       return;
     }
 
-    final List<Observable<WeekModel>> weekDetails = <Observable<WeekModel>>[];
-    final List<Observable<WeekModel>> oldWeekDetails =
-      <Observable<WeekModel>>[];
+    final List<Stream<WeekModel>> weekDetails = <Stream<WeekModel>>[];
+    final List<Stream<WeekModel>> oldWeekDetails =
+      <Stream<WeekModel>>[];
 
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
-    final Observable<List<WeekModel>> getWeekPlans =
+    final Stream<List<WeekModel>> getWeekPlans =
       reformatWeekDetailsToObservableList(weekDetails);
 
-    final Observable<List<WeekModel>> getOldWeekPlans =
+    final Stream<List<WeekModel>> getOldWeekPlans =
       reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
@@ -110,13 +110,13 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Reformats [weekDetails] and [oldWeekDetails] into an Observable List
-  Observable<List<WeekModel>> reformatWeekDetailsToObservableList
-      (List<Observable<WeekModel>> details){
+  Stream<List<WeekModel>> reformatWeekDetailsToObservableList
+      (List<Stream<WeekModel>> details){
       // ignore: always_specify_types
-      return details.isEmpty ? Observable.empty() :
+      return details.isEmpty ? Stream.empty() :
         details.length == 1 ?
         details[0].map((WeekModel plan) => <WeekModel>[plan]) :
-        Observable.combineLatestList(details);
+        Rx.combineLatestList(details);
   }
 
   /// Makes API calls to get the weekplan details
@@ -124,8 +124,8 @@ class WeekplansBloc extends BlocBase {
   /// and current/upcoming weekplans are stored in [weekDetails]
   void getWeekDetails(
     List<WeekNameModel> weekPlanNames,
-    List<Observable<WeekModel>> weekDetails,
-    List<Observable<WeekModel>> oldWeekDetails){
+    List<Stream<WeekModel>> weekDetails,
+    List<Stream<WeekModel>> oldWeekDetails){
 
     // Loops through all weekplans and sort them into old and upcoming weekplans
     for (WeekNameModel weekPlanName in weekPlanNames) {
@@ -305,7 +305,7 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// This stream checks that you have only marked one week model
-  Observable<bool> onlyOneModelMarkedStream() {
+  Stream<bool> onlyOneModelMarkedStream() {
     return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
   }
 

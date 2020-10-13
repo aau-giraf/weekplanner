@@ -19,8 +19,8 @@ class MockPictogramApi extends Mock implements PictogramApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(GirafUserModel(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(GirafUserModel(
       id: '1',
       department: 3,
       role: Role.Guardian,
@@ -35,7 +35,7 @@ class MockUploadFromGalleryBloc extends UploadFromGalleryBloc {
   MockUploadFromGalleryBloc(Api api) : super(api);
 
   @override
-  Observable<bool> get isInputValid => _isInputValid.stream;
+  Stream<bool> get isInputValid => _isInputValid.stream;
 
   final BehaviorSubject<bool> _isInputValid =
       BehaviorSubject<bool>.seeded(false);
@@ -73,7 +73,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     when(api.pictogram.create(any))
-        .thenAnswer((_) => Observable<PictogramModel>.error(Exception()));
+        .thenAnswer((_) => Stream<PictogramModel>.error(Exception()));
     bloc.setInputIsValid(true);
 
     await tester.tap(find.byKey(const Key('SavePictogramButtonKey')));

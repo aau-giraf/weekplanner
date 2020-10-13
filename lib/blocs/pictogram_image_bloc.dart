@@ -46,7 +46,7 @@ class PictogramImageBloc extends BlocBase {
 
         _image.add(_cache[id]);
       } else {
-        Observable<Image>.retry(() {
+        Rx.retry<Image>(() {
           return _api.pictogram.getImage(id);
         }, 3)
             .listen(

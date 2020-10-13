@@ -43,19 +43,19 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 }
 
 class MockAuth extends Mock implements AuthBloc {
   @override
-  Observable<bool> get loggedIn => _loggedIn.stream;
+  Stream<bool> get loggedIn => _loggedIn.stream;
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(true);
 
   @override
-  Observable<WeekplanMode> get mode => _mode.stream;
+  Stream<WeekplanMode> get mode => _mode.stream;
   final BehaviorSubject<WeekplanMode> _mode =
       BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
@@ -85,7 +85,7 @@ class MockAuth extends Mock implements AuthBloc {
 
 class MockActivityApi extends Mock implements ActivityApi {
   @override
-  Observable<ActivityModel> update(ActivityModel activity, String userId) {
+  Stream<ActivityModel> update(ActivityModel activity, String userId) {
     return BehaviorSubject<ActivityModel>.seeded(activity);
   }
 }
@@ -234,7 +234,7 @@ void main() {
         .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
 
     when(api.user.getSettings(any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings);
+      return Stream<SettingsModel>.value(mockSettings);
     });
   }
 
@@ -759,7 +759,7 @@ void main() {
   testWidgets('Only have a play button for timer when lockTimerControl is true',
       (WidgetTester tester) async {
     when(api.user.getSettings(any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings2);
+      return Stream<SettingsModel>.value(mockSettings2);
     });
     await tester.runAsync(() async {
       authBloc.setMode(WeekplanMode.citizen);
@@ -827,7 +827,7 @@ void main() {
       'No buttons for timer when an activity with a completed timer is chosen',
       (WidgetTester tester) async {
     when(api.user.getSettings(any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings2);
+      return Stream<SettingsModel>.value(mockSettings2);
     });
     await tester.runAsync(() async {
       authBloc.setMode(WeekplanMode.citizen);

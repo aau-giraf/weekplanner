@@ -32,23 +32,23 @@ class MockEditWeekplanBloc extends EditWeekplanBloc {
   Api api;
 
   @override
-  Observable<bool> get validTitleStream =>
-      Observable<bool>.just(acceptAllInputs);
+  Stream<bool> get validTitleStream =>
+      Stream<bool>.value(acceptAllInputs);
 
   @override
-  Observable<bool> get validYearStream =>
-      Observable<bool>.just(acceptAllInputs);
+  Stream<bool> get validYearStream =>
+      Stream<bool>.value(acceptAllInputs);
 
   @override
-  Observable<bool> get validWeekNumberStream =>
-      Observable<bool>.just(acceptAllInputs);
+  Stream<bool> get validWeekNumberStream =>
+      Stream<bool>.value(acceptAllInputs);
 
   @override
-  Observable<PictogramModel> get thumbnailStream =>
-      Observable<PictogramModel>.just(mockPictogram);
+  Stream<PictogramModel> get thumbnailStream =>
+      Stream<PictogramModel>.value(mockPictogram);
 
   @override
-  Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
+  Stream<bool> get allInputsAreValidStream => Stream<bool>.value(true);
 }
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -91,12 +91,12 @@ void main() {
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
       savedWeekplan = true;
-      return Observable<WeekModel>.just(mockWeek);
+      return Stream<WeekModel>.value(mockWeek);
     });
 
     when(api.week.getNames(any)).thenAnswer(
       (_) {
-        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
+        return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,
@@ -107,7 +107,7 @@ void main() {
 
     when(api.week.get(any, any, any)).thenAnswer(
       (_) {
-        return Observable<WeekModel>.just(mockWeek);
+        return Stream<WeekModel>.value(mockWeek);
       },
     );
 

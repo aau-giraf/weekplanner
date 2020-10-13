@@ -13,8 +13,8 @@ import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(GirafUserModel(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(GirafUserModel(
       id: '1',
       department: 3,
       role: Role.Guardian,
@@ -24,11 +24,11 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
-  Observable<List<DisplayNameModel>> getCitizens(String id) {
+  Stream<List<DisplayNameModel>> getCitizens(String id) {
     final List<DisplayNameModel> output = <DisplayNameModel>[];
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
 
-    return Observable<List<DisplayNameModel>>.just(output);
+    return Stream<List<DisplayNameModel>>.value(output);
   }
 }
 
@@ -36,16 +36,16 @@ Map<String, WeekModel> map = <String, WeekModel>{};
 class MockWeekApi extends Mock implements WeekApi {
 
   @override
-  Observable<WeekModel> update(String id, int year, int weekNumber,
+  Stream<WeekModel> update(String id, int year, int weekNumber,
     WeekModel week) {
     map[id] = week;
-    return Observable<WeekModel>.just(week);
+    return Stream<WeekModel>.value(week);
   }
 
   @override
-  Observable<WeekModel> get(String id, int year, int weekNumber) {
+  Stream<WeekModel> get(String id, int year, int weekNumber) {
     // return null so there are no conflicts
-    return Observable<WeekModel>.just(null);
+    return Stream<WeekModel>.value(null);
   }
 
 }

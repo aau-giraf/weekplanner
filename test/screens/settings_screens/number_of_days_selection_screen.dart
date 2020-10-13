@@ -18,13 +18,13 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxBu
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Observable<SettingsModel> getSettings(String id) {
+  Stream<SettingsModel> getSettings(String id) {
     final SettingsModel settingsModel = SettingsModel(
         orientation: null,
         completeMark: null,
@@ -34,7 +34,7 @@ class MockUserApi extends Mock implements UserApi {
         nrOfDaysToDisplay: 1,
         weekDayColors: null);
 
-    return Observable<SettingsModel>.just(settingsModel);
+    return Stream<SettingsModel>.value(settingsModel);
   }
 }
 

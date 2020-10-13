@@ -11,8 +11,8 @@ import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(GirafUserModel(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(GirafUserModel(
         id: '1',
         department: 3,
         role: Role.Guardian,
@@ -22,11 +22,11 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
-  Observable<List<DisplayNameModel>> getCitizens(String id) {
+  Stream<List<DisplayNameModel>> getCitizens(String id) {
     final List<DisplayNameModel> output = <DisplayNameModel>[];
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
 
-    return Observable<List<DisplayNameModel>>.just(output);
+    return Stream<List<DisplayNameModel>>.value(output);
   }
 }
 

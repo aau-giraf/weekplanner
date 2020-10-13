@@ -21,14 +21,14 @@ class TimerBloc extends BlocBase {
   DisplayNameModel _user;
 
   /// Stream for the progress of the timer.
-  Observable<double> get timerProgressStream => _timerProgressStream.stream;
+  Stream<double> get timerProgressStream => _timerProgressStream.stream;
 
   /// stream for checking if the timer is running
-  Observable<TimerRunningMode> get timerRunningMode =>
+  Stream<TimerRunningMode> get timerRunningMode =>
       _timerRunningModeStream.stream;
 
   /// Stream for checking if the timer is instantiated.
-  Observable<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
 
   /// BehaviorSubject for the progress of the timer.
   final BehaviorSubject<double> _timerProgressStream =

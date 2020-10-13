@@ -38,17 +38,17 @@ class NewCitizenBloc extends BlocBase {
   Sink<String> get onPasswordVerifyChange => passwordVerifyController.sink;
 
   /// Validation stream for display name
-  Observable<bool> get validDisplayNameStream =>
+  Stream<bool> get validDisplayNameStream =>
       displayNameController.stream.transform(_displayNameValidation);
   /// Validation stream for username
-  Observable<bool> get validUsernameStream =>
+  Stream<bool> get validUsernameStream =>
       usernameController.stream.transform(_usernameValidation);
   /// Validation stream for password
-  Observable<bool> get validPasswordStream =>
+  Stream<bool> get validPasswordStream =>
       passwordController.stream.transform(_passwordValidation);
   /// Validation stream for password validation
-  Observable<bool> get validPasswordVerificationStream =>
-      Observable.combineLatest2<String, String, bool>
+  Stream<bool> get validPasswordVerificationStream =>
+      Rx.combineLatest2<String, String, bool>
         (passwordController.startWith(''), passwordVerifyController,
               (String a, String b) => a == b);
 
@@ -63,7 +63,7 @@ class NewCitizenBloc extends BlocBase {
   }
 
   /// Method called with information about the new citizen.
-  Observable<GirafUserModel> createCitizen() {
+  Stream<GirafUserModel> createCitizen() {
     return _api.account.register(
         usernameController.value,
         passwordController.value,
@@ -73,8 +73,8 @@ class NewCitizenBloc extends BlocBase {
     );
   }
   /// Gives information about whether all inputs are valid.
-  Observable<bool> get allInputsAreValidStream =>
-      Observable.combineLatest4<bool, bool, bool, bool, bool>(
+  Stream<bool> get allInputsAreValidStream =>
+      Rx.combineLatest4<bool, bool, bool, bool, bool>(
           validDisplayNameStream,
           validUsernameStream,
           validPasswordStream,

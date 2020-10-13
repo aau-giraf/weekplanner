@@ -15,7 +15,7 @@ class AuthBloc extends BlocBase {
   final Api _api;
 
   /// Whether or not the user is logged in
-  Observable<bool> get loggedIn => _loggedIn.stream;
+  Stream<bool> get loggedIn => _loggedIn.stream;
 
   /// Start with providing false as the logged in status
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
@@ -25,10 +25,10 @@ class AuthBloc extends BlocBase {
   BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
   /// The stream that emits the current clearance level
-  Observable<WeekplanMode> get mode => _mode.stream;
+  Stream<WeekplanMode> get mode => _mode.stream;
 
   /// Stream that streams status of last login attemp from popup.
-  Observable<bool> get loginAttempt =>_loginAttempt.stream;
+  Stream<bool> get loginAttempt =>_loginAttempt.stream;
 
   final BehaviorSubject<bool> _loginAttempt =
   BehaviorSubject<bool>.seeded(false);

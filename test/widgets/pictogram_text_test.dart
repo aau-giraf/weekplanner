@@ -24,14 +24,14 @@ SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Observable<SettingsModel> getSettings(String id) {
-    return Observable<SettingsModel>.just(mockSettings);
+  Stream<SettingsModel> getSettings(String id) {
+    return Stream<SettingsModel>.value(mockSettings);
   }
 }
 

@@ -28,7 +28,7 @@ class MockCopyResolveBloc extends CopyResolveBloc {
   Api api;
 
   @override
-  Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
+  Stream<bool> get allInputsAreValidStream => Stream<bool>.value(true);
 }
 
 final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
@@ -75,34 +75,34 @@ void main() {
       );
 
       weekNameModelList.add(weekNameModel);
-      return Observable<WeekModel>.just(weekplan1);
+      return Stream<WeekModel>.value(weekplan1);
     });
 
     when(api.week.get('testId', 2020, 3)).thenAnswer((_) {
       for (WeekNameModel week in weekNameModelList){
         final bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
         if (isEqual){
-          return Observable<WeekModel>.just(weekplan1Copy);
+          return Stream<WeekModel>.value(weekplan1Copy);
         }
       }
-      return Observable<WeekModel>.just(WeekModel(
+      return Stream<WeekModel>.value(WeekModel(
         thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
     });
 
     when(api.week
       .get('testId', weekNameModel.weekYear, weekNameModel.weekNumber))
       .thenAnswer((_) {
-      return Observable<WeekModel>.just(weekplan1);
+      return Stream<WeekModel>.value(weekplan1);
     });
 
     when(api.week
       .get('testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
       .thenAnswer((_) {
-      return Observable<WeekModel>.just(weekplan2);
+      return Stream<WeekModel>.value(weekplan2);
     });
 
     when(api.week.getNames('testId')).thenAnswer((_) {
-      return Observable<List<WeekNameModel>>.just(weekNameModelList);
+      return Stream<List<WeekNameModel>>.value(weekNameModelList);
     });
 
     di.clearAll();

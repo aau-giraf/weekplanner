@@ -74,7 +74,7 @@ class MockLoginScreenAutoLogin extends LoginScreen {
 
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
-  Observable<bool> get loggedIn => _loggedIn.stream;
+  Stream<bool> get loggedIn => _loggedIn.stream;
   final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(false);
 
   @override

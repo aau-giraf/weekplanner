@@ -14,7 +14,7 @@ class SettingsBloc extends BlocBase {
   final Api _api;
 
   /// Settings stream
-  Observable<SettingsModel> get settings => _settings.stream;
+  Stream<SettingsModel> get settings => _settings.stream;
 
   /// Currently selected theme
   Stream<GirafTheme> get theme => _theme.stream;
@@ -38,7 +38,7 @@ class SettingsBloc extends BlocBase {
   }
 
   /// Update an existing settingsModel
-  Observable<SettingsModel> updateSettings(
+  Stream<SettingsModel> updateSettings(
       String userId, SettingsModel settingsModel) {
     return _api.user
         .updateSettings(userId, settingsModel);

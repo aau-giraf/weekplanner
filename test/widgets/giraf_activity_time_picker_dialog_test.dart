@@ -57,12 +57,12 @@ class MockScreen extends StatelessWidget {
 
 class MockTimerBloc extends Mock implements TimerBloc {
   @override
-  Observable<double> get timerProgressStream => _timerProgressStream.stream;
+  Stream<double> get timerProgressStream => _timerProgressStream.stream;
   final BehaviorSubject<double> _timerProgressStream =
       BehaviorSubject<double>.seeded(0.0);
 
   @override
-  Observable<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
   final BehaviorSubject<bool> _timerInstantiatedStream =
       BehaviorSubject<bool>.seeded(false);
 

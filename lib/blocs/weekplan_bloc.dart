@@ -16,7 +16,7 @@ class WeekplanBloc extends BlocBase {
   WeekplanBloc(this._api);
 
   /// The stream that emits the currently chosen weekplan
-  Observable<UserWeekModel> get userWeek => _userWeek.stream;
+  Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -235,7 +235,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  Observable<bool> _atLeastOneActivityMarked(){
+  Stream<bool> _atLeastOneActivityMarked(){
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
   }

@@ -8,13 +8,13 @@ environment:
 
 dependencies:
   shared_preferences: ^0.5.1+1
-  rxdart: ^0.21.0
+  rxdart: ">=0.23.0 <0.24.1"
   http: ^0.12.0+1
   injector: ^1.0.6
   api_client:
     git:
       url: https://github.com/aau-giraf/api_client.git
-      ref: master
+      ref: feature/56
   auto_size_text: ^1.1.1
   image_picker: ^0.6.0+2
   rflutter_alert: ^1.0.2

@@ -56,7 +56,7 @@ class GirafButton extends StatefulWidget {
   /// A stream which tells whether the button should be enabled or disabled.
   /// If the stream emits a null value, the value of isEnabled will be used
   /// instead.
-  final Observable<bool> isEnabledStream;
+  final Stream<bool> isEnabledStream;
 
   @override
   _GirafButtonState createState() => _GirafButtonState();

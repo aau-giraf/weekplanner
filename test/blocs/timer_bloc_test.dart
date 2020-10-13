@@ -18,7 +18,7 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 class MockActivityApi extends Mock implements ActivityApi {
   @override
-  Observable<ActivityModel> update(ActivityModel activity, String userId) {
+  Stream<ActivityModel> update(ActivityModel activity, String userId) {
     return BehaviorSubject<ActivityModel>.seeded(activity);
   }
 }

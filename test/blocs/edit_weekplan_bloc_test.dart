@@ -39,12 +39,12 @@ void main() {
     api.week = MockWeekApi();
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
-      return Observable<WeekModel>.just(mockWeek);
+      return Stream<WeekModel>.value(mockWeek);
     });
 
     when(api.week.getNames(any)).thenAnswer(
       (_) {
-        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
+        return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,
@@ -55,7 +55,7 @@ void main() {
 
     when(api.week.get(any, any, any)).thenAnswer(
       (_) {
-        return Observable<WeekModel>.just(mockWeek);
+        return Stream<WeekModel>.value(mockWeek);
       },
     );
 
