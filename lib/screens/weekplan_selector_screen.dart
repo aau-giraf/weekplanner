@@ -88,7 +88,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       BuildContext context, Stream<List<WeekModel>> weekModels,
       [Stream<List<WeekModel>> oldWeekModels]) {
     return Container(
-        child: ListView(children: <Widget>[
+        child: Column(children: <Widget>[
       StreamBuilder<bool>(
           stream: _weekBloc.searchMode,
           initialData: true,
@@ -96,7 +96,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             return Visibility(
                 visible: snapshot.data,
                 child: Container(
-                    height: MediaQuery.of(context).size.height,
+                    height: MediaQuery.of(context).size.height / 2,
                     // ignore: always_specify_types
                     child: SearchBar(
                         cancellationWidget: const Text('Annuller'),

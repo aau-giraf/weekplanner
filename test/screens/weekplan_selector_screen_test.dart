@@ -200,7 +200,9 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
-    expect(find.byWidgetPredicate((Widget widget) => widget is GridView),
+    expect(
+        find.byWidgetPredicate(
+            (Widget widget) => widget is GridView || widget is ListView),
         findsNWidgets(2));
   });
 
@@ -593,7 +595,7 @@ void main() {
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
-        widget is GirafNotifyDialog &&
+            widget is GirafNotifyDialog &&
             widget.title == 'Fejl' &&
             widget.description ==
                 'Der skal markeres præcis én uge for at kopiere'),
