@@ -272,36 +272,49 @@ class ShowActivityScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           child: Card(
                             child: Material(
-                            child: InkWell(
-                              key: const Key('OverallTimerBoxKey'),
-                             onTap: () {!timerInitSnapshot.data ?
-                              _buildTimerDialog(overallContext) : null;
-                              },
-                            child: Column(children: <Widget>[
+                              child: InkWell(
+                                key: const Key('OverallTimerBoxKey'),
+                                onTap: () {!timerInitSnapshot.data ?
+                                //Build timer dialog on tap if timer has no data
+                                // ignore: unnecessary_statements
+                                  _buildTimerDialog(overallContext) : null;
+                                  },
+                                //hide splash/highlight color when timer exists
+                                highlightColor: timerInitSnapshot.data == null 
+                                  || !timerInitSnapshot.data ?
+                                  Theme.of(overallContext).highlightColor :
+                                  Colors.transparent,
+                                splashColor: timerInitSnapshot.data == null ||
+                                  !timerInitSnapshot.data ?
+                                  Theme.of(overallContext).splashColor :
+                                  Colors.transparent,
+                              child: Column(children: <Widget>[
                               // The title of the timer widget
                               Center(
-                                  key: const Key('TimerTitleKey'),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Timer',
-                                        style: titleTextStyle,
-                                        textAlign: TextAlign.center),
-                                  )),
+                                key: const Key('TimerTitleKey'),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Timer',
+                                      style: titleTextStyle,
+                                      textAlign: TextAlign.center),
+                                  )
+                                ),
                               Expanded(
-                                  // Depending on whether a timer is initiated,
-                                  // different widgets are shown.
-                                  child: (timerInitSnapshot.hasData
-                                          ? timerInitSnapshot.data
-                                          : false)
+                                // Depending on whether a timer is initiated,
+                                // different widgets are shown.
+                                child: (timerInitSnapshot.hasData
+                                        ? timerInitSnapshot.data
+                                        : false)
                                       ? _timerIsInitiatedWidget()
                                       : _timerIsNotInitiatedWidget(
-                                          overallContext, modeSnapshot)),
-                              _timerButtons(overallContext, timerInitSnapshot,
-                                  modeSnapshot)
-                            ]),
+                                        overallContext, modeSnapshot)),
+                                      _timerButtons(overallContext, 
+                                      timerInitSnapshot, modeSnapshot)
+                                ]
+                              ),
+                            ),
                           ),
-                          ),
-                          ),
+                        ),
                       ),
                     ),
                   ),
