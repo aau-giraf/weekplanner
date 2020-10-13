@@ -54,6 +54,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
           title: _user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
@@ -88,7 +89,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       BuildContext context, Stream<List<WeekModel>> weekModels,
       [Stream<List<WeekModel>> oldWeekModels]) {
     return Container(
-        child: Column(children: <Widget>[
+        child: ListView(children: <Widget>[
       StreamBuilder<bool>(
           stream: _weekBloc.searchMode,
           initialData: true,
