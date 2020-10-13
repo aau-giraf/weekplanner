@@ -697,6 +697,6 @@ void main() {
     await tester.enterText(find.byType(TextField), nameWeekModel2);
     await tester.pumpAndSettle();
 
-    expect(find.text('nr:0'), findsOneWidget);
+    expect(find.text(nameWeekModel2), findsOneWidget);
   });
 }
