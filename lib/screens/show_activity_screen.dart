@@ -353,7 +353,7 @@ class ShowActivityScreen extends StatelessWidget {
                       );
                     }))),
       ),
-      buildButtonBar()
+      buildButtonBar(), buildInputField()
     ]));
   }
 
@@ -672,6 +672,51 @@ class ShowActivityScreen extends StatelessWidget {
         ]);
   }
 
+  Column buildInputField() {
+    return Column(
+      children: <Widget>[
+        Container(width: 600,
+          child: Row(children: <Widget>[
+            Expanded(
+              child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
+              child: TextField(
+                style: const TextStyle(
+                  fontSize: 28,
+                  height: 1.3,
+                  color: Colors.black
+                ),
+                onChanged: null,
+                decoration: InputDecoration(
+                  hintText: 'Nyt piktogram navn',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50))),
+              ),
+            ),
+            ),
+            Column(
+              children: <Widget>[
+                GirafButton(
+                  key: const Key('SavePictogramTextForCitizenButton'),
+                  onPressed: (){
+
+                  },
+                  text: 'Gem til borger',
+                ),
+                GirafButton(
+                  key: const Key('GetStandardPictogramTextForCitizenButton'),
+                  onPressed: (){
+
+                  },
+                  text: 'Hent standard',
+                )
+              ],
+            )
+          ]
+        ))
+      ]
+    );
+  }
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     return StreamBuilder<Image>(
