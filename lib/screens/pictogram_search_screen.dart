@@ -7,7 +7,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import '../style/custom_color.dart' as theme;
 
@@ -62,7 +61,8 @@ class PictogramSearch extends StatelessWidget {
                           children: snapshot.data
                               .map((PictogramModel pictogram) => PictogramImage(
                                   pictogram: pictogram,
-                                  haveRights: pictogram.userId == user.id,
+                                  haveRights: user == null ? false
+                                      : pictogram.userId == user.id,
                                   onPressed: () =>
                                       Routes.pop(context, pictogram)))
                               .toList(),

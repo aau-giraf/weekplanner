@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -19,7 +18,7 @@ class PictogramImage extends StatelessWidget {
     Key key,
     @required this.pictogram,
     @required this.onPressed,
-    this.haveRights
+    this.haveRights = false
   }) : super(key: key) {
     _bloc.load(pictogram);
   }
@@ -72,23 +71,24 @@ class PictogramImage extends StatelessWidget {
             child: Directionality(
               textDirection: TextDirection.ltr,
               child: Stack(
-              children: <Widget>[StreamBuilder<Image>(
+              children: <Widget>[
+                StreamBuilder<Image>(
                   stream: _bloc.image,
                   builder:
                       (BuildContext context, AsyncSnapshot<Image> snapshot) =>
                           snapshot.data ?? _loading),
                 GirafButton(
-                  onPressed: () {_confirmDeleteDialog(context);},
+                  onPressed: () {_confirmDeleteDialog(context); onPressed();},
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Slet',
                   isEnabled: haveRights,
-                )
+                ),
               ]
-            )
             )
       ),
 
-      ),
+      )
+    )
     );
   }
 }
