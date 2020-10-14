@@ -631,7 +631,8 @@ class ShowActivityScreen extends StatelessWidget {
                     }
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
                       return Container(
-                        child: Column(children: <Widget>[
+                        child: Row(children: <Widget>[
+                        Container(child:
                         GirafButton(
                         key: const Key('CancelStateToggleButton'),
                           onPressed: () {
@@ -643,17 +644,19 @@ class ShowActivityScreen extends StatelessWidget {
                               ? 'Aflys'
                               : 'Fortryd',
                           icon: activitySnapshot.data.state !=
-                              ActivityState.Canceled
+                                  ActivityState.Canceled
                               ? const ImageIcon(
-                              AssetImage('assets/icons/cancel.png'),
-                              color: theme.GirafColors.red)
+                                  AssetImage('assets/icons/cancel.png'),
+                                  color: theme.GirafColors.red)
                               : const ImageIcon(
-                              AssetImage('assets/icons/undo.png'),
-                              color: theme.GirafColors.blue)
+                                  AssetImage('assets/icons/undo.png'),
+                                  color: theme.GirafColors.blue),
                         ),
-                        const SizedBox(height: 3.5),
+                        margin: const EdgeInsets.only(right: 40.0)
+                        ),
+                        Container(child:
                         GirafButton(
-                          key: const Key('CompleteStateToggleButton'),
+                        key: const Key('CompleteStateToggleButton'),
                           onPressed: () {
                             _activityBloc.completeActivity();
                           },
@@ -669,8 +672,9 @@ class ShowActivityScreen extends StatelessWidget {
                                   AssetImage('assets/icons/undo.png'),
                                   color: theme.GirafColors.blue)
                         ),
-                        ]),
-                      );
+                        margin: const EdgeInsets.only(left: 40.0),
+                        ),
+                    ]));
 
                     } else {
                       return GirafButton(
