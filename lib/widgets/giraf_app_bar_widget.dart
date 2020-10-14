@@ -14,7 +14,7 @@ class GirafAppBar extends StatefulWidget implements PreferredSizeWidget {
       this.isGuardian = true,
       this.bottom})
       : toolbarBloc = di.getDependency<ToolbarBloc>(),
-        preferredSize = const Size.fromHeight(53.0),
+        preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 
   /// Used to store the title of the toolbar.

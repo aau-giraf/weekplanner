@@ -87,7 +87,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         child: ListView(children: <Widget>[
       StreamBuilder<bool>(
           stream: _weekBloc.searchMode,
-          initialData: true,
+          initialData: false,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return Visibility(
                 visible: snapshot.data,
@@ -102,7 +102,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         onSearch: _weekBloc.onSearch,
                         onItemFound: (WeekModel weekplan, int index) {
                           return ListTile(
-                            key: Key('nr:' + index.toString()),
+                            key: Key(index.toString()),
                             // ignore: sdk_version_set_literal, always_specify_types
                             onTap: () => {
                               _weekBloc.toggleSearch(),

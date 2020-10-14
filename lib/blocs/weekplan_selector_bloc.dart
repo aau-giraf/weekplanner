@@ -4,6 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -318,27 +319,54 @@ class WeekplansBloc extends BlocBase {
 
   /// Sets [_searchResults] to the found elements of [_weekModel].
   Future<List<WeekModel>> onSearch(String searchQuery) async {
-    final List<WeekModel> allModels = <WeekModel>[];
     final List<WeekModel> foundModels = <WeekModel>[];
-    await weekModels.first
-        // ignore: sdk_version_set_literal, always_specify_types
-        .then((List<WeekModel> wm) => {
-              // ignore: avoid_function_literals_in_foreach_calls
-              wm.forEach((WeekModel element) {
-                allModels.add(element);
+    final List<WeekModel> currentModels = await weekModels.first;
+    List<WeekModel> oldModels;
+    try {
+      oldModels = await oldWeekModels.first;
+    } catch (e) {
+      print(e);
+    }
+    bool currentEmpty;
+    bool oldEmpty;
+
+    // await weekModels.first.then((value) =>
+    //     value.length > 1 ? currentEmpty = false : currentEmpty = true);
+
+    // await oldWeekModels.first
+    //     .then((value) => value.isNotEmpty ? oldEmpty = false : oldEmpty = true);
+
+    // final bool weekModelEmpty = await weekModels.isEmpty ? true : false;
+    // final bool oldWeekModelEmpty = await oldWeekModels.isEmpty ? true : false;
+
+    if (currentModels.length > 1) {
+      await oldWeekModels.first.then((List<WeekModel> value) =>
+          foundModels.addAll(value.where(
+              (WeekModel element) => element.name.contains(searchQuery))));
+      return foundModels;
+    }
+
+    if (oldModels.isNotEmpty) {
+      await weekModels.first.then((List<WeekModel> value) => foundModels.addAll(
+          value.where(
+              (WeekModel element) => element.name.contains(searchQuery))));
+      return foundModels;
+    }
+
+    if (!(currentModels.length > 1 && oldModels.isNotEmpty)) {
+      await weekModels.first
+          .then((List<WeekModel> value) => {
+                foundModels.addAll(value.where(
+                    (WeekModel element) => element.name.contains(searchQuery)))
               })
-            })
-        .then((_) => oldWeekModels.first
-            // ignore: sdk_version_set_literal, always_specify_types
-            .then((List<WeekModel> wm) => {
-                  // ignore: avoid_function_literals_in_foreach_calls
-                  wm.forEach((WeekModel element) {
-                    allModels.add(element);
-                  })
-                })
-            .then((_) => foundModels.addAll(allModels.where(
-                (WeekModel element) => element.name.contains(searchQuery)))));
-    return foundModels;
+          .then((_) => oldWeekModels.first.then((List<WeekModel> value) => {
+                foundModels.addAll(value.where(
+                    (WeekModel element) => element.name.contains(searchQuery)))
+              }));
+      return foundModels;
+    }
+
+    return null;
   }
   //}
 

@@ -8,6 +8,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -693,6 +694,8 @@ void main() {
 
     // await tester.showKeyboard(find.byKey(Key('WeekplanSearchBar')));
     // await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.byType(SearchBar));
 
     await tester.enterText(find.byType(TextField), nameWeekModel2);
     await tester.pumpAndSettle();
