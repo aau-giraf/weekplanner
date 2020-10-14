@@ -217,7 +217,7 @@ class ShowActivityScreen extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: IconButton(
-                            icon: AspectRatio(
+                            icon: const AspectRatio(
                               aspectRatio: 1,
                               child: FittedBox(
                                 child: Icon(
@@ -632,8 +632,9 @@ class ShowActivityScreen extends StatelessWidget {
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
                       return Container(
                         child: Row(children: <Widget>[
-                        Container(child:
-                        GirafButton(
+                          Padding(
+                        padding: const EdgeInsets.only(right: 40.0),
+                        child: GirafButton(
                         key: const Key('CancelStateToggleButton'),
                           onPressed: () {
                             _activityBloc.cancelActivity();
@@ -651,10 +652,7 @@ class ShowActivityScreen extends StatelessWidget {
                               : const ImageIcon(
                                   AssetImage('assets/icons/undo.png'),
                                   color: theme.GirafColors.blue),
-                        ),
-                        margin: const EdgeInsets.only(right: 40.0)
-                        ),
-                        Container(child:
+                        )),
                         GirafButton(
                         key: const Key('CompleteStateToggleButton'),
                           onPressed: () {
@@ -671,8 +669,6 @@ class ShowActivityScreen extends StatelessWidget {
                               : const ImageIcon(
                                   AssetImage('assets/icons/undo.png'),
                                   color: theme.GirafColors.blue)
-                        ),
-                        margin: const EdgeInsets.only(left: 40.0),
                         ),
                     ]));
 
