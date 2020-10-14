@@ -484,7 +484,7 @@ class WeekplanDayColumn extends StatelessWidget {
                         child: Image.asset('assets/icons/add.png'),
                         color: theme.GirafColors.buttonColor,
                         onPressed: () async {
-                          Routes.push(context, PictogramSearch())
+                          Routes.push(context, PictogramSearch(user: user,))
                               .then((Object object) {
                             if (object is PictogramModel) {
                               final PictogramModel newPictogram = object;
