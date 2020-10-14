@@ -6,7 +6,7 @@ packages:
     description:
       path: "."
       ref: "feature/56"
-      resolved-ref: cbee8c4ae7c5c297c2b923c6f264f035c8819c37
+      resolved-ref: "130add14d14db4d6c850630cd1767e18840fcf61"
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"
@@ -180,7 +180,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.7+11"
+    version: "0.6.6+4"
   image_picker_platform_interface:
     dependency: transitive
     description:

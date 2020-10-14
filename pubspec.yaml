@@ -16,7 +16,7 @@ dependencies:
       url: https://github.com/aau-giraf/api_client.git
       ref: feature/56
   auto_size_text: ^1.1.1
-  image_picker: ^0.6.0+2
+  image_picker: 0.6.6+4
   rflutter_alert: ^1.0.2
   flutter:
     sdk: flutter
