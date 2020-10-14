@@ -8,6 +8,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
@@ -275,7 +276,8 @@ class ToolbarBloc extends BlocBase {
                 : null,
             child: const Text(
               'Bekræft',
-              style: TextStyle(color: theme.GirafColors.white, fontSize: 20),
+              style: TextStyle(color: theme.GirafColors.white,
+                  fontSize: GirafFont.small),
             ),
             color: theme.GirafColors.dialogButton,
           )
