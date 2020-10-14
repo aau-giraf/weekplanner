@@ -78,7 +78,7 @@ class PictogramImage extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<Image> snapshot) =>
                           snapshot.data ?? _loading),
                 GirafButton(
-                  onPressed: () {_confirmDeleteDialog(context); onPressed();},
+                  onPressed: () {_confirmDeleteDialog(context);},
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Slet',
                   isEnabled: haveRights,

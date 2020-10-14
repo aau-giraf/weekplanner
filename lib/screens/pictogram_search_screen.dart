@@ -61,8 +61,9 @@ class PictogramSearch extends StatelessWidget {
                           children: snapshot.data
                               .map((PictogramModel pictogram) => PictogramImage(
                                   pictogram: pictogram,
-                                  haveRights: user == null ? false
-                                      : pictogram.userId == user.id,
+                                  haveRights: user == null || pictogram.userId
+                                      == null ? false :
+                                      pictogram.userId == user.id,
                                   onPressed: () =>
                                       Routes.pop(context, pictogram)))
                               .toList(),
