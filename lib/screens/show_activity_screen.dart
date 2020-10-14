@@ -630,24 +630,48 @@ class ShowActivityScreen extends StatelessWidget {
                       return const CircularProgressIndicator();
                     }
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                      return GirafButton(
-                          key: const Key('CancelStateToggleButton'),
+                      return Container(
+                        child: Column(children: <Widget>[
+                        GirafButton(
+                        key: const Key('CancelStateToggleButton'),
                           onPressed: () {
                             _activityBloc.cancelActivity();
                             _activity.state = _activityBloc.getActivity().state;
                           },
                           text: activitySnapshot.data.state !=
-                                  ActivityState.Canceled
+                              ActivityState.Canceled
                               ? 'Aflys'
                               : 'Fortryd',
                           icon: activitySnapshot.data.state !=
-                                  ActivityState.Canceled
+                              ActivityState.Canceled
                               ? const ImageIcon(
-                                  AssetImage('assets/icons/cancel.png'),
-                                  color: theme.GirafColors.red)
+                              AssetImage('assets/icons/cancel.png'),
+                              color: theme.GirafColors.red)
+                              : const ImageIcon(
+                              AssetImage('assets/icons/undo.png'),
+                              color: theme.GirafColors.blue)
+                        ),
+                        const SizedBox(height: 3.5),
+                        GirafButton(
+                          key: const Key('CompleteStateToggleButton'),
+                          onPressed: () {
+                            _activityBloc.completeActivity();
+                          },
+                          isEnabled: activitySnapshot.data.state !=
+                              ActivityState.Canceled,
+                          width: 100,
+                          icon: activitySnapshot.data.state !=
+                                  ActivityState.Completed
+                              ? const ImageIcon(
+                                  AssetImage('assets/icons/accept.png'),
+                                  color: theme.GirafColors.green)
                               : const ImageIcon(
                                   AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue));
+                                  color: theme.GirafColors.blue)
+                        ),
+                        ]),
+                      );
+
                     } else {
                       return GirafButton(
                           key: const Key('CompleteStateToggleButton'),
