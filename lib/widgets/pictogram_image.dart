@@ -69,19 +69,22 @@ class PictogramImage extends StatelessWidget {
       child: Card(
         child: FittedBox(
             fit: BoxFit.contain,
-            child: Stack(
-            children: <Widget>[StreamBuilder<Image>(
-                stream: _bloc.image,
-                builder:
-                    (BuildContext context, AsyncSnapshot<Image> snapshot) =>
-                        snapshot.data ?? _loading),
-              GirafButton(
-                onPressed: () {_confirmDeleteDialog(context);},
-                icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
-                text: 'Slet',
-                isEnabled: haveRights,
-              )
-            ]
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: Stack(
+              children: <Widget>[StreamBuilder<Image>(
+                  stream: _bloc.image,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Image> snapshot) =>
+                          snapshot.data ?? _loading),
+                GirafButton(
+                  onPressed: () {_confirmDeleteDialog(context);},
+                  icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                  text: 'Slet',
+                  isEnabled: haveRights,
+                )
+              ]
+            )
             )
       ),
 
