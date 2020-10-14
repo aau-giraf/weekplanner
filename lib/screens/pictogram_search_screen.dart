@@ -1,3 +1,4 @@
+import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -15,7 +16,14 @@ import '../style/custom_color.dart' as theme;
 /// This screen will return `null` back is pressed, otherwise it will return the
 /// chosen pictogram.
 class PictogramSearch extends StatelessWidget {
+
+  /// Constructor
+  PictogramSearch({@required this.user});
+
   final PictogramBloc _bloc = di.getDependency<PictogramBloc>();
+
+  /// The current authenticated user
+  final DisplayNameModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +62,7 @@ class PictogramSearch extends StatelessWidget {
                           children: snapshot.data
                               .map((PictogramModel pictogram) => PictogramImage(
                                   pictogram: pictogram,
+                                  haveRights: pictogram.userId == user.id,
                                   onPressed: () =>
                                       Routes.pop(context, pictogram)))
                               .toList(),

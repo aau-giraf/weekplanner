@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -18,12 +19,16 @@ class PictogramImage extends StatelessWidget {
     Key key,
     @required this.pictogram,
     @required this.onPressed,
+    this.haveRights
   }) : super(key: key) {
     _bloc.load(pictogram);
   }
 
   /// Provided Pictogram to load
   final PictogramModel pictogram;
+  /// haveRights returns true if the current active user have the rights to the
+  /// pictogram.
+  final bool haveRights;
 
   /// The provided callback function which will be called on
   /// every press of the image
@@ -35,10 +40,6 @@ class PictogramImage extends StatelessWidget {
           width: 100, height: 100, child: const CircularProgressIndicator()
       )
   );
-
-  void deletePic(){
-    _bloc.delete(pictogram);
-  }
 
   Future<Center> _confirmDeleteDialog(
       BuildContext context
@@ -53,7 +54,7 @@ class PictogramImage extends StatelessWidget {
               confirmButtonText: 'Slet',
               confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: (){
-                deletePic();
+                _bloc.delete(pictogram);
                 Routes.pop(context);
               }
           );
@@ -78,7 +79,7 @@ class PictogramImage extends StatelessWidget {
                 onPressed: () {_confirmDeleteDialog(context);},
                 icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                 text: 'Slet',
-                isEnabled: false,
+                isEnabled: haveRights,
               )
             ]
             )
