@@ -672,6 +672,7 @@ class ShowActivityScreen extends StatelessWidget {
         ]);
   }
 
+  ///
   Column buildInputField() {
     return Column(
       children: <Widget>[
@@ -696,12 +697,15 @@ class ShowActivityScreen extends StatelessWidget {
             ),
             Column(
               children: <Widget>[
-                GirafButton(
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: GirafButton(
                   key: const Key('SavePictogramTextForCitizenButton'),
                   onPressed: (){
 
                   },
                   text: 'Gem til borger',
+                ),
                 ),
                 GirafButton(
                   key: const Key('GetStandardPictogramTextForCitizenButton'),
