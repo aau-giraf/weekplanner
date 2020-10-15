@@ -213,7 +213,7 @@ class SettingsScreen extends StatelessWidget {
             return SettingsSection('Tidsrepræsentation', <SettingsSectionItem>[
               SettingsArrowButton(
                 'Indstillinger for tidsrepræsentation',
-                    () async { Object result = await Routes
+                    () async { final Object result = await Routes
                         .push(context, TimeRepresentationScreen(_user));
                         settingsModel.defaultTimer = result;
                         _settingsBloc.updateSettings(_user.id, settingsModel)
