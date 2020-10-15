@@ -37,9 +37,6 @@ class WeekplanSelectorBloc extends BlocBase {
   final BehaviorSubject<List<WeekModel>> _oldWeekModel =
       BehaviorSubject<List<WeekModel>>();
 
-  // final BehaviorSubject<List<WeekModel>> _searchResults =
-  //     BehaviorSubject<List<WeekModel>>();
-
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
