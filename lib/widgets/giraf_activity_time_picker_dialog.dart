@@ -126,7 +126,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                     hintText: '',
                   ),
                   inputFormatters: <TextInputFormatter>[
-                    WhitelistingTextInputFormatter(RegExp('[0-9]*')),
+                    FilteringTextInputFormatter.allow(RegExp('[0-9]*')),
                     LengthLimitingTextInputFormatter(2)
                   ]),
             ),

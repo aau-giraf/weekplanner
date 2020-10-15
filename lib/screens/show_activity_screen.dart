@@ -217,7 +217,7 @@ class ShowActivityScreen extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: IconButton(
-                            icon: AspectRatio(
+                            icon: const AspectRatio(
                               aspectRatio: 1,
                               child: FittedBox(
                                 child: Icon(
