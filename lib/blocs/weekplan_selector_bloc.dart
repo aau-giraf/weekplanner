@@ -4,15 +4,14 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
-import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// WeekplansBloc to get weekplans for a user
-class WeekplansBloc extends BlocBase {
+class WeekplanSelectorBloc extends BlocBase {
   /// This bloc obtains a list of all [WeekModel]'s
   /// for a given [UsernameModel].
-  WeekplansBloc(this._api);
+  WeekplanSelectorBloc(this._api);
 
   /// This is a stream where all the [WeekNameModel] are put in,
   ///to be used when getting the [WeekModel].
@@ -89,19 +88,19 @@ class WeekplansBloc extends BlocBase {
 
     if (weekPlanNames.isEmpty) {
       _weekModel.add(weekPlans);
+      _oldWeekModel.add(<WeekModel>[]);
       return;
     }
 
-    final List<Observable<WeekModel>> weekDetails = <Observable<WeekModel>>[];
-    final List<Observable<WeekModel>> oldWeekDetails =
-        <Observable<WeekModel>>[];
+    final List<Stream<WeekModel>> weekDetails = <Stream<WeekModel>>[];
+    final List<Stream<WeekModel>> oldWeekDetails = <Stream<WeekModel>>[];
 
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
-    final Observable<List<WeekModel>> getWeekPlans =
+    final Stream<List<WeekModel>> getWeekPlans =
         reformatWeekDetailsToObservableList(weekDetails);
 
-    final Observable<List<WeekModel>> getOldWeekPlans =
+    final Stream<List<WeekModel>> getOldWeekPlans =
         reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
@@ -118,11 +117,11 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Reformats [weekDetails] and [oldWeekDetails] into an Observable List
-  Observable<List<WeekModel>> reformatWeekDetailsToObservableList(
-      List<Observable<WeekModel>> details) {
+  Stream<List<WeekModel>> reformatWeekDetailsToObservableList(
+      List<Stream<WeekModel>> details) {
     // ignore: always_specify_types
     return details.isEmpty
-        ? Observable<List<WeekModel>>.empty()
+        ? const Stream<List<WeekModel>>.empty()
         : details.length == 1
             ? details[0].map((WeekModel plan) => <WeekModel>[plan])
             : Observable.combineLatestList(details);
@@ -133,8 +132,8 @@ class WeekplansBloc extends BlocBase {
   /// and current/upcoming weekplans are stored in [weekDetails]
   void getWeekDetails(
       List<WeekNameModel> weekPlanNames,
-      List<Observable<WeekModel>> weekDetails,
-      List<Observable<WeekModel>> oldWeekDetails) {
+      List<Stream<WeekModel>> weekDetails,
+      List<Stream<WeekModel>> oldWeekDetails) {
     // Loops through all weekplans and sort them into old and upcoming weekplans
     for (WeekNameModel weekPlanName in weekPlanNames) {
       if (isWeekDone(weekPlanName)) {
@@ -317,61 +316,40 @@ class WeekplansBloc extends BlocBase {
     _search.add(!_search.value);
   }
 
-  /// Sets [_searchResults] to the found elements of [_weekModel].
+  /// Used when searching for weekplans. Gets called by the [SearchBar] from
+  /// the selector screen.
+  ///
+  /// Returns the found [WeekModel]s or throws an Error if nothing is found.
   Future<List<WeekModel>> onSearch(String searchQuery) async {
     final List<WeekModel> foundModels = <WeekModel>[];
+    final List<WeekModel> oldModels = await oldWeekModels.first;
     final List<WeekModel> currentModels = await weekModels.first;
-    List<WeekModel> oldModels;
-    try {
-      oldModels = await oldWeekModels.first;
-    } catch (e) {
-      print(e);
-    }
-    bool currentEmpty;
-    bool oldEmpty;
 
-    // await weekModels.first.then((value) =>
-    //     value.length > 1 ? currentEmpty = false : currentEmpty = true);
-
-    // await oldWeekModels.first
-    //     .then((value) => value.isNotEmpty ? oldEmpty = false : oldEmpty = true);
-
-    // final bool weekModelEmpty = await weekModels.isEmpty ? true : false;
-    // final bool oldWeekModelEmpty = await oldWeekModels.isEmpty ? true : false;
-
-    if (currentModels.length > 1) {
-      await oldWeekModels.first.then((List<WeekModel> value) =>
-          foundModels.addAll(value.where(
-              (WeekModel element) => element.name.contains(searchQuery))));
+    if (currentModels.length > 1 && oldModels.isNotEmpty) {
+      foundModels.addAll(currentModels
+          .where((WeekModel element) => element.name.contains(searchQuery)));
+      foundModels.addAll(oldModels
+          .where((WeekModel element) => element.name.contains(searchQuery)));
       return foundModels;
     }
 
     if (oldModels.isNotEmpty) {
-      await weekModels.first.then((List<WeekModel> value) => foundModels.addAll(
-          value.where(
-              (WeekModel element) => element.name.contains(searchQuery))));
+      foundModels.addAll(oldModels
+          .where((WeekModel element) => element.name.contains(searchQuery)));
       return foundModels;
     }
 
-    if (!(currentModels.length > 1 && oldModels.isNotEmpty)) {
-      await weekModels.first
-          .then((List<WeekModel> value) => {
-                foundModels.addAll(value.where(
-                    (WeekModel element) => element.name.contains(searchQuery)))
-              })
-          .then((_) => oldWeekModels.first.then((List<WeekModel> value) => {
-                foundModels.addAll(value.where(
-                    (WeekModel element) => element.name.contains(searchQuery)))
-              }));
+    if (currentModels.length > 1) {
+      foundModels.addAll(currentModels
+          .where((WeekModel element) => element.name.contains(searchQuery)));
       return foundModels;
     }
 
-    return null;
+    throw Error(); // This error does get caught, just not here.
   }
-  //}
 
   /// This stream checks that you have only marked one week model
-  Observable<bool> onlyOneModelMarkedStream() {
+  Stream<bool> onlyOneModelMarkedStream() {
     return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
   }
 

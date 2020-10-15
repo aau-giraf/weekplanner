@@ -26,7 +26,7 @@ class EditWeekPlanScreen extends StatelessWidget {
 
   /// This bloc is the bloc from the week plan selector screen it is needed in
   /// in order to delete the week plan
-  final WeekplansBloc selectorBloc;
+  final WeekplanSelectorBloc selectorBloc;
   final EditWeekplanBloc _bloc;
 
   @override

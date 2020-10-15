@@ -53,22 +53,22 @@ class MockWeekApi extends Mock implements WeekApi {
   @override
   Observable<WeekModel> get(String id, int year, int weekNumber) {
     final WeekModel weekModel = WeekModel(days: <WeekdayModel>[
-      WeekdayModel(
-          day: Weekday.Monday, activities: <ActivityModel>[
-            ActivityModel(
-              pictograms: null,
-              order: 1,
-              state: null,
-              isChoiceBoard: false,
-              id: 1
-            )
+      WeekdayModel(day: Weekday.Monday, activities: <ActivityModel>[
+        ActivityModel(
+            pictograms: null,
+            order: 1,
+            state: null,
+            isChoiceBoard: false,
+            id: 1)
       ])
     ]);
     return hasConflict
         ? Observable<WeekModel>.just(weekModel)
         : Observable<WeekModel>.just(WeekModel(
-        thumbnail: null, name: '$year - $weekNumber', weekYear: year,
-        weekNumber: weekNumber));
+            thumbnail: null,
+            name: '$year - $weekNumber',
+            weekYear: year,
+            weekNumber: weekNumber));
   }
 
   @override
@@ -107,7 +107,8 @@ void main() {
     di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
     di.registerDependency<EditWeekplanBloc>((_) => EditWeekplanBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
+    di.registerDependency<WeekplanSelectorBloc>(
+        (_) => WeekplanSelectorBloc(api));
   });
 
   testWidgets('Renders CopyToCitizenScreen', (WidgetTester tester) async {

@@ -30,7 +30,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
   WeekplanSelectorScreen(this._user)
-      : _weekBloc = di.getDependency<WeekplansBloc>() {
+      : _weekBloc = di.getDependency<WeekplanSelectorBloc>() {
     _weekBloc.load(_user, true);
   }
 
@@ -38,7 +38,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
   _WeekplanSelectorScreenState createState() =>
       _WeekplanSelectorScreenState(_user, _weekBloc);
 
-  final WeekplansBloc _weekBloc;
+  final WeekplanSelectorBloc _weekBloc;
   final DisplayNameModel _user;
 }
 
@@ -48,7 +48,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   /// Requires a user to load weekplans
   _WeekplanSelectorScreenState(this._user, this._weekBloc);
 
-  final WeekplansBloc _weekBloc;
+  final WeekplanSelectorBloc _weekBloc;
   final DisplayNameModel _user;
 
   @override
@@ -100,6 +100,14 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         onCancelled: () => _weekBloc.toggleSearch(),
                         searchBarStyle: const SearchBarStyle(),
                         onSearch: _weekBloc.onSearch,
+                        onError: (Error error) {
+                          return const Center(
+                            child: Text(
+                              'Ingen ugeplaner fundet',
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        },
                         onItemFound: (WeekModel weekplan, int index) {
                           return ListTile(
                             key: Key(index.toString()),
@@ -156,6 +164,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 return MediaQuery.of(context).orientation ==
                         Orientation.portrait
                     ? GridView.count(
+                        key: const Key('WeekplanList'),
                         crossAxisCount: 3,
                         crossAxisSpacing:
                             MediaQuery.of(context).size.width / 100 * 1.5,
@@ -172,6 +181,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         }).toList(),
                       )
                     : ListView(
+                        key: const Key('WeekplanList'),
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10),

@@ -109,7 +109,8 @@ void main() {
     di.registerDependency<CopyWeekplanBloc>((_) => CopyWeekplanBloc(api));
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
+    di.registerDependency<WeekplanSelectorBloc>(
+        (_) => WeekplanSelectorBloc(api));
   });
 
   testWidgets('Renders CopyResolveScreen', (WidgetTester tester) async {

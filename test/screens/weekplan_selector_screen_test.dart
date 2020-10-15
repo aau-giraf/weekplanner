@@ -8,7 +8,6 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -39,7 +38,7 @@ class MockPictogramApi extends Mock implements PictogramApi {}
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
-  WeekplansBloc bloc;
+  WeekplanSelectorBloc bloc;
   EditWeekplanBloc editBloc;
   Api api;
   MockWeekApi weekApi;
@@ -149,12 +148,12 @@ void main() {
     api.week = weekApi;
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
-    bloc = WeekplansBloc(api);
+    bloc = WeekplanSelectorBloc(api);
 
     setupApiCalls();
 
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => bloc);
+    di.registerDependency<WeekplanSelectorBloc>((_) => bloc);
     di.registerDependency<EditWeekplanBloc>((_) => editBloc);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
@@ -197,13 +196,14 @@ void main() {
     expect(find.text('Overståede uger'), findsOneWidget);
   });
 
-  testWidgets('Should have two GridView Widgets', (WidgetTester tester) async {
+  testWidgets('Should have two Weekplan lists', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
     expect(
-        find.byWidgetPredicate(
-            (Widget widget) => widget is GridView || widget is ListView),
+        find.byKey(
+          const Key('WeekplanList'),
+        ),
         findsNWidgets(2));
   });
 
@@ -680,7 +680,8 @@ void main() {
     expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
   });
 
-  testWidgets('Search for weekplan', (WidgetTester tester) async {
+  testWidgets('Does the searchbar become visible?',
+      (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
       home: WeekplanSelectorScreen(mockUser),
     ));
@@ -689,17 +690,6 @@ void main() {
     await tester.tap(find.byTooltip('Søg'));
     await tester.pumpAndSettle();
 
-    // await tester.tap(find.byKey(Key('WeekplanSearchBar')));
-    // await tester.pumpAndSettle();
-
-    // await tester.showKeyboard(find.byKey(Key('WeekplanSearchBar')));
-    // await tester.pumpAndSettle();
-
-    await tester.ensureVisible(find.byType(SearchBar));
-
-    await tester.enterText(find.byType(TextField), nameWeekModel2);
-    await tester.pumpAndSettle();
-
-    expect(find.text(nameWeekModel2), findsOneWidget);
+    expect(find.byKey(const Key('WeekplanSearchBar')), findsOneWidget);
   });
 }

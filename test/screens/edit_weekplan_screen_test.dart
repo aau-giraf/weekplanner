@@ -71,9 +71,9 @@ final WeekModel mockWeek = WeekModel(
     weekYear: 2019);
 
 final DisplayNameModel mockUser =
-DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
+    DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
 
-WeekplansBloc mockWeekplanSelector;
+WeekplanSelectorBloc mockWeekplanSelector;
 
 void main() {
   MockEditWeekplanBloc mockBloc;
@@ -111,11 +111,11 @@ void main() {
       },
     );
 
-    mockWeekplanSelector = WeekplansBloc(api);
+    mockWeekplanSelector = WeekplanSelectorBloc(api);
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => mockWeekplanSelector);
+    di.registerDependency<WeekplanSelectorBloc>((_) => mockWeekplanSelector);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
