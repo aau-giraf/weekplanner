@@ -65,6 +65,7 @@ void main() {
     (WidgetTester tester) async{
     await tester.pumpWidget(MaterialApp(
         home: CompletedActivityIconScreen(user),
+        // ignore: always_specify_types
         navigatorObservers: [mockObserver]
     ));
     verify(mockObserver.didPush(any, any));
