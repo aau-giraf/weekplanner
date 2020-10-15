@@ -130,7 +130,7 @@ class WeekplanBloc extends BlocBase {
           final ActivityModel newActivity = ActivityModel(
               id: activity.id,
               pictograms: activity.pictograms,
-              order: _getMaxOrder(week.days[dayOfWeek].activities),
+              order: week.days[dayOfWeek].activities.length,
               isChoiceBoard: activity.isChoiceBoard,
               state: ActivityState.Normal);
 
@@ -149,7 +149,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  int _getMaxOrder(List<ActivityModel> activities) {
+  /*int _getMaxOrder(List<ActivityModel> activities) {
     int max = 0;
 
     for (ActivityModel activity in activities) {
@@ -158,7 +158,7 @@ class WeekplanBloc extends BlocBase {
       }
     }
     return max;
-  }
+  }*/
 
   /// Toggles edit mode
   void toggleEditMode() {

@@ -16,6 +16,7 @@ import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/choiceboard_widgets/choice_board.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -49,7 +50,8 @@ class ShowActivityScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Text style used for title.
-  final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
+  final TextStyle titleTextStyle = const TextStyle(fontSize:
+  GirafFont.activity_screen_buttons);
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +230,7 @@ class ShowActivityScreen extends StatelessWidget {
                               await Routes.push(context, PictogramSearch())
                                   .then((Object object) {
                                 if (object is PictogramModel) {
-                                  _activityBloc.load(_activity, _girafUser);
+                                  _activityBloc.load(_activity,_girafUser);
                                   final PictogramModel newPictogram = object;
                                   _activity.isChoiceBoard = true;
                                   _activity.pictograms.add(newPictogram);
@@ -632,6 +634,7 @@ class ShowActivityScreen extends StatelessWidget {
                           key: const Key('CancelStateToggleButton'),
                           onPressed: () {
                             _activityBloc.cancelActivity();
+                            _activity.state = _activityBloc.getActivity().state;
                           },
                           text: activitySnapshot.data.state !=
                                   ActivityState.Canceled
