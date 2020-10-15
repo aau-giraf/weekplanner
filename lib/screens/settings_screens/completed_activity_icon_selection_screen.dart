@@ -43,41 +43,19 @@ class CompletedActivityIconScreen extends StatelessWidget {
                           0,
                           _settingsModel.completeMark.index,
                           'Fjern aktiviteten for borgeren', () {
-                              _settingsModel.completeMark =
-                                  CompleteMark.Removed;
-                              _settingsBloc.updateSettings(_user.id,
-                                _settingsModel).listen((SettingsModel model) {
-                                  _settingsBloc.loadSettings(_user);
-                                  if(model != null){
-                                    Routes.pop(context);
-                                  }
-                              });
+                              Routes.pop(context, CompleteMark.Removed);
                           }),
                       SettingsCheckMarkButton(
                           1,
                           _settingsModel.completeMark.index,
                           'Flueben', () {
-                        _settingsModel.completeMark = CompleteMark.Checkmark;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel).
-                            listen((SettingsModel model) {
-                              _settingsBloc.loadSettings(_user);
-                              if(model != null){
-                                Routes.pop(context);
-                              }
-                        });
+                        Routes.pop(context, CompleteMark.Checkmark);
                       }),
                       SettingsCheckMarkButton(
                           2,
                           _settingsModel.completeMark.index,
                           'Lav aktiviteten grå', () {
-                        _settingsModel.completeMark = CompleteMark.MovedRight;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel).
-                            listen((SettingsModel model) {
-                              _settingsBloc.loadSettings(_user);
-                              if(model != null){
-                                Routes.pop(context);
-                              }
-                        });
+                        Routes.pop(context, CompleteMark.MovedRight);
                       }),
                     ]),
                   ],
