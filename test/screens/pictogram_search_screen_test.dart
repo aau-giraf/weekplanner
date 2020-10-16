@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -26,7 +24,6 @@ void main() {
   PictogramBloc bloc;
   Api api;
   MockPictogramApi pictogramApi;
-  DisplayNameModel user;
 
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
@@ -50,15 +47,14 @@ void main() {
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<NewCitizenBloc>((_) => NewCitizenBloc(api));
   });
 
   testWidgets('renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
@@ -72,7 +68,7 @@ void main() {
         (_) => BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
     await tester.enterText(find.byType(TextField), query);
 
     await tester.pump(const Duration(milliseconds: 11000));
@@ -99,7 +95,7 @@ void main() {
         (_) => BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
     await tester.enterText(find.byType(TextField), query);
 
     await tester.pump(const Duration(milliseconds: 11000));
@@ -124,28 +120,22 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: PictogramSearch(user: user,),
+        home: PictogramSearch(),
         navigatorObservers: <NavigatorObserver>[mockObserver],
       ),
     );
-    final Finder searchScreen = find.byType(PictogramSearch);
-    expect(searchScreen,findsOneWidget);
     await tester.enterText(find.byType(TextField), query);
     await tester.pump(const Duration(milliseconds: 11000));
 
     bloc.pictograms.listen((List<PictogramModel> images) async {
-
+      await tester.pump();
 
       await tester.tap(find.byType(PictogramImage));
-      await tester.pump();
-      
-      verify(mockObserver.didPop(any, any));
-      
-      final Finder imageFinder = find.byType(PictogramImage);
-      final Finder matchFinder = find.descendant
-        (of: searchScreen, matching: imageFinder);
 
-      expect(matchFinder, findsOneWidget);
+      final Route<dynamic> pushedRoute =
+          verify(mockObserver.didPush(captureAny, any)).captured.single;
+
+      expect(await pushedRoute.popped, pictogramModel);
       done.complete(true);
     });
     await done.future;
@@ -159,7 +149,7 @@ void main() {
             (_) => BehaviorSubject<List<PictogramModel>>.seeded(
             null));
 
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(home: PictogramSearch()));
     await tester.enterText(find.byType(TextField), query);
 
     await tester.pump(const Duration(milliseconds: 11000));
