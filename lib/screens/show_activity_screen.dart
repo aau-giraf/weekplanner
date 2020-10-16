@@ -87,10 +87,11 @@ class ShowActivityScreen extends StatelessWidget {
     final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
             title: 'Aktivitet',
             appBarIcons: const <AppBarIcon, VoidCallback>{}),
-        body: keyboardVisible ? Container() : childContainer);
+        body: childContainer);
   }
 
   /// Builds the activity.
@@ -201,16 +202,9 @@ class ShowActivityScreen extends StatelessWidget {
                                 builder: (BuildContext context,
                                     AsyncSnapshot<ActivityModel>
                                         activitySnapshot) {
-                                  if (activitySnapshot.hasData &&
-                                      activitySnapshot.data.isChoiceBoard) {
-                                    return Text('Tilføj Aktivitet',
+                                    return Text('Tilføj Valgmulighed',
                                         style: titleTextStyle,
                                         textAlign: TextAlign.center);
-                                  } else {
-                                    return Text('Tilføj ChoiceBoard',
-                                        style: titleTextStyle,
-                                        textAlign: TextAlign.center);
-                                  }
                                 }),
                           )),
                       Expanded(
@@ -314,6 +308,16 @@ class ShowActivityScreen extends StatelessWidget {
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
+          Visibility(
+              visible: _activity.isChoiceBoard,
+              child: const TextField(
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                    hintText: 'navn',
+                    border: OutlineInputBorder(),
+                ),
+              )
+          ),
       Expanded(
         child: FittedBox(
             child: Container(
@@ -353,7 +357,7 @@ class ShowActivityScreen extends StatelessWidget {
                       );
                     }))),
       ),
-      buildButtonBar()
+      buildButtonBar(),
     ]));
   }
 
