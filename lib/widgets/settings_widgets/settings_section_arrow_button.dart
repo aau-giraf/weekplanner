@@ -22,7 +22,7 @@ class SettingsArrowButton extends SettingsSectionItem {
   ListTile build(BuildContext context) {
     return ListTile(
       title: buildTitle(),
-      trailing: const Icon(
+      trailing: Icon(
         Icons.arrow_forward,
         color: theme.GirafColors.black,
       ),

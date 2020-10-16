@@ -217,7 +217,7 @@ class ShowActivityScreen extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: IconButton(
-                            icon: const AspectRatio(
+                            icon: AspectRatio(
                               aspectRatio: 1,
                               child: FittedBox(
                                 child: Icon(
@@ -227,8 +227,7 @@ class ShowActivityScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () async {
-                              await Routes.push(context, PictogramSearch(
-                                user: _girafUser,))
+                              await Routes.push(context, PictogramSearch())
                                   .then((Object object) {
                                 if (object is PictogramModel) {
                                   _activityBloc.load(_activity,_girafUser);

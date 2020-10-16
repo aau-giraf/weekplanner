@@ -38,7 +38,7 @@ class SettingsCheckMarkButton extends SettingsSectionItem {
   ListTile build(BuildContext context) {
     Widget trailing;
     if (expected == current) {
-      trailing = const Icon(Icons.check, color: theme.GirafColors.black);
+      trailing = Icon(Icons.check, color: theme.GirafColors.black);
     } else {
       trailing = null;
     }
