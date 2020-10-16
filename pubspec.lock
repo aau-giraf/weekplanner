@@ -5,8 +5,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: "42f1863be3eee972a07b511b659a85a47577d590"
+      ref: develop
+      resolved-ref: cfea5dcf591652cb939d3db698622fe5bc9b8881
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"

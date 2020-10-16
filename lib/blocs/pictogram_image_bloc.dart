@@ -73,6 +73,11 @@ class PictogramImageBloc extends BlocBase {
     return true;
   }
 
+  /// Delete pictogram
+  void delete(PictogramModel pm){
+    _api.pictogram.delete(pm.id);
+  }
+
   @override
   void dispose() {
     _image.close();

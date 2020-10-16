@@ -58,12 +58,12 @@ void main() {
       return widget is Image;
     });
 
-    expect(f, findsNothing);
+    expect(f, findsOneWidget);
 
     final Completer<bool> waiter = Completer<bool>();
     bloc.image.listen(expectAsync1((Image image) async {
       await tester.pump();
-      expect(f, findsOneWidget);
+      expect(f, findsNWidgets(2));
       waiter.complete();
     }));
     await waiter.future;
@@ -72,7 +72,7 @@ void main() {
   testWidgets('triggers callback on tap', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
 
-    await tester.pumpWidget(PictogramImage(
+     await tester.pumpWidget(PictogramImage(
       pictogram: pictogramModel,
       onPressed: () {
         done.complete(true);
@@ -80,7 +80,7 @@ void main() {
     ));
 
     final Finder f = find.byWidgetPredicate((Widget widget) {
-      return widget is Card;
+      return widget is StreamBuilder;
     });
 
     bloc.image.listen(expectAsync1((Image image) async {
