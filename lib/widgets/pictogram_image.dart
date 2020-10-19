@@ -4,6 +4,7 @@ import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../routes.dart';
 
 /// Widget for rendering pictogram models as images
@@ -53,11 +54,28 @@ class PictogramImage extends StatelessWidget {
               confirmButtonText: 'Slet',
               confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: (){
-                _bloc.delete(pictogram);
+
+                if (!_bloc.delete(pictogram)){
+                  _notifyErrorOnDeleteDialog(context);
+                }
                 Routes.pop(context);
               }
           );
         }
+    );
+  }
+
+  Future<Center> _notifyErrorOnDeleteDialog(BuildContext context){
+    return showDialog<Center>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context){
+        return const GirafNotifyDialog(
+          title: 'Det valgte piktogram kunne ikke slettes',
+          description: 'Piktogrammet kunne ikke slettes, prøv igen. '
+              'Hvis fejlen gentager sig, kontakt en administrator.',
+        );
+      }
     );
   }
 
@@ -66,28 +84,34 @@ class PictogramImage extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Card(
-        child: FittedBox(
-            fit: BoxFit.contain,
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: Stack(
-              children: <Widget>[
-                StreamBuilder<Image>(
-                  stream: _bloc.image,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<Image> snapshot) =>
-                          snapshot.data ?? _loading),
-                GirafButton(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: <Widget>[
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  child: StreamBuilder<Image>(
+                      stream: _bloc.image,
+                      builder:
+                        (BuildContext context, AsyncSnapshot<Image> snapshot) =>
+                      snapshot.data ?? _loading)
+                )
+              ),
+              haveRights ? Positioned(
+                top: 5,
+                right: 5,
+                child: GirafButton(
                   onPressed: () {_confirmDeleteDialog(context);},
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Slet',
-                  isEnabled: haveRights,
                 ),
-              ]
-            )
-      ),
-
-      )
+              ) : Container(),
+            ]
+          )
+        )
     )
     );
   }

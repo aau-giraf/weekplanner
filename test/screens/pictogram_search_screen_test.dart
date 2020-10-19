@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,8 +14,8 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
-
 import '../blocs/pictogram_bloc_test.dart';
 import '../test_image.dart';
 
@@ -31,16 +30,19 @@ void main() {
   final PictogramModel pictogramModel = PictogramModel(
       id: 1,
       lastEdit: null,
-      title: null,
+      title: 'kat',
       accessLevel: null,
       imageUrl: 'http://any.tld',
-      imageHash: null);
+      imageHash: null,
+      userId: '1'
+  );
 
   setUp(() {
     api = Api('any');
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = PictogramBloc(api);
+    user = DisplayNameModel(id: '1',displayName: 'Anders and',role: 'Guardian');
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
@@ -167,4 +169,31 @@ void main() {
     expect(find.byKey(const Key('timeoutWidget')), findsOneWidget);
 
   });
+
+  testWidgets('Tap delete button triggers confirm popup',
+          (WidgetTester tester) async {
+    const String query = 'Kat';
+
+    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
+            (_) => BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[pictogramModel]));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PictogramSearch(user: user)
+      ),
+    );
+    await tester.enterText(find.byType(TextField), query);
+    await tester.pump(const Duration(milliseconds: 11000));
+    final Finder f = find.text('Slet');
+
+    expect(f, findsOneWidget);
+
+    await tester.tap(f);
+    await tester.pump();
+
+    expect(find.byType(GirafConfirmDialog),findsOneWidget);
+
+  });
+  
 }

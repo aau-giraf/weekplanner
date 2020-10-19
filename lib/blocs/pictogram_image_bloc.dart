@@ -74,8 +74,18 @@ class PictogramImageBloc extends BlocBase {
   }
 
   /// Delete pictogram
-  void delete(PictogramModel pm){
-    _api.pictogram.delete(pm.id);
+   bool delete (PictogramModel pm){
+    bool result;
+    final Observable<bool> res = _api.pictogram.delete(pm.id);
+    if (res != null) {
+      res.listen((bool success) {
+        result = success ?? false;
+      });
+    }
+    else{
+      result = false;
+    }
+    return result;
   }
 
   @override
