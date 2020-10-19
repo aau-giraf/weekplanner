@@ -9,9 +9,16 @@ import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
-class ChooseCitizenScreen extends StatelessWidget {
+class ChooseCitizenScreen extends StatefulWidget {
+  @override
+  _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState();
+}
+
+class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
+
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
 
   @override
@@ -85,7 +92,19 @@ class ChooseCitizenScreen extends StatelessWidget {
                 WeekplanSelectorScreen(user)))).toList();
 
     list.insert(0, FlatButton(
-      onPressed: () { Routes.push(context, NewCitizenScreen());},
+      onPressed: () async {
+        final Object result =  await Routes.push(context, NewCitizenScreen());
+        final DisplayNameModel newUser = DisplayNameModel.fromGirafUser(result);
+        list.add(CitizenAvatar(
+              displaynameModel: newUser,
+              onPressed: () => Routes.push(context,
+                  WeekplanSelectorScreen(newUser))
+          )
+        );
+        ///Update the screen with the new citizen
+        _bloc.updateBloc();
+        setState(() {});
+      },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: Column(
@@ -109,7 +128,7 @@ class ChooseCitizenScreen extends StatelessWidget {
                 child: const Center(
                   child: AutoSizeText(
                     'Tilføj Borger',
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: GirafFont.large),
                   ),
                 )
             )

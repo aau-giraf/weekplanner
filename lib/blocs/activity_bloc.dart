@@ -28,6 +28,10 @@ class ActivityBloc extends BlocBase {
     _user = user;
     _activityModelStream.add(activityModel);
   }
+  /// Return the current ActivityModel
+  ActivityModel getActivity(){
+    return _activityModel;
+  }
 
   /// Mark the selected activity as complete. Toggle function, if activity is
   /// Completed, it will become Normal

@@ -6,6 +6,7 @@ import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/style/custom_color.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import 'giraf_button_widget.dart';
@@ -33,7 +34,7 @@ class InputFieldsWeekPlan extends StatefulWidget {
 
 /// The state for the input fields
 class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
-  final TextStyle _style = const TextStyle(fontSize: 20);
+  final TextStyle _style = const TextStyle(fontSize: GirafFont.small);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,8 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter(RegExp('[ -~\u00C0-\u00FF]'))
+                  FilteringTextInputFormatter.allow(
+                      RegExp('[ -~\u00C0-\u00FF]'))
                 ],
                 style: _style,
                 decoration: InputDecoration(

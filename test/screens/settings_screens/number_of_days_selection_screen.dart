@@ -16,7 +16,7 @@ import 'package:weekplanner/screens/settings_screens/number_of_days_selection_sc
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
-class MockUserApi extends Mock implements UserApi {
+class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
   Observable<GirafUserModel> me() {
     return Observable<GirafUserModel>.just(
@@ -40,6 +40,7 @@ class MockUserApi extends Mock implements UserApi {
 
 void main() {
   Api api;
+  NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Citizen.toString());
@@ -48,6 +49,7 @@ void main() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
+    mockObserver = MockUserApi();
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
@@ -68,7 +70,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
+    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
   });
 
   testWidgets('Has option, Vis kun i dag', (WidgetTester tester) async {
@@ -77,10 +79,10 @@ void main() {
     expect(find.text('Vis kun i dag'), findsOneWidget);
   });
 
-  testWidgets('Has option, Vis Vis to dage', (WidgetTester tester) async {
+  testWidgets('Has option, Vis to dage', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.text('Vis Vis to dage'), findsOneWidget);
+    expect(find.text('Vis to dage'), findsOneWidget);
   });
 
   testWidgets('Has option, Vis mandag til fredag', (WidgetTester tester) async {
@@ -100,4 +102,22 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.check), findsOneWidget);
   });
+
+  testWidgets('Has number of days screen been popped',
+          (WidgetTester tester) async{
+        await tester.pumpWidget(MaterialApp(
+            home: NumberOfDaysScreen(user),
+            // ignore: always_specify_types
+            navigatorObservers: [mockObserver]
+        ));
+        verify(mockObserver.didPush(any, any));
+
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
+
+        await tester.pump();
+        await tester.tap(find.byType(SettingsCheckMarkButton).last);
+        await tester.pump();
+        verify(mockObserver.didPop(any, any));
+      });
 }
