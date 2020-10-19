@@ -693,27 +693,49 @@ class ShowActivityScreen extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50))),
               ),
-            ),
+              ),
             ),
             Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: GirafButton(
-                  key: const Key('SavePictogramTextForCitizenButton'),
-                  onPressed: (){
+                StreamBuilder<WeekplanMode>(
+                    stream: _authBloc.mode,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<WeekplanMode> weekplanModeSnapshot){
+                      return StreamBuilder<ActivityModel>(
+                          stream: _activityBloc.activityModelStream,
+                          builder: (BuildContext context,
+                          AsyncSnapshot<ActivityModel> activitySnapshot){
+                          if (activitySnapshot.data == null) {
+                            return const CircularProgressIndicator();
+                          }
+                          else{
+                            return Container(
+                              child: Column(children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10.0),
+                                child: GirafButton(
+                                  key: const
+                                      Key('SavePictogramTextForCitizenBtn'),
+                                  onPressed: (){
 
-                  },
-                  text: 'Gem til borger',
-                ),
-                ),
-                GirafButton(
-                  key: const Key('GetStandardPictogramTextForCitizenButton'),
-                  onPressed: (){
+                                  },
+                                  text: 'Gem til borger',
+                                ),
+                              ),
+                                GirafButton(
+                                  key: const
+                                  Key('GetStandardPictogramTextForCitizenBtn'),
+                                  onPressed: (){
 
-                  },
-                  text: 'Hent standard',
-                )
+                                  },
+                                  text: 'Hent standard',
+                                )
+                              ]
+                            ));
+                          }
+                        });
+                      }
+                ),
               ],
             )
           ]
