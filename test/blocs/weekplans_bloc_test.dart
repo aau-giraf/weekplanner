@@ -270,14 +270,38 @@ void main() {
     done();
   }));
 
-  //test('Check if a week is done', async((DoneFn done) {
+  // TODO: Test if the getWeekNumberFromDate works as expected
+
+
+  // TODO: Test for hver dag i ugen den første januar kan være, og test om skiftet fra uge 1 til uge 2 passer
+  // TODO: Test også at skiftet mellem den sidste uge i året og den næste uge (Både 52 og 53)
+
+  test('Check if the correct week number is returned', async((DoneFn done) {
+   expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 14)), 42);
+   expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 7)), 41);
+   expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 28)), 53);
+   expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 31)), 53);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 3)), 53);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 4)), 1);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 20)), 24);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 21)), 25);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 20)), 24);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 26)), 51);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 27)), 52);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 2)), 52);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 3)), 1);
+
+   done();
+  }));
+
+  // test('Check if a week is done', async((DoneFn done) {
   //  expect(bloc.isWeekDone(weekNameModel1), true);
   //  expect(bloc.isWeekDone(weekNameModel2), false);
   //  expect(bloc.isWeekDone(weekNameModel3), false);
   //  expect(bloc.isWeekDone(weekNameModel4), true);
   //  expect(bloc.isWeekDone(weekNameModel5), true);
   //  done();
-  //}));
+  // }));
 
   //test('Weekplans should be split into old and upcoming', async((DoneFn done){
   //  weekNameModelList.add(weekNameModel2);

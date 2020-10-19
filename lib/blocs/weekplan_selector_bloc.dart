@@ -143,17 +143,49 @@ class WeekplansBloc extends BlocBase {
 
   /// Returns the current week number
   int getCurrentWeekNum(){
-    const int daysInWeek = 7;
-    const int daysOffset = 6;
+    // return getWeekNumberFromDate(DateTime.now());
+    
+    return getWeekNumberFromDate(DateTime(2021, 1, 17));
+  }
 
-    final int dayOfYear = DateTime.now().difference(
-        DateTime(DateTime.now().year, 1, 1)).inDays;
-    final int dayOfWeek = DateTime.now().weekday;
-    final int dowJan1 = DateTime(DateTime.now().year, 1, 1).weekday;
-    int weekNum = ((dayOfYear + daysOffset) / daysInWeek).round();
-    if(dayOfWeek < dowJan1){
-      weekNum++;
+  /// Calculates the current week number from a given date
+  int getWeekNumberFromDate(DateTime date) {
+
+    // TODO: Lav en switch der switcher på dayOfWeekJan1
+
+    // Find which day of the year the given date is.
+    // Example: 14/10/2020 is day 288.
+    // Becomes zero indexed, the +1 is to make it one indexed
+    final int dayOfYear = date.difference(
+        DateTime(date.year, 1, 1)).inDays + 1;
+
+    final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+    switch (dayOfWeekJan1) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
     }
+
+    // Find the offset based on the ISO 8601 standard:
+    // Week 1 is the week with the year's first Thursday in it
+    final int weekOneOffset = dayOfWeekJan1 <= 4 ?
+      dayOfWeekJan1 - 1 :
+      dayOfWeekJan1 - 8;
+
+    final int weekNum = ((dayOfYear + weekOneOffset) / 7).floor() + 1;
+
+    print("Rough estimate: ${(dayOfYear + weekOneOffset) / 7}");
+    print("Offset: ${weekOneOffset}");
+    print("Januar: ${dayOfWeekJan1}");
+    print("Day of year: ${dayOfYear}");
+
+    print("Michelle: ${weekNum}");
+
     return weekNum;
   }
 
