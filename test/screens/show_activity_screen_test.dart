@@ -434,7 +434,7 @@ void main() {
   });
 
   testWidgets(
-      'ChoiceBoard-button text is "Tilføj ChoiceBoard" when not a ChoiceBoard',
+      'ChoiceBoard-button text is Tilføj Valgmulighed" when not a ChoiceBoard',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
@@ -444,11 +444,11 @@ void main() {
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Tilføj ChoiceBoard'), findsOneWidget);
+    expect(find.text('Tilføj Valgmulighed'), findsOneWidget);
   });
 
   testWidgets(
-      'ChoiceBoard-button text is "Tilføj Aktivitet" when is ChoiceBoard',
+      'ChoiceBoard-button text is "Tilføj Valgmulighed" when is ChoiceBoard',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = true;
@@ -459,7 +459,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Tilføj Aktivitet'), findsOneWidget);
+    expect(find.text('Tilføj Valgmulighed'), findsOneWidget);
   });
 
   testWidgets('No ChoiceBoardParts when not a ChoiceBoard',
@@ -861,6 +861,26 @@ void main() {
               widget.key == const Key('TimerDeleteButtonKey')),
           findsNothing);
     });
+  });
+
+  testWidgets('Choiceboard textfield loads', (WidgetTester tester) async{
+    authBloc.setMode(WeekplanMode.guardian);
+    await tester.pumpWidget(MaterialApp(home:
+    ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+    expect(find.byKey(const Key('ChoiceBoardNameText')), findsOneWidget);
+  });
+
+  testWidgets('ChoiceBoard name can be changed', (WidgetTester tester)
+  async {
+    authBloc.setMode(WeekplanMode.guardian);
+    await tester.pumpWidget(MaterialApp(home:
+    ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pump();
+    await tester.enterText(
+        find.byKey(const Key('ChoiceBoardNameText')), 'test');
+    await tester.pumpAndSettle();
+    expect(find.text('test'), findsOneWidget);
   });
 
   testWidgets('Activity state is normal when an activity has been cancelled '

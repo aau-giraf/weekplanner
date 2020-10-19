@@ -310,6 +310,7 @@ class ShowActivityScreen extends StatelessWidget {
           Visibility(
               visible: _activity.isChoiceBoard,
               child: TextFormField(
+                key: const Key('ChoiceBoardNameText'),
                 initialValue: _activity.choiceBoardName,
                 textAlign: TextAlign.center,
                 onFieldSubmitted: (String text)
