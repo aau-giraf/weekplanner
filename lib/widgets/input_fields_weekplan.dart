@@ -163,7 +163,9 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     } else {
       return PictogramImage(
           pictogram: snapshot.data,
-          onPressed: () => _openPictogramSearch(context, widget.bloc));
+          onPressed: () => _openPictogramSearch(context, widget.bloc),
+          haveRights: false,
+      );
     }
   }
 
