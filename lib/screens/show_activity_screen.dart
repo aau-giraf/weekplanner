@@ -309,10 +309,13 @@ class ShowActivityScreen extends StatelessWidget {
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
           Visibility(
               visible: _activity.isChoiceBoard,
-              child: const TextField(
+              child: TextFormField(
+                initialValue: _activity.choiceBoardName,
                 textAlign: TextAlign.center,
+                onFieldSubmitted: (String text)
+                {_activity.choiceBoardName = text;
+                _activityBloc.update();},
                 decoration: InputDecoration(
-                    hintText: 'navn',
                     border: OutlineInputBorder(),
                 ),
               )

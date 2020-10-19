@@ -48,7 +48,8 @@ class PictogramText extends StatelessWidget {
                   final bool pictogramTextIsEnabled = settings.pictogramText;
                   if (_isGuardianMode(weekMode) || pictogramTextIsEnabled) {
                     if (_activity.isChoiceBoard) {
-                      return _buildPictogramText(context, 'ChoiceBoard');
+                      return _buildPictogramText(context,
+                          _activity.choiceBoardName);
                     } else {
                       final String pictogramText =
                           _pictogram.title.toUpperCase();
