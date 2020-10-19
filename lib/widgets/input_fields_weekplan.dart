@@ -65,8 +65,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(
-                      RegExp('[ -~\u00C0-\u00FF]'))
+                  WhitelistingTextInputFormatter(RegExp('[ -~\u00C0-\u00FF]'))
                 ],
                 style: _style,
                 decoration: InputDecoration(
