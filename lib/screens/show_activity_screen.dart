@@ -315,8 +315,8 @@ class ShowActivityScreen extends StatelessWidget {
                 onFieldSubmitted: (String text)
                 {_activity.choiceBoardName = text;
                 _activityBloc.update();},
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                decoration: const InputDecoration(
+                    border:  OutlineInputBorder(),
                 ),
               )
           ),
