@@ -38,7 +38,6 @@ class ShowActivityScreen extends StatelessWidget {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
-    _pictogramBloc.load(_activityBloc.getActivity().pictograms.first);
   }
 
   final DisplayNameModel _girafUser;
@@ -50,7 +49,6 @@ class ShowActivityScreen extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final PictogramBloc _pictogramBloc = di.getDependency<PictogramBloc>();
 
   final TextEditingController tec = TextEditingController();
 
@@ -726,8 +724,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   key: const
                                     Key('SavePictogramTextForCitizenBtn'),
                                   onPressed: (){
-                                    _pictogramBloc.setAltTitle(tec.text,
-                                        _girafUser.id);
+                                    //_activity.pictograms.first
 
                                   },
                                   text: 'Gem til borger',

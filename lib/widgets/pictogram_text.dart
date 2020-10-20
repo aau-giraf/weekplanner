@@ -99,6 +99,8 @@ class PictogramText extends StatelessWidget {
       const Tuple2<String, String>('d', 'iu')
     ];
 
+    PictogramModel picModel = _activity.pictograms.first;
+
     if(testTuple.isNotEmpty){
       for(int i = 0; testTuple.length > i; i++){
         if(testTuple[i].item1 == _user.id){

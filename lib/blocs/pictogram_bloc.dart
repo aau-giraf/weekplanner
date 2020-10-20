@@ -67,16 +67,6 @@ class PictogramBloc extends BlocBase {
     });
   }
 
-  void load(PictogramModel pictogramModel) {
-    _pictogramModel = pictogramModel;
-  }
-
-  Tuple2<String, String> alternativeTitleRelations;
-
-  void setAltTitle(String title, String userId){
-    //_pictogramModel.alternativeTitleRelations.add()
-  }
-
   @override
   void dispose() {
     _pictograms.close();
