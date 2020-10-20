@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
@@ -17,7 +17,8 @@ class PictogramImageBloc extends BlocBase {
   /// Provides loaded pictogram-images
   Stream<Image> get image => _image.stream;
 
-  final BehaviorSubject<Image> _image = BehaviorSubject<Image>();
+  final rx_dart.BehaviorSubject<Image> _image
+  = rx_dart.BehaviorSubject<Image>();
 
   final Api _api;
 
@@ -46,7 +47,7 @@ class PictogramImageBloc extends BlocBase {
 
         _image.add(_cache[id]);
       } else {
-        Observable<Image>.retry(() {
+        rx_dart.Rx.retry<Image>(() {
           return _api.pictogram.getImage(id);
         }, 3)
             .listen(
@@ -71,6 +72,21 @@ class PictogramImageBloc extends BlocBase {
       lock.release();
     }
     return true;
+  }
+
+  /// Delete pictogram
+   bool delete (PictogramModel pm){
+    bool result;
+    final Stream<bool> res = _api.pictogram.delete(pm.id);
+    if (res != null) {
+      res.listen((bool success) {
+        result = success ?? false;
+      });
+    }
+    else{
+      result = false;
+    }
+    return result;
   }
 
   @override

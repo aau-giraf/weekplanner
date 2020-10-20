@@ -15,8 +15,8 @@ class NewCitizenScreen extends StatelessWidget {
   }
 
   final ApiErrorTranslater _translator = ApiErrorTranslater();
-
   final NewCitizenBloc _bloc;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

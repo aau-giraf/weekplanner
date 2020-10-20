@@ -39,40 +39,15 @@ class NumberOfDaysScreen extends StatelessWidget {
                     SettingsSection('Antal dage', <SettingsSectionItem>[
                       SettingsCheckMarkButton(
                           1, _settingsModel.nrOfDaysToDisplay, 'Vis kun i dag',
-                          () {
-                            _settingsModel.nrOfDaysToDisplay = 1;
-                            _settingsBloc.updateSettings(
-                                _user.id, _settingsModel)
-                                .listen((SettingsModel response) {
-                              if (response != null) {
-                                Routes.pop(context);
-                              }
-                            });
-                          }),
+                          () => Routes.pop(context, 1) ),
                       SettingsCheckMarkButton(
                           2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
-                              () {
-                            _settingsModel.nrOfDaysToDisplay = 2;
-                            _settingsBloc.updateSettings(
-                                _user.id, _settingsModel)
-                                .listen((SettingsModel response) {
-                              if (response != null) {
-                                Routes.pop(context);
-                              }
-                            });
-                          }),
+                              () => Routes.pop(context, 2) ),
                       SettingsCheckMarkButton(
                           5,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til fredag', () {
-                        _settingsModel.nrOfDaysToDisplay = 5;
-                        _settingsBloc.updateSettings(
-                            _user.id, _settingsModel)
-                            .listen((SettingsModel response) {
-                          if (response != null) {
-                            Routes.pop(context);
-                          }
-                        });
+                            Routes.pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
                           7,
