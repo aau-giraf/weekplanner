@@ -4,6 +4,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
+import 'package:tuple/tuple.dart';
 
 /// For how long the debouncer should wait
 const int _debounceTime = 250;
@@ -70,8 +71,10 @@ class PictogramBloc extends BlocBase {
     _pictogramModel = pictogramModel;
   }
 
-  void setAltTitle(String title, String userId){
+  Tuple2<String, String> alternativeTitleRelations;
 
+  void setAltTitle(String title, String userId){
+    //_pictogramModel.alternativeTitleRelations.add()
   }
 
   @override
