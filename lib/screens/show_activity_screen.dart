@@ -224,7 +224,7 @@ class ShowActivityScreen extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: IconButton(
-                            icon: AspectRatio(
+                            icon: const AspectRatio(
                               aspectRatio: 1,
                               child: FittedBox(
                                 child: Icon(
@@ -691,9 +691,6 @@ class ShowActivityScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
               child: TextField(
                 controller: tec,
-                onChanged: (String newValue){
-                  print('Hello! $newValue');
-                },
                 style: const TextStyle(
                   fontSize: 28,
                   height: 1.3,
@@ -703,7 +700,6 @@ class ShowActivityScreen extends StatelessWidget {
                   hintText: 'Nyt piktogram navn',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
-                    borderSide: const BorderSide(color: Colors.red, width: 50)
                   )),
               ),
               ),
