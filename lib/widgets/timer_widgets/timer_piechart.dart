@@ -24,7 +24,9 @@ class TimerPiechart extends StatelessWidget {
                     side: BorderSide(
                         color: theme.GirafColors.black, width: 0.5))),
             child: CircleAvatar(
-              backgroundColor: theme.GirafColors.red,
+              backgroundColor: timerProgressSnapshot.hasData &&
+                  timerProgressSnapshot.data < 1
+                  ? theme.GirafColors.red : theme.GirafColors.white,
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: CircularProgressIndicator(
