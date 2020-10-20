@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import '../style/custom_color.dart' as theme;
 
 /// A button for the Giraf application.
@@ -55,7 +56,7 @@ class GirafButton extends StatefulWidget {
   /// A stream which tells whether the button should be enabled or disabled.
   /// If the stream emits a null value, the value of isEnabled will be used
   /// instead.
-  final Stream<bool> isEnabledStream;
+  final Observable<bool> isEnabledStream;
 
   @override
   _GirafButtonState createState() => _GirafButtonState();

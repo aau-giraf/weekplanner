@@ -12,6 +12,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -23,14 +24,14 @@ SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Stream<SettingsModel> getSettings(String id) {
-    return Stream<SettingsModel>.value(mockSettings);
+  Observable<SettingsModel> getSettings(String id) {
+    return Observable<SettingsModel>.just(mockSettings);
   }
 }
 
@@ -108,7 +109,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
-    expect(find.text('Sometitle'), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
   });
 
   testWidgets('Pictogram text is displayed when true and in guardian mode',
@@ -121,7 +123,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
-    expect(find.text('Sometitle'), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
   });
 
   testWidgets('Pictogram text is displayed when false and in guardian mode',
@@ -134,6 +137,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AutoSizeText), findsOneWidget);
-    expect(find.text('Sometitle'), findsOneWidget);
+    final String title = pictogramModel.title;
+    expect(find.text(title.toUpperCase()), findsOneWidget);
   });
 }

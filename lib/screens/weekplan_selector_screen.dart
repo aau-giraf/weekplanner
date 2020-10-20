@@ -14,7 +14,6 @@ import 'package:weekplanner/screens/edit_weekplan_screen.dart';
 import 'package:weekplanner/screens/new_weekplan_screen.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_screen.dart';
-import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -75,7 +74,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         child:
           const AutoSizeText(
             'Overståede uger',
-            style: TextStyle(fontSize: GirafFont.small),
+            style: TextStyle(fontSize: 18),
             maxLines: 1,
             minFontSize: 14,
             textAlign: TextAlign.center,
@@ -189,7 +188,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                         (BuildContext context, BoxConstraints constraints) {
                       return AutoSizeText(
                         weekplan.name,
-                        style: const TextStyle(fontSize: GirafFont.small),
+                        style: const TextStyle(fontSize: 18),
                         maxLines: 1,
                         minFontSize: 14,
                         textAlign: TextAlign.center,
@@ -206,8 +205,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                                 'Uge: ${weekplan.weekNumber}      '
                                 'År: ${weekplan.weekYear}',
                                 key: const Key('weekYear'),
-                                style: const TextStyle(fontSize:
-                                GirafFont.small),
+                                style: const TextStyle(fontSize: 18),
                                 maxLines: 1,
                                 minFontSize: 14,
                                 textAlign: TextAlign.center,
@@ -226,12 +224,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
     if (weekplan.thumbnail != null) {
       handleOnTapWeekPlan(inEditMode, weekplan, context);
     } else {
-      handleOnTapWeekPlanAdd(context);
+      handleOnTapWeekPlanAdd(inEditMode, context);
     }
   }
 
   /// Handles on tap on a add new weekplan card
-  void handleOnTapWeekPlanAdd(BuildContext context) {
+  void handleOnTapWeekPlanAdd(bool inEditMode, BuildContext context) {
+    if (!inEditMode) {
       Routes.push<WeekModel>(
         context,
         NewWeekplanScreen(
@@ -239,6 +238,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
           existingWeekPlans: _weekBloc.weekNameModels,
         ),
       ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
+    }
   }
 
   /// Handles on tap on a weekplan card

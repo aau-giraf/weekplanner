@@ -16,7 +16,6 @@ import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
-import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/choiceboard_widgets/choice_board.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -50,8 +49,7 @@ class ShowActivityScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Text style used for title.
-  final TextStyle titleTextStyle = const TextStyle(fontSize:
-  GirafFont.activity_screen_buttons);
+  final TextStyle titleTextStyle = const TextStyle(fontSize: 24);
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +229,7 @@ class ShowActivityScreen extends StatelessWidget {
                                 user: _girafUser,))
                                   .then((Object object) {
                                 if (object is PictogramModel) {
-                                  _activityBloc.load(_activity,_girafUser);
+                                  _activityBloc.load(_activity, _girafUser);
                                   final PictogramModel newPictogram = object;
                                   _activity.isChoiceBoard = true;
                                   _activity.pictograms.add(newPictogram);
@@ -631,18 +629,13 @@ class ShowActivityScreen extends StatelessWidget {
                       return const CircularProgressIndicator();
                     }
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                      return Container(
-                        child: Row(children: <Widget>[
-                          Padding(
-                        padding: const EdgeInsets.only(right: 40.0),
-                        child: GirafButton(
-                        key: const Key('CancelStateToggleButton'),
+                      return GirafButton(
+                          key: const Key('CancelStateToggleButton'),
                           onPressed: () {
                             _activityBloc.cancelActivity();
-                            _activity.state = _activityBloc.getActivity().state;
                           },
                           text: activitySnapshot.data.state !=
-                              ActivityState.Canceled
+                                  ActivityState.Canceled
                               ? 'Aflys'
                               : 'Fortryd',
                           icon: activitySnapshot.data.state !=
@@ -652,27 +645,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   color: theme.GirafColors.red)
                               : const ImageIcon(
                                   AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue),
-                        )),
-                        GirafButton(
-                        key: const Key('CompleteStateToggleButton'),
-                          onPressed: () {
-                            _activityBloc.completeActivity();
-                          },
-                          isEnabled: activitySnapshot.data.state !=
-                              ActivityState.Canceled,
-                          width: 100,
-                          icon: activitySnapshot.data.state !=
-                                  ActivityState.Completed
-                              ? const ImageIcon(
-                                  AssetImage('assets/icons/accept.png'),
-                                  color: theme.GirafColors.green)
-                              : const ImageIcon(
-                                  AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue)
-                        ),
-                    ]));
-
+                                  color: theme.GirafColors.blue));
                     } else {
                       return GirafButton(
                           key: const Key('CompleteStateToggleButton'),

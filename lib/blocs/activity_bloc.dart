@@ -1,6 +1,5 @@
-
 import 'package:api_client/models/displayname_model.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/api/api.dart';
@@ -15,9 +14,9 @@ class ActivityBloc extends BlocBase {
   /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
-  /// rx_dart.BehaviorSubject for the updated ActivityModel.
-  final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
-      rx_dart.BehaviorSubject<ActivityModel>();
+  /// BehaviorSubject for the updated ActivityModel.
+  final BehaviorSubject<ActivityModel> _activityModelStream =
+      BehaviorSubject<ActivityModel>();
 
   final Api _api;
   ActivityModel _activityModel;
@@ -28,10 +27,6 @@ class ActivityBloc extends BlocBase {
     _activityModel = activityModel;
     _user = user;
     _activityModelStream.add(activityModel);
-  }
-  /// Return the current ActivityModel
-  ActivityModel getActivity(){
-    return _activityModel;
   }
 
   /// Mark the selected activity as complete. Toggle function, if activity is

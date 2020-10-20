@@ -55,20 +55,35 @@ class ColorThemeSelectorScreen extends StatelessWidget {
         WeekplanColorTheme.standardColorSetting(),
         _settingsModel.weekDayColors,
         'Standard', () {
-          Routes.pop(context, WeekplanColorTheme.standardColorSetting());
+      _settingsModel.weekDayColors = WeekplanColorTheme.standardColorSetting();
+      _settingsBloc.updateSettings(_user.id, _settingsModel).take(1).listen(
+            (SettingsModel settings) {
+          Routes.pop(context, settings);
+        },
+      );
     }));
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme.blueWhiteColorSetting(),
         _settingsModel.weekDayColors,
         'Blå/Hvid', () {
-      Routes.pop(context, WeekplanColorTheme.blueWhiteColorSetting());
+      _settingsModel.weekDayColors = WeekplanColorTheme.blueWhiteColorSetting();
+      _settingsBloc.updateSettings(_user.id, _settingsModel).take(1).listen(
+            (SettingsModel settings) {
+          Routes.pop(context, settings);
+        },
+      );
     }));
     settingsList.add(SettingsColorThemeCheckMarkButton(
         WeekplanColorTheme.greyWhiteColorSetting(),
         _settingsModel.weekDayColors,
         'Grå/Hvid', () {
-      Routes.pop(context, WeekplanColorTheme.greyWhiteColorSetting());
+      _settingsModel.weekDayColors = WeekplanColorTheme.greyWhiteColorSetting();
+      _settingsBloc.updateSettings(_user.id, _settingsModel).take(1).listen(
+        (SettingsModel settings) {
+          Routes.pop(context, settings);
+        },
+      );
     }));
 
     return settingsList;

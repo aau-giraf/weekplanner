@@ -21,8 +21,8 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(GirafUserModel(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(GirafUserModel(
         id: '1',
         department: 3,
         role: Role.Guardian,
@@ -67,11 +67,11 @@ void main() {
     api.user = MockUserApi();
     api.week = MockWeekApi();
     when(api.week.update(any, any, any, any)).thenAnswer((Invocation inv) {
-      return Stream<WeekModel>.value(inv.positionalArguments[3]);
+      return Observable<WeekModel>.just(inv.positionalArguments[3]);
     });
 
     when(api.week.get(any, any, any)).thenAnswer((Invocation inv) {
-      return Stream<WeekModel>.value(week);
+      return Observable<WeekModel>.just(week);
     });
 
     weekplanBloc = WeekplanBloc(api);
@@ -347,7 +347,7 @@ void main() {
         weekYear: 2019);
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
-      return Stream<WeekModel>.value(newWeekModel);
+      return Observable<WeekModel>.just(newWeekModel);
     });
 
     weekplanBloc.userWeek.take(1).flatMap((_) {
@@ -448,7 +448,7 @@ void main() {
         weekYear: 2019);
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
-      return Stream<WeekModel>.value(newWeekModel);
+      return Observable<WeekModel>.just(newWeekModel);
     });
 
     weekplanBloc.userWeek.take(1).flatMap((_) {

@@ -24,7 +24,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
-
+import 'package:rxdart/rxdart.dart';
 
 import 'test_image.dart';
 
@@ -197,22 +197,22 @@ class MockWeekApi extends Mock implements WeekApi {
   WeekModel _mockWeek;
 
   @override
-  Stream<WeekModel> get(String id, int year, int weekNumber) {
-    return Stream<WeekModel>.value(_mockWeek);
+  Observable<WeekModel> get(String id, int year, int weekNumber) {
+    return Observable<WeekModel>.just(_mockWeek);
   }
 
   @override
-  Stream<WeekModel> update(
+  Observable<WeekModel> update(
       String id, int year, int weekNumber, WeekModel weekInput) {
     _mockWeek = weekInput;
-    return Stream<WeekModel>.value(_mockWeek);
+    return Observable<WeekModel>.just(_mockWeek);
   }
 }
 
 class MockAccountApi extends Mock implements AccountApi {
   @override
-  Stream<bool> login(String username, String password) {
-    return Stream<bool>.value(true);
+  Observable<bool> login(String username, String password) {
+    return Observable<bool>.just(true);
   }
 }
 
@@ -222,8 +222,8 @@ class MockUserApi extends Mock implements UserApi {
   SettingsModel _mockSettings;
 
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(GirafUserModel(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(GirafUserModel(
       id: '1',
       department: 3,
       role: Role.Guardian,
@@ -234,14 +234,14 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
-  Stream<SettingsModel> getSettings(String id) {
-    return Stream<SettingsModel>.value(_mockSettings);
+  Observable<SettingsModel> getSettings(String id) {
+    return Observable<SettingsModel>.just(_mockSettings);
   }
 
   @override
-  Stream<SettingsModel> updateSettings(String id, SettingsModel settings) {
+  Observable<SettingsModel> updateSettings(String id, SettingsModel settings) {
     _mockSettings = settings;
-    return Stream<SettingsModel>.value(_mockSettings);
+    return Observable<SettingsModel>.just(_mockSettings);
   }
 }
 
@@ -252,33 +252,33 @@ class MockActivityApi extends Mock implements ActivityApi {
 
   // Updates the activity with the same id as the input.
   @override
-  Stream<ActivityModel> update(ActivityModel activity, String userId) {
+  Observable<ActivityModel> update(ActivityModel activity, String userId) {
     final int amtActivities = _mockActivities.length;
 
     //We look for the activity with the same id, and update.
     for (int i = 0; i < amtActivities; i++) {
       if (activity.id == _mockActivities[i].id) {
         _mockActivities[i] = activity;
-        return Stream<ActivityModel>.value(_mockActivities[i]);
+        return Observable<ActivityModel>.just(_mockActivities[i]);
       }
     }
     // Else we just return the activity put in as input
-    return Stream<ActivityModel>.value(activity);
+    return Observable<ActivityModel>.just(activity);
   }
 
   @override
-  Stream<ActivityModel> add(ActivityModel activity, String userId,
+  Observable<ActivityModel> add(ActivityModel activity, String userId,
       String weekplanName, int weekYear, int weekNumber, Weekday weekDay) {
     _mockActivities.add(activity);
-    return Stream<ActivityModel>.value(activity);
+    return Observable<ActivityModel>.just(activity);
   }
 }
 
 class MockPictogramApi extends Mock implements PictogramApi {
   @override
-  Stream<Image> getImage(int id) {
+  Observable<Image> getImage(int id) {
     //We take the sample image from the test_image.dart file
     final Image mockImage = sampleImage;
-    return Stream<Image>.value(mockImage);
+    return Observable<Image>.just(mockImage);
   }
 }

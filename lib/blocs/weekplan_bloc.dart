@@ -5,7 +5,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
@@ -16,7 +16,7 @@ class WeekplanBloc extends BlocBase {
   WeekplanBloc(this._api);
 
   /// The stream that emits the currently chosen weekplan
-  Stream<UserWeekModel> get userWeek => _userWeek.stream;
+  Observable<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -34,14 +34,13 @@ class WeekplanBloc extends BlocBase {
 
   /// The API
   final Api _api;
-  final rx_dart.BehaviorSubject<bool> _editMode
-  = rx_dart.BehaviorSubject<bool>.seeded(false);
-  final rx_dart.BehaviorSubject<List<ActivityModel>> _markedActivities =
-      rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
-  final rx_dart.BehaviorSubject<UserWeekModel> _userWeek =
-      rx_dart.BehaviorSubject<UserWeekModel>();
-  final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
-      rx_dart.BehaviorSubject<bool>.seeded(false);
+  final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
+  final BehaviorSubject<List<ActivityModel>> _markedActivities =
+      BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+  final BehaviorSubject<UserWeekModel> _userWeek =
+      BehaviorSubject<UserWeekModel>();
+  final BehaviorSubject<bool> _activityPlaceholderVisible =
+      BehaviorSubject<bool>.seeded(false);
 
   /// Sink to set the currently chosen week
   void loadWeek(WeekModel week, DisplayNameModel user) {
@@ -131,7 +130,7 @@ class WeekplanBloc extends BlocBase {
           final ActivityModel newActivity = ActivityModel(
               id: activity.id,
               pictograms: activity.pictograms,
-              order: week.days[dayOfWeek].activities.length,
+              order: _getMaxOrder(week.days[dayOfWeek].activities),
               isChoiceBoard: activity.isChoiceBoard,
               state: ActivityState.Normal);
 
@@ -150,7 +149,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  /*int _getMaxOrder(List<ActivityModel> activities) {
+  int _getMaxOrder(List<ActivityModel> activities) {
     int max = 0;
 
     for (ActivityModel activity in activities) {
@@ -159,7 +158,7 @@ class WeekplanBloc extends BlocBase {
       }
     }
     return max;
-  }*/
+  }
 
   /// Toggles edit mode
   void toggleEditMode() {
@@ -236,7 +235,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  Stream<bool> _atLeastOneActivityMarked(){
+  Observable<bool> _atLeastOneActivityMarked(){
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
   }

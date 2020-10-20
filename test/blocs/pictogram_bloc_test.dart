@@ -1,4 +1,4 @@
-import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -27,8 +27,7 @@ void main() {
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
             (_) =>
-        rx_dart.BehaviorSubject<List<PictogramModel>>
-            .seeded(<PictogramModel>[]));
+        BehaviorSubject<List<PictogramModel>>.seeded(<PictogramModel>[]));
 
     bloc.pictograms.listen((List<PictogramModel> response) {
       switch (count) {

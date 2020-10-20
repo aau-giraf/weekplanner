@@ -8,7 +8,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
@@ -19,8 +19,8 @@ class MockPictogramApi extends Mock implements PictogramApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(GirafUserModel(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(GirafUserModel(
       id: '1',
       department: 3,
       role: Role.Guardian,
@@ -35,10 +35,10 @@ class MockUploadFromGalleryBloc extends UploadFromGalleryBloc {
   MockUploadFromGalleryBloc(Api api) : super(api);
 
   @override
-  Stream<bool> get isInputValid => _isInputValid.stream;
+  Observable<bool> get isInputValid => _isInputValid.stream;
 
-  final rx_dart.BehaviorSubject<bool> _isInputValid =
-      rx_dart.BehaviorSubject<bool>.seeded(false);
+  final BehaviorSubject<bool> _isInputValid =
+      BehaviorSubject<bool>.seeded(false);
 
   void setInputIsValid(bool b) {
     _isInputValid.add(b);
@@ -73,7 +73,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     when(api.pictogram.create(any))
-        .thenAnswer((_) => Stream<PictogramModel>.error(Exception()));
+        .thenAnswer((_) => Observable<PictogramModel>.error(Exception()));
     bloc.setInputIsValid(true);
 
     await tester.tap(find.byKey(const Key('SavePictogramButtonKey')));

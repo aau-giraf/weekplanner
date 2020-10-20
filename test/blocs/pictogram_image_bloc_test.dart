@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -34,7 +34,7 @@ void main() {
         imageHash: null);
 
     when(pictogramApi.getImage(model.id))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
+        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
     bloc.image.listen((Image response) {
       expect(response, isNotNull);

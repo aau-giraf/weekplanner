@@ -9,6 +9,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -22,20 +23,20 @@ SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Stream<SettingsModel> getSettings(String id) {
-    return Stream<SettingsModel>.value(mockSettings);
+  Observable<SettingsModel> getSettings(String id) {
+    return Observable<SettingsModel>.just(mockSettings);
   }
 
   @override
-  Stream<SettingsModel> updateSettings(String id, SettingsModel settings) {
+  Observable<SettingsModel> updateSettings(String id, SettingsModel settings) {
     mockSettings = settings;
-    return Stream<SettingsModel>.value(mockSettings);
+    return Observable<SettingsModel>.just(mockSettings);
   }
 
   static List<WeekdayColorModel> createWeekDayColors() {

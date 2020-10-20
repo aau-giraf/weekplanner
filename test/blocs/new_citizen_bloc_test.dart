@@ -6,12 +6,13 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(GirafUserModel(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(GirafUserModel(
         id: '1',
         department: 1,
         role: Role.Guardian,
@@ -45,7 +46,7 @@ void main() {
         any, any, any,
         departmentId: anyNamed('departmentId'), role:  anyNamed('role')))
         .thenAnswer((_) {
-      return Stream<GirafUserModel>.value(user);
+      return Observable<GirafUserModel>.just(user);
     });
 
 
@@ -149,18 +150,6 @@ void main() {
 
   test('All inputs are not valid - username', async((DoneFn done) {
     bloc.onUsernameChange.add('');
-    bloc.onPasswordChange.add('1234');
-    bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.displayName);
-    bloc.allInputsAreValidStream.listen((bool isValid) {
-      expect(isValid, isNotNull);
-      expect(isValid, false);
-    });
-    done();
-  }));
-
-  test('All inputs are not valid - username', async((DoneFn done) {
-    bloc.onUsernameChange.add('!!PeterMadsen??');
     bloc.onPasswordChange.add('1234');
     bloc.onPasswordVerifyChange.add('1234');
     bloc.onDisplayNameChange.add(user.displayName);

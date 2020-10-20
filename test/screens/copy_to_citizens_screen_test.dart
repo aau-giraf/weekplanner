@@ -14,6 +14,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
@@ -29,19 +30,19 @@ import 'edit_weekplan_screen_test.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Stream<List<DisplayNameModel>> getCitizens(String id) {
+  Observable<List<DisplayNameModel>> getCitizens(String id) {
     final List<DisplayNameModel> output = <DisplayNameModel>[];
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
-    return Stream<List<DisplayNameModel>>.value(output);
+    return Observable<List<DisplayNameModel>>.just(output);
   }
 }
 
@@ -50,7 +51,7 @@ bool hasConflict = false;
 
 class MockWeekApi extends Mock implements WeekApi {
   @override
-  Stream<WeekModel> get(String id, int year, int weekNumber) {
+  Observable<WeekModel> get(String id, int year, int weekNumber) {
     final WeekModel weekModel = WeekModel(days: <WeekdayModel>[
       WeekdayModel(
           day: Weekday.Monday, activities: <ActivityModel>[
@@ -64,17 +65,17 @@ class MockWeekApi extends Mock implements WeekApi {
       ])
     ]);
     return hasConflict
-        ? Stream<WeekModel>.value(weekModel)
-        : Stream<WeekModel>.value(WeekModel(
+        ? Observable<WeekModel>.just(weekModel)
+        : Observable<WeekModel>.just(WeekModel(
         thumbnail: null, name: '$year - $weekNumber', weekYear: year,
         weekNumber: weekNumber));
   }
 
   @override
-  Stream<WeekModel> update(
+  Observable<WeekModel> update(
       String id, int year, int weekNumber, WeekModel weekModel) {
     map[id] = weekModel;
-    return Stream<WeekModel>.value(weekModel);
+    return Observable<WeekModel>.just(weekModel);
   }
 }
 
@@ -95,7 +96,7 @@ void main() {
     api.week = MockWeekApi();
 
     when(api.week.getNames(any)).thenAnswer((_) {
-      return Stream<List<WeekNameModel>>.value(<WeekNameModel>[]);
+      return Observable<List<WeekNameModel>>.just(<WeekNameModel>[]);
     });
 
     bloc = CopyWeekplanBloc(api);

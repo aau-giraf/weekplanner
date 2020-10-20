@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -15,15 +16,15 @@ import 'package:weekplanner/screens/settings_screens/number_of_days_selection_sc
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
-class MockUserApi extends Mock implements UserApi, NavigatorObserver {
+class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> me() {
-    return Stream<GirafUserModel>.value(
+  Observable<GirafUserModel> me() {
+    return Observable<GirafUserModel>.just(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Stream<SettingsModel> getSettings(String id) {
+  Observable<SettingsModel> getSettings(String id) {
     final SettingsModel settingsModel = SettingsModel(
         orientation: null,
         completeMark: null,
@@ -33,13 +34,12 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
         nrOfDaysToDisplay: 1,
         weekDayColors: null);
 
-    return Stream<SettingsModel>.value(settingsModel);
+    return Observable<SettingsModel>.just(settingsModel);
   }
 }
 
 void main() {
   Api api;
-  NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Citizen.toString());
@@ -48,7 +48,6 @@ void main() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
-    mockObserver = MockUserApi();
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
@@ -69,19 +68,13 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
+    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(3));
   });
 
   testWidgets('Has option, Vis kun i dag', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Vis kun i dag'), findsOneWidget);
-  });
-
-  testWidgets('Has option, Vis to dage', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
-    await tester.pumpAndSettle();
-    expect(find.text('Vis to dage'), findsOneWidget);
   });
 
   testWidgets('Has option, Vis mandag til fredag', (WidgetTester tester) async {
@@ -101,22 +94,4 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.check), findsOneWidget);
   });
-
-  testWidgets('Has number of days screen been popped',
-          (WidgetTester tester) async{
-        await tester.pumpWidget(MaterialApp(
-            home: NumberOfDaysScreen(user),
-            // ignore: always_specify_types
-            navigatorObservers: [mockObserver]
-        ));
-        verify(mockObserver.didPush(any, any));
-
-        await tester.pumpAndSettle();
-        expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
-
-        await tester.pump();
-        await tester.tap(find.byType(SettingsCheckMarkButton).last);
-        await tester.pump();
-        verify(mockObserver.didPop(any, any));
-      });
 }

@@ -61,30 +61,22 @@ class SettingsScreen extends StatelessWidget {
             return SettingsSection('Tema', <SettingsSectionItem>[
               SettingsArrowButton(
                   'Farver på ugeplan',
-                      () async {
-                          final Object result = await Routes.push(
-                              context, ColorThemeSelectorScreen(user: _user));
-                          settingsModel.weekDayColors = result;
-                          _settingsBloc.updateSettings(_user.id, settingsModel)
-                              .take(1).listen((SettingsModel settings) {
-                            _settingsBloc.loadSettings(_user);
-                          });
-                      },
+                      () =>
+                          Routes.push(
+                              context, ColorThemeSelectorScreen(user: _user))
+                              .then(
+                                  (Object object) =>
+                                      _settingsBloc.loadSettings(_user)),
                   titleTrailing: ThemeBox.fromHexValues(
                       settingsModel.weekDayColors[0].hexColor,
                       settingsModel.weekDayColors[1].hexColor)),
               SettingsArrowButton(
                   'Tegn for udførelse',
-                      () async {
-                          final Object result =  await Routes.push(context,
-                          CompletedActivityIconScreen(_user));
-
-                          settingsModel.completeMark = result;
-                          _settingsBloc.updateSettings(_user.id, settingsModel).
-                          listen((SettingsModel model) {
-                            _settingsBloc.loadSettings(_user);
-                          });
-                      },
+                      () => Routes.push(context,
+                          CompletedActivityIconScreen(_user))
+                          .then(
+                              (Object object) =>
+                                  _settingsBloc.loadSettings(_user)),
                   titleTrailing: Text(settingsModel.completeMark ==
                       CompleteMark.Checkmark
                       ? 'Flueben'
@@ -116,17 +108,11 @@ class SettingsScreen extends StatelessWidget {
             return SettingsSection('Ugeplan', <SettingsSectionItem>[
               SettingsArrowButton(
                 'Antal dage',
-                    () async { final Object result = await Routes.push(
-                        context, NumberOfDaysScreen(_user));
-                              settingsModel.nrOfDaysToDisplay = result;
-                              _settingsBloc.updateSettings(
-                                  _user.id, settingsModel).listen(
-                                      (SettingsModel response) {
-                                _settingsBloc.loadSettings(_user);});},
+                    () => Routes.push(context, NumberOfDaysScreen(_user))
+                            .then((Object object) =>
+                            _settingsBloc.loadSettings(_user)),
                 titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
                     ? 'En dag'
-                    : settingsModel.nrOfDaysToDisplay == 2
-                    ? 'To dage'
                     : settingsModel.nrOfDaysToDisplay == 5
                     ? 'Mandag til fredag'
                     : 'Mandag til søndag'),
@@ -209,18 +195,13 @@ class SettingsScreen extends StatelessWidget {
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final DefaultTimer userTimer = settingsSnapshot.data.defaultTimer;
-            final SettingsModel settingsModel = settingsSnapshot.data;
+
             return SettingsSection('Tidsrepræsentation', <SettingsSectionItem>[
               SettingsArrowButton(
                 'Indstillinger for tidsrepræsentation',
-                    () async { final Object result = await Routes
-                        .push(context, TimeRepresentationScreen(_user));
-                        settingsModel.defaultTimer = result;
-                        _settingsBloc.updateSettings(_user.id, settingsModel)
-                          .listen((SettingsModel response) {
-                            _settingsBloc.loadSettings(_user);
-                          });
-                    },
+                    () => Routes.push(context, TimeRepresentationScreen(_user))
+                        .then((Object object) =>
+                        _settingsBloc.loadSettings(_user)),
                 titleTrailing: Image(
                     width: 50,
                     height: 50,

@@ -12,14 +12,15 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 
 class MockSettingsApi extends Mock implements UserApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Stream<GirafUserModel> get(String id) {
-    return Stream<GirafUserModel>.value(GirafUserModel(
+  Observable<GirafUserModel> get(String id) {
+    return Observable<GirafUserModel>.just(GirafUserModel(
         id: '1',
         department: 3,
         role: Role.Guardian,
@@ -71,13 +72,13 @@ void main() {
 
     // Mocks the api call to get settings
     when(api.user.getSettings(any)).thenAnswer((Invocation inv) {
-      return Stream<SettingsModel>.value(settings);
+      return Observable<SettingsModel>.just(settings);
     });
 
     // Mocks the api call to update settings
     when(api.user.updateSettings(any, any)).thenAnswer((Invocation inv) {
       settings = updatedSettings;
-      return Stream<SettingsModel>.value(updatedSettings);
+      return Observable<SettingsModel>.just(updatedSettings);
     });
 
     settingsBloc = SettingsBloc(api);

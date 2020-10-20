@@ -4,7 +4,6 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import 'package:http/http.dart' as http;
@@ -146,7 +145,7 @@ class LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
                           key: const Key('UsernameKey'),
-                          style: const TextStyle(fontSize: GirafFont.large),
+                          style: const TextStyle(fontSize: 30),
                           controller: usernameCtrl,
                           keyboardType: TextInputType.text,
                           // Use email input type for emails.
@@ -171,7 +170,7 @@ class LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
                           key: const Key('PasswordKey'),
-                          style: const TextStyle(fontSize: GirafFont.large),
+                          style: const TextStyle(fontSize: 30),
                           controller: passwordCtrl,
                           obscureText: true,
                           decoration: const InputDecoration.collapsed(

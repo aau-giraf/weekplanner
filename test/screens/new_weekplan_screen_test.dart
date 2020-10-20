@@ -8,7 +8,7 @@ import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
@@ -32,23 +32,23 @@ class MockNewWeekplanBloc extends NewWeekplanBloc {
   Api api;
 
   @override
-  Stream<bool> get validTitleStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Observable<bool> get validTitleStream =>
+      Observable<bool>.just(acceptAllInputs);
 
   @override
-  Stream<bool> get validYearStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Observable<bool> get validYearStream =>
+      Observable<bool>.just(acceptAllInputs);
 
   @override
-  Stream<bool> get validWeekNumberStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Observable<bool> get validWeekNumberStream =>
+      Observable<bool>.just(acceptAllInputs);
 
   @override
-  Stream<PictogramModel> get thumbnailStream =>
-      Stream<PictogramModel>.value(mockPictogram);
+  Observable<PictogramModel> get thumbnailStream =>
+      Observable<PictogramModel>.just(mockPictogram);
 
   @override
-  Stream<bool> get allInputsAreValidStream => Stream<bool>.value(true);
+  Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
 }
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -87,16 +87,16 @@ void main() {
     savedWeekplan = false;
 
     when(api.pictogram.getImage(mockPictogram.id))
-        .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
+        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
       savedWeekplan = true;
-      return Stream<WeekModel>.value(mockWeek);
+      return Observable<WeekModel>.just(mockWeek);
     });
 
     when(api.week.getNames(any)).thenAnswer(
           (_) {
-        return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
+        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,
@@ -107,7 +107,7 @@ void main() {
 
     when(api.week.get(any, any, any)).thenAnswer(
           (_) {
-        return Stream<WeekModel>.value(mockWeek);
+        return Observable<WeekModel>.just(mockWeek);
       },
     );
 
@@ -350,7 +350,7 @@ void main() {
   testWidgets('Week plan is created even when there are no existing plans',
           (WidgetTester tester) async {
         when(api.week.getNames(any)).thenAnswer(
-                (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
+                (_) => Observable<List<WeekNameModel>>.just(<WeekNameModel>[]));
 
         mockWeekplanSelector = WeekplansBloc(api);
         mockWeekplanSelector.load(mockUser);

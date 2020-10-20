@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:weekplanner/style/custom_color.dart' as theme;
-import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// Screen where the user see their legal rights
@@ -26,12 +25,12 @@ class PrivacyInformationScreen extends StatelessWidget {
                           TextSpan(
                               text: 'Oplysninger om vores behandling '
                                   'af dine personoplysninger mv.''\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small,
+                              style: TextStyle(fontSize: 20.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: '1. Vi er den dataansvarlige '
                                   '– hvordan kontakter du os?' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.large,
+                              style: TextStyle(fontSize: 30.00,
                               fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Girafs Venner er dataansvarlig for '
@@ -50,12 +49,12 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   '\n' '\n'
                                   '   \u2022 '
                                   'Mail: ulrik@cs.aau.dk' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(
                               text: '2. Formålene med og retsgrundlaget for '
                                   'behandlingen af dine '
                                   'personoplysninger' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small,
+                              style: TextStyle(fontSize: 30.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Vi behandler dine '
@@ -97,11 +96,11 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'struktur i hverdagen gennem '
                                   'et kommunikationsværktøj.' '\n'
                                   '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(
                               text: '3. Kategorier af '
                                   'personoplysninger' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.large,
+                              style: TextStyle(fontSize: 30.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Vi behandler følgende '
@@ -112,23 +111,23 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   '   \u2022 ' 'Almindelige '
                                   'personoplysninger'
                                   '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(
                               text: '4. Hvor dine '
                                   'personoplysninger stammer '
                                   'fra' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.large,
+                              style: TextStyle(fontSize: 30.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Personoplysningerne stammer '
                                   'fra registreringen af brugeren '
                                   'i applikationen.' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(
                               text: '5. Opbevaring af '
                                   'dine personoplysninger' '\n'
                                   '\n',
-                              style: TextStyle(fontSize: GirafFont.large,
+                              style: TextStyle(fontSize: 30.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Personlige oplysninger '
@@ -140,12 +139,12 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'institutionen eller som resultat '
                                   'af manglende anvendelse af '
                                   'systemet.' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(
                               text: '6. Retten til at '
                                   'trække samtykke tilbage'
                                   '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.large,
+                              style: TextStyle(fontSize: 30.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Du har til enhver tid ret '
@@ -164,9 +163,9 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   ' dit samtykke, har det '
                                   'derfor først virkning '
                                   'fra dette tidspunkt.' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(text: '7. Dine rettigheder' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.large,
+                              style: TextStyle(fontSize: 30.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Du har efter '
@@ -191,7 +190,7 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'Du har ret til at få urigtige '
                                   'oplysninger om dig selv '
                                   'rettet.' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(
                               text: '   \u2022 '
                                   'Ret til sletning. I særlige'
@@ -245,10 +244,10 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'registreredes rettigheder, '
                                   'som du finder på '
                                   'www.datatilsynet.dk.' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
                           TextSpan(text: '8. Klage til Datatilsynet'
                               '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.large,
+                              style: TextStyle(fontSize: 30.0,
                                   fontWeight: FontWeight.bold)),
                           TextSpan(
                               text: 'Du har ret til at '
@@ -259,7 +258,7 @@ class PrivacyInformationScreen extends StatelessWidget {
                                   'Du finder Datatilsynets '
                                   'kontaktoplysninger på '
                                   'www.datatilsynet.dk.' '\n' '\n',
-                              style: TextStyle(fontSize: GirafFont.small)),
+                              style: TextStyle(fontSize: 20.0)),
 
 
                         ],

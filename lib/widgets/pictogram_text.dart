@@ -8,7 +8,6 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:weekplanner/style/font_size.dart';
 
 /// This is a widget used to create text under the pictograms
 class PictogramText extends StatelessWidget {
@@ -73,14 +72,13 @@ class PictogramText extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: AutoSizeText(
-            pictogramText[0] + pictogramText.substring(1).toLowerCase(),
+            pictogramText,
             minFontSize: minFontSize,
             maxLines: 2,
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold,
-                fontSize: GirafFont.pictogram),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 150),
           ),
         ));
   }

@@ -8,7 +8,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -18,8 +18,8 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 class MockActivityApi extends Mock implements ActivityApi {
   @override
-  Stream<ActivityModel> update(ActivityModel activity, String userId) {
-    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  Observable<ActivityModel> update(ActivityModel activity, String userId) {
+    return BehaviorSubject<ActivityModel>.seeded(activity);
   }
 }
 
