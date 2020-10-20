@@ -77,7 +77,7 @@ class PictogramImageBloc extends BlocBase {
   /// Delete pictogram
    bool delete (PictogramModel pm){
     bool result;
-    final Observable<bool> res = _api.pictogram.delete(pm.id);
+    final Stream<bool> res = _api.pictogram.delete(pm.id);
     if (res != null) {
       res.listen((bool success) {
         result = success ?? false;
