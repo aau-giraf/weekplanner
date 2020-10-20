@@ -5,7 +5,7 @@ import 'package:api_client/models/timer_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
@@ -21,32 +21,32 @@ class TimerBloc extends BlocBase {
   DisplayNameModel _user;
 
   /// Stream for the progress of the timer.
-  Observable<double> get timerProgressStream => _timerProgressStream.stream;
+  Stream<double> get timerProgressStream => _timerProgressStream.stream;
 
   /// stream for checking if the timer is running
-  Observable<TimerRunningMode> get timerRunningMode =>
+  Stream<TimerRunningMode> get timerRunningMode =>
       _timerRunningModeStream.stream;
 
   /// Stream for checking if the timer is instantiated.
-  Observable<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
 
-  /// BehaviorSubject for the progress of the timer.
-  final BehaviorSubject<double> _timerProgressStream =
-      BehaviorSubject<double>.seeded(0.0);
+  /// rx_dart.BehaviorSubject for the progress of the timer.
+  final rx_dart.BehaviorSubject<double> _timerProgressStream =
+      rx_dart.BehaviorSubject<double>.seeded(0.0);
 
-  /// BehaviorSubject for to check if timer is running.
-  final BehaviorSubject<TimerRunningMode> _timerRunningModeStream =
-      BehaviorSubject<TimerRunningMode>.seeded(
+  /// rx_dart.BehaviorSubject for to check if timer is running.
+  final rx_dart.BehaviorSubject<TimerRunningMode> _timerRunningModeStream =
+      rx_dart.BehaviorSubject<TimerRunningMode>.seeded(
           TimerRunningMode.not_initialized);
 
-  /// BehaviorSubject for to check if timer is instantiated.
-  final BehaviorSubject<bool> _timerInstantiatedStream =
-      BehaviorSubject<bool>.seeded(false);
+  /// rx_dart.BehaviorSubject for to check if timer is instantiated.
+  final rx_dart.BehaviorSubject<bool> _timerInstantiatedStream =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Behavior subject for the progress of the timer in
   ///  hours, minutes and seconds.
-  final BehaviorSubject<List<int>> _timerProgressNumeric =
-      BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
+  final rx_dart.BehaviorSubject<List<int>> _timerProgressNumeric =
+      rx_dart.BehaviorSubject<List<int>>.seeded(<int>[0, 0, 0]);
 
   /// Stream for the progress of the timer in minutes and seconds.
   /// The array streamed contains hours at index 0,

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 ///This bloc is used by a guardian to instantiate a new citizen.
@@ -16,17 +16,17 @@ class NewCitizenBloc extends BlocBase {
   GirafUserModel _user;
 
    /// This field controls the display name input field
-  final BehaviorSubject<String> displayNameController =
-      BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String> displayNameController =
+      rx_dart.BehaviorSubject<String>();
    /// This field controls the username input field
-  final BehaviorSubject<String> usernameController =
-      BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String> usernameController =
+      rx_dart.BehaviorSubject<String>();
    /// This field controls the password input field
-  final BehaviorSubject<String> passwordController =
-      BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String> passwordController =
+      rx_dart.BehaviorSubject<String>();
    /// This field controls the password verification input field
-  final BehaviorSubject<String> passwordVerifyController =
-      BehaviorSubject<String>();
+  final rx_dart.BehaviorSubject<String> passwordVerifyController =
+      rx_dart.BehaviorSubject<String>();
 
   /// Handles when the entered display name is changed.
   Sink<String> get onDisplayNameChange => displayNameController.sink;
@@ -38,18 +38,19 @@ class NewCitizenBloc extends BlocBase {
   Sink<String> get onPasswordVerifyChange => passwordVerifyController.sink;
 
   /// Validation stream for display name
-  Observable<bool> get validDisplayNameStream =>
+  Stream<bool> get validDisplayNameStream =>
       displayNameController.stream.transform(_displayNameValidation);
   /// Validation stream for username
-  Observable<bool> get validUsernameStream =>
+  Stream<bool> get validUsernameStream =>
       usernameController.stream.transform(_usernameValidation);
   /// Validation stream for password
-  Observable<bool> get validPasswordStream =>
+  Stream<bool> get validPasswordStream =>
       passwordController.stream.transform(_passwordValidation);
   /// Validation stream for password validation
-  Observable<bool> get validPasswordVerificationStream =>
-      Observable.combineLatest2<String, String, bool>
-        (passwordController.startWith(''), passwordVerifyController,
+  Stream<bool> get validPasswordVerificationStream =>
+      rx_dart.Rx.combineLatest2<String, String, bool>
+        (passwordController.hasValue ? passwordController : ''
+          , passwordVerifyController,
               (String a, String b) => a == b);
 
 
@@ -63,7 +64,7 @@ class NewCitizenBloc extends BlocBase {
   }
 
   /// Method called with information about the new citizen.
-  Observable<GirafUserModel> createCitizen() {
+  Stream<GirafUserModel> createCitizen() {
     return _api.account.register(
         usernameController.value,
         passwordController.value,
@@ -73,8 +74,8 @@ class NewCitizenBloc extends BlocBase {
     );
   }
   /// Gives information about whether all inputs are valid.
-  Observable<bool> get allInputsAreValidStream =>
-      Observable.combineLatest4<bool, bool, bool, bool, bool>(
+  Stream<bool> get allInputsAreValidStream =>
+      rx_dart.Rx.combineLatest4<bool, bool, bool, bool, bool>(
           validDisplayNameStream,
           validUsernameStream,
           validPasswordStream,
@@ -100,7 +101,10 @@ class NewCitizenBloc extends BlocBase {
         if (input == null || input.isEmpty) {
           sink.add(false);
         } else {
-          sink.add(!input.contains(' '));
+          //Regular Expression to check if the username contains
+          //only all letters, numbers, underscore and/or hyphen.
+          sink.add(input.contains(RegExp(r'^[A-ZÆØÅ0-9_-]*$',
+            caseSensitive : false)));
         }
       });
 

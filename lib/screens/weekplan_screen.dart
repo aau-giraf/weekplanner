@@ -286,9 +286,9 @@ class WeekplanScreen extends StatelessWidget {
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
                     _weekdayCounter = 0;
-                    // If the option of showing 1 day is chosen the
+                    // If the option of showing 1 or 2 days is chosen the
                     // _weekdayCounter must start from today's date
-                    if (_daysToDisplay == 1) {
+                    if (_daysToDisplay == 1 || _daysToDisplay == 2) {
                       _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
                     // Adding the selected number of days to weekDays
@@ -310,6 +310,12 @@ class WeekplanScreen extends StatelessWidget {
                           )
                         )
                       );
+                      if (_daysToDisplay == 2 && _weekdayCounter == 6) {
+                        break;
+                        /* If the user wants two days to display
+                         * and today is sunday then it only shows one day
+                         */
+                      }
                       if (_weekdayCounter == 6) {
                         _weekdayCounter = 0;
                       } else {

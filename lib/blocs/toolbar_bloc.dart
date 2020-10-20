@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
@@ -18,8 +19,8 @@ class ToolbarBloc extends BlocBase {
   /// If the confirm button in popup is clickable.
   bool _clickable = true;
 
-  final BehaviorSubject<List<IconButton>> _visibleButtons =
-      BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
+  final rx_dart.BehaviorSubject<List<IconButton>> _visibleButtons =
+      rx_dart.BehaviorSubject<List<IconButton>>.seeded(<IconButton>[]);
 
   /// The current visibility of the edit-button.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
@@ -275,7 +276,8 @@ class ToolbarBloc extends BlocBase {
                 : null,
             child: const Text(
               'Bekræft',
-              style: TextStyle(color: theme.GirafColors.white, fontSize: 20),
+              style: TextStyle(color: theme.GirafColors.white,
+                  fontSize: GirafFont.small),
             ),
             color: theme.GirafColors.dialogButton,
           )

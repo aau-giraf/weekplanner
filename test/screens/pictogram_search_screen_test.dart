@@ -3,7 +3,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
@@ -45,7 +45,7 @@ void main() {
     user = DisplayNameModel(id: '1',displayName: 'Anders and',role: 'Guardian');
 
     when(pictogramApi.getImage(pictogramModel.id))
-        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
     di.registerDependency<PictogramBloc>((_) => bloc);
@@ -71,7 +71,7 @@ void main() {
     const String query = 'Kat';
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-        (_) => BehaviorSubject<List<PictogramModel>>.seeded(
+        (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
     await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
@@ -98,7 +98,7 @@ void main() {
     const String query = 'Kat';
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-        (_) => BehaviorSubject<List<PictogramModel>>.seeded(
+        (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
     await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
@@ -121,7 +121,7 @@ void main() {
     const String query = 'Kat';
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-        (_) => BehaviorSubject<List<PictogramModel>>.seeded(
+        (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
     await tester.pumpWidget(
@@ -158,7 +158,7 @@ void main() {
     const String query = 'Kat';
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-            (_) => BehaviorSubject<List<PictogramModel>>.seeded(
+            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             null));
 
     await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));

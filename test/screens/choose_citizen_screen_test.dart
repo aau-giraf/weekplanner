@@ -7,7 +7,6 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -19,19 +18,19 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Observable<List<DisplayNameModel>> getCitizens(String id) {
+  Stream<List<DisplayNameModel>> getCitizens(String id) {
     final List<DisplayNameModel> output = <DisplayNameModel>[];
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
     output.add(DisplayNameModel(displayName: 'test1', role: 'test1', id: id));
-    return Observable<List<DisplayNameModel>>.just(output);
+    return Stream<List<DisplayNameModel>>.value(output);
   }
 }
 
