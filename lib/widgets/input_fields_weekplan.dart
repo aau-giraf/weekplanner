@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
+import 'package:weekplanner/style/custom_color.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 
 import 'giraf_button_widget.dart';
@@ -26,14 +28,13 @@ class InputFieldsWeekPlan extends StatefulWidget {
   /// This is the information from the current weekModel object
   final WeekModel weekModel;
 
-
   @override
   InputFieldsWeekPlanState createState() => InputFieldsWeekPlanState();
 }
 
 /// The state for the input fields
 class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
-  final TextStyle _style = const TextStyle(fontSize: 20);
+  final TextStyle _style = const TextStyle(fontSize: GirafFont.small);
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +61,8 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
               return TextFormField(
                 key: const Key('WeekTitleTextFieldKey'),
                 onChanged: widget.bloc.onTitleChanged.add,
-                initialValue: widget.weekModel == null
-                    ? ''
-                    : widget.weekModel.name,
+                initialValue:
+                    widget.weekModel == null ? '' : widget.weekModel.name,
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
@@ -153,7 +153,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Text('Vælg billede til ugeplan',
-                    style: _style.apply(color: Colors.red)),
+                    style: _style.apply(color: GirafColors.errorColor)),
               ),
               Expanded(child: Image.asset('assets/icons/galleryBig.png')),
             ],

@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
@@ -168,7 +169,8 @@ class UploadImageFromPhone extends StatelessWidget {
         ),
         const Text(
           'Tryk for at vælge billede',
-          style: TextStyle(color: theme.GirafColors.black, fontSize: 25),
+          style: TextStyle(color: theme.GirafColors.black,
+              fontSize: GirafFont.medium),
         )
       ],
     );
@@ -181,7 +183,8 @@ class UploadImageFromPhone extends StatelessWidget {
         ),
         child: Text(
           'Vælg billede fra galleri',
-          style: TextStyle(color: theme.GirafColors.black, fontSize: 25),
+          style: TextStyle(color: theme.GirafColors.black,
+              fontSize: GirafFont.medium),
           textAlign: TextAlign.center,
         ));
   }

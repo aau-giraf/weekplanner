@@ -6,7 +6,7 @@ import 'package:api_client/models/timer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -57,14 +57,14 @@ class MockScreen extends StatelessWidget {
 
 class MockTimerBloc extends Mock implements TimerBloc {
   @override
-  Observable<double> get timerProgressStream => _timerProgressStream.stream;
-  final BehaviorSubject<double> _timerProgressStream =
-      BehaviorSubject<double>.seeded(0.0);
+  Stream<double> get timerProgressStream => _timerProgressStream.stream;
+  final rx_dart.BehaviorSubject<double> _timerProgressStream =
+      rx_dart.BehaviorSubject<double>.seeded(0.0);
 
   @override
-  Observable<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
-  final BehaviorSubject<bool> _timerInstantiatedStream =
-      BehaviorSubject<bool>.seeded(false);
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  final rx_dart.BehaviorSubject<bool> _timerInstantiatedStream =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   @override
   void addTimer(Duration duration) {

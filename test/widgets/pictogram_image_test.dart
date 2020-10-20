@@ -5,7 +5,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -45,7 +45,7 @@ void main() {
     bloc = PictogramImageBloc(api);
 
     when(pictogramApi.getImage(pictogramModel.id))
-        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
     di.registerDependency<PictogramImageBloc>((_) => bloc);
