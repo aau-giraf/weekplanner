@@ -27,6 +27,7 @@ class PictogramBloc extends BlocBase {
       BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
+  PictogramModel _pictogramModel;
   Timer _debounceTimer;
 
   /// Initializes a search for [query].
@@ -63,6 +64,10 @@ class PictogramBloc extends BlocBase {
         _pictograms.add(_resultPlaceholder);
       });
     });
+  }
+
+  void load(PictogramModel pictogramModel) {
+    _pictogramModel = pictogramModel;
   }
 
   void setAltTitle(String title, String userId){

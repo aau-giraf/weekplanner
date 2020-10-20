@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -37,6 +38,7 @@ class ShowActivityScreen extends StatelessWidget {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
+    _pictogramBloc.load(_activityBloc.getActivity().pictograms.first);
   }
 
   final DisplayNameModel _girafUser;
@@ -48,8 +50,9 @@ class ShowActivityScreen extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final PictogramBloc _pictogramBloc = di.getDependency<PictogramBloc>();
 
-  TextEditingController tec = TextEditingController();
+  final TextEditingController tec = TextEditingController();
 
   /// Text style used for title.
   final TextStyle titleTextStyle = const TextStyle(fontSize:
@@ -699,7 +702,9 @@ class ShowActivityScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: 'Nyt piktogram navn',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50))),
+                    borderRadius: BorderRadius.circular(50),
+                    borderSide: const BorderSide(color: Colors.red, width: 50)
+                  )),
               ),
               ),
             ),
@@ -725,7 +730,8 @@ class ShowActivityScreen extends StatelessWidget {
                                   key: const
                                     Key('SavePictogramTextForCitizenBtn'),
                                   onPressed: (){
-                                    String altTitle = tec.text;
+                                    _pictogramBloc.setAltTitle(tec.text,
+                                        _girafUser.id);
 
                                   },
                                   text: 'Gem til borger',
