@@ -84,22 +84,18 @@ class PictogramImage extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Card(
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: Stack(
-            children: <Widget>[
-              FittedBox(
-                fit: BoxFit.contain,
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  child: StreamBuilder<Image>(
-                      stream: _bloc.image,
-                      builder:
-                        (BuildContext context, AsyncSnapshot<Image> snapshot) =>
-                      snapshot.data ?? _loading)
-                )
-              ),
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: Container(
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: Stack(
+                children: <Widget>[
+                   StreamBuilder<Image>(
+                    stream: _bloc.image,
+                    builder:
+                      (BuildContext context, AsyncSnapshot<Image> snapshot) =>
+                      snapshot.data ?? _loading),
               haveRights ? Positioned(
                 top: 5,
                 right: 5,
@@ -109,10 +105,9 @@ class PictogramImage extends StatelessWidget {
                   text: 'Slet',
                 ),
               ) : Container(),
-            ]
-          )
+          ])
         )
     )
-    );
+    )));
   }
 }
