@@ -49,6 +49,8 @@ class ShowActivityScreen extends StatelessWidget {
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
+  TextEditingController tec = TextEditingController();
+
   /// Text style used for title.
   final TextStyle titleTextStyle = const TextStyle(fontSize:
   GirafFont.activity_screen_buttons);
@@ -84,13 +86,15 @@ class ShowActivityScreen extends StatelessWidget {
         children: buildScreen(context, mode),
       );
     }
-    final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    //final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
         appBar: GirafAppBar(
             title: 'Aktivitet',
             appBarIcons: const <AppBarIcon, VoidCallback>{}),
-        body: keyboardVisible ? Container() : childContainer);
+        resizeToAvoidBottomInset: false,
+        body: childContainer
+    );
   }
 
   /// Builds the activity.
@@ -353,7 +357,7 @@ class ShowActivityScreen extends StatelessWidget {
                       );
                     }))),
       ),
-      buildButtonBar(), buildInputField()
+      buildButtonBar(), buildInputField(context)
     ]));
   }
 
@@ -672,8 +676,9 @@ class ShowActivityScreen extends StatelessWidget {
         ]);
   }
 
-  ///
-  Column buildInputField() {
+  /// Builds the input field and buttons for changing the description of
+  /// the pictogram for a specific citizen
+  Column buildInputField(BuildContext context) {
     return Column(
       children: <Widget>[
         Container(width: 600,
@@ -682,12 +687,15 @@ class ShowActivityScreen extends StatelessWidget {
               child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
               child: TextField(
+                controller: tec,
+                onChanged: (String newValue){
+                  print('Hello! $newValue');
+                },
                 style: const TextStyle(
                   fontSize: 28,
                   height: 1.3,
-                  color: Colors.black
+                  color: theme.GirafColors.black
                 ),
-                onChanged: null,
                 decoration: InputDecoration(
                   hintText: 'Nyt piktogram navn',
                   border: OutlineInputBorder(
@@ -715,8 +723,9 @@ class ShowActivityScreen extends StatelessWidget {
                                 padding: const EdgeInsets.only(bottom: 10.0),
                                 child: GirafButton(
                                   key: const
-                                      Key('SavePictogramTextForCitizenBtn'),
+                                    Key('SavePictogramTextForCitizenBtn'),
                                   onPressed: (){
+                                    String altTitle = tec.text;
 
                                   },
                                   text: 'Gem til borger',
