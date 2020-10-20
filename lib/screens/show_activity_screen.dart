@@ -192,15 +192,16 @@ class ShowActivityScreen extends StatelessWidget {
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
                     onTap: () async {
-                        await Routes.push(context, PictogramSearch())
-                          .then((Object object) {
+                      await Routes.push(context, PictogramSearch(
+                        user: _girafUser,))
+                        .then((Object object) {
                         if (object is PictogramModel) {
                           _activityBloc.load(_activity, _girafUser);
                           final PictogramModel newPictogram = object;
                           _activity.isChoiceBoard = true;
                           _activity.pictograms.add(newPictogram);
                           _activityBloc.update();
-                        }
+                          }
                       });
                     },
                     child: Column(children: <Widget>[
@@ -226,7 +227,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   }
                                 }),
                           )),
-                      Expanded(
+                      const Expanded(
                         child: AspectRatio(
                           aspectRatio: 1,
                               child: FittedBox(
