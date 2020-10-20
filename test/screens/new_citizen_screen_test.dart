@@ -11,7 +11,6 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -29,7 +28,7 @@ class MockAccountApi extends AccountApi {
   /// override of the register function, which returns an error
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
   @override
-  Observable<GirafUserModel> register(
+  Stream<GirafUserModel> register(
       String username, String password, String displayName,
       {@required int departmentId, @required Role role}) {
     final Map<String, dynamic> body = <String, dynamic>{
@@ -47,7 +46,7 @@ class MockAccountApi extends AccountApi {
           // ignore: lines_longer_than_80_chars
           'message: User already exists, details: A user with the given username already exists, errorKey: UserAlreadyExists',
           401);
-      final Observable<Response> mockResponse = Observable<Response>.fromFuture(
+      final Stream<Response> mockResponse = Stream<Response>.fromFuture(
           userAlreadyExistsResponse(mockHttpResponse));
       return mockResponse.map((Response res) => throw ApiException(res));
     } else if (username == 'defaultError') {
@@ -55,11 +54,11 @@ class MockAccountApi extends AccountApi {
           // ignore: lines_longer_than_80_chars
           'message: something went wrong, details: unexpected error, errorKey: Error',
           401);
-      final Observable<Response> mockResponse = Observable<Response>.fromFuture(
+      final Stream<Response> mockResponse = Stream<Response>.fromFuture(
           unexpectedErrorResponse(mockHttpResponse));
       return mockResponse.map((Response res) => throw ApiException(res));
     }
-    return Observable<GirafUserModel>.fromFuture(createMockUserModel(body));
+    return Stream<GirafUserModel>.fromFuture(createMockUserModel(body));
   }
 
   /// Creates the Error for the stream
@@ -100,29 +99,29 @@ class MockNewCitizenBloc extends NewCitizenBloc {
   Api api;
 
   @override
-  Observable<bool> get validDisplayNameStream =>
-      Observable<bool>.just(acceptAllInputs);
+  Stream<bool> get validDisplayNameStream =>
+      Stream<bool>.value(acceptAllInputs);
 
   @override
-  Observable<bool> get validUsernameStream =>
-      Observable<bool>.just(acceptAllInputs);
+  Stream<bool> get validUsernameStream =>
+      Stream<bool>.value(acceptAllInputs);
 
   @override
-  Observable<bool> get validPasswordStream =>
-      Observable<bool>.just(acceptAllInputs);
+  Stream<bool> get validPasswordStream =>
+      Stream<bool>.value(acceptAllInputs);
 
   @override
-  Observable<bool> get validPasswordVerificationStream =>
-      Observable<bool>.just(acceptAllInputs);
+  Stream<bool> get validPasswordVerificationStream =>
+      Stream<bool>.value(acceptAllInputs);
 
   @override
-  Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
+  Stream<bool> get allInputsAreValidStream => Stream<bool>.value(true);
 }
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(GirafUserModel(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(GirafUserModel(
         id: '1',
         department: 1,
         role: Role.Guardian,

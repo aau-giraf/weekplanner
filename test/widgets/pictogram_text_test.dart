@@ -12,7 +12,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -24,14 +23,14 @@ SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Observable<SettingsModel> getSettings(String id) {
-    return Observable<SettingsModel>.just(mockSettings);
+  Stream<SettingsModel> getSettings(String id) {
+    return Stream<SettingsModel>.value(mockSettings);
   }
 }
 

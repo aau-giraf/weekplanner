@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Creates a button in the ButtomAppBar.
@@ -34,7 +33,7 @@ class BottomAppBarButton extends StatelessWidget {
 
   /// A stream which tells whether the button should be enabled or disabled.
   /// If the stream emits a null value, isEnabled will be used instead.
-  final Observable<bool> isEnabledStream;
+  final Stream<bool> isEnabledStream;
 
   @override
   Widget build(BuildContext context) {

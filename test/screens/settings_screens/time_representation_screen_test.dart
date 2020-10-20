@@ -8,7 +8,6 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -19,13 +18,13 @@ import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxBu
 
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Observable<SettingsModel> getSettings(String id) {
+  Stream<SettingsModel> getSettings(String id) {
     final SettingsModel settingsModel = SettingsModel(
         orientation: null,
         completeMark: null,
@@ -35,7 +34,7 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
         nrOfDaysToDisplay: null,
         weekDayColors: null);
 
-    return Observable<SettingsModel>.just(settingsModel);
+    return Stream<SettingsModel>.value(settingsModel);
   }
 }
 
