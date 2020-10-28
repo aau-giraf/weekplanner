@@ -9,7 +9,6 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -20,16 +19,16 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_colorThemeButton.dart';
 
-class MockUserApi extends Mock implements UserApi {
+class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 
   @override
-  Observable<SettingsModel> getSettings(String id) {
-    return Observable<SettingsModel>.just(mockSettings);
+  Stream<SettingsModel> getSettings(String id) {
+    return Stream<SettingsModel>.value(mockSettings);
   }
 
   static List<WeekdayColorModel> createWeekDayColors() {
@@ -58,6 +57,7 @@ SettingsModel mockSettings;
 void main() {
   Api api;
   SettingsBloc settingsBloc;
+  NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
@@ -66,6 +66,7 @@ void main() {
     api = Api('any');
     api.user = MockUserApi();
     settingsBloc = SettingsBloc(api);
+    mockObserver = MockUserApi();
 
     mockSettings = SettingsModel(
         orientation: null,
@@ -79,7 +80,7 @@ void main() {
         lockTimerControl: false);
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings);
+      return Stream<SettingsModel>.value(mockSettings);
     });
 
     di.clearAll();
@@ -192,4 +193,23 @@ void main() {
             widget.text == 'Grå/Hvid'),
         findsOneWidget);
   });
+
+  testWidgets('Has color theme selection screen been popped',
+          (WidgetTester tester) async{
+        await tester.pumpWidget(MaterialApp(
+            home: ColorThemeSelectorScreen(user: user),
+            // ignore: always_specify_types
+            navigatorObservers: [mockObserver]
+        ));
+        verify(mockObserver.didPush(any, any));
+
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsColorThemeCheckMarkButton),
+            findsNWidgets(3));
+
+        await tester.pump();
+        await tester.tap(find.byType(SettingsColorThemeCheckMarkButton).first);
+        await tester.pump();
+        verify(mockObserver.didPop(any, any));
+      });
 }

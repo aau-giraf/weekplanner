@@ -187,11 +187,25 @@ class ShowActivityScreen extends StatelessWidget {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),  
                   child: Card(
                     key: const Key('AddChoiceBoardButtonKey'),
+                    child: InkWell(
+                    onTap: () async {
+                      await Routes.push(context, PictogramSearch(
+                        user: _girafUser,))
+                        .then((Object object) {
+                        if (object is PictogramModel) {
+                          _activityBloc.load(_activity, _girafUser);
+                          final PictogramModel newPictogram = object;
+                          _activity.isChoiceBoard = true;
+                          _activity.pictograms.add(newPictogram);
+                          _activityBloc.update();
+                          }
+                      });
+                    },
                     child: Column(children: <Widget>[
-                      // The title of the timer widget
+                      // The title of the choiceBoard widget
                       Center(
                           key: const Key('ChoiceboardTitleKey'),
                           child: Padding(
@@ -213,37 +227,21 @@ class ShowActivityScreen extends StatelessWidget {
                                   }
                                 }),
                           )),
-                      Expanded(
+                      const Expanded(
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child: IconButton(
-                            icon: AspectRatio(
-                              aspectRatio: 1,
                               child: FittedBox(
                                 child: Icon(
                                   Icons.add,
                                   color: theme.GirafColors.black,
                                 ),
-                              ),
                             ),
-                            onPressed: () async {
-                              await Routes.push(context, PictogramSearch())
-                                  .then((Object object) {
-                                if (object is PictogramModel) {
-                                  _activityBloc.load(_activity,_girafUser);
-                                  final PictogramModel newPictogram = object;
-                                  _activity.isChoiceBoard = true;
-                                  _activity.pictograms.add(newPictogram);
-                                  _activityBloc.update();
-                                }
-                              });
-                            },
-                          ),
                         ),
                       ),
                     ]),
                   ),
                 ),
+              ),
               ),
             ),
           );
@@ -276,36 +274,56 @@ class ShowActivityScreen extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(20),
                           child: Card(
-                            key: const Key('OverallTimerBoxKey'),
-                            child: Column(children: <Widget>[
+                            child: Material(
+                              child: InkWell(
+                                key: const Key('OverallTimerBoxKey'),
+                                onTap: () {!timerInitSnapshot.data ?
+                                //Build timer dialog on tap if timer has no data
+                                // ignore: unnecessary_statements
+                                  _buildTimerDialog(overallContext) : null;
+                                  },
+                                //hide splash/highlight color when timer exists
+                                highlightColor: timerInitSnapshot.data == null 
+                                  || !timerInitSnapshot.data ?
+                                  Theme.of(overallContext).highlightColor :
+                                  Colors.transparent,
+                                splashColor: timerInitSnapshot.data == null ||
+                                  !timerInitSnapshot.data ?
+                                  Theme.of(overallContext).splashColor :
+                                  Colors.transparent,
+                              child: Column(children: <Widget>[
                               // The title of the timer widget
                               Center(
-                                  key: const Key('TimerTitleKey'),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Timer',
-                                        style: titleTextStyle,
-                                        textAlign: TextAlign.center),
-                                  )),
+                                key: const Key('TimerTitleKey'),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Timer',
+                                      style: titleTextStyle,
+                                      textAlign: TextAlign.center),
+                                  )
+                                ),
                               Expanded(
-                                  // Depending on whether a timer is initiated,
-                                  // different widgets are shown.
-                                  child: (timerInitSnapshot.hasData
-                                          ? timerInitSnapshot.data
-                                          : false)
+                                // Depending on whether a timer is initiated,
+                                // different widgets are shown.
+                                child: (timerInitSnapshot.hasData
+                                        ? timerInitSnapshot.data
+                                        : false)
                                       ? _timerIsInitiatedWidget()
                                       : _timerIsNotInitiatedWidget(
-                                          overallContext, modeSnapshot)),
-                              _timerButtons(overallContext, timerInitSnapshot,
-                                  modeSnapshot)
-                            ]),
+                                        overallContext, modeSnapshot)),
+                                      _timerButtons(overallContext, 
+                                      timerInitSnapshot, modeSnapshot)
+                                ]
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                );
-              });
+                ),
+              );
+            });
         });
   }
 
@@ -397,14 +415,9 @@ class ShowActivityScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(0),
               child: Container(
-                  child: IconButton(
-                      key: const Key('AddTimerButtonKey'),
-                      icon: const ImageIcon(
-                          AssetImage('assets/icons/addTimerHighRes.png')),
-                      onPressed: () {
-                        _buildTimerDialog(overallContext);
-                      })),
-            ))
+                  child: const ImageIcon(AssetImage('assets/icons/addTimerHighRes.png')),
+                  key: const Key('AddTimerButtonKey'),                     
+            )))
         : Container(
             key: const Key('TimerNotInitCitizenKey'),
           );
@@ -630,14 +643,18 @@ class ShowActivityScreen extends StatelessWidget {
                       return const CircularProgressIndicator();
                     }
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                      return GirafButton(
-                          key: const Key('CancelStateToggleButton'),
+                      return Container(
+                        child: Row(children: <Widget>[
+                          Padding(
+                        padding: const EdgeInsets.only(right: 40.0),
+                        child: GirafButton(
+                        key: const Key('CancelStateToggleButton'),
                           onPressed: () {
                             _activityBloc.cancelActivity();
                             _activity.state = _activityBloc.getActivity().state;
                           },
                           text: activitySnapshot.data.state !=
-                                  ActivityState.Canceled
+                              ActivityState.Canceled
                               ? 'Aflys'
                               : 'Fortryd',
                           icon: activitySnapshot.data.state !=
@@ -647,7 +664,27 @@ class ShowActivityScreen extends StatelessWidget {
                                   color: theme.GirafColors.red)
                               : const ImageIcon(
                                   AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue));
+                                  color: theme.GirafColors.blue),
+                        )),
+                        GirafButton(
+                        key: const Key('CompleteStateToggleButton'),
+                          onPressed: () {
+                            _activityBloc.completeActivity();
+                          },
+                          isEnabled: activitySnapshot.data.state !=
+                              ActivityState.Canceled,
+                          width: 100,
+                          icon: activitySnapshot.data.state !=
+                                  ActivityState.Completed
+                              ? const ImageIcon(
+                                  AssetImage('assets/icons/accept.png'),
+                                  color: theme.GirafColors.green)
+                              : const ImageIcon(
+                                  AssetImage('assets/icons/undo.png'),
+                                  color: theme.GirafColors.blue)
+                        ),
+                    ]));
+
                     } else {
                       return GirafButton(
                           key: const Key('CompleteStateToggleButton'),

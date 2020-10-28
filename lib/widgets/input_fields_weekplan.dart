@@ -66,7 +66,8 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
                 keyboardType: TextInputType.text,
                 // To avoid emojis and other special characters
                 inputFormatters: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter(RegExp('[ -~\u00C0-\u00FF]'))
+                  FilteringTextInputFormatter.allow(
+                      RegExp('[ -~\u00C0-\u00FF]'))
                 ],
                 style: _style,
                 decoration: InputDecoration(
@@ -162,12 +163,14 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
     } else {
       return PictogramImage(
           pictogram: snapshot.data,
-          onPressed: () => _openPictogramSearch(context, widget.bloc));
+          onPressed: () => _openPictogramSearch(context, widget.bloc),
+          haveRights: false,
+      );
     }
   }
 
   void _openPictogramSearch(BuildContext context, NewWeekplanBloc bloc) {
-    Routes.push<PictogramModel>(context, PictogramSearch())
+    Routes.push<PictogramModel>(context, PictogramSearch(user: null,))
         .then((PictogramModel pictogram) {
       if (pictogram != null) {
         bloc.onThumbnailChanged.add(pictogram);
