@@ -88,8 +88,17 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         .map<Widget>((DisplayNameModel user) =>
         CitizenAvatar(
             displaynameModel: user,
-            onPressed:  () => Routes.push(context,
-                WeekplanSelectorScreen(user)))).toList();
+            onPressed:  () async {
+              bool repush = true;
+              while (repush) {
+                final bool result = await Routes.push<bool>(context,
+                    WeekplanSelectorScreen(user));
+                repush = result?? false;
+              }
+            }
+
+
+        )).toList();
 
     list.insert(0, FlatButton(
       onPressed: () async {

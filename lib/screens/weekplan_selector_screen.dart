@@ -334,9 +334,12 @@ class WeekplanSelectorScreen extends StatelessWidget {
         weekModel: _weekBloc.getMarkedWeekModels()[0],
         selectorBloc: _weekBloc,
       ),
-    ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
+    ).then((WeekModel newWeek) { _weekBloc.load(_user, true);
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
+    Routes.pop<bool>(context,true);
+    });
+
   }
 
   ///Builds dialog box to select where to copy weekplan or cancel
