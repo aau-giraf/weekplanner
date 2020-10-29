@@ -238,7 +238,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
           user: _user,
           existingWeekPlans: _weekBloc.weekNameModels,
         ),
-      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
+      ).then((WeekModel newWeekPlan) async => await _weekBloc.load(_user, true));
   }
 
   /// Handles on tap on a weekplan card
@@ -248,7 +248,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
       _weekBloc.toggleMarkedWeekModel(weekplan);
     } else {
       Routes.push(context, WeekplanScreen(weekplan, _user))
-          .then((_) => _weekBloc.load(_user, true));
+          .then((_) async => await _weekBloc.load(_user, true));
     }
   }
 
@@ -334,7 +334,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
         weekModel: _weekBloc.getMarkedWeekModels()[0],
         selectorBloc: _weekBloc,
       ),
-    ).then((WeekModel newWeek) { _weekBloc.load(_user, true);
+    ).then((WeekModel newWeek) async { await _weekBloc.load(_user, true);
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
     //Routes.pop<bool>(context,true);
