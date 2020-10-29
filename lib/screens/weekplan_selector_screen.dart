@@ -295,7 +295,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
-                      onPressed: () => _pushEditWeekPlan(context)),
+                      onPressed: () async => await _pushEditWeekPlan(context)),
                   BottomAppBarButton(
                       buttonText: 'Kopiér',
                       buttonKey: 'CopyWeekplanButton',
@@ -313,7 +313,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ));
   }
 
-  void _pushEditWeekPlan(BuildContext context) {
+  void _pushEditWeekPlan(BuildContext context) async {
     final int markedCount = _weekBloc.getNumberOfMarkedWeekModels();
     if (markedCount != 1) {
       final String description = markedCount > 1
@@ -327,7 +327,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
           });
       return;
     }
-    Routes.push<WeekModel>(
+    await Routes.push<WeekModel>(
       context,
       EditWeekPlanScreen(
         user: _user,
@@ -337,7 +337,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ).then((WeekModel newWeek) { _weekBloc.load(_user, true);
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
-    Routes.pop<bool>(context,true);
+    //Routes.pop<bool>(context,true);
     });
 
   }
