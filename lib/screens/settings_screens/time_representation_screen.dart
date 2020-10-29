@@ -41,25 +41,11 @@ class TimeRepresentationScreen extends StatelessWidget {
                         'Vælg Tidsrepræsentation', <SettingsSectionItem>[
                       SettingsCheckMarkButton(DefaultTimer.PieChart,
                           _settingsModel.defaultTimer, 'Standard', () {
-                        _settingsModel.defaultTimer = DefaultTimer.PieChart;
-                        _settingsBloc
-                            .updateSettings(_user.id, _settingsModel)
-                            .listen((SettingsModel response) {
-                          if (response != null) {
-                            Routes.pop(context);
-                          }
-                        });
+                            Routes.pop(context, DefaultTimer.PieChart);
                       }, DefaultTimer.PieChart),
                       SettingsCheckMarkButton(DefaultTimer.Hourglass,
                           _settingsModel.defaultTimer, 'Timeglas', () {
-                        _settingsModel.defaultTimer = DefaultTimer.Hourglass;
-                        _settingsBloc
-                            .updateSettings(_user.id, _settingsModel)
-                            .listen((SettingsModel response) {
-                          if (response != null) {
-                            Routes.pop(context);
-                          }
-                        });
+                            Routes.pop(context, DefaultTimer.Hourglass);
                       }, DefaultTimer.Hourglass),
                       SettingsCheckMarkButton(DefaultTimer.Numeric,
                           _settingsModel.defaultTimer, 'Nedtælling', () {
@@ -68,7 +54,7 @@ class TimeRepresentationScreen extends StatelessWidget {
                             .updateSettings(_user.id, _settingsModel)
                             .listen((SettingsModel response) {
                           if (response != null) {
-                            Routes.pop(context);
+                            Routes.pop(context, DefaultTimer.Numeric);
                           }
                         });
                       }, DefaultTimer.Numeric)
