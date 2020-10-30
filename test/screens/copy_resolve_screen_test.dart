@@ -74,15 +74,15 @@ void main() {
       return Stream<WeekModel>.value(weekplan1);
     });
 
-    when(api.week.get('testId', 2020, 3)).thenAnswer((_) {
+    when(api.week.get('testId', 2020, 50)).thenAnswer((_) {
       for (WeekNameModel week in weekNameModelList) {
-        final bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
+        final bool isEqual = week.weekYear == 2020 && week.weekNumber == 50;
         if (isEqual) {
           return Stream<WeekModel>.value(weekplan1Copy);
         }
       }
       return Stream<WeekModel>.value(WeekModel(
-          thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
+          thumbnail: null, name: '2020 - 50', weekYear: 2020, weekNumber: 50));
     });
 
     when(api.week
