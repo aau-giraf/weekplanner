@@ -2,7 +2,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// Bloc to get settings for a user
@@ -14,21 +14,21 @@ class SettingsBloc extends BlocBase {
   final Api _api;
 
   /// Settings stream
-  Observable<SettingsModel> get settings => _settings.stream;
+  Stream<SettingsModel> get settings => _settings.stream;
 
   /// Currently selected theme
   Stream<GirafTheme> get theme => _theme.stream;
 
   /// List of available themes
   Stream<List<GirafTheme>> get themeList => _themeList.stream;
-  final BehaviorSubject<List<GirafTheme>> _themeList =
-      BehaviorSubject<List<GirafTheme>>.seeded(<GirafTheme>[]);
+  final rx_dart.BehaviorSubject<List<GirafTheme>> _themeList =
+      rx_dart.BehaviorSubject<List<GirafTheme>>.seeded(<GirafTheme>[]);
 
-  final BehaviorSubject<GirafTheme> _theme =
-      BehaviorSubject<GirafTheme>.seeded(null);
+  final rx_dart.BehaviorSubject<GirafTheme> _theme =
+      rx_dart.BehaviorSubject<GirafTheme>.seeded(null);
 
-  final BehaviorSubject<SettingsModel> _settings =
-      BehaviorSubject<SettingsModel>();
+  final rx_dart.BehaviorSubject<SettingsModel> _settings =
+      rx_dart.BehaviorSubject<SettingsModel>();
 
   /// Load the settings for a user
   void loadSettings(DisplayNameModel user) {
@@ -38,7 +38,7 @@ class SettingsBloc extends BlocBase {
   }
 
   /// Update an existing settingsModel
-  Observable<SettingsModel> updateSettings(
+  Stream<SettingsModel> updateSettings(
       String userId, SettingsModel settingsModel) {
     return _api.user
         .updateSettings(userId, settingsModel);

@@ -11,7 +11,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
@@ -108,37 +108,43 @@ void main() {
     weekNameModelList.add(weekNameModel2);
 
     when(weekApi.getNames('testId')).thenAnswer(
-        (_) => BehaviorSubject<List<WeekNameModel>>.seeded(weekNameModelList));
+        (_) => rx_dart.BehaviorSubject<List<WeekNameModel>>
+            .seeded(weekNameModelList));
 
     when(weekApi.get(
             'testId', weekNameModel.weekYear, weekNameModel.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
+        .seeded(weekModel1));
 
     when(weekApi.get(
             'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(emptyWeekmodel));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
+        .seeded(emptyWeekmodel));
     when(weekApi.get(
             'testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel2));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
+        .seeded(weekModel2));
 
     when(weekApi.get('testId', weekModel1.weekYear, weekModel1.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(weekModel1));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
+        .seeded(weekModel1));
 
     when(weekApi.get(
             'testId', mockWeekModel.weekYear, mockWeekModel.weekNumber))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeekModel));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
+        .seeded(mockWeekModel));
 
     when(weekApi.update(
             'testId', weekModel1Copy.weekYear, weekModel1Copy.weekNumber, any))
         .thenAnswer((_) {
-      return BehaviorSubject<WeekModel>.seeded(weekModel1Copy);
+      return rx_dart.BehaviorSubject<WeekModel>.seeded(weekModel1Copy);
     });
 
     when(weekApi.delete(mockUser.id, any, any))
-        .thenAnswer((_) => BehaviorSubject<bool>.seeded(true));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
     when(pictogramApi.getImage(any))
-        .thenAnswer((_) => BehaviorSubject<Image>.seeded(sampleImage));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
   }
 
   //region setUp()
@@ -654,7 +660,8 @@ void main() {
     mockWeekNameModelList.add(weekNameModel2);
 
     when(weekApi.getNames('testId')).thenAnswer((_) =>
-        BehaviorSubject<List<WeekNameModel>>.seeded(mockWeekNameModelList));
+        rx_dart.BehaviorSubject<List<WeekNameModel>>
+            .seeded(mockWeekNameModelList));
 
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));

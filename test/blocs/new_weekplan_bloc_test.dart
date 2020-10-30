@@ -5,7 +5,6 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:async_test/async_test.dart';
@@ -40,12 +39,12 @@ void main() {
     api.week = MockWeekApi();
 
     when(api.week.update(any, any, any, any)).thenAnswer((_) {
-      return Observable<WeekModel>.just(mockWeek);
+      return Stream<WeekModel>.value(mockWeek);
     });
 
     when(api.week.getNames(any)).thenAnswer(
       (_) {
-        return Observable<List<WeekNameModel>>.just(<WeekNameModel>[
+        return Stream<List<WeekNameModel>>.value(<WeekNameModel>[
           WeekNameModel(
               name: mockWeek.name,
               weekNumber: mockWeek.weekNumber,
@@ -56,7 +55,7 @@ void main() {
 
     when(api.week.get(any, any, any)).thenAnswer(
       (_) {
-        return Observable<WeekModel>.just(mockWeek);
+        return Stream<WeekModel>.value(mockWeek);
       },
     );
 
@@ -92,7 +91,7 @@ void main() {
   test('Should save the new weekplan even when there are no existing', async(
     (DoneFn done) {
       when(api.week.getNames(any)).thenAnswer(
-          (_) => Observable<List<WeekNameModel>>.just(<WeekNameModel>[]));
+          (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
 
       mockWeekplanSelector = WeekplanSelectorBloc(api);
       mockWeekplanSelector.load(mockUser);
