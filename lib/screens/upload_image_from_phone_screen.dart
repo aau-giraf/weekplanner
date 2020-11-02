@@ -20,16 +20,22 @@ class UploadImageFromPhone extends StatelessWidget {
   UploadImageFromPhone({Key key}) : super(key: key);
 
   final UploadFromGalleryBloc _uploadFromGallery =
-      di.getDependency<UploadFromGalleryBloc>();
+  di.getDependency<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
-  double screenHeight;
-  double screenWidth;
+  dynamic screenHeight;
+  dynamic screenWidth;
+
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery.of(context).size.height;
-    screenWidth = MediaQuery.of(context).size.width;
-
+    screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Scaffold(
       appBar: GirafAppBar(title: 'Tilføj fra galleri'),
       body: StreamBuilder<bool>(
@@ -44,15 +50,11 @@ class UploadImageFromPhone extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     return ListView(
-
-/*      child: Column(
-
-        crossAxisAlignment: CrossAxisAlignment.stretch,*/
-        children: <Widget>[
-          _buildDefaultText(),
-          _buildImageBox(),
-          _buildInputField(context),
-        ],
+      children: <Widget>[
+        _buildDefaultText(),
+        _buildImageBox(),
+        _buildInputField(context),
+      ],
       //),
     );
   }
@@ -117,43 +119,22 @@ class UploadImageFromPhone extends StatelessWidget {
       ],
     );
   }
-/*
+
   Widget _buildImageBox() {
-    return Expanded(
-      child: Padding(
+    return Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(
-                width: 4,
-                color: theme.GirafColors.black,
-              ),
-              color: theme.GirafColors.white70,
-              borderRadius: _imageBorder),
-          child: _getAndDisplayPicture(),
-        ),
-      ),
-    );
-  }
-  */
-
-
-  Widget _buildImageBox() {
-    return  Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Container(
-
-      child: FlatButton(
-        onPressed: _uploadFromGallery.chooseImageFromGallery,
-        child: StreamBuilder<File>(
-            stream: _uploadFromGallery.file,
-            builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+          child: FlatButton(
+            onPressed: _uploadFromGallery.chooseImageFromGallery,
+            child: StreamBuilder<File>(
+                stream: _uploadFromGallery.file,
+                builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
                 snapshot.data != null
                     ? _displayImage(snapshot.data)
                     : _displayIfNoImage()),
 
-    ),
-      )
+          ),
+        )
     );
   }
 
@@ -175,16 +156,12 @@ class UploadImageFromPhone extends StatelessWidget {
       height: screenHeight / 3,
       width: screenWidth * 0.90,
       decoration: BoxDecoration(
-         // color: Colors.blue,
-
           border: Border.all(
             width: 4,
             color: theme.GirafColors.black,
           ),
           color: theme.GirafColors.white70,
           borderRadius: _imageBorder),
-
-    //  height: MediaQuery.of(context).size.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
