@@ -14,6 +14,7 @@ import '../style/custom_color.dart' as theme;
 
 /// Screen for uploading a [PictogramModel] to the server
 /// Generic type I used for mocks in testing
+// ignore: must_be_immutable
 class UploadImageFromPhone extends StatelessWidget {
   /// Default constructor
   UploadImageFromPhone({Key key}) : super(key: key);
