@@ -117,6 +117,24 @@ class WeekplanBloc extends BlocBase {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
   }
+/// Undo
+  void UndoMarkedActivities(){
+   final WeekModel week = _userWeek.value.week;
+    final DisplayNameModel user = _userWeek.value.user;
+
+    for (ActivityModel activity in _markedActivities.value) {
+      activity.state = ActivityState.Normal;
+    }
+
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel newWeek) {
+      _userWeek.add(UserWeekModel(newWeek, user));
+    });
+
+    clearMarkedActivities();
+
+  }
 
   /// Copies the marked activities to the given days
   void copyMarkedActivities(List<bool> days) {
