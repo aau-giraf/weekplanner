@@ -49,6 +49,9 @@ class WeekplanBloc extends BlocBase {
         .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
+    },  onError: (dynamic error) {
+      print('En fejl opstod under indlæsningen af ugen');
+      print(error.runtimeType.toString());
     });
   }
 
@@ -94,6 +97,9 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+    },  onError: (dynamic error) {
+      print('En fejl opstod under opdatering af aktivitet');
+      print(error.runtimeType.toString());
     });
 
     clearMarkedActivities();
@@ -115,6 +121,9 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+    },  onError: (dynamic error) {
+      print('En fejl opstod under opdatering af ugeplan');
+      print(error.runtimeType.toString());
     });
   }
 
@@ -147,6 +156,9 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+    },  onError: (dynamic error) {
+      print('En fejl opstod under kopiering af aktivitet');
+      print(error.runtimeType.toString());
     });
   }
 
@@ -192,6 +204,9 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+    },  onError: (dynamic error) {
+      print('En fejl opstod under tilføjelse af aktivitet');
+      print(error.runtimeType.toString());
     });
   }
 
@@ -233,6 +248,9 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+    },  onError: (dynamic error) {
+      print('En fejl opstod under insættelse af pictrogram');
+      print(error.runtimeType.toString());
     });
   }
 

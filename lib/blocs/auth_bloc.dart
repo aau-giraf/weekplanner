@@ -47,6 +47,9 @@ class AuthBloc extends BlocBase {
         loggedInUsername = username;
         setMode(WeekplanMode.guardian);
       }
+    },  onError: (dynamic error) {
+      print('En fejl opstod under brugerbekræftelse');
+      print(error.runtimeType.toString());
     });
   }
 
@@ -57,6 +60,9 @@ class AuthBloc extends BlocBase {
           _loginAttempt.add(status);
           setMode(WeekplanMode.guardian);
         }
+    },  onError: (dynamic error) {
+      print('En fejl opstod under brugerbekræftelse');
+      print(error.runtimeType.toString());
     });
   }
 
@@ -64,6 +70,9 @@ class AuthBloc extends BlocBase {
   void logout() {
     _api.account.logout().listen((dynamic _) {
       _loggedIn.add(false);
+    }, onError: (dynamic error) {
+      print('En fejl opstod da brugerloggede ud');
+      print(error.runtimeType.toString());
     });
   }
   /// Updates the mode of the weekplan

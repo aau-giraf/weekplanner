@@ -40,7 +40,10 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
         .listen((WeekModel weekModel) {
           final bool done = weekModel != null;
           callCompleter.complete(done);
-        });
+        },  onError: (dynamic error) {
+        print('En fejl opstod under kopiering af ugeplan');
+        print(error.runtimeType.toString());
+      });
 
       callFutures.add(callCompleter.future);
     }

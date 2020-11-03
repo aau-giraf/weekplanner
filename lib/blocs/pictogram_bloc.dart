@@ -62,6 +62,9 @@ class PictogramBloc extends BlocBase {
           .listen((List<PictogramModel> results) {
         _resultPlaceholder = results;
         _pictograms.add(_resultPlaceholder);
+      },  onError: (dynamic error) {
+        print('En fejl blev fundet under søgningen');
+        print(error.runtimeType.toString());
       });
     });
   }
