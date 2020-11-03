@@ -41,8 +41,8 @@ class Bootstrap {
       return WeekplanBloc(i.getDependency<Api>());
     });
 
-    di.registerDependency<WeekplansBloc>((Injector i) {
-      return WeekplansBloc(i.getDependency<Api>());
+    di.registerDependency<WeekplanSelectorBloc>((Injector i) {
+      return WeekplanSelectorBloc(i.getDependency<Api>());
     });
 
     di.registerDependency<ToolbarBloc>((_) {
@@ -103,6 +103,5 @@ class Bootstrap {
     di.registerDependency<CopyResolveBloc>((Injector i) {
       return CopyResolveBloc(i.getDependency<Api>());
     });
-
   }
 }
