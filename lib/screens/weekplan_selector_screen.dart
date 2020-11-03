@@ -1,6 +1,8 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
+import 'package:flappy_search_bar/search_bar_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -25,24 +27,40 @@ import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Screen to select a weekplan for a given user
-class WeekplanSelectorScreen extends StatelessWidget {
+class WeekplanSelectorScreen extends StatefulWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
   WeekplanSelectorScreen(this._user)
-      : _weekBloc = di.getDependency<WeekplansBloc>() {
+      : _weekBloc = di.getDependency<WeekplanSelectorBloc>() {
     _weekBloc.load(_user, true);
   }
 
-  final WeekplansBloc _weekBloc;
+  @override
+  _WeekplanSelectorScreenState createState() =>
+      _WeekplanSelectorScreenState(_user, _weekBloc);
+
+  final WeekplanSelectorBloc _weekBloc;
+  final DisplayNameModel _user;
+}
+
+@override
+class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
+  /// Constructor for weekplan selector screen.
+  /// Requires a user to load weekplans
+  _WeekplanSelectorScreenState(this._user, this._weekBloc);
+
+  final WeekplanSelectorBloc _weekBloc;
   final DisplayNameModel _user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
           title: _user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
             AppBarIcon.edit: () => _weekBloc.toggleEditMode(),
+            AppBarIcon.search: () => _weekBloc.toggleSearch(),
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
                 Routes.push(context, SettingsScreen(_user))
@@ -59,42 +77,80 @@ class WeekplanSelectorScreen extends StatelessWidget {
             }
           },
         ),
-        body: _buildWeekplanColumnview(context));
+        body: _buildWeekplanColumnview(
+            context, _weekBloc.weekModels, _weekBloc.oldWeekModels));
   }
 
-  Widget _buildWeekplanColumnview(BuildContext context) {
-    final Stream<List<WeekModel>> weekModels = _weekBloc.weekModels;
-    final Stream<List<WeekModel>> oldWeekModels = _weekBloc.oldWeekModels;
-
+  Widget _buildWeekplanColumnview(
+      BuildContext context, Stream<List<WeekModel>> weekModels,
+      [Stream<List<WeekModel>> oldWeekModels]) {
     return Container(
-        child: Column(children: <Widget>[
-      Expanded(flex: 5, child: _buildWeekplanGridview
-        (context, weekModels, true)),
+        child: ListView(children: <Widget>[
+      StreamBuilder<bool>(
+          stream: _weekBloc.searchMode,
+          initialData: false,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return Visibility(
+                visible: snapshot.data,
+                child: Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    // ignore: always_specify_types
+                    child: SearchBar(
+                        key: const Key('WeekplanSearchBar'),
+                        cancellationWidget: const Text('Annuller'),
+                        onCancelled: () => _weekBloc.toggleSearch(),
+                        searchBarStyle: const SearchBarStyle(),
+                        onSearch: _weekBloc.onSearch,
+                        onError: (Error error) {
+                          return const Center(
+                            child: Text(
+                              'Ingen ugeplaner fundet',
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        },
+                        onItemFound: (WeekModel weekplan, int index) {
+                          return ListTile(
+                            key: Key(index.toString()),
+                            // ignore: always_specify_types
+                            onTap: () => {
+                              _weekBloc.toggleSearch(),
+                              handleOnTapWeekPlan(false, weekplan, context)
+                            },
+                            title: Text(weekplan.name),
+                            subtitle: Text('Uge ' +
+                                weekplan.weekNumber.toString() +
+                                ', år ' +
+                                weekplan.weekYear.toString()),
+                          );
+                        })));
+          }),
       Container(
-        color: Colors.grey,
-        child:
-          const AutoSizeText(
-            'Overståede uger',
-            style: TextStyle(fontSize: GirafFont.small),
-            maxLines: 1,
-            minFontSize: 14,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-          ),
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: _buildWeekplanGridview(context, weekModels, true)),
+      Container(
+        color: theme.GirafColors.grey,
+        child: const AutoSizeText(
+          'Overståede uger',
+          style: TextStyle(fontSize: 18),
+          maxLines: 1,
+          minFontSize: 14,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+        ),
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.fromLTRB(10.0, 3, 0, 3),
       ),
-      Expanded(flex: 5, child:
-              _buildWeekplanGridview(context, oldWeekModels, false)),
-
+      Container(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: _buildWeekplanGridview(context, oldWeekModels, false)),
     ]));
   }
 
-  Widget _buildWeekplanGridview(
-      BuildContext context, Stream<List<WeekModel>> weekModels,
-      bool isUpcomingWeekplan) {
+  Widget _buildWeekplanGridview(BuildContext context,
+      Stream<List<WeekModel>> weekModels, bool isUpcomingWeekplan) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
-    if(!isUpcomingWeekplan) {
+    if (!isUpcomingWeekplan) {
       initial = <WeekModel>[];
     }
     return StreamBuilder<List<WeekModel>>(
@@ -106,28 +162,39 @@ class WeekplanSelectorScreen extends StatelessWidget {
               stream: _weekBloc.markedWeekModels,
               builder: (BuildContext context,
                   AsyncSnapshot<List<WeekModel>> markedWeeksSnapshot) {
-                return GridView.count(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    crossAxisCount:
-                            MediaQuery.of(context).orientation ==
-                                Orientation.landscape
-                                ? 4
-                                : 3,
-
-                    crossAxisSpacing:
-                        MediaQuery.of(context).size.width / 100 * 1.5,
-                    mainAxisSpacing:
-                        MediaQuery.of(context).size.width / 100 * 1.5,
-                    children: weekplansSnapshot.data.map((WeekModel weekplan) {
-                      return _buildWeekPlanSelector(
-                        context,
-                        weekplan,
-                        markedWeeksSnapshot.hasData &&
-                            markedWeeksSnapshot.data.contains(weekplan),
-                        isUpcomingWeekplan
-                      );
-                    }).toList());
+                return MediaQuery.of(context).orientation ==
+                        Orientation.portrait
+                    ? GridView.count(
+                        key: const Key('WeekplanList'),
+                        crossAxisCount: 3,
+                        crossAxisSpacing:
+                            MediaQuery.of(context).size.width / 100 * 1.5,
+                        mainAxisSpacing:
+                            MediaQuery.of(context).size.width / 100 * 1.5,
+                        children:
+                            weekplansSnapshot.data.map((WeekModel weekplan) {
+                          return _buildWeekPlanSelector(
+                              context,
+                              weekplan,
+                              markedWeeksSnapshot.hasData &&
+                                  markedWeeksSnapshot.data.contains(weekplan),
+                              isUpcomingWeekplan);
+                        }).toList(),
+                      )
+                    : ListView(
+                        key: const Key('WeekplanList'),
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        children:
+                            weekplansSnapshot.data.map((WeekModel weekplan) {
+                          return _buildWeekPlanSelector(
+                              context,
+                              weekplan,
+                              markedWeeksSnapshot.hasData &&
+                                  markedWeeksSnapshot.data.contains(weekplan),
+                              isUpcomingWeekplan);
+                        }).toList());
               });
         });
   }
@@ -145,11 +212,19 @@ class WeekplanSelectorScreen extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(color: theme.GirafColors.black, width: 15),
           ),
-          child: _buildWeekplanCard(context, weekplan, bloc, current,
-              ));
+          child: _buildWeekplanCard(
+            context,
+            weekplan,
+            bloc,
+            current,
+          ));
     } else {
-      return _buildWeekplanCard(context, weekplan, bloc, current,
-          );
+      return _buildWeekplanCard(
+        context,
+        weekplan,
+        bloc,
+        current,
+      );
     }
   }
 
@@ -164,10 +239,8 @@ class WeekplanSelectorScreen extends StatelessWidget {
               onTap: () =>
                   handleOnTap(context, weekplan, inEditModeSnapshot.data),
               child: ColorFiltered(
-                colorFilter:
-                    ColorFilter.mode(
-                        Colors.grey,
-                        current ? BlendMode.dst : BlendMode.modulate),
+                colorFilter: ColorFilter.mode(
+                    Colors.grey, current ? BlendMode.dst : BlendMode.modulate),
                 child: Card(
                     child: Column(
                   children: <Widget>[
@@ -202,17 +275,19 @@ class WeekplanSelectorScreen extends StatelessWidget {
                           : Expanded(child: LayoutBuilder(builder:
                               (BuildContext context,
                                   BoxConstraints constraints) {
-                              return AutoSizeText(
-                                'Uge: ${weekplan.weekNumber}      '
-                                'År: ${weekplan.weekYear}',
-                                key: const Key('weekYear'),
-                                style: const TextStyle(fontSize:
-                                GirafFont.small),
-                                maxLines: 1,
-                                minFontSize: 14,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              );
+                              return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: AutoSizeText(
+                                    'Uge: ${weekplan.weekNumber}      '
+                                    'År: ${weekplan.weekYear}',
+                                    key: const Key('weekYear'),
+                                    style: const TextStyle(fontSize: 18),
+                                    maxLines: 1,
+                                    minFontSize: 14,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                  ));
                             })),
                     )
                   ],
@@ -232,13 +307,13 @@ class WeekplanSelectorScreen extends StatelessWidget {
 
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(BuildContext context) {
-      Routes.push<WeekModel>(
-        context,
-        NewWeekplanScreen(
-          user: _user,
-          existingWeekPlans: _weekBloc.weekNameModels,
-        ),
-      ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
+    Routes.push<WeekModel>(
+      context,
+      NewWeekplanScreen(
+        user: _user,
+        existingWeekPlans: _weekBloc.weekNameModels,
+      ),
+    ).then((WeekModel newWeekPlan) => _weekBloc.load(_user, true));
   }
 
   /// Handles on tap on a weekplan card
