@@ -38,7 +38,7 @@ class MockPictogramApi extends Mock implements PictogramApi {}
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
-  WeekplanSelectorBloc bloc;
+  WeekplansBloc bloc;
   EditWeekplanBloc editBloc;
   Api api;
   MockWeekApi weekApi;
@@ -154,12 +154,12 @@ void main() {
     api.week = weekApi;
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
-    bloc = WeekplanSelectorBloc(api);
+    bloc = WeekplansBloc(api);
 
     setupApiCalls();
 
     di.clearAll();
-    di.registerDependency<WeekplanSelectorBloc>((_) => bloc);
+    di.registerDependency<WeekplansBloc>((_) => bloc);
     di.registerDependency<EditWeekplanBloc>((_) => editBloc);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
@@ -202,14 +202,11 @@ void main() {
     expect(find.text('Overståede uger'), findsOneWidget);
   });
 
-  testWidgets('Should have two Weekplan lists', (WidgetTester tester) async {
+  testWidgets('Should have two GridView Widgets', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
-    expect(
-        find.byKey(
-          const Key('WeekplanList'),
-        ),
+    expect(find.byWidgetPredicate((Widget widget) => widget is GridView),
         findsNWidgets(2));
   });
 
@@ -602,7 +599,7 @@ void main() {
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
-            widget is GirafNotifyDialog &&
+        widget is GirafNotifyDialog &&
             widget.title == 'Fejl' &&
             widget.description ==
                 'Der skal markeres præcis én uge for at kopiere'),
@@ -685,18 +682,5 @@ void main() {
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
     expect(find.byKey(Key(mockWeekModel.name)), findsOneWidget);
     expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
-  });
-
-  testWidgets('Does the searchbar become visible?',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: WeekplanSelectorScreen(mockUser),
-    ));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Søg'));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('WeekplanSearchBar')), findsOneWidget);
   });
 }

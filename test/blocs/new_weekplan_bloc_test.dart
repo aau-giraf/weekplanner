@@ -24,7 +24,7 @@ void main() {
       imageUrl: 'http://any.tld',
       imageHash: null);
   final DisplayNameModel mockUser =
-      DisplayNameModel(displayName: 'User', id: '1', role: null);
+  DisplayNameModel(displayName: 'User', id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,
@@ -32,7 +32,7 @@ void main() {
       weekNumber: 1,
       weekYear: 2019);
 
-  WeekplanSelectorBloc mockWeekplanSelector;
+  WeekplansBloc mockWeekplanSelector;
 
   setUp(() {
     api = Api('any');
@@ -59,11 +59,11 @@ void main() {
       },
     );
 
-    mockWeekplanSelector = WeekplanSelectorBloc(api);
+    mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
-    di.registerSingleton<WeekplanSelectorBloc>((_) => mockWeekplanSelector);
+    di.registerSingleton<WeekplansBloc>((_) => mockWeekplanSelector);
 
     bloc = NewWeekplanBloc(api);
     bloc.initialize(mockUser);
@@ -93,7 +93,7 @@ void main() {
       when(api.week.getNames(any)).thenAnswer(
           (_) => Stream<List<WeekNameModel>>.value(<WeekNameModel>[]));
 
-      mockWeekplanSelector = WeekplanSelectorBloc(api);
+      mockWeekplanSelector = WeekplansBloc(api);
       mockWeekplanSelector.load(mockUser);
 
       bloc.onTitleChanged.add('Ugeplan');
