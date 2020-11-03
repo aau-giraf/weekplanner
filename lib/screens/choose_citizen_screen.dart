@@ -140,12 +140,13 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     return list;
   }
 
-  void _pushWeekplanSelector(DisplayNameModel user) async{
+  Future<void> _pushWeekplanSelector(DisplayNameModel user) async{
       bool repush = true;
       while (repush) {
         final bool result = await Routes.push<bool>(context,
             WeekplanSelectorScreen(user));
         repush = result?? false;
       }
+      return;
   }
 }
