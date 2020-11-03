@@ -16,7 +16,7 @@ class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
   EditWeekplanBloc bloc;
-  WeekplanSelectorBloc mockWeekplanSelector;
+  WeekplansBloc mockWeekplanSelector;
   Api api;
   final PictogramModel mockThumbnail = PictogramModel(
       id: 1,
@@ -26,7 +26,7 @@ void main() {
       imageUrl: 'http://any.tld',
       imageHash: null);
   final DisplayNameModel mockUser =
-      DisplayNameModel(displayName: 'User', id: '1', role: null);
+  DisplayNameModel(displayName: 'User', id: '1', role: null);
   final WeekModel mockWeek = WeekModel(
       thumbnail: mockThumbnail,
       days: null,
@@ -62,11 +62,11 @@ void main() {
     when(api.week.delete(mockUser.id, mockWeek.weekYear, mockWeek.weekNumber))
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
 
-    mockWeekplanSelector = WeekplanSelectorBloc(api);
+    mockWeekplanSelector = WeekplansBloc(api);
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
-    di.registerSingleton<WeekplanSelectorBloc>((_) => mockWeekplanSelector);
+    di.registerSingleton<WeekplansBloc>((_) => mockWeekplanSelector);
 
     bloc = EditWeekplanBloc(api);
     bloc.initialize(mockUser);
