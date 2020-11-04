@@ -196,22 +196,23 @@ class ShowActivityScreen extends StatelessWidget {
                   child: Card(
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
-                    onTap: () async {
-                      await Routes.push(context, PictogramSearch(
-                        user: _girafUser,))
-                        .then((Object object) {
-                        if (object is PictogramModel) {
-                          _activityBloc.load(_activity, _girafUser);
-                          final PictogramModel newPictogram = object;
-                          _activity.isChoiceBoard = true;
-                          _activity.pictograms.add(newPictogram);
-                          _activityBloc.update();
-                          }
-                      });
-                    },
-                    child: Column(children: <Widget>[
+                      onTap: () async {
+                        await Routes.push(context, PictogramSearch(
+                          user: _girafUser,))
+                          .then((Object object) {
+                          if (object is PictogramModel) {
+                            _activityBloc.load(_activity, _girafUser);
+                            final PictogramModel newPictogram = object;
+                            _activity.isChoiceBoard = true;
+                            _activity.pictograms.add(newPictogram);
+                            _activityBloc.update();
+                            }
+                        });
+                      },
+                    child: Column(
+                        children: <Widget>[
                       // The title of the choiceBoard widget
-                      Center(
+                          Center(
                           key: const Key('ChoiceboardTitleKey'),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -231,25 +232,29 @@ class ShowActivityScreen extends StatelessWidget {
                                         textAlign: TextAlign.center);
                                   }
                                 }),
-                          )),
-                      const Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: IconButton(
-                            icon: const AspectRatio(
+                            )
+                          ),
+                          const Expanded(
+                            child: AspectRatio(
                               aspectRatio: 1,
-                              child: FittedBox(
-                                child: Icon(
-                                  Icons.add,
-                                  color: theme.GirafColors.black,
+                              child: IconButton(
+                                icon: const AspectRatio(
+                                  aspectRatio: 1,
+                                    child: FittedBox(
+                                      child: Icon(
+                                        Icons.add,
+                                        color: theme.GirafColors.black,
+                                      ),
+                                    ),
                                 ),
-                            ),
-                        ),
+                              )
+                            )
+                          )
+                        ]
                       ),
-                    ]),
+                    ),
                   ),
                 ),
-              ),
               ),
             ),
           );
