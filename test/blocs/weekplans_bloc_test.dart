@@ -283,19 +283,99 @@ void main() {
   // TODO: Test også at skiftet mellem den sidste uge i året og den næste uge (Både 52 og 53)
 
   test('Check if the correct week number is returned', async((DoneFn done) {
-   expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 14)), 42);
-   expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 7)), 41);
-   expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 28)), 53);
-   expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 31)), 53);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 3)), 53);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 4)), 1);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 20)), 24);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 21)), 25);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 20)), 24);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 26)), 51);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 27)), 52);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 2)), 52);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 3)), 1);
+
+    /* Semi-random checks */
+    expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 14)), 42);
+    expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 7)), 41);
+    expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 28)), 53);
+    expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 31)), 53);
+    expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 3)), 53);
+    expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 4)), 1);
+    expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 20)), 24);
+    expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 21)), 25);
+    expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 26)), 51);
+    expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 27)), 52);
+    expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 2)), 52);
+    expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 3)), 1);
+
+
+   /* Monday */
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 10)), 10);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 11)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 12)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 13)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 14)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 15)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 16)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 17)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 18)), 12);
+
+   /* Tuesday */
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 10)), 10);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 11)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 12)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 13)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 14)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 15)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 16)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 17)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 18)), 12);
+
+   /* Wednesday */
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 9)), 10);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 10)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 11)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 12)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 13)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 14)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 15)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 16)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 17)), 12);
+
+   /* Thursday */
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 8)), 10);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 9)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 10)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 11)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 12)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 13)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 14)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 15)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 16)), 12);
+
+   /* Friday */
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 14)), 10);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 15)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 16)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 17)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 18)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 19)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 20)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 21)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 22)), 12);
+
+   /* Saturday */
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 13)), 10);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 14)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 15)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 16)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 17)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 18)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 19)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 20)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 21)), 12);
+
+   /* Sunday */
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 12)), 10);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 13)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 14)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 15)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 16)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 17)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 18)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 19)), 11);
+   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 20)), 12);
+
 
    done();
   }));

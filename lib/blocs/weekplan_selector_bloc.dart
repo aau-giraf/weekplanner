@@ -144,50 +144,169 @@ class WeekplansBloc extends BlocBase {
 
   /// Returns the current week number
   int getCurrentWeekNum(){
-    // return getWeekNumberFromDate(DateTime.now());
+    return getWeekNumberFromDate(DateTime.now());
     
-    return getWeekNumberFromDate(DateTime(2021, 1, 17));
+    // return getWeekNumberFromDate(DateTime(2021, 1, 17));
   }
 
   /// Calculates the current week number from a given date
   int getWeekNumberFromDate(DateTime date) {
 
-    // TODO: Lav en switch der switcher på dayOfWeekJan1
+    // date = DateTime(2022, 10, 31);
+
+    // TODO: Hent datoer for de næste 10 år og tjek om det her virker
+
+    // WARNING: The if statement below is due to
+    // an inconsistency with Duration (At the time of writing, 2020/11/04).
+    // Once a year a day is duplicated, and at another time a day is skipped.
+    // Example:
+    // 2022/03/27 and 2022/03/28, both are day 86.
+    // 2022/10/30 and 2022/10/31, are day 302 and day 304
+    // This if statement resolves that inconsistency, but it may be fixed
+    // in the future.
+
+    final Duration hoursToToday = date.difference(DateTime(date.year, 1, 1));
+
+    int dayOfYear;
 
     // Find which day of the year the given date is.
     // Example: 14/10/2020 is day 288.
-    // Becomes zero indexed, the +1 is to make it one indexed
-    final int dayOfYear = date.difference(
-        DateTime(date.year, 1, 1)).inDays + 1;
+    // Becomes zero indexed, the +1 is to make it one indexed'
+    if (hoursToToday.inHours % 24 == 0) {
+      dayOfYear = hoursToToday.inDays + 1;
+    }
+    else {
+      dayOfYear = hoursToToday.inDays + 2;
+    }
 
     final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
 
-    switch (dayOfWeekJan1) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
+    int weekNum;
+
+    // final int dayOfWeek = date.weekday;
+    //
+    // switch (dayOfWeekJan1) {
+    // /* Jan 1 is in week 1 */
+    //   case 1:
+    //     if (dayOfWeek == 7) {
+    //       weekNum = ((dayOfYear - 1) / 7).floor() + 1;
+    //     }
+    //     else {
+    //       weekNum = ((dayOfYear) / 7).floor() + 1;
+    //     }
+    //     break;
+    //
+    //   case 2:
+    //     weekNum = ((dayOfYear) / 7).floor() + 1;
+    //     break;
+    //
+    //   case 3:
+    //     if (dayOfWeek == 1) {
+    //       weekNum = ((dayOfYear + 1) / 7).floor() + 1;
+    //     }
+    //     else {
+    //       weekNum = ((dayOfYear) / 7).floor() + 1;
+    //     }
+    //     break;
+    //
+    //   case 4:
+    //     switch (dayOfWeek) {
+    //       case 1: case 2:
+    //         weekNum = ((dayOfYear + 2) / 7).floor() + 1;
+    //         break;
+    //
+    //       case 3: case 4: case 5: case 6: case 7:
+    //         weekNum = ((dayOfYear) / 7).floor() + 1;
+    //         break;
+    //     }
+    //     break;
+    //
+    // /* Jan 1 is in the last week of the previous year */
+    //   case 5:
+    //     switch (dayOfWeek) {
+    //       case 1: case 2: case 3:
+    //         weekNum = ((dayOfYear) / 7).floor() + 1;
+    //         break;
+    //
+    //       case 4: case 5: case 6: case 7:
+    //         if (dayOfYear <= 3) {
+    //           weekNum = getLastYearLastWeek(date);
+    //         }
+    //         else {
+    //           weekNum = ((dayOfYear - 4) / 7).floor() + 1;
+    //         }
+    //         break;
+    //     }
+    //     break;
+    //
+    //   case 6:
+    //     switch (dayOfWeek) {
+    //       case 1: case 2: case 3: case 4:
+    //         weekNum = ((dayOfYear) / 7).floor() + 1;
+    //         break;
+    //
+    //       case 5: case 6: case 7:
+    //         if (dayOfYear <= 2) {
+    //           weekNum = getLastYearLastWeek(date);
+    //         }
+    //         else {
+    //           weekNum = ((dayOfYear - 3) / 7).floor() + 1;
+    //         }
+    //         break;
+    //     }
+    //     break;
+    //
+    //   case 7:
+    //     switch (dayOfWeek) {
+    //       case 1: case 2: case 3: case 4: case 5:
+    //         weekNum = ((dayOfYear) / 7).floor() + 1;
+    //         break;
+    //
+    //       case 6: case 7:
+    //         if (dayOfYear == 1) {
+    //           weekNum = getLastYearLastWeek(date);
+    //         }
+    //         else {
+    //           weekNum = ((dayOfYear - 2) / 7).floor() + 1;
+    //         }
+    //         break;
+    //     }
+    //     break;
+    // }
+
+
+    if (dayOfWeekJan1 <= 4) {
+      weekNum = ((dayOfYear + (dayOfWeekJan1 - 2)) / 7).floor() + 1;
+    }
+    else {
+      int n;
+      switch (dayOfWeekJan1) {
+        case 5:
+          n = 3;
+          break;
+        case 6:
+          n = 2;
+          break;
+        case 7:
+          n = 1;
+          break;
+      }
+
+      if (dayOfYear <= n) {
+        weekNum = getLastYearLastWeek(date);
+      }
+      else {
+        weekNum = ((dayOfYear + (dayOfWeekJan1 - 9)) / 7).floor() + 1;
+      }
     }
 
-    // Find the offset based on the ISO 8601 standard:
-    // Week 1 is the week with the year's first Thursday in it
-    final int weekOneOffset = dayOfWeekJan1 <= 4 ?
-      dayOfWeekJan1 - 1 :
-      dayOfWeekJan1 - 8;
-
-    final int weekNum = ((dayOfYear + weekOneOffset) / 7).floor() + 1;
-
-    print("Rough estimate: ${(dayOfYear + weekOneOffset) / 7}");
-    print("Offset: ${weekOneOffset}");
-    print("Januar: ${dayOfWeekJan1}");
-    print("Day of year: ${dayOfYear}");
-
-    print("Michelle: ${weekNum}");
-
     return weekNum;
+  }
+
+  int getLastYearLastWeek(DateTime date) {
+    final DateTime lastYearLastDay = DateTime(date.year - 1, 12, 31);
+
+    return getWeekNumberFromDate(lastYearLastDay);
   }
 
   /// Upcoming weekplans is sorted in ascending order
