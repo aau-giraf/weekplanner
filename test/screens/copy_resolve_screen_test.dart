@@ -1,5 +1,8 @@
+import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +23,23 @@ import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
+
+class MockUserApi extends Mock implements UserApi {
+  @override
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
+        GirafUserModel(id: 'testId', username: 'testName', role: Role.Guardian)
+    );
+  }
+
+  @override
+  Stream<List<DisplayNameModel>> getCitizens(String id) {
+    final List<DisplayNameModel> output = <DisplayNameModel>[];
+    output.add(DisplayNameModel(displayName: 'testName', role: 'testRole',
+        id: id));
+    return Stream<List<DisplayNameModel>>.value(output);
+  }
+}
 
 class MockCopyResolveBloc extends CopyResolveBloc {
   MockCopyResolveBloc(this.api) : super(api);
@@ -63,6 +83,7 @@ void main() {
 
     api = Api('any');
     api.week = MockWeekApi();
+    api.user = MockUserApi();
 
     when(api.week.update('testId', 2020, 3, any)).thenAnswer((
       Invocation answer) {
