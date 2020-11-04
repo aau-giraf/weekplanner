@@ -6,13 +6,12 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(GirafUserModel(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(GirafUserModel(
         id: '1',
         department: 1,
         role: Role.Guardian,
@@ -46,7 +45,7 @@ void main() {
         any, any, any,
         departmentId: anyNamed('departmentId'), role:  anyNamed('role')))
         .thenAnswer((_) {
-      return Observable<GirafUserModel>.just(user);
+      return Stream<GirafUserModel>.value(user);
     });
 
 

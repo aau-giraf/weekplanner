@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
@@ -24,8 +24,8 @@ class PictogramBloc extends BlocBase {
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
 
-  final BehaviorSubject<List<PictogramModel>> _pictograms =
-      BehaviorSubject<List<PictogramModel>>();
+  final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
+      rx_dart.BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
   PictogramModel _pictogramModel;
@@ -65,6 +65,13 @@ class PictogramBloc extends BlocBase {
         _pictograms.add(_resultPlaceholder);
       });
     });
+  }
+
+  ///
+  /// Deletes a chosen pictogram
+  ///
+  void delete(PictogramModel pm){
+    _api.pictogram.delete(pm.id);
   }
 
   @override

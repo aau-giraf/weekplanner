@@ -5,7 +5,7 @@ import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
@@ -16,7 +16,7 @@ class WeekplanBloc extends BlocBase {
   WeekplanBloc(this._api);
 
   /// The stream that emits the currently chosen weekplan
-  Observable<UserWeekModel> get userWeek => _userWeek.stream;
+  Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -34,13 +34,14 @@ class WeekplanBloc extends BlocBase {
 
   /// The API
   final Api _api;
-  final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<List<ActivityModel>> _markedActivities =
-      BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
-  final BehaviorSubject<UserWeekModel> _userWeek =
-      BehaviorSubject<UserWeekModel>();
-  final BehaviorSubject<bool> _activityPlaceholderVisible =
-      BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _editMode
+  = rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<List<ActivityModel>> _markedActivities =
+      rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+  final rx_dart.BehaviorSubject<UserWeekModel> _userWeek =
+      rx_dart.BehaviorSubject<UserWeekModel>();
+  final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Sink to set the currently chosen week
   void loadWeek(WeekModel week, DisplayNameModel user) {
@@ -235,7 +236,7 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  Observable<bool> _atLeastOneActivityMarked(){
+  Stream<bool> _atLeastOneActivityMarked(){
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
   }
