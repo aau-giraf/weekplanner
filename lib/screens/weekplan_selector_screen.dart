@@ -390,12 +390,12 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   Future<void> _pushEditWeekPlan(BuildContext context) async {
     final int markedCount = _weekBloc.getNumberOfMarkedWeekModels();
-    bool reload;
+    bool reload = false;
     _weekBloc.oldWeekModels.listen((List<WeekModel> list) {
       reload = list.length < 2;
     });
     _weekBloc.weekModels.listen((List<WeekModel> list) {
-      reload |= list.length < 2;
+      reload |= list.length < 3;
     });
     if (markedCount != 1) {
       final String description = markedCount > 1
