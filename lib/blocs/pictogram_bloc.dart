@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
