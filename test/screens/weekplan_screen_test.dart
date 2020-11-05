@@ -220,7 +220,7 @@ void main() {
     expect(find.byKey(const Key('isSelectedKey')), findsOneWidget);
   });
 
-  testWidgets('Cancel/Copy/Delete buttons not build when edit mode is false',
+  testWidgets('Cancel/Copy/Delete/Undo buttons not built when edit mode is false',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
@@ -245,9 +245,16 @@ void main() {
             widget.buttonText == 'Slet' &&
             widget.buttonKey == 'DeleteActivtiesButton'),
         findsNothing);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+        widget is BottomAppBarButton &&
+            widget.buttonText == 'Genoptag' &&
+            widget.buttonKey == 'GenoptagActivtiesButton'),
+        findsNothing);
   });
 
-  testWidgets('Cancel/Copy/Delete buttons are built when edit mode is true',
+  testWidgets('Cancel/Copy/Delete/Undo buttons are built when edit mode is true',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
@@ -276,10 +283,17 @@ void main() {
             widget.buttonText == 'Slet' &&
             widget.buttonKey == 'DeleteActivtiesButton'),
         findsOneWidget);
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+        widget is BottomAppBarButton &&
+            widget.buttonText == 'Genoptag' &&
+            widget.buttonKey == 'GenoptagActivtiesButton'),
+        findsOneWidget);
   });
 
   testWidgets(
-      'Cancel/Copy/Delete buttons do not open dialog when no activites are selected',
+      'Cancel/Copy/Delete/Undo buttons do not open dialog when no activites are selected',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
@@ -320,6 +334,17 @@ void main() {
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog && widget.title == 'Slet aktiviteter'),
+        findsNothing);
+
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    widget is BottomAppBarButton &&
+        widget.buttonText == 'Genoptag' &&
+        widget.buttonKey == 'GenoptagActivtiesButton'));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+        widget is GirafConfirmDialog && widget.title == 'Genoptag'),
         findsNothing);
   });
 
@@ -431,6 +456,33 @@ void main() {
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
   });
+/*
+  testWidgets('Resuming an activity works', (WidgetTester tester) async {
+    mockWeek.days[0].activities.add(mockActivities[0]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    await tester.tap(find.byType(ActivityCard).first);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
+        widget.buttonText == 'Genoptag' &&
+        widget.buttonKey == 'GenoptagActivtiesButton'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('g')), findsNothing);
+
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('g')), findsOneWidget);
+  });
+  */
 
   testWidgets('Copying an activity works', (WidgetTester tester) async {
     mockWeek.days[0].activities.add(mockActivities[0]);
@@ -737,7 +789,7 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Check mark completed activty mode works in Citizen Mode',
+  testWidgets('Check mark completed activity mode works in Citizen Mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Checkmark;
@@ -751,7 +803,7 @@ void main() {
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
-  testWidgets('Greyed out completed activty mode works in Citizen Mode',
+  testWidgets('Greyed out completed activity mode works in Citizen Mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.MovedRight;
@@ -768,7 +820,7 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Remove completed activty mode works in Citizen Mode',
+  testWidgets('Remove completed activity mode works in Citizen Mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Removed;
@@ -785,7 +837,7 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Not completede activites are not hidden',
+  testWidgets('Not completed activities are not hidden',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Removed;
@@ -802,7 +854,7 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Check mark completed activty mode works in Citizen Mode',
+  testWidgets('Check mark completed activity mode works in Citizen Mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockSettings.completeMark = CompleteMark.Checkmark;
@@ -820,6 +872,7 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivities[0].state = ActivityState.Canceled;
+
 
     // Added Cancelled activity with a cross
     mockWeek.days[0].activities.add(mockActivities[0]);

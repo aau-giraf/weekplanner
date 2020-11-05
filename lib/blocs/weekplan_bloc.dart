@@ -117,7 +117,8 @@ class WeekplanBloc extends BlocBase {
       _userWeek.add(UserWeekModel(newWeek, user));
     });
   }
-/// Undo
+/// Set the marked activities as resumed
+  // ignore: non_constant_identifier_names
   void UndoMarkedActivities(){
    final WeekModel week = _userWeek.value.week;
     final DisplayNameModel user = _userWeek.value.user;
