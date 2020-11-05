@@ -4,6 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -145,25 +146,20 @@ class WeekplansBloc extends BlocBase {
   /// Returns the current week number
   int getCurrentWeekNum(){
     return getWeekNumberFromDate(DateTime.now());
-    
-    // return getWeekNumberFromDate(DateTime(2021, 1, 17));
   }
 
   /// Calculates the current week number from a given date
   int getWeekNumberFromDate(DateTime date) {
 
-    // date = DateTime(2022, 10, 31);
-
-    // TODO: Hent datoer for de næste 10 år og tjek om det her virker
-
-    // WARNING: The if statement below is due to
+    // The if statement below is due to
     // an inconsistency with Duration (At the time of writing, 2020/11/04).
     // Once a year a day is duplicated, and at another time a day is skipped.
     // Example:
     // 2022/03/27 and 2022/03/28, both are day 86.
     // 2022/10/30 and 2022/10/31, are day 302 and day 304
-    // This if statement resolves that inconsistency, but it may be fixed
-    // in the future.
+    // This is a problem due to summer time.
+    // DateTime.utc is another possibility, but it just adds an hour to
+    // all days of the year.
 
     final Duration hoursToToday = date.difference(DateTime(date.year, 1, 1));
 
@@ -171,7 +167,8 @@ class WeekplansBloc extends BlocBase {
 
     // Find which day of the year the given date is.
     // Example: 14/10/2020 is day 288.
-    // Becomes zero indexed, the +1 is to make it one indexed'
+    // Is zero indexed, the "+ 1" is to make it one-indexed.
+    // The "+ 2" is in the case where a day is skipped, explained above.
     if (hoursToToday.inHours % 24 == 0) {
       dayOfYear = hoursToToday.inDays + 1;
     }
@@ -179,107 +176,59 @@ class WeekplansBloc extends BlocBase {
       dayOfYear = hoursToToday.inDays + 2;
     }
 
-    final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+    /*
+    If next year's first of January is a Tuesday, Wednesday, or a Thursday,
+    and the given date is in the last days of this year, it is in the
+    next year's week 1.
+     */
+    final int dayOfWeekJan1NextYear = DateTime(date.year + 1, 1, 1).weekday;
+
+    if (date.month == 12 &&
+        dayOfWeekJan1NextYear >= 2 &&
+        dayOfWeekJan1NextYear <= 4) {
+      switch (dayOfWeekJan1NextYear) {
+        case 2:
+          if (date.day == 31) {
+            return 1;
+          }
+          break;
+
+        case 3:
+          if (date.day == 31 || date.day == 30) {
+            return 1;
+          }
+          break;
+
+        case 4:
+          if (date.day == 31 || date.day == 30 || date.day == 29) {
+            return 1;
+          }
+          break;
+      }
+    }
 
     int weekNum;
+    final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
 
-    // final int dayOfWeek = date.weekday;
-    //
-    // switch (dayOfWeekJan1) {
-    // /* Jan 1 is in week 1 */
-    //   case 1:
-    //     if (dayOfWeek == 7) {
-    //       weekNum = ((dayOfYear - 1) / 7).floor() + 1;
-    //     }
-    //     else {
-    //       weekNum = ((dayOfYear) / 7).floor() + 1;
-    //     }
-    //     break;
-    //
-    //   case 2:
-    //     weekNum = ((dayOfYear) / 7).floor() + 1;
-    //     break;
-    //
-    //   case 3:
-    //     if (dayOfWeek == 1) {
-    //       weekNum = ((dayOfYear + 1) / 7).floor() + 1;
-    //     }
-    //     else {
-    //       weekNum = ((dayOfYear) / 7).floor() + 1;
-    //     }
-    //     break;
-    //
-    //   case 4:
-    //     switch (dayOfWeek) {
-    //       case 1: case 2:
-    //         weekNum = ((dayOfYear + 2) / 7).floor() + 1;
-    //         break;
-    //
-    //       case 3: case 4: case 5: case 6: case 7:
-    //         weekNum = ((dayOfYear) / 7).floor() + 1;
-    //         break;
-    //     }
-    //     break;
-    //
-    // /* Jan 1 is in the last week of the previous year */
-    //   case 5:
-    //     switch (dayOfWeek) {
-    //       case 1: case 2: case 3:
-    //         weekNum = ((dayOfYear) / 7).floor() + 1;
-    //         break;
-    //
-    //       case 4: case 5: case 6: case 7:
-    //         if (dayOfYear <= 3) {
-    //           weekNum = getLastYearLastWeek(date);
-    //         }
-    //         else {
-    //           weekNum = ((dayOfYear - 4) / 7).floor() + 1;
-    //         }
-    //         break;
-    //     }
-    //     break;
-    //
-    //   case 6:
-    //     switch (dayOfWeek) {
-    //       case 1: case 2: case 3: case 4:
-    //         weekNum = ((dayOfYear) / 7).floor() + 1;
-    //         break;
-    //
-    //       case 5: case 6: case 7:
-    //         if (dayOfYear <= 2) {
-    //           weekNum = getLastYearLastWeek(date);
-    //         }
-    //         else {
-    //           weekNum = ((dayOfYear - 3) / 7).floor() + 1;
-    //         }
-    //         break;
-    //     }
-    //     break;
-    //
-    //   case 7:
-    //     switch (dayOfWeek) {
-    //       case 1: case 2: case 3: case 4: case 5:
-    //         weekNum = ((dayOfYear) / 7).floor() + 1;
-    //         break;
-    //
-    //       case 6: case 7:
-    //         if (dayOfYear == 1) {
-    //           weekNum = getLastYearLastWeek(date);
-    //         }
-    //         else {
-    //           weekNum = ((dayOfYear - 2) / 7).floor() + 1;
-    //         }
-    //         break;
-    //     }
-    //     break;
-    // }
+    /*
+    An offset is added to the given date (dayOfYear), to ensure that we find
+    the correct week. The offset is based on the day of the week that
+    January 1st falls on, and the day of the week the given date is.
+    We then divide by seven to find the week number,
+    and add 1 because it is 0-indexed.
+     */
 
-
+    // If January 1st falls on a Monday, Tuesday, Wednesday, or Thursday:
     if (dayOfWeekJan1 <= 4) {
       weekNum = ((dayOfYear + (dayOfWeekJan1 - 2)) / 7).floor() + 1;
     }
+
+    // If January 1st falls on a Friday, Saturday, or a Sunday,
+    // check if the given date belongs to last year's last week:
     else {
       int n;
+
       switch (dayOfWeekJan1) {
         case 5:
           n = 3;
