@@ -394,8 +394,17 @@ void main() {
   test('Check if the correct week number is returned '
       'from list of dates', async((DoneFn done) {
 
-    final String csv = File('test/blocs/Dates_with_weeks_2020_to_2030_comma.csv')
-        .readAsStringSync();
+    // Because GitHub CI is stupid
+    File file = File('${Directory.current.path}/blocs/'
+        'Dates_with_weeks_2020_to_2030_comma.csv');
+
+    if (!file.existsSync()) {
+      file = File('${Directory.current.path}/test/blocs/'
+          'Dates_with_weeks_2020_to_2030_comma.csv');
+    }
+
+    final String csv = file.readAsStringSync();
+
 
     final List<List<dynamic>> datesAndWeeks = const CsvToListConverter()
         .convert(csv);
