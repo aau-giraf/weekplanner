@@ -6,7 +6,6 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
-import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:flutter_test/flutter_test.dart';
@@ -395,14 +394,16 @@ void main() {
   test('Check if the correct week number is returned '
       'from list of dates', async((DoneFn done) {
 
-    String csv = File('test/blocs/Dates_with_weeks_2020_to_2030_comma.csv').readAsStringSync();
+    final String csv = File('test/blocs/Dates_with_weeks_2020_to_2030_comma.csv')
+        .readAsStringSync();
 
-    List<List<dynamic>> datesAndWeeks = const CsvToListConverter().convert(csv);
+    final List<List<dynamic>> datesAndWeeks = const CsvToListConverter()
+        .convert(csv);
 
     for (int i = 0; i < datesAndWeeks.length; i++) {
 
-      DateTime date = DateTime.parse(datesAndWeeks[i][0]);
-      int week = datesAndWeeks[i][1];
+      final DateTime date = DateTime.parse(datesAndWeeks[i][0]);
+      final int week = datesAndWeeks[i][1];
 
       try {
         expect(bloc.getWeekNumberFromDate(date), week);

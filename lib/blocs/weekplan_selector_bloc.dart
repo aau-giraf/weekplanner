@@ -4,7 +4,6 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
