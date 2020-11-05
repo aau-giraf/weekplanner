@@ -412,7 +412,7 @@ void main() {
     for (int i = 0; i < datesAndWeeks.length; i++) {
 
       final DateTime date = DateTime.parse(datesAndWeeks[i][0]);
-      final int week = datesAndWeeks[i][1];
+      final int week = int.parse(datesAndWeeks[i][1].toString());
 
       try {
         expect(bloc.getWeekNumberFromDate(date), week);
