@@ -396,23 +396,24 @@ void main() {
 
     // Because GitHub CI is stupid
     File file = File('${Directory.current.path}/blocs/'
-        'Dates_with_weeks_2020_to_2030_comma.csv');
+        'Dates_with_weeks_2020_to_2030_semi.csv');
 
     if (!file.existsSync()) {
       file = File('${Directory.current.path}/test/blocs/'
-          'Dates_with_weeks_2020_to_2030_comma.csv');
+          'Dates_with_weeks_2020_to_2030_semi.csv');
     }
 
     final String csv = file.readAsStringSync();
 
+    CsvToListConverter converter = const CsvToListConverter(fieldDelimiter:
+    ',', textDelimiter: '"', textEndDelimiter: '"', eol: ';');
 
-    final List<List<dynamic>> datesAndWeeks = const CsvToListConverter()
-        .convert(csv);
+    final List<List<dynamic>> datesAndWeeks = converter.convert(csv);
 
     for (int i = 0; i < datesAndWeeks.length; i++) {
 
       final DateTime date = DateTime.parse(datesAndWeeks[i][0]);
-      final int week = int.parse(datesAndWeeks[i][1].toString());
+      final int week = datesAndWeeks[i][1];
 
       try {
         expect(bloc.getWeekNumberFromDate(date), week);
