@@ -60,9 +60,6 @@ class NewCitizenBloc extends BlocBase {
     resetBloc();
     _api.user.me().listen((GirafUserModel user) {
       _user = user;
-    },  onError: (dynamic error) {
-      print('En fejl opstod under opdatering af bruger');
-      print(error.runtimeType.toString());
     });
   }
 

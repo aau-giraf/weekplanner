@@ -59,9 +59,6 @@ class ActivityBloc extends BlocBase {
         .listen((ActivityModel activityModel) {
       _activityModel = activityModel;
       _activityModelStream.add(activityModel);
-    },  onError: (dynamic error) {
-      print('En fejl opstod under updatering af aktivitet');
-      print(error.runtimeType.toString());
     });
   }
 

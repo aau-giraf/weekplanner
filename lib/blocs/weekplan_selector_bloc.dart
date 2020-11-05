@@ -64,10 +64,7 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(_weekNameModelsList.add,
-        onError: (dynamic error) {
-      print('En fejl under tilføjelse af ugeplan');
-      print(error.runtimeType.toString());});
+    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
   }
 
   /// Gets all the information for a [Weekmodel].
@@ -234,19 +231,16 @@ class WeekplansBloc extends BlocBase {
       _api.week
           .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
           .listen((bool deleted) {
-          if (deleted) {
-        // Checks if its an old or upcoming weekplan
-        if(localWeekModels != null && localWeekModels.contains(weekModel)){
-          localWeekModels.remove(weekModel);
-          _weekModel.add(localWeekModels);
-        } else {
-          oldLocalWeekModels.remove(weekModel);
-          _oldWeekModel.add(oldLocalWeekModels);
+        if (deleted) {
+          // Checks if its an old or upcoming weekplan
+          if(localWeekModels != null && localWeekModels.contains(weekModel)){
+            localWeekModels.remove(weekModel);
+            _weekModel.add(localWeekModels);
+          } else {
+            oldLocalWeekModels.remove(weekModel);
+            _oldWeekModel.add(oldLocalWeekModels);
+          }
         }
-      }
-    },  onError: (dynamic error) {
-        print('En fejl opstod da en uge skulle slettes');
-        print(error.runtimeType.toString());
       });
     }
     clearMarkedWeekModels();
@@ -298,11 +292,7 @@ class WeekplansBloc extends BlocBase {
     final Completer<WeekModel> completer = Completer<WeekModel>();
     _api.week
         .get(_user.id, marked.weekYear, marked.weekNumber)
-        .listen((WeekModel weekModel) => completer.complete(weekModel),
-        onError: (dynamic error) {
-      print('En fejl opstod under opdatering af ugeplan');
-      print(error.runtimeType.toString());
-    });
+        .listen((WeekModel weekModel) => completer.complete(weekModel));
 
     return completer.future;
   }

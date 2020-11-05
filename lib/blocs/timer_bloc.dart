@@ -92,10 +92,7 @@ class TimerBloc extends BlocBase {
     _timerProgressNumeric.add(_durationToTimestamp(duration));
     _api.activity
         .update(_activityModel, _user.id)
-        .listen((ActivityModel activity) {},  onError: (dynamic error) {
-      print('En fejl opstod under tilføjelse af en timer');
-      print(error.runtimeType.toString());
-    });
+        .listen((ActivityModel activity) {});
   }
 
   List<int> _durationToTimestamp(Duration duration) {
@@ -208,10 +205,7 @@ class TimerBloc extends BlocBase {
 
       _api.activity
           .update(_activityModel, _user.id)
-          .listen((ActivityModel activity) {},  onError: (dynamic error) {
-        print('En fejl opstod da timeren skulle startes');
-        print(error.runtimeType.toString());
-      });
+          .listen((ActivityModel activity) {});
     }
   }
 
@@ -251,10 +245,7 @@ class TimerBloc extends BlocBase {
 
       _api.activity
           .update(_activityModel, _user.id)
-          .listen((ActivityModel activity) {},  onError: (dynamic error) {
-        print('En fejl opstod da timeren skulle pauses');
-        print(error.runtimeType.toString());
-      });
+          .listen((ActivityModel activity) {});
     }
   }
 
@@ -276,7 +267,7 @@ class TimerBloc extends BlocBase {
     }
   }
 
-  /// Deletes the timer from the activity and updates the database.
+  /// Deletes the timer from the activity and updates is database.
   void deleteTimer() {
     _resetCounterAndStopwatch();
     _activityModel.timer = null;
@@ -284,10 +275,7 @@ class TimerBloc extends BlocBase {
 
     _api.activity
         .update(_activityModel, _user.id)
-        .listen((ActivityModel activity) {},  onError: (dynamic error) {
-      print('En fejl opstod da timeren skulle fjernes');
-      print(error.runtimeType.toString());
-    });
+        .listen((ActivityModel activity) {});
   }
 
   void _resetCounterAndStopwatch() {

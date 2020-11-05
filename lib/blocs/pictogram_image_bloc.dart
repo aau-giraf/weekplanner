@@ -33,11 +33,7 @@ class PictogramImageBloc extends BlocBase {
   ///
   /// The [pictogram] model should contain an ID which the API can then fetch.
   void load(PictogramModel pictogram) {
-    _api.pictogram.getImage(pictogram.id).listen(_image.add,
-        onError: (dynamic error) {
-      print('En fejl opstod under indlæsningen af pictogram');
-      print(error.runtimeType.toString());
-    });
+    _api.pictogram.getImage(pictogram.id).listen(_image.add);
   }
 
   /// Initialize loading of a specific [PictogramModel] from its [id].

@@ -437,11 +437,12 @@ class WeekplanDayColumn extends StatelessWidget {
             return WeekplannerChoiceboardSelector(
                 activities[index], _activityBloc, user, weekplanBloc, week);
           }).then((Object object) => weekplanBloc.loadWeek(week, user));
-    } else if (!(activities[index].state == ActivityState.Completed &&
-        isCitizen)) {
+    }
+    else if(!inEditMode){
       Routes.push(context, ShowActivityScreen(activities[index], user))
           .then((Object object) => weekplanBloc.loadWeek(week, user));
     }
+
   }
 
   /// Builds activity card with a status icon if it is marked
