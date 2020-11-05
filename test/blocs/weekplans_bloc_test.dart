@@ -405,8 +405,9 @@ void main() {
 
     final String csv = file.readAsStringSync();
 
-    CsvToListConverter converter = const CsvToListConverter(fieldDelimiter:
-    ',', textDelimiter: '"', textEndDelimiter: '"', eol: ';');
+    const CsvToListConverter converter = CsvToListConverter(
+        fieldDelimiter: ',', textDelimiter: '"',
+        textEndDelimiter: '"', eol: ';');
 
     final List<List<dynamic>> datesAndWeeks = converter.convert(csv);
 
