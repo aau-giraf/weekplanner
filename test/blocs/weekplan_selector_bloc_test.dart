@@ -12,7 +12,7 @@ import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 class MockWeekApi extends Mock implements WeekApi {}
 
 void main() {
-  WeekplanSelectorBloc bloc;
+  WeekplansBloc bloc;
   Api api;
   MockWeekApi weekApi;
 
@@ -74,7 +74,7 @@ void main() {
     api = Api('any');
     weekApi = MockWeekApi();
     api.week = weekApi;
-    bloc = WeekplanSelectorBloc(api);
+    bloc = WeekplansBloc(api);
 
     setupApiCalls();
   });
