@@ -34,6 +34,9 @@ class SettingsBloc extends BlocBase {
   void loadSettings(DisplayNameModel user) {
     _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
       _settings.add(settingsModel);
+    },  onError: (dynamic error) {
+      print('En fejl opstod under indlæsningen af instillinger');
+      print(error.runtimeType.toString());
     });
   }
 
