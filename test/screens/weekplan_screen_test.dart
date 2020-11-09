@@ -456,8 +456,11 @@ void main() {
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
   });
-/*
+
+  ///Testing the undo button works "Genoptag" - knap
   testWidgets('Resuming an activity works', (WidgetTester tester) async {
+    //Create a cancel activity
+    mockActivities[0].state = ActivityState.Canceled;
     mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
@@ -475,16 +478,18 @@ void main() {
         widget.buttonKey == 'GenoptagActivtiesButton'));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('g')), findsNothing);
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+
 
     await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
     await tester.pumpAndSettle();
+    expect(find.byKey(const Key('IconCanceled')), findsNothing);
 
-    expect(find.byKey(const Key('g')), findsOneWidget);
   });
-  */
+
 
   testWidgets('Copying an activity works', (WidgetTester tester) async {
+
     mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
