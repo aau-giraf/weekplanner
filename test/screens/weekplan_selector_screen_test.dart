@@ -35,7 +35,6 @@ import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../test_image.dart';
-import 'edit_weekplan_screen_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
