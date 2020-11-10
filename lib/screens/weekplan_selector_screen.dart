@@ -107,7 +107,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               Expanded(
                 flex: 1,
                 child: IconButton(
+                  key: const Key('HideOldWeeks'),
                   padding: const EdgeInsets.all(0.0),
+                  alignment: Alignment.centerRight,
                   color: Colors.black,
                   icon: const Icon(Icons.remove, size: 50),
                   onPressed: (){
@@ -118,7 +120,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                   : Expanded(
                 flex: 1,
                 child: IconButton(
+                  key: const Key('ShowOldWeeks'),
                   padding: const EdgeInsets.all(0.0),
+                  alignment: Alignment.centerRight,
                   color: Colors.black,
                   icon: const Icon(Icons.add, size: 50),
                   onPressed: (){
