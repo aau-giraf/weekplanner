@@ -79,6 +79,15 @@ class ActivityBloc extends BlocBase {
     });
   }
 
+  String getAlternateName(){
+    String name;
+    _api.alternateName.get(_user.id, _activityModel.pictograms.first.id)
+        .listen((AlternateNameModel an) {
+          name = an.name; });
+
+    return name;
+  }
+
   @override
   void dispose() {
     _activityModelStream.close();

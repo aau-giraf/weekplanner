@@ -1,3 +1,4 @@
+import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -38,6 +39,7 @@ class ShowActivityScreen extends StatelessWidget {
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
   }
+  final Api _api = di.getDependency<Api>();
 
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
@@ -725,75 +727,71 @@ class ShowActivityScreen extends StatelessWidget {
   /// Builds the input field and buttons for changing the description of
   /// the pictogram for a specific citizen
   Column buildInputField(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(width: 600,
-          child: Row(children: <Widget>[
-            Expanded(
-              child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
-              child: TextField(
-                controller: tec,
-                style: const TextStyle(
-                  fontSize: 28,
-                  height: 1.3,
-                  color: theme.GirafColors.black
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Nyt piktogram navn',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  )),
-              ),
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                StreamBuilder<WeekplanMode>(
-                    stream: _authBloc.mode,
+      return Column(
+        children: <Widget>[
+          StreamBuilder<WeekplanMode>(
+              stream: _authBloc.mode,
+              builder: (BuildContext context,
+                  AsyncSnapshot<WeekplanMode> weekplanModeSnapshot){
+                return StreamBuilder<ActivityModel>(
+                    stream: _activityBloc.activityModelStream,
                     builder: (BuildContext context,
-                        AsyncSnapshot<WeekplanMode> weekplanModeSnapshot){
-                      return StreamBuilder<ActivityModel>(
-                          stream: _activityBloc.activityModelStream,
-                          builder: (BuildContext context,
-                          AsyncSnapshot<ActivityModel> activitySnapshot){
-                          if (activitySnapshot.data == null) {
-                            return const CircularProgressIndicator();
-                          }
-                          else{
-                            return Container(
-                              child: Column(children: <Widget>[
+                        AsyncSnapshot<ActivityModel> activitySnapshot){
+                      if (activitySnapshot.data == null) {
+                        return const CircularProgressIndicator();
+                      }
+                      if(weekplanModeSnapshot.data == WeekplanMode.guardian){
+                        return Container(
+                            child: Column(children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 10.0),
+                                  padding: const
+                                  EdgeInsets.fromLTRB(0, 30, 20, 30),
+                                  child: TextField(
+                                    controller: tec,
+                                    style: const TextStyle(
+                                        fontSize: 28,
+                                        height: 1.3,
+                                        color: theme.GirafColors.black
+                                    ),
+                                    decoration: InputDecoration(
+                                        hintText: _activityBloc.getAlternateName(),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(50),
+                                        )),
+                                  ),
+                                ),
+                              Padding(
+                                padding: const
+                                EdgeInsets.only(bottom: 10.0),
                                 child: GirafButton(
                                   key: const
-                                    Key('SavePictogramTextForCitizenBtn'),
+                                  Key('SavePictogramTextForCitizenBtn'),
                                   onPressed: (){
-                                    _activityBloc.setAlternateName(tec.text);
-                                  },
+                                    _activityBloc
+                                        .setAlternateName(tec.text);
+                                    },
                                   text: 'Gem til borger',
                                 ),
                               ),
-                                GirafButton(
-                                  key: const
-                                  Key('GetStandardPictogramTextForCitizenBtn'),
-                                  onPressed: (){
+                              GirafButton(
+                                key: const
+                                Key('GetStandardPictogramTextForCitizenBtn')
+                                ,onPressed: (){
 
-                                  },
-                                  text: 'Hent standard',
-                                )
-                              ]
+                              },
+                                text: 'Hent standard',
+                              )
+                            ]
                             ));
-                          }
-                        });
                       }
-                ),
-              ],
-            )
-          ]
-        ))
-      ]
-    );
+                      else{
+                        return Container();
+                      }
+                    });
+              }),
+            ],
+          );
   }
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
