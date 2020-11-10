@@ -295,7 +295,7 @@ class WeekplanSelectorScreen extends StatelessWidget {
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
-                      onPressed: () => _pushEditWeekPlan(context)),
+                      onPressed: () async => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
                       buttonText: 'Kopiér',
                       buttonKey: 'CopyWeekplanButton',
@@ -313,8 +313,15 @@ class WeekplanSelectorScreen extends StatelessWidget {
     ));
   }
 
-  void _pushEditWeekPlan(BuildContext context) {
+  Future<void> _pushEditWeekPlan(BuildContext context) async {
     final int markedCount = _weekBloc.getNumberOfMarkedWeekModels();
+    bool reload = false;
+    _weekBloc.oldWeekModels.listen((List<WeekModel> list) {
+      reload = list.length < 2;
+    });
+    _weekBloc.weekModels.listen((List<WeekModel> list) {
+      reload |= list.length < 3;
+    });
     if (markedCount != 1) {
       final String description = markedCount > 1
           ? 'Der kan kun redigeres en uge ad gangen'
@@ -327,16 +334,20 @@ class WeekplanSelectorScreen extends StatelessWidget {
           });
       return;
     }
-    Routes.push<WeekModel>(
+    await Routes.push<WeekModel>(
       context,
       EditWeekPlanScreen(
         user: _user,
         weekModel: _weekBloc.getMarkedWeekModels()[0],
         selectorBloc: _weekBloc,
       ),
-    ).then((WeekModel newWeek) => _weekBloc.load(_user, true));
+    ).then((WeekModel newWeek) { _weekBloc.load(_user, true);
     _weekBloc.toggleEditMode();
     _weekBloc.clearMarkedWeekModels();
+    if(reload) {
+      Routes.pop<bool>(context, true);
+    }
+    });
   }
 
   ///Builds dialog box to select where to copy weekplan or cancel
