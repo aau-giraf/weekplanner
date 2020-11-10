@@ -124,7 +124,7 @@ class WeekplanBloc extends BlocBase {
     final DisplayNameModel user = _userWeek.value.user;
 
     for (ActivityModel activity in _markedActivities.value) {
-      activity.state = ActivityState.Active;
+      activity.state = ActivityState.Normal;
     }
 
     _api.week
