@@ -745,15 +745,19 @@ void main() {
   });
 
   testWidgets(
-      'Test if Hide old weeks button works', (WidgetTester tester) async {
+      'Test if hide/show old weeks button works', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    _WeekplanSelecterScreenState.showOldWeeks = true;
     await tester.pump();
+    expect(find.byKey(const Key('HideOldWeeks')), findsOneWidget);
     await tester.tap(find.byKey(const Key('HideOldWeeks')));
     await tester.pumpAndSettle();
-
     expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
-    expect(showOldWeeks, false);
+    expect(find.byKey(const Key('HideOldWeeks')), findsNothing);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('HideOldWeeks')), findsOneWidget);
+    expect(find.byKey(const Key('ShowOldWeeks')), findsNothing);
   });
 }

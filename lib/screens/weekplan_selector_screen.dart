@@ -43,7 +43,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
  class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   bool showOldWeeks = true;
 
- void _ToggleOldWeeks() {
+ void _toggleOldWeeks() {
    print('Old weeks ' + showOldWeeks.toString());
 
    setState(() {
@@ -114,7 +114,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
                   color: Colors.black,
                   icon: const Icon(Icons.remove, size: 50),
                   onPressed: (){
-                    _ToggleOldWeeks();
+                    _toggleOldWeeks();
                   },
                 ),
               )
@@ -127,7 +127,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
                   color: Colors.black,
                   icon: const Icon(Icons.add, size: 50),
                   onPressed: (){
-                    _ToggleOldWeeks();
+                    _toggleOldWeeks();
                   },
                 ),
               ),
@@ -135,7 +135,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
           ),
         ),
         onTap: (){
-          _ToggleOldWeeks();
+          _toggleOldWeeks();
     },
       ),
 
