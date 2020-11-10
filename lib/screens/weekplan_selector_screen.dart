@@ -40,7 +40,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
   _WeekplanSelectorScreenState createState() => _WeekplanSelectorScreenState();
 }
 
-class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
+ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   bool showOldWeeks = true;
 
  void _ToggleOldWeeks() {
@@ -80,7 +80,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   Widget _buildWeekplanColumnview(BuildContext context) {
     final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
-    final Stream<List<WeekModel>> oldWeekModels = widget._weekBloc.oldWeekModels;
+    final Stream<List<WeekModel>> oldWeekModels
+      = widget._weekBloc.oldWeekModels;
 
 
     return Container(
@@ -294,7 +295,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           user: widget._user,
           existingWeekPlans: widget._weekBloc.weekNameModels,
         ),
-      ).then((WeekModel newWeekPlan) => widget._weekBloc.load(widget._user, true));
+      ).then((WeekModel newWeekPlan) =>
+          widget._weekBloc.load(widget._user, true));
   }
 
   /// Handles on tap on a weekplan card
@@ -417,7 +419,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             option1Text: 'Anden borger',
             option1OnPressed: () {
               widget._weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
-                Routes.push(context, CopyToCitizensScreen(weekmodel, widget._user));
+                Routes.push(context,
+                    CopyToCitizensScreen(weekmodel, widget._user));
               });
             },
             option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),

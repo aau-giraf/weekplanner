@@ -35,6 +35,7 @@ import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../test_image.dart';
+import 'edit_weekplan_screen_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -741,5 +742,18 @@ void main() {
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
     expect(find.byKey(Key(mockWeekModel.name)), findsOneWidget);
     expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
+  });
+
+  testWidgets(
+      'Test if Hide old weeks button works', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    _WeekplanSelecterScreenState.showOldWeeks = true;
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('HideOldWeeks')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    expect(showOldWeeks, false);
   });
 }
