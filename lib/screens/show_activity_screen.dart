@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -770,8 +769,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   key: const
                                     Key('SavePictogramTextForCitizenBtn'),
                                   onPressed: (){
-                                    //_activity.pictograms.first
-
+                                    _activityBloc.setAlternateName(tec.text);
                                   },
                                   text: 'Gem til borger',
                                 ),

@@ -4,7 +4,6 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
-import 'package:tuple/tuple.dart';
 
 /// For how long the debouncer should wait
 const int _debounceTime = 250;
@@ -28,7 +27,6 @@ class PictogramBloc extends BlocBase {
       rx_dart.BehaviorSubject<List<PictogramModel>>();
 
   final Api _api;
-  PictogramModel _pictogramModel;
   Timer _debounceTimer;
 
   /// Initializes a search for [query].

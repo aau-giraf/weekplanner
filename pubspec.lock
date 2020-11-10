@@ -5,8 +5,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: develop
-      resolved-ref: "0f76fdbd5f6525b37f578fef8c26fef028e7ec2b"
+      ref: "feature/76"
+      resolved-ref: acab4707f366df224405b9d5cd7a34c165922ceb
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"
@@ -446,7 +446,7 @@ packages:
     source: hosted
     version: "0.2.17"
   tuple:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: tuple
       url: "https://pub.dartlang.org"

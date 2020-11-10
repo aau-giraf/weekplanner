@@ -5,6 +5,7 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/alternate_name_model.dart';
 
 /// Logic for activities
 class ActivityBloc extends BlocBase {
@@ -22,6 +23,7 @@ class ActivityBloc extends BlocBase {
   final Api _api;
   ActivityModel _activityModel;
   DisplayNameModel _user;
+  AlternateNameModel _alternateName;
 
   /// Loads the ActivityModel and the GirafUser.
   void load(ActivityModel activityModel, DisplayNameModel user) {
@@ -59,6 +61,21 @@ class ActivityBloc extends BlocBase {
         .listen((ActivityModel activityModel) {
       _activityModel = activityModel;
       _activityModelStream.add(activityModel);
+    });
+  }
+
+  /// Set a new alternate Name
+  void setAlternateName(String name){
+    _alternateName = AlternateNameModel(name: name, citizen: _user.id,
+        pictogram: _activityModel.pictograms.first.id);
+    _api.alternateName.create(_alternateName
+        ).listen((AlternateNameModel an) {
+          if(an != null){
+           print('aha');
+          }
+          else{
+            print('hmm');
+          }
     });
   }
 
