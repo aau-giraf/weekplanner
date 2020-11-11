@@ -470,6 +470,108 @@ void main() {
     weekplanBloc.loadWeek(week, user);
   }));
 
+  test('Checks if marked activities are marked as resumed',
+  async((DoneFn done) {
+    final DisplayNameModel user = DisplayNameModel(
+        role: Role.Citizen.toString(),
+        displayName: 'User',
+        id: '1'
+    );
+
+    final ActivityModel activity = ActivityModel(
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: ActivityState.Normal);
+
+    final ActivityModel newActivity = ActivityModel(
+        pictograms: <PictogramModel>[
+          PictogramModel(
+              accessLevel: null,
+              id: null,
+              imageHash: null,
+              imageUrl: null,
+              lastEdit: null,
+              title: 'test123')
+        ],
+        id: 2,
+        isChoiceBoard: null,
+        order: null,
+        state: ActivityState.Active);
+
+    week = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[activity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday),
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    final WeekModel newWeekModel = WeekModel(
+        thumbnail: PictogramModel(
+            imageUrl: null,
+            imageHash: null,
+            accessLevel: null,
+            title: null,
+            id: null,
+            lastEdit: null),
+        days: <WeekdayModel>[
+          WeekdayModel(
+              activities: <ActivityModel>[newActivity], day: Weekday.Monday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Tuesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Wednesday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Thursday),
+          WeekdayModel(activities: <ActivityModel>[], day: Weekday.Friday)
+        ],
+        name: 'Week',
+        weekNumber: 1,
+        weekYear: 2019);
+
+    when(api.week.update(any, any, any, any)).thenAnswer((_) {
+      return Stream<WeekModel>.value(newWeekModel);
+    });
+
+    weekplanBloc.userWeek.take(1).flatMap((_) {
+      weekplanBloc.addMarkedActivity(activity);
+      return weekplanBloc.userWeek.take(1);
+    }).flatMap((_) {
+      weekplanBloc.UndoMarkedActivities();
+      return weekplanBloc.userWeek.take(1);
+    }).listen((UserWeekModel userWeekModel) {
+      verify(api.week.update(any, any, any, any));
+      expect(
+          userWeekModel.week.days[Weekday.Monday.index].activities.first.state,
+          ActivityState.Active);
+      done();
+    }, onError: (Object error) {
+      fail('Should not throw error');
+    });
+
+    weekplanBloc.loadWeek(week, user);
+  }));
+
+
   test('Checks if the edit mode toggles from true', async((DoneFn done) {
     /// Edit mode stream initial value is false.
     weekplanBloc.toggleEditMode();
