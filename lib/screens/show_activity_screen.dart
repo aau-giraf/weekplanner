@@ -1,4 +1,3 @@
-import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -39,7 +38,6 @@ class ShowActivityScreen extends StatelessWidget {
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
   }
-  final Api _api = di.getDependency<Api>();
 
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
@@ -51,6 +49,7 @@ class ShowActivityScreen extends StatelessWidget {
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
+  /// Textfield controller
   final TextEditingController tec = TextEditingController();
 
   /// Text style used for title.
@@ -239,7 +238,7 @@ class ShowActivityScreen extends StatelessWidget {
                             child: AspectRatio(
                               aspectRatio: 1,
                               child: IconButton(
-                                icon: const AspectRatio(
+                                icon: AspectRatio(
                                   aspectRatio: 1,
                                     child: FittedBox(
                                       child: Icon(
@@ -386,7 +385,9 @@ class ShowActivityScreen extends StatelessWidget {
                       );
                     }))),
       ),
-      buildButtonBar(), buildInputField(context)
+      buildButtonBar(),
+          _activityBloc.getActivity().isChoiceBoard ? Container() :
+            buildInputField(context)
     ]));
   }
 
@@ -744,22 +745,28 @@ class ShowActivityScreen extends StatelessWidget {
                         return Container(
                             child: Column(children: <Widget>[
                               Padding(
-                                  padding: const
-                                  EdgeInsets.fromLTRB(0, 30, 20, 30),
-                                  child: TextField(
-                                    controller: tec,
-                                    style: const TextStyle(
-                                        fontSize: 28,
-                                        height: 1.3,
-                                        color: theme.GirafColors.black
-                                    ),
-                                    decoration: InputDecoration(
-                                        hintText: _activityBloc.getAlternateName(),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(50),
-                                        )),
-                                  ),
+                                padding: const
+                                EdgeInsets.fromLTRB(0, 30, 20, 30),
+                                child: StreamBuilder<String>(
+                                  stream: _activityBloc.alternateNameStream,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<String> nameSnapshot){
+                                    return TextField(
+                                      controller: tec,
+                                      style: const TextStyle(
+                                          fontSize: 28,
+                                          height: 1.3,
+                                          color: theme.GirafColors.black
+                                      ),
+                                      decoration: InputDecoration(
+                                          hintText: _activity.title,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(50),
+                                          )),
+                                      );
+                                    }
+                                  )
                                 ),
                               Padding(
                                 padding: const
@@ -776,9 +783,9 @@ class ShowActivityScreen extends StatelessWidget {
                               ),
                               GirafButton(
                                 key: const
-                                Key('GetStandardPictogramTextForCitizenBtn')
-                                ,onPressed: (){
-
+                                Key('GetStandardPictogramTextForCitizenBtn'),
+                                onPressed: (){
+                                  _activityBloc.getStandardTitle();
                               },
                                 text: 'Hent standard',
                               )

@@ -16,9 +16,15 @@ class ActivityBloc extends BlocBase {
   /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
+  /// Stream for updated AlternateName
+  Stream<String> get alternateNameStream => _alternateNameStream.stream;
+
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
       rx_dart.BehaviorSubject<ActivityModel>();
+
+  final rx_dart.BehaviorSubject<String> _alternateNameStream =
+      rx_dart.BehaviorSubject<String>();
 
   final Api _api;
   ActivityModel _activityModel;
@@ -66,26 +72,41 @@ class ActivityBloc extends BlocBase {
 
   /// Set a new alternate Name
   void setAlternateName(String name){
+
     _alternateName = AlternateNameModel(name: name, citizen: _user.id,
         pictogram: _activityModel.pictograms.first.id);
-    _api.alternateName.create(_alternateName
-        ).listen((AlternateNameModel an) {
-          if(an != null){
-           print('aha');
-          }
-          else{
-            print('hmm');
-          }
-    });
-  }
+    final AlternateNameModel newAn = _alternateName;
+    getAlternateName();
+    if(_alternateName == null){
+      _api.alternateName.create(newAn
+      ).listen((AlternateNameModel an) {
+        _alternateNameStream.add(an.name);
+        _alternateName = an;
+      });
+    }
+    else {
+      _api.alternateName.put(_alternateName.id, newAn).listen(
+        (AlternateNameModel an) {
+          _alternateNameStream.add(an.name);
+          _alternateName = an;
+      });
+    }
 
-  String getAlternateName(){
-    String name;
+    _activityModel.title = _alternateName.name;
+    update();
+  }
+  /// Method to get alternate name from api
+  void getAlternateName(){
     _api.alternateName.get(_user.id, _activityModel.pictograms.first.id)
         .listen((AlternateNameModel an) {
-          name = an.name; });
-
-    return name;
+          _alternateNameStream.add(an.name);
+          _alternateName = an;
+        });
+  }
+  ///Method to get the standard tile from the pictogram
+  void getStandardTitle(){
+    _activityModel.title = _activityModel.pictograms.first.title;
+    update();
   }
 
   @override
