@@ -49,6 +49,7 @@ class WeekplanBloc extends BlocBase {
         .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
+
     });
   }
 
@@ -190,8 +191,8 @@ class WeekplanBloc extends BlocBase {
     _api.activity.add(activity, user.id, week.name, week.weekYear,
     week.weekNumber, Weekday.values[day]).listen((ActivityModel res) {
       week.days[day].activities.add(res);
+      _userWeek.add(UserWeekModel(week,user));
     });
-    loadWeek(week, user);
   }
 
   /// Returns the number of marked activities
