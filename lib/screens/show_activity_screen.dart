@@ -752,6 +752,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   builder: (BuildContext context,
                                       AsyncSnapshot<String> nameSnapshot){
                                     return TextField(
+                                      key: const Key('AlternateNameTextField'),
                                       controller: tec,
                                       style: const TextStyle(
                                           fontSize: 28,

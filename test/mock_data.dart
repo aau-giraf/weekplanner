@@ -153,7 +153,8 @@ class MockData {
                 imageHash: null,
                 imageUrl: null,
                 lastEdit: null)
-          ]),
+          ],
+          title: 'Activity1'),
       ActivityModel(
           id: 1,
           state: ActivityState.Normal,
@@ -167,7 +168,8 @@ class MockData {
                 imageHash: null,
                 imageUrl: null,
                 lastEdit: null)
-          ]),
+          ],
+          title: 'Activity2'),
       ActivityModel(
           id: 2,
           state: ActivityState.Normal,
@@ -186,7 +188,8 @@ class MockData {
               startTime: DateTime(2020),
               progress: 0,
               fullLength: 10,
-              paused: true))
+              paused: true),
+          title: 'Activity3')
     ];
   }
 }
