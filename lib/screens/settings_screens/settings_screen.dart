@@ -78,22 +78,22 @@ class SettingsScreen extends StatelessWidget {
                       () async {
                           final Object result =  await Routes.push(context,
                           CompletedActivityIconScreen(_user));
-
-                          settingsModel.completeMark = result;
-                          _settingsBloc.updateSettings(_user.id, settingsModel).
-                          listen((SettingsModel model) {
-                            _settingsBloc.loadSettings(_user);
-                          });
+                          if (result != null){
+                            settingsModel.completeMark = result;
+                            _settingsBloc.updateSettings(_user.id, settingsModel).
+                            listen((SettingsModel model) {
+                              _settingsBloc.loadSettings(_user);
+                            });
+                          }
                       },
-                  titleTrailing: Text(settingsModel.completeMark ==
-                      CompleteMark.Checkmark
+                  titleTrailing: Text(
+                      settingsModel.completeMark == CompleteMark.Checkmark
                       ? 'Flueben'
                       : settingsModel.completeMark == CompleteMark.MovedRight
                       ? 'Lav aktiviteten grå'
                       : 'Fjern aktiviteten'))
             ]);
-          } else {
-            return const Center(
+          } else {            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -118,11 +118,15 @@ class SettingsScreen extends StatelessWidget {
                 'Antal dage',
                     () async { final Object result = await Routes.push(
                         context, NumberOfDaysScreen(_user));
-                              settingsModel.nrOfDaysToDisplay = result;
-                              _settingsBloc.updateSettings(
-                                  _user.id, settingsModel).listen(
-                                      (SettingsModel response) {
-                                _settingsBloc.loadSettings(_user);});},
+                    if(result != null) {
+                      settingsModel.nrOfDaysToDisplay = result;
+                      _settingsBloc.updateSettings(
+                          _user.id, settingsModel).listen(
+                              (SettingsModel response) {
+                            _settingsBloc.loadSettings(_user);
+                          });
+                    }
+                              },
                 titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
                     ? 'En dag'
                     : settingsModel.nrOfDaysToDisplay == 2
