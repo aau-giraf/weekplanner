@@ -88,7 +88,8 @@ class SettingsScreen extends StatelessWidget {
                           CompletedActivityIconScreen(_user));
                           if (result != null){
                             settingsModel.completeMark = result;
-                            _settingsBloc.updateSettings(_user.id, settingsModel).
+                            _settingsBloc.updateSettings(
+                                _user.id, settingsModel).
                             listen((SettingsModel model) {
                               _settingsBloc.loadSettings(_user);
                             });
