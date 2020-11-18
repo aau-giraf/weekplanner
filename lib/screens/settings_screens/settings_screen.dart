@@ -102,7 +102,8 @@ class SettingsScreen extends StatelessWidget {
                       ? 'Lav aktiviteten grå'
                       : 'Fjern aktiviteten'))
             ]);
-          } else {            return const Center(
+          } else {
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
