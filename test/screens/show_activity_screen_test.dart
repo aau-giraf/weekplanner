@@ -139,7 +139,8 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictograms: <PictogramModel>[mockPictograms.first])
+      pictograms: <PictogramModel>[mockPictograms.first],
+      title: mockPictograms.first.title)
 ];
 
 final DisplayNameModel mockUser =
@@ -163,7 +164,8 @@ ActivityModel makeNewActivityModel() {
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictograms: <PictogramModel>[mockPictograms.first]);
+      pictograms: <PictogramModel>[mockPictograms.first],
+      title: mockPictograms.first.title);
 }
 
 ActivityModel mockActivityModelWithTimer() {
@@ -177,7 +179,8 @@ ActivityModel mockActivityModelWithTimer() {
           startTime: DateTime.now(),
           progress: 0,
           fullLength: const Duration(seconds: 5).inMilliseconds,
-          paused: true));
+          paused: true),
+      title: mockPictograms.first.title);
 }
 
 ActivityModel mockActivityModelWithCompletedTimer() {
@@ -191,7 +194,8 @@ ActivityModel mockActivityModelWithCompletedTimer() {
           startTime: DateTime.now(),
           progress: const Duration(seconds: 5).inMilliseconds,
           fullLength: const Duration(seconds: 5).inMilliseconds,
-          paused: true));
+          paused: true),
+      title: 'Activity1');
 }
 
 final SettingsModel mockSettings = SettingsModel(
@@ -880,5 +884,129 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(mockActivity.state, ActivityState.Normal);
+  });
+  
+  testWidgets('Button for save alternate name to'
+      ' activity is rendered in guardian mode', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = false;
+    await tester.pumpWidget(MaterialApp(home:
+        ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey
+        (const Key('SavePictogramTextForCitizenBtn')), findsOneWidget);
+  });
+
+  testWidgets('Button for update activity title to pictogram title'
+      ' is rendered in guaridan mode', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = false;
+    await tester.pumpWidget(MaterialApp(home:
+      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey
+      (const Key('GetStandardPictogramTextForCitizenBtn')), findsOneWidget);
+  });
+
+  testWidgets('Textfield for typing alternate name is rendered in guardian'
+      ' mode and isChoiceBoard is false', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = false;
+    await tester.pumpWidget(MaterialApp(home:
+      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('AlternateNameTextField')), findsOneWidget);
+  });
+
+  testWidgets('Button for save alternate name to activity title'
+      ' is not rendered in citizen mode', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockActivity.isChoiceBoard = false;
+    await tester.pumpWidget(MaterialApp(home:
+    ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey
+      (const Key('SavePictogramTextForCitizenBtn')), findsNothing);
+  });
+
+  testWidgets('Button for update activity title to pictogram title'
+      ' is not rendered in citizen mode', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockActivity.isChoiceBoard = false;
+    await tester.pumpWidget(MaterialApp(home:
+      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey
+      (const Key('GetStandardPictogramTextForCitizenBtn')), findsNothing);
+  });
+
+  testWidgets('Button for save alternate name to activity title is not rendered'
+      ' while isChoiceBoard is true', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = true;
+    await tester.pumpWidget(MaterialApp(home:
+      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey
+      (const Key('SavePictogramTextForCitizenBtn')), findsNothing);
+  });
+
+  testWidgets('Button for update activity title to pictogram title is not '
+      'rendered while isChoiceBoard is true', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = true;
+    await tester.pumpWidget(MaterialApp(home:
+      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey
+      (const Key('GetStandardPictogramTextForCitizenBtn')), findsNothing);
+  });
+
+  testWidgets('Activity title is updated on button press',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = false;
+
+    await tester.pumpWidget(MaterialApp(home:
+      ShowActivityScreen(mockActivity, mockUser)));
+
+    await tester.pump();
+    await tester.enterText(find.byKey(
+        const Key('AlternateNameTextField')), 'test');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
+    await tester.pumpAndSettle();
+
+    expect('test', mockActivity.title);
+  });
+
+  testWidgets('Activity title is set to pictogram title on button press',
+          (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.isChoiceBoard = false;
+
+    await tester.pumpWidget(MaterialApp(home:
+      ShowActivityScreen(mockActivity, mockUser)));
+
+    // Change activity title before getting original
+    await tester.pump();
+    await tester.enterText(find.byKey(
+        const Key('AlternateNameTextField')), 'test');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
+
+    // Get original title
+    await tester.tap(
+        find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')));
+    await tester.pumpAndSettle();
+
+    expect(mockActivity.title, mockPictograms.first.title);
   });
 }

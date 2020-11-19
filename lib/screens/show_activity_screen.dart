@@ -234,11 +234,11 @@ class ShowActivityScreen extends StatelessWidget {
                                 }),
                             )
                           ),
-                          const Expanded(
+                          Expanded(
                             child: AspectRatio(
                               aspectRatio: 1,
                               child: IconButton(
-                                icon: AspectRatio(
+                                icon: const AspectRatio(
                                   aspectRatio: 1,
                                     child: FittedBox(
                                       child: Icon(
@@ -247,6 +247,9 @@ class ShowActivityScreen extends StatelessWidget {
                                       ),
                                     ),
                                 ),
+                                onPressed: (){
+
+                                },
                               )
                             )
                           )
@@ -748,6 +751,7 @@ class ShowActivityScreen extends StatelessWidget {
                                 padding: const
                                 EdgeInsets.fromLTRB(0, 30, 20, 30),
                                 child: TextField(
+                                      key: const Key('AlternateNameTextField'),
                                       controller: tec,
                                       style: const TextStyle(
                                           fontSize: 28,
