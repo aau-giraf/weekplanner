@@ -234,11 +234,11 @@ class ShowActivityScreen extends StatelessWidget {
                                 }),
                             )
                           ),
-                          const Expanded(
+                          Expanded(
                             child: AspectRatio(
                               aspectRatio: 1,
                               child: IconButton(
-                                icon: AspectRatio(
+                                icon: const AspectRatio(
                                   aspectRatio: 1,
                                     child: FittedBox(
                                       child: Icon(
@@ -247,6 +247,9 @@ class ShowActivityScreen extends StatelessWidget {
                                       ),
                                     ),
                                 ),
+                                onPressed: (){
+
+                                },
                               )
                             )
                           )
