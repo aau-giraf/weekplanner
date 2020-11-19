@@ -34,8 +34,8 @@ class MockData {
   MockData() {
     mockWeek = _createInitialMockWeek();
     mockSettings = _createInitialMockSettings();
-    mockActivities = _createInitialMockActivities();
     mockPictograms = _createInitialMockPictograms();
+    mockActivities = _createInitialMockActivities();
     mockUser = DisplayNameModel(
         role: Role.Guardian.toString(), displayName: 'User', id: '1');
 
@@ -154,7 +154,7 @@ class MockData {
                 imageUrl: null,
                 lastEdit: null)
           ],
-          title: 'Activity1'),
+          title: mockPictograms.first.title),
       ActivityModel(
           id: 1,
           state: ActivityState.Normal,
@@ -169,7 +169,7 @@ class MockData {
                 imageUrl: null,
                 lastEdit: null)
           ],
-          title: 'Activity2'),
+          title: mockPictograms.first.title),
       ActivityModel(
           id: 2,
           state: ActivityState.Normal,
@@ -189,7 +189,7 @@ class MockData {
               progress: 0,
               fullLength: 10,
               paused: true),
-          title: 'Activity3')
+          title: mockPictograms.first.title)
     ];
   }
 }

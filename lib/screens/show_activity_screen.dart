@@ -248,7 +248,6 @@ class ShowActivityScreen extends StatelessWidget {
                                     ),
                                 ),
                                 onPressed: (){
-
                                 },
                               )
                             )
@@ -775,6 +774,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   onPressed: (){
                                     _activityBloc
                                         .setAlternateName(tec.text);
+                                    _activityBloc.update();
                                     },
                                   text: 'Gem til borger',
                                 ),

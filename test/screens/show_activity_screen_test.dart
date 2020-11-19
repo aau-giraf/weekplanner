@@ -973,18 +973,19 @@ void main() {
           (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
+    mockActivity.title = 'red';
 
     await tester.pumpWidget(MaterialApp(home:
       ShowActivityScreen(mockActivity, mockUser)));
 
     await tester.pump();
-    await tester.enterText(find.byKey(
-        const Key('AlternateNameTextField')), 'test');
+    await tester.enterText(
+        find.byKey(const Key('AlternateNameTextField')), 'test');
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
     await tester.pumpAndSettle();
 
-    expect('test', mockActivity.title);
+    expect(mockActivity.title, 'test');
   });
 
   testWidgets('Activity title is set to pictogram title on button press',

@@ -624,7 +624,7 @@ void main() {
     expect(find.byType(PictogramText), findsOneWidget);
 
     // Get the title of the activity
-    final String title = mockActivities[0].pictograms.first.title;
+    final String title = mockActivities[0].title;
 
     expect(find.text(title[0].toUpperCase() + title.substring(1).toLowerCase()),
         findsOneWidget);

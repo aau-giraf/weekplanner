@@ -134,7 +134,8 @@ class WeekplanBloc extends BlocBase {
               pictograms: activity.pictograms,
               order: week.days[dayOfWeek].activities.length,
               isChoiceBoard: activity.isChoiceBoard,
-              state: ActivityState.Normal);
+              state: ActivityState.Normal,
+              title: activity.title);
 
           // Add the copy to the specified day
           week.days[dayOfWeek].activities.add(newActivity);
