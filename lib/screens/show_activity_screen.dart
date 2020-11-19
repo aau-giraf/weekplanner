@@ -747,11 +747,7 @@ class ShowActivityScreen extends StatelessWidget {
                               Padding(
                                 padding: const
                                 EdgeInsets.fromLTRB(0, 30, 20, 30),
-                                child: StreamBuilder<String>(
-                                  stream: _activityBloc.alternateNameStream,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<String> nameSnapshot){
-                                    return TextField(
+                                child: TextField(
                                       controller: tec,
                                       style: const TextStyle(
                                           fontSize: 28,
@@ -764,9 +760,7 @@ class ShowActivityScreen extends StatelessWidget {
                                             borderRadius:
                                             BorderRadius.circular(50),
                                           )),
-                                      );
-                                    }
-                                  )
+                                      )
                                 ),
                               Padding(
                                 padding: const
@@ -777,6 +771,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   onPressed: (){
                                     _activityBloc
                                         .setAlternateName(tec.text);
+                                    _activityBloc.update();
                                     },
                                   text: 'Gem til borger',
                                 ),

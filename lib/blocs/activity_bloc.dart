@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -16,15 +17,10 @@ class ActivityBloc extends BlocBase {
   /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
-  /// Stream for updated AlternateName
-  Stream<String> get alternateNameStream => _alternateNameStream.stream;
 
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
       rx_dart.BehaviorSubject<ActivityModel>();
-
-  final rx_dart.BehaviorSubject<String> _alternateNameStream =
-      rx_dart.BehaviorSubject<String>();
 
   final Api _api;
   ActivityModel _activityModel;
@@ -73,35 +69,39 @@ class ActivityBloc extends BlocBase {
   /// Set a new alternate Name
   void setAlternateName(String name){
 
-    _alternateName = AlternateNameModel(name: name, citizen: _user.id,
-        pictogram: _activityModel.pictograms.first.id);
-    final AlternateNameModel newAn = _alternateName;
-    getAlternateName();
+    _alternateName = null;
+    final AlternateNameModel newAn = AlternateNameModel(name: name,
+        citizen: _user.id, pictogram: _activityModel.pictograms.first.id);
+    getAlternateName().then((AlternateNameModel value) {
+      _alternateName = value;
+
     if(_alternateName == null){
       _api.alternateName.create(newAn
       ).listen((AlternateNameModel an) {
-        _alternateNameStream.add(an.name);
         _alternateName = an;
       });
     }
     else {
       _api.alternateName.put(_alternateName.id, newAn).listen(
-        (AlternateNameModel an) {
-          _alternateNameStream.add(an.name);
-          _alternateName = an;
-      });
+              (AlternateNameModel an) {
+            _alternateName = an;
+          });
     }
 
     _activityModel.title = _alternateName.name;
-    update();
+      update();
+    });
+
   }
   /// Method to get alternate name from api
-  void getAlternateName(){
+  Future<AlternateNameModel> getAlternateName(){
+    final Completer<AlternateNameModel> f = Completer<AlternateNameModel>();
     _api.alternateName.get(_user.id, _activityModel.pictograms.first.id)
-        .listen((AlternateNameModel an) {
-          _alternateNameStream.add(an.name);
-          _alternateName = an;
+        .listen((Object result) {
+          _alternateName = result;
+          f.complete(result);
         });
+    return f.future;
   }
   ///Method to get the standard tile from the pictogram
   void getStandardTitle(){
