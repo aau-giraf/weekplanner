@@ -44,8 +44,6 @@ class WeekplanSelectorScreen extends StatefulWidget {
   bool showOldWeeks = true;
 
  void _toggleOldWeeks() {
-   print('Old weeks ' + showOldWeeks.toString());
-
    setState(() {
       showOldWeeks = !showOldWeeks;
       },
