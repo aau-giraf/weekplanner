@@ -322,22 +322,42 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
+    var inputtext = '';
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
           Visibility(
               visible: _activity.isChoiceBoard,
-              child: TextFormField(
+            child: Row(
+              children: <Widget> [
+                Flexible(
+                child: TextFormField(
                 key: const Key('ChoiceBoardNameText'),
                 initialValue: _activity.choiceBoardName,
                 textAlign: TextAlign.center,
-                onFieldSubmitted: (String text)
-                {_activity.choiceBoardName = text;
-                _activityBloc.update();},
+                onChanged: (String text){
+                  inputtext = text;
+                  _activity.choiceBoardName = text;
+                },
                 decoration: const InputDecoration(
                     border:  OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-              )
+                RaisedButton(
+                  color: theme.GirafColors.gradientDefaultOrange,
+                  disabledColor: theme.GirafColors.gradientDisabledOrange,
+                  padding: EdgeInsets.all(8.0),
+                  onPressed: (){
+                    _activity.choiceBoardName = inputtext;
+                    _activityBloc.update();
+                  },
+                  child: const Text(
+                    'Godkend'
+                  ),
+                ),
+                ],
+              ),
           ),
       Expanded(
         child: FittedBox(
