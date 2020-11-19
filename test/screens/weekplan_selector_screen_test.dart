@@ -1,12 +1,17 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
+import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
+import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,6 +41,59 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 class MockPictogramApi extends Mock implements PictogramApi {}
 
 class MockWeekApi extends Mock implements WeekApi {}
+
+class MockUserApi extends Mock implements UserApi {
+  @override
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
+        GirafUserModel(id: 'testId', username: 'testName', role: Role.Guardian)
+    );
+  }
+
+  @override
+  Stream<List<DisplayNameModel>> getCitizens(String id) {
+    final List<DisplayNameModel> output = <DisplayNameModel>[];
+    output.add(DisplayNameModel(displayName: 'testName', role: 'testRole',
+        id: id));
+    return Stream<List<DisplayNameModel>>.value(output);
+  }
+
+  @override
+  Stream<SettingsModel> getSettings(String id) {
+    return Stream<SettingsModel>.value(
+        SettingsModel(
+          orientation: null,
+          completeMark: null,
+          cancelMark: null,
+          defaultTimer: null,
+          theme: null,
+          nrOfDaysToDisplay: 1,
+          weekDayColors: MockUserApi.createWeekDayColors(),
+          lockTimerControl: false,
+          pictogramText: false,
+        ));
+  }
+
+  static List<WeekdayColorModel> createWeekDayColors() {
+    final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Monday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Tuesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Wednesday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Thursday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Friday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Saturday));
+    weekDayColors
+        .add(WeekdayColorModel(hexColor: '#FF0000', day: Weekday.Sunday));
+
+    return weekDayColors;
+  }
+}
 
 void main() {
   WeekplansBloc bloc;
@@ -155,6 +213,7 @@ void main() {
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = WeekplansBloc(api);
+    api.user = MockUserApi();
 
     setupApiCalls();
 

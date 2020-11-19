@@ -141,6 +141,17 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+
+                      BottomAppBarButton(
+                          buttonText: 'Genoptag',
+                          buttonKey: 'GenoptagActivtiesButton',
+                          assetPath: 'assets/icons/undo.png',
+                          isEnabled: false,
+                          isEnabledStream:
+                          _weekplanBloc.atLeastOneActivityMarked,
+                          dialogFunction: _buildUndoDialog),
+
+
                       BottomAppBarButton(
                           buttonText: 'Aflys',
                           buttonKey: 'CancelActivtiesButton',
@@ -216,6 +227,34 @@ class WeekplanScreen extends StatelessWidget {
               });
         });
   }
+
+   Future<Center> _buildUndoDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+              title: 'Genoptag',
+              description: 'Vil du Genoptage ' +
+                  _weekplanBloc.getNumberOfMarkedActivities().toString() +
+                  ' aktivitet(er)',
+              confirmButtonText: 'Genoptag',
+              confirmButtonIcon:
+                  const ImageIcon(AssetImage('assets/icons/undo.png')),
+              confirmOnPressed: () {
+                _weekplanBloc.UndoMarkedActivities();
+                _weekplanBloc.toggleEditMode();
+
+                // Closes the dialog box
+                Routes.pop(context);
+              });
+        });
+  }
+
+
+
+
+
 
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildRemoveDialog(BuildContext context) {
