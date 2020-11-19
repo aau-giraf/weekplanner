@@ -70,37 +70,43 @@ class ActivityBloc extends BlocBase {
   void setAlternateName(String name){
 
     _alternateName = null;
+    final Completer<void> completer = Completer<void>();
     final AlternateNameModel newAn = AlternateNameModel(name: name,
         citizen: _user.id, pictogram: _activityModel.pictograms.first.id);
-    getAlternateName().then((AlternateNameModel value) {
-      _alternateName = value;
-
-    if(_alternateName == null){
-      _api.alternateName.create(newAn
-      ).listen((AlternateNameModel an) {
-        _alternateName = an;
-      });
-    }
-    else {
-      _api.alternateName.put(_alternateName.id, newAn).listen(
-              (AlternateNameModel an) {
-            _alternateName = an;
-          });
-    }
-
-    _activityModel.title = _alternateName.name;
-      update();
+    getAlternateName().whenComplete(() {
+      if (_alternateName == null) {
+        _api.alternateName.create(newAn).listen((AlternateNameModel an) {
+          _alternateName = an;
+          _activityModel.title = _alternateName.name;
+          update();
+          completer.complete();
+        });
+      }
+      else {
+        _api.alternateName.put(_alternateName.id, newAn).listen(
+                (AlternateNameModel an) {
+              _alternateName = an;
+              _activityModel.title = _alternateName.name;
+              update();
+              completer.complete();
+            });
+      }
     });
+
+    Future.wait([completer.future]);
 
   }
   /// Method to get alternate name from api
-  Future<AlternateNameModel> getAlternateName(){
+  Future<void> getAlternateName(){
     final Completer<AlternateNameModel> f = Completer<AlternateNameModel>();
     _api.alternateName.get(_user.id, _activityModel.pictograms.first.id)
         .listen((Object result) {
           _alternateName = result;
-          f.complete(result);
-        });
+          f.complete();
+        }).onError((Object error){
+          _alternateName = null;
+          f.complete();
+    });
     return f.future;
   }
   ///Method to get the standard tile from the pictogram
