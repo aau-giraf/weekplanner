@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -35,9 +37,10 @@ class AuthBloc extends BlocBase {
   rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
-  void authenticate(String username, String password) {
+  Future<void> authenticate(String username, String password) {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
+    final Completer<void> completer = Completer<void>();
     _api.account.login(username, password).listen((bool status) {
       // Set the status
       // If there is a successful login, remove the loading spinner,
@@ -47,7 +50,13 @@ class AuthBloc extends BlocBase {
         loggedInUsername = username;
         setMode(WeekplanMode.guardian);
       }
+      completer.complete();
+    }).onError((Object error){
+      completer.complete();
     });
+    // ignore: always_specify_types
+    Future.wait([completer.future]);
+    return completer.future;
   }
 
   /// Authenticates the user only by password when signing-in from PopUp.

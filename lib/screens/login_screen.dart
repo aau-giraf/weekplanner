@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
@@ -45,47 +44,52 @@ class LoginScreenState extends State<LoginScreen> {
     showLoadingSpinner(context, true);
     currentContext = context;
     loginStatus = false;
-    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
-    authBloc.loggedIn.doOnDone(() => print('done')).listen((bool snapshot) {
-      loginStatus = snapshot;
-      if (snapshot && !_popCalled) {
-        // Pop the loading spinner
-        Routes.pop(context);
-        _popCalled = true;
-      } else {
-        //calls the callback method
-        showNotifyDialog();
-      }
+    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
+        .then((dynamic result){
+      authBloc.loggedIn.listen((bool snapshot) {
+        loginStatus = snapshot;
+        if (snapshot && !_popCalled) {
+          // Pop the loading spinner
+          Routes.pop(context);
+          _popCalled = true;
+        } else {
+          //calls the callback method
+          showNotifyDialog();
+        }
+      }).onError((Object error){
+        print(error);
+      });
     });
+
   }
 
   /// This is the callback method of the loading spinner to show the dialog
   void showNotifyDialog() {
-    // Checking internet connection, if true check server connection
-    checkInternetConnection().then((bool hasInternetConnection) {
-      if (hasInternetConnection) {
-        // Checking server connection, if true check username/password
-        checkServerConnection().then((bool hasServerConnection) {
-          if (hasServerConnection) {
-            // Checking username/password
-            if (!loginStatus) {
-              creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
-                  'WrongUsernameOrPassword');
+    if(!loginStatus) {
+      // Checking internet connection, if true check server connection
+      checkInternetConnection().then((bool hasInternetConnection) {
+        if (hasInternetConnection) {
+          // Checking server connection, if true check username/password
+          checkServerConnection().then((bool hasServerConnection) {
+            if (hasServerConnection) {
+              // Checking username/password
+                creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
+                    'WrongUsernameOrPassword');
+            } else {
+              creatingNotifyDialog(
+                  'Der er i øjeblikket'
+                      ' ikke forbindelse til serveren.',
+                  'NoConnectionToServer');
             }
-          } else {
-            creatingNotifyDialog(
-                'Der er i øjeblikket'
-                    ' ikke forbindelse til serveren.',
-                'NoConnectionToServer');
-          }
-        });
-      } else {
-        creatingNotifyDialog(
-            'Der er ingen forbindelse'
-                ' til internettet.',
-            'NoConnectionToInternet');
-      }
-    });
+          });
+        } else {
+          creatingNotifyDialog(
+              'Der er ingen forbindelse'
+                  ' til internettet.',
+              'NoConnectionToInternet');
+        }
+      });
+    }
   }
 
   /// Function that creates the notify dialog,
@@ -260,7 +264,7 @@ class LoginScreenState extends State<LoginScreen> {
   /// Function to test connection to server,
   /// it both checks for DEV API connection and to PROD API connection
   Future<bool> checkServerConnection() async {
-    final String loginUrl = environment.getVar<String>('SERVER_HOST');
+    final String loginUrl = environment.getVar<String>('SERVER_HOST') + 'v1/Status';
     try {
       final http.Response loginResponse =
           await http.get(loginUrl).timeout(const Duration(seconds: 10));
