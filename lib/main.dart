@@ -35,6 +35,7 @@ void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
       theme: ThemeData(fontFamily: 'Quicksand'),
+      //debugShowCheckedModeBanner: false,
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di

@@ -187,7 +187,7 @@ class ShowActivityScreen extends StatelessWidget {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Padding(
-                  padding: const EdgeInsets.all(20),  
+                  padding: const EdgeInsets.all(20),
                   child: Card(
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
@@ -276,7 +276,7 @@ class ShowActivityScreen extends StatelessWidget {
                                   _buildTimerDialog(overallContext) : null;
                                   },
                                 //hide splash/highlight color when timer exists
-                                highlightColor: timerInitSnapshot.data == null 
+                                highlightColor: timerInitSnapshot.data == null
                                   || !timerInitSnapshot.data ?
                                   Theme.of(overallContext).highlightColor :
                                   Colors.transparent,
@@ -304,7 +304,7 @@ class ShowActivityScreen extends StatelessWidget {
                                       ? _timerIsInitiatedWidget()
                                       : _timerIsNotInitiatedWidget(
                                         overallContext, modeSnapshot)),
-                                      _timerButtons(overallContext, 
+                                      _timerButtons(overallContext,
                                       timerInitSnapshot, modeSnapshot)
                                 ]
                               ),
@@ -383,7 +383,8 @@ class ShowActivityScreen extends StatelessWidget {
                                 child: _activity.isChoiceBoard
                                     ? ChoiceBoard(
                                         _activity, _activityBloc, _girafUser)
-                                    : buildLoadPictogramImage(),
+                                    : buildLoadPictogramImage()
+
                               ),
                               _buildActivityStateIcon(
                                   context, snapshot.data.state),
@@ -443,7 +444,7 @@ class ShowActivityScreen extends StatelessWidget {
               padding: const EdgeInsets.all(0),
               child: Container(
                   child: const ImageIcon(AssetImage('assets/icons/addTimerHighRes.png')),
-                  key: const Key('AddTimerButtonKey'),                     
+                  key: const Key('AddTimerButtonKey'),
             )))
         : Container(
             key: const Key('TimerNotInitCitizenKey'),
@@ -738,6 +739,7 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
+    _pictoImageBloc.load(_activityBloc.getActivity().pictograms.first);
     return StreamBuilder<Image>(
       stream: _pictoImageBloc.image,
       builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
