@@ -139,12 +139,14 @@ final List<ActivityModel> mockActivities = <ActivityModel>[
       state: ActivityState.Normal,
       order: 0,
       isChoiceBoard: false,
-      pictograms: <PictogramModel>[mockPictograms.first],
-      title: mockPictograms.first.title)
+      pictograms: <PictogramModel>[mockPictograms[1]],
+      title: mockPictograms[1].title)
 ];
 
 final DisplayNameModel mockUser =
     DisplayNameModel(id: '42', displayName: 'mockUser', role: null);
+final DisplayNameModel mockUser2 =
+    DisplayNameModel(id: '43', displayName: 'mockUser2', role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
 class MockScreen extends StatelessWidget {
@@ -973,19 +975,18 @@ void main() {
           (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
-    mockActivity.title = 'red';
 
     await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser)));
+      ShowActivityScreen(mockActivity, mockUser2)));
 
     await tester.pump();
     await tester.enterText(
-        find.byKey(const Key('AlternateNameTextField')), 'test');
+        find.byKey(const Key('AlternateNameTextField')), 'HalliHalløj');
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
     await tester.pumpAndSettle();
 
-    expect(mockActivity.title, 'test');
+    expect(mockActivity.title, 'HalliHalløj');
   });
 
   testWidgets('Activity title is set to pictogram title on button press',
@@ -994,7 +995,7 @@ void main() {
     mockActivity.isChoiceBoard = false;
 
     await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser)));
+      ShowActivityScreen(mockActivity, mockUser2)));
 
     // Change activity title before getting original
     await tester.pump();

@@ -494,7 +494,8 @@ void main() {
         isChoiceBoard: null,
         state: null,
         id: null,
-        pictograms: null);
+        pictograms: null,
+        title: '');
 
     weekplanBloc.userWeek.take(1).flatMap((_) {
       weekplanBloc.addActivity(activity, 0);
