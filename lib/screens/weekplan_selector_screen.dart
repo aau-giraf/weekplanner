@@ -371,12 +371,12 @@ class WeekplanSelectorScreen extends StatefulWidget {
     ));
   }
   Future<void> _pushEditWeekPlan(BuildContext context) async {
-    final int markedCount = _weekBloc.getNumberOfMarkedWeekModels();
+    final int markedCount = widget._weekBloc.getNumberOfMarkedWeekModels();
     bool reload = false;
-    _weekBloc.oldWeekModels.listen((List<WeekModel> list) {
+    widget._weekBloc.oldWeekModels.listen((List<WeekModel> list) {
       reload = list.length < 2;
     });
-    _weekBloc.weekModels.listen((List<WeekModel> list) {
+    widget._weekBloc.weekModels.listen((List<WeekModel> list) {
       reload |= list.length < 3;
     });
     if (markedCount != 1) {
@@ -399,9 +399,9 @@ class WeekplanSelectorScreen extends StatefulWidget {
         selectorBloc: widget._weekBloc,
       ),
 
-    ).then((WeekModel newWeek) { _weekBloc.load(_user, true);
-    _weekBloc.toggleEditMode();
-    _weekBloc.clearMarkedWeekModels();
+    ).then((WeekModel newWeek) { widget._weekBloc.load(widget._user, true);
+    widget._weekBloc.toggleEditMode();
+    widget._weekBloc.clearMarkedWeekModels();
     if(reload) {
       Routes.pop<bool>(context, true);
     }
