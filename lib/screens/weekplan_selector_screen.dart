@@ -353,7 +353,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
-                      onPressed: () => _pushEditWeekPlan(context)),
+                      onPressed: () async => _pushEditWeekPlan(context)),
                   BottomAppBarButton(
                       buttonText: 'Kopiér',
                       buttonKey: 'CopyWeekplanButton',
@@ -370,9 +370,15 @@ class WeekplanSelectorScreen extends StatefulWidget {
       ],
     ));
   }
-
-  void _pushEditWeekPlan(BuildContext context) {
-    final int markedCount = widget._weekBloc.getNumberOfMarkedWeekModels();
+  Future<void> _pushEditWeekPlan(BuildContext context) async {
+    final int markedCount = _weekBloc.getNumberOfMarkedWeekModels();
+    bool reload = false;
+    _weekBloc.oldWeekModels.listen((List<WeekModel> list) {
+      reload = list.length < 2;
+    });
+    _weekBloc.weekModels.listen((List<WeekModel> list) {
+      reload |= list.length < 3;
+    });
     if (markedCount != 1) {
       final String description = markedCount > 1
           ? 'Der kan kun redigeres en uge ad gangen'
@@ -385,16 +391,22 @@ class WeekplanSelectorScreen extends StatefulWidget {
           });
       return;
     }
-    Routes.push<WeekModel>(
+    await Routes.push<WeekModel>(
       context,
       EditWeekPlanScreen(
         user: widget._user,
         weekModel: widget._weekBloc.getMarkedWeekModels()[0],
         selectorBloc: widget._weekBloc,
       ),
-    ).then((WeekModel newWeek) => widget._weekBloc.load(widget._user, true));
-    widget._weekBloc.toggleEditMode();
-    widget._weekBloc.clearMarkedWeekModels();
+
+    ).then((WeekModel newWeek) { _weekBloc.load(_user, true);
+    _weekBloc.toggleEditMode();
+    _weekBloc.clearMarkedWeekModels();
+    if(reload) {
+      Routes.pop<bool>(context, true);
+    }
+    });
+
   }
 
   ///Builds dialog box to select where to copy weekplan or cancel
