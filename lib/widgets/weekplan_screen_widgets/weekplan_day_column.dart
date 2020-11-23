@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -7,6 +9,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -198,7 +201,8 @@ class WeekplanDayColumn extends StatelessWidget {
       }
     }
   }
-
+int color1 = 0xFFFFFFFF;
+int color2 = 0xFFFFFFFF;
   /// Builds a day's activities
   StreamBuilder<List<ActivityModel>> _buildDayActivities(
       List<ActivityModel> activities, WeekModel week) {
@@ -214,37 +218,86 @@ class WeekplanDayColumn extends StatelessWidget {
               builder:
                   (BuildContext context, AsyncSnapshot<bool> editModeSnapshot) {
                 return Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == weekday.activities.length) {
-                        return StreamBuilder<bool>(
-                            stream: weekplanBloc.activityPlaceholderVisible,
-                            initialData: false,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<bool> snapshot) {
-                              return Visibility(
-                                key: const Key('GreyDragVisibleKey'),
-                                visible: snapshot.data,
-                                child: _dragTargetPlaceholder(index, weekday),
-                              );
-                            });
-                      } else {
-                        return StreamBuilder<WeekplanMode>(
-                            stream: _authBloc.mode,
-                            initialData: WeekplanMode.guardian,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<WeekplanMode> snapshot) {
-                              if (snapshot.data == WeekplanMode.guardian) {
-                                return _dragTargetPictogram(
-                                    index, week, editModeSnapshot.data);
-                              }
-                              return _pictogramIconStack(
-                                  context, index, week, editModeSnapshot.data);
-                            });
-                      }
-                    },
-                    itemCount: weekday.activities.length + 1,
-                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        stops: [0.0, 0.2, 0.8, 1.0],
+                        colors: [
+                          Color(color1),
+                          const Color(0x00000000),
+                          const Color(0x00000000),
+                          Color(color2),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      )
+                    ),
+                    child: NotificationListener<ScrollNotification>(
+                      child: ListView.builder(
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index == weekday.activities.length) {
+                            return StreamBuilder<bool>(
+                                stream: weekplanBloc.activityPlaceholderVisible,
+                                initialData: false,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<bool> snapshot) {
+                                  return Visibility(
+                                    key: const Key('GreyDragVisibleKey'),
+                                    visible: snapshot.data,
+                                    child: _dragTargetPlaceholder(index,
+                                                                  weekday),
+                                  );
+                                });
+                          } else {
+                            return StreamBuilder<WeekplanMode>(
+                                stream: _authBloc.mode,
+                                initialData: WeekplanMode.guardian,
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<WeekplanMode> snapshot) {
+                                  if (snapshot.data == WeekplanMode.guardian) {
+                                    return _dragTargetPictogram(
+                                        index, week, editModeSnapshot.data);
+                                  }
+                                  return _pictogramIconStack(
+                                      context, index,
+                                      week, editModeSnapshot.data);
+                                });
+                          }
+                        },
+                        itemCount: weekday.activities.length + 1,
+                      ),
+                      onNotification: (ScrollNotification scrollInfo) {
+                        if (scrollInfo.metrics.pixels ==
+                            scrollInfo.metrics.maxScrollExtent) {
+                          print('gooden in the bottom hooten');
+                          print(scrollInfo.metrics.pixels);
+                          color1 = 0xFFFFFFFF;
+                          color2 = 0x00000000;
+                          print(color1.toString());
+                          print(color2.toString());
+                          return true;
+                        } else if (scrollInfo.metrics.pixels ==
+                        scrollInfo.metrics.minScrollExtent) {
+                          print('gooden but in the top hooten');
+                          print(scrollInfo.metrics.pixels);
+                          color1 = 0x00000000;
+                          color2 = 0xFFFFFFFF;
+                          print(color1.toString());
+                          print(color2.toString());
+                          return true;
+                        } if (scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.maxScrollExtent &&
+                              scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.minScrollExtent){
+                          color1 = 0x00000000;
+                          color2 = 0x00000000;
+                          print(color1.toString());
+                          print(color2.toString());
+                        }
+                        return true;
+                      },
+                    ),
+                  )
                 );
               });
         });
