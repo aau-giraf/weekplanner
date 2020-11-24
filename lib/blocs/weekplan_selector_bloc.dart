@@ -240,7 +240,7 @@ class WeekplansBloc extends BlocBase {
       }
 
       if (dayOfYear <= n) {
-        return getLastYearLastWeek(date);
+        return getLastYearsLastWeek(date);
       }
       else {
         return ((dayOfYear + (dayOfWeekJan1 - 9)) / 7).floor() + 1;
@@ -248,10 +248,10 @@ class WeekplansBloc extends BlocBase {
     }
   }
 
-  int getLastYearLastWeek(DateTime date) {
-    final DateTime lastYearLastDay = DateTime(date.year - 1, 12, 31);
+  int getLastYearsLastWeek(DateTime date) {
+    final DateTime lastYearsLastDay = DateTime(date.year - 1, 12, 31);
 
-    return getWeekNumberFromDate(lastYearLastDay);
+    return getWeekNumberFromDate(lastYearsLastDay);
   }
 
   /// Upcoming weekplans is sorted in ascending order
