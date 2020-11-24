@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/blocs/blocs_api_exeptions.dart';
 
 /// Bloc to get settings for a user
 /// Set settings, and listen for changes in them.
@@ -32,17 +35,25 @@ class SettingsBloc extends BlocBase {
 
   /// Load the settings for a user
   void loadSettings(DisplayNameModel user) {
-    _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
-      _settings.add(settingsModel);
-    },  onError: (dynamic error) {
-      print('En fejl opstod under indlæsningen af instillinger');
-      print(error.runtimeType.toString());
-    });
+    try{
+      //_api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
+      //  _settings.add(settingsModel);
+      //});
+      throw HttpException('404');
+    }on SocketException{throw blocs_api_exeptions('Unable to connect to the internet');}
+    on HttpException{throw blocs_api_exeptions('Unable to find the page');}
+    on FormatException{throw blocs_api_exeptions('Error loading format');}
+
+//,  onError: (dynamic error) {
+      //print('En fejl opstod under indlæsningen af instillinger');
+      //print(error.runtimeType.toString());
+    //});
   }
 
   /// Update an existing settingsModel
   Stream<SettingsModel> updateSettings(
       String userId, SettingsModel settingsModel) {
+
     return _api.user
         .updateSettings(userId, settingsModel);
   }
