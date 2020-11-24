@@ -145,10 +145,10 @@ class WeekplansBloc extends BlocBase {
   /// Returns the current week number
   int getCurrentWeekNum() {
 
-    DateTime now = DateTime.now();
+    final DateTime now = DateTime.now();
 
     // Ignores the specific time of day
-    DateTime date = DateTime(now.year, now.month, now.day);
+    final DateTime date = DateTime(now.year, now.month, now.day);
     return getWeekNumberFromDate(date);
   }
 
