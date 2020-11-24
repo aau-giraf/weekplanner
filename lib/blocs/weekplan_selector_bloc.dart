@@ -143,8 +143,13 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Returns the current week number
-  int getCurrentWeekNum(){
-    return getWeekNumberFromDate(DateTime.now());
+  int getCurrentWeekNum() {
+
+    DateTime now = DateTime.now();
+
+    // Ignores the specific time of day
+    DateTime date = DateTime(now.year, now.month, now.day);
+    return getWeekNumberFromDate(date);
   }
 
   /// Calculates the current week number from a given date
@@ -186,6 +191,7 @@ class WeekplansBloc extends BlocBase {
     if (date.month == 12 &&
         dayOfWeekJan1NextYear >= 2 &&
         dayOfWeekJan1NextYear <= 4) {
+
       switch (dayOfWeekJan1NextYear) {
         case 2:
           if (date.day == 31) {
@@ -207,7 +213,6 @@ class WeekplansBloc extends BlocBase {
       }
     }
 
-    int weekNum;
     final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
 
     /*
@@ -220,7 +225,7 @@ class WeekplansBloc extends BlocBase {
 
     // If January 1st falls on a Monday, Tuesday, Wednesday, or Thursday:
     if (dayOfWeekJan1 <= 4) {
-      weekNum = ((dayOfYear + (dayOfWeekJan1 - 2)) / 7).floor() + 1;
+      return ((dayOfYear + (dayOfWeekJan1 - 2)) / 7).floor() + 1;
     }
 
     // If January 1st falls on a Friday, Saturday, or a Sunday,
@@ -229,26 +234,18 @@ class WeekplansBloc extends BlocBase {
       int n;
 
       switch (dayOfWeekJan1) {
-        case 5:
-          n = 3;
-          break;
-        case 6:
-          n = 2;
-          break;
-        case 7:
-          n = 1;
-          break;
+        case 5: n = 3; break;
+        case 6: n = 2; break;
+        case 7: n = 1; break;
       }
 
       if (dayOfYear <= n) {
-        weekNum = getLastYearLastWeek(date);
+        return getLastYearLastWeek(date);
       }
       else {
-        weekNum = ((dayOfYear + (dayOfWeekJan1 - 9)) / 7).floor() + 1;
+        return ((dayOfYear + (dayOfWeekJan1 - 9)) / 7).floor() + 1;
       }
     }
-
-    return weekNum;
   }
 
   int getLastYearLastWeek(DateTime date) {
