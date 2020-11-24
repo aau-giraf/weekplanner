@@ -37,7 +37,7 @@ class AuthBloc extends BlocBase {
   rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
-  Future<void> authenticate(String username, String password) {
+  Future<void> authenticate(String username, String password) async {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
     final Completer<void> completer = Completer<void>();
@@ -52,7 +52,7 @@ class AuthBloc extends BlocBase {
       }
       completer.complete();
     }).onError((Object error){
-      completer.complete();
+      completer.completeError(error);
     });
     // ignore: always_specify_types
     Future.wait([completer.future]);
@@ -60,13 +60,20 @@ class AuthBloc extends BlocBase {
   }
 
   /// Authenticates the user only by password when signing-in from PopUp.
-  void authenticateFromPopUp(String username, String password) {
+  Future<void> authenticateFromPopUp(String username, String password) async {
+    final Completer<void> completer = Completer<void>();
     _api.account.login(username, password).listen((bool status) {
       if (status) {
           _loginAttempt.add(status);
           setMode(WeekplanMode.guardian);
         }
-    });
+      completer.complete();
+    }).onError((Object error) {
+      completer.completeError(error);
+    } );
+    // ignore: always_specify_types
+    Future.wait([completer.future]);
+    return completer.future;
   }
 
   /// Logs the currently logged in user out

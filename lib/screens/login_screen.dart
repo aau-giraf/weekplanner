@@ -56,8 +56,6 @@ class LoginScreenState extends State<LoginScreen> {
           //calls the callback method
           showNotifyDialog();
         }
-      }).onError((Object error){
-        print(error);
       });
     });
 
