@@ -189,6 +189,7 @@ class WeekplansBloc extends BlocBase {
     final int dayOfWeekJan1NextYear = DateTime(date.year + 1, 1, 1).weekday;
 
     if (date.month == 12 &&
+        date.day >= 29 &&
         dayOfWeekJan1NextYear >= 2 &&
         dayOfWeekJan1NextYear <= 4) {
 
