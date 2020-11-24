@@ -52,7 +52,7 @@ class AuthBloc extends BlocBase {
       }
       completer.complete();
     }).onError((Object error){
-      completer.completeError(error);
+      completer.complete();
     });
     // ignore: always_specify_types
     Future.wait([completer.future]);
