@@ -264,7 +264,7 @@ class LoginScreenState extends State<LoginScreen> {
   /// Function to test connection to server,
   /// it both checks for DEV API connection and to PROD API connection
   Future<bool> checkServerConnection() async {
-    final String loginUrl = environment.getVar<String>('SERVER_HOST') + 'v1/Status';
+    final String loginUrl = environment.getVar<String>('SERVER_HOST') + '/v1/Status';
     try {
       final http.Response loginResponse =
           await http.get(loginUrl).timeout(const Duration(seconds: 10));

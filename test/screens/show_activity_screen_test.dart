@@ -67,7 +67,7 @@ class MockAuth extends Mock implements AuthBloc {
   String loggedInUsername = 'Graatand';
 
   @override
-  void authenticate(String username, String password) {
+  Future<void> authenticate(String username, String password) async {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');
