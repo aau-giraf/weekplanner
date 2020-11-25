@@ -63,19 +63,21 @@ class LoginScreenState extends State<LoginScreen> {
             error.errorKey.toString());
       }
       else if(error is SocketException){
-        checkInternetConnection().then((bool hasInternetConnection) {
+        authBloc.checkInternetConnection().then((bool hasInternetConnection) {
           if (hasInternetConnection) {
             // Checking server connection, if true check username/password
-            checkServerConnection().then((bool hasServerConnection) {
+            authBloc.getApiConnection().then((bool hasServerConnection) {
               if (hasServerConnection) {
-                creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller'
-                    ' kontakt en administrator', error.message);
-              } else {
+                unknownErrorDialog(error.message);
+              }
+              else{
                 creatingNotifyDialog(
                     'Der er i øjeblikket'
                         ' ikke forbindelse til serveren.',
-                    'NoConnectionToServer');
+                    'ServerConnectionError');
               }
+            }).catchError((Object error){
+             unknownErrorDialog(error.toString());
             });
           } else {
             creatingNotifyDialog(
@@ -86,8 +88,7 @@ class LoginScreenState extends State<LoginScreen> {
         });
       }
       else {
-        creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
-            'kontakt en administrator', 'UnknownError');
+        unknownErrorDialog('UnknownError');
       }
     });
   }
@@ -105,6 +106,11 @@ class LoginScreenState extends State<LoginScreen> {
           return GirafNotifyDialog(
               title: 'Fejl', description: description, key: Key(key));
         });
+  }
+  /// Create an unknown error dialog
+  void unknownErrorDialog(String key){
+    creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
+        'kontakt en administrator', 'key');
   }
 
   @override
@@ -260,30 +266,4 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  /// Function to test connection to server,
-  /// it both checks for DEV API connection and to PROD API connection
-  Future<bool> checkServerConnection() async {
-    authBloc.getApiConnection().then((bool status) {
-      return Future<bool>.value(status);
-    }).catchError((Object error){
-      print(error.toString());
-      return Future<bool>.value(false);
-    });
-    return Future<bool>.value(false);
-  }
-
-  /// Function to test connection to internet
-  Future<bool> checkInternetConnection() async {
-    try {
-      final List<InternetAddress> result =
-          await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return Future<bool>.value(true);
-      }
-      return null;
-    } on SocketException catch (e) {
-      print(e.message);
-      return Future<bool>.value(false);
-    }
-  }
 }

@@ -26,6 +26,8 @@ dependencies:
   mutex: ^1.0.1
   csv: ^4.1.0
   material_design_icons_flutter: ^3.2.3895
+  connectivity: ^2.0.2
+  data_connection_checker: ^0.3.4
   audioplayers:
 
 dev_dependencies:

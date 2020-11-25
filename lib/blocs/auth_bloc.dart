@@ -4,6 +4,8 @@ import 'package:api_client/api/api.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -55,7 +57,7 @@ class AuthBloc extends BlocBase {
       completer.completeError(error);
     });
 
-    Future.wait(<Future<bool>>[completer.future]);
+    Future.wait(<Future<void>>[completer.future]);
     return completer.future;
   }
 
@@ -81,10 +83,20 @@ class AuthBloc extends BlocBase {
     _api.status.status().listen((bool status) {
       completer.complete(status);
     }).onError((Object error){
-      completer.completeError(error);
+      completer.complete(false);
     });
-    Future.wait(<Future<void>>[completer.future]);
+    Future.wait(<Future<bool>>[completer.future]);
     return completer.future;
+  }
+  /// Checks if there is an internet connection
+  Future<bool> checkInternetConnection() async{
+    final ConnectivityResult result = await Connectivity().checkConnectivity();
+    bool hasConnection = false;
+    if(result != ConnectivityResult.none)
+      {
+        hasConnection = await DataConnectionChecker().hasConnection;
+      }
+    return Future<bool>.value(hasConnection);
   }
 
   /// Logs the currently logged in user out
