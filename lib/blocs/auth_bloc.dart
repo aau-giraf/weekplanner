@@ -54,8 +54,8 @@ class AuthBloc extends BlocBase {
     }).onError((Object error){
       completer.completeError(error);
     });
-    // ignore: always_specify_types
-    Future.wait([completer.future]);
+
+    Future.wait(<Future<bool>>[completer.future]);
     return completer.future;
   }
 
@@ -71,8 +71,7 @@ class AuthBloc extends BlocBase {
     }).onError((Object error) {
       completer.completeError(error);
     } );
-    // ignore: always_specify_types
-    Future.wait([completer.future]);
+    Future.wait(<Future<void>>[completer.future]);
     return completer.future;
   }
 
@@ -84,8 +83,7 @@ class AuthBloc extends BlocBase {
     }).onError((Object error){
       completer.completeError(error);
     });
-    // ignore: always_specify_types
-    Future.wait([completer.future]);
+    Future.wait(<Future<void>>[completer.future]);
     return completer.future;
   }
 
