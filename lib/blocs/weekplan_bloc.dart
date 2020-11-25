@@ -247,7 +247,13 @@ class WeekplanBloc extends BlocBase {
     }
 
     week.days[dayTo.index].activities.insert(activity.order, activity);
-
+///merge conflict here
+    _api.week
+        .update(user.id, week.weekYear, week.weekNumber, week)
+        .listen((WeekModel newWeek) {
+      _userWeek.add(UserWeekModel(newWeek, user));
+    });
+    /// split here
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
@@ -255,6 +261,10 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
+  void (){
+
+  }
+/// to here
   Stream<bool> _atLeastOneActivityMarked(){
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
