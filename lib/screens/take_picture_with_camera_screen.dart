@@ -38,7 +38,7 @@ class TakePictureWithCamera extends StatelessWidget {
         .size
         .width;
     return Scaffold(
-      appBar: GirafAppBar(title: 'Tag billede med kamera'),
+      appBar: GirafAppBar(title: 'Tilføj fra kamera'),
       body: StreamBuilder<bool>(
           stream: _takePictureWithCamera.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -173,7 +173,7 @@ class TakePictureWithCamera extends StatelessWidget {
             scale: .75,
           ),
           const Text(
-            'Tryk for at vælge billede',
+            'Tryk for at tage billede med kamera',
             style: TextStyle(color: theme.GirafColors.black,
                 fontSize: GirafFont.medium),
           )
@@ -188,7 +188,7 @@ class TakePictureWithCamera extends StatelessWidget {
           bottom: 10,
         ),
         child: Text(
-          'Vælg billede fra galleri',
+          'Tag billede med kamera',
           style: TextStyle(color: theme.GirafColors.black,
               fontSize: GirafFont.medium),
           textAlign: TextAlign.center,
