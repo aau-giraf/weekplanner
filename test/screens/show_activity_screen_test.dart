@@ -981,12 +981,12 @@ void main() {
 
     await tester.pump();
     await tester.enterText(
-        find.byKey(const Key('AlternateNameTextField')), 'HalliHalløj');
+        find.byKey(const Key('AlternateNameTextField')), 'test');
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
     await tester.pumpAndSettle();
 
-    expect(mockActivity.title, 'HalliHalløj');
+    expect(mockActivity.title, 'test');
   });
 
   testWidgets('Activity title is set to pictogram title on button press',
