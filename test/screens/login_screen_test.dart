@@ -27,19 +27,13 @@ class MockLoginScreenState extends LoginScreenState {
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
       if (snapshot == false) {
-        showNotifyDialog();
+        if (!loginStatus) {
+
+          creatingNotifyDialog('Forkert brugernavn og/eller adgangskode',
+              'WrongUsernameOrPassword');
+        }
       }
     });
-  }
-
-  /// This is the callback method of the loading spinner to show the dialog
-  void showNotifyDialog() {
-    // Checking username/password
-    if (!loginStatus) {
-
-      creatingNotifyDialog('Forkert brugernavn og/eller adgangskode',
-          'WrongUsernameOrPassword');
-    }
   }
 
   /// Function that creates the notify dialog,
