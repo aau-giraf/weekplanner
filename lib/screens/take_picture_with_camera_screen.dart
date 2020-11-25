@@ -3,7 +3,6 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
-import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
@@ -108,6 +107,7 @@ class TakePictureWithCamera extends StatelessWidget {
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem',
             onPressed: () {
+              // ignore: lines_longer_than_80_chars
               _takePictureWithCamera.createPictogram().listen((PictogramModel p) {
                 Routes.pop(context, p);
               }, onError: (Object error) {
