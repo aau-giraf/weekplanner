@@ -76,7 +76,7 @@ class AuthBloc extends BlocBase {
     return completer.future;
   }
 
-  ///
+  ///Checks if theres is a connection to the api server
   Future<bool> getApiConnection(){
     final Completer<bool> completer = Completer<bool>();
     _api.status.status().listen((bool status) {
