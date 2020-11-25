@@ -427,8 +427,8 @@ void main() {
         }
         on TestFailure {
           print('Error in calculating week number for date: '
-              '${date.toString()}\nGot ${actualWeek}, '
-              'expected ${expectedWeek}');
+              '${date.toString()}\nGot $actualWeek, '
+              'expected $expectedWeek');
           fail('');
         }
       }
