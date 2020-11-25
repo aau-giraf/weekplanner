@@ -36,7 +36,6 @@ import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../mock_data.dart';
-import 'show_activity_screen_test.dart';
 
 void main() {
   WeekModel mockWeek;

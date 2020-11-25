@@ -37,7 +37,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
-import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
