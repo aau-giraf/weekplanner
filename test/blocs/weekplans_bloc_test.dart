@@ -281,156 +281,969 @@ void main() {
 
 
 
-  /*
+  group('getWeekNumberFromDate', () {
+    /*
   This test is to find errors with getWeekNumberFromDate if the next test
   fails on one if its 4000 cases. It might not be enough though. More dates
   can be added to cover more cases. Good luck!
 
   The test is skipped for now (Remove skip from the end of the test)
    */
-  test('Check if the correct week number is returned', async((DoneFn done) {
+    test('Check if the correct week number is returned', async((DoneFn done) {
 
-    /* Semi-random checks */
-    expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 14)), 42);
-    expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 7)), 41);
-    expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 28)), 53);
-    expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 31)), 53);
-    expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 3)), 53);
-    expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 4)), 1);
-    expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 20)), 24);
-    expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 21)), 25);
-    expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 26)), 51);
-    expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 27)), 52);
-    expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 2)), 52);
-    expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 3)), 1);
-    expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 27)), 12);
-    expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 28)), 13);
-    expect(bloc.getWeekNumberFromDate(DateTime(2022, 10, 30)), 43);
-    expect(bloc.getWeekNumberFromDate(DateTime(2022, 10, 31)), 44);
+      /* Semi-random checks */
+      expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 14)), 42);
+      expect(bloc.getWeekNumberFromDate(DateTime(2020, 10, 7)), 41);
+      expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 28)), 53);
+      expect(bloc.getWeekNumberFromDate(DateTime(2020, 12, 31)), 53);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 3)), 53);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 1, 4)), 1);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 20)), 24);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 6, 21)), 25);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 26)), 51);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 12, 27)), 52);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 2)), 52);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 1, 3)), 1);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 27)), 12);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 28)), 13);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 10, 30)), 43);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 10, 31)), 44);
 
 
-    /* These next expects checks the same week in years where the
+      /* These next expects checks the same week in years where the
      first of January starts on different week days.
      */
 
-   /* Monday */
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 10)), 10);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 11)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 12)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 13)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 14)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 15)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 16)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 17)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 18)), 12);
+      /* Monday */
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 10)), 10);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 11)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 12)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 13)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 14)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 15)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 16)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 17)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2024, 3, 18)), 12);
 
-   /* Tuesday */
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 10)), 10);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 11)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 12)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 13)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 14)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 15)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 16)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 17)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 18)), 12);
+      /* Tuesday */
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 10)), 10);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 11)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 12)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 13)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 14)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 15)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 16)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 17)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2030, 3, 18)), 12);
 
-   /* Wednesday */
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 9)), 10);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 10)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 11)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 12)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 13)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 14)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 15)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 16)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 17)), 12);
+      /* Wednesday */
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 9)), 10);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 10)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 11)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 12)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 13)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 14)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 15)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 16)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2025, 3, 17)), 12);
 
-   /* Thursday */
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 8)), 10);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 9)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 10)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 11)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 12)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 13)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 14)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 15)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 16)), 12);
+      /* Thursday */
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 8)), 10);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 9)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 10)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 11)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 12)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 13)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 14)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 15)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2026, 3, 16)), 12);
 
-   /* Friday */
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 14)), 10);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 15)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 16)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 17)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 18)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 19)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 20)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 21)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 22)), 12);
+      /* Friday */
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 14)), 10);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 15)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 16)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 17)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 18)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 19)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 20)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 21)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2021, 3, 22)), 12);
 
-   /* Saturday */
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 13)), 10);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 14)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 15)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 16)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 17)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 18)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 19)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 20)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 21)), 12);
+      /* Saturday */
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 13)), 10);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 14)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 15)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 16)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 17)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 18)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 19)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 20)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2022, 3, 21)), 12);
 
-   /* Sunday */
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 12)), 10);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 13)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 14)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 15)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 16)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 17)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 18)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 19)), 11);
-   expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 20)), 12);
+      /* Sunday */
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 12)), 10);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 13)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 14)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 15)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 16)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 17)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 18)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 19)), 11);
+      expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 20)), 12);
 
-   done();
-  }), skip: 'Only needed if the function breaks');
+      done();
+    }), skip: 'Only needed if the function breaks');
 
 
-  test('Check if the correct week number is returned '
-      'from list of dates', async((DoneFn done) {
+    test('Check if the correct week number is returned '
+        'from list of dates', async((DoneFn done) {
 
-    // Because GitHub CI is stupid
-    File file = File('${Directory.current.path}/blocs/'
-        'Dates_with_weeks_2020_to_2030_semi.csv');
-
-    if (!file.existsSync()) {
-      file = File('${Directory.current.path}/test/blocs/'
+      // Because GitHub CI is stupid
+      File file = File('${Directory.current.path}/blocs/'
           'Dates_with_weeks_2020_to_2030_semi.csv');
-    }
 
-    final String csv = file.readAsStringSync();
-
-    const CsvToListConverter converter = CsvToListConverter(
-        fieldDelimiter: ',', textDelimiter: '"',
-        textEndDelimiter: '"', eol: ';');
-
-    final List<List<dynamic>> datesAndWeeks = converter.convert(csv);
-
-    for (int i = 0; i < datesAndWeeks.length; i++) {
-
-      final DateTime date = DateTime.parse(datesAndWeeks[i][0]);
-      final int week = datesAndWeeks[i][1];
-
-      try {
-        expect(bloc.getWeekNumberFromDate(date), week);
+      if (!file.existsSync()) {
+        file = File('${Directory.current.path}/test/blocs/'
+            'Dates_with_weeks_2020_to_2030_semi.csv');
       }
-      on TestFailure {
-        print('Error in calculating week number for date: '
-            '${date.toString()}\n');
-        fail('');
-      }
-    }
 
-    done();
-  }));
+      final String csv = file.readAsStringSync();
+
+      const CsvToListConverter converter = CsvToListConverter(
+          fieldDelimiter: ',', textDelimiter: '"',
+          textEndDelimiter: '"', eol: ';');
+
+      final List<List<dynamic>> datesAndWeeks = converter.convert(csv);
+
+      for (int i = 0; i < datesAndWeeks.length; i++) {
+
+        final DateTime date = DateTime.parse(datesAndWeeks[i][0]);
+        final int expectedWeek = datesAndWeeks[i][1];
+
+        final int actualWeek = bloc.getWeekNumberFromDate(date);
+
+        try {
+          expect(actualWeek, expectedWeek);
+        }
+        on TestFailure {
+          print('Error in calculating week number for date: '
+              '${date.toString()}\nGot ${actualWeek}, '
+              'expected ${expectedWeek}');
+          fail('');
+        }
+      }
+
+      done();
+    }));
+  });
+
+  group('getLastYearsLastWeek', () {
+    test('2020 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2020, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2021 should return 53', async((DoneFn done) {
+      final DateTime date = DateTime(2021, 6, 1, 12);
+
+      const int expected = 53;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2022 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2022, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2023 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2023, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2024 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2024, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2025 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2025, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2026 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2026, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2027 should return 53', async((DoneFn done) {
+      final DateTime date = DateTime(2027, 6, 1, 12);
+
+      const int expected = 53;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2028 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2028, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2029 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2029, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+
+    test('2030 should return 52', async((DoneFn done) {
+      final DateTime date = DateTime(2030, 6, 1, 12);
+
+      const int expected = 52;
+      final int actual = bloc.getLastYearsLastWeek(date);
+
+      expect(actual, expected);
+
+      done();
+    }));
+  });
+
+  group('weekIsLastYearsLastWeek', () {
+    group('January 1st is a Friday', () {
+      test('Day is Monday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2020, 12, 28, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Tuesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2020, 12, 29, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Wednesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2020, 12, 30, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Thursday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2020, 12, 31, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Friday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 1, 1, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Saturday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 1, 2, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Sunday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 1, 3, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Monday again, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 1, 4, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+    });
+
+    group('January 1st is a Saturday', () {
+      test('Day is Monday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 12, 27, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Tuesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 12, 28, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Wednesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 12, 29, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Thursday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 12, 30, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Friday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2021, 12, 31, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Saturday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 1, 1, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Sunday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 1, 2, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Monday again, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 1, 3, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+    });
+
+    group('January 1st is a Sunday', () {
+      test('Day is Monday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 12, 26, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Tuesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 12, 27, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Wednesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 12, 28, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Thursday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 12, 29, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Friday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 12, 30, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Saturday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2022, 12, 31, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Sunday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2023, 1, 1, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Monday again, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2023, 1, 2, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+    });
+
+    group('January 1st is a Monday', () {
+      test('Day is Friday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2023, 12, 29, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Saturday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2023, 12, 30, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Sunday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2023, 12, 31, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Monday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2024, 1, 1, 12);
+
+        final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
+
+        final int dayOfYear =
+            date.difference(DateTime(date. year, 1, 1)).inDays + 1;
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsLastYearsLastWeek(dayOfYear,
+            dayOfWeekJan1);
+
+        expect(actual, expected);
+
+        done();
+      }));
+    });
+  });
+
+  group('weekIsNextYearsFirstWeek', () {
+    group('Days that should not be considered', () {
+      test('01/06/2020, return false',
+          async((DoneFn done) {
+            final DateTime date = DateTime(2020, 6, 1, 12);
+
+            const bool expected = false;
+            final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+            expect(actual, expected);
+
+            done();
+          }));
+
+      test('06/04/2020, return false',
+          async((DoneFn done) {
+            final DateTime date = DateTime(2025, 4, 6, 12);
+
+            const bool expected = false;
+            final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+            expect(actual, expected);
+
+            done();
+          }));
+    });
+
+    group('January 1st is a Tuesday', () {
+      test('Day is Sunday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2029, 12, 30, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Monday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2029, 12, 31, 12);
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Tuesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2030, 1, 1, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Wednesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2030, 1, 2, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Thursday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2030, 1, 3, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+    });
+
+    group('January 1st is a Wednesday', () {
+      test('Day is Sunday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2030, 12, 29, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Monday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2030, 12, 30, 12);
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Tuesday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2030, 12, 31, 12);
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Wednesday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2031, 1, 1, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Thursday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2031, 1, 2, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+    });
+
+    group('January 1st is a Thursday', () {
+      test('Day is Sunday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2031, 12, 28, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Monday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2031, 12, 29, 12);
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Tuesday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2031, 12, 30, 12);
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Wednesday, return true', async((DoneFn done) {
+        final DateTime date = DateTime(2031, 12, 31, 12);
+
+        const bool expected = true;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+
+      test('Day is Thursday, return false', async((DoneFn done) {
+        final DateTime date = DateTime(2032, 1, 1, 12);
+
+        const bool expected = false;
+        final bool actual = bloc.weekIsNextYearsFirstWeek(date);
+
+        expect(actual, expected);
+
+        done();
+      }));
+    });
+  });
 
   // test('Weekplans should be split into old and upcoming',
   // async((DoneFn done){
