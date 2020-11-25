@@ -349,6 +349,7 @@ class ShowActivityScreen extends StatelessWidget {
               ),
             ),
             RaisedButton(
+              key: const Key('ChoiceBoardNameButton'),
               color: theme.GirafColors.gradientDefaultOrange,
               disabledColor: theme.GirafColors.gradientDisabledOrange,
               padding: const EdgeInsets.all(8.0),

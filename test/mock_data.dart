@@ -186,7 +186,29 @@ class MockData {
               startTime: DateTime(2020),
               progress: 0,
               fullLength: 10,
-              paused: true))
+              paused: true)),
+      ActivityModel(
+          id: 3,
+          state: ActivityState.Normal,
+          order: 0,
+          isChoiceBoard: true,
+          choiceBoardName: 'nametest',
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle2',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null),
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle2',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ])
     ];
   }
 }

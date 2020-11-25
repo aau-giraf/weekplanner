@@ -37,6 +37,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
+import 'package:weekplanner/screens/weekplan_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
@@ -890,9 +891,12 @@ void main() {
     ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
     await tester.enterText(
-        find.byKey(const Key('ChoiceBoardNameText')), 'test');
+        find.byKey(const Key('ChoiceBoardNameText')), 'nametest');
+    expect(find.text('nametest'), findsOneWidget);
+    await tester.tap(
+        find.byKey(const Key('ChoiceBoardNameButton')));
     await tester.pumpAndSettle();
-    expect(find.text('test'), findsOneWidget);
+    expect(find.text('nametest'), findsOneWidget);
   });
 
   testWidgets('Activity state is normal when an activity has been cancelled '

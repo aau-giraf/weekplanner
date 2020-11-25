@@ -36,6 +36,7 @@ import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../mock_data.dart';
+import 'show_activity_screen_test.dart';
 
 void main() {
   WeekModel mockWeek;
@@ -871,6 +872,16 @@ void main() {
 
     // Find checkmark icon by key
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
+
+  testWidgets('Activity lists changed name', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockWeek.days[4].activities.add(mockActivities[3]);
+
+    // Build the weekPlan screen
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+    expect(find.text('nametest'), findsOneWidget);
   });
 
   testWidgets('Cancelled activities displayed correctly in Citizen Mode',
