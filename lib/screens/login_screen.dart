@@ -8,7 +8,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
-import 'package:http/http.dart' as http;
 import '../style/custom_color.dart' as theme;
 
 /// Logs the user in
@@ -264,19 +263,13 @@ class LoginScreenState extends State<LoginScreen> {
   /// Function to test connection to server,
   /// it both checks for DEV API connection and to PROD API connection
   Future<bool> checkServerConnection() async {
-    final String loginUrl = environment.getVar<String>('SERVER_HOST') + '/v1/Status';
-    try {
-      final http.Response loginResponse =
-          await http.get(loginUrl).timeout(const Duration(seconds: 10));
-      if (loginResponse.statusCode == 200) {
-        return Future<bool>.value(true);
-      } else {
-        throw Exception('Authentication Error');
-      }
-    } catch (e) {
-      print('Error:' + e.toString());
+    authBloc.getApiConnection().then((bool status) {
+      return Future<bool>.value(status);
+    }).catchError((Object error){
+      print(error.toString());
       return Future<bool>.value(false);
-    }
+    });
+    return Future<bool>.value(false);
   }
 
   /// Function to test connection to internet

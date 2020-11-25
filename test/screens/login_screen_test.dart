@@ -33,7 +33,6 @@ class MockLoginScreenState extends LoginScreenState {
   }
 
   /// This is the callback method of the loading spinner to show the dialog
-  @override
   void showNotifyDialog() {
     // Checking username/password
     if (!loginStatus) {

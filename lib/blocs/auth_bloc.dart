@@ -76,6 +76,19 @@ class AuthBloc extends BlocBase {
     return completer.future;
   }
 
+  ///
+  Future<bool> getApiConnection(){
+    final Completer<bool> completer = Completer<bool>();
+    _api.status.status().listen((bool status) {
+      completer.complete(status);
+    }).onError((Object error){
+      completer.completeError(error);
+    });
+    // ignore: always_specify_types
+    Future.wait([completer.future]);
+    return completer.future;
+  }
+
   /// Logs the currently logged in user out
   void logout() {
     _api.account.logout().listen((dynamic _) {
