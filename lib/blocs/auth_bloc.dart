@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 
 /// All about Authentication. Login, logout, etc.
@@ -90,12 +88,7 @@ class AuthBloc extends BlocBase {
   }
   /// Checks if there is an internet connection
   Future<bool> checkInternetConnection() async{
-    final ConnectivityResult result = await Connectivity().checkConnectivity();
-    bool hasConnection = false;
-    if(result != ConnectivityResult.none)
-      {
-        hasConnection = await DataConnectionChecker().hasConnection;
-      }
+    final bool hasConnection = await DataConnectionChecker().hasConnection;
     return Future<bool>.value(hasConnection);
   }
 
