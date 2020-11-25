@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:api_client/api/api_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -45,51 +46,52 @@ class LoginScreenState extends State<LoginScreen> {
     currentContext = context;
     loginStatus = false;
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
-        .then((dynamic result){
-      authBloc.loggedIn.listen((bool snapshot) {
-        loginStatus = snapshot;
-        if (snapshot && !_popCalled) {
-          // Pop the loading spinner
-          Routes.pop(context);
-          _popCalled = true;
-        } else {
-          //calls the callback method
-          showNotifyDialog();
-        }
-      });
+      .then((dynamic result){
+        authBloc.loggedIn.listen((bool snapshot) {
+          loginStatus = snapshot;
+          if (snapshot && !_popCalled) {
+            // Pop the loading spinner
+            Routes.pop(context);
+            _popCalled = true;
+          } else {
+            creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
+                'kontakt en administrator', 'UnknownError');
+          }
+        });
+    }).catchError((Object error) {
+      if(error is ApiException){
+        creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
+            error.errorKey.toString());
+      }
+      else if(error is SocketException){
+        checkInternetConnection().then((bool hasInternetConnection) {
+          if (hasInternetConnection) {
+            // Checking server connection, if true check username/password
+            checkServerConnection().then((bool hasServerConnection) {
+              if (hasServerConnection) {
+                creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller'
+                    ' kontakt en administrator', error.message);
+              } else {
+                creatingNotifyDialog(
+                    'Der er i øjeblikket'
+                        ' ikke forbindelse til serveren.',
+                    'NoConnectionToServer');
+              }
+            });
+          } else {
+            creatingNotifyDialog(
+                'Der er ingen forbindelse'
+                    ' til internettet.',
+                'NoConnectionToInternet');
+          }
+        });
+      }
+      else {
+        creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
+            'kontakt en administrator', 'UnknownError');
+      }
     });
-
   }
-
-  /// This is the callback method of the loading spinner to show the dialog
-  void showNotifyDialog() {
-    if(!loginStatus) {
-      // Checking internet connection, if true check server connection
-      checkInternetConnection().then((bool hasInternetConnection) {
-        if (hasInternetConnection) {
-          // Checking server connection, if true check username/password
-          checkServerConnection().then((bool hasServerConnection) {
-            if (hasServerConnection) {
-              // Checking username/password
-                creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
-                    'WrongUsernameOrPassword');
-            } else {
-              creatingNotifyDialog(
-                  'Der er i øjeblikket'
-                      ' ikke forbindelse til serveren.',
-                  'NoConnectionToServer');
-            }
-          });
-        } else {
-          creatingNotifyDialog(
-              'Der er ingen forbindelse'
-                  ' til internettet.',
-              'NoConnectionToInternet');
-        }
-      });
-    }
-  }
-
   /// Function that creates the notify dialog,
   /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
