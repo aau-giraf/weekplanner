@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+
+import 'blocs_api_exeptions.dart';
 
 /// Bloc to copy a weekplan to other users
 class CopyWeekplanBloc extends ChooseCitizenBloc {
@@ -34,13 +37,18 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     final List<Future<bool>> callFutures = <Future<bool>>[];
     for (DisplayNameModel user in users) {
       final Completer<bool> callCompleter = Completer<bool>();
-      _api.week
-        .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
-        .take(1)
-        .listen((WeekModel weekModel) {
+      try{
+        _api.week
+            .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
+            .take(1)
+            .listen((WeekModel weekModel) {
           final bool done = weekModel != null;
           callCompleter.complete(done);
         });
+      }on SocketException{throw BlocsApiExeptions('Sock');}
+      on HttpException{throw BlocsApiExeptions('Http');}
+      on TimeoutException{throw BlocsApiExeptions('Time');}
+      on FormatException{throw BlocsApiExeptions('Form');}
 
       callFutures.add(callCompleter.future);
     }
@@ -76,24 +84,30 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
       DisplayNameModel user, WeekModel weekModel) async {
     bool daysAreEmpty = true;
 
-    final WeekModel response = await _api.week
-        .get(user.id, weekModel.weekYear, weekModel.weekNumber).first;
+    try{
+      final WeekModel response = await _api.week
+          .get(user.id, weekModel.weekYear, weekModel.weekNumber).first;
 
-    if(response.days == null){
-      return false;
-    }
+      if(response.days == null){
+        return false;
+      }
 
-    for (WeekdayModel weekDay in response.days) {
-      daysAreEmpty = daysAreEmpty && weekDay.activities.isEmpty;
-    }
+      for (WeekdayModel weekDay in response.days) {
+        daysAreEmpty = daysAreEmpty && weekDay.activities.isEmpty;
+      }
 
-    ///Checks whether the name of the week model is different from the default
-    /// created when no week exists
-    if(daysAreEmpty) {
-      final int weekYear = weekModel.weekYear;
-      final int weekNumber = weekModel.weekNumber;
-      daysAreEmpty = response.name.compareTo('$weekYear - $weekNumber') == 0;
-    }
+      ///Checks whether the name of the week model is different from the default
+      /// created when no week exists
+      if(daysAreEmpty) {
+        final int weekYear = weekModel.weekYear;
+        final int weekNumber = weekModel.weekNumber;
+        daysAreEmpty = response.name.compareTo('$weekYear - $weekNumber') == 0;
+      }
+
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
 
     return !daysAreEmpty;
   }

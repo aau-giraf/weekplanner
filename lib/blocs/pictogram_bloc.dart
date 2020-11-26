@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
+
+import 'blocs_api_exeptions.dart';
 
 /// For how long the debouncer should wait
 const int _debounceTime = 250;
@@ -39,7 +42,6 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-
     if (query.isEmpty) {
       return;
     }
@@ -47,6 +49,7 @@ class PictogramBloc extends BlocBase {
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
     }
+
     _pictograms.add(null);
     List<PictogramModel> _resultPlaceholder;
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
@@ -57,15 +60,17 @@ class PictogramBloc extends BlocBase {
               'Tjek internetforbindelsen.');
         }
       });
-      _api.pictogram
-          .getAll(page: 1, pageSize: 10, query: query)
-          .listen((List<PictogramModel> results) {
-        _resultPlaceholder = results;
-        _pictograms.add(_resultPlaceholder);
-      },  onError: (dynamic error) {
-            print('En fejl blev fundet under søgningen');
-            print(error.runtimeType.toString());
-      });
+      try{
+        _api.pictogram
+            .getAll(page: 1, pageSize: 10, query: query)
+            .listen((List<PictogramModel> results) {
+          _resultPlaceholder = results;
+          _pictograms.add(_resultPlaceholder);
+        });
+      } on SocketException{throw BlocsApiExeptions('Sock');}
+      on HttpException{throw BlocsApiExeptions('Http');}
+      on TimeoutException{throw BlocsApiExeptions('Time');}
+      on FormatException{throw BlocsApiExeptions('Form');}
     });
   }
 
@@ -73,7 +78,12 @@ class PictogramBloc extends BlocBase {
   /// Deletes a chosen pictogram
   ///
   void delete(PictogramModel pm){
-    _api.pictogram.delete(pm.id);
+    try{
+      _api.pictogram.delete(pm.id);
+    } on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
   }
 
   @override

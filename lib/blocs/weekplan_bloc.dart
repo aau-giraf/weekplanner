@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -8,6 +11,8 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/user_week_model.dart';
+
+import 'blocs_api_exeptions.dart';
 
 
 /// Bloc that streams the currently chosen weekplan
@@ -45,11 +50,18 @@ class WeekplanBloc extends BlocBase {
 
   /// Sink to set the currently chosen week
   void loadWeek(WeekModel week, DisplayNameModel user) {
-    _api.week
-        .get(user.id, week.weekYear, week.weekNumber)
-        .listen((WeekModel loadedWeek) {
-      _userWeek.add(UserWeekModel(loadedWeek, user));
-    });
+    try{
+      _api.week
+          .get(user.id, week.weekYear, week.weekNumber)
+          .listen((WeekModel loadedWeek) {
+        _userWeek.add(UserWeekModel(loadedWeek, user));
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
+
   }
 
   /// Adds a new marked activity to the stream
@@ -89,12 +101,17 @@ class WeekplanBloc extends BlocBase {
     for (ActivityModel activity in _markedActivities.value) {
       activity.state = ActivityState.Canceled;
     }
+    try{
+      _api.week
+          .update(user.id, week.weekYear, week.weekNumber, week)
+          .listen((WeekModel newWeek) {
+        _userWeek.add(UserWeekModel(newWeek, user));
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
 
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
-    });
 
     clearMarkedActivities();
   }
@@ -111,11 +128,41 @@ class WeekplanBloc extends BlocBase {
 
     clearMarkedActivities();
     // Updates the weekplan in the database
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
-    });
+    try{
+      _api.week
+          .update(user.id, week.weekYear, week.weekNumber, week)
+          .listen((WeekModel newWeek) {
+        _userWeek.add(UserWeekModel(newWeek, user));
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
+  }
+/// Set the marked activities as resumed
+  // ignore: non_constant_identifier_names
+  void UndoMarkedActivities(){
+   final WeekModel week = _userWeek.value.week;
+    final DisplayNameModel user = _userWeek.value.user;
+
+    for (ActivityModel activity in _markedActivities.value) {
+      activity.state = ActivityState.Active;
+    }
+    try{
+      _api.week
+          .update(user.id, week.weekYear, week.weekNumber, week)
+          .listen((WeekModel newWeek) {
+        _userWeek.add(UserWeekModel(newWeek, user));
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
+
+    clearMarkedActivities();
+
   }
 
   /// Copies the marked activities to the given days
@@ -142,12 +189,17 @@ class WeekplanBloc extends BlocBase {
     }
 
     clearMarkedActivities();
+    try{
+      _api.week
+          .update(user.id, week.weekYear, week.weekNumber, week)
+          .listen((WeekModel newWeek) {
+        _userWeek.add(UserWeekModel(newWeek, user));
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
 
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
-    });
   }
 
   /*int _getMaxOrder(List<ActivityModel> activities) {
@@ -188,11 +240,17 @@ class WeekplanBloc extends BlocBase {
     final DisplayNameModel user = _userWeek.value.user;
 
     week.days[day].activities.add(activity);
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
-    });
+    try{
+      _api.week
+          .update(user.id, week.weekYear, week.weekNumber, week)
+          .listen((WeekModel newWeek) {
+        _userWeek.add(UserWeekModel(newWeek, user));
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
   }
 
   /// Returns the number of marked activities
@@ -228,12 +286,17 @@ class WeekplanBloc extends BlocBase {
     }
 
     week.days[dayTo.index].activities.insert(activity.order, activity);
+    try{
+      _api.week
+          .update(user.id, week.weekYear, week.weekNumber, week)
+          .listen((WeekModel newWeek) {
+        _userWeek.add(UserWeekModel(newWeek, user));
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
 
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
-    });
   }
 
   Stream<bool> _atLeastOneActivityMarked(){

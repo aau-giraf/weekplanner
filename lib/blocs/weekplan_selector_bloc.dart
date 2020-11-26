@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -6,6 +7,8 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
+
+import 'blocs_api_exeptions.dart';
 
 /// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
@@ -64,7 +67,13 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
+    try{
+      _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
   }
 
   /// Gets all the information for a [Weekmodel].
@@ -130,15 +139,21 @@ class WeekplansBloc extends BlocBase {
 
     // Loops through all weekplans and sort them into old and upcoming weekplans
     for (WeekNameModel weekPlanName in weekPlanNames) {
-      if(isWeekDone(weekPlanName)) {
-        oldWeekDetails.add(_api.week
-            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
-            .take(1));
-      } else {
-        weekDetails.add(_api.week
-            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
-            .take(1));
-      }
+      try{
+        if(isWeekDone(weekPlanName)) {
+          oldWeekDetails.add(_api.week
+              .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+              .take(1));
+        } else {
+          weekDetails.add(_api.week
+              .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+              .take(1));
+        }
+        }on SocketException{throw BlocsApiExeptions('Sock');}
+        on HttpException{throw BlocsApiExeptions('Http');}
+        on TimeoutException{throw BlocsApiExeptions('Time');}
+        on FormatException{throw BlocsApiExeptions('Form');}
+
     }
   }
 
@@ -326,22 +341,27 @@ class WeekplansBloc extends BlocBase {
     final List<WeekModel> localWeekModels = _weekModel.value;
     final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value.toList();
     // Updates the weekplan in the database
-    for (WeekModel weekModel in _markedWeekModels.value) {
-      _api.week
-          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
-          .listen((bool deleted) {
-        if (deleted) {
-          // Checks if its an old or upcoming weekplan
-          if(localWeekModels != null && localWeekModels.contains(weekModel)){
-            localWeekModels.remove(weekModel);
-            _weekModel.add(localWeekModels);
-          } else {
-            oldLocalWeekModels.remove(weekModel);
-            _oldWeekModel.add(oldLocalWeekModels);
+    try{
+      for (WeekModel weekModel in _markedWeekModels.value) {
+        _api.week
+            .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+            .listen((bool deleted) {
+          if (deleted) {
+            // Checks if its an old or upcoming weekplan
+            if(localWeekModels != null && localWeekModels.contains(weekModel)){
+              localWeekModels.remove(weekModel);
+              _weekModel.add(localWeekModels);
+            } else {
+              oldLocalWeekModels.remove(weekModel);
+              _oldWeekModel.add(oldLocalWeekModels);
+            }
           }
-        }
-      });
-    }
+        });
+      }
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
     clearMarkedWeekModels();
   }
 
@@ -362,14 +382,20 @@ class WeekplansBloc extends BlocBase {
 
   /// This method deletes the given week model from the database
   void deleteWeek(List<WeekModel> weekModels, WeekModel weekModel){
-    _api.week
-        .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
-        .listen((bool deleted) {
-      if (deleted) {
-        weekModels.remove(weekModel);
-        _weekModel.add(weekModels);
-      }
-    });
+    try{
+      _api.week
+          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+          .listen((bool deleted) {
+        if (deleted) {
+          weekModels.remove(weekModel);
+          _weekModel.add(weekModels);
+        }
+      });
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
   }
 
   /// Returns the number of marked week models
@@ -389,9 +415,14 @@ class WeekplansBloc extends BlocBase {
     final WeekModel marked = _markedWeekModels.value[0];
 
     final Completer<WeekModel> completer = Completer<WeekModel>();
-    _api.week
-        .get(_user.id, marked.weekYear, marked.weekNumber)
-        .listen((WeekModel weekModel) => completer.complete(weekModel));
+    try{
+      _api.week
+          .get(_user.id, marked.weekYear, marked.weekNumber)
+          .listen((WeekModel weekModel) => completer.complete(weekModel));
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
 
     return completer.future;
   }

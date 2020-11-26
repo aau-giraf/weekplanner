@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:mutex/mutex.dart';
+
+import 'blocs_api_exeptions.dart';
 
 /// Pictogram-Image Business Logic Component
 class PictogramImageBloc extends BlocBase {
@@ -33,7 +36,12 @@ class PictogramImageBloc extends BlocBase {
   ///
   /// The [pictogram] model should contain an ID which the API can then fetch.
   void load(PictogramModel pictogram) {
-    _api.pictogram.getImage(pictogram.id).listen(_image.add);
+    try{
+      _api.pictogram.getImage(pictogram.id).listen(_image.add);
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
   }
 
   /// Initialize loading of a specific [PictogramModel] from its [id].
@@ -48,7 +56,12 @@ class PictogramImageBloc extends BlocBase {
         _image.add(_cache[id]);
       } else {
         rx_dart.Rx.retry<Image>(() {
-          return _api.pictogram.getImage(id);
+          try{
+            return _api.pictogram.getImage(id);
+          }on SocketException{throw BlocsApiExeptions('Sock');}
+          on HttpException{throw BlocsApiExeptions('Http');}
+          on TimeoutException{throw BlocsApiExeptions('Time');}
+          on FormatException{throw BlocsApiExeptions('Form');}
         }, 3)
             .listen(
           (Image image) async {
@@ -77,16 +90,23 @@ class PictogramImageBloc extends BlocBase {
   /// Delete pictogram
    bool delete (PictogramModel pm){
     bool result;
-    final Stream<bool> res = _api.pictogram.delete(pm.id);
-    if (res != null) {
-      res.listen((bool success) {
-        result = success ?? false;
-      });
-    }
-    else{
-      result = false;
-    }
-    return result;
+    try{
+      final Stream<bool> res = _api.pictogram.delete(pm.id);
+
+      if (res != null) {
+        res.listen((bool success) {
+          result = success ?? false;
+        });
+      }
+      else{
+        result = false;
+      }
+      return result;
+
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
   }
 
   @override

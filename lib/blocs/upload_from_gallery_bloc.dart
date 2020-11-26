@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:api_client/api/api.dart';
@@ -7,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:image/image.dart';
+
+import 'blocs_api_exeptions.dart';
 
 /// Bloc for retriving an image from a phones gallery,
 /// and send it to the pictogram database
@@ -93,19 +96,25 @@ class UploadFromGalleryBloc extends BlocBase {
   /// from the seleted [Image], [AccessLevel], and title
   Stream<PictogramModel> createPictogram() {
     _isUploading.add(true);
-    return _api.pictogram
-        .create(PictogramModel(
-      accessLevel: _accessLevel,
-      title: _pictogramName,
-    ))
-        .flatMap((PictogramModel pictogram) {
-      return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
-    }).map((PictogramModel pictogram) {
-      _isUploading.add(false);
-      return pictogram;
-    }).doOnError((Object error, StackTrace trace) {
-      _isUploading.add(false);
-    }).take(1);
+    try{
+      return _api.pictogram
+          .create(PictogramModel(
+        accessLevel: _accessLevel,
+        title: _pictogramName,
+      ))
+          .flatMap((PictogramModel pictogram) {
+        return _api.pictogram.updateImage(pictogram.id, _encodePng(_file.value));
+      }).map((PictogramModel pictogram) {
+        _isUploading.add(false);
+        return pictogram;
+      }).doOnError((Object error, StackTrace trace) {
+        _isUploading.add(false);
+      }).take(1);
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
   }
 
   @override

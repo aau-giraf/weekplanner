@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/timer_model.dart';
@@ -9,6 +10,8 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
+
+import 'blocs_api_exeptions.dart';
 
 /// Logic for activities
 class TimerBloc extends BlocBase {
@@ -90,9 +93,15 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
     _timerProgressNumeric.add(_durationToTimestamp(duration));
-    _api.activity
-        .update(_activityModel, _user.id)
-        .listen((ActivityModel activity) {});
+    try{
+      _api.activity
+          .update(_activityModel, _user.id)
+          .listen((ActivityModel activity) {});
+    }on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
+
   }
 
   List<int> _durationToTimestamp(Duration duration) {
@@ -203,9 +212,14 @@ class TimerBloc extends BlocBase {
       });
       _timerRunningModeStream.add(TimerRunningMode.running);
 
-      _api.activity
-          .update(_activityModel, _user.id)
-          .listen((ActivityModel activity) {});
+      try{
+        _api.activity
+            .update(_activityModel, _user.id)
+            .listen((ActivityModel activity) {});
+      }on SocketException{throw BlocsApiExeptions('Sock');}
+      on HttpException{throw BlocsApiExeptions('Http');}
+      on TimeoutException{throw BlocsApiExeptions('Time');}
+      on FormatException{throw BlocsApiExeptions('Form');}
     }
   }
 

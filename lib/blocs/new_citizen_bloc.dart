@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
+
+import 'blocs_api_exeptions.dart';
 
 ///This bloc is used by a guardian to instantiate a new citizen.
 class NewCitizenBloc extends BlocBase {
@@ -58,20 +61,30 @@ class NewCitizenBloc extends BlocBase {
   /// Necessary to call in case another user logs in without terminating the app
   void initialize() {
     resetBloc();
-    _api.user.me().listen((GirafUserModel user) {
-      _user = user;
-    });
+    try{
+      _api.user.me().listen((GirafUserModel user) {
+        _user = user;
+      });
+    } on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
   }
 
   /// Method called with information about the new citizen.
   Stream<GirafUserModel> createCitizen() {
-    return _api.account.register(
-        usernameController.value,
-        passwordController.value,
-        displayNameController.value,
-        departmentId: _user.department,
-        role: Role.Citizen
-    );
+    try{
+      return _api.account.register(
+          usernameController.value,
+          passwordController.value,
+          displayNameController.value,
+          departmentId: _user.department,
+          role: Role.Citizen
+      );
+    } on SocketException{throw BlocsApiExeptions('Sock');}
+    on HttpException{throw BlocsApiExeptions('Http');}
+    on TimeoutException{throw BlocsApiExeptions('Time');}
+    on FormatException{throw BlocsApiExeptions('Form');}
   }
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>

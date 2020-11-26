@@ -7,6 +7,7 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   // Register all dependencies for injector
@@ -33,8 +34,10 @@ bool lastState = false;
 bool first = true;
 void _runApp() {
   runApp(MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Weekplanner',
       theme: ThemeData(fontFamily: 'Quicksand'),
+      //debugShowCheckedModeBanner: false,
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di
@@ -52,7 +55,8 @@ void _runApp() {
               Routes.goHome(context);
               return LoginScreen();
             }
-          })));
+          })
+    ));
 }
 
 bool get _isInDebugMode {

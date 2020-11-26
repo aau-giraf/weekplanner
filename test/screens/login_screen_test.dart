@@ -27,20 +27,13 @@ class MockLoginScreenState extends LoginScreenState {
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
       if (snapshot == false) {
-        showNotifyDialog();
+        if (!loginStatus) {
+
+          creatingNotifyDialog('Forkert brugernavn og/eller adgangskode',
+              'WrongUsernameOrPassword');
+        }
       }
     });
-  }
-
-  /// This is the callback method of the loading spinner to show the dialog
-  @override
-  void showNotifyDialog() {
-    // Checking username/password
-    if (!loginStatus) {
-
-      creatingNotifyDialog('Forkert brugernavn og/eller adgangskode',
-          'WrongUsernameOrPassword');
-    }
   }
 
   /// Function that creates the notify dialog,
@@ -82,7 +75,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   String loggedInUsername;
 
   @override
-  void authenticate(String username, String password) {
+  Future<void> authenticate(String username, String password) async {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');

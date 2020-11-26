@@ -36,7 +36,7 @@ class MockAuthBloc extends AuthBloc {
   MockAuthBloc(Api api) : super(api);
 
   @override
-  void authenticateFromPopUp(String username, String password) {
+  Future<void> authenticateFromPopUp(String username, String password) async {
     if (password == 'password') {
       setAttempt(true);
       setMode(WeekplanMode.guardian);

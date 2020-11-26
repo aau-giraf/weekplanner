@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:api_client/api/api.dart';
@@ -11,7 +10,6 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
-
 import 'package:csv/csv.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -282,18 +280,6 @@ void main() {
   }));
 
 
-  //test('Check if a week is done', async((DoneFn done) {
-  //  expect(bloc.isWeekDone(weekNameModel1), true);
-  //  expect(bloc.isWeekDone(weekNameModel2), false);
-  //  expect(bloc.isWeekDone(weekNameModel3), false);
-  //  expect(bloc.isWeekDone(weekNameModel4), true);
-  //  expect(bloc.isWeekDone(weekNameModel5), true);
-  //  done();
-  //}));
-
-  //test('Weekplans should be split into old and upcoming', async((DoneFn done){
-
-
   /*
   This test is to find errors with getWeekNumberFromDate if the next test
   fails on one if its 4000 cases. It might not be enough though. More dates
@@ -445,25 +431,19 @@ void main() {
 
   // test('Weekplans should be split into old and upcoming',
   // async((DoneFn done){
-
   //  weekNameModelList.add(weekNameModel2);
   //  weekNameModelList.add(weekNameModel3);
   //  weekNameModelList.add(weekNameModel4);
   //  weekNameModelList.add(weekNameModel5);
-
+  //
   //  weekModelList.add(weekModel2);
   //  weekModelList.add(weekModel3);
   //  weekModelList.add(weekModel4);
   //  weekModelList.add(weekModel5);
-
-  //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test',
-  //  id: 'test'));
-
   //
   //  bloc.load(DisplayNameModel(displayName: 'test', role: 'test',
   //  id: 'test'));
   //
-
   //  bloc.oldWeekModels.listen((List<WeekModel>oldWeekModels) {
   //    expect(oldWeekModels.contains(weekModel1), true);
   //    expect(oldWeekModels.contains(weekModel2), false);
@@ -471,9 +451,7 @@ void main() {
   //    expect(oldWeekModels.contains(weekModel4), true);
   //    expect(oldWeekModels.contains(weekModel5), true);
   //  });
-
   //
-
   //  bloc.weekModels.listen((List<WeekModel>weekModels) {
   //    expect(weekModels.contains(weekModel1), false);
   //    expect(weekModels.contains(weekModel2), true);
@@ -481,11 +459,8 @@ void main() {
   //    expect(weekModels.contains(weekModel4), false);
   //    expect(weekModels.contains(weekModel5), false);
   //  });
-
-//
+  //
   //  done();
-  //}));
-
-
+  // }));
 
 }

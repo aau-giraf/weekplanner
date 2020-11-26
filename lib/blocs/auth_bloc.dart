@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -35,9 +37,10 @@ class AuthBloc extends BlocBase {
   rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
-  void authenticate(String username, String password) {
+  Future<void> authenticate(String username, String password) async {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
+    final Completer<void> completer = Completer<void>();
     _api.account.login(username, password).listen((bool status) {
       // Set the status
       // If there is a successful login, remove the loading spinner,
@@ -47,17 +50,46 @@ class AuthBloc extends BlocBase {
         loggedInUsername = username;
         setMode(WeekplanMode.guardian);
       }
+      completer.complete();
+    }).onError((Object error){
+      completer.completeError(error);
     });
+
+    Future.wait(<Future<void>>[completer.future]);
+    return completer.future;
   }
 
   /// Authenticates the user only by password when signing-in from PopUp.
-  void authenticateFromPopUp(String username, String password) {
+  Future<void> authenticateFromPopUp(String username, String password) async {
+    final Completer<void> completer = Completer<void>();
     _api.account.login(username, password).listen((bool status) {
       if (status) {
           _loginAttempt.add(status);
           setMode(WeekplanMode.guardian);
         }
+      completer.complete();
+    }).onError((Object error) {
+      completer.completeError(error);
+    } );
+    Future.wait(<Future<void>>[completer.future]);
+    return completer.future;
+  }
+
+  ///Checks if theres is a connection to the api server
+  Future<bool> getApiConnection(){
+    final Completer<bool> completer = Completer<bool>();
+    _api.status.status().listen((bool status) {
+      completer.complete(status);
+    }).onError((Object error){
+      completer.complete(false);
     });
+    Future.wait(<Future<bool>>[completer.future]);
+    return completer.future;
+  }
+  /// Checks if there is an internet connection
+  Future<bool> checkInternetConnection() async{
+    final bool hasConnection = await DataConnectionChecker().hasConnection;
+    return Future<bool>.value(hasConnection);
   }
 
   /// Logs the currently logged in user out
