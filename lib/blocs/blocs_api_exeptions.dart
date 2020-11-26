@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
 import '../main.dart';
 
 ///This class handles all api exeptions
@@ -8,7 +9,8 @@ class BlocsApiExeptions{
 
   ///this constructor allows developers to costumize errors
   BlocsApiExeptions(String errorType,
-      [this.errormessage = 'opps noget gik galt']){
+      [this.errormessage = 'opps noget gik galt',
+        Object error]){
     ///switchen her er bare for at give nogle basale api fejl
     switch (errorType){
       case 'Sock':
@@ -23,8 +25,13 @@ class BlocsApiExeptions{
       case 'Form':
         errormessage = 'en formaterings fejl opstod';
         break;
+      case 'spec':
+         _translator.catchApiError(error, navigatorKey.currentContext);
+        break;
     }
   }
+
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   ///This string is used to contain error messages
   String errormessage;

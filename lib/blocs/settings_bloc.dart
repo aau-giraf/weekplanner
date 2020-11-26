@@ -45,6 +45,8 @@ class SettingsBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
   }
 
@@ -58,6 +60,8 @@ class SettingsBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
   }
 
   /// Set the theme to be used

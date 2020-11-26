@@ -60,6 +60,8 @@ class WeekplanBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
 
   }
@@ -111,6 +113,8 @@ class WeekplanBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
 
     clearMarkedActivities();
@@ -138,6 +142,8 @@ class WeekplanBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
   }
 /// Set the marked activities as resumed
@@ -159,6 +165,8 @@ class WeekplanBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
 
     clearMarkedActivities();
@@ -199,6 +207,8 @@ class WeekplanBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
   }
 
@@ -250,6 +260,8 @@ class WeekplanBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
   }
 
@@ -296,6 +308,8 @@ class WeekplanBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
+    on Exception catch(exeption)
+    {throw BlocsApiExeptions('spec', '', exeption);}
 
   }
 
