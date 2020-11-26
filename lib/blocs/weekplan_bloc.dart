@@ -18,6 +18,10 @@ class WeekplanBloc extends BlocBase {
   /// The stream that emits the currently chosen weekplan
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
+  Stream<WeekdayModel> get mondayStream => _mondayStream.stream;
+
+  Stream<WeekdayModel> get tuesdayStream => _tuesdayStream.stream;
+
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
 
@@ -42,6 +46,10 @@ class WeekplanBloc extends BlocBase {
       rx_dart.BehaviorSubject<UserWeekModel>();
   final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
       rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<WeekdayModel> _mondayStream =
+  rx_dart.BehaviorSubject<WeekdayModel>();
+  final rx_dart.BehaviorSubject<WeekdayModel> _tuesdayStream =
+  rx_dart.BehaviorSubject<WeekdayModel>();
 
   /// Sink to set the currently chosen week
   void loadWeek(WeekModel week, DisplayNameModel user) {
@@ -247,13 +255,10 @@ class WeekplanBloc extends BlocBase {
     }
 
     week.days[dayTo.index].activities.insert(activity.order, activity);
-///merge conflict here
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
-    });
-    /// split here
+
+    _mondayStream.add(WeekdayModel(day: dayFrom, activities: week.days[0].activities));
+    _tuesdayStream.add(WeekdayModel(day: dayTo, activities: week.days[1].activities));
+
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
@@ -261,10 +266,6 @@ class WeekplanBloc extends BlocBase {
     });
   }
 
-  void (){
-
-  }
-/// to here
   Stream<bool> _atLeastOneActivityMarked(){
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
