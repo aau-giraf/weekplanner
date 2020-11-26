@@ -18,9 +18,8 @@ class WeekplanBloc extends BlocBase {
   /// The stream that emits the currently chosen weekplan
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
-  Stream<WeekdayModel> get mondayStream => _mondayStream.stream;
-
-  Stream<WeekdayModel> get tuesdayStream => _tuesdayStream.stream;
+  final List<rx_dart.BehaviorSubject<WeekdayModel>> _weekDayStreams =
+      <rx_dart.BehaviorSubject<WeekdayModel>>[];
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -46,18 +45,50 @@ class WeekplanBloc extends BlocBase {
       rx_dart.BehaviorSubject<UserWeekModel>();
   final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
       rx_dart.BehaviorSubject<bool>.seeded(false);
-  final rx_dart.BehaviorSubject<WeekdayModel> _mondayStream =
-  rx_dart.BehaviorSubject<WeekdayModel>();
-  final rx_dart.BehaviorSubject<WeekdayModel> _tuesdayStream =
-  rx_dart.BehaviorSubject<WeekdayModel>();
+
+  WeekModel _week;
+  int _daysToDisplay = 0;
+  int _firstDay = 0;
+
+  /// Set how many days are displayed and which day is the first
+  void setDaysToDisplay(int numDays, int firstDay){
+    _daysToDisplay = numDays;
+    _firstDay = firstDay;
+  }
 
   /// Sink to set the currently chosen week
-  void loadWeek(WeekModel week, DisplayNameModel user) {
+  void getWeek(WeekModel week, DisplayNameModel user) {
     _api.week
         .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
+          _week = loadedWeek;
       _userWeek.add(UserWeekModel(loadedWeek, user));
     });
+  }
+
+  /// Get the current week fresh from the api
+  void loadWeek(DisplayNameModel user){
+    _api.week
+        .get(user.id, _week.weekYear, _week.weekNumber)
+        .listen((WeekModel loadedWeek) {
+      _userWeek.add(UserWeekModel(loadedWeek, user));
+    });
+  }
+
+  /// update each weekday
+  void updateWeekdays(WeekModel week){
+    for(int i = 0; i < _daysToDisplay ; i++){
+      print(i);
+      var prevday = _weekDayStreams[i].value;
+      var newday = week.days[i+_firstDay];
+      if(prevday != newday) {
+        _weekDayStreams[i].add(week.days[i + _firstDay]);
+        print("ikke helt så ens");
+      }
+      else{
+        print("de var ens, neeem");
+      }
+    }
   }
 
   /// Adds a new marked activity to the stream
@@ -81,6 +112,24 @@ class WeekplanBloc extends BlocBase {
     _markedActivities.add(<ActivityModel>[]);
   }
 
+  /// Getter for weekdaystreams
+  Stream<WeekdayModel> getWeekdayStream(int index){
+    return _weekDayStreams[index].stream;
+  }
+
+  /// Add a new weekdaystream
+  void addWeekdayStream(){
+    _weekDayStreams.add(rx_dart.BehaviorSubject<WeekdayModel>.seeded(_week.days[_firstDay+_weekDayStreams.length]));
+  }
+
+  /// Clear weekdaystreams list
+  void clearWeekdayStreams(){
+    for(rx_dart.BehaviorSubject<WeekdayModel> i in _weekDayStreams){
+      i.close();
+    }
+    _weekDayStreams.clear();
+  }
+
   /// Checks if an activity is marked
   bool isActivityMarked(ActivityModel activityModel) {
     if (_markedActivities.value == null) {
@@ -102,6 +151,7 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+      updateWeekdays(newWeek);
     });
 
     clearMarkedActivities();
@@ -123,6 +173,7 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+      updateWeekdays(newWeek);
     });
   }
 /// Set the marked activities as resumed
@@ -139,6 +190,7 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+      updateWeekdays(newWeek);
     });
 
     clearMarkedActivities();
@@ -174,6 +226,7 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+      updateWeekdays(newWeek);
     });
   }
 
@@ -219,6 +272,7 @@ class WeekplanBloc extends BlocBase {
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+      updateWeekdays(newWeek);
     });
   }
 
@@ -256,13 +310,11 @@ class WeekplanBloc extends BlocBase {
 
     week.days[dayTo.index].activities.insert(activity.order, activity);
 
-    _mondayStream.add(WeekdayModel(day: dayFrom, activities: week.days[0].activities));
-    _tuesdayStream.add(WeekdayModel(day: dayTo, activities: week.days[1].activities));
-
     _api.week
         .update(user.id, week.weekYear, week.weekNumber, week)
         .listen((WeekModel newWeek) {
       _userWeek.add(UserWeekModel(newWeek, user));
+      updateWeekdays(newWeek);
     });
   }
 
@@ -273,7 +325,9 @@ class WeekplanBloc extends BlocBase {
 
   @override
   void dispose() {
+    clearWeekdayStreams();
     _userWeek.close();
     _activityPlaceholderVisible.close();
+    _markedActivities.close();
   }
 }

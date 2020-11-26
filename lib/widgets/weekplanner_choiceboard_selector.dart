@@ -2,6 +2,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -19,7 +20,7 @@ import 'giraf_confirm_dialog.dart';
 class WeekplannerChoiceboardSelector extends StatelessWidget {
   ///Constructor
   WeekplannerChoiceboardSelector(this._activity, this._activityBloc, this._user,
-      this._weekplanBloc, this._week) {
+      this._weekplanBloc, this._weekday) {
     _activityBloc.load(_activity, _user);
   }
 
@@ -27,7 +28,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   final WeekplanBloc _weekplanBloc;
 
-  final WeekModel _week;
+  final WeekdayModel _weekday;
 
   final DisplayNameModel _user;
 
@@ -165,7 +166,6 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
                 _activityBloc.update();
                 _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
-                  _weekplanBloc.loadWeek(_week, _user);
                   Routes.pop(context);
                 });
                 // Closes the dialog box

@@ -34,7 +34,7 @@ class WeekplanScreen extends StatelessWidget {
   /// <param name="week">Week that should be shown on the weekplan</param>
   /// <param name="user">owner of the weekplan</param>
   WeekplanScreen(this._week, this._user, {Key key}) : super(key: key) {
-    _weekplanBloc.loadWeek(_week, _user);
+    _weekplanBloc.getWeek(_week, _user);
     _settingsBloc.loadSettings(_user);
   }
 
@@ -305,6 +305,8 @@ class WeekplanScreen extends StatelessWidget {
 
             if (role == WeekplanMode.guardian) {
               weekDays.clear();
+              _weekplanBloc.clearWeekdayStreams();
+              _weekplanBloc.setDaysToDisplay(7, 0);
               for (int i = 0; i < weekModel.days.length; i++) {
                 weekDays.add(Expanded(
                     child: WeekplanDayColumn(
@@ -312,7 +314,9 @@ class WeekplanScreen extends StatelessWidget {
                   color: defaultWeekColors[i],
                   weekplanBloc: _weekplanBloc,
                   user: _user,
+                  streamIndex: i,
                 )));
+                _weekplanBloc.addWeekdayStream();
               }
               return Row(children: weekDays);
             } else if (role == WeekplanMode.citizen) {
@@ -332,6 +336,9 @@ class WeekplanScreen extends StatelessWidget {
                     }
                     // Adding the selected number of days to weekDays
                     weekDays.clear();
+                    _weekplanBloc.clearWeekdayStreams();
+                    _weekplanBloc.setDaysToDisplay(_daysToDisplay,
+                        _weekdayCounter);
                     for (int i = 0; i < _daysToDisplay; i++) {
                       // Get color from the citizen's chosen color theme
                       final String dayColor = _settingsModel.weekDayColors
@@ -346,9 +353,11 @@ class WeekplanScreen extends StatelessWidget {
                           color: Color(int.parse(dayColor)),
                           weekplanBloc: _weekplanBloc,
                           user: _user,
+                          streamIndex: i,
                           )
                         )
                       );
+                      _weekplanBloc.addWeekdayStream();
                       if (_daysToDisplay == 2 && _weekdayCounter == 6) {
                         break;
                         /* If the user wants two days to display
@@ -377,6 +386,7 @@ class WeekplanScreen extends StatelessWidget {
                 },
               );
             }
+            _weekplanBloc.updateWeekdays(_week);
           } else {
             return const Center(
               child: CircularProgressIndicator(),
