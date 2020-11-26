@@ -23,8 +23,6 @@ class UploadImageFromPhone extends StatelessWidget {
   final UploadFromGalleryBloc _uploadFromGallery =
   di.getDependency<UploadFromGalleryBloc>();
 
-  final ApiErrorTranslater _translator = ApiErrorTranslater();
-
   final BorderRadius _imageBorder = BorderRadius.circular(25);
   ///screen height
   dynamic screenHeight;
@@ -116,8 +114,7 @@ class UploadImageFromPhone extends StatelessWidget {
                 Routes.pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
-              }).onError((Object error) =>
-                  _translator.catchApiError(error, context));
+              });
             },
             isEnabledStream: _uploadFromGallery.isInputValid,
           ),
