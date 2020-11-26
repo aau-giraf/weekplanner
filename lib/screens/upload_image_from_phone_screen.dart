@@ -10,7 +10,6 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
-import 'package:weekplanner/api/errorcode_translater.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Screen for uploading a [PictogramModel] to the server
