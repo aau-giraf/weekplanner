@@ -149,14 +149,14 @@ class WeekplansBloc extends BlocBase {
 
   /// Calculates the current week number from a given date
   int getWeekNumberFromDate(DateTime date) {
-    
+
     // Get the preliminary week number
     final int weekNum = getWeekNumberFromNearestThursday(date);
 
     // Define a day that is in the last week of the year.
     // ## December 28th is always in the last week of the year ##
-    final DateTime dayInLastWeekThisYear = DateTime(date.year, 12, 28, 12);
-    final DateTime dayInLastWeekLastYear = DateTime(date.year - 1, 12, 28, 12);
+    final DateTime dayInLastWeekThisYear = DateTime(date.year, 12, 28);
+    final DateTime dayInLastWeekLastYear = DateTime(date.year - 1, 12, 28);
 
     // If the preliminary week number is 0,
     // the given date is in last year's last week
