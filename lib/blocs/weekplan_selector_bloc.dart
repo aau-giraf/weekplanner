@@ -265,7 +265,7 @@ class WeekplansBloc extends BlocBase {
 
     return weekNum;
   }
-
+  ///this gets last year last week
   int getLastYearLastWeek(DateTime date) {
     final DateTime lastYearLastDay = DateTime(date.year - 1, 12, 31);
 

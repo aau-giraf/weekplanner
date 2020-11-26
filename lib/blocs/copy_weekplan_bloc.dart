@@ -39,7 +39,8 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
       final Completer<bool> callCompleter = Completer<bool>();
       try{
         _api.week
-            .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
+            .update(user.id, weekModel.weekYear,
+            weekModel.weekNumber, weekModel)
             .take(1)
             .listen((WeekModel weekModel) {
           final bool done = weekModel != null;
