@@ -73,8 +73,8 @@ class WeekplansBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
-    on Exception catch(exeption)
-    {throw BlocsApiExeptions('spec', '', exeption);}
+    on Error catch(error)
+    {throw BlocsApiExeptions('spec', '', error);}
 
   }
 
@@ -155,8 +155,8 @@ class WeekplansBloc extends BlocBase {
         on HttpException{throw BlocsApiExeptions('Http');}
         on TimeoutException{throw BlocsApiExeptions('Time');}
         on FormatException{throw BlocsApiExeptions('Form');}
-      on Exception catch(exeption)
-      {throw BlocsApiExeptions('spec', '', exeption);}
+      on Error catch(error)
+      {throw BlocsApiExeptions('spec', '', error);}
 
     }
   }
@@ -366,8 +366,8 @@ class WeekplansBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
-    on Exception catch(exeption)
-    {throw BlocsApiExeptions('spec', '', exeption);}
+    on Error catch(error)
+    {throw BlocsApiExeptions('spec', '', error);}
     clearMarkedWeekModels();
   }
 
@@ -401,8 +401,8 @@ class WeekplansBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
-    on Exception catch(exeption)
-    {throw BlocsApiExeptions('spec', '', exeption);}
+    on Error catch(error)
+    {throw BlocsApiExeptions('spec', '', error);}
 
   }
 
@@ -431,8 +431,8 @@ class WeekplansBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
-    on Exception catch(exeption)
-    {throw BlocsApiExeptions('spec', '', exeption);}
+    on Error catch(error)
+    {throw BlocsApiExeptions('spec', '', error);}
 
     return completer.future;
   }

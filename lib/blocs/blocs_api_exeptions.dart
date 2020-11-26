@@ -25,7 +25,8 @@ class BlocsApiExeptions{
       case 'Form':
         errormessage = 'en formaterings fejl opstod';
         break;
-      case 'spec':
+      case 'spec'://if the exeption is not a exeption but a error send it to
+      // the error handler
          _translator.catchApiError(error, navigatorKey.currentContext);
         break;
     }

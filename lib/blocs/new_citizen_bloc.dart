@@ -69,8 +69,8 @@ class NewCitizenBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
-    on Exception catch(exeption)
-    {throw BlocsApiExeptions('spec', '', exeption);}
+    on Error catch(error)
+    {throw BlocsApiExeptions('spec', '', error);}
   }
 
   /// Method called with information about the new citizen.
@@ -87,8 +87,8 @@ class NewCitizenBloc extends BlocBase {
     on HttpException{throw BlocsApiExeptions('Http');}
     on TimeoutException{throw BlocsApiExeptions('Time');}
     on FormatException{throw BlocsApiExeptions('Form');}
-    on Exception catch(exeption)
-    {throw BlocsApiExeptions('spec', '', exeption);}
+    on Error catch(error)
+    {throw BlocsApiExeptions('spec', '', error);}
   }
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>
