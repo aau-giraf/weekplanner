@@ -149,9 +149,7 @@ class WeekplansBloc extends BlocBase {
 
   /// Calculates the current week number from a given date
   int getWeekNumberFromDate(DateTime date) {
-    // Sets the time of day to be noon, thus mitigating the summer time issue
-    date = DateTime(date.year, date.month, date.day, 12);
-
+    
     // Get the preliminary week number
     final int weekNum = getWeekNumberFromNearestThursday(date);
 
@@ -180,6 +178,9 @@ class WeekplansBloc extends BlocBase {
 
   /// Calculates the week number from the nearest Thursday of the given date
   int getWeekNumberFromNearestThursday(DateTime date) {
+
+    // Sets the time of day to be noon, thus mitigating the summer time issue
+    date = DateTime(date.year, date.month, date.day, 12);
 
     // Find the number of days we are into the year. June 1st would be day 153
     final int dayOfYear = date.difference(DateTime(date. year, 1, 1)).inDays;
