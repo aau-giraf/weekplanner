@@ -7,6 +7,7 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 
+///navigator key allows for error messages from back end
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
