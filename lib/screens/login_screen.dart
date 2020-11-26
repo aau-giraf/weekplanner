@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
+import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
@@ -20,6 +21,8 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   /// AuthBloC used to communicate with API
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
+
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -56,13 +59,14 @@ class LoginScreenState extends State<LoginScreen> {
             creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
                 'kontakt en administrator', 'UnknownError');
           }
-        });
+        }).onError((Object error) =>
+            _translator.catchApiError(error, context));;
     }).catchError((Object error) {
       if(error is ApiException){
         creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
             error.errorKey.toString());
       }
-      else if(error is SocketException){
+      if(error is SocketException){
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
           if (hasInternetConnection) {
             // Checking server connection, if true check username/password

@@ -10,6 +10,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Screen for uploading a [PictogramModel] to the server
@@ -21,6 +22,8 @@ class UploadImageFromPhone extends StatelessWidget {
 
   final UploadFromGalleryBloc _uploadFromGallery =
   di.getDependency<UploadFromGalleryBloc>();
+
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
   dynamic screenHeight;
@@ -111,7 +114,8 @@ class UploadImageFromPhone extends StatelessWidget {
                 Routes.pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
-              });
+              }).onError((Object error) =>
+                  _translator.catchApiError(error, context));;
             },
             isEnabledStream: _uploadFromGallery.isInputValid,
           ),

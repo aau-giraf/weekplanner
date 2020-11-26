@@ -21,6 +21,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -42,6 +43,8 @@ class WeekplanSelectorScreen extends StatefulWidget {
 
  class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   bool showOldWeeks = true;
+
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
 
  void _toggleOldWeeks() {
    setState(() {
@@ -373,10 +376,12 @@ class WeekplanSelectorScreen extends StatefulWidget {
     bool reload = false;
     widget._weekBloc.oldWeekModels.listen((List<WeekModel> list) {
       reload = list.length < 2;
-    });
+    }).onError((Object error) =>
+        _translator.catchApiError(error, context));
     widget._weekBloc.weekModels.listen((List<WeekModel> list) {
       reload |= list.length < 3;
-    });
+    }).onError((Object error) =>
+        _translator.catchApiError(error, context));;
     if (markedCount != 1) {
       final String description = markedCount > 1
           ? 'Der kan kun redigeres en uge ad gangen'
