@@ -62,7 +62,7 @@ class LoginScreenState extends State<LoginScreen> {
         creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
             error.errorKey.toString());
       }
-      if(error is SocketException){
+      else if(error is SocketException){
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
           if (hasInternetConnection) {
             // Checking server connection, if true check username/password
