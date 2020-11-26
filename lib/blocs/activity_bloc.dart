@@ -92,8 +92,7 @@ class ActivityBloc extends BlocBase {
             });
       }
     });
-
-    Future.wait([completer.future]);
+    Future.wait(<Future<void>>[completer.future]);
 
   }
   /// Method to get alternate name from api

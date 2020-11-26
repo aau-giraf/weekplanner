@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
@@ -82,6 +81,57 @@ class MockAuth extends Mock implements AuthBloc {
     _loggedIn.add(false);
     _mode.add(WeekplanMode.citizen);
   }
+}
+
+class MockActivityBloc extends Mock implements ActivityBloc{
+  MockActivityBloc();
+
+  @override
+  void setAlternateName(String name){
+    mockActivity.title = name;
+  }
+
+  @override
+  ActivityModel getActivity() {
+    return mockActivity;
+  }
+
+  @override
+  void completeActivity() {
+    mockActivity.state = mockActivity.state == ActivityState.Completed ?
+      ActivityState.Normal : ActivityState.Completed;
+    _activityModelStream.add(mockActivity);
+  }
+
+  @override
+  Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
+
+  final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
+  rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity);
+
+  /// Mark the selected activity as cancelled.Toggle function, if activity is
+  /// Canceled, it will become Normal
+  @override
+  void cancelActivity() {
+    mockActivity.state = mockActivity.state == ActivityState.Canceled
+        ? ActivityState.Normal
+        : ActivityState.Canceled;
+    _activityModelStream.add(mockActivity);
+  }
+
+
+  ///Method to get the standard tile from the pictogram
+  @override
+  void getStandardTitle(){
+    mockActivity.title = mockActivity.pictograms.first.title;
+    update();
+  }
+
+  @override
+  void dispose() {
+    _activityModelStream.close();
+  }
+
 }
 
 class MockActivityApi extends Mock implements ActivityApi {
@@ -252,7 +302,7 @@ void main() {
     api.week = weekApi;
     api.activity = MockActivityApi();
     authBloc = AuthBloc(api);
-    bloc = ActivityBloc(api);
+    bloc = MockActivityBloc();
     timerBloc = TimerBloc(api);
     timerBloc.load(mockActivity,
         user: DisplayNameModel(id: '10', displayName: 'Test', role: ''));
@@ -980,13 +1030,15 @@ void main() {
       ShowActivityScreen(mockActivity, mockUser2)));
 
     await tester.pump();
+
+    expect(bloc.getActivity().title,'blå');
     await tester.enterText(
         find.byKey(const Key('AlternateNameTextField')), 'test');
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
     await tester.pumpAndSettle();
 
-    expect(mockActivity.title, 'test');
+    expect(bloc.getActivity().title,'test');
   });
 
   testWidgets('Activity title is set to pictogram title on button press',
