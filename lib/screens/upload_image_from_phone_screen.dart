@@ -26,7 +26,9 @@ class UploadImageFromPhone extends StatelessWidget {
   final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+  ///screen height
   dynamic screenHeight;
+  ///screen width
   dynamic screenWidth;
 
   @override
@@ -115,7 +117,7 @@ class UploadImageFromPhone extends StatelessWidget {
               }, onError: (Object error) {
                 _showUploadError(context);
               }).onError((Object error) =>
-                  _translator.catchApiError(error, context));;
+                  _translator.catchApiError(error, context));
             },
             isEnabledStream: _uploadFromGallery.isInputValid,
           ),

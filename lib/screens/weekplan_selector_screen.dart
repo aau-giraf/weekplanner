@@ -381,7 +381,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
     widget._weekBloc.weekModels.listen((List<WeekModel> list) {
       reload |= list.length < 3;
     }).onError((Object error) =>
-        _translator.catchApiError(error, context));;
+        _translator.catchApiError(error, context));
     if (markedCount != 1) {
       final String description = markedCount > 1
           ? 'Der kan kun redigeres en uge ad gangen'

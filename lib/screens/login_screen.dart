@@ -60,7 +60,7 @@ class LoginScreenState extends State<LoginScreen> {
                 'kontakt en administrator', 'UnknownError');
           }
         }).onError((Object error) =>
-            _translator.catchApiError(error, context));;
+            _translator.catchApiError(error, context));
     }).catchError((Object error) {
       if(error is ApiException){
         creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
