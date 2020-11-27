@@ -242,7 +242,7 @@ class WeekplanScreen extends StatelessWidget {
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/undo.png')),
               confirmOnPressed: () {
-                _weekplanBloc.UndoMarkedActivities();
+                _weekplanBloc.undoMarkedActivities();
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
@@ -386,7 +386,6 @@ class WeekplanScreen extends StatelessWidget {
                 },
               );
             }
-            _weekplanBloc.updateWeekdays(_week);
           } else {
             return const Center(
               child: CircularProgressIndicator(),

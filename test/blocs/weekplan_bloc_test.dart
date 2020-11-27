@@ -556,7 +556,7 @@ void main() {
       weekplanBloc.addMarkedActivity(activity);
       return weekplanBloc.userWeek.take(1);
     }).flatMap((_) {
-      weekplanBloc.UndoMarkedActivities();
+      weekplanBloc.undoMarkedActivities();
       return weekplanBloc.userWeek.take(1);
     }).listen((UserWeekModel userWeekModel) {
       verify(api.week.update(any, any, any, any));
