@@ -74,6 +74,10 @@ class WeekplanBloc extends BlocBase {
         .get(user.id, _week.weekYear, _week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
+      _week = loadedWeek;
+      for(int i = 0; i < _daysToDisplay; i++){
+        _weekDayStreams[i].add(loadedWeek.days[i-_firstDay]);
+      }
     });
   }
 
@@ -238,6 +242,7 @@ class WeekplanBloc extends BlocBase {
       return Future<void>.error(error);
     });
 
+    return Future<void>.value();
   }
 
   /// Returns the number of marked activities
@@ -248,37 +253,37 @@ class WeekplanBloc extends BlocBase {
   /// Reorders activities between same or different days.
   void reorderActivities(
       ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
-    final WeekModel week = _userWeek.value.week;
-    final DisplayNameModel user = _userWeek.value.user;
-
     // Removed from dayFrom, the day the pictogram is dragged from
-    int dayLength = week.days[dayFrom.index].activities.length;
+    int dayLength = _week.days[dayFrom.index].activities.length;
 
+    List<WeekdayModel> daysToUpdate = <WeekdayModel>[];
     for (int i = activity.order + 1; i < dayLength; i++) {
-      week.days[dayFrom.index].activities[i].order -= 1;
+      _week.days[dayFrom.index].activities[i].order -= 1;
     }
 
-    week.days[dayFrom.index].activities.remove(activity);
+    _week.days[dayFrom.index].activities.remove(activity);
+    daysToUpdate.add(_week.days[dayFrom.index]);
 
     activity.order = dayFrom == dayTo &&
-            week.days[dayTo.index].activities.length == newOrder - 1
+            _week.days[dayTo.index].activities.length == newOrder - 1
         ? newOrder - 1
         : newOrder;
 
     // Inserts into dayTo, the day that the pictogram is inserted to
-    dayLength = week.days[dayTo.index].activities.length;
+    dayLength = _week.days[dayTo.index].activities.length;
 
     for (int i = activity.order; i < dayLength; i++) {
-      week.days[dayTo.index].activities[i].order += 1;
+      _week.days[dayTo.index].activities[i].order += 1;
     }
 
-    week.days[dayTo.index].activities.insert(activity.order, activity);
+    if(dayFrom != dayTo){
+      daysToUpdate.add(_week.days[dayTo.index]);
+    }
+    _week.days[dayTo.index].activities.insert(activity.order, activity);
 
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
-     // updateWeekdays(newWeek);
+    updateWeekdays(daysToUpdate)
+        .catchError((Object error){
+      return Future<void>.error(error);
     });
   }
 

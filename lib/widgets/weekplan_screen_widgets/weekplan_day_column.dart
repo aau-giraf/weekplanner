@@ -436,7 +436,9 @@ class WeekplanDayColumn extends StatelessWidget {
           });
     }
     else if(!inEditMode){
-      Routes.push(context, ShowActivityScreen(activities[index], user));
+      Routes.push(context, ShowActivityScreen(activities[index], user))
+          .whenComplete(() {weekplanBloc.updateWeekdays(<WeekdayModel>[weekday]);});
+
     }
 
   }
