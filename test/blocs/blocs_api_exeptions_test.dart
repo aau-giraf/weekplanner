@@ -3,33 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/blocs_api_exeptions.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      title: 'test',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('test'),
-        ),
-        body: const Center(
-          child: Text('test'),
-        ),
-      ),
-    );
-  }
-}
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+import 'package:weekplanner/bootstrap.dart';
 
 void main() {
 
   const String comparestring1 = 'opps noget gik galt';
 
+  Bootstrap.register();
+  WidgetsFlutterBinding.ensureInitialized();
+
   setUp((){
-    runApp(MyApp());
 
   });
 
@@ -40,6 +23,6 @@ void main() {
         BlocsApiExeptions('A string is printed');
         expect(testblocsApiExeptions.toString(), comparestring1);
         done();
-    })
+      })
   );
 }

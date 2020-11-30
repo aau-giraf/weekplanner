@@ -15,15 +15,19 @@ class BlocsApiExeptions{
     switch (errorType){
       case 'Sock':
         errormessage = 'kunne ikke få forbindelse til internettet';
+        showMyDialog();
         break;
       case 'Http':
         errormessage = 'kunne ikke finde den søgte side';
+        showMyDialog();
         break;
       case 'Time':
         errormessage = 'der skete en timeout fejl';
+        showMyDialog();
         break;
       case 'Form':
         errormessage = 'en formaterings fejl opstod';
+        showMyDialog();
         break;
       case 'spec'://if the exeption is not a exeption but a error send it to
       // the error handler
@@ -40,8 +44,6 @@ class BlocsApiExeptions{
   ///dette gøre man bare kan kaste vores api fejl
  @override
   String toString() {
-    print('i got the error');
-   showMyDialog();
    return errormessage;
  }
 
