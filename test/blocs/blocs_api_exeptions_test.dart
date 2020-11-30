@@ -38,9 +38,7 @@ void main() {
       async((DoneFn done) {
         final BlocsApiExeptions testblocsApiExeptions =
         BlocsApiExeptions('A string is printed');
-        print(testblocsApiExeptions.toString());
-        print(comparestring1);
-        assert(testblocsApiExeptions.toString() == comparestring1);
+        expect(testblocsApiExeptions.toString(), comparestring1);
         done();
     })
   );
