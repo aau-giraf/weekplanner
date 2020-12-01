@@ -143,118 +143,58 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Returns the current week number
-  int getCurrentWeekNum(){
+  int getCurrentWeekNum() {
     return getWeekNumberFromDate(DateTime.now());
   }
 
   /// Calculates the current week number from a given date
   int getWeekNumberFromDate(DateTime date) {
 
-    // The if statement below is due to
-    // an inconsistency with Duration (At the time of writing, 2020/11/04).
-    // Once a year a day is duplicated, and at another time a day is skipped.
-    // Example:
-    // 2022/03/27 and 2022/03/28, both are day 86.
-    // 2022/10/30 and 2022/10/31, are day 302 and day 304
-    // This is a problem due to summer time.
-    // DateTime.utc is another possibility, but it just adds an hour to
-    // all days of the year.
+    // Get the preliminary week number
+    final int weekNum = getWeekNumberFromNearestThursday(date);
 
-    final Duration hoursToToday = date.difference(DateTime(date.year, 1, 1));
+    // Define a day that is in the last week of the year.
+    // ## December 28th is always in the last week of the year ##
+    final DateTime dayInLastWeekThisYear = DateTime(date.year, 12, 28);
+    final DateTime dayInLastWeekLastYear = DateTime(date.year - 1, 12, 28);
 
-    int dayOfYear;
-
-    // Find which day of the year the given date is.
-    // Example: 14/10/2020 is day 288.
-    // Is zero indexed, the "+ 1" is to make it one-indexed.
-    // The "+ 2" is in the case where a day is skipped, explained above.
-    if (hoursToToday.inHours % 24 == 0) {
-      dayOfYear = hoursToToday.inDays + 1;
+    // If the preliminary week number is 0,
+    // the given date is in last year's last week
+    if (weekNum == 0) {
+      return getWeekNumberFromNearestThursday(dayInLastWeekLastYear);
     }
+    // If the preliminary week number is bigger than the amount of weeks in
+    // the given date's year, it is in the next year's week 1
+    else if (weekNum >
+        getWeekNumberFromNearestThursday(dayInLastWeekThisYear)) {
+      return 1;
+    }
+    // If none of the cases described above are true, the
+    // preliminary week number is the actual week number
     else {
-      dayOfYear = hoursToToday.inDays + 2;
+      return weekNum;
     }
-
-
-    /*
-    If next year's first of January is a Tuesday, Wednesday, or a Thursday,
-    and the given date is in the last days of this year, it is in the
-    next year's week 1.
-     */
-    final int dayOfWeekJan1NextYear = DateTime(date.year + 1, 1, 1).weekday;
-
-    if (date.month == 12 &&
-        dayOfWeekJan1NextYear >= 2 &&
-        dayOfWeekJan1NextYear <= 4) {
-      switch (dayOfWeekJan1NextYear) {
-        case 2:
-          if (date.day == 31) {
-            return 1;
-          }
-          break;
-
-        case 3:
-          if (date.day == 31 || date.day == 30) {
-            return 1;
-          }
-          break;
-
-        case 4:
-          if (date.day == 31 || date.day == 30 || date.day == 29) {
-            return 1;
-          }
-          break;
-      }
-    }
-
-    int weekNum;
-    final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
-
-    /*
-    An offset is added to the given date (dayOfYear), to ensure that we find
-    the correct week. The offset is based on the day of the week that
-    January 1st falls on, and the day of the week the given date is.
-    We then divide by seven to find the week number,
-    and add 1 because it is 0-indexed.
-     */
-
-    // If January 1st falls on a Monday, Tuesday, Wednesday, or Thursday:
-    if (dayOfWeekJan1 <= 4) {
-      weekNum = ((dayOfYear + (dayOfWeekJan1 - 2)) / 7).floor() + 1;
-    }
-
-    // If January 1st falls on a Friday, Saturday, or a Sunday,
-    // check if the given date belongs to last year's last week:
-    else {
-      int n;
-
-      switch (dayOfWeekJan1) {
-        case 5:
-          n = 3;
-          break;
-        case 6:
-          n = 2;
-          break;
-        case 7:
-          n = 1;
-          break;
-      }
-
-      if (dayOfYear <= n) {
-        weekNum = getLastYearLastWeek(date);
-      }
-      else {
-        weekNum = ((dayOfYear + (dayOfWeekJan1 - 9)) / 7).floor() + 1;
-      }
-    }
-
-    return weekNum;
   }
 
-  int getLastYearLastWeek(DateTime date) {
-    final DateTime lastYearLastDay = DateTime(date.year - 1, 12, 31);
+  /// Calculates the week number from the nearest Thursday of the given date
+  int getWeekNumberFromNearestThursday(DateTime date) {
 
-    return getWeekNumberFromDate(lastYearLastDay);
+    // Sets the time of day to be noon, thus mitigating the summer time issue
+    date = DateTime(date.year, date.month, date.day, 12);
+
+    // Find the number of days we are into the year. June 1st would be day 153
+    final int dayOfYear = date.difference(DateTime(date. year, 1, 1)).inDays;
+
+    const int dayOfWeekThursday = 4;
+
+    // Find the day of the year for the nearest Thursday to the given date.
+    // ## The week number for the given date,
+    //    is the same as its nearest Thursday's ##
+    final int nearestThursday = (dayOfYear - date.weekday) + dayOfWeekThursday;
+
+    // Find how many weeks have passed since the first Thursday plus 1 as:
+    // ## The first Thursday of a year is always in week 1 ##
+    return (nearestThursday / 7).floor() + 1;
   }
 
   /// Upcoming weekplans is sorted in ascending order
