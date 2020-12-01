@@ -6,7 +6,7 @@ packages:
     description:
       path: "."
       ref: "feature/81"
-      resolved-ref: "2b682481e668783c2badc1773828415cf6e04610"
+      resolved-ref: "9c6179faf17355e1a3ebeac79ea5e8d7c779b6fc"
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"

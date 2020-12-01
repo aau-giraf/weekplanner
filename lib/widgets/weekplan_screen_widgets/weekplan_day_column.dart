@@ -437,10 +437,8 @@ class WeekplanDayColumn extends StatelessWidget {
     }
     else if(!inEditMode){
       Routes.push(context, ShowActivityScreen(activities[index], user))
-          .whenComplete(() {weekplanBloc.updateWeekdays(<WeekdayModel>[weekday]);});
-
+          .whenComplete(() {weekplanBloc.getWeekday(weekday.day);});
     }
-
   }
 
   /// Builds activity card with a status icon if it is marked

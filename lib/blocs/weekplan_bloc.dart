@@ -292,6 +292,18 @@ class WeekplanBloc extends BlocBase {
     activities.isNotEmpty);
   }
 
+  Future<void> getWeekday(Weekday day) async{
+    final DisplayNameModel user = _userWeek.value.user;
+    _api.week.getDay(user.id, _week.weekYear, _week.weekNumber, day)
+        .listen((WeekdayModel newDay) {
+        _weekDayStreams[newDay.day.index-_firstDay].add(newDay);
+    }).onError((Object error){
+      return Future<void>.error(error);
+    });
+
+    return Future<void>.value();
+  }
+
   Future<void> updateWeekdays(List<WeekdayModel> days) async{
     final DisplayNameModel user = _userWeek.value.user;
     final Completer<void> completer = Completer<void>();
