@@ -59,19 +59,25 @@ class WeekplanBloc extends BlocBase {
   }
 
   /// Sink to set the currently chosen week
-  void getWeek(WeekModel week, DisplayNameModel user) {
+  Future<void> getWeek(WeekModel week, DisplayNameModel user) async {
     _api.week
         .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
           _week = loadedWeek;
       _userWeek.add(UserWeekModel(loadedWeek, user));
+    }).onError((Object error){
+      return Future<void>.error(error);
     });
   }
 
   /// Get the current week fresh from the api
   void loadWeek(DisplayNameModel user){
+    loadWeekUser(_week, user);
+  }
+
+  void loadWeekUser(WeekModel week, DisplayNameModel user){
     _api.week
-        .get(user.id, _week.weekYear, _week.weekNumber)
+        .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
       _week = loadedWeek;

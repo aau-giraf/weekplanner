@@ -85,7 +85,7 @@ void main() {
       done();
     });
 
-    weekplanBloc.loadWeek(week, user);
+    weekplanBloc.loadWeekUser(week, user);
   }));
 
   test('Adds an activity to a list of marked activities', async((DoneFn done) {
@@ -250,36 +250,26 @@ void main() {
         order: null,
         state: null);
 
-    final WeekModel weekModel = WeekModel(
-        thumbnail: PictogramModel(
-            imageUrl: null,
-            imageHash: null,
-            accessLevel: null,
-            title: null,
-            id: null,
-            lastEdit: null),
-        days: <WeekdayModel>[
-          WeekdayModel(
-              activities: <ActivityModel>[activity], day: Weekday.Monday)
-        ],
-        name: 'Week',
-        weekNumber: 1,
-        weekYear: 2019);
+    weekplanBloc.getWeek(week, user).whenComplete((){
+      for(int i = 0; i < week.days.length; i++){
+        weekplanBloc.addWeekdayStream();
+      }
+    });
 
-    weekplanBloc.userWeek.take(1).flatMap((_) {
+    weekplanBloc.getWeekdayStream(0).take(1).flatMap((_) {
       weekplanBloc.addMarkedActivity(activity);
-      return weekplanBloc.userWeek.take(1);
+      return weekplanBloc.getWeekdayStream(0).take(1);
     }).flatMap((_) {
       weekplanBloc.deleteMarkedActivities();
-      return weekplanBloc.userWeek.take(1);
-    }).listen((UserWeekModel userWeekModel) {
-      verify(api.week.update(any, any, any, any));
-      expect(userWeekModel.week.days[Weekday.Monday.index].activities,
-          <ActivityModel>[]);
+      return weekplanBloc.getWeekdayStream(0).take(1);
+    }).listen((WeekdayModel weekday) {
+      verify(api.week.updateDay(any, any, any, any));
+      expect(weekday.activities, <ActivityModel>[]);
       done();
     });
 
-    weekplanBloc.loadWeek(weekModel, user);
+
+
   }));
 
   test('Checks if marked activities are copied to a new day',
@@ -367,7 +357,7 @@ void main() {
       fail('Should not throw error');
     });
 
-    weekplanBloc.loadWeek(week, user);
+    weekplanBloc.loadWeekUser(week, user);
   }));
 
   test('Checks if marked activities are marked as cancel', async((DoneFn done) {
@@ -467,7 +457,7 @@ void main() {
       fail('Should not throw error');
     });
 
-    weekplanBloc.loadWeek(week, user);
+    weekplanBloc.loadWeekUser(week, user);
   }));
 
   test('Checks if marked activities are marked as resumed',
@@ -568,7 +558,7 @@ void main() {
       fail('Should not throw error');
     });
 
-    weekplanBloc.loadWeek(week, user);
+    weekplanBloc.loadWeekUser(week, user);
   }));
 
 
@@ -612,7 +602,7 @@ void main() {
       fail('Should not throw error');
     });
 
-    weekplanBloc.loadWeek(week, user);
+    weekplanBloc.loadWeekUser(week, user);
   }));
 
   test('Reorder activity from monday to tuesday', async((DoneFn done) {
@@ -652,7 +642,7 @@ void main() {
       fail('Should not throw error');
     });
 
-    weekplanBloc.loadWeek(week, user);
+    weekplanBloc.loadWeekUser(week, user);
   }));
 
   test('Reorder activity from monday to monday', async((DoneFn done) {
@@ -700,7 +690,7 @@ void main() {
       fail('Should not throw error');
     });
 
-    weekplanBloc.loadWeek(week, user);
+    weekplanBloc.loadWeekUser(week, user);
   }));
 
   test('Testing atLeastOneActivityMarked returns false when '
