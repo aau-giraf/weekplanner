@@ -1,3 +1,4 @@
+import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
@@ -20,6 +21,7 @@ import '../../di.dart';
 import '../../routes.dart';
 import '../../style/custom_color.dart' as theme;
 import '../giraf_button_widget.dart';
+import '../giraf_notify_dialog.dart';
 import '../weekplanner_choiceboard_selector.dart';
 import 'activity_card.dart';
 
@@ -437,7 +439,11 @@ class WeekplanDayColumn extends StatelessWidget {
     }
     else if(!inEditMode){
       Routes.push(context, ShowActivityScreen(activities[index], user))
-          .whenComplete(() {weekplanBloc.getWeekday(weekday.day);});
+          .whenComplete(() {weekplanBloc.getWeekday(weekday.day)
+          .catchError((Object error) {
+            creatingNotifyDialog(error, context);
+        });
+      });
     }
   }
 
@@ -500,5 +506,29 @@ class WeekplanDayColumn extends StatelessWidget {
                 }),
           ),
         ));
+  }
+
+  /// Function that creates the notify dialog,
+  /// depeninding which error occured
+  void creatingNotifyDialog(Object error, BuildContext context) {
+    /// Show the new NotifyDialog
+    String message = '';
+    Key key;
+    if(error is ApiException){
+      message = error.errorMessage;
+      // ignore: avoid_as
+      key = error.errorKey as Key;
+    }
+    else{
+      message = error.toString();
+      key = const Key('UnknownError');
+    }
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl', description: message, key: key);
+        });
   }
 }
