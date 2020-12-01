@@ -48,7 +48,7 @@ class WeekplanBloc extends BlocBase {
   final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
       rx_dart.BehaviorSubject<bool>.seeded(false);
 
-  WeekModel _week;
+  WeekModel _week ;
   int _daysToDisplay = 0;
   int _firstDay = 0;
 
@@ -68,25 +68,24 @@ class WeekplanBloc extends BlocBase {
     }).onError((Object error){
       return Future<void>.error(error);
     });
+    return Future<void>.value();
   }
 
   /// Get the current week fresh from the api
-  void loadWeek(DisplayNameModel user){
-    loadWeekUser(_week, user);
-  }
-
-  void loadWeekUser(WeekModel week, DisplayNameModel user){
+  Future<void> loadWeek(DisplayNameModel user) async{
     _api.week
-        .get(user.id, week.weekYear, week.weekNumber)
+        .get(user.id, _week.weekYear, _week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
       _week = loadedWeek;
       for(int i = 0; i < _daysToDisplay; i++){
         _weekDayStreams[i].add(loadedWeek.days[i-_firstDay]);
       }
+    }).onError((Object error) {
+      return Future<void>.error(error);
     });
+    return Future<void>.value();
   }
-
 
   /// Adds a new marked activity to the stream
   void addMarkedActivity(ActivityModel activityModel) {
@@ -257,12 +256,12 @@ class WeekplanBloc extends BlocBase {
   }
 
   /// Reorders activities between same or different days.
-  void reorderActivities(
-      ActivityModel activity, Weekday dayFrom, Weekday dayTo, int newOrder) {
+  Future<void> reorderActivities (ActivityModel activity, Weekday dayFrom,
+      Weekday dayTo, int newOrder) async {
     // Removed from dayFrom, the day the pictogram is dragged from
     int dayLength = _week.days[dayFrom.index].activities.length;
 
-    List<WeekdayModel> daysToUpdate = <WeekdayModel>[];
+    final List<WeekdayModel> daysToUpdate = <WeekdayModel>[];
     for (int i = activity.order + 1; i < dayLength; i++) {
       _week.days[dayFrom.index].activities[i].order -= 1;
     }
@@ -291,6 +290,7 @@ class WeekplanBloc extends BlocBase {
         .catchError((Object error){
       return Future<void>.error(error);
     });
+    return Future<void>.value();
   }
 
   Stream<bool> _atLeastOneActivityMarked(){
@@ -298,6 +298,7 @@ class WeekplanBloc extends BlocBase {
     activities.isNotEmpty);
   }
 
+  /// Method to get a single weekday from the api
   Future<void> getWeekday(Weekday day) async{
     final DisplayNameModel user = _userWeek.value.user;
     _api.week.getDay(user.id, _week.weekYear, _week.weekNumber, day)
@@ -310,20 +311,18 @@ class WeekplanBloc extends BlocBase {
     return Future<void>.value();
   }
 
+  /// Method to update a given list of weekdays
   Future<void> updateWeekdays(List<WeekdayModel> days) async{
     final DisplayNameModel user = _userWeek.value.user;
-    final Completer<void> completer = Completer<void>();
     for(WeekdayModel day in days){
       _api.week.updateDay(user.id, _week.weekYear, _week.weekNumber, day)
           .listen((WeekdayModel newDay) {
             _weekDayStreams[newDay.day.index-_firstDay].add(newDay);
-            completer.complete();
       }).onError((Object error) {
-        completer.completeError(error);
+        return Future<void>.error(error);
       });
     }
-    Future.wait(<Future<void>>[completer.future]);
-    return completer.future;
+    return Future<void>.value();
   }
 
   @override

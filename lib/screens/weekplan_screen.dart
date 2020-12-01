@@ -1,3 +1,4 @@
+import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -18,6 +19,7 @@ import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../style/custom_color.dart' as theme;
@@ -182,7 +184,8 @@ class WeekplanScreen extends StatelessWidget {
   }
 
   void _copyActivities(List<bool> days, BuildContext context) {
-    _weekplanBloc.copyMarkedActivities(days);
+    _weekplanBloc.copyMarkedActivities(days)
+        .catchError((Object error){buildErrorDialog(context, error);});
     Routes.pop(context);
     _weekplanBloc.toggleEditMode();
   }
@@ -219,7 +222,10 @@ class WeekplanScreen extends StatelessWidget {
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
               confirmOnPressed: () {
-                _weekplanBloc.cancelMarkedActivities();
+                _weekplanBloc.cancelMarkedActivities()
+                    .catchError((Object error){
+                      buildErrorDialog(context, error);
+                });
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
@@ -242,7 +248,10 @@ class WeekplanScreen extends StatelessWidget {
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/undo.png')),
               confirmOnPressed: () {
-                _weekplanBloc.undoMarkedActivities();
+                _weekplanBloc.undoMarkedActivities()
+                    .catchError((Object error){
+                      buildErrorDialog(context, error);
+                });
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
@@ -271,7 +280,10 @@ class WeekplanScreen extends StatelessWidget {
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: () {
-                _weekplanBloc.deleteMarkedActivities();
+                _weekplanBloc.deleteMarkedActivities()
+                    .catchError((Object error){
+                      buildErrorDialog(context, error);
+                });
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
@@ -392,6 +404,28 @@ class WeekplanScreen extends StatelessWidget {
             );
           }
           return Row(children: weekDays);
+        });
+  }
+
+  /// Function that creates the notify dialog,
+  void buildErrorDialog(BuildContext context, Object error) {
+    String message = '';
+    Key key;
+    if(error is ApiException){
+      message = error.errorMessage;
+      // ignore: avoid_as
+      key = error.errorKey as Key;
+    }
+    else{
+      message = error.toString();
+      key = const Key('UnknownError');
+    }
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl', description: message, key: key);
         });
   }
 }
