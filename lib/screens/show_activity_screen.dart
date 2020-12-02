@@ -87,8 +87,7 @@ class ShowActivityScreen extends StatelessWidget {
         children: buildScreen(context, mode),
       );
     }
-    //final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-
+    
     return Scaffold(
         appBar: GirafAppBar(
             title: 'Aktivitet',
