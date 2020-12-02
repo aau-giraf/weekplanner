@@ -434,7 +434,7 @@ class WeekplanDayColumn extends StatelessWidget {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return WeekplannerChoiceboardSelector(
-                activities[index], _activityBloc, user, weekplanBloc, weekday);
+                activities[index], _activityBloc, user);
           });
     }
     else if(!inEditMode){
