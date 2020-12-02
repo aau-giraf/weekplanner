@@ -95,6 +95,21 @@ class ActivityBloc extends BlocBase {
     Future.wait(<Future<void>>[completer.future]);
 
   }
+  /// Get the title of the lefover activity when deleting choiceboard
+  void getTitleWhenChoiceboardDeleted(){
+    _alternateName = null;
+    getAlternateName().whenComplete(() {
+      if(_alternateName == null){
+        getStandardTitle();
+        update();
+      }
+      else{
+        _activityModel.title = _alternateName.name;
+        update();
+      }
+    });
+  }
+
   /// Method to get alternate name from api
   Future<void> getAlternateName(){
     final Completer<AlternateNameModel> f = Completer<AlternateNameModel>();
