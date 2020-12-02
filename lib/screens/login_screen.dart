@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:api_client/api/api_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -7,7 +8,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
-import 'package:http/http.dart' as http;
 import '../style/custom_color.dart' as theme;
 
 /// Logs the user in
@@ -41,63 +41,77 @@ class LoginScreenState extends State<LoginScreen> {
 
   /// This is called when login should be triggered
   void loginAction(BuildContext context) {
-    showLoadingSpinner(context, false, showNotifyDialog, 2000);
+    showLoadingSpinner(context, true);
     currentContext = context;
     loginStatus = false;
-    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text);
-    authBloc.loggedIn.listen((bool snapshot) {
-      loginStatus = snapshot;
-      if (snapshot && !_popCalled) {
-        // Pop the loading spinner
-        Routes.pop(context);
-        _popCalled = true;
-      }
-    });
-  }
-
-  /// This is the callback method of the loading spinner to show the dialog
-  void showNotifyDialog() {
-    // Checking internet connection, if true check server connection
-    checkInternetConnection().then((bool hasInternetConnection) {
-      if (hasInternetConnection) {
-
-        // Checking server connection, if true check username/password
-        checkServerConnection().then((bool hasServerConnection) {
-          if (hasServerConnection) {
-
-            // Checking username/password
-            if (!loginStatus) {
-              creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.', 'WrongUsernameOrPassword');
-            }
+    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
+      .then((dynamic result){
+        authBloc.loggedIn.listen((bool snapshot) {
+          loginStatus = snapshot;
+          if (snapshot && !_popCalled) {
+            // Pop the loading spinner
+            Routes.pop(context);
+            _popCalled = true;
           } else {
-            creatingNotifyDialog('Der er i øjeblikket'
-                ' ikke forbindelse til serveren.', 'NoConnectionToServer');
+            creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
+                'kontakt en administrator', 'UnknownError');
           }
         });
-      } else {
-        creatingNotifyDialog('Der er ingen forbindelse'
-            ' til internettet.', 'NoConnectionToInternet');
+    }).catchError((Object error) {
+      if(error is ApiException){
+        creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
+            error.errorKey.toString());
+      }
+      else if(error is SocketException){
+        authBloc.checkInternetConnection().then((bool hasInternetConnection) {
+          if (hasInternetConnection) {
+            // Checking server connection, if true check username/password
+            authBloc.getApiConnection().then((bool hasServerConnection) {
+              if (hasServerConnection) {
+                unknownErrorDialog(error.message);
+              }
+              else{
+                creatingNotifyDialog(
+                    'Der er i øjeblikket'
+                        ' ikke forbindelse til serveren.',
+                    'ServerConnectionError');
+              }
+            }).catchError((Object error){
+             unknownErrorDialog(error.toString());
+            });
+          } else {
+            creatingNotifyDialog(
+                'Der er ingen forbindelse'
+                    ' til internettet.',
+                'NoConnectionToInternet');
+          }
+        });
+      }
+      else {
+        unknownErrorDialog('UnknownError');
       }
     });
   }
-
   /// Function that creates the notify dialog,
   /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
-     /// Remove the loading spinner
+    /// Remove the loading spinner
     Routes.pop(currentContext);
+
     /// Show the new NotifyDialog
     showDialog<Center>(
         barrierDismissible: false,
         context: currentContext,
         builder: (BuildContext context) {
           return GirafNotifyDialog(
-              title: 'Fejl',
-              description: description,
-              key: Key(key));
+              title: 'Fejl', description: description, key: Key(key));
         });
   }
-
+  /// Create an unknown error dialog
+  void unknownErrorDialog(String key){
+    creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
+        'kontakt en administrator', 'key');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +152,10 @@ class LoginScreenState extends State<LoginScreen> {
                           : const EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: theme.GirafColors.grey,
-                                width: 1),
+                            border: Border.all(
+                                color: theme.GirafColors.grey, width: 1),
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(20.0)),
+                                const BorderRadius.all(Radius.circular(20.0)),
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
@@ -163,10 +177,10 @@ class LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(color: theme.GirafColors.grey,
-                                width: 1),
+                            border: Border.all(
+                                color: theme.GirafColors.grey, width: 1),
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(20.0)),
+                                const BorderRadius.all(Radius.circular(20.0)),
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -215,8 +229,8 @@ class LoginScreenState extends State<LoginScreen> {
                                 child: const Text(
                                   'Auto-Login',
                                   key: Key('AutoLoginKey'),
-                                  style: TextStyle(color:
-                                    theme.GirafColors.white),
+                                  style:
+                                      TextStyle(color: theme.GirafColors.white),
                                 ),
                                 onPressed: () {
                                   usernameCtrl.text =
@@ -250,39 +264,6 @@ class LoginScreenState extends State<LoginScreen> {
       ),
       padding: const EdgeInsets.only(bottom: 10),
     );
-  }
-
-  /// Function to test connection to server,
-  /// it both checks for DEV API connection and to PROD API connection
-  Future<bool> checkServerConnection() async {
-    final String loginUrl = environment.getVar<String>('SERVER_HOST');
-    try {
-      final http.Response loginResponse =
-      await http.get(loginUrl).timeout(const Duration(seconds: 10));
-      if (loginResponse.statusCode == 200) {
-        return Future<bool>.value(true);
-      } else {
-        throw Exception('Authentication Error');
-      }
-    } catch (e) {
-      print('Error:' + e.toString());
-      return Future<bool>.value(false);
-    }
-  }
-
-  /// Function to test connection to internet
-  Future<bool> checkInternetConnection() async {
-    try {
-      final List<InternetAddress> result = await InternetAddress.lookup(
-          'google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return Future<bool>.value(true);
-      }
-      return null;
-    } on SocketException catch (e) {
-      print(e.message);
-      return Future<bool>.value(false);
-    }
   }
 
 }

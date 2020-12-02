@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -38,6 +39,8 @@ import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
+import '../test_image.dart';
+
 class MockWeekApi extends Mock implements WeekApi {}
 
 class MockUserApi extends Mock implements UserApi {
@@ -63,7 +66,7 @@ class MockAuth extends Mock implements AuthBloc {
   String loggedInUsername = 'Graatand';
 
   @override
-  void authenticate(String username, String password) {
+  Future<void> authenticate(String username, String password) async {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');
@@ -138,6 +141,13 @@ class MockActivityApi extends Mock implements ActivityApi {
   @override
   Stream<ActivityModel> update(ActivityModel activity, String userId) {
     return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
+}
+
+class MockPictogramApi extends Mock implements PictogramApi {
+  @override
+  Stream<Image> getImage(int id) {
+    return rx_dart.BehaviorSubject<Image>.seeded(sampleImage);
   }
 }
 
@@ -300,6 +310,7 @@ void main() {
     weekApi = MockWeekApi();
     api.user = MockUserApi();
     api.week = weekApi;
+    api.pictogram = MockPictogramApi();
     api.activity = MockActivityApi();
     authBloc = AuthBloc(api);
     bloc = MockActivityBloc();
