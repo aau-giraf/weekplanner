@@ -56,8 +56,10 @@ void main() {
     user = mockData.mockUser;
 
     final Api api = mockData.mockApi;
+
     authBloc = AuthBloc(api);
     authBloc.setMode(WeekplanMode.guardian);
+
     weekplanBloc = WeekplanBloc(api);
 
     di.clearAll();
