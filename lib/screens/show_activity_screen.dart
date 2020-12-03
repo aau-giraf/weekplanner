@@ -135,7 +135,8 @@ class ShowActivityScreen extends StatelessWidget {
                 if (authSnapshot.hasData &&
                     activitySnapshot.hasData &&
                     authSnapshot.data != WeekplanMode.citizen &&
-                    activitySnapshot.data.state == ActivityState.Normal) {
+                    (activitySnapshot.data.state != ActivityState.Canceled &&
+                    activitySnapshot.data.state != ActivityState.Completed)) {
                   return _buildChoiceBoardButton(context);
                 } else {
                   return _buildEmptyContainer();
