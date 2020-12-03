@@ -201,13 +201,14 @@ class WeekplanDayColumn extends StatelessWidget {
       }
     }
   }
+
 int color1 = 0xFFFFFFFF;
 int color2 = 0xFFFFFFFF;
   /// Builds a day's activities
   StreamBuilder<List<ActivityModel>> _buildDayActivities(
       List<ActivityModel> activities, WeekModel week) {
     final WeekdayModel weekday = week.days[dayOfTheWeek.index];
-
+    
     return StreamBuilder<List<ActivityModel>>(
         stream: weekplanBloc.markedActivities,
         builder: (BuildContext context,
@@ -269,23 +270,23 @@ int color2 = 0xFFFFFFFF;
                       onNotification: (ScrollNotification scrollInfo) {
                         if (scrollInfo.metrics.pixels ==
                             scrollInfo.metrics.maxScrollExtent) {
-                          print('gooden in the bottom hooten');
-                          print(scrollInfo.metrics.pixels);
+                          print('at the bottom');
+                          //print(scrollInfo.metrics.pixels);
                           color1 = 0xFFFFFFFF;
                           color2 = 0x00000000;
-                          print(color1.toString());
-                          print(color2.toString());
+                          //print(color1.toString());
+                          //print(color2.toString());
                           return true;
                         } else if (scrollInfo.metrics.pixels ==
                         scrollInfo.metrics.minScrollExtent) {
-                          print('gooden but in the top hooten');
+                          print('at the top');
                           print(scrollInfo.metrics.pixels);
                           color1 = 0x00000000;
                           color2 = 0xFFFFFFFF;
                           print(color1.toString());
                           print(color2.toString());
                           return true;
-                        } if (scrollInfo.metrics.pixels ==
+                        } else if (scrollInfo.metrics.pixels ==
                               scrollInfo.metrics.maxScrollExtent &&
                               scrollInfo.metrics.pixels ==
                               scrollInfo.metrics.minScrollExtent){
