@@ -117,7 +117,8 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-                    activitySnapshot.data.state == ActivityState.Canceled)
+                   (activitySnapshot.data.state == ActivityState.Canceled ||
+                    activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -134,7 +135,7 @@ class ShowActivityScreen extends StatelessWidget {
                 if (authSnapshot.hasData &&
                     activitySnapshot.hasData &&
                     authSnapshot.data != WeekplanMode.citizen &&
-                    activitySnapshot.data.state != ActivityState.Canceled) {
+                    activitySnapshot.data.state == ActivityState.Normal) {
                   return _buildChoiceBoardButton(context);
                 } else {
                   return _buildEmptyContainer();
@@ -654,6 +655,8 @@ class ShowActivityScreen extends StatelessWidget {
                             _activityBloc.cancelActivity();
                             _activity.state = _activityBloc.getActivity().state;
                           },
+                          isEnabled: activitySnapshot.data.state !=
+                              ActivityState.Completed,
                           text: activitySnapshot.data.state !=
                               ActivityState.Canceled
                               ? 'Aflys'
