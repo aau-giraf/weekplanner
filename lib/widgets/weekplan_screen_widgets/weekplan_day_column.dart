@@ -217,7 +217,7 @@ class WeekplanDayColumn extends StatelessWidget {
                 return Expanded(
                   child: ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
-                      if (index == weekday.activities.length) {
+                      if ( index >= weekday.activities.length ) {
                         return StreamBuilder<bool>(
                             stream: weekplanBloc.activityPlaceholderVisible,
                             initialData: false,
@@ -236,8 +236,8 @@ class WeekplanDayColumn extends StatelessWidget {
                             builder: (BuildContext context,
                                 AsyncSnapshot<WeekplanMode> snapshot) {
                               if (snapshot.data == WeekplanMode.guardian) {
-                                return _dragTargetPictogram(
-                                    index, weekday, editModeSnapshot.data);
+                                return _dragTargetPictogram(index, weekday,
+                                    editModeSnapshot.data, context);
                               }
                               return _pictogramIconStack(context, index,
                                   weekday, editModeSnapshot.data);
@@ -279,7 +279,7 @@ class WeekplanDayColumn extends StatelessWidget {
 
   // Returns the draggable pictograms, which also function as drop targets.
   DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
-      int index, WeekdayModel weekday, bool inEditMode) {
+      int index, WeekdayModel weekday, bool inEditMode, BuildContext context) {
 
     return DragTarget<Tuple2<ActivityModel, Weekday>>(
       key: const Key('DragTarget'),
@@ -315,7 +315,10 @@ class WeekplanDayColumn extends StatelessWidget {
       },
       onAccept: (Tuple2<ActivityModel, Weekday> data) {
         weekplanBloc.reorderActivities(
-            data.item1, data.item2, weekday.day, index);
+            data.item1, data.item2, weekday.day, index)
+            .catchError((Object error){
+          creatingNotifyDialog(error, context);
+        });
       },
     );
   }
@@ -324,6 +327,7 @@ class WeekplanDayColumn extends StatelessWidget {
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final ActivityModel currActivity = weekday.activities[index];
+
 
     final bool isMarked = weekplanBloc.isActivityMarked(currActivity);
 
@@ -450,6 +454,11 @@ class WeekplanDayColumn extends StatelessWidget {
   /// Builds activity card with a status icon if it is marked
   StatelessWidget _buildIsMarked(bool isMarked, BuildContext context,
       WeekdayModel weekday, List<ActivityModel> activities, int index) {
+    if(index >= activities.length){
+      return Container(
+        child:  const CircularProgressIndicator()
+      );
+    }
     if (isMarked) {
       return Container(
           key: const Key('isSelectedKey'),

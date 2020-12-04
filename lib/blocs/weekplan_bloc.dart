@@ -318,6 +318,7 @@ class WeekplanBloc extends BlocBase {
       _api.week.updateDay(user.id, _week.weekYear, _week.weekNumber, day)
           .listen((WeekdayModel newDay) {
             _weekDayStreams[newDay.day.index-_firstDay].add(newDay);
+            _week.days[newDay.day.index] = newDay;
       }).onError((Object error) {
         return Future<void>.error(error);
       });
