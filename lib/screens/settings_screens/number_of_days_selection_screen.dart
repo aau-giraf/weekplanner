@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_section_checkboxButton.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_section_item.dart';
 
 import '../../di.dart';
 import '../../routes.dart';
@@ -40,40 +42,25 @@ class NumberOfDaysScreen extends StatelessWidget {
                       SettingsCheckMarkButton(
                           1, _settingsModel.nrOfDaysToDisplay, 'Vis kun i dag',
                           () {
-                            _settingsModel.nrOfDaysToDisplay = 1;
-                            _settingsBloc.updateSettings(
-                                _user.id, _settingsModel)
-                                .listen((SettingsModel response) {
-                              if (response != null) {
-                                Routes.pop(context);
-                              }
-                            });
+                  Routes.pop(context, 1);
                           }),
+                      SettingsCheckMarkButton(
+                          2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
+                              () {
+                            Routes.pop(context, 2);
+                          }),
+
                       SettingsCheckMarkButton(
                           5,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til fredag', () {
-                        _settingsModel.nrOfDaysToDisplay = 5;
-                        _settingsBloc.updateSettings(
-                            _user.id, _settingsModel)
-                            .listen((SettingsModel response) {
-                          if (response != null) {
-                            Routes.pop(context);
-                          }
-                        });
+                            Routes.pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
                           7,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til søndag', () {
-                        _settingsModel.nrOfDaysToDisplay = 7;
-                        _settingsBloc.updateSettings(
-                            _user.id, _settingsModel)
-                            .listen((SettingsModel response) {
-                          if (response != null) {
-                            Routes.pop(context);
-                          }
-                        });
+                        Routes.pop(context, 7);
                       }),
                     ]),
                   ],

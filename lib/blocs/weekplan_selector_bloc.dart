@@ -4,7 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
 /// WeekplansBloc to get weekplans for a user
@@ -28,24 +28,25 @@ class WeekplansBloc extends BlocBase {
   /// The stream that emits the marked activities
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
-  final BehaviorSubject<List<WeekModel>> _weekModel =
-      BehaviorSubject<List<WeekModel>>();
+  final rx_dart.BehaviorSubject<List<WeekModel>> _weekModel =
+      rx_dart.BehaviorSubject<List<WeekModel>>();
 
-  final BehaviorSubject<List<WeekModel>> _oldWeekModel =
-  BehaviorSubject<List<WeekModel>>();
+  final rx_dart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
+  rx_dart.BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
   /// when wanting information about weekplans.
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
-  final BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-      BehaviorSubject<List<WeekNameModel>>();
+  final rx_dart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
+      rx_dart.BehaviorSubject<List<WeekNameModel>>();
 
-  final BehaviorSubject<bool> _editMode = BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _editMode
+  = rx_dart.BehaviorSubject<bool>.seeded(false);
 
-  final BehaviorSubject<List<WeekModel>> _markedWeekModels =
-      BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
+  final rx_dart.BehaviorSubject<List<WeekModel>> _markedWeekModels =
+      rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
   DisplayNameModel _user;
@@ -84,16 +85,16 @@ class WeekplansBloc extends BlocBase {
       return;
     }
 
-    final List<Observable<WeekModel>> weekDetails = <Observable<WeekModel>>[];
-    final List<Observable<WeekModel>> oldWeekDetails =
-      <Observable<WeekModel>>[];
+    final List<Stream<WeekModel>> weekDetails = <Stream<WeekModel>>[];
+    final List<Stream<WeekModel>> oldWeekDetails =
+      <Stream<WeekModel>>[];
 
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
-    final Observable<List<WeekModel>> getWeekPlans =
+    final Stream<List<WeekModel>> getWeekPlans =
       reformatWeekDetailsToObservableList(weekDetails);
 
-    final Observable<List<WeekModel>> getOldWeekPlans =
+    final Stream<List<WeekModel>> getOldWeekPlans =
       reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
@@ -110,13 +111,13 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Reformats [weekDetails] and [oldWeekDetails] into an Observable List
-  Observable<List<WeekModel>> reformatWeekDetailsToObservableList
-      (List<Observable<WeekModel>> details){
+  Stream<List<WeekModel>> reformatWeekDetailsToObservableList
+      (List<Stream<WeekModel>> details){
       // ignore: always_specify_types
-      return details.isEmpty ? Observable.empty() :
+      return details.isEmpty ? const Stream.empty() :
         details.length == 1 ?
         details[0].map((WeekModel plan) => <WeekModel>[plan]) :
-        Observable.combineLatestList(details);
+        rx_dart.Rx.combineLatestList(details);
   }
 
   /// Makes API calls to get the weekplan details
@@ -124,8 +125,8 @@ class WeekplansBloc extends BlocBase {
   /// and current/upcoming weekplans are stored in [weekDetails]
   void getWeekDetails(
     List<WeekNameModel> weekPlanNames,
-    List<Observable<WeekModel>> weekDetails,
-    List<Observable<WeekModel>> oldWeekDetails){
+    List<Stream<WeekModel>> weekDetails,
+    List<Stream<WeekModel>> oldWeekDetails){
 
     // Loops through all weekplans and sort them into old and upcoming weekplans
     for (WeekNameModel weekPlanName in weekPlanNames) {
@@ -142,19 +143,58 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// Returns the current week number
-  int getCurrentWeekNum(){
-    const int daysInWeek = 7;
-    const int daysOffset = 6;
+  int getCurrentWeekNum() {
+    return getWeekNumberFromDate(DateTime.now());
+  }
 
-    final int dayOfYear = DateTime.now().difference(
-        DateTime(DateTime.now().year, 1, 1)).inDays;
-    final int dayOfWeek = DateTime.now().weekday;
-    final int dowJan1 = DateTime(DateTime.now().year, 1, 1).weekday;
-    int weekNum = ((dayOfYear + daysOffset) / daysInWeek).round();
-    if(dayOfWeek < dowJan1){
-      weekNum++;
+  /// Calculates the current week number from a given date
+  int getWeekNumberFromDate(DateTime date) {
+
+    // Get the preliminary week number
+    final int weekNum = getWeekNumberFromNearestThursday(date);
+
+    // Define a day that is in the last week of the year.
+    // ## December 28th is always in the last week of the year ##
+    final DateTime dayInLastWeekThisYear = DateTime(date.year, 12, 28);
+    final DateTime dayInLastWeekLastYear = DateTime(date.year - 1, 12, 28);
+
+    // If the preliminary week number is 0,
+    // the given date is in last year's last week
+    if (weekNum == 0) {
+      return getWeekNumberFromNearestThursday(dayInLastWeekLastYear);
     }
-    return weekNum;
+    // If the preliminary week number is bigger than the amount of weeks in
+    // the given date's year, it is in the next year's week 1
+    else if (weekNum >
+        getWeekNumberFromNearestThursday(dayInLastWeekThisYear)) {
+      return 1;
+    }
+    // If none of the cases described above are true, the
+    // preliminary week number is the actual week number
+    else {
+      return weekNum;
+    }
+  }
+
+  /// Calculates the week number from the nearest Thursday of the given date
+  int getWeekNumberFromNearestThursday(DateTime date) {
+
+    // Sets the time of day to be noon, thus mitigating the summer time issue
+    date = DateTime(date.year, date.month, date.day, 12);
+
+    // Find the number of days we are into the year. June 1st would be day 153
+    final int dayOfYear = date.difference(DateTime(date. year, 1, 1)).inDays;
+
+    const int dayOfWeekThursday = 4;
+
+    // Find the day of the year for the nearest Thursday to the given date.
+    // ## The week number for the given date,
+    //    is the same as its nearest Thursday's ##
+    final int nearestThursday = (dayOfYear - date.weekday) + dayOfWeekThursday;
+
+    // Find how many weeks have passed since the first Thursday plus 1 as:
+    // ## The first Thursday of a year is always in week 1 ##
+    return (nearestThursday / 7).floor() + 1;
   }
 
   /// Upcoming weekplans is sorted in ascending order
@@ -174,7 +214,7 @@ class WeekplansBloc extends BlocBase {
 
   /// Old weekplans needs to be sorted in descending order
   List<WeekModel> _sortOldWeekPlans(List<WeekModel> list) {
-    list.sort((WeekModel a, WeekModel b) {
+    list.toList().sort((WeekModel a, WeekModel b) {
       if (a.weekYear == b.weekYear) {
         return b.weekNumber.compareTo(a.weekNumber);
       } else {
@@ -224,7 +264,7 @@ class WeekplansBloc extends BlocBase {
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
     final List<WeekModel> localWeekModels = _weekModel.value;
-    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value;
+    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value.toList();
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
@@ -305,7 +345,7 @@ class WeekplansBloc extends BlocBase {
   }
 
   /// This stream checks that you have only marked one week model
-  Observable<bool> onlyOneModelMarkedStream() {
+  Stream<bool> onlyOneModelMarkedStream() {
     return _markedWeekModels.map((List<WeekModel> event) => event.length == 1);
   }
 

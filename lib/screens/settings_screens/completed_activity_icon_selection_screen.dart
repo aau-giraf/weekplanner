@@ -3,13 +3,17 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_section_checkboxButton.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_section_item.dart';
 
 import '../../di.dart';
+
 
 /// Screen where the icon for completed activity can be chosen
 class CompletedActivityIconScreen extends StatelessWidget {
@@ -39,34 +43,21 @@ class CompletedActivityIconScreen extends StatelessWidget {
                     SettingsSection('Tegn for udførelse', <SettingsSectionItem>[
                       SettingsCheckMarkButton(
                           0,
-                          _settingsModel.completeMark.index,
+                          _settingsModel.completeMark,
                           'Fjern aktiviteten for borgeren', () {
-                              _settingsModel.completeMark =
-                                  CompleteMark.Removed;
-                              _settingsBloc.updateSettings(_user.id,
-                                _settingsModel).listen((SettingsModel model) {
-                                  _settingsBloc.loadSettings(_user);
-                              });
+                              Routes.pop(context, CompleteMark.Removed);
                           }),
                       SettingsCheckMarkButton(
                           1,
-                          _settingsModel.completeMark.index,
+                          _settingsModel.completeMark,
                           'Flueben', () {
-                        _settingsModel.completeMark = CompleteMark.Checkmark;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel).
-                            listen((SettingsModel model) {
-                              _settingsBloc.loadSettings(_user);
-                        });
+                        Routes.pop(context, CompleteMark.Checkmark);
                       }),
                       SettingsCheckMarkButton(
                           2,
-                          _settingsModel.completeMark.index,
+                          _settingsModel.completeMark,
                           'Lav aktiviteten grå', () {
-                        _settingsModel.completeMark = CompleteMark.MovedRight;
-                        _settingsBloc.updateSettings(_user.id, _settingsModel).
-                            listen((SettingsModel model) {
-                              _settingsBloc.loadSettings(_user);
-                        });
+                        Routes.pop(context, CompleteMark.MovedRight);
                       }),
                     ]),
                   ],

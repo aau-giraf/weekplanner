@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -25,7 +26,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -39,31 +40,34 @@ import 'package:weekplanner/screens/show_activity_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
+import '../test_image.dart';
+
 class MockWeekApi extends Mock implements WeekApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
-  Observable<GirafUserModel> me() {
-    return Observable<GirafUserModel>.just(
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 }
 
 class MockAuth extends Mock implements AuthBloc {
   @override
-  Observable<bool> get loggedIn => _loggedIn.stream;
-  final BehaviorSubject<bool> _loggedIn = BehaviorSubject<bool>.seeded(true);
+  Stream<bool> get loggedIn => _loggedIn.stream;
+  final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
+      .seeded(true);
 
   @override
-  Observable<WeekplanMode> get mode => _mode.stream;
-  final BehaviorSubject<WeekplanMode> _mode =
-      BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
+  Stream<WeekplanMode> get mode => _mode.stream;
+  final rx_dart.BehaviorSubject<WeekplanMode> _mode =
+      rx_dart.BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
   @override
   String loggedInUsername = 'Graatand';
 
   @override
-  void authenticate(String username, String password) {
+  Future<void> authenticate(String username, String password) async {
     // Mock the API and allow these 2 users to ?login?
     final bool status = (username == 'test' && password == 'test') ||
         (username == 'Graatand' && password == 'password');
@@ -85,8 +89,15 @@ class MockAuth extends Mock implements AuthBloc {
 
 class MockActivityApi extends Mock implements ActivityApi {
   @override
-  Observable<ActivityModel> update(ActivityModel activity, String userId) {
-    return BehaviorSubject<ActivityModel>.seeded(activity);
+  Stream<ActivityModel> update(ActivityModel activity, String userId) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
+}
+
+class MockPictogramApi extends Mock implements PictogramApi {
+  @override
+  Stream<Image> getImage(int id) {
+    return rx_dart.BehaviorSubject<Image>.seeded(sampleImage);
   }
 }
 
@@ -231,10 +242,10 @@ void main() {
   void setupApiCalls() {
     when(weekApi.update(
             mockUser.id, mockWeek.weekYear, mockWeek.weekNumber, mockWeek))
-        .thenAnswer((_) => BehaviorSubject<WeekModel>.seeded(mockWeek));
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>.seeded(mockWeek));
 
     when(api.user.getSettings(any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings);
+      return Stream<SettingsModel>.value(mockSettings);
     });
   }
 
@@ -243,6 +254,7 @@ void main() {
     weekApi = MockWeekApi();
     api.user = MockUserApi();
     api.week = weekApi;
+    api.pictogram = MockPictogramApi();
     api.activity = MockActivityApi();
     authBloc = AuthBloc(api);
     bloc = ActivityBloc(api);
@@ -298,14 +310,14 @@ void main() {
     expect(find.byKey(const Key('CancelStateToggleButton')), findsOneWidget);
   });
 
-  testWidgets('Complete activity button is NOT rendered in guardian mode',
+  testWidgets('Complete activity button is rendered in guardian mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     await tester.pumpWidget(
         MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
     await tester.pump();
 
-    expect(find.byKey(const Key('CompleteStateToggleButton')), findsNothing);
+    expect(find.byKey(const Key('CompleteStateToggleButton')), findsOneWidget);
   });
 
   testWidgets('Cancel activity button is NOT rendered in citizen mode',
@@ -759,7 +771,7 @@ void main() {
   testWidgets('Only have a play button for timer when lockTimerControl is true',
       (WidgetTester tester) async {
     when(api.user.getSettings(any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings2);
+      return Stream<SettingsModel>.value(mockSettings2);
     });
     await tester.runAsync(() async {
       authBloc.setMode(WeekplanMode.citizen);
@@ -827,7 +839,7 @@ void main() {
       'No buttons for timer when an activity with a completed timer is chosen',
       (WidgetTester tester) async {
     when(api.user.getSettings(any)).thenAnswer((_) {
-      return Observable<SettingsModel>.just(mockSettings2);
+      return Stream<SettingsModel>.value(mockSettings2);
     });
     await tester.runAsync(() async {
       authBloc.setMode(WeekplanMode.citizen);
@@ -861,5 +873,23 @@ void main() {
               widget.key == const Key('TimerDeleteButtonKey')),
           findsNothing);
     });
+  });
+
+  testWidgets('Activity state is normal when an activity has been cancelled '
+      'and non-cancelled and timer added', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.guardian);
+    mockActivity.state = ActivityState.Normal;
+    await tester.pumpWidget(
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('AddTimerButtonKey')));
+    await tester.pumpAndSettle();
+
+    expect(mockActivity.state, ActivityState.Normal);
   });
 }

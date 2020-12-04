@@ -437,11 +437,12 @@ class WeekplanDayColumn extends StatelessWidget {
             return WeekplannerChoiceboardSelector(
                 activities[index], _activityBloc, user, weekplanBloc, week);
           }).then((Object object) => weekplanBloc.loadWeek(week, user));
-    } else if (!(activities[index].state == ActivityState.Completed &&
-        isCitizen)) {
+    }
+    else if(!inEditMode){
       Routes.push(context, ShowActivityScreen(activities[index], user))
           .then((Object object) => weekplanBloc.loadWeek(week, user));
     }
+
   }
 
   /// Builds activity card with a status icon if it is marked
@@ -484,7 +485,7 @@ class WeekplanDayColumn extends StatelessWidget {
                         child: Image.asset('assets/icons/add.png'),
                         color: theme.GirafColors.buttonColor,
                         onPressed: () async {
-                          Routes.push(context, PictogramSearch())
+                          Routes.push(context, PictogramSearch(user: user,))
                               .then((Object object) {
                             if (object is PictogramModel) {
                               final PictogramModel newPictogram = object;

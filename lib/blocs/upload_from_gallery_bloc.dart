@@ -4,7 +4,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:image/image.dart';
 
@@ -17,24 +17,24 @@ class UploadFromGalleryBloc extends BlocBase {
   String _pictogramName;
 
   /// Publishes the image file, while it is nut null
-  Observable<File> get file => _file.stream.where((File f) => f != null);
+  Stream<File> get file => _file.stream.where((File f) => f != null);
 
   /// Publishes true while waiting for the pictogram to be uploaded
-  Observable<bool> get isUploading => _isUploading.stream;
+  Stream<bool> get isUploading => _isUploading.stream;
 
   /// Publishes the accessLevel for the pictogram
-  Observable<String> get accessLevel => _accessString.stream;
+  Stream<String> get accessLevel => _accessString.stream;
 
   /// Publishes if the input fields are filled
-  Observable<bool> get isInputValid => _isInputValid.stream;
+  Stream<bool> get isInputValid => _isInputValid.stream;
 
-  final BehaviorSubject<bool> _isInputValid =
-      BehaviorSubject<bool>.seeded(false);
-  final BehaviorSubject<File> _file = BehaviorSubject<File>();
-  final BehaviorSubject<String> _accessString =
-      BehaviorSubject<String>.seeded('Offentlig');
-  final BehaviorSubject<bool> _isUploading =
-      BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _isInputValid =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<File> _file = rx_dart.BehaviorSubject<File>();
+  final rx_dart.BehaviorSubject<String> _accessString =
+      rx_dart.BehaviorSubject<String>.seeded('Offentlig');
+  final rx_dart.BehaviorSubject<bool> _isUploading =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   AccessLevel _accessLevel = AccessLevel.PUBLIC;
 
@@ -91,7 +91,7 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Creates a [PictogramModel]
   /// from the seleted [Image], [AccessLevel], and title
-  Observable<PictogramModel> createPictogram() {
+  Stream<PictogramModel> createPictogram() {
     _isUploading.add(true);
     return _api.pictogram
         .create(PictogramModel(

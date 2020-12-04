@@ -141,6 +141,17 @@ class WeekplanScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+
+                      BottomAppBarButton(
+                          buttonText: 'Genoptag',
+                          buttonKey: 'GenoptagActivtiesButton',
+                          assetPath: 'assets/icons/undo.png',
+                          isEnabled: false,
+                          isEnabledStream:
+                          _weekplanBloc.atLeastOneActivityMarked,
+                          dialogFunction: _buildUndoDialog),
+
+
                       BottomAppBarButton(
                           buttonText: 'Aflys',
                           buttonKey: 'CancelActivtiesButton',
@@ -217,6 +228,34 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
+   Future<Center> _buildUndoDialog(BuildContext context) {
+    return showDialog<Center>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+              title: 'Genoptag',
+              description: 'Vil du Genoptage ' +
+                  _weekplanBloc.getNumberOfMarkedActivities().toString() +
+                  ' aktivitet(er)',
+              confirmButtonText: 'Genoptag',
+              confirmButtonIcon:
+                  const ImageIcon(AssetImage('assets/icons/undo.png')),
+              confirmOnPressed: () {
+                _weekplanBloc.UndoMarkedActivities();
+                _weekplanBloc.toggleEditMode();
+
+                // Closes the dialog box
+                Routes.pop(context);
+              });
+        });
+  }
+
+
+
+
+
+
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildRemoveDialog(BuildContext context) {
     return showDialog<Center>(
@@ -286,9 +325,9 @@ class WeekplanScreen extends StatelessWidget {
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
                     _weekdayCounter = 0;
-                    // If the option of showing 1 day is chosen the
+                    // If the option of showing 1 or 2 days is chosen the
                     // _weekdayCounter must start from today's date
-                    if (_daysToDisplay == 1) {
+                    if (_daysToDisplay == 1 || _daysToDisplay == 2) {
                       _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
                     // Adding the selected number of days to weekDays
@@ -310,6 +349,12 @@ class WeekplanScreen extends StatelessWidget {
                           )
                         )
                       );
+                      if (_daysToDisplay == 2 && _weekdayCounter == 6) {
+                        break;
+                        /* If the user wants two days to display
+                         * and today is sunday then it only shows one day
+                         */
+                      }
                       if (_weekdayCounter == 6) {
                         _weekdayCounter = 0;
                       } else {

@@ -1,11 +1,14 @@
+import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
+//import 'package:rxdart/rxdart.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
@@ -21,6 +24,23 @@ import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
+class MockUserApi extends Mock implements UserApi {
+  @override
+  Stream<GirafUserModel> me() {
+    return Stream<GirafUserModel>.value(
+        GirafUserModel(id: 'testId', username: 'testName', role: Role.Guardian)
+    );
+  }
+
+  @override
+  Stream<List<DisplayNameModel>> getCitizens(String id) {
+    final List<DisplayNameModel> output = <DisplayNameModel>[];
+    output.add(DisplayNameModel(displayName: 'testName', role: 'testRole',
+        id: id));
+    return Stream<List<DisplayNameModel>>.value(output);
+  }
+}
+
 class MockCopyResolveBloc extends CopyResolveBloc {
   MockCopyResolveBloc(this.api) : super(api);
 
@@ -28,7 +48,7 @@ class MockCopyResolveBloc extends CopyResolveBloc {
   Api api;
 
   @override
-  Observable<bool> get allInputsAreValidStream => Observable<bool>.just(true);
+  Stream<bool> get allInputsAreValidStream => Stream<bool>.value(true);
 }
 
 final List<WeekNameModel> weekNameModelList = <WeekNameModel>[];
@@ -63,6 +83,7 @@ void main() {
 
     api = Api('any');
     api.week = MockWeekApi();
+    api.user = MockUserApi();
 
     when(api.week.update('testId', 2020, 3, any)).thenAnswer((
       Invocation answer) {
@@ -75,34 +96,34 @@ void main() {
       );
 
       weekNameModelList.add(weekNameModel);
-      return Observable<WeekModel>.just(weekplan1);
+      return Stream<WeekModel>.value(weekplan1);
     });
 
     when(api.week.get('testId', 2020, 3)).thenAnswer((_) {
       for (WeekNameModel week in weekNameModelList){
         final bool isEqual = week.weekYear == 2020 && week.weekNumber == 3;
         if (isEqual){
-          return Observable<WeekModel>.just(weekplan1Copy);
+          return Stream<WeekModel>.value(weekplan1Copy);
         }
       }
-      return Observable<WeekModel>.just(WeekModel(
+      return Stream<WeekModel>.value(WeekModel(
         thumbnail: null, name: '2020 - 3', weekYear: 2020, weekNumber: 3));
     });
 
     when(api.week
       .get('testId', weekNameModel.weekYear, weekNameModel.weekNumber))
       .thenAnswer((_) {
-      return Observable<WeekModel>.just(weekplan1);
+      return Stream<WeekModel>.value(weekplan1);
     });
 
     when(api.week
       .get('testId', weekNameModel2.weekYear, weekNameModel2.weekNumber))
       .thenAnswer((_) {
-      return Observable<WeekModel>.just(weekplan2);
+      return Stream<WeekModel>.value(weekplan2);
     });
 
     when(api.week.getNames('testId')).thenAnswer((_) {
-      return Observable<List<WeekNameModel>>.just(weekNameModelList);
+      return Stream<List<WeekNameModel>>.value(weekNameModelList);
     });
 
     di.clearAll();

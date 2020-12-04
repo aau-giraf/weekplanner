@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
@@ -116,7 +117,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                   },
                   controller: textController,
                   style: const TextStyle(
-                    fontSize: 50,
+                    fontSize: GirafFont.timer,
                   ),
                   textAlign: TextAlign.center,
                   keyboardType: const TextInputType.numberWithOptions(
@@ -125,7 +126,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                     hintText: '',
                   ),
                   inputFormatters: <TextInputFormatter>[
-                    WhitelistingTextInputFormatter(RegExp('[0-9]*')),
+                    FilteringTextInputFormatter.allow(RegExp('[0-9]*')),
                     LengthLimitingTextInputFormatter(2)
                   ]),
             ),

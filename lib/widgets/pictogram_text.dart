@@ -8,6 +8,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
+import 'package:weekplanner/style/font_size.dart';
 
 /// This is a widget used to create text under the pictograms
 class PictogramText extends StatelessWidget {
@@ -67,19 +68,51 @@ class PictogramText extends StatelessWidget {
   SizedBox _buildPictogramText(BuildContext context, String pictogramText) {
     return SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width / 4,
+        height: null,
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: AutoSizeText(
-            pictogramText,
+            pictogramText[0] + pictogramText.substring(1).toLowerCase(),
             minFontSize: minFontSize,
-            maxLines: 2,
+            maxLines: textLines(pictogramText, context),
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 150),
+            style: const TextStyle(fontWeight: FontWeight.bold,
+                fontSize: GirafFont.pictogram),
           ),
         ));
+  }
+}
+
+/// Try to calculate the actual size of the text, with the size of the screen
+/// accounted for
+double textWidth(String text, BuildContext context) {
+  return (TextPainter(
+          text: TextSpan(
+              text: text,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 120)),
+          maxLines: 1,
+          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+          textDirection: TextDirection.ltr)
+        ..layout())
+      .size
+      .width;
+}
+
+/// Counts the amount of words by splitting by the spaces and count the result
+/// if theres only 1 word then max lines is 1 else the max lines is 2
+int textLines(String pictogramText, BuildContext context) {
+  if (pictogramText.split(RegExp('\\s+')).length > 1) {
+    return 2;
+  } else {
+    if (textWidth(pictogramText, context) >=
+        MediaQuery.of(context).size.width) {
+      return 2;
+    } else {
+      return 1;
+    }
   }
 }
