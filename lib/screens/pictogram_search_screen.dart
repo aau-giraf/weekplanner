@@ -97,13 +97,6 @@ class PictogramSearch extends StatelessWidget {
                   await Routes.push(context, UploadImageFromPhone());
                 },
               ),
-              GirafButton(
-                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
-                  text: 'Tag billede med kamera',
-                  onPressed: () async {
-                    await Routes.push(context, TakePictureWithCamera());
-                  }
-              ),
             ],
           ),
         ));
