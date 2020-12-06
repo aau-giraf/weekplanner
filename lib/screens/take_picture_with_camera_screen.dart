@@ -109,8 +109,8 @@ class TakePictureWithCamera extends StatelessWidget {
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem',
             onPressed: () {
-              // ignore: lines_longer_than_80_chars
-              _takePictureWithCamera.createPictogram().listen((PictogramModel p) {
+              _takePictureWithCamera.createPictogram().listen((PictogramModel p)
+              {
                 Routes.pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
