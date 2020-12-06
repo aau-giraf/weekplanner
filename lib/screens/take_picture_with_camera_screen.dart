@@ -23,7 +23,9 @@ class TakePictureWithCamera extends StatelessWidget {
   di.getDependency<TakePictureWithCameraBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+  ///height of screen
   dynamic screenHeight;
+  ///width of screen
   dynamic screenWidth;
 
   @override
