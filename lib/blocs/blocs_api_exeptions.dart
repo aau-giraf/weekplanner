@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../main.dart';
 
 ///This class handles all api exeptions
-class BlocsApiExeptions{
-
+class BlocsApiException{
 
   ///this constructor allows developers to costumize errors
-  BlocsApiExeptions(String errorType,
+  BlocsApiException(String errorType,
       [this.errormessage = 'opps noget gik galt',
         Object error]){
-    ///switchen her er bare for at give nogle basale api fejl
+    ///this switch finds the relevent exeption
     switch (errorType){
       case 'Sock':
         errormessage = 'kunne ikke få forbindelse til internettet';
@@ -41,30 +41,16 @@ class BlocsApiExeptions{
   ///This string is used to contain error messages
   String errormessage;
 
-  ///dette gøre man bare kan kaste vores api fejl
- @override
-  String toString() {
-   return errormessage;
- }
-
- ///denne del lave en alret besked som popper op til brugeren
+ ///This part creates the message
   void showMyDialog() {
     showDialog<Center>(
         context: navigatorKey.currentContext,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('En problem opstod'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text(errormessage),
-                ],
-              ),
-            ),
-          );
-        }
-    );
+          return GirafNotifyDialog(
+              title: 'Noget gik galt',
+              description: errormessage,
+              key: const Key('ErrorMessageDialog'));
+        });
   }
-
 
 }
