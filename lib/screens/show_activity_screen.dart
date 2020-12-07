@@ -233,23 +233,16 @@ class ShowActivityScreen extends StatelessWidget {
                                 }),
                             )
                           ),
-                          Expanded(
+                          const Expanded(
                             child: AspectRatio(
                               aspectRatio: 1,
-                              child: IconButton(
-                                icon: const AspectRatio(
-                                  aspectRatio: 1,
-                                    child: FittedBox(
-                                      child: Icon(
-                                        Icons.add,
-                                        color: theme.GirafColors.black,
-                                      ),
-                                    ),
+                                child: FittedBox(
+                                  child: Icon(
+                                    Icons.add,
+                                    color: theme.GirafColors.black,
+                                  ),
                                 ),
-                                onPressed: (){
-                                },
-                              )
-                            )
+                            ),
                           )
                         ]
                       ),
