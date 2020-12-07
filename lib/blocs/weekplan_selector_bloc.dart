@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -7,8 +6,6 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-
-import 'blocs_api_exeptions.dart';
 
 /// WeekplansBloc to get weekplans for a user
 class WeekplansBloc extends BlocBase {
@@ -67,15 +64,7 @@ class WeekplansBloc extends BlocBase {
     _user = user;
     _addWeekplan = addWeekplan;
     weekNameModels.listen(getAllWeekInfo);
-    try{
-      _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
-    on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
-
+    _api.week.getNames(_user.id).listen(_weekNameModelsList.add);
   }
 
   /// Gets all the information for a [Weekmodel].
@@ -141,139 +130,71 @@ class WeekplansBloc extends BlocBase {
 
     // Loops through all weekplans and sort them into old and upcoming weekplans
     for (WeekNameModel weekPlanName in weekPlanNames) {
-      try{
-        if(isWeekDone(weekPlanName)) {
-          oldWeekDetails.add(_api.week
-              .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
-              .take(1));
-        } else {
-          weekDetails.add(_api.week
-              .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
-              .take(1));
-        }
-        }on SocketException{throw BlocsApiExeptions('Sock');}
-        on HttpException{throw BlocsApiExeptions('Http');}
-        on TimeoutException{throw BlocsApiExeptions('Time');}
-        on FormatException{throw BlocsApiExeptions('Form');}
-      on Error catch(error)
-      {throw BlocsApiExeptions('spec', '', error);}
-
+      if(isWeekDone(weekPlanName)) {
+        oldWeekDetails.add(_api.week
+            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .take(1));
+      } else {
+        weekDetails.add(_api.week
+            .get(_user.id, weekPlanName.weekYear, weekPlanName.weekNumber)
+            .take(1));
+      }
     }
   }
 
   /// Returns the current week number
-  int getCurrentWeekNum(){
+  int getCurrentWeekNum() {
     return getWeekNumberFromDate(DateTime.now());
   }
 
   /// Calculates the current week number from a given date
   int getWeekNumberFromDate(DateTime date) {
 
-    // The if statement below is due to
-    // an inconsistency with Duration (At the time of writing, 2020/11/04).
-    // Once a year a day is duplicated, and at another time a day is skipped.
-    // Example:
-    // 2022/03/27 and 2022/03/28, both are day 86.
-    // 2022/10/30 and 2022/10/31, are day 302 and day 304
-    // This is a problem due to summer time.
-    // DateTime.utc is another possibility, but it just adds an hour to
-    // all days of the year.
+    // Get the preliminary week number
+    final int weekNum = getWeekNumberFromNearestThursday(date);
 
-    final Duration hoursToToday = date.difference(DateTime(date.year, 1, 1));
+    // Define a day that is in the last week of the year.
+    // ## December 28th is always in the last week of the year ##
+    final DateTime dayInLastWeekThisYear = DateTime(date.year, 12, 28);
+    final DateTime dayInLastWeekLastYear = DateTime(date.year - 1, 12, 28);
 
-    int dayOfYear;
-
-    // Find which day of the year the given date is.
-    // Example: 14/10/2020 is day 288.
-    // Is zero indexed, the "+ 1" is to make it one-indexed.
-    // The "+ 2" is in the case where a day is skipped, explained above.
-    if (hoursToToday.inHours % 24 == 0) {
-      dayOfYear = hoursToToday.inDays + 1;
+    // If the preliminary week number is 0,
+    // the given date is in last year's last week
+    if (weekNum == 0) {
+      return getWeekNumberFromNearestThursday(dayInLastWeekLastYear);
     }
+    // If the preliminary week number is bigger than the amount of weeks in
+    // the given date's year, it is in the next year's week 1
+    else if (weekNum >
+        getWeekNumberFromNearestThursday(dayInLastWeekThisYear)) {
+      return 1;
+    }
+    // If none of the cases described above are true, the
+    // preliminary week number is the actual week number
     else {
-      dayOfYear = hoursToToday.inDays + 2;
+      return weekNum;
     }
-
-
-    /*
-    If next year's first of January is a Tuesday, Wednesday, or a Thursday,
-    and the given date is in the last days of this year, it is in the
-    next year's week 1.
-     */
-    final int dayOfWeekJan1NextYear = DateTime(date.year + 1, 1, 1).weekday;
-
-    if (date.month == 12 &&
-        dayOfWeekJan1NextYear >= 2 &&
-        dayOfWeekJan1NextYear <= 4) {
-      switch (dayOfWeekJan1NextYear) {
-        case 2:
-          if (date.day == 31) {
-            return 1;
-          }
-          break;
-
-        case 3:
-          if (date.day == 31 || date.day == 30) {
-            return 1;
-          }
-          break;
-
-        case 4:
-          if (date.day == 31 || date.day == 30 || date.day == 29) {
-            return 1;
-          }
-          break;
-      }
-    }
-
-    int weekNum;
-    final int dayOfWeekJan1 = DateTime(date.year, 1, 1).weekday;
-
-    /*
-    An offset is added to the given date (dayOfYear), to ensure that we find
-    the correct week. The offset is based on the day of the week that
-    January 1st falls on, and the day of the week the given date is.
-    We then divide by seven to find the week number,
-    and add 1 because it is 0-indexed.
-     */
-
-    // If January 1st falls on a Monday, Tuesday, Wednesday, or Thursday:
-    if (dayOfWeekJan1 <= 4) {
-      weekNum = ((dayOfYear + (dayOfWeekJan1 - 2)) / 7).floor() + 1;
-    }
-
-    // If January 1st falls on a Friday, Saturday, or a Sunday,
-    // check if the given date belongs to last year's last week:
-    else {
-      int n;
-
-      switch (dayOfWeekJan1) {
-        case 5:
-          n = 3;
-          break;
-        case 6:
-          n = 2;
-          break;
-        case 7:
-          n = 1;
-          break;
-      }
-
-      if (dayOfYear <= n) {
-        weekNum = getLastYearLastWeek(date);
-      }
-      else {
-        weekNum = ((dayOfYear + (dayOfWeekJan1 - 9)) / 7).floor() + 1;
-      }
-    }
-
-    return weekNum;
   }
-  ///this gets last year last week
-  int getLastYearLastWeek(DateTime date) {
-    final DateTime lastYearLastDay = DateTime(date.year - 1, 12, 31);
 
-    return getWeekNumberFromDate(lastYearLastDay);
+  /// Calculates the week number from the nearest Thursday of the given date
+  int getWeekNumberFromNearestThursday(DateTime date) {
+
+    // Sets the time of day to be noon, thus mitigating the summer time issue
+    date = DateTime(date.year, date.month, date.day, 12);
+
+    // Find the number of days we are into the year. June 1st would be day 153
+    final int dayOfYear = date.difference(DateTime(date. year, 1, 1)).inDays;
+
+    const int dayOfWeekThursday = 4;
+
+    // Find the day of the year for the nearest Thursday to the given date.
+    // ## The week number for the given date,
+    //    is the same as its nearest Thursday's ##
+    final int nearestThursday = (dayOfYear - date.weekday) + dayOfWeekThursday;
+
+    // Find how many weeks have passed since the first Thursday plus 1 as:
+    // ## The first Thursday of a year is always in week 1 ##
+    return (nearestThursday / 7).floor() + 1;
   }
 
   /// Upcoming weekplans is sorted in ascending order
@@ -345,29 +266,22 @@ class WeekplansBloc extends BlocBase {
     final List<WeekModel> localWeekModels = _weekModel.value;
     final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value.toList();
     // Updates the weekplan in the database
-    try{
-      for (WeekModel weekModel in _markedWeekModels.value) {
-        _api.week
-            .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
-            .listen((bool deleted) {
-          if (deleted) {
-            // Checks if its an old or upcoming weekplan
-            if(localWeekModels != null && localWeekModels.contains(weekModel)){
-              localWeekModels.remove(weekModel);
-              _weekModel.add(localWeekModels);
-            } else {
-              oldLocalWeekModels.remove(weekModel);
-              _oldWeekModel.add(oldLocalWeekModels);
-            }
+    for (WeekModel weekModel in _markedWeekModels.value) {
+      _api.week
+          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+          .listen((bool deleted) {
+        if (deleted) {
+          // Checks if its an old or upcoming weekplan
+          if(localWeekModels != null && localWeekModels.contains(weekModel)){
+            localWeekModels.remove(weekModel);
+            _weekModel.add(localWeekModels);
+          } else {
+            oldLocalWeekModels.remove(weekModel);
+            _oldWeekModel.add(oldLocalWeekModels);
           }
-        });
-      }
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
-    on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+        }
+      });
+    }
     clearMarkedWeekModels();
   }
 
@@ -388,22 +302,14 @@ class WeekplansBloc extends BlocBase {
 
   /// This method deletes the given week model from the database
   void deleteWeek(List<WeekModel> weekModels, WeekModel weekModel){
-    try{
-      _api.week
-          .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
-          .listen((bool deleted) {
-        if (deleted) {
-          weekModels.remove(weekModel);
-          _weekModel.add(weekModels);
-        }
-      });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
-    on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
-
+    _api.week
+        .delete(_user.id, weekModel.weekYear, weekModel.weekNumber)
+        .listen((bool deleted) {
+      if (deleted) {
+        weekModels.remove(weekModel);
+        _weekModel.add(weekModels);
+      }
+    });
   }
 
   /// Returns the number of marked week models
@@ -423,16 +329,9 @@ class WeekplansBloc extends BlocBase {
     final WeekModel marked = _markedWeekModels.value[0];
 
     final Completer<WeekModel> completer = Completer<WeekModel>();
-    try{
-      _api.week
-          .get(_user.id, marked.weekYear, marked.weekNumber)
-          .listen((WeekModel weekModel) => completer.complete(weekModel));
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
-    on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    _api.week
+        .get(_user.id, marked.weekYear, marked.weekNumber)
+        .listen((WeekModel weekModel) => completer.complete(weekModel));
 
     return completer.future;
   }
