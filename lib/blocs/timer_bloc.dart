@@ -11,7 +11,7 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 /// Logic for activities
 class TimerBloc extends BlocBase {
@@ -97,12 +97,12 @@ class TimerBloc extends BlocBase {
       _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {});
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
   }
 
@@ -218,12 +218,12 @@ class TimerBloc extends BlocBase {
         _api.activity
             .update(_activityModel, _user.id)
             .listen((ActivityModel activity) {});
-      }on SocketException{throw BlocsApiExeptions('Sock');}
-      on HttpException{throw BlocsApiExeptions('Http');}
-      on TimeoutException{throw BlocsApiExeptions('Time');}
-      on FormatException{throw BlocsApiExeptions('Form');}
+      }on SocketException{throw BlocsApiException('Sock');}
+      on HttpException{throw BlocsApiException('Http');}
+      on TimeoutException{throw BlocsApiException('Time');}
+      on FormatException{throw BlocsApiException('Form');}
       on Error catch(error)
-      {throw BlocsApiExeptions('spec', '', error);}
+      {throw BlocsApiException('spec', '', error);}
     }
   }
 

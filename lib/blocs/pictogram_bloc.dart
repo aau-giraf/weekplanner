@@ -6,7 +6,7 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 /// For how long the debouncer should wait
 const int _debounceTime = 250;
@@ -67,12 +67,12 @@ class PictogramBloc extends BlocBase {
           _resultPlaceholder = results;
           _pictograms.add(_resultPlaceholder);
         });
-      } on SocketException{throw BlocsApiExeptions('Sock');}
-      on HttpException{throw BlocsApiExeptions('Http');}
-      on TimeoutException{throw BlocsApiExeptions('Time');}
-      on FormatException{throw BlocsApiExeptions('Form');}
+      } on SocketException{throw BlocsApiException('Sock');}
+      on HttpException{throw BlocsApiException('Http');}
+      on TimeoutException{throw BlocsApiException('Time');}
+      on FormatException{throw BlocsApiException('Form');}
       on Error catch(error)
-      {throw BlocsApiExeptions('spec', '', error);}
+      {throw BlocsApiException('spec', '', error);}
     });
   }
 
@@ -82,12 +82,12 @@ class PictogramBloc extends BlocBase {
   void delete(PictogramModel pm){
     try{
       _api.pictogram.delete(pm.id);
-    } on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    } on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
   }
 
   @override

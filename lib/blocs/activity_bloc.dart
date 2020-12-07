@@ -9,7 +9,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 /// Logic for activities
 class ActivityBloc extends BlocBase {
@@ -66,12 +66,12 @@ class ActivityBloc extends BlocBase {
         _activityModel = activityModel;
         _activityModelStream.add(activityModel);
       });
-    } on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    } on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
   }
 
   @override

@@ -7,7 +7,7 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 /// Bloc to copy a weekplan to other users
 class CopyWeekplanBloc extends ChooseCitizenBloc {
@@ -46,12 +46,12 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
           final bool done = weekModel != null;
           callCompleter.complete(done);
         });
-      }on SocketException{throw BlocsApiExeptions('Sock');}
-      on HttpException{throw BlocsApiExeptions('Http');}
-      on TimeoutException{throw BlocsApiExeptions('Time');}
-      on FormatException{throw BlocsApiExeptions('Form');}
+      }on SocketException{throw BlocsApiException('Sock');}
+      on HttpException{throw BlocsApiException('Http');}
+      on TimeoutException{throw BlocsApiException('Time');}
+      on FormatException{throw BlocsApiException('Form');}
       on Error catch(error)
-      {throw BlocsApiExeptions('spec', '', error);}
+      {throw BlocsApiException('spec', '', error);}
 
       callFutures.add(callCompleter.future);
     }
@@ -107,12 +107,12 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
         daysAreEmpty = response.name.compareTo('$weekYear - $weekNumber') == 0;
       }
 
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
     return !daysAreEmpty;
   }

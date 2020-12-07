@@ -12,7 +12,7 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/user_week_model.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 
 /// Bloc that streams the currently chosen weekplan
@@ -56,12 +56,12 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekModel loadedWeek) {
         _userWeek.add(UserWeekModel(loadedWeek, user));
       });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
 
   }
@@ -109,12 +109,12 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekModel newWeek) {
         _userWeek.add(UserWeekModel(newWeek, user));
       });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
 
     clearMarkedActivities();
@@ -138,12 +138,12 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekModel newWeek) {
         _userWeek.add(UserWeekModel(newWeek, user));
       });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
   }
 /// Set the marked activities as resumed
@@ -161,12 +161,12 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekModel newWeek) {
         _userWeek.add(UserWeekModel(newWeek, user));
       });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
 
     clearMarkedActivities();
@@ -203,12 +203,12 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekModel newWeek) {
         _userWeek.add(UserWeekModel(newWeek, user));
       });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
   }
 
@@ -256,12 +256,12 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekModel newWeek) {
         _userWeek.add(UserWeekModel(newWeek, user));
       });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
   }
 
@@ -304,12 +304,12 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekModel newWeek) {
         _userWeek.add(UserWeekModel(newWeek, user));
       });
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
 
   }
 

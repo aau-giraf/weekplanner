@@ -7,7 +7,7 @@ import 'package:api_client/models/giraf_user_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 ///This bloc is used by a guardian to instantiate a new citizen.
 class NewCitizenBloc extends BlocBase {
@@ -65,12 +65,12 @@ class NewCitizenBloc extends BlocBase {
       _api.user.me().listen((GirafUserModel user) {
         _user = user;
       });
-    } on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    } on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
   }
 
   /// Method called with information about the new citizen.
@@ -83,12 +83,12 @@ class NewCitizenBloc extends BlocBase {
           departmentId: _user.department,
           role: Role.Citizen
       );
-    } on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    } on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
   }
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>

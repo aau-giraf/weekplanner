@@ -14,7 +14,7 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 /// New-Weekplan Business Logic Component.
 class NewWeekplanBloc extends BlocBase {
@@ -165,12 +165,12 @@ class NewWeekplanBloc extends BlocBase {
             _weekModel)
             .take(1)
             .listen(saveCompleter.complete);
-      } on SocketException{throw BlocsApiExeptions('Sock');}
-      on HttpException{throw BlocsApiExeptions('Http');}
-      on TimeoutException{throw BlocsApiExeptions('Time');}
-      on FormatException{throw BlocsApiExeptions('Form');}
+      } on SocketException{throw BlocsApiException('Sock');}
+      on HttpException{throw BlocsApiException('Http');}
+      on TimeoutException{throw BlocsApiException('Time');}
+      on FormatException{throw BlocsApiException('Form');}
       on Error catch(error)
-      {throw BlocsApiExeptions('spec', '', error);}
+      {throw BlocsApiException('spec', '', error);}
 
     } else {
       saveCompleter.complete(null);

@@ -8,7 +8,7 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:mutex/mutex.dart';
 
-import 'blocs_api_exeptions.dart';
+import 'blocs_api_exceptions.dart';
 
 /// Pictogram-Image Business Logic Component
 class PictogramImageBloc extends BlocBase {
@@ -38,12 +38,12 @@ class PictogramImageBloc extends BlocBase {
   void load(PictogramModel pictogram) {
     try{
       _api.pictogram.getImage(pictogram.id).listen(_image.add);
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
   }
 
   /// Initialize loading of a specific [PictogramModel] from its [id].
@@ -60,12 +60,12 @@ class PictogramImageBloc extends BlocBase {
         rx_dart.Rx.retry<Image>(() {
           try{
             return _api.pictogram.getImage(id);
-          }on SocketException{throw BlocsApiExeptions('Sock');}
-          on HttpException{throw BlocsApiExeptions('Http');}
-          on TimeoutException{throw BlocsApiExeptions('Time');}
-          on FormatException{throw BlocsApiExeptions('Form');}
+          }on SocketException{throw BlocsApiException('Sock');}
+          on HttpException{throw BlocsApiException('Http');}
+          on TimeoutException{throw BlocsApiException('Time');}
+          on FormatException{throw BlocsApiException('Form');}
           on Error catch(error)
-          {throw BlocsApiExeptions('spec', '', error);}
+          {throw BlocsApiException('spec', '', error);}
         }, 3)
             .listen(
           (Image image) async {
@@ -107,12 +107,12 @@ class PictogramImageBloc extends BlocBase {
       }
       return result;
 
-    }on SocketException{throw BlocsApiExeptions('Sock');}
-    on HttpException{throw BlocsApiExeptions('Http');}
-    on TimeoutException{throw BlocsApiExeptions('Time');}
-    on FormatException{throw BlocsApiExeptions('Form');}
+    }on SocketException{throw BlocsApiException('Sock');}
+    on HttpException{throw BlocsApiException('Http');}
+    on TimeoutException{throw BlocsApiException('Time');}
+    on FormatException{throw BlocsApiException('Form');}
     on Error catch(error)
-    {throw BlocsApiExeptions('spec', '', error);}
+    {throw BlocsApiException('spec', '', error);}
   }
 
   @override
