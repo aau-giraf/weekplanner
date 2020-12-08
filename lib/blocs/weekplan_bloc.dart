@@ -49,6 +49,7 @@ class WeekplanBloc extends BlocBase {
         .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
+
     });
   }
 
@@ -152,7 +153,8 @@ class WeekplanBloc extends BlocBase {
               pictograms: activity.pictograms,
               order: week.days[dayOfWeek].activities.length,
               isChoiceBoard: activity.isChoiceBoard,
-              state: ActivityState.Normal);
+              state: ActivityState.Normal,
+              title: activity.title);
 
           // Add the copy to the specified day
           week.days[dayOfWeek].activities.add(newActivity);
@@ -206,11 +208,10 @@ class WeekplanBloc extends BlocBase {
     final WeekModel week = _userWeek.value.week;
     final DisplayNameModel user = _userWeek.value.user;
 
-    week.days[day].activities.add(activity);
-    _api.week
-        .update(user.id, week.weekYear, week.weekNumber, week)
-        .listen((WeekModel newWeek) {
-      _userWeek.add(UserWeekModel(newWeek, user));
+    _api.activity.add(activity, user.id, week.name, week.weekYear,
+    week.weekNumber, Weekday.values[day]).listen((ActivityModel res) {
+      week.days[day].activities.add(res);
+      _userWeek.add(UserWeekModel(week,user));
     });
   }
 

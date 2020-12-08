@@ -19,8 +19,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: a6a9879f4c4d80862aef526773455d5dcf4eb533
+      ref: develop
+      resolved-ref: be69773323a358f9ba03deaba1dea184a3c7e248
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"
@@ -102,42 +102,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0-nullsafety.3"
-  charcode:
-    dependency: transitive
-    description:
-      name: charcode
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0-nullsafety.1"
-  cli_util:
-    dependency: transitive
-    description:
-      name: cli_util
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
-  clock:
-    dependency: transitive
-    description:
-      name: clock
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0-nullsafety.1"
-  code_builder:
-    dependency: transitive
-    description:
-      name: code_builder
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.5.0"
-  collection:
-    dependency: transitive
-    description:
-      name: collection
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.15.0-nullsafety.3"
+    version: "1.14.13"
   convert:
     dependency: transitive
     description:
@@ -593,7 +558,7 @@ packages:
     source: hosted
     version: "0.2.19-nullsafety.2"
   tuple:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: tuple
       url: "https://pub.dartlang.org"
