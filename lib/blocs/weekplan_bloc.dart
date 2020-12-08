@@ -267,7 +267,10 @@ class WeekplanBloc extends BlocBase {
       _week.days[dayFrom.index].activities[i].order -= 1;
     }
 
-    _week.days[dayFrom.index].activities.remove(activity);
+
+
+    _week.days[dayFrom.index].activities.removeWhere(
+            (ActivityModel a)=> a.id == activity.id);
     daysToUpdate.add(_week.days[dayFrom.index]);
 
     activity.order = dayFrom == dayTo &&
