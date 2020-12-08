@@ -1,3 +1,4 @@
+import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -15,6 +16,7 @@ import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/user_week_model.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 
 class MockWeekApi extends Mock implements WeekApi {}
 
@@ -28,6 +30,18 @@ class MockUserApi extends Mock implements UserApi {
         roleName: 'Guardian',
         displayName: 'Kurt',
         username: 'SpaceLord69'));
+  }
+}
+
+class MockActivityApi extends Mock implements ActivityApi {
+  @override
+  Stream<ActivityModel> update(ActivityModel activity, String userId) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
+  @override
+  Stream<ActivityModel> add(ActivityModel activity, String userId,
+      String weekplanName, int weekYear, int weekNumber, Weekday weekDay) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
 }
 
@@ -65,6 +79,7 @@ void main() {
 
     api.user = MockUserApi();
     api.week = MockWeekApi();
+    api.activity = MockActivityApi();
     when(api.week.update(any, any, any, any)).thenAnswer((Invocation inv) {
       return Stream<WeekModel>.value(inv.positionalArguments[3]);
     });
@@ -470,7 +485,8 @@ void main() {
         isChoiceBoard: null,
         state: null,
         id: null,
-        pictograms: null);
+        pictograms: null,
+        title: '');
 
     weekplanBloc.getWeek(week, user).whenComplete((){
       weekplanBloc.setDaysToDisplay(2, 0);
