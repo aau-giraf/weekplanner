@@ -56,7 +56,8 @@ void main() {
       pictograms: <PictogramModel>[pictogramModel],
       order: null,
       state: ActivityState.Normal,
-      isChoiceBoard: false);
+      isChoiceBoard: false,
+      title: pictogramModel.title);
 
   setUp(() {
     di.clearAll();
@@ -126,7 +127,7 @@ void main() {
 
   testWidgets('Pictogram text is displayed when false and in guardian mode',
       (WidgetTester tester) async {
-    mockSettings.pictogramText = false;
+    mockSettings.pictogramText = true;
     authBloc.setMode(WeekplanMode.guardian);
 
     await tester

@@ -1,12 +1,10 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/models/week_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -18,16 +16,12 @@ import 'giraf_confirm_dialog.dart';
 ///This is a class
 class WeekplannerChoiceboardSelector extends StatelessWidget {
   ///Constructor
-  WeekplannerChoiceboardSelector(this._activity, this._activityBloc, this._user,
-      this._weekplanBloc, this._week) {
+  WeekplannerChoiceboardSelector(this._activity, this._activityBloc,
+      this._user) {
     _activityBloc.load(_activity, _user);
   }
 
   final ActivityModel _activity;
-
-  final WeekplanBloc _weekplanBloc;
-
-  final WeekModel _week;
 
   final DisplayNameModel _user;
 
@@ -165,7 +159,6 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
                 _activityBloc.update();
                 _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
-                  _weekplanBloc.loadWeek(_week, _user);
                   Routes.pop(context);
                 });
                 // Closes the dialog box
