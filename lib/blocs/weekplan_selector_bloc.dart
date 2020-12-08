@@ -114,7 +114,7 @@ class WeekplansBloc extends BlocBase {
       List<Stream<WeekModel>> details) {
     // ignore: always_specify_types
     return details.isEmpty
-        ? const Stream.empty()
+        ? const Stream<WeekModel>.empty()
         : details.length == 1
             ? details[0].map((WeekModel plan) => <WeekModel>[plan])
             : rx_dart.Rx.combineLatestList(details);
