@@ -242,13 +242,22 @@ class WeekplanBloc extends BlocBase {
 
   /// Adds an activity to the given day.
   Future<void> addActivity(ActivityModel activity, int day) {
-    _week.days[day].activities.add(activity);
 
-    updateWeekdays(<WeekdayModel>[_week.days[day]]).catchError((Object error){
-      return Future<void>.error(error);
-    });
+    final Completer<void> completer = Completer<void>();
+    final DisplayNameModel user = _userWeek.value.user;
+    _api.activity.add(activity, user.id, _week.name, _week.weekYear,
+        _week.weekNumber, _week.days[day].day)
+        .listen((ActivityModel ac) {
+          _week.days[day].activities.add(ac);
+          updateWeekdays(<WeekdayModel>[_week.days[day]])
+            .catchError((Object error){
+              completer.completeError(error);
+          });
+          completer.complete();
+        }).onError((Object error){ completer.completeError(error);});
 
-    return Future<void>.value();
+    Future.wait(<Future<void>>[completer.future]);
+    return completer.future;
   }
 
   /// Returns the number of marked activities
