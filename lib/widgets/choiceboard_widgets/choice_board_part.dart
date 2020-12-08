@@ -52,6 +52,7 @@ class ChoiceBoardPart extends StatelessWidget {
                   _activity.pictograms.remove(_pictogramModel);
                   if (_activity.pictograms.length == 1) {
                     _activity.isChoiceBoard = false;
+                    _bloc.getTitleWhenChoiceboardDeleted();
                   }
                   _bloc.update();
                 }),

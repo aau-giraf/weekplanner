@@ -499,7 +499,6 @@ class WeekplanDayColumn extends StatelessWidget {
                                       state: ActivityState.Active,
                                       isChoiceBoard: false),
                                   weekday.day.index);
-                              weekplanBloc.loadWeek(week, user);
                             }
                           });
                         }),
