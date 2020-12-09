@@ -92,7 +92,10 @@ class ShowActivityScreen extends StatelessWidget {
         appBar: GirafAppBar(
             title: 'Aktivitet',
             appBarIcons: const <AppBarIcon, VoidCallback>{}),
-        body: childContainer);
+        resizeToAvoidBottomInset: false,
+        body: childContainer
+    );
+
   }
 
   /// Builds the activity.
@@ -119,8 +122,8 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-                    (activitySnapshot.data.state == ActivityState.Canceled ||
-                        activitySnapshot.data.state == ActivityState.Completed))
+                   (activitySnapshot.data.state == ActivityState.Canceled ||
+                    activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -138,8 +141,7 @@ class ShowActivityScreen extends StatelessWidget {
                     activitySnapshot.hasData &&
                     authSnapshot.data != WeekplanMode.citizen &&
                     (activitySnapshot.data.state != ActivityState.Canceled &&
-                        activitySnapshot.data.state !=
-                            ActivityState.Completed)) {
+                    activitySnapshot.data.state != ActivityState.Completed)) {
                   return _buildChoiceBoardButton(context);
                 } else {
                   return _buildEmptyContainer();
@@ -197,11 +199,9 @@ class ShowActivityScreen extends StatelessWidget {
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
                       onTap: () async {
-                        await Routes.push(
-                            context,
-                            PictogramSearch(
-                              user: _girafUser,
-                            )).then((Object object) {
+                        await Routes.push(context, PictogramSearch(
+                          user: _girafUser,))
+                          .then((Object object) {
                           if (object is PictogramModel) {
                             _activityBloc.load(_activity, _girafUser);
                             final PictogramModel newPictogram = object;
@@ -410,9 +410,8 @@ class ShowActivityScreen extends StatelessWidget {
                     }))),
       ),
       buildButtonBar(),
-      _activityBloc.getActivity().isChoiceBoard
-          ? Container()
-          : buildInputField(context)
+          _activityBloc.getActivity().isChoiceBoard ? Container() :
+            buildInputField(context)
     ]));
   }
 
@@ -686,29 +685,30 @@ class ShowActivityScreen extends StatelessWidget {
                     }
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
                       return Container(
-                          child: Row(children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.only(right: 40.0),
-                            child: GirafButton(
-                              key: const Key('CancelStateToggleButton'),
-                              onPressed: () {
-                                _activityBloc.cancelActivity();
-                                _activity.state =
-                                    _activityBloc.getActivity().state;
-                              },
-                              text: activitySnapshot.data.state !=
-                                      ActivityState.Canceled
-                                  ? 'Aflys'
-                                  : 'Fortryd',
-                              icon: activitySnapshot.data.state !=
-                                      ActivityState.Canceled
-                                  ? const ImageIcon(
-                                      AssetImage('assets/icons/cancel.png'),
-                                      color: theme.GirafColors.red)
-                                  : const ImageIcon(
-                                      AssetImage('assets/icons/undo.png'),
-                                      color: theme.GirafColors.blue),
-                            )),
+                        child: Row(children: <Widget>[
+                          Padding(
+                        padding: const EdgeInsets.only(right: 40.0),
+                        child: GirafButton(
+                        key: const Key('CancelStateToggleButton'),
+                          onPressed: () {
+                            _activityBloc.cancelActivity();
+                            _activity.state = _activityBloc.getActivity().state;
+                          },
+                          isEnabled: activitySnapshot.data.state !=
+                              ActivityState.Completed,
+                          text: activitySnapshot.data.state !=
+                              ActivityState.Canceled
+                              ? 'Aflys'
+                              : 'Fortryd',
+                          icon: activitySnapshot.data.state !=
+                                  ActivityState.Canceled
+                              ? const ImageIcon(
+                                  AssetImage('assets/icons/cancel.png'),
+                                  color: theme.GirafColors.red)
+                              : const ImageIcon(
+                                  AssetImage('assets/icons/undo.png'),
+                                  color: theme.GirafColors.blue),
+                        )),
                         GirafButton(
                             key: const Key('CompleteStateToggleButton'),
                             onPressed: () {
@@ -753,65 +753,73 @@ class ShowActivityScreen extends StatelessWidget {
   /// Builds the input field and buttons for changing the description of
   /// the pictogram for a specific citizen
   Column buildInputField(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        StreamBuilder<WeekplanMode>(
-            stream: _authBloc.mode,
-            builder: (BuildContext context,
-                AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
-              return StreamBuilder<ActivityModel>(
-                  stream: _activityBloc.activityModelStream,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<ActivityModel> activitySnapshot) {
-                    if (activitySnapshot.data == null) {
-                      return const CircularProgressIndicator();
-                    }
-                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                      return Container(
-                          child: Column(children: <Widget>[
-                        Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
-                            child: TextField(
-                              key: const Key('AlternateNameTextField'),
-                              controller: tec,
-                              style: const TextStyle(
-                                  fontSize: 28,
-                                  height: 1.3,
-                                  color: theme.GirafColors.black),
-                              decoration: InputDecoration(
-                                  hintText: _activity.title,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(50),
-                                  )),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: GirafButton(
-                            key: const Key('SavePictogramTextForCitizenBtn'),
-                            onPressed: () {
-                              _activityBloc.setAlternateName(tec.text);
-                            },
-                            text: 'Gem til borger',
-                          ),
-                        ),
-                        GirafButton(
-                          key: const Key(
-                              'GetStandardPictogramTextForCitizenBtn'),
-                          onPressed: () {
-                            _activityBloc.getStandardTitle();
-                          },
-                          text: 'Hent standard',
-                        )
-                      ]));
-                    } else {
-                      return Container();
-                    }
-                  });
-            }),
-      ],
-    );
+      return Column(
+        children: <Widget>[
+          StreamBuilder<WeekplanMode>(
+              stream: _authBloc.mode,
+              builder: (BuildContext context,
+                  AsyncSnapshot<WeekplanMode> weekplanModeSnapshot){
+                return StreamBuilder<ActivityModel>(
+                    stream: _activityBloc.activityModelStream,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<ActivityModel> activitySnapshot){
+                      if (activitySnapshot.data == null) {
+                        return const CircularProgressIndicator();
+                      }
+                      if(weekplanModeSnapshot.data == WeekplanMode.guardian){
+                        return Container(
+                            child: Column(children: <Widget>[
+                              Padding(
+                                padding: const
+                                EdgeInsets.fromLTRB(0, 30, 20, 30),
+                                child: TextField(
+                                      key: const Key('AlternateNameTextField'),
+                                      controller: tec,
+                                      style: const TextStyle(
+                                          fontSize: 28,
+                                          height: 1.3,
+                                          color: theme.GirafColors.black
+                                      ),
+                                      decoration: InputDecoration(
+                                          hintText: _activity.title,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(50),
+                                          )),
+                                      )
+                                ),
+                              Padding(
+                                padding: const
+                                EdgeInsets.only(bottom: 10.0),
+                                child: GirafButton(
+                                  key: const
+                                  Key('SavePictogramTextForCitizenBtn'),
+                                  onPressed: (){
+                                    _activityBloc
+                                        .setAlternateName(tec.text);
+                                    },
+                                  text: 'Gem til borger',
+                                ),
+                              ),
+                              GirafButton(
+                                key: const
+                                Key('GetStandardPictogramTextForCitizenBtn'),
+                                onPressed: (){
+                                  _activityBloc.getStandardTitle();
+                              },
+                                text: 'Hent standard',
+                              )
+                            ]
+                            ));
+                      }
+                      else{
+                        return Container();
+                      }
+                    });
+              }),
+            ],
+          );
   }
-
   /// Creates a pictogram image from the streambuilder
   Widget buildLoadPictogramImage() {
     _pictoImageBloc.load(_activityBloc.getActivity().pictograms.first);

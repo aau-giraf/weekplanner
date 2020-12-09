@@ -233,19 +233,18 @@ class MockWeekApi extends Mock implements WeekApi {
 
   @override
   Stream<WeekdayModel> updateDay(
-      String id, int year, int weekNumber, WeekdayModel weekInput) {
-    WeekdayModel dayToReplace = _mockWeek.days
-        .singleWhere((WeekdayModel day) => day.day == weekInput.day);
+      String id, int year, int weekNumber, WeekdayModel weekInput){
+    WeekdayModel dayToReplace = _mockWeek.days.singleWhere(
+            (WeekdayModel day) => day.day == weekInput.day);
     dayToReplace = weekInput;
     return Stream<WeekdayModel>.value(dayToReplace);
   }
-
   @override
-  Stream<WeekdayModel> getDay(
-      String id, int year, int weekNumber, Weekday day) {
+  Stream<WeekdayModel> getDay(String id, int year, int weekNumber, Weekday day){
     return Stream<WeekdayModel>.value(_mockWeek.days
         .singleWhere((WeekdayModel weekday) => weekday.day == day));
   }
+
 }
 
 class MockAccountApi extends Mock implements AccountApi {
