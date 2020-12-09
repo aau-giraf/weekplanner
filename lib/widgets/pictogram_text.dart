@@ -45,8 +45,8 @@ class PictogramText extends StatelessWidget {
                   final bool pictogramTextIsEnabled = settings.pictogramText;
                   if (_isGuardianMode(weekMode) || pictogramTextIsEnabled) {
                     if (_activity.isChoiceBoard) {
-                      return _buildPictogramText(context,
-                          _activity.choiceBoardName);
+                      return _buildPictogramText(
+                          context, _activity.choiceBoardName);
                     } else {
                       final String pictogramText = _activity.title;
                       return _buildPictogramText(context, pictogramText);
@@ -70,19 +70,18 @@ class PictogramText extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: AutoSizeText(
-            pictogramText[0].toUpperCase()
-                + pictogramText.substring(1).toLowerCase(),
+            pictogramText[0].toUpperCase() +
+                pictogramText.substring(1).toLowerCase(),
             minFontSize: minFontSize,
             maxLines: textLines(pictogramText, context),
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold,
-                fontSize: GirafFont.pictogram),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, fontSize: GirafFont.pictogram),
           ),
         ));
   }
-
 }
 
 /// Try to calculate the actual size of the text, with the size of the screen

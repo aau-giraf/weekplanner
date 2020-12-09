@@ -187,7 +187,8 @@ class MockData {
               startTime: DateTime(2020),
               progress: 0,
               fullLength: 10,
-              paused: true)),
+              paused: true),
+          title: mockPictograms.first.title),
       ActivityModel(
           id: 3,
           state: ActivityState.Normal,
@@ -209,7 +210,8 @@ class MockData {
                 imageHash: null,
                 imageUrl: null,
                 lastEdit: null)
-          ])
+          ],
+          title: mockPictograms.first.title)
     ];
   }
 }
@@ -233,18 +235,19 @@ class MockWeekApi extends Mock implements WeekApi {
 
   @override
   Stream<WeekdayModel> updateDay(
-      String id, int year, int weekNumber, WeekdayModel weekInput){
-    WeekdayModel dayToReplace = _mockWeek.days.singleWhere(
-            (WeekdayModel day) => day.day == weekInput.day);
+      String id, int year, int weekNumber, WeekdayModel weekInput) {
+    WeekdayModel dayToReplace = _mockWeek.days
+        .singleWhere((WeekdayModel day) => day.day == weekInput.day);
     dayToReplace = weekInput;
     return Stream<WeekdayModel>.value(dayToReplace);
   }
+
   @override
-  Stream<WeekdayModel> getDay(String id, int year, int weekNumber, Weekday day){
+  Stream<WeekdayModel> getDay(
+      String id, int year, int weekNumber, Weekday day) {
     return Stream<WeekdayModel>.value(_mockWeek.days
         .singleWhere((WeekdayModel weekday) => weekday.day == day));
   }
-
 }
 
 class MockAccountApi extends Mock implements AccountApi {
