@@ -49,6 +49,9 @@ class ShowActivityScreen extends StatelessWidget {
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
+  /// Textfield controller
+  final TextEditingController tec = TextEditingController();
+
   /// Text style used for title.
   final TextStyle titleTextStyle =
       const TextStyle(fontSize: GirafFont.activity_screen_buttons);
@@ -84,7 +87,6 @@ class ShowActivityScreen extends StatelessWidget {
         children: buildScreen(context, mode),
       );
     }
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
@@ -117,7 +119,8 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-                    activitySnapshot.data.state == ActivityState.Canceled)
+                    (activitySnapshot.data.state == ActivityState.Canceled ||
+                        activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -134,7 +137,9 @@ class ShowActivityScreen extends StatelessWidget {
                 if (authSnapshot.hasData &&
                     activitySnapshot.hasData &&
                     authSnapshot.data != WeekplanMode.citizen &&
-                    activitySnapshot.data.state != ActivityState.Canceled) {
+                    (activitySnapshot.data.state != ActivityState.Canceled &&
+                        activitySnapshot.data.state !=
+                            ActivityState.Completed)) {
                   return _buildChoiceBoardButton(context);
                 } else {
                   return _buildEmptyContainer();
@@ -343,6 +348,10 @@ class ShowActivityScreen extends StatelessWidget {
                   inputtext = text;
                   _activity.choiceBoardName = text;
                 },
+                onFieldSubmitted: (String text) {
+                  _activity.choiceBoardName = inputtext;
+                  _activityBloc.update();
+                },
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -401,6 +410,9 @@ class ShowActivityScreen extends StatelessWidget {
                     }))),
       ),
       buildButtonBar(),
+      _activityBloc.getActivity().isChoiceBoard
+          ? Container()
+          : buildInputField(context)
     ]));
   }
 
@@ -736,6 +748,68 @@ class ShowActivityScreen extends StatelessWidget {
             },
           ),
         ]);
+  }
+
+  /// Builds the input field and buttons for changing the description of
+  /// the pictogram for a specific citizen
+  Column buildInputField(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        StreamBuilder<WeekplanMode>(
+            stream: _authBloc.mode,
+            builder: (BuildContext context,
+                AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
+              return StreamBuilder<ActivityModel>(
+                  stream: _activityBloc.activityModelStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<ActivityModel> activitySnapshot) {
+                    if (activitySnapshot.data == null) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
+                      return Container(
+                          child: Column(children: <Widget>[
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
+                            child: TextField(
+                              key: const Key('AlternateNameTextField'),
+                              controller: tec,
+                              style: const TextStyle(
+                                  fontSize: 28,
+                                  height: 1.3,
+                                  color: theme.GirafColors.black),
+                              decoration: InputDecoration(
+                                  hintText: _activity.title,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  )),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: GirafButton(
+                            key: const Key('SavePictogramTextForCitizenBtn'),
+                            onPressed: () {
+                              _activityBloc.setAlternateName(tec.text);
+                            },
+                            text: 'Gem til borger',
+                          ),
+                        ),
+                        GirafButton(
+                          key: const Key(
+                              'GetStandardPictogramTextForCitizenBtn'),
+                          onPressed: () {
+                            _activityBloc.getStandardTitle();
+                          },
+                          text: 'Hent standard',
+                        )
+                      ]));
+                    } else {
+                      return Container();
+                    }
+                  });
+            }),
+      ],
+    );
   }
 
   /// Creates a pictogram image from the streambuilder

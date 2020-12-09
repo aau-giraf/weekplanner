@@ -5,16 +5,24 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/privacy_information_screen.dart';
-import 'package:weekplanner/screens/settings_screens/time_representation_screen.dart';
+import 'package:weekplanner/screens/settings_screens/'
+    'number_of_days_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/'
+    'color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/'
+    'privacy_information_screen.dart';
+import 'package:weekplanner/screens/settings_screens/'
+    'time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_theme_display_box.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_section_arrow_button.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_section_checkboxButton.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_section_item.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_theme_display_box.dart';
 import '../../di.dart';
 import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
 import 'completed_activity_icon_selection_screen.dart';
@@ -78,15 +86,17 @@ class SettingsScreen extends StatelessWidget {
                       () async {
                           final Object result =  await Routes.push(context,
                           CompletedActivityIconScreen(_user));
-
-                          settingsModel.completeMark = result;
-                          _settingsBloc.updateSettings(_user.id, settingsModel).
-                          listen((SettingsModel model) {
-                            _settingsBloc.loadSettings(_user);
-                          });
+                          if (result != null){
+                            settingsModel.completeMark = result;
+                            _settingsBloc.updateSettings(
+                                _user.id, settingsModel).
+                            listen((SettingsModel model) {
+                              _settingsBloc.loadSettings(_user);
+                            });
+                          }
                       },
-                  titleTrailing: Text(settingsModel.completeMark ==
-                      CompleteMark.Checkmark
+                  titleTrailing: Text(
+                      settingsModel.completeMark == CompleteMark.Checkmark
                       ? 'Flueben'
                       : settingsModel.completeMark == CompleteMark.MovedRight
                       ? 'Lav aktiviteten grå'
@@ -118,11 +128,15 @@ class SettingsScreen extends StatelessWidget {
                 'Antal dage',
                     () async { final Object result = await Routes.push(
                         context, NumberOfDaysScreen(_user));
-                              settingsModel.nrOfDaysToDisplay = result;
-                              _settingsBloc.updateSettings(
-                                  _user.id, settingsModel).listen(
-                                      (SettingsModel response) {
-                                _settingsBloc.loadSettings(_user);});},
+                    if(result != null) {
+                      settingsModel.nrOfDaysToDisplay = result;
+                      _settingsBloc.updateSettings(
+                          _user.id, settingsModel).listen(
+                              (SettingsModel response) {
+                            _settingsBloc.loadSettings(_user);
+                          });
+                    }
+                              },
                 titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
                     ? 'En dag'
                     : settingsModel.nrOfDaysToDisplay == 2

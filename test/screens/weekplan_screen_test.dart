@@ -56,8 +56,10 @@ void main() {
     user = mockData.mockUser;
 
     final Api api = mockData.mockApi;
+
     authBloc = AuthBloc(api);
     authBloc.setMode(WeekplanMode.guardian);
+
     weekplanBloc = WeekplanBloc(api);
 
     di.clearAll();
@@ -681,7 +683,7 @@ void main() {
     expect(find.byType(PictogramText), findsOneWidget);
 
     // Get the title of the activity
-    final String title = mockActivities[0].pictograms.first.title;
+    final String title = mockActivities[0].title;
 
     expect(find.text(title[0].toUpperCase() + title.substring(1).toLowerCase()),
         findsOneWidget);

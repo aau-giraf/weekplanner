@@ -742,4 +742,21 @@ void main() {
     expect(find.byKey(Key(mockWeekModel.name)), findsOneWidget);
     expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
   });
+
+  testWidgets(
+      'Test if hide/show old weeks button works', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pump();
+    expect(find.byKey(const Key('HideOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('HideOldWeeks')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    expect(find.byKey(const Key('HideOldWeeks')), findsNothing);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('HideOldWeeks')), findsOneWidget);
+    expect(find.byKey(const Key('ShowOldWeeks')), findsNothing);
+  });
 }
