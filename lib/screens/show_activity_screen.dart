@@ -331,7 +331,7 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
-    String inputtext = '';
+    String inputtext = _activity.choiceBoardName;
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
@@ -342,10 +342,12 @@ class ShowActivityScreen extends StatelessWidget {
             Flexible(
               child: TextFormField(
                 key: const Key('ChoiceBoardNameText'),
-                initialValue: _activity.choiceBoardName,
+                initialValue: _activity.choiceBoardName == ' '
+                    ? ''
+                    : _activity.choiceBoardName,
                 textAlign: TextAlign.center,
                 onChanged: (String text) {
-                  inputtext = text;
+                  inputtext = text.isNotEmpty ? text : ' ';
                   _activity.choiceBoardName = text;
                 },
                 onFieldSubmitted: (String text) {
