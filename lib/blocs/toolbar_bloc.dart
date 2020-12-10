@@ -146,6 +146,7 @@ class ToolbarBloc extends BlocBase {
 
   IconButton _createIconBack(BuildContext context) {
     return IconButton(
+      key: const Key('BackButton'),
       icon: Image.asset('assets/icons/back.png'),
       tooltip: 'Tilbage',
       onPressed: () {

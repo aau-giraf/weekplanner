@@ -1,21 +1,24 @@
 /// Font sizes for the GIRAF project.
 
-class GirafFont
-{
+class GirafFont {
   GirafFont._();
 
-  ///pictogram
+  /// Font size for pictograms
   static const double pictogram = 150;
-  ///timer
+
+  /// Font size for timers
+
   static const double timer = 50;
-  ///large
+
+  /// Font size for large text
   static const double large = 30;
-  ///small
+
+  /// Font size for small text
   static const double small = 20;
-  ///medium
+
+  /// Font size for medium text
   static const double medium = 24;
-  ///activity_screen_buttons
+
+  /// Font size for activity screen buttons
   static const double activity_screen_buttons = 23;
-
-
 }

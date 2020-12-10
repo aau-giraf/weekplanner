@@ -25,7 +25,6 @@ import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 
-
 import 'test_image.dart';
 
 /// Mock data that can be used for tests
@@ -189,6 +188,29 @@ class MockData {
               progress: 0,
               fullLength: 10,
               paused: true),
+          title: mockPictograms.first.title),
+      ActivityModel(
+          id: 3,
+          state: ActivityState.Normal,
+          order: 0,
+          isChoiceBoard: true,
+          choiceBoardName: 'nametest',
+          pictograms: <PictogramModel>[
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle2',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null),
+            PictogramModel(
+                id: 25,
+                title: 'PictogramTitle2',
+                accessLevel: AccessLevel.PUBLIC,
+                imageHash: null,
+                imageUrl: null,
+                lastEdit: null)
+          ],
           title: mockPictograms.first.title)
     ];
   }
@@ -213,18 +235,19 @@ class MockWeekApi extends Mock implements WeekApi {
 
   @override
   Stream<WeekdayModel> updateDay(
-      String id, int year, int weekNumber, WeekdayModel weekInput){
-    WeekdayModel dayToReplace = _mockWeek.days.singleWhere(
-            (WeekdayModel day) => day.day == weekInput.day);
+      String id, int year, int weekNumber, WeekdayModel weekInput) {
+    WeekdayModel dayToReplace = _mockWeek.days
+        .singleWhere((WeekdayModel day) => day.day == weekInput.day);
     dayToReplace = weekInput;
     return Stream<WeekdayModel>.value(dayToReplace);
   }
+
   @override
-  Stream<WeekdayModel> getDay(String id, int year, int weekNumber, Weekday day){
+  Stream<WeekdayModel> getDay(
+      String id, int year, int weekNumber, Weekday day) {
     return Stream<WeekdayModel>.value(_mockWeek.days
         .singleWhere((WeekdayModel weekday) => weekday.day == day));
   }
-
 }
 
 class MockAccountApi extends Mock implements AccountApi {
