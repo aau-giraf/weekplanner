@@ -20,22 +20,20 @@ class UploadImageFromPhone extends StatelessWidget {
   UploadImageFromPhone({Key key}) : super(key: key);
 
   final UploadFromGalleryBloc _uploadFromGallery =
-  di.getDependency<UploadFromGalleryBloc>();
+      di.getDependency<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+
+  /// Height of the screen
   dynamic screenHeight;
+
+  /// Width of the screen
   dynamic screenWidth;
 
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: GirafAppBar(title: 'Tilføj fra galleri'),
       body: StreamBuilder<bool>(
@@ -129,13 +127,11 @@ class UploadImageFromPhone extends StatelessWidget {
             child: StreamBuilder<File>(
                 stream: _uploadFromGallery.file,
                 builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                snapshot.data != null
-                    ? _displayImage(snapshot.data)
-                    : _displayIfNoImage()),
-
+                    snapshot.data != null
+                        ? _displayImage(snapshot.data)
+                        : _displayIfNoImage()),
           ),
-        )
-    );
+        ));
   }
 
   void _showUploadError(BuildContext context) {
@@ -173,8 +169,8 @@ class UploadImageFromPhone extends StatelessWidget {
           ),
           const Text(
             'Tryk for at vælge billede',
-            style: TextStyle(color: theme.GirafColors.black,
-                fontSize: GirafFont.medium),
+            style: TextStyle(
+                color: theme.GirafColors.black, fontSize: GirafFont.medium),
           )
         ],
       ),
@@ -188,8 +184,8 @@ class UploadImageFromPhone extends StatelessWidget {
         ),
         child: Text(
           'Vælg billede fra galleri',
-          style: TextStyle(color: theme.GirafColors.black,
-              fontSize: GirafFont.medium),
+          style: TextStyle(
+              color: theme.GirafColors.black, fontSize: GirafFont.medium),
           textAlign: TextAlign.center,
         ));
   }
