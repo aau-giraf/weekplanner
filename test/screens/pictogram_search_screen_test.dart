@@ -35,15 +35,15 @@ void main() {
       accessLevel: null,
       imageUrl: 'http://any.tld',
       imageHash: null,
-      userId: '1'
-  );
+      userId: '1');
 
   setUp(() {
     api = Api('any');
     pictogramApi = MockPictogramApi();
     api.pictogram = pictogramApi;
     bloc = PictogramBloc(api);
-    user = DisplayNameModel(id: '1',displayName: 'Anders and',role: 'Guardian');
+    user =
+        DisplayNameModel(id: '1', displayName: 'Anders and', role: 'Guardian');
 
     when(pictogramApi.getImage(pictogramModel.id))
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
@@ -56,12 +56,27 @@ void main() {
     di.registerDependency<NewCitizenBloc>((_) => NewCitizenBloc(api));
   });
 
+  testWidgets('Camera button shows', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: PictogramSearch(user: user),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tag billede'), findsOneWidget);
+  });
+
   testWidgets('renders', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(
+        home: PictogramSearch(
+      user: user,
+    )));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(
+        home: PictogramSearch(
+      user: user,
+    )));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
@@ -75,7 +90,10 @@ void main() {
         (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(
+        home: PictogramSearch(
+      user: user,
+    )));
     await tester.enterText(find.byType(TextField), query);
 
     await tester.pump(const Duration(milliseconds: 11000));
@@ -102,7 +120,10 @@ void main() {
         (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(
+        home: PictogramSearch(
+      user: user,
+    )));
     await tester.enterText(find.byType(TextField), query);
 
     await tester.pump(const Duration(milliseconds: 11000));
@@ -127,26 +148,26 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: PictogramSearch(user: user,),
+        home: PictogramSearch(
+          user: user,
+        ),
         navigatorObservers: <NavigatorObserver>[mockObserver],
       ),
     );
     final Finder searchScreen = find.byType(PictogramSearch);
-    expect(searchScreen,findsOneWidget);
+    expect(searchScreen, findsOneWidget);
     await tester.enterText(find.byType(TextField), query);
     await tester.pump(const Duration(milliseconds: 11000));
 
     bloc.pictograms.listen((List<PictogramModel> images) async {
-
-
       await tester.tap(find.byType(PictogramImage));
       await tester.pump();
-      
+
       verify(mockObserver.didPop(any, any));
-      
+
       final Finder imageFinder = find.byType(PictogramImage);
-      final Finder matchFinder = find.descendant
-        (of: searchScreen, matching: imageFinder);
+      final Finder matchFinder =
+          find.descendant(of: searchScreen, matching: imageFinder);
 
       expect(matchFinder, findsOneWidget);
       done.complete(true);
@@ -155,34 +176,33 @@ void main() {
   });
 
   testWidgets('Display text to user if no result is found after 10 seconds',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     const String query = 'Kat';
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
-            null));
+        (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(null));
 
-    await tester.pumpWidget(MaterialApp(home: PictogramSearch(user: user,)));
+    await tester.pumpWidget(MaterialApp(
+        home: PictogramSearch(
+      user: user,
+    )));
     await tester.enterText(find.byType(TextField), query);
 
     await tester.pump(const Duration(milliseconds: 11000));
 
     expect(find.byKey(const Key('timeoutWidget')), findsOneWidget);
-
   });
 
   testWidgets('Tap delete button triggers confirm popup',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     const String query = 'Kat';
 
     when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-            (_) => BehaviorSubject<List<PictogramModel>>.seeded(
+        (_) => BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: PictogramSearch(user: user)
-      ),
+      MaterialApp(home: PictogramSearch(user: user)),
     );
     await tester.enterText(find.byType(TextField), query);
     await tester.pump(const Duration(milliseconds: 11000));
@@ -193,8 +213,6 @@ void main() {
     await tester.tap(f);
     await tester.pump();
 
-    expect(find.byType(GirafConfirmDialog),findsOneWidget);
-
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
-  
 }
