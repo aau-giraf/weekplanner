@@ -9,6 +9,7 @@ import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
@@ -102,6 +103,10 @@ class Bootstrap {
 
     di.registerDependency<CopyResolveBloc>((Injector i) {
       return CopyResolveBloc(i.getDependency<Api>());
+    });
+
+    di.registerDependency((Injector i) {
+      return TakePictureWithCameraBloc(i.getDependency<Api>());
     });
 
   }
