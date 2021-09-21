@@ -32,7 +32,7 @@ class TakePictureWithCameraBloc extends BlocBase {
   rx_dart.BehaviorSubject<bool>.seeded(false);
   final rx_dart.BehaviorSubject<File> _file = rx_dart.BehaviorSubject<File>();
   final rx_dart.BehaviorSubject<String> _accessString =
-  rx_dart.BehaviorSubject<String>.seeded('Offentlig');
+  rx_dart.BehaviorSubject<String>.seeded('Institution');
   final rx_dart.BehaviorSubject<bool> _isUploading =
   rx_dart.BehaviorSubject<bool>.seeded(false);
 

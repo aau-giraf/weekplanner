@@ -82,8 +82,8 @@ class UploadImageFromPhone extends StatelessWidget {
                       onChanged: (String newValue) {
                         _uploadFromGallery.setAccessLevel(newValue);
                       },
-                      items: <String>['Offentlig', 'Privat']
-                          .map<DropdownMenuItem<String>>((String value) {
+                      items: <String>['Institution', 'Privat']
+                          .map<DropdownMenu½Item<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
