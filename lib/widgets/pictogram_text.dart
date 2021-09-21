@@ -69,9 +69,7 @@ class PictogramText extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
-          child: AutoSizeText(
-            pictogramText[0].toUpperCase() +
-                pictogramText.substring(1).toLowerCase(),
+          child:  AutoSizeText(pictogramText,
             minFontSize: minFontSize,
             maxLines: textLines(pictogramText, context),
             textAlign: TextAlign.center,
