@@ -69,7 +69,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             if (snapshot.data) {
               return _buildBottomAppBar(context);
-            } else {
+            }else {
               return Container(width: 0.0, height: 0.0);
             }
           },
@@ -352,7 +352,8 @@ class WeekplanSelectorScreen extends StatefulWidget {
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
-                      onPressed: () async => _pushEditWeekPlan(context)),
+                      onPressed: () async => _pushEditWeekPlan(context),
+                  ),
                   BottomAppBarButton(
                       buttonText: 'Kopiér',
                       buttonKey: 'CopyWeekplanButton',
@@ -378,16 +379,17 @@ class WeekplanSelectorScreen extends StatefulWidget {
     widget._weekBloc.weekModels.listen((List<WeekModel> list) {
       reload |= list.length < 3;
     });
-    if (markedCount != 1) {
-      final String description = markedCount > 1
-          ? 'Der kan kun redigeres en uge ad gangen'
-          : 'Markér en uge for at redigere den';
+    if (markedCount > 1) {
+      const String description = 'Der kan kun redigeres en uge ad gangen';
       showDialog<Center>(
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return GirafNotifyDialog(title: 'Fejl', description: description);
           });
+      return;
+    }
+    if (markedCount < 1){
       return;
     }
     await Routes.push<WeekModel>(
@@ -410,7 +412,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
 
   ///Builds dialog box to select where to copy weekplan or cancel
   Future<Center> _buildCopyDialog(BuildContext context) {
-    if (widget._weekBloc.getNumberOfMarkedWeekModels() != 1) {
+    if (widget._weekBloc.getNumberOfMarkedWeekModels() > 1) {
       return showDialog<Center>(
           barrierDismissible: false,
           context: context,
@@ -419,6 +421,9 @@ class WeekplanSelectorScreen extends StatefulWidget {
                 title: 'Fejl',
                 description: 'Der skal markeres præcis én uge for at kopiere');
           });
+    }
+    if(widget._weekBloc.getNumberOfMarkedWeekModels() < 1){
+      return null;
     }
     return showDialog<Center>(
         barrierDismissible: false,
@@ -455,14 +460,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildDeletionDialog(BuildContext context) {
     if (widget._weekBloc.getNumberOfMarkedWeekModels() == 0) {
-      return showDialog<Center>(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return const GirafNotifyDialog(
-                title: 'Fejl',
-                description: 'Der skal markeres mindst én uge for at slette');
-          });
+      return null;
     }
 
     return showDialog<Center>(
