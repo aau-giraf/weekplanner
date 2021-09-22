@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -58,7 +56,6 @@ class WeekplanSelectorScreen extends StatefulWidget {
         appBar: GirafAppBar(
           title: widget._user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
-            AppBarIcon.changeToCitizen: () {},
             AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
@@ -71,7 +68,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             if (snapshot.data) {
               return _buildBottomAppBar(context);
-            } else {
+            }else {
               return Container(width: 0.0, height: 0.0);
             }
           },
@@ -152,7 +149,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
       BuildContext context, Stream<List<WeekModel>> weekModels,
       bool isUpcomingWeekplan) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
-    if (!isUpcomingWeekplan) {
+    if(!isUpcomingWeekplan) {
       initial = <WeekModel>[];
     }
     return StreamBuilder<List<WeekModel>>(
@@ -387,12 +384,11 @@ class WeekplanSelectorScreen extends StatefulWidget {
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
-            return const GirafNotifyDialog
-              (title: 'Fejl', description: description);
+            return GirafNotifyDialog(title: 'Fejl', description: description);
           });
       return;
     }
-    if (markedCount < 1) {
+    if (markedCount < 1){
       return;
     }
     await Routes.push<WeekModel>(
@@ -406,7 +402,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
     ).then((WeekModel newWeek) { widget._weekBloc.load(widget._user, true);
     widget._weekBloc.toggleEditMode();
     widget._weekBloc.clearMarkedWeekModels();
-    if (reload) {
+    if(reload) {
       Routes.pop<bool>(context, true);
     }
     });
@@ -425,7 +421,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
                 description: 'Der skal markeres præcis én uge for at kopiere');
           });
     }
-    if (widget._weekBloc.getNumberOfMarkedWeekModels() < 1) {
+    if(widget._weekBloc.getNumberOfMarkedWeekModels() < 1){
       return null;
     }
     return showDialog<Center>(
