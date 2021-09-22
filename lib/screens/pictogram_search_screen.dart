@@ -16,7 +16,6 @@ import '../style/custom_color.dart' as theme;
 /// This screen will return `null` back is pressed, otherwise it will return the
 /// chosen pictogram.
 class PictogramSearch extends StatelessWidget {
-
   /// Constructor
   PictogramSearch({@required this.user});
 
@@ -62,9 +61,10 @@ class PictogramSearch extends StatelessWidget {
                           children: snapshot.data
                               .map((PictogramModel pictogram) => PictogramImage(
                                   pictogram: pictogram,
-                                  haveRights: user == null || pictogram.userId
-                                      == null ? false :
-                                      pictogram.userId == user.id,
+                                  haveRights:
+                                      user == null || pictogram.userId == null
+                                          ? false
+                                          : pictogram.userId == user.id,
                                   onPressed: () =>
                                       Routes.pop(context, pictogram)))
                               .toList(),
@@ -86,24 +86,46 @@ class PictogramSearch extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: theme.GirafColors.amber,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              GirafButton(
-                icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
-                text: 'Tilføj fra galleri',
-                onPressed: () async {
-                  await Routes.push(context, UploadImageFromPhone());
-                },
-              ),
-              GirafButton(
-                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
-                  text: 'Tag billede',
-                  onPressed: () async {
-                    await Routes.push(context, TakePictureWithCamera());
-                  }
-              ),
+              Expanded(
+                  child: Container(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: <double>[
+                            1 / 3,
+                            2 / 3
+                          ],
+                              colors: <Color>[
+                            theme.GirafColors.appBarYellow,
+                            theme.GirafColors.appBarOrange,
+                          ])),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          GirafButton(
+                            icon: const ImageIcon(
+                                AssetImage('assets/icons/gallery.png')),
+                            text: 'Tilføj fra galleri',
+                            onPressed: () async {
+                              await Routes.push(
+                                  context, UploadImageFromPhone());
+                            },
+                          ),
+                          GirafButton(
+                              icon: const ImageIcon(
+                                  AssetImage('assets/icons/camera.png')),
+                              text: 'Tag billede',
+                              onPressed: () async {
+                                await Routes.push(
+                                    context, TakePictureWithCamera());
+                              }),
+                        ],
+                      )))
             ],
           ),
         ));
