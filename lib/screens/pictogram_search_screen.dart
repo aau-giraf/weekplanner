@@ -8,6 +8,7 @@ import 'package:weekplanner/screens/take_picture_with_camera_screen.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import '../style/custom_color.dart' as theme;
 
@@ -107,27 +108,29 @@ class PictogramSearch extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          GirafButton(
-                            icon: const ImageIcon(
-                                AssetImage('assets/icons/gallery.png')),
-                            text: 'Tilføj fra galleri',
-                            onPressed: () async {
-                              await Routes.push(
+                          BottomAppBarButton(
+                            buttonText: 'Tilføj fra galleri',
+                            buttonKey: 'TilføjFraGalleriButton',
+                            assetPath: 'assets/icons/gallery.png',
+                            dialogFunction: (BuildContext context) {
+                              Routes.push(
                                   context, UploadImageFromPhone());
-                            },
+                            }
                           ),
-                          GirafButton(
-                              icon: const ImageIcon(
-                                  AssetImage('assets/icons/camera.png')),
-                              text: 'Tag billede',
-                              onPressed: () async {
-                                await Routes.push(
+                          BottomAppBarButton(
+                              buttonText: 'Tag billede',
+                              buttonKey: 'TagBilledeButton',
+                              assetPath: 'assets/icons/camera.png',
+                              dialogFunction: (BuildContext context) {
+                                Routes.push(
                                     context, TakePictureWithCamera());
-                              }),
-                        ],
+                              }
+                          )
+                        ]
                       )))
-            ],
-          ),
+            ]
+          )
         ));
   }
+
 }
