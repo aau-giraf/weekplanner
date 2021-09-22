@@ -704,7 +704,7 @@ class ShowActivityScreen extends StatelessWidget {
                                       ActivityState.Canceled
                                   ? 'Aflys'
                                   : 'Fortryd',
-                              width: 125,
+                              width: 125s,
                               icon: activitySnapshot.data.state !=
                                       ActivityState.Canceled
                                   ? const ImageIcon(
