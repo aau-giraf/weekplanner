@@ -472,7 +472,9 @@ class WeekplanSelectorScreen extends StatefulWidget {
               title: 'Slet ugeplaner',
               description: 'Vil du slette ' +
                   widget._weekBloc.getNumberOfMarkedWeekModels().toString() +
-                  ' ugeplan(er)',
+                  '${widget._weekBloc.getNumberOfMarkedWeekModels() == 1
+                      ? ' ugeplan'
+              : ' ugeplaner'}?',
               confirmButtonText: 'Slet',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/delete.png')),
