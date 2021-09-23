@@ -387,7 +387,8 @@ class WeekplanSelectorScreen extends StatefulWidget {
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
-            return GirafNotifyDialog(title: 'Fejl', description: description);
+            return const GirafNotifyDialog
+              (title: 'Fejl', description: description);
           });
       return;
     }
