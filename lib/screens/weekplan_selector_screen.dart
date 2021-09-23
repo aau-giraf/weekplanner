@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
