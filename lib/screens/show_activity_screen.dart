@@ -833,23 +833,53 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the icon that displays the activity's state
-  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+  Stack _buildActivityStateIcon(BuildContext context, ActivityState state) {
     if (state == ActivityState.Completed) {
-      return Icon(
-        Icons.check,
-        key: const Key('IconCompleted'),
-        color: theme.GirafColors.green,
-        size: MediaQuery.of(context).size.width,
+      return Stack(children: <Widget>[
+
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigAcceptBorder.png'),
+            key: const Key('IconCompleted'),
+            color: theme.GirafColors.black,
+            size: MediaQuery.of(context).size.width,
+          ),
+        )
+        ,
+
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigAccept.png'),
+            key: const Key('IconCompletedBorder'),
+            color: theme.GirafColors.green,
+            size: MediaQuery.of(context).size.width,
+          ),
+        )
+      ]
       );
     } else if (state == ActivityState.Canceled) {
-      return Icon(
-        Icons.clear,
-        key: const Key('IconCanceled'),
-        color: theme.GirafColors.red,
-        size: MediaQuery.of(context).size.width,
+      return Stack(children: <Widget>[
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigCancelBorder.png'),
+            key: const Key('IconCompletedBorder'),
+            color: theme.GirafColors.black,
+            size: MediaQuery.of(context).size.width,
+          ),
+        ),
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigCancel.png'),
+            key: const Key('IconCompleted'),
+            color: theme.GirafColors.red,
+            size: MediaQuery.of(context).size.width,
+          ),
+        ),
+
+      ]
       );
     } else {
-      return Container();
+      return Stack(children: <Widget> [Container()]);
     }
   }
 }
