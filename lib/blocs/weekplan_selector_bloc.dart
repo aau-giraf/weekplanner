@@ -229,7 +229,7 @@ class WeekplansBloc extends BlocBase {
     final int currentYear = DateTime.now().year;
     final int currentWeek = getCurrentWeekNum();
 
-    if (weekPlan.weekYear < currentYear ||
+    if (weekPlan.weekYear < currentYear && weekPlan.weekNumber != currentWeek ||
         (weekPlan.weekYear == currentYear &&
             weekPlan.weekNumber < currentWeek)) {
       return true;
