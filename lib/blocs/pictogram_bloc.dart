@@ -4,10 +4,12 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// For how long the debouncer should wait
 const int _debounceTime = 250;
 const int _timeoutTime = 10000;
+const int pageSize = 10;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
@@ -22,6 +24,10 @@ class PictogramBloc extends BlocBase {
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
+  List<PictogramModel> latestPictograms = List<PictogramModel>
+      .empty(growable: true);
+  String latestQuery = null;
+  int latestPage = 1;
 
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
       rx_dart.BehaviorSubject<List<PictogramModel>>();
@@ -42,6 +48,7 @@ class PictogramBloc extends BlocBase {
     if (query.isEmpty) {
       return;
     }
+
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
     }
@@ -57,11 +64,30 @@ class PictogramBloc extends BlocBase {
         }
       });
       _api.pictogram
-          .getAll(page: 1, pageSize: 10, query: query)
+          .getAll(page: latestPage, pageSize: pageSize, query: query)
           .listen((List<PictogramModel> results) {
         _resultPlaceholder = results;
+        latestPictograms = _resultPlaceholder;
+        latestQuery = query;
+        latestPage = 1;
         _pictograms.add(_resultPlaceholder);
       });
+    });
+  }
+
+  /// Extends the previous search with additional pictograms
+  ///
+  /// The results are published in [pictograms].
+  void extendSearch() {
+    if (latestQuery == null || latestQuery.isEmpty) {
+      return;
+    }
+
+    _api.pictogram
+        .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery)
+        .listen((List<PictogramModel> results) {
+      latestPictograms.addAll(results);
+      _pictograms.add(latestPictograms);
     });
   }
 
