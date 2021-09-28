@@ -70,7 +70,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             if (snapshot.data) {
               return _buildBottomAppBar(context);
-            }else {
+            } else {
               return Container(width: 0.0, height: 0.0);
             }
           },
