@@ -33,8 +33,6 @@ class PictogramSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScrollController sc = ScrollController();
-
     return Scaffold(
         appBar: GirafAppBar(title: 'Piktogram'),
         body: Column(
@@ -64,27 +62,18 @@ class PictogramSearch extends StatelessWidget {
                     initialData: const <PictogramModel>[],
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
-
-                      // Listens for if view is scrolled to the bottom
-                      sc.addListener(() {
-                        if (sc.position.atEdge && sc.position.pixels != 0) {
-                          _bloc.extendSearch();
-                        }
-                      });
-
                       if (snapshot.hasData) {
                         return GridView.count(
                           crossAxisCount: 4,
                           children: snapshot.data
                               .map((PictogramModel pictogram) => PictogramImage(
-                                  pictogram: pictogram,
-                                  haveRights: user == null || pictogram.userId
-                                      == null ? false :
-                                      pictogram.userId == user.id,
-                                  onPressed: () =>
-                                      Routes.pop(context, pictogram)))
-                              .toList(),
-                          controller: sc
+                              pictogram: pictogram,
+                              haveRights: user == null || pictogram.userId
+                                  == null ? false :
+                              pictogram.userId == user.id,
+                              onPressed: () =>
+                                  Routes.pop(context, pictogram))).toList(),
+                          controller: _bloc.sc
                         );
                       } else if (snapshot.hasError) {
                         return InkWell(
@@ -100,6 +89,15 @@ class PictogramSearch extends StatelessWidget {
                     }),
               ),
             ),
+            if(_bloc.loadingPictograms)...[
+            Positioned(
+                left: 0,
+                bottom: 0,
+                child: Container(
+                  height: 80,
+                  child: Center(child: CircularProgressIndicator()),
+                )
+            )]
           ],
         ),
         bottomNavigationBar: BottomAppBar(

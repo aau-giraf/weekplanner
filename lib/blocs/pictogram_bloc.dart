@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
@@ -16,7 +17,14 @@ class PictogramBloc extends BlocBase {
   /// Pictogram Business Logic Component
   ///
   /// Gives the ability to search for pictograms and await the results.
-  PictogramBloc(this._api);
+  PictogramBloc(this._api){
+    // Listens for if view is scrolled to the bottom
+    sc.addListener(() {
+      if (sc.position.pixels >= sc.position.maxScrollExtent) {
+        extendSearch();
+      }
+    });
+  }
 
   /// This stream is where all results from searching for pictograms are put in.
   ///
@@ -28,7 +36,8 @@ class PictogramBloc extends BlocBase {
       .empty(growable: true);
   String latestQuery = null;
   int latestPage = 1;
-
+  ScrollController sc = ScrollController();
+  bool loadingPictograms = false;
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
       rx_dart.BehaviorSubject<List<PictogramModel>>();
 
@@ -48,7 +57,7 @@ class PictogramBloc extends BlocBase {
     if (query.isEmpty) {
       return;
     }
-
+    loadingPictograms = true;
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
     }
@@ -71,7 +80,8 @@ class PictogramBloc extends BlocBase {
         latestQuery = query;
         latestPage = 1;
         _pictograms.add(_resultPlaceholder);
-      });
+        loadingPictograms = false;
+          });
     });
   }
 
@@ -82,12 +92,21 @@ class PictogramBloc extends BlocBase {
     if (latestQuery == null || latestQuery.isEmpty) {
       return;
     }
-
-    _api.pictogram
-        .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery)
-        .listen((List<PictogramModel> results) {
-      latestPictograms.addAll(results);
-      _pictograms.add(latestPictograms);
+    loadingPictograms = true;
+    if (_debounceTimer != null) {
+      _debounceTimer.cancel();
+    }
+    _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
+      _api.pictogram
+          .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery)
+          .listen((List<PictogramModel> results) {
+            if(results == null || results.isEmpty ){
+              return;
+            }
+            latestPictograms.addAll(results);
+            _pictograms.add(latestPictograms);
+            loadingPictograms = false;
+      });
     });
   }
 
@@ -101,5 +120,6 @@ class PictogramBloc extends BlocBase {
   @override
   void dispose() {
     _pictograms.close();
+    sc.dispose();
   }
 }
