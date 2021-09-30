@@ -89,15 +89,11 @@ class PictogramSearch extends StatelessWidget {
                     }),
               ),
             ),
-            if(_bloc.loadingPictograms)...[
-            Positioned(
-                left: 0,
-                bottom: 0,
-                child: Container(
-                  height: 80,
-                  child: Center(child: CircularProgressIndicator()),
-                )
-            )]
+            _bloc.loadingPictograms ? Container(
+                height: 80,
+                child: const Center(child: CircularProgressIndicator()),
+                  )
+            : Container()
           ],
         ),
         bottomNavigationBar: BottomAppBar(
