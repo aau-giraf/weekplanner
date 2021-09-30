@@ -244,7 +244,7 @@ class WeekplanScreen extends StatelessWidget {
           return GirafConfirmDialog(
               title: 'Genoptag',
               description: 'Vil du genoptage ' +
-              _weekplanBloc.getNumberOfMarkedActivities().toString() +
+                  _weekplanBloc.getNumberOfMarkedActivities().toString() +
                   '${_weekplanBloc.getNumberOfMarkedActivities() == 1
                       ? ' aktivitet'
                       : ' aktiviteter'}?',
