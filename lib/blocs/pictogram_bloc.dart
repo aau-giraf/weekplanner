@@ -105,7 +105,9 @@ class PictogramBloc extends BlocBase {
             }
             latestPictograms.addAll(results);
             _pictograms.add(latestPictograms);
+            // For updating / removing the loading indicator image, when pictograms are finished loading.
             loadingPictograms = false;
+            _pictograms.add(latestPictograms);
       });
     });
   }
