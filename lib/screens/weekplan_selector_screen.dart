@@ -425,7 +425,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
                 description: 'Der skal markeres præcis én uge for at kopiere');
           });
     }
-    if(widget._weekBloc.getNumberOfMarkedWeekModels() < 1){
+    if (widget._weekBloc.getNumberOfMarkedWeekModels() < 1) {
       return null;
     }
     return showDialog<Center>(
