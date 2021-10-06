@@ -63,19 +63,23 @@ class PictogramSearch extends StatelessWidget {
                               child: GridView.count(
                                 crossAxisCount: 4,
                                 children: snapshot.data
-                                    .map((PictogramModel pictogram) => PictogramImage(
+                                    .map((PictogramModel pictogram)
+                                => PictogramImage(
                                     pictogram: pictogram,
                                     haveRights: user == null || pictogram.userId
                                         == null ? false :
                                     pictogram.userId == user.id,
                                     onPressed: () =>
-                                        Routes.pop(context, pictogram))).toList(),
+                                        Routes.pop(context, pictogram)))
+                                    .toList(),
                                 controller: _bloc.sc
                             )
                             ),
                             _bloc.loadingPictograms == true ? Container(
                               height: 80,
-                              child: const Center(child: CircularProgressIndicator()),
+                              child: const Center(
+                                  child: CircularProgressIndicator()
+                              ),
                             )
                                 : Container()
                           ]
