@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:api_client/models/displayname_model.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -11,11 +8,8 @@ import 'package:weekplanner/screens/take_picture_with_camera_screen.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import '../style/custom_color.dart' as theme;
-
-const int _debounceTime = 250;
 
 /// Screen for searching for pictograms
 ///
@@ -67,7 +61,7 @@ class PictogramSearch extends StatelessWidget {
                           children: <Widget> [
                             Expanded(
                               child: GridView.count(
-                                crossAxisCount: 1,
+                                crossAxisCount: 4,
                                 children: snapshot.data
                                     .map((PictogramModel pictogram) => PictogramImage(
                                     pictogram: pictogram,

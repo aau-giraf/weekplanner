@@ -5,12 +5,13 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/api/api.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 
 /// For how long the debouncer should wait
 const int _debounceTime = 250;
 const int _timeoutTime = 10000;
-const int pageSize = 10;
+
+/// Amount of pictograms per page
+const int pageSize = 20;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
@@ -32,12 +33,24 @@ class PictogramBloc extends BlocBase {
   /// receive null from this stream, you know to discard your previous results
   /// and display a loading indicator
   Stream<List<PictogramModel>> get pictograms => _pictograms.stream;
-  List<PictogramModel> latestPictograms = List<PictogramModel>
-      .empty(growable: true);
-  String latestQuery = null;
+
+  /// This is the pictograms received from the latest search function call.
+  ///
+  /// Is extended on extendSearch function call.
+  List<PictogramModel> latestPictograms = <PictogramModel>[];
+
+  /// This is the query string specified at the latest search.
+  String latestQuery;
+
+  /// This is the page number incrementing on every call to extendSearch.
   int latestPage = 1;
+
+  /// The scroll controller used in scrollViews, to notify bottom-hits.
   ScrollController sc = ScrollController();
+
+  /// Boolean used to specify if currently fetching pictograms from server.
   bool loadingPictograms = false;
+
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
       rx_dart.BehaviorSubject<List<PictogramModel>>();
 
@@ -57,6 +70,7 @@ class PictogramBloc extends BlocBase {
     if (query.isEmpty) {
       return;
     }
+
     loadingPictograms = true;
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
@@ -79,8 +93,8 @@ class PictogramBloc extends BlocBase {
         latestPictograms = _resultPlaceholder;
         latestQuery = query;
         latestPage = 1;
-        _pictograms.add(_resultPlaceholder);
         loadingPictograms = false;
+        _pictograms.add(_resultPlaceholder);
           });
     });
   }
@@ -92,10 +106,14 @@ class PictogramBloc extends BlocBase {
     if (latestQuery == null || latestQuery.isEmpty) {
       return;
     }
-    loadingPictograms = true;
+
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
     }
+
+    loadingPictograms = true;
+    // Update view with updated loadingPictogram value.
+    _pictograms.add(latestPictograms);
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
       _api.pictogram
           .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery)
@@ -104,9 +122,8 @@ class PictogramBloc extends BlocBase {
               return;
             }
             latestPictograms.addAll(results);
-            _pictograms.add(latestPictograms);
-            // For updating / removing the loading indicator image, when pictograms are finished loading.
             loadingPictograms = false;
+            // Update view with latest pictograms and loadingPictogram value.
             _pictograms.add(latestPictograms);
       });
     });
