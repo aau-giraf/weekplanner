@@ -51,6 +51,9 @@ class PictogramBloc extends BlocBase {
   /// Boolean used to specify if currently fetching pictograms from server.
   bool loadingPictograms = false;
 
+  /// Boolean used to specify if more pictograms are able to be loaded.
+  bool reachedLastPictogram = false;
+
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
       rx_dart.BehaviorSubject<List<PictogramModel>>();
 
@@ -93,6 +96,7 @@ class PictogramBloc extends BlocBase {
         latestPictograms = _resultPlaceholder;
         latestQuery = query;
         latestPage = 1;
+        reachedLastPictogram = false;
         loadingPictograms = false;
         _pictograms.add(_resultPlaceholder);
           });
@@ -103,7 +107,7 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void extendSearch() {
-    if (latestQuery == null || latestQuery.isEmpty) {
+    if (reachedLastPictogram || latestQuery == null || latestQuery.isEmpty) {
       return;
     }
 
@@ -118,7 +122,8 @@ class PictogramBloc extends BlocBase {
       _api.pictogram
           .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery)
           .listen((List<PictogramModel> results) {
-            if(results == null || results.isEmpty ){
+            if(results == null || results.isEmpty) {
+              reachedLastPictogram = true;
               return;
             }
             latestPictograms.addAll(results);
