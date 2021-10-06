@@ -11,7 +11,7 @@ const int _debounceTime = 250;
 const int _timeoutTime = 10000;
 
 /// Amount of pictograms per page
-const int pageSize = 20;
+const int pageSize = 24;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
@@ -122,14 +122,14 @@ class PictogramBloc extends BlocBase {
       _api.pictogram
           .getAll(page: ++latestPage, pageSize: pageSize, query: latestQuery)
           .listen((List<PictogramModel> results) {
-            if(results == null || results.isEmpty) {
-              reachedLastPictogram = true;
-              return;
-            }
-            latestPictograms.addAll(results);
-            loadingPictograms = false;
-            // Update view with latest pictograms and loadingPictogram value.
-            _pictograms.add(latestPictograms);
+        if(results == null || results.isEmpty) {
+          reachedLastPictogram = true;
+        } else {
+          latestPictograms.addAll(results);
+        }
+        loadingPictograms = false;
+        // Update view with latest pictograms and loadingPictogram value.
+        _pictograms.add(latestPictograms);
       });
     });
   }
