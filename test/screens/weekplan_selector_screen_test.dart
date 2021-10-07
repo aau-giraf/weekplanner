@@ -527,28 +527,6 @@ void main() {
     expect(find.text('Markér en uge for at redigere den'), findsOneWidget);
   });
 
-  testWidgets('Test edit failure dialog with multiple selected',
-      (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(Key(weekModel1.name)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(Key(weekModel2.name)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('EditButtonKey')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Fejl'), findsOneWidget);
-    expect(find.text('Der kan kun redigeres en uge ad gangen'), findsOneWidget);
-  });
-
   testWidgets('Test edit no error dialog with one selected',
       (WidgetTester tester) async {
     await tester
@@ -565,23 +543,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Fejl'), findsNothing);
-  });
-
-  testWidgets('Test delete failure when none selected',
-      (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('DeleteActivtiesButton')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Fejl'), findsOneWidget);
-    expect(find.text('Der skal markeres mindst én uge for at slette'),
-        findsOneWidget);
   });
 
   testWidgets('Test BottomAppBar buttons exist', (WidgetTester tester) async {
@@ -614,28 +575,6 @@ void main() {
     expect(find.text('Fortryd'), findsOneWidget);
     expect(find.text('Anden borger'), findsOneWidget);
     expect(find.text('Denne borger'), findsOneWidget);
-  });
-
-  testWidgets(
-      'Test that “Kopier” button shows a dialog '
-      'when no weekplans have been marked', (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byTooltip('Rediger'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('CopyWeekplanButton')));
-    await tester.pumpAndSettle();
-
-    expect(
-        find.byWidgetPredicate((Widget widget) =>
-            widget is GirafNotifyDialog &&
-            widget.title == 'Fejl' &&
-            widget.description ==
-                'Der skal markeres præcis én uge for at kopiere'),
-        findsOneWidget);
   });
 
   testWidgets(
