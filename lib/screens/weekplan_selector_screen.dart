@@ -58,6 +58,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
         appBar: GirafAppBar(
           title: widget._user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
+            AppBarIcon.changeToCitizen: () {},
             AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
@@ -70,7 +71,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             if (snapshot.data) {
               return _buildBottomAppBar(context);
-            }else {
+            } else {
               return Container(width: 0.0, height: 0.0);
             }
           },
@@ -424,7 +425,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
                 description: 'Der skal markeres præcis én uge for at kopiere');
           });
     }
-    if(widget._weekBloc.getNumberOfMarkedWeekModels() < 1){
+    if (widget._weekBloc.getNumberOfMarkedWeekModels() < 1) {
       return null;
     }
     return showDialog<Center>(
