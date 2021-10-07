@@ -17,6 +17,7 @@ import '../style/custom_color.dart' as theme;
 /// chosen pictogram.
 class PictogramSearch extends StatelessWidget {
 
+
   /// Constructor
   PictogramSearch({@required this.user});
 
