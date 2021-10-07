@@ -512,20 +512,6 @@ void main() {
     expect(bloc.getMarkedWeekModels().contains(weekModel1), false);
   });
 
-  testWidgets('Test edit failure dialog with zero selected',
-      (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Rediger'));
-
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('EditButtonKey')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Fejl'), findsOneWidget);
-    expect(find.text('Markér en uge for at redigere den'), findsOneWidget);
-  });
 
   testWidgets('Test edit no error dialog with one selected',
       (WidgetTester tester) async {
@@ -544,6 +530,29 @@ void main() {
 
     expect(find.text('Fejl'), findsNothing);
   });
+
+  testWidgets('Test edit failure dialog with multiple selected',
+          (WidgetTester tester) async {
+        await tester
+            .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byTooltip('Rediger'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(Key(weekModel1.name)));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(Key(weekModel2.name)));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('EditButtonKey')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Fejl'), findsOneWidget);
+        expect(find.text('Der kan kun redigeres en uge ad gangen'),
+            findsOneWidget);
+      });
 
   testWidgets('Test BottomAppBar buttons exist', (WidgetTester tester) async {
     await tester
