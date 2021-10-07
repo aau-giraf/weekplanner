@@ -1,4 +1,4 @@
-name: Flutter
+name: Flutter Android and iOS verification
 
 on: [push]
 
