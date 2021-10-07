@@ -862,7 +862,7 @@ class ShowActivityScreen extends StatelessWidget {
         Container(
           child: ImageIcon(
             const AssetImage('assets/icons/bigCancelBorder.png'),
-            key: const Key('IconCompletedBorder'),
+            key: const Key('IconCanceledBorder'),
             color: theme.GirafColors.black,
             size: MediaQuery.of(context).size.width,
           ),
@@ -870,7 +870,7 @@ class ShowActivityScreen extends StatelessWidget {
         Container(
           child: ImageIcon(
             const AssetImage('assets/icons/bigCancel.png'),
-            key: const Key('IconCompleted'),
+            key: const Key('IconCanceled'),
             color: theme.GirafColors.red,
             size: MediaQuery.of(context).size.width,
           ),
