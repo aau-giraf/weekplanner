@@ -152,7 +152,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
       BuildContext context, Stream<List<WeekModel>> weekModels,
       bool isUpcomingWeekplan) {
     List<WeekModel> initial = <WeekModel>[WeekModel(name: 'Tilføj ugeplan')];
-    if(!isUpcomingWeekplan) {
+    if (!isUpcomingWeekplan) {
       initial = <WeekModel>[];
     }
     return StreamBuilder<List<WeekModel>>(
@@ -392,7 +392,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
           });
       return;
     }
-    if (markedCount < 1){
+    if (markedCount < 1) {
       return;
     }
     await Routes.push<WeekModel>(
@@ -406,7 +406,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
     ).then((WeekModel newWeek) { widget._weekBloc.load(widget._user, true);
     widget._weekBloc.toggleEditMode();
     widget._weekBloc.clearMarkedWeekModels();
-    if(reload) {
+    if (reload) {
       Routes.pop<bool>(context, true);
     }
     });
