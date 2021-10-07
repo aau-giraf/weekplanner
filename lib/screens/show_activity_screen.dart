@@ -91,7 +91,14 @@ class ShowActivityScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
             title: 'Aktivitet',
-            appBarIcons: const <AppBarIcon, VoidCallback>{}),
+            appBarIcons: (mode == WeekplanMode.guardian)
+            ? <AppBarIcon, VoidCallback>{
+                AppBarIcon.changeToCitizen: () {}
+            }
+            : <AppBarIcon, VoidCallback>{
+                AppBarIcon.changeToGuardian: () {}
+            },
+        ),
         body: childContainer);
   }
 

@@ -56,6 +56,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
         appBar: GirafAppBar(
           title: widget._user.displayName,
           appBarIcons: <AppBarIcon, VoidCallback>{
+            AppBarIcon.changeToCitizen: () {},
             AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
