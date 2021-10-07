@@ -279,8 +279,6 @@ void main() {
     done();
   }));
 
-
-
   group('getWeekNumberFromDate', () {
     /*
   This test is to find errors with getWeekNumberFromDate if the next test
@@ -392,7 +390,7 @@ void main() {
       expect(bloc.getWeekNumberFromDate(DateTime(2023, 3, 20)), 12);
 
       done();
-    }), skip: 'Only needed if the function breaks');
+    })/*, skip: 'Only needed if the function breaks'*/);
 
 
     test('Check if the correct week number is returned '
