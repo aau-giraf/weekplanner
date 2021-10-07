@@ -531,7 +531,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Fejl'), findsOneWidget);
-        expect(find.text('Der kan kun redigeres en uge ad gangen'), findsOneWidget);
+        expect(find.text('Der kan kun redigeres en uge ad gangen'),
+            findsOneWidget);
       });
 
   testWidgets('Test edit no error dialog with one selected',
