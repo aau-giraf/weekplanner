@@ -15,7 +15,7 @@ void main() {
 
     final UserWeekModel userWeek = UserWeekModel(week, user);
 
-    expect(week, userWeek.week);
+    expect(week, userWeek.user);
     expect(user, userWeek.user);
   });
 }
