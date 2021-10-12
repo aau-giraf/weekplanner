@@ -30,12 +30,15 @@ void main() {
   WeekNameModel(name: 'name', weekNumber: 3, weekYear: 2020);
   final WeekNameModel weekNameModel5 =
   WeekNameModel(name: 'name', weekNumber: 50, weekYear: 2019);
+  final WeekNameModel weekNameModel6 =
+  WeekNameModel(name: 'name', weekNumber: 8, weekYear: 9999);
   final List<WeekModel> weekModelList = <WeekModel>[];
   final WeekModel weekModel1 = WeekModel(weekNumber: 8, weekYear: 2020);
   final WeekModel weekModel2 = WeekModel(weekNumber: 3, weekYear: 2021);
   final WeekModel weekModel3 = WeekModel(weekNumber: 28, weekYear: 2020);
   final WeekModel weekModel4 = WeekModel(weekNumber: 3, weekYear: 2020);
   final WeekModel weekModel5 = WeekModel(weekNumber: 50, weekYear: 2019);
+  final WeekModel weekModel6 = WeekModel(weekNumber: 8, weekYear: 9999);
   final DisplayNameModel mockUser =
   DisplayNameModel(displayName: 'test', id: 'test', role: 'test');
 
@@ -74,6 +77,11 @@ void main() {
         .get('test', weekNameModel5.weekYear, weekNameModel5.weekNumber))
         .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
         .seeded(weekModel5));
+
+    when(weekApi
+        .get('test', weekNameModel6.weekYear, weekNameModel6.weekNumber))
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
+        .seeded(weekModel6));
 
     when(weekApi.delete(mockUser.id, any, any))
         .thenAnswer((_) => rx_dart.BehaviorSubject<bool>.seeded(true));
@@ -222,6 +230,39 @@ void main() {
 
         done();
       }));
+
+  test('check deletion of new weekplan without oldWeekPlan',
+      async((DoneFn done) {
+    final List<WeekNameModel> weekNameModelList = <WeekNameModel>[
+      weekNameModel6
+    ];
+    when(weekApi.get(
+        mockUser.id, weekNameModel6.weekYear, weekNameModel6.weekNumber))
+        .thenAnswer((_) => rx_dart.BehaviorSubject<WeekModel>
+        .seeded(weekModel6));
+
+    when(weekApi.getNames(mockUser.id)).thenAnswer(
+            (_) => rx_dart.BehaviorSubject<List<WeekNameModel>>
+            .seeded(weekNameModelList));
+
+    bloc.load(mockUser);
+    bloc.toggleMarkedWeekModel(weekModel6);
+    expect(bloc.getNumberOfMarkedWeekModels(), 1);
+
+    int count = 0;
+    bloc.weekModels.listen((List<WeekModel> userWeekModels) {
+      if (count == 0) {
+        bloc.deleteMarkedWeekModels();
+        count++;
+      } else {
+        expect(userWeekModels.contains(weekModel6), false);
+        expect(userWeekModels.length, 0);
+        expect(bloc.getNumberOfMarkedWeekModels(), 0);
+      }
+    });
+
+    done();
+  }));
 
   test('Checks if the edit mode toggles from true', async((DoneFn done) {
     /// Edit mode stream initial value is false.
