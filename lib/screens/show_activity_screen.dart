@@ -249,7 +249,6 @@ class ShowActivityScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              ),
             ),
           );
         });
@@ -331,8 +330,7 @@ class ShowActivityScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-              );
+                );
             });
         });
   }

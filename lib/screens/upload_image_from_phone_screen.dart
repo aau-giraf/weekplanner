@@ -26,12 +26,6 @@ class UploadImageFromPhone extends StatelessWidget {
   dynamic screenHeight;
   dynamic screenWidth;
 
-  /// Height of the screen
-  dynamic screenHeight;
-
-  /// Width of the screen
-  dynamic screenWidth;
-
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
