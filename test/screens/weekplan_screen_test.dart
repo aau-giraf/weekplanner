@@ -349,7 +349,8 @@ void main() {
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is GirafConfirmDialog && widget.title == 'Genoptag'),
-        findsNothing);
+            findsNothing
+    );
   });
 
   testWidgets('Cancel activity button opens dialog when activity is selected',
@@ -490,6 +491,7 @@ void main() {
   });
 
   testWidgets('Copying an activity works', (WidgetTester tester) async {
+
     mockWeek.days[0].activities.add(mockActivities[0]);
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
@@ -887,6 +889,7 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivities[0].state = ActivityState.Canceled;
+
 
     // Added Cancelled activity with a cross
     mockWeek.days[0].activities.add(mockActivities[0]);
