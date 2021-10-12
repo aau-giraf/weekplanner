@@ -1,6 +1,5 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ class PictogramText extends StatelessWidget {
   }
 
   final ActivityModel _activity;
-
   final DisplayNameModel _user;
 
   /// The settings bloc which we get the settings from, you need to make sure
@@ -33,7 +31,6 @@ class PictogramText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PictogramModel _pictogram = _activity.pictograms.first;
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
         builder: (BuildContext context,
@@ -48,10 +45,10 @@ class PictogramText extends StatelessWidget {
                   final bool pictogramTextIsEnabled = settings.pictogramText;
                   if (_isGuardianMode(weekMode) || pictogramTextIsEnabled) {
                     if (_activity.isChoiceBoard) {
-                      return _buildPictogramText(context, 'ChoiceBoard');
+                      return _buildPictogramText(
+                          context, _activity.choiceBoardName);
                     } else {
-                      final String pictogramText =
-                          _pictogram.title.toUpperCase();
+                      final String pictogramText = _activity.title;
                       return _buildPictogramText(context, pictogramText);
                     }
                   }
@@ -73,14 +70,15 @@ class PictogramText extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05),
           child: AutoSizeText(
-            pictogramText[0] + pictogramText.substring(1).toLowerCase(),
+            pictogramText[0].toUpperCase() +
+                pictogramText.substring(1).toLowerCase(),
             minFontSize: minFontSize,
             maxLines: textLines(pictogramText, context),
             textAlign: TextAlign.center,
             // creates a ... postfix if text overflows
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold,
-                fontSize: GirafFont.pictogram),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, fontSize: GirafFont.pictogram),
           ),
         ));
   }

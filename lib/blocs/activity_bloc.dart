@@ -1,10 +1,12 @@
 
+import 'dart:async';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
+import 'package:api_client/models/alternate_name_model.dart';
 
 /// Logic for activities
 class ActivityBloc extends BlocBase {
@@ -22,6 +24,7 @@ class ActivityBloc extends BlocBase {
   final Api _api;
   ActivityModel _activityModel;
   DisplayNameModel _user;
+  AlternateNameModel _alternateName;
 
   /// Loads the ActivityModel and the GirafUser.
   void load(ActivityModel activityModel, DisplayNameModel user) {
@@ -60,6 +63,69 @@ class ActivityBloc extends BlocBase {
       _activityModel = activityModel;
       _activityModelStream.add(activityModel);
     });
+  }
+
+  /// Set a new alternate Name
+  void setAlternateName(String name){
+
+    _alternateName = null;
+    final Completer<void> completer = Completer<void>();
+    final AlternateNameModel newAn = AlternateNameModel(name: name,
+        citizen: _user.id, pictogram: _activityModel.pictograms.first.id);
+    getAlternateName().whenComplete(() {
+      if (_alternateName == null) {
+        _api.alternateName.create(newAn).listen((AlternateNameModel an) {
+          _alternateName = an;
+          _activityModel.title = _alternateName.name;
+          update();
+          completer.complete();
+        });
+      }
+      else {
+        _api.alternateName.put(_alternateName.id, newAn).listen(
+                (AlternateNameModel an) {
+              _alternateName = an;
+              _activityModel.title = _alternateName.name;
+              update();
+              completer.complete();
+            });
+      }
+    });
+    Future.wait(<Future<void>>[completer.future]);
+
+  }
+  /// Get the title of the lefover activity when deleting choiceboard
+  void getTitleWhenChoiceboardDeleted(){
+    _alternateName = null;
+    getAlternateName().whenComplete(() {
+      if(_alternateName == null){
+        getStandardTitle();
+        update();
+      }
+      else{
+        _activityModel.title = _alternateName.name;
+        update();
+      }
+    });
+  }
+
+  /// Method to get alternate name from api
+  Future<void> getAlternateName(){
+    final Completer<AlternateNameModel> f = Completer<AlternateNameModel>();
+    _api.alternateName.get(_user.id, _activityModel.pictograms.first.id)
+        .listen((Object result) {
+          _alternateName = result;
+          f.complete();
+        }).onError((Object error){
+          _alternateName = null;
+          f.complete();
+    });
+    return f.future;
+  }
+  ///Method to get the standard tile from the pictogram
+  void getStandardTitle(){
+    _activityModel.title = _activityModel.pictograms.first.title;
+    update();
   }
 
   @override

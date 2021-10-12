@@ -42,7 +42,6 @@ class PictogramBloc extends BlocBase {
     if (query.isEmpty) {
       return;
     }
-
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
     }

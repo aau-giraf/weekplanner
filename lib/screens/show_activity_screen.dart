@@ -49,9 +49,12 @@ class ShowActivityScreen extends StatelessWidget {
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
+  /// Textfield controller
+  final TextEditingController tec = TextEditingController();
+
   /// Text style used for title.
-  final TextStyle titleTextStyle = const TextStyle(fontSize:
-  GirafFont.activity_screen_buttons);
+  final TextStyle titleTextStyle =
+      const TextStyle(fontSize: GirafFont.activity_screen_buttons);
 
   @override
   Widget build(BuildContext context) {
@@ -84,13 +87,19 @@ class ShowActivityScreen extends StatelessWidget {
         children: buildScreen(context, mode),
       );
     }
-    final bool keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
             title: 'Aktivitet',
-            appBarIcons: const <AppBarIcon, VoidCallback>{}),
-        body: keyboardVisible ? Container() : childContainer);
+            appBarIcons: (mode == WeekplanMode.guardian)
+            ? <AppBarIcon, VoidCallback>{
+                AppBarIcon.changeToCitizen: () {}
+            }
+            : <AppBarIcon, VoidCallback>{
+                AppBarIcon.changeToGuardian: () {}
+            },
+        ),
+        body: childContainer);
   }
 
   /// Builds the activity.
@@ -193,54 +202,50 @@ class ShowActivityScreen extends StatelessWidget {
                   child: Card(
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
-                    onTap: () async {
-                      await Routes.push(context, PictogramSearch(
-                        user: _girafUser,))
-                        .then((Object object) {
-                        if (object is PictogramModel) {
-                          _activityBloc.load(_activity, _girafUser);
-                          final PictogramModel newPictogram = object;
-                          _activity.isChoiceBoard = true;
-                          _activity.pictograms.add(newPictogram);
-                          _activityBloc.update();
+                      onTap: () async {
+                        await Routes.push(
+                            context,
+                            PictogramSearch(
+                              user: _girafUser,
+                            )).then((Object object) {
+                          if (object is PictogramModel) {
+                            _activityBloc.load(_activity, _girafUser);
+                            final PictogramModel newPictogram = object;
+                            _activity.isChoiceBoard = true;
+                            _activity.pictograms.add(newPictogram);
+                            _activityBloc.update();
                           }
-                      });
-                    },
-                    child: Column(children: <Widget>[
-                      // The title of the choiceBoard widget
-                      Center(
-                          key: const Key('ChoiceboardTitleKey'),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: StreamBuilder<ActivityModel>(
-                                stream: _activityBloc.activityModelStream,
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<ActivityModel>
-                                        activitySnapshot) {
-                                  if (activitySnapshot.hasData &&
-                                      activitySnapshot.data.isChoiceBoard) {
-                                    return Text('Tilføj Aktivitet',
+                        });
+                      },
+                      child: Column(children: <Widget>[
+                        // The title of the choiceBoard widget
+                        Center(
+                            key: const Key('ChoiceboardTitleKey'),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: StreamBuilder<ActivityModel>(
+                                  stream: _activityBloc.activityModelStream,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<ActivityModel>
+                                          activitySnapshot) {
+                                    return Text('Tilføj Valgmulighed',
                                         style: titleTextStyle,
                                         textAlign: TextAlign.center);
-                                  } else {
-                                    return Text('Tilføj ChoiceBoard',
-                                        style: titleTextStyle,
-                                        textAlign: TextAlign.center);
-                                  }
-                                }),
-                          )),
-                      const Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                              child: FittedBox(
-                                child: Icon(
-                                  Icons.add,
-                                  color: theme.GirafColors.black,
-                                ),
+                                  }),
+                            )),
+                        const Expanded(
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: FittedBox(
+                              child: Icon(
+                                Icons.add,
+                                color: theme.GirafColors.black,
+                              ),
                             ),
+                          ),
                         ),
-                      ),
-                    ]),
+                      ]),
+                    ),
                   ),
                 ),
               ),
@@ -279,43 +284,46 @@ class ShowActivityScreen extends StatelessWidget {
                             child: Material(
                               child: InkWell(
                                 key: const Key('OverallTimerBoxKey'),
-                                onTap: () {!timerInitSnapshot.data ?
-                                //Build timer dialog on tap if timer has no data
-                                // ignore: unnecessary_statements
-                                  _buildTimerDialog(overallContext) : null;
-                                  },
+                                onTap: () {
+                                  //Build timer dialog on
+                                  //tap if timer has no data
+                                  if (!timerInitSnapshot.data) {
+                                    _buildTimerDialog(overallContext);
+                                  }
+                                },
                                 //hide splash/highlight color when timer exists
-                                highlightColor: timerInitSnapshot.data == null
-                                  || !timerInitSnapshot.data ?
-                                  Theme.of(overallContext).highlightColor :
-                                  Colors.transparent,
+                                highlightColor: timerInitSnapshot.data ==
+                                            null ||
+                                        !timerInitSnapshot.data
+                                    ? Theme.of(overallContext).highlightColor
+                                    : Colors.transparent,
                                 splashColor: timerInitSnapshot.data == null ||
-                                  !timerInitSnapshot.data ?
-                                  Theme.of(overallContext).splashColor :
-                                  Colors.transparent,
-                              child: Column(children: <Widget>[
-                              // The title of the timer widget
-                              Center(
-                                key: const Key('TimerTitleKey'),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text('Timer',
-                                      style: titleTextStyle,
-                                      textAlign: TextAlign.center),
-                                  )
-                                ),
-                              Expanded(
-                                // Depending on whether a timer is initiated,
-                                // different widgets are shown.
-                                child: (timerInitSnapshot.hasData
-                                        ? timerInitSnapshot.data
-                                        : false)
-                                      ? _timerIsInitiatedWidget()
-                                      : _timerIsNotInitiatedWidget(
-                                        overallContext, modeSnapshot)),
-                                      _timerButtons(overallContext,
+                                        !timerInitSnapshot.data
+                                    ? Theme.of(overallContext).splashColor
+                                    : Colors.transparent,
+                                child: Column(children: <Widget>[
+                                  // The title of the timer widget
+                                  Center(
+                                      key: const Key('TimerTitleKey'),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Timer',
+                                            style: titleTextStyle,
+                                            textAlign: TextAlign.center),
+                                      )),
+                                  Expanded(
+                                      // Depending on whether
+                                      // a timer is initiated,
+                                      // different widgets are shown.
+                                      child: (timerInitSnapshot.hasData
+                                              ? timerInitSnapshot.data
+                                              : false)
+                                          ? _timerIsInitiatedWidget()
+                                          : _timerIsNotInitiatedWidget(
+                                              overallContext, modeSnapshot)),
+                                  _timerButtons(overallContext,
                                       timerInitSnapshot, modeSnapshot)
-                                ]
+                                ]),
                               ),
                             ),
                           ),
@@ -331,9 +339,48 @@ class ShowActivityScreen extends StatelessWidget {
 
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
+    String inputtext = _activity.choiceBoardName;
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
+      Visibility(
+        visible: _activity.isChoiceBoard,
+        child: Row(
+          children: <Widget>[
+            Flexible(
+              child: TextFormField(
+                key: const Key('ChoiceBoardNameText'),
+                initialValue: _activity.choiceBoardName == ' '
+                    ? ''
+                    : _activity.choiceBoardName,
+                textAlign: TextAlign.center,
+                onChanged: (String text) {
+                  inputtext = text.isNotEmpty ? text : ' ';
+                  _activity.choiceBoardName = text;
+                },
+                onFieldSubmitted: (String text) {
+                  _activity.choiceBoardName = inputtext;
+                  _activityBloc.update();
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            RaisedButton(
+              key: const Key('ChoiceBoardNameButton'),
+              color: theme.GirafColors.gradientDefaultOrange,
+              disabledColor: theme.GirafColors.gradientDisabledOrange,
+              padding: const EdgeInsets.all(8.0),
+              onPressed: () {
+                _activity.choiceBoardName = inputtext;
+                _activityBloc.update();
+              },
+              child: const Text('Godkend'),
+            ),
+          ],
+        ),
+      ),
       Expanded(
         child: FittedBox(
             child: Container(
@@ -353,14 +400,12 @@ class ShowActivityScreen extends StatelessWidget {
                             alignment: AlignmentDirectional.center,
                             children: <Widget>[
                               SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                                child: _activity.isChoiceBoard
-                                    ? ChoiceBoard(
-                                        _activity, _activityBloc, _girafUser)
-                                    : buildLoadPictogramImage()
-
-                              ),
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.width,
+                                  child: _activity.isChoiceBoard
+                                      ? ChoiceBoard(
+                                          _activity, _activityBloc, _girafUser)
+                                      : buildLoadPictogramImage()),
                               _buildActivityStateIcon(
                                   context, snapshot.data.state),
                             ],
@@ -374,7 +419,10 @@ class ShowActivityScreen extends StatelessWidget {
                       );
                     }))),
       ),
-      buildButtonBar()
+      buildButtonBar(),
+      _activityBloc.getActivity().isChoiceBoard
+          ? Container()
+          : buildInputField(context)
     ]));
   }
 
@@ -416,11 +464,12 @@ class ShowActivityScreen extends StatelessWidget {
         ? FittedBox(
             key: const Key('TimerNotInitGuardianKey'),
             child: Padding(
-              padding: const EdgeInsets.all(0),
-              child: Container(
-                  child: const ImageIcon(AssetImage('assets/icons/addTimerHighRes.png')),
+                padding: const EdgeInsets.all(0),
+                child: Container(
+                  child: const ImageIcon(
+                      AssetImage('assets/icons/addTimerHighRes.png')),
                   key: const Key('AddTimerButtonKey'),
-            )))
+                )))
         : Container(
             key: const Key('TimerNotInitCitizenKey'),
           );
@@ -645,73 +694,129 @@ class ShowActivityScreen extends StatelessWidget {
                     if (activitySnapshot.data == null) {
                       return const CircularProgressIndicator();
                     }
-                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
-                      return Container(
-                        child: Row(children: <Widget>[
-                          Padding(
-                        padding: const EdgeInsets.only(right: 40.0),
-                        child: GirafButton(
-                        key: const Key('CancelStateToggleButton'),
-                          onPressed: () {
-                            _activityBloc.cancelActivity();
-                            _activity.state = _activityBloc.getActivity().state;
-                          },
-                          isEnabled: activitySnapshot.data.state !=
-                              ActivityState.Completed,
-                          text: activitySnapshot.data.state !=
-                              ActivityState.Canceled
-                              ? 'Aflys'
-                              : 'Fortryd',
-                          icon: activitySnapshot.data.state !=
-                                  ActivityState.Canceled
-                              ? const ImageIcon(
-                                  AssetImage('assets/icons/cancel.png'),
-                                  color: theme.GirafColors.red)
-                              : const ImageIcon(
-                                  AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue),
-                        )),
-                        GirafButton(
-                        key: const Key('CompleteStateToggleButton'),
-                          onPressed: () {
-                            _activityBloc.completeActivity();
-                          },
-                          isEnabled: activitySnapshot.data.state !=
-                              ActivityState.Canceled,
-                          width: 100,
-                          icon: activitySnapshot.data.state !=
-                                  ActivityState.Completed
-                              ? const ImageIcon(
-                                  AssetImage('assets/icons/accept.png'),
-                                  color: theme.GirafColors.green)
-                              : const ImageIcon(
-                                  AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue)
-                        ),
-                    ]));
 
+                    final GirafButton completeButton = GirafButton(
+                        key: const Key('CompleteStateToggleButton'),
+                        onPressed: () {
+                          _activityBloc.completeActivity();
+                        },
+                        isEnabled: activitySnapshot.data.state !=
+                            ActivityState.Canceled,
+                        width: 100,
+                        icon: activitySnapshot.data.state !=
+                            ActivityState.Completed
+                            ? const ImageIcon(
+                            AssetImage('assets/icons/accept.png'),
+                            color: theme.GirafColors.green)
+                            : const ImageIcon(
+                            AssetImage('assets/icons/undo.png'),
+                            color: theme.GirafColors.blue));
+
+                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
+                      final GirafButton cancelButton = GirafButton(
+                        key: const Key('CancelStateToggleButton'),
+                        onPressed: () {
+                          _activityBloc.cancelActivity();
+                          _activity.state =
+                              _activityBloc.getActivity().state;
+                        },
+                        isEnabled: activitySnapshot.data.state !=
+                            ActivityState.Completed,
+                        text: activitySnapshot.data.state !=
+                            ActivityState.Canceled
+                            ? 'Aflys'
+                            : 'Fortryd',
+                        icon: activitySnapshot.data.state !=
+                            ActivityState.Canceled
+                            ? const ImageIcon(
+                            AssetImage('assets/icons/cancel.png'),
+                            color: theme.GirafColors.red)
+                            : const ImageIcon(
+                            AssetImage('assets/icons/undo.png'),
+                            color: theme.GirafColors.blue),
+                      );
+
+                      if (_activity.isChoiceBoard) {
+                        return Container(
+                            child: Row(children: <Widget>[
+                              cancelButton]));
+                      } else {
+                        return Container(
+                            child: Row(children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 40.0),
+                                child: completeButton),
+                              cancelButton]));
+                      }
                     } else {
-                      return GirafButton(
-                          key: const Key('CompleteStateToggleButton'),
-                          onPressed: () {
-                            _activityBloc.completeActivity();
-                          },
-                          isEnabled: activitySnapshot.data.state !=
-                              ActivityState.Canceled,
-                          width: 100,
-                          icon: activitySnapshot.data.state !=
-                                  ActivityState.Completed
-                              ? const ImageIcon(
-                                  AssetImage('assets/icons/accept.png'),
-                                  color: theme.GirafColors.green)
-                              : const ImageIcon(
-                                  AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue));
+                      return completeButton;
                     }
                   });
             },
           ),
         ]);
+  }
+
+  /// Builds the input field and buttons for changing the description of
+  /// the pictogram for a specific citizen
+  Column buildInputField(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        StreamBuilder<WeekplanMode>(
+            stream: _authBloc.mode,
+            builder: (BuildContext context,
+                AsyncSnapshot<WeekplanMode> weekplanModeSnapshot) {
+              return StreamBuilder<ActivityModel>(
+                  stream: _activityBloc.activityModelStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<ActivityModel> activitySnapshot) {
+                    if (activitySnapshot.data == null) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
+                      return Container(
+                          child: Column(children: <Widget>[
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 30, 20, 30),
+                            child: TextField(
+                              key: const Key('AlternateNameTextField'),
+                              controller: tec,
+                              style: const TextStyle(
+                                  fontSize: 28,
+                                  height: 1.3,
+                                  color: theme.GirafColors.black),
+                              decoration: InputDecoration(
+                                  hintText: _activity.title,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  )),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: GirafButton(
+                            key: const Key('SavePictogramTextForCitizenBtn'),
+                            onPressed: () {
+                              _activityBloc.setAlternateName(tec.text);
+                            },
+                            text: 'Gem til borger',
+                          ),
+                        ),
+                        GirafButton(
+                          key: const Key(
+                              'GetStandardPictogramTextForCitizenBtn'),
+                          onPressed: () {
+                            _activityBloc.getStandardTitle();
+                          },
+                          text: 'Hent standard',
+                        )
+                      ]));
+                    } else {
+                      return Container();
+                    }
+                  });
+            }),
+      ],
+    );
   }
 
   /// Creates a pictogram image from the streambuilder

@@ -10,6 +10,4 @@ class GirafFont
   static const double small = 20;
   static const double medium = 24;
   static const double activity_screen_buttons = 23;
-
-
 }

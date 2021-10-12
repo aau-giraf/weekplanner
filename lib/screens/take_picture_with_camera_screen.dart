@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
+import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
@@ -15,31 +15,33 @@ import '../style/custom_color.dart' as theme;
 /// Screen for uploading a [PictogramModel] to the server
 /// Generic type I used for mocks in testing
 // ignore: must_be_immutable
-class UploadImageFromPhone extends StatelessWidget {
+class TakePictureWithCamera extends StatelessWidget {
   /// Default constructor
-  UploadImageFromPhone({Key key}) : super(key: key);
+  TakePictureWithCamera({Key key}) : super(key: key);
 
-  final UploadFromGalleryBloc _uploadFromGallery =
-  di.getDependency<UploadFromGalleryBloc>();
+  final TakePictureWithCameraBloc _takePictureWithCamera =
+  di.getDependency<TakePictureWithCameraBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+  ///height of screen
   dynamic screenHeight;
-  dynamic screenWidth;
-
-  /// Height of the screen
-  dynamic screenHeight;
-
-  /// Width of the screen
+  ///width of screen
   dynamic screenWidth;
 
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery.of(context).size.height;
-    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Scaffold(
-      appBar: GirafAppBar(title: 'Tilføj fra galleri'),
+      appBar: GirafAppBar(title: 'Tilføj fra kamera'),
       body: StreamBuilder<bool>(
-          stream: _uploadFromGallery.isUploading,
+          stream: _takePictureWithCamera.isUploading,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return snapshot.hasData && snapshot.data
                 ? const LoadingSpinnerWidget()
@@ -66,7 +68,7 @@ class UploadImageFromPhone extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: TextField(
-                onChanged: _uploadFromGallery.setPictogramName,
+                onChanged: _takePictureWithCamera.setPictogramName,
                 decoration: InputDecoration(
                     hintText: 'Piktogram navn',
                     border: OutlineInputBorder(
@@ -76,13 +78,13 @@ class UploadImageFromPhone extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(left: 20),
               child: StreamBuilder<String>(
-                  stream: _uploadFromGallery.accessLevel,
+                  stream: _takePictureWithCamera.accessLevel,
                   builder:
                       (BuildContext context, AsyncSnapshot<String> snapshot) {
                     return DropdownButton<String>(
                       value: snapshot.data,
                       onChanged: (String newValue) {
-                        _uploadFromGallery.setAccessLevel(newValue);
+                        _takePictureWithCamera.setAccessLevel(newValue);
                       },
                       items: <String>['Offentlig', 'Privat']
                           .map<DropdownMenuItem<String>>((String value) {
@@ -107,13 +109,14 @@ class UploadImageFromPhone extends StatelessWidget {
             icon: const ImageIcon(AssetImage('assets/icons/save.png')),
             text: 'Gem',
             onPressed: () {
-              _uploadFromGallery.createPictogram().listen((PictogramModel p) {
+              _takePictureWithCamera.createPictogram().listen((PictogramModel p)
+              {
                 Routes.pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
               });
             },
-            isEnabledStream: _uploadFromGallery.isInputValid,
+            isEnabledStream: _takePictureWithCamera.isInputValid,
           ),
         ),
       ],
@@ -125,14 +128,15 @@ class UploadImageFromPhone extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
           child: FlatButton(
-            onPressed: _uploadFromGallery.chooseImageFromGallery,
+            onPressed: _takePictureWithCamera.takePictureWithCamera,
             child: StreamBuilder<File>(
-                stream: _uploadFromGallery.file,
+                stream: _takePictureWithCamera.file,
                 builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                    snapshot.data != null
-                        ? _displayImage(snapshot.data)
-                        : _displayIfNoImage()),
-          )
+                snapshot.data != null
+                    ? _displayImage(snapshot.data)
+                    : _displayIfNoImage()),
+
+          ),
         )
     );
   }
@@ -171,9 +175,9 @@ class UploadImageFromPhone extends StatelessWidget {
             scale: .75,
           ),
           const Text(
-            'Tryk for at vælge billede',
-            style: TextStyle(
-                color: theme.GirafColors.black, fontSize: GirafFont.medium),
+            'Tryk for at tage billede med kamera',
+            style: TextStyle(color: theme.GirafColors.black,
+                fontSize: GirafFont.medium),
           )
         ],
       ),
@@ -186,9 +190,9 @@ class UploadImageFromPhone extends StatelessWidget {
           bottom: 10,
         ),
         child: Text(
-          'Vælg billede fra galleri',
-          style: TextStyle(
-              color: theme.GirafColors.black, fontSize: GirafFont.medium),
+          'Tag billede med kamera',
+          style: TextStyle(color: theme.GirafColors.black,
+              fontSize: GirafFont.medium),
           textAlign: TextAlign.center,
         ));
   }
