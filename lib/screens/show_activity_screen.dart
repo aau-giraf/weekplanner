@@ -126,8 +126,8 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-                    (activitySnapshot.data.state == ActivityState.Canceled ||
-                        activitySnapshot.data.state == ActivityState.Completed))
+                   (activitySnapshot.data.state == ActivityState.Canceled ||
+                    activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -145,8 +145,7 @@ class ShowActivityScreen extends StatelessWidget {
                     activitySnapshot.hasData &&
                     authSnapshot.data != WeekplanMode.citizen &&
                     (activitySnapshot.data.state != ActivityState.Canceled &&
-                        activitySnapshot.data.state !=
-                            ActivityState.Completed)) {
+                    activitySnapshot.data.state != ActivityState.Completed)) {
                   return _buildChoiceBoardButton(context);
                 } else {
                   return _buildEmptyContainer();
@@ -250,6 +249,7 @@ class ShowActivityScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              ),
             ),
           );
         });
@@ -331,8 +331,9 @@ class ShowActivityScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                );
-              });
+                ),
+              );
+            });
         });
   }
 

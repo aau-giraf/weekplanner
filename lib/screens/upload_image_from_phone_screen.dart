@@ -20,9 +20,11 @@ class UploadImageFromPhone extends StatelessWidget {
   UploadImageFromPhone({Key key}) : super(key: key);
 
   final UploadFromGalleryBloc _uploadFromGallery =
-      di.getDependency<UploadFromGalleryBloc>();
+  di.getDependency<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+  dynamic screenHeight;
+  dynamic screenWidth;
 
   /// Height of the screen
   dynamic screenHeight;
@@ -130,8 +132,9 @@ class UploadImageFromPhone extends StatelessWidget {
                     snapshot.data != null
                         ? _displayImage(snapshot.data)
                         : _displayIfNoImage()),
-          ),
-        ));
+          )
+        )
+    );
   }
 
   void _showUploadError(BuildContext context) {
