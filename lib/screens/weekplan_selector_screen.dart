@@ -351,7 +351,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
                       text: 'Redigér',
                       icon:
                           const ImageIcon(AssetImage('assets/icons/edit.png')),
-                      onPressed: () async => _pushEditWeekPlan(context),
+                      onPressed: () async => _pushEditWeekPlan(context)
                   ),
                   BottomAppBarButton(
                       buttonText: 'Kopiér',
