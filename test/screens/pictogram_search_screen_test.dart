@@ -87,7 +87,8 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 
-    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: query)).thenAnswer(
         (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
@@ -117,7 +118,8 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 
-    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: query)).thenAnswer(
         (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
@@ -143,7 +145,8 @@ void main() {
     final Completer<bool> done = Completer<bool>();
     const String query = 'Kat';
 
-    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: query)).thenAnswer(
         (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
@@ -178,7 +181,8 @@ void main() {
       (WidgetTester tester) async {
     const String query = 'Kat';
 
-    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: query)).thenAnswer(
         (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(null));
 
     await tester.pumpWidget(MaterialApp(
@@ -196,7 +200,8 @@ void main() {
       (WidgetTester tester) async {
     const String query = 'Kat';
 
-    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: query)).thenAnswer(
         (_) => BehaviorSubject<List<PictogramModel>>.seeded(
             <PictogramModel>[pictogramModel]));
 
