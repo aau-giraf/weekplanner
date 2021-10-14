@@ -16,6 +16,7 @@ import '../style/custom_color.dart' as theme;
 /// This screen will return `null` back is pressed, otherwise it will return the
 /// chosen pictogram.
 class PictogramSearch extends StatelessWidget {
+
   /// Constructor
   PictogramSearch({@required this.user});
 
