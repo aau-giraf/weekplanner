@@ -62,19 +62,26 @@ class WeekplanScreen extends StatelessWidget {
               appBar: GirafAppBar(
                 title: _user.displayName + ' - ' + _week.name,
                 appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
-                    ? <AppBarIcon, VoidCallback>{
-                        AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                        AppBarIcon.changeToCitizen: () {},
-                        AppBarIcon.logout: () {},
-                        AppBarIcon.settings: () =>
-                            Routes.push<WeekModel>(context,
-                            SettingsScreen(_user)).then((WeekModel newWeek) =>
-                                _settingsBloc.loadSettings(_user)),
-                      }
-
-                    : <AppBarIcon, VoidCallback>{
-                        AppBarIcon.changeToGuardian: () {}
-                      },
+                    ? <AppBarIcon, VoidCallback> {
+                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
+                  AppBarIcon.changeToCitizen: () {},
+                  AppBarIcon.logout: () {},
+                  AppBarIcon.settings: () =>
+                      Routes.push<WeekModel>(context,
+                          SettingsScreen(_user)).then((WeekModel newWeek) =>
+                          _settingsBloc.loadSettings(_user))
+                }
+                : (weekModeSnapshot.data == WeekplanMode.trustee)
+                    ? <AppBarIcon, VoidCallback> {
+                  AppBarIcon.changeToCitizen: () {},
+                  AppBarIcon.settings: () =>
+                      Routes.push<WeekModel>(context,
+                          SettingsScreen(_user)).then((WeekModel newWeek) =>
+                          _settingsBloc.loadSettings(_user))
+                }
+                : <AppBarIcon, VoidCallback> {
+                  AppBarIcon.changeToGuardian: () {}
+                },
                 isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
               ),
               body: StreamBuilder<UserWeekModel>(
