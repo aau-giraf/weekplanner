@@ -25,7 +25,8 @@ void main() {
     const String query = 'Kat';
     int count = 0;
 
-    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: query)).thenAnswer(
             (_) =>
         rx_dart.BehaviorSubject<List<PictogramModel>>
             .seeded(<PictogramModel>[]));
@@ -36,7 +37,8 @@ void main() {
           expect(response, isNull);
           break;
         case 1:
-          verify(pictogramApi.getAll(page: 1, pageSize: 10, query: query));
+          verify(pictogramApi.getAll(page: bloc.latestPage,
+              pageSize: pageSize, query: query));
           done();
           break;
       }

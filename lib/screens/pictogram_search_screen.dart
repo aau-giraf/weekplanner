@@ -56,18 +56,33 @@ class PictogramSearch extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
                       if (snapshot.hasData) {
-                        return GridView.count(
-                          crossAxisCount: 4,
-                          children: snapshot.data
-                              .map((PictogramModel pictogram) => PictogramImage(
-                                  pictogram: pictogram,
-                                  haveRights:
-                                      user == null || pictogram.userId == null
-                                          ? false
-                                          : pictogram.userId == user.id,
-                                  onPressed: () =>
-                                      Routes.pop(context, pictogram)))
-                              .toList(),
+                        return Column(
+                          children: <Widget> [
+                            Expanded(
+                              child: GridView.count(
+                                crossAxisCount: 4,
+                                children: snapshot.data
+                                    .map((PictogramModel pictogram)
+                                => PictogramImage(
+                                    pictogram: pictogram,
+                                    haveRights: user == null || pictogram.userId
+                                        == null ? false :
+                                    pictogram.userId == user.id,
+                                    onPressed: () =>
+                                        Routes.pop(context, pictogram)))
+                                    .toList(),
+                                controller: _bloc.sc
+                            )
+                            ),
+                            _bloc.loadingPictograms == true
+                            ? Container(
+                              height: 80,
+                              child: const Center(
+                                  child: CircularProgressIndicator()
+                              ),
+                            )
+                            : Container()
+                          ]
                         );
                       } else if (snapshot.hasError) {
                         return InkWell(
@@ -129,7 +144,6 @@ class PictogramSearch extends StatelessWidget {
                       )))
             ]
           )
-        ));
+       ));
   }
-
 }
