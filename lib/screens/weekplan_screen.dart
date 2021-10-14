@@ -73,6 +73,7 @@ class WeekplanScreen extends StatelessWidget {
                 }
                 : (weekModeSnapshot.data == WeekplanMode.trustee)
                     ? <AppBarIcon, VoidCallback> {
+                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                   AppBarIcon.changeToCitizen: () {},
                   AppBarIcon.settings: () =>
                       Routes.push<WeekModel>(context,
