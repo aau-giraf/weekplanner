@@ -219,31 +219,4 @@ void main() {
 
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
-
-  testWidgets('Tap delete button triggers confirm popup',
-          (WidgetTester tester) async {
-    const String query = 'Kat';
-
-    when(pictogramApi.getAll(page: 1, pageSize: 10, query: query)).thenAnswer(
-            (_) => BehaviorSubject<List<PictogramModel>>.seeded(
-            <PictogramModel>[pictogramModel]));
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: PictogramSearch(user: user)
-      ),
-    );
-    await tester.enterText(find.byType(TextField), query);
-    await tester.pump(const Duration(milliseconds: 11000));
-    final Finder f = find.text('Slet');
-
-    expect(f, findsOneWidget);
-
-    await tester.tap(f);
-    await tester.pump();
-
-    expect(find.byType(GirafConfirmDialog),findsOneWidget);
-
-  });
-  
 }
