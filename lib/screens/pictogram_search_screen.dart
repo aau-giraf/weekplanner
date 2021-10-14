@@ -7,7 +7,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/take_picture_with_camera_screen.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import '../style/custom_color.dart' as theme;
 
@@ -16,7 +16,6 @@ import '../style/custom_color.dart' as theme;
 /// This screen will return `null` back is pressed, otherwise it will return the
 /// chosen pictogram.
 class PictogramSearch extends StatelessWidget {
-
 
   /// Constructor
   PictogramSearch({@required this.user});
@@ -76,13 +75,14 @@ class PictogramSearch extends StatelessWidget {
                                 controller: _bloc.sc
                             )
                             ),
-                            _bloc.loadingPictograms == true ? Container(
+                            _bloc.loadingPictograms == true
+                            ? Container(
                               height: 80,
                               child: const Center(
                                   child: CircularProgressIndicator()
                               ),
                             )
-                                : Container()
+                            : Container()
                           ]
                         );
                       } else if (snapshot.hasError) {
@@ -102,26 +102,49 @@ class PictogramSearch extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: theme.GirafColors.amber,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              GirafButton(
-                icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
-                text: 'Tilføj fra galleri',
-                onPressed: () async {
-                  await Routes.push(context, UploadImageFromPhone());
-                },
-              ),
-              GirafButton(
-                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
-                  text: 'Tag billede',
-                  onPressed: () async {
-                    await Routes.push(context, TakePictureWithCamera());
-                  }
-              ),
-            ],
-          ),
-        ));
+              Expanded(
+                  child: Container(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: <double>[
+                            1 / 3,
+                            2 / 3
+                          ],
+                              colors: <Color>[
+                            theme.GirafColors.appBarYellow,
+                            theme.GirafColors.appBarOrange,
+                          ])),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          BottomAppBarButton(
+                            buttonText: 'Tilføj fra galleri',
+                            buttonKey: 'TilføjFraGalleriButton',
+                            assetPath: 'assets/icons/gallery.png',
+                            dialogFunction: (BuildContext context) {
+                              Routes.push(
+                                  context, UploadImageFromPhone());
+                            }
+                          ),
+                          BottomAppBarButton(
+                              buttonText: 'Tag billede',
+                              buttonKey: 'TagBilledeButton',
+                              assetPath: 'assets/icons/camera.png',
+                              dialogFunction: (BuildContext context) {
+                                Routes.push(
+                                    context, TakePictureWithCamera());
+                              }
+                          )
+                        ]
+                      )))
+            ]
+          )
+       ));
   }
 }
