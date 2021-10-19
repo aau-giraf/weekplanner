@@ -1,6 +1,6 @@
 # Weekplanner
 
-![Build Status](https://github.com/aau-giraf/weekplanner/workflows/CI/badge.svg)
+[![Flutter Android and iOS verification](https://github.com/aau-giraf/weekplanner/actions/workflows/flutter-verification.yml/badge.svg)](https://github.com/aau-giraf/weekplanner/actions/workflows/flutter-verification.yml)
 [![codecov](https://codecov.io/gh/aau-giraf/weekplanner/branch/develop/graph/badge.svg)](https://codecov.io/gh/aau-giraf/weekplanner)
 
 

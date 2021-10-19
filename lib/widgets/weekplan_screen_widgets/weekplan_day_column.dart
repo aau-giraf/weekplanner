@@ -449,6 +449,7 @@ class WeekplanDayColumn extends StatelessWidget {
         });
       });
     }
+
   }
 
   /// Builds activity card with a status icon if it is marked
