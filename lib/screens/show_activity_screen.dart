@@ -91,7 +91,14 @@ class ShowActivityScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
             title: 'Aktivitet',
-            appBarIcons: const <AppBarIcon, VoidCallback>{}),
+            appBarIcons: (mode == WeekplanMode.guardian)
+            ? <AppBarIcon, VoidCallback>{
+                AppBarIcon.changeToCitizen: () {}
+            }
+            : <AppBarIcon, VoidCallback>{
+                AppBarIcon.changeToGuardian: () {}
+            },
+        ),
         body: childContainer);
   }
 
@@ -119,8 +126,8 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-                    (activitySnapshot.data.state == ActivityState.Canceled ||
-                        activitySnapshot.data.state == ActivityState.Completed))
+                   (activitySnapshot.data.state == ActivityState.Canceled ||
+                    activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -138,8 +145,7 @@ class ShowActivityScreen extends StatelessWidget {
                     activitySnapshot.hasData &&
                     authSnapshot.data != WeekplanMode.citizen &&
                     (activitySnapshot.data.state != ActivityState.Canceled &&
-                        activitySnapshot.data.state !=
-                            ActivityState.Completed)) {
+                    activitySnapshot.data.state != ActivityState.Completed)) {
                   return _buildChoiceBoardButton(context);
                 } else {
                   return _buildEmptyContainer();
@@ -325,7 +331,7 @@ class ShowActivityScreen extends StatelessWidget {
                     ),
                   ),
                 );
-              });
+            });
         });
   }
 
@@ -686,6 +692,24 @@ class ShowActivityScreen extends StatelessWidget {
                     if (activitySnapshot.data == null) {
                       return const CircularProgressIndicator();
                     }
+
+                    final GirafButton completeButton = GirafButton(
+                        key: const Key('CompleteStateToggleButton'),
+                        onPressed: () {
+                          _activityBloc.completeActivity();
+                        },
+                        isEnabled: activitySnapshot.data.state !=
+                            ActivityState.Canceled,
+                        width: 100,
+                        icon: activitySnapshot.data.state !=
+                            ActivityState.Completed
+                            ? const ImageIcon(
+                            AssetImage('assets/icons/accept.png'),
+                            color: theme.GirafColors.green)
+                            : const ImageIcon(
+                            AssetImage('assets/icons/undo.png'),
+                            color: theme.GirafColors.blue));
+
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
                       return Container(
                           child: Row(children: <Widget>[
@@ -733,22 +757,7 @@ class ShowActivityScreen extends StatelessWidget {
                                     color: theme.GirafColors.blue)),
                       ]));
                     } else {
-                      return GirafButton(
-                          key: const Key('CompleteStateToggleButton'),
-                          onPressed: () {
-                            _activityBloc.completeActivity();
-                          },
-                          isEnabled: activitySnapshot.data.state !=
-                              ActivityState.Canceled,
-                          width: 100,
-                          icon: activitySnapshot.data.state !=
-                                  ActivityState.Completed
-                              ? const ImageIcon(
-                                  AssetImage('assets/icons/accept.png'),
-                                  color: theme.GirafColors.green)
-                              : const ImageIcon(
-                                  AssetImage('assets/icons/undo.png'),
-                                  color: theme.GirafColors.blue));
+                      return completeButton;
                     }
                   });
             },
@@ -835,23 +844,53 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the icon that displays the activity's state
-  Widget _buildActivityStateIcon(BuildContext context, ActivityState state) {
+  Stack _buildActivityStateIcon(BuildContext context, ActivityState state) {
     if (state == ActivityState.Completed) {
-      return Icon(
-        Icons.check,
-        key: const Key('IconCompleted'),
-        color: theme.GirafColors.green,
-        size: MediaQuery.of(context).size.width,
+      return Stack(children: <Widget>[
+
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigAcceptBorder.png'),
+            key: const Key('IconCompleted'),
+            color: theme.GirafColors.black,
+            size: MediaQuery.of(context).size.width,
+          ),
+        )
+        ,
+
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigAccept.png'),
+            key: const Key('IconCompletedBorder'),
+            color: theme.GirafColors.green,
+            size: MediaQuery.of(context).size.width,
+          ),
+        )
+      ]
       );
     } else if (state == ActivityState.Canceled) {
-      return Icon(
-        Icons.clear,
-        key: const Key('IconCanceled'),
-        color: theme.GirafColors.red,
-        size: MediaQuery.of(context).size.width,
+      return Stack(children: <Widget>[
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigCancelBorder.png'),
+            key: const Key('IconCanceledBorder'),
+            color: theme.GirafColors.black,
+            size: MediaQuery.of(context).size.width,
+          ),
+        ),
+        Container(
+          child: ImageIcon(
+            const AssetImage('assets/icons/bigCancel.png'),
+            key: const Key('IconCanceled'),
+            color: theme.GirafColors.red,
+            size: MediaQuery.of(context).size.width,
+          ),
+        ),
+
+      ]
       );
     } else {
-      return Container();
+      return Stack(children: <Widget> [Container()]);
     }
   }
 }
