@@ -683,7 +683,6 @@ void main() {
     expect(find.byType(PictogramText), findsOneWidget);
 
     // Get the title of the activity
-    // ignore: unused_local_variable
     final String title = mockActivities[0].title;
 
 
