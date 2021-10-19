@@ -265,7 +265,10 @@ class WeekplansBloc extends BlocBase {
   /// Delete the marked week models when the trash button is clicked
   void deleteMarkedWeekModels() {
     final List<WeekModel> localWeekModels = _weekModel.value;
-    final List<WeekModel> oldLocalWeekModels = _oldWeekModel.value.toList();
+    List<WeekModel> oldLocalWeekModels;
+    if (_oldWeekModel.value != null) {
+      oldLocalWeekModels = _oldWeekModel.value.toList();
+    }
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
