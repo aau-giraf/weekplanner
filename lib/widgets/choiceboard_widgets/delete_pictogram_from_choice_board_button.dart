@@ -15,7 +15,7 @@ class DeletePictogramFromChoiceBoardButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GirafButton(
       key: const Key('ChoiceBoardDeleteButton'),
-      height: MediaQuery.of(context).size.width * 0.07,
+      height: MediaQuery.of(context).size.width * 0.12,
       text: 'Slet',
       onPressed: () => _callback(),
       fontSize: 30,
