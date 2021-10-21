@@ -64,6 +64,7 @@ class AuthBloc extends BlocBase {
     final Completer<void> completer = Completer<void>();
     _api.account.login(username, password).listen((bool status) {
       if (status) {
+        // Get the role of a specific user
         _api.account.role(username).listen((String role){
           if (role == 'guardian'){
             setMode(WeekplanMode.guardian);

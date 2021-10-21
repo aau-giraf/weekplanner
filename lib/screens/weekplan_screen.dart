@@ -63,6 +63,7 @@ class WeekplanScreen extends StatelessWidget {
                 title: _user.displayName + ' - ' + _week.name,
                 appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
                     ? <AppBarIcon, VoidCallback> {
+                  // Show icons for guardian role
                   AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                   AppBarIcon.changeToCitizen: () {},
                   AppBarIcon.logout: () {},
@@ -73,6 +74,7 @@ class WeekplanScreen extends StatelessWidget {
                 }
                 : (weekModeSnapshot.data == WeekplanMode.trustee)
                     ? <AppBarIcon, VoidCallback> {
+                  // Show icons for trustee role
                   AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                   AppBarIcon.changeToCitizen: () {},
                   AppBarIcon.settings: () =>
@@ -81,6 +83,7 @@ class WeekplanScreen extends StatelessWidget {
                           _settingsBloc.loadSettings(_user))
                 }
                 : <AppBarIcon, VoidCallback> {
+                  // Show icons for citizen role
                   AppBarIcon.changeToGuardian: () {}
                 },
                 isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
