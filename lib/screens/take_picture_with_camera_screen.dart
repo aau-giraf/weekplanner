@@ -86,7 +86,7 @@ class TakePictureWithCamera extends StatelessWidget {
                       onChanged: (String newValue) {
                         _takePictureWithCamera.setAccessLevel(newValue);
                       },
-                      items: <String>['Offentlig', 'Privat']
+                      items: <String>['Institution', 'Privat']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,

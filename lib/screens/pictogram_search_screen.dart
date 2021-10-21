@@ -7,7 +7,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/take_picture_with_camera_screen.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import '../style/custom_color.dart' as theme;
 
@@ -57,17 +57,33 @@ class PictogramSearch extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<List<PictogramModel>> snapshot) {
                       if (snapshot.hasData) {
-                        return GridView.count(
-                          crossAxisCount: 4,
-                          children: snapshot.data
-                              .map((PictogramModel pictogram) => PictogramImage(
-                                  pictogram: pictogram,
-                                  haveRights: user == null || pictogram.userId
-                                      == null ? false :
-                                      pictogram.userId == user.id,
-                                  onPressed: () =>
-                                      Routes.pop(context, pictogram)))
-                              .toList(),
+                        return Column(
+                          children: <Widget> [
+                            Expanded(
+                              child: GridView.count(
+                                crossAxisCount: 4,
+                                children: snapshot.data
+                                    .map((PictogramModel pictogram)
+                                => PictogramImage(
+                                    pictogram: pictogram,
+                                    haveRights: user == null || pictogram.userId
+                                        == null ? false :
+                                    pictogram.userId == user.id,
+                                    onPressed: () =>
+                                        Routes.pop(context, pictogram)))
+                                    .toList(),
+                                controller: _bloc.sc
+                            )
+                            ),
+                            _bloc.loadingPictograms == true
+                            ? Container(
+                              height: 80,
+                              child: const Center(
+                                  child: CircularProgressIndicator()
+                              ),
+                            )
+                            : Container()
+                          ]
                         );
                       } else if (snapshot.hasError) {
                         return InkWell(
@@ -86,26 +102,49 @@ class PictogramSearch extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: theme.GirafColors.amber,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              GirafButton(
-                icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
-                text: 'Tilføj fra galleri',
-                onPressed: () async {
-                  await Routes.push(context, UploadImageFromPhone());
-                },
-              ),
-              GirafButton(
-                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
-                  text: 'Tag billede',
-                  onPressed: () async {
-                    await Routes.push(context, TakePictureWithCamera());
-                  }
-              ),
-            ],
-          ),
-        ));
+              Expanded(
+                  child: Container(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: <double>[
+                            1 / 3,
+                            2 / 3
+                          ],
+                              colors: <Color>[
+                            theme.GirafColors.appBarYellow,
+                            theme.GirafColors.appBarOrange,
+                          ])),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          BottomAppBarButton(
+                            buttonText: 'Tilføj fra galleri',
+                            buttonKey: 'TilføjFraGalleriButton',
+                            assetPath: 'assets/icons/gallery.png',
+                            dialogFunction: (BuildContext context) {
+                              Routes.push(
+                                  context, UploadImageFromPhone());
+                            }
+                          ),
+                          BottomAppBarButton(
+                              buttonText: 'Tag billede',
+                              buttonKey: 'TagBilledeButton',
+                              assetPath: 'assets/icons/camera.png',
+                              dialogFunction: (BuildContext context) {
+                                Routes.push(
+                                    context, TakePictureWithCamera());
+                              }
+                          )
+                        ]
+                      )))
+            ]
+          )
+       ));
   }
 }
