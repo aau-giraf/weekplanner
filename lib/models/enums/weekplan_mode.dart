@@ -3,5 +3,7 @@ enum WeekplanMode {
   /// Citizen mode
   citizen,
   /// Guardian mode
-  guardian
+  guardian,
+  ///Trustee mode
+  trustee
 }
