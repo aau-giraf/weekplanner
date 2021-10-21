@@ -48,17 +48,18 @@ class AuthBloc extends BlocBase {
       if (status) {
         _loggedIn.add(status);
         loggedInUsername = username;
-        String role = _api.account.role(username).toString();
+        final String role = _api.account.role(username).toString();
         ///sets the mode according to the role the user has
-        if (role.compareTo("Guardian") == true) {
+        if (role.compareTo('Guardian') != null) {
         setMode(WeekplanMode.guardian);
         }
-        else if (role.compareTo("Trustee") == true) {
+        else if (role.compareTo('Trustee') != null) {
           setMode(WeekplanMode.trustee);
         }
-        else if (role.compareTo("Citizen") == true) {
+        else if (role.compareTo('Citizen') != null) {
           setMode(WeekplanMode.citizen);
         }
+
 
       }
       completer.complete();
