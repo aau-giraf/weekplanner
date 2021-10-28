@@ -743,7 +743,7 @@ class ShowActivityScreen extends StatelessWidget {
                             isEnabled: activitySnapshot.data.state !=
                                 ActivityState.Canceled,
                             text: 'Færdiggør',
-                            width: 150,
+                            width: 155,
                             icon: activitySnapshot.data.state !=
                                     ActivityState.Completed
                                 ? const ImageIcon(
