@@ -69,8 +69,8 @@ void main() {
       })
   );
 
-  String username = 'Graatand';
-  String password = 'password';
+  final String username = 'Graatand';
+  final String password = 'password';
   test('Should check that authenticate works', async((DoneFn done) {
     authBloc.mode.skip(1).listen((WeekplanMode mode) {
 
