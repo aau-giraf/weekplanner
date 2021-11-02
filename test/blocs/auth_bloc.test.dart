@@ -16,7 +16,6 @@ class MockAccountApi extends Mock implements AccountApi {
   @override Stream<String> role(String username){
     ///Returns a role to check that authenticate works
     if (username.compareTo('Graatand') == 0){
-
       return Stream<String>.value('Guardian');
 
     } else if (username.compareTo('Chris') == 0){
