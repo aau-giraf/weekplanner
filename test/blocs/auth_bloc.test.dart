@@ -20,7 +20,6 @@ class MockAccountApi extends Mock implements AccountApi {
     } else if (username.compareTo('Chris') == 0){
 
       return Stream<String>.value('Trustee');
-
     } else if (username.compareTo('Janne') == 0){
 
       return Stream<String>.value('Citizen');
