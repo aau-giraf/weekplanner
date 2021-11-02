@@ -91,7 +91,6 @@ void main() {
   const String username2 = 'Chris';
   test('Should check that authenticate works', async((DoneFn done) {
     authBloc.mode.skip(1).listen((WeekplanMode mode) {
-
       expect(mode, WeekplanMode.trustee);
       done();
     });
