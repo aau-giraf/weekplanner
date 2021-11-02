@@ -34,7 +34,7 @@ void main() {
   setUp((){
     _api = Api('any');
     authBloc = AuthBloc(_api);
-  _api.account = MockAccountApi();
+    _api.account = MockAccountApi();
 
   });
   test('Check if the mode defaults to guardian', async((DoneFn done) {
