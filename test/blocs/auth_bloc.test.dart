@@ -23,7 +23,6 @@ class MockAccountApi extends Mock implements AccountApi {
 
       return Stream<String>.value('Citizen');
     }
-
     return null;
   }
 }
