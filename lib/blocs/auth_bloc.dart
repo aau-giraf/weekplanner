@@ -41,26 +41,26 @@ class AuthBloc extends BlocBase {
     // Show the Loading Spinner, with a callback of 2 seconds.
     // Call the API login function
     final Completer<void> completer = Completer<void>();
-    _api.account.login(username, password).listen((bool status) {
+    //Is async because otherwise the await for the role function cannot return
+    //the string.
+    _api.account.login(username, password).listen((bool status) async {
       // Set the status
       // If there is a successful login, remove the loading spinner,
       // and push the status to the stream
       if (status) {
         _loggedIn.add(status);
         loggedInUsername = username;
-        final String role = _api.account.role(username).toString();
+        final String role = await _api.account.role(username).first;
         ///sets the mode according to the role the user has
-        if (role.compareTo('Guardian') != null) {
+        if (role.compareTo('Guardian') == 0) {
         setMode(WeekplanMode.guardian);
         }
-        else if (role.compareTo('Trustee') != null) {
+        else if (role.compareTo('Trustee') == 0) {
           setMode(WeekplanMode.trustee);
         }
-        else if (role.compareTo('Citizen') != null) {
+        else if (role.compareTo('Citizen') == 0) {
           setMode(WeekplanMode.citizen);
         }
-
-
       }
       completer.complete();
     }).onError((Object error){

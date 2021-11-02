@@ -14,8 +14,21 @@ class MockAccountApi extends Mock implements AccountApi {
   }
 
   @override Stream<String> role(String username){
-    ///Returns guardian to check if guardian is actually set
-    return Stream<String>.value('guardian');
+    ///Returns a role to check that authenticate works
+    if (username.compareTo('Graatand') == 0){
+
+      return Stream<String>.value('Guardian');
+
+    } else if (username.compareTo('Chris') == 0){
+
+      return Stream<String>.value('Trustee');
+
+    } else if (username.compareTo('Janne') == 0){
+
+      return Stream<String>.value('Citizen');
+    }
+
+    return null;
   }
 }
 
@@ -78,5 +91,25 @@ void main() {
       done();
     });
     authBloc.authenticate(username, password);
+  }));
+
+  const String username2 = 'Chris';
+  test('Should check that authenticate works', async((DoneFn done) {
+    authBloc.mode.skip(1).listen((WeekplanMode mode) {
+
+      expect(mode, WeekplanMode.trustee);
+      done();
+    });
+    authBloc.authenticate(username2, password);
+  }));
+
+  const String username3 = 'Janne';
+  test('Should check that authenticate works', async((DoneFn done) {
+    authBloc.mode.skip(1).listen((WeekplanMode mode) {
+
+      expect(mode, WeekplanMode.citizen);
+      done();
+    });
+    authBloc.authenticate(username3, password);
   }));
 }
