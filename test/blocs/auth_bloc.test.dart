@@ -82,7 +82,6 @@ void main() {
   const String password = 'password';
   test('Should check that authenticate works', async((DoneFn done) {
     authBloc.mode.skip(1).listen((WeekplanMode mode) {
-
       expect(mode, WeekplanMode.guardian);
       done();
     });
