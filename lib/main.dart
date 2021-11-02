@@ -7,22 +7,18 @@ import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 
-
 void main() {
   // Register all dependencies for injector
   Bootstrap.register();
   WidgetsFlutterBinding.ensureInitialized();
-  if (_isInDebugMode) {
-    // If in DEBUG mode
-    environment.setFile('assets/environments.json').whenComplete(() {
-      _runApp();
-    });
-  } else {
-    // Else Production
-    environment.setFile('assets/environments.prod.json').whenComplete(() {
-      _runApp();
-    });
-  }
+  /***
+   * The weekplanner will by default run towards the dev-enviroment
+   * Use the "environments.local.json" for running against your local web-api
+   * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
+   */
+  environment.setFile('assets/environments.dev.json').whenComplete(() {
+    _runApp();
+  });
 }
 
 /// Stores the last state of being logged in
@@ -54,10 +50,4 @@ void _runApp() {
               return LoginScreen();
             }
           })));
-}
-
-bool get _isInDebugMode {
-  bool inDebugMode = false;
-  assert(inDebugMode = true);
-  return inDebugMode;
 }
