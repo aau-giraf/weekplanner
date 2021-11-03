@@ -23,7 +23,11 @@ class UploadImageFromPhone extends StatelessWidget {
   di.getDependency<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+
+  ///Variable representing the screen height
   dynamic screenHeight;
+
+  ///Variable representing the screen width
   dynamic screenWidth;
 
   @override
