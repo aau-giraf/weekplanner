@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -65,14 +66,14 @@ class AuthBloc extends BlocBase {
     _api.account.login(username, password).listen((bool status) {
       if (status) {
         // Get the role of a specific user
-        _api.account.role(username).listen((String role){
-          if (role == 'guardian'){
+        _api.user.role(username).listen((int role) {
+          if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
           }
-          else if(role == 'trustee'){
+          else if(role == Role.Trustee.index) {
             setMode(WeekplanMode.trustee);
           }
-          else{
+          else {
             setMode(WeekplanMode.citizen);
           }
           _loginAttempt.add(status);
