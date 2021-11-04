@@ -50,7 +50,7 @@ class AuthBloc extends BlocBase {
       // and push the status to the stream
       if (status) {
         // Get the role of a specific user
-        _api.user.role(username).listen((int role){
+        _api.user.role(username).listen((int role) {
           if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
           }
