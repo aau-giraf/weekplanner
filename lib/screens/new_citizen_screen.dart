@@ -4,6 +4,7 @@ import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/new_citizen_login_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
@@ -27,7 +28,7 @@ class NewCitizenScreen extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding:
-                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
+            const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
             child: StreamBuilder<bool>(
                 stream: _bloc.validDisplayNameStream,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -35,10 +36,10 @@ class NewCitizenScreen extends StatelessWidget {
                     key: const Key('displayNameField'),
                     decoration: InputDecoration(
                       border:
-                          const OutlineInputBorder(borderSide: BorderSide()),
+                      const OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Navn',
                       errorText: (snapshot?.data == true) &&
-                              _bloc.displayNameController.value != null
+                          _bloc.displayNameController.value != null
                           ? null
                           : 'Navn skal udfyldes',
                     ),
@@ -55,13 +56,13 @@ class NewCitizenScreen extends StatelessWidget {
                     key: const Key('usernameField'),
                     decoration: InputDecoration(
                       border:
-                          const OutlineInputBorder(borderSide: BorderSide()),
+                      const OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Brugernavn',
                       errorText: (snapshot?.data == true) &&
-                              _bloc.usernameController.value != null
+                          _bloc.usernameController.value != null
                           ? null
-                          // cant make it shorter because of the string
-                          // ignore: lines_longer_than_80_chars
+                      // cant make it shorter because of the string
+                      // ignore: lines_longer_than_80_chars
                           : 'Brugernavn er tomt eller indeholder et ugyldigt tegn',
                     ),
                     onChanged: _bloc.onUsernameChange.add,
@@ -77,13 +78,13 @@ class NewCitizenScreen extends StatelessWidget {
                     key: const Key('passwordField'),
                     decoration: InputDecoration(
                       border:
-                          const OutlineInputBorder(borderSide: BorderSide()),
+                      const OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Kodeord',
                       errorText: (snapshot?.data == true) &&
-                              _bloc.passwordController.value != null
+                          _bloc.passwordController.value != null
                           ? null
-                          // cant make it shorter because of the string
-                          // ignore: lines_longer_than_80_chars
+                      // cant make it shorter because of the string
+                      // ignore: lines_longer_than_80_chars
                           : 'Kodeord må ikke indeholde mellemrum eller være tom',
                     ),
                     onChanged: _bloc.onPasswordChange.add,
@@ -100,7 +101,7 @@ class NewCitizenScreen extends StatelessWidget {
                     key: const Key('passwordVerifyField'),
                     decoration: InputDecoration(
                       border:
-                          const OutlineInputBorder(borderSide: BorderSide()),
+                      const OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Gentag kodeord',
                       errorText: (snapshot?.data == true)
                           ? null
@@ -117,19 +118,14 @@ class NewCitizenScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: GirafButton(
-                  key: const Key('saveButton'),
-                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                  text: 'Gem borger',
+                  key: const Key('nextButton'),
+                  text: 'Næste',
                   isEnabled: false,
                   isEnabledStream: _bloc.allInputsAreValidStream,
                   onPressed: () {
-                    _bloc.createCitizen().listen((GirafUserModel response) {
-                      if (response != null) {
-                        Routes.pop<GirafUserModel>(context, response);
-                        _bloc.resetBloc();
-                      }
-                    }).onError((Object error) =>
-                        _translator.catchApiError(error, context));
+                    Routes.push(context, NewCitizenLoginScreen(_bloc))
+                        .then((_) => Routes.pop(context))
+                        .then((_) => _bloc.resetBloc());
                   },
                 ),
               ),

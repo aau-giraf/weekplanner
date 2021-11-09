@@ -1,0 +1,120 @@
+import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
+import 'package:weekplanner/blocs/new_citizen_bloc.dart';
+import 'package:weekplanner/blocs/new_citizen_login_bloc.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/pictogram_image.dart';
+
+import '../di.dart';
+import '../routes.dart';
+
+/// Screen for creating a citizen login
+class NewCitizenLoginScreen extends StatelessWidget {
+
+  /// Constructor for NewCitizenLoginScreen()
+  NewCitizenLoginScreen(NewCitizenBloc bloc) {
+    _createBloc = bloc;
+  }
+
+  GirafUserModel userModel;
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
+  final NewCitizenLoginBloc _citizenLoginBloc = null;
+  NewCitizenBloc _createBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: GirafAppBar(
+          title: 'Lav borger login',
+        ),
+        body: ListView (
+          children: <Widget>[
+            Padding(
+                padding:
+                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
+                child: Container(
+                  height: 200,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Opret pictogram kode til borger',
+                      textAlign:TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black.withOpacity(0.7),
+                          fontSize: 40
+                      ),
+                    ),
+                  ),
+                )
+            ),
+            Padding(
+                padding:
+                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
+                child: Column(
+                    children: [
+                      GridView.count(
+                          crossAxisCount: 5,
+                          children: List.generate(10, (index) /* TODO replace with input function for generating/fetching pictograms */{
+                            return Center(
+                              child: Text(
+                                'Item $index',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                            );
+                          })
+                          , shrinkWrap: true),
+                    ]
+                )
+            ),
+            Padding(
+                padding:
+                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
+                child: Column(
+                    children: [
+                      GridView.count(
+                          crossAxisCount: 4,
+                          children: List.generate(4, (index) /* TODO replace with function for generating input field for pictograms */{
+                            return Center(
+                              child: Text(
+                                'Item $index',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                            );
+                          })
+                          , shrinkWrap: true),
+                    ]
+                )
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: GirafButton(
+                      key: const Key('saveButton'),
+                      icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+                      text: 'Gem borger',
+                      isEnabled: false,
+                      isEnabledStream: _createBloc.allInputsAreValidStream,
+                      onPressed: () {
+                        _createBloc.createCitizen().listen((GirafUserModel response) {
+                          if (response != null) {
+                            Routes.pop<GirafUserModel>(context, response);
+                            _createBloc.resetBloc();
+                          }
+                        }).onError((Object error) =>
+                            _translator.catchApiError(error, context));
+                      },
+                    ),
+                  ),
+                ]
+            )
+          ],
+        )
+    );
+  }
+}
