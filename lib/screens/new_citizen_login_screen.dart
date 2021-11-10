@@ -16,14 +16,14 @@ import '../routes.dart';
 class NewCitizenLoginScreen extends StatelessWidget {
 
   /// Constructor for NewCitizenLoginScreen()
-  NewCitizenLoginScreen(NewCitizenBloc bloc) {
-    _createBloc = bloc;
-  }
+  NewCitizenLoginScreen(this._citizenBloc)
+      : _citizenLoginBloc = di.getDependency<NewCitizenLoginBloc>();
 
-  GirafUserModel userModel;
+
+
   final ApiErrorTranslater _translator = ApiErrorTranslater();
-  final NewCitizenLoginBloc _citizenLoginBloc = null;
-  NewCitizenBloc _createBloc;
+  final NewCitizenLoginBloc _citizenLoginBloc;
+  final NewCitizenBloc _citizenBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +99,13 @@ class NewCitizenLoginScreen extends StatelessWidget {
                       icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                       text: 'Gem borger',
                       isEnabled: false,
-                      isEnabledStream: _createBloc.allInputsAreValidStream,
+                      isEnabledStream: _citizenBloc.allInputsAreValidStream,
                       onPressed: () {
-                        _createBloc.createCitizen().listen((GirafUserModel response) {
+                        _citizenBloc.createCitizen()
+                            .listen((GirafUserModel response) {
                           if (response != null) {
                             Routes.pop<GirafUserModel>(context, response);
-                            _createBloc.resetBloc();
+                            _citizenBloc.resetBloc();
                           }
                         }).onError((Object error) =>
                             _translator.catchApiError(error, context));

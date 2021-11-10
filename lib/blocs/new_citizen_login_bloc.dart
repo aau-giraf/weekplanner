@@ -3,9 +3,13 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 
 ///Bloc for the creation of a citizens password
 class NewCitizenLoginBloc extends BlocBase{
-    NewCitizenLoginBloc(this._api);
 
-    final Api _api;
+  ///Constructor for the bloc
+  NewCitizenLoginBloc(this._api);
+
+  final Api _api;
+
+
 
   @override
   void dispose() {
