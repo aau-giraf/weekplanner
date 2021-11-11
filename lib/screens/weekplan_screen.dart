@@ -226,9 +226,11 @@ class WeekplanScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return GirafConfirmDialog(
               title: 'Aflys aktiviteter',
-              description: 'Vil du markere ' +
+              description: 'Vil du markere '+
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  ' aktivitet(er) som aflyst',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
+                      ? ' aktivitet'
+                      : ' aktiviteter'} som aflyst?',
               confirmButtonText: 'Bekræft',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/accept.png')),
@@ -252,9 +254,11 @@ class WeekplanScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return GirafConfirmDialog(
               title: 'Genoptag',
-              description: 'Vil du Genoptage ' +
+              description: 'Vil du genoptage ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  ' aktivitet(er)',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
+                      ? ' aktivitet'
+                      : ' aktiviteter'}?',
               confirmButtonText: 'Genoptag',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/undo.png')),
@@ -286,7 +290,9 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Slet aktiviteter',
               description: 'Vil du slette ' +
                   _weekplanBloc.getNumberOfMarkedActivities().toString() +
-                  ' aktivitet(er)',
+                  '${_weekplanBloc.getNumberOfMarkedActivities() == 1
+                      ? ' aktivitet'
+                      : ' aktiviteter'}?',
               confirmButtonText: 'Slet',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/delete.png')),

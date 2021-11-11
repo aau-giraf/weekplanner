@@ -23,7 +23,11 @@ class UploadImageFromPhone extends StatelessWidget {
   di.getDependency<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
+
+  ///Variable representing the screen height
   dynamic screenHeight;
+
+  ///Variable representing the screen width
   dynamic screenWidth;
 
   @override
@@ -78,7 +82,7 @@ class UploadImageFromPhone extends StatelessWidget {
                       onChanged: (String newValue) {
                         _uploadFromGallery.setAccessLevel(newValue);
                       },
-                      items: <String>['Offentlig', 'Privat']
+                      items: <String>['Institution', 'Privat']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
