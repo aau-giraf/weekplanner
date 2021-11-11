@@ -1,5 +1,7 @@
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/api/user_api.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -12,15 +14,18 @@ class MockAccountApi extends Mock implements AccountApi {
     ///Returns true to mark the the user exists
    return Stream<bool>.value(true);
   }
+}
 
-  @override Stream<String> role(String username){
+///A mock of the user api to use in the tests
+class MockUserApi extends Mock implements UserApi {
+  @override Stream<int> role(String username){
     ///Returns a role to check that authenticate works
     if (username.compareTo('Graatand') == 0){
-      return Stream<String>.value('Guardian');
+      return Stream<int>.value(Role.Guardian.index);
     } else if (username.compareTo('Chris') == 0){
-      return Stream<String>.value('Trustee');
+      return Stream<int>.value(Role.Trustee.index);
     } else if (username.compareTo('Janne') == 0){
-      return Stream<String>.value('Citizen');
+      return Stream<int>.value(Role.Citizen.index);
     }
     return null;
   }
@@ -33,14 +38,16 @@ void main() {
     _api = Api('any');
     authBloc = AuthBloc(_api);
     _api.account = MockAccountApi();
-
+    _api.user = MockUserApi();
   });
+
   test('Check if the mode defaults to guardian', async((DoneFn done) {
     authBloc.mode.listen((WeekplanMode mode) {
       expect(mode, WeekplanMode.guardian);
       done();
     });
   }));
+
   test('Test if mode is changed to citizen when setMode is called with citizen',
       async((DoneFn done) {
         authBloc.mode.skip(1).listen((WeekplanMode mode) {
