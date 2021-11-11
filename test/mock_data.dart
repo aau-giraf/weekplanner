@@ -255,11 +255,6 @@ class MockAccountApi extends Mock implements AccountApi {
   Stream<bool> login(String username, String password) {
     return Stream<bool>.value(true);
   }
-
-  @override
-  Stream<String> role(String username) {
-    return Stream<String>.value('guardian');
-  }
 }
 
 class MockUserApi extends Mock implements UserApi {
@@ -277,6 +272,11 @@ class MockUserApi extends Mock implements UserApi {
       displayName: 'Kurt',
       username: 'SpaceLord69',
     ));
+  }
+
+  @override
+  Stream<int> role(String username) {
+    return Stream<int>.value(Role.Guardian.index);
   }
 
   @override
