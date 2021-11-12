@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -48,19 +49,20 @@ class AuthBloc extends BlocBase {
       // If there is a successful login, remove the loading spinner,
       // and push the status to the stream
       if (status) {
-        _loggedIn.add(status);
-        loggedInUsername = username;
-        final String role = await _api.account.role(username).first;
-        ///sets the mode according to the role the user has
-        if (role.compareTo('Guardian') == 0) {
-        setMode(WeekplanMode.guardian);
-        }
-        else if (role.compareTo('Trustee') == 0) {
-          setMode(WeekplanMode.trustee);
-        }
-        else if (role.compareTo('Citizen') == 0) {
-          setMode(WeekplanMode.citizen);
-        }
+        // Get the role of a specific user
+        _api.user.role(username).listen((int role) {
+          if (role == Role.Guardian.index) {
+            setMode(WeekplanMode.guardian);
+          }
+          else if(role == Role.Trustee.index) {
+            setMode(WeekplanMode.trustee);
+          }
+          else {
+            setMode(WeekplanMode.citizen);
+          }
+          _loggedIn.add(status);
+          loggedInUsername = username;
+        });
       }
       completer.complete();
     }).onError((Object error){
@@ -76,10 +78,22 @@ class AuthBloc extends BlocBase {
     final Completer<void> completer = Completer<void>();
     _api.account.login(username, password).listen((bool status) {
       if (status) {
+        // Get the role of a specific user
+        _api.user.role(username).listen((int role) {
+          if (role == Role.Guardian.index) {
+            setMode(WeekplanMode.guardian);
+          }
+          else if(role == Role.Trustee.index) {
+            setMode(WeekplanMode.trustee);
+          }
+          else {
+            setMode(WeekplanMode.citizen);
+          }
           _loginAttempt.add(status);
-          setMode(WeekplanMode.guardian);
-        }
-      completer.complete();
+        });
+      }
+
+    completer.complete();
     }).onError((Object error) {
       completer.completeError(error);
     } );
