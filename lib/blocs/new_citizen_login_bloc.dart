@@ -24,7 +24,10 @@ class NewCitizenLoginBloc extends BlocBase{
 
   final Api _api;
 
+  ///Stream listening for pictograms from server
   Stream <List<PictogramModel>> get pictograms => _pictograms.stream;
+
+  ///Stream listening for pictograms to input in login field
   Stream <List<PictogramModel>> get selectedPictograms => _selectedPictograms.stream;
 
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
@@ -49,6 +52,10 @@ class NewCitizenLoginBloc extends BlocBase{
   ///Login list
   List<PictogramModel> loginList = [];
 
+  ///Initializes a search for pictograms from the server w
+  /// Uses a given search query
+  //TODO(kristnaKris): should have its own api call to specific pictograms specified for login
+  /// The results are published in [pictograms].
   void getPictograms (int size){
 
     loadingPictograms = true;
@@ -78,12 +85,16 @@ class NewCitizenLoginBloc extends BlocBase{
     });
   }
 
+  ///Updates the loginList and adds it to the stream
+  ///Removes the current element from [loginList] at the given [index]
+  ///Adds the updated loginList to the [_selectedPictograms] stream
   void update (PictogramModel pictogram, int index){
     loginList.removeAt(index);
     loginList.insert(index, pictogram);
     _selectedPictograms.add(loginList);
   }
 
+  ///finds the first null element of the loginList
   int getNextNull (){
     int index = loginList.indexOf(null);
     return index;

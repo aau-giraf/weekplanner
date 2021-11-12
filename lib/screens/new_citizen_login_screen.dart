@@ -104,6 +104,8 @@ class NewCitizenLoginScreen extends StatelessWidget {
     );
   }
 
+  ///Builds the selection of pictograms
+  ///Return a grid of pictograms
   Column buildPictogramSelection
       (BuildContext context, AsyncSnapshot<List<PictogramModel>> snapshot){
     return Column(
@@ -125,6 +127,8 @@ class NewCitizenLoginScreen extends StatelessWidget {
     );
   }
 
+  ///Builds the the login field
+  ///Returns a grid of pictograms or loginFields
   Column buildPictogramInput
       (BuildContext context, AsyncSnapshot<List<PictogramModel>> snapshot) {
     return Column(
@@ -149,6 +153,7 @@ class NewCitizenLoginScreen extends StatelessWidget {
   }
 }
 
+///Loading image to display while awaiting pictograms from api
 Container Loading(){
   return Container(
       height: 80,
