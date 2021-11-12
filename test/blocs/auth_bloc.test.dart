@@ -72,8 +72,7 @@ void main() {
 
   test(
       'Test if the mode is changed to trustee '
-      'when setMode is called with trustee'
-      ,
+      'when setMode is called with trustee',
       async((DoneFn done) {
         authBloc.mode.skip(1).listen((WeekplanMode mode) {
           expect(mode, WeekplanMode.trustee);

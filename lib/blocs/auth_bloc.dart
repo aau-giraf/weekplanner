@@ -78,10 +78,22 @@ class AuthBloc extends BlocBase {
     final Completer<void> completer = Completer<void>();
     _api.account.login(username, password).listen((bool status) {
       if (status) {
+        // Get the role of a specific user
+        _api.user.role(username).listen((int role) {
+          if (role == Role.Guardian.index) {
+            setMode(WeekplanMode.guardian);
+          }
+          else if(role == Role.Trustee.index) {
+            setMode(WeekplanMode.trustee);
+          }
+          else {
+            setMode(WeekplanMode.citizen);
+          }
           _loginAttempt.add(status);
-          setMode(WeekplanMode.guardian);
-        }
-      completer.complete();
+        });
+      }
+
+    completer.complete();
     }).onError((Object error) {
       completer.completeError(error);
     } );
