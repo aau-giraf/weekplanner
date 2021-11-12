@@ -54,39 +54,24 @@ class NewCitizenLoginScreen extends StatelessWidget {
             Padding(
                 padding:
                 const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
-                child: Column(
-                    children: [
-                      GridView.count(
-                          crossAxisCount: 5,
-                          children: List.generate(10, (index) /* TODO replace with input function for generating/fetching pictograms */{
-                            return Center(
-                              child: Text(
-                                'Item $index',
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                            );
-                          })
-                          , shrinkWrap: true),
-                    ]
+                child: StreamBuilder<List<PictogramModel>>(
+                  stream: _citizenLoginBloc.pictograms,
+                  builder: (
+                      BuildContext context,
+                      AsyncSnapshot<List<PictogramModel>> snapshot) =>
+                      buildPictogramSelection(context, snapshot),
                 )
             ),
             Padding(
                 padding:
                 const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
-                child: Column(
-                    children: [
-                      GridView.count(
-                          crossAxisCount: 4,
-                          children: List.generate(4, (index) /* TODO replace with function for generating input field for pictograms */{
-                            return Center(
-                              child: Text(
-                                'Item $index',
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                            );
-                          })
-                          , shrinkWrap: true),
-                    ]
+                child: StreamBuilder<List<PictogramModel>>(
+                  stream: _citizenLoginBloc.selectedPictograms,
+                  initialData: const <PictogramModel> [],
+                  builder: (
+                      BuildContext context,
+                      AsyncSnapshot<List<PictogramModel>> snapshot) =>
+                      buildPictogramInput(context, snapshot),
                 )
             ),
             Row(
@@ -118,4 +103,58 @@ class NewCitizenLoginScreen extends StatelessWidget {
         )
     );
   }
+
+  Column buildPictogramSelection
+      (BuildContext context, AsyncSnapshot<List<PictogramModel>> snapshot){
+    return Column(
+        children: [
+          GridView.count(
+              crossAxisCount: 5,
+              children: List.generate(5, (index) =>
+              _citizenLoginBloc.loadingPictograms == false ?
+              PictogramImage(
+                  pictogram: snapshot.data.elementAt(index),
+                  onPressed: () =>
+                      _citizenLoginBloc.update(snapshot.data.elementAt(index),
+                          _citizenLoginBloc.getNextNull())
+              )
+                  : Loading()
+              ), shrinkWrap: true
+          ),
+        ]
+    );
+  }
+
+  Column buildPictogramInput
+      (BuildContext context, AsyncSnapshot<List<PictogramModel>> snapshot) {
+    return Column(
+        children: [
+          GridView.count(
+              crossAxisCount: _citizenLoginBloc.loginSize,
+              children: List.generate(_citizenLoginBloc.loginSize, (index) =>
+              _citizenLoginBloc.loadingPictograms == false
+                  && snapshot.data.elementAt(index) != null  ?
+              PictogramImage(
+                  pictogram: snapshot.data.elementAt(index),
+                  onPressed: () => _citizenLoginBloc.update(null, index)
+              )
+                  : Center(
+                child: Text(
+                  'Login field $index',
+                  style: Theme.of(context).textTheme.headline5,),
+              )
+              ), shrinkWrap: true),
+        ]
+    );
+  }
 }
+
+Container Loading(){
+  return Container(
+      height: 80,
+      child: const Center(
+          child: CircularProgressIndicator()
+      )
+  );
+}
+
