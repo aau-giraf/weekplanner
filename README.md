@@ -24,4 +24,5 @@ GNU GENERAL PUBLIC LICENSE V3
 Copyright [2020] [Aalborg University]
 
 ## Workflow badges
-![Weekplanner dev status](https://github.com/aau-giraf/weekplanner/.github/workflows/main.yml/bagde.svg?branch=develop)
+[![Weekplanner dev status](https://github.com/aau-giraf/weekplanner/workflows/CI/bagde.svg)]
+(https://github.com/aau-giraf/weekplanner/actions)
