@@ -9,7 +9,7 @@ env:
 
 jobs:
   Android:
-    name: Android on ${{ matrix.os }}
+    name: Flutter on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
