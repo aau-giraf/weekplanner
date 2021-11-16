@@ -24,6 +24,4 @@ GNU GENERAL PUBLIC LICENSE V3
 Copyright [2020] [Aalborg University]
 
 ## Workflow badges
-Dev - [![Weekplanner dev Status](https://github.com/aau-giraf/weekplanner/workflows/CI/badge.svg?branch=develop)](https://github.com/aau-giraf/weekplanner/actions)
-
-Dev - [![Weekplanner dev Status](https://github.com/aau-giraf/weekplanner/workflows/Flutter%20Android%20and%20iOS%20verification/badge.svg?branch=develop)](https://github.com/aau-giraf/weekplanner/actions)
+Dev - [![Weekplanner dev Status](https://github.com/aau-giraf/weekplanner/workflows/Flutter%20verification/badge.svg?branch=develop)](https://github.com/aau-giraf/weekplanner/actions)
