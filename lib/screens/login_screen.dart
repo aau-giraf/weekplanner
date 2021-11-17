@@ -48,7 +48,10 @@ class LoginScreenState extends State<LoginScreen> {
       .then((dynamic result){
         authBloc.loggedIn.listen((bool snapshot) {
           loginStatus = snapshot;
-          if (snapshot && !_popCalled) {
+          if (!snapshot) {
+            return;
+          }
+          if (!_popCalled) {
             // Pop the loading spinner
             Routes.pop(context);
             _popCalled = true;
