@@ -16,7 +16,7 @@ class MockAccountApi extends Mock implements AccountApi {
   }
 }
 
-///A mock of the account api to use in the tests
+///A mock of the user api to use in the tests
 class MockUserApi extends Mock implements UserApi {
   @override Stream<int> role(String username){
     ///Returns a role to check that authenticate works
