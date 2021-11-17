@@ -50,7 +50,7 @@ class AuthBloc extends BlocBase {
       // and push the status to the stream
       if (status) {
         // Get the role of a specific user
-        _api.user.role(username).listen((int role) {
+        _api.user.role(username).listen((int role) async {
           if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
           }
@@ -62,9 +62,11 @@ class AuthBloc extends BlocBase {
           }
           _loggedIn.add(status);
           loggedInUsername = username;
+          completer.complete();
+        }).onError((Object error) {
+          completer.completeError(error);
         });
       }
-      completer.complete();
     }).onError((Object error){
       completer.completeError(error);
     });
@@ -76,10 +78,15 @@ class AuthBloc extends BlocBase {
   /// Authenticates the user only by password when signing-in from PopUp.
   Future<void> authenticateFromPopUp(String username, String password) async {
     final Completer<void> completer = Completer<void>();
-    _api.account.login(username, password).listen((bool status) {
+    //Is async because otherwise the await for the role function cannot return
+    //the string.
+    _api.account.login(username, password).listen((bool status) async {
+      // Set the status
+      // If there is a successful login, remove the loading spinner,
+      // and push the status to the stream
       if (status) {
         // Get the role of a specific user
-        _api.user.role(username).listen((int role) {
+        _api.user.role(username).listen((int role) async {
           if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
           }
@@ -90,13 +97,15 @@ class AuthBloc extends BlocBase {
             setMode(WeekplanMode.citizen);
           }
           _loginAttempt.add(status);
+          completer.complete();
+        }).onError((Object error) {
+          completer.completeError(error);
         });
       }
-
-    completer.complete();
     }).onError((Object error) {
       completer.completeError(error);
-    } );
+    });
+
     Future.wait(<Future<void>>[completer.future]);
     return completer.future;
   }
@@ -124,6 +133,7 @@ class AuthBloc extends BlocBase {
       _loggedIn.add(false);
     });
   }
+
   /// Updates the mode of the weekplan
   void setMode(WeekplanMode mode) {
     _mode.add(mode);
