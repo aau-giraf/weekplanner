@@ -11,7 +11,7 @@ class NewCitizenLoginBloc extends BlocBase{
 
   ///Constructor for the bloc
   NewCitizenLoginBloc(this._api){
-    this.getPictograms(20);
+    this.getPictograms(100);
     for (int i = 0; i < loginSize; i++ ){
       loginList.add(null);
     }

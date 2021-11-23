@@ -111,8 +111,8 @@ class NewCitizenLoginScreen extends StatelessWidget {
     return Column(
         children: [
           GridView.count(
-              crossAxisCount: 5,
-              children: List.generate(5, (index) =>
+              crossAxisCount: 6,
+              children: List.generate(24, (index) =>
               _citizenLoginBloc.loadingPictograms == false ?
               PictogramImage(
                   pictogram: snapshot.data.elementAt(index),
