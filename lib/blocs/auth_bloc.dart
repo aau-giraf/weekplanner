@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:weekplanner/widgets/no_connection_dialog.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -51,6 +53,7 @@ class AuthBloc extends BlocBase {
       if (status) {
         // Get the role of a specific user
         _api.user.role(username).listen((int role) async {
+
           if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
           }
@@ -60,6 +63,7 @@ class AuthBloc extends BlocBase {
           else {
             setMode(WeekplanMode.citizen);
           }
+
           _loggedIn.add(status);
           loggedInUsername = username;
           completer.complete();
