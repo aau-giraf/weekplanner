@@ -22,7 +22,6 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
-  environment.setFile('assets/environments.dev.json').whenComplete(() {
     _runApp();
   });
 }
@@ -32,7 +31,9 @@ bool lastState = false;
 
 /// Stores if this is first time,
 /// since this fixes a bug with logging in first time
-bool first = true;
+bool firstTimeLogIn = true;
+
+
 void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
@@ -43,14 +44,21 @@ void _runApp() {
           stream: di
               .getDependency<AuthBloc>()
               .loggedIn
-              .where((bool currentState) => lastState != currentState || first),
+              .where((bool currentState) =>
+                      lastState != currentState || firstTimeLogIn),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             lastState = snapshot.data;
-            first = false;
-            _api.connectivity.stream.listen((dynamic event) {
-              print("hesten testen læsden");
-              noConnectionDialog(context);
-            });
+            //To make sure we only listen to the stream once we take advantage
+            // of firstTimeLogin bool value
+            if(firstTimeLogIn== true){
+              _api.connectivity.connectivityStream.listen((dynamic event) {
+                print(event);
+                if(event == false){
+                  lostConnectionDialog(context);
+                }
+              });
+            }
+            firstTimeLogIn = false;
             if (snapshot.data) {
               // In case logged in show ChooseCitizenScreen
               return ChooseCitizenScreen();
@@ -62,7 +70,7 @@ void _runApp() {
           })));
 
   }
-void noConnectionDialog(BuildContext context){
+void lostConnectionDialog(BuildContext context){
   showDialog<Center>(
       context: context,
       builder: (BuildContext context) {
