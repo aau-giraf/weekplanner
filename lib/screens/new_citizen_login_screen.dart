@@ -17,12 +17,12 @@ class NewCitizenLoginScreen extends StatelessWidget {
 
   /// Constructor for NewCitizenLoginScreen()
   NewCitizenLoginScreen(this._citizenBloc)
-      : _citizenLoginBloc = di.getDependency<NewCitizenLoginBloc>();
+      : _citizenLoginBloc = di.getDependency<LoginPictogramBloc>();
 
 
 
   final ApiErrorTranslater _translator = ApiErrorTranslater();
-  final NewCitizenLoginBloc _citizenLoginBloc;
+  final LoginPictogramBloc _citizenLoginBloc;
   final NewCitizenBloc _citizenBloc;
 
   @override

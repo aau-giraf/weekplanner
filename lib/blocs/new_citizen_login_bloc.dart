@@ -7,10 +7,10 @@ import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 
 ///Bloc for the creation of a citizens password
-class NewCitizenLoginBloc extends BlocBase{
+class LoginPictogramBloc extends BlocBase{
 
   ///Constructor for the bloc
-  NewCitizenLoginBloc(this._api){
+  LoginPictogramBloc(this._api){
     this.getPictograms(100);
     for (int i = 0; i < loginSize; i++ ){
       loginList.add(null);
