@@ -21,7 +21,7 @@ import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
-import 'blocs/new_citizen_login_bloc.dart';
+import 'blocs/login_pictogram_bloc.dart';
 
 /// Bootstrap the project
 class Bootstrap {
@@ -70,8 +70,8 @@ class Bootstrap {
       return NewCitizenBloc(i.getDependency<Api>());
     });
 
-    di.registerSingleton<NewCitizenLoginBloc>((Injector i) {
-      return NewCitizenLoginBloc(i.getDependency<Api>());
+    di.registerSingleton<LoginPictogramBloc>((Injector i) {
+      return LoginPictogramBloc(i.getDependency<Api>());
     });
 
     di.registerDependency<EditWeekplanBloc>((Injector i) {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
-import 'package:weekplanner/blocs/new_citizen_login_bloc.dart';
+import 'package:weekplanner/blocs/login_pictogram_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
