@@ -95,7 +95,7 @@ class UploadFromGalleryBloc extends BlocBase {
     _isUploading.add(true);
     return _api.pictogram
         .create(PictogramModel(
-      accessLevel: _accessLevel,
+      accessLevel: AccessLevel.PRIVATE,
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {

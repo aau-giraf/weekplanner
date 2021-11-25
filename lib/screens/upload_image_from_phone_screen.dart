@@ -71,27 +71,6 @@ class UploadImageFromPhone extends StatelessWidget {
                         borderRadius: BorderRadius.circular(50))),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 20),
-              child: StreamBuilder<String>(
-                  stream: _uploadFromGallery.accessLevel,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    return DropdownButton<String>(
-                      value: snapshot.data,
-                      onChanged: (String newValue) {
-                        _uploadFromGallery.setAccessLevel(newValue);
-                      },
-                      items: <String>['Institution', 'Privat']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    );
-                  }),
-            ),
           ],
         ),
         Container(
@@ -194,6 +173,8 @@ class UploadImageFromPhone extends StatelessWidget {
   Widget _displayImage(File image) {
     return Container(
       child: Image.file(image),
+      height: screenHeight / 2,
+      width: screenWidth / 2,
       decoration: BoxDecoration(
         borderRadius: _imageBorder,
       ),
