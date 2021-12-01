@@ -17,11 +17,19 @@ class LoginPictogramBloc extends BlocBase {
     }
   }
 
+  /// Empty char to satisfy query
+  static const String query = '';
+  /// First page as static
+  static const int page = 1;
+
+  final Api _api;
+
   ///Stream listening for pictograms from server
   Stream <List<PictogramModel>> get pictograms => _pictograms.stream;
 
   ///Stream listening for pictograms to input in login field
   Stream <List<PictogramModel>> get selectedPictograms => _selectedPictograms.stream;
+
 
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
   rx_dart.BehaviorSubject<List<PictogramModel>>();
