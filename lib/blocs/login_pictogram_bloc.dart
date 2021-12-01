@@ -17,11 +17,17 @@ class LoginPictogramBloc extends BlocBase {
     }
   }
 
+  ///Stream listening for pictograms from server
+  Stream <List<PictogramModel>> get pictograms => _pictograms.stream;
+
+  ///Stream listening for pictograms to input in login field
+  Stream <List<PictogramModel>> get selectedPictograms => _selectedPictograms.stream;
+
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
-      rx_dart.BehaviorSubject<List<PictogramModel>>();
+  rx_dart.BehaviorSubject<List<PictogramModel>>();
 
   final rx_dart.BehaviorSubject<List<PictogramModel>> _selectedPictograms =
-      rx_dart.BehaviorSubject<List<PictogramModel>>();
+  rx_dart.BehaviorSubject<List<PictogramModel>>();
 
   ///Async timer
   Timer _debounceTimer;
