@@ -10,6 +10,7 @@ import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../style/custom_color.dart' as theme;
+import 'citizen_login_screen.dart';
 
 /// Logs the user in
 class LoginScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 
 /// This is the login state
 class LoginScreenState extends State<LoginScreen> {
-  /// AuthBloC used to communicate with API
+  /// AuthBloc used to communicate with API
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -38,57 +39,58 @@ class LoginScreenState extends State<LoginScreen> {
 
   /// This is called when login should be triggered
   void loginAction(BuildContext context) {
-    showLoadingSpinner(context, true);
-    currentContext = context;
-    loginStatus = false;
-    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
-      .then((dynamic result) {
-      StreamSubscription<bool> loginListener;
-         loginListener = authBloc.loggedIn.listen((bool snapshot) {
+      showLoadingSpinner(context, true);
+      currentContext = context;
+      loginStatus = false;
+      authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
+          .then((dynamic result) {
+        StreamSubscription<bool> loginListener;
+        loginListener = authBloc.loggedIn.listen((bool snapshot) {
           loginStatus = snapshot;
           // Return if logging out
-          if (snapshot) {
+          if(snapshot) {
             // Pop the loading spinner
             Routes.pop(context);
           }
+
           // Stop listening for future logins
           loginListener.cancel();
-         });
-    }).catchError((Object error) {
-      if(error is ApiException){
-        creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
-            error.errorKey.toString());
-      }
-      else if(error is SocketException){
-        authBloc.checkInternetConnection().then((bool hasInternetConnection) {
-          if (hasInternetConnection) {
-            // Checking server connection, if true check username/password
-            authBloc.getApiConnection().then((bool hasServerConnection) {
-              if (hasServerConnection) {
-                unknownErrorDialog(error.message);
-              }
-              else{
-                creatingNotifyDialog(
-                    'Der er i øjeblikket'
-                        ' ikke forbindelse til serveren.',
-                    'ServerConnectionError');
-              }
-            }).catchError((Object error){
-             unknownErrorDialog(error.toString());
-            });
-          } else {
-            creatingNotifyDialog(
-                'Der er ingen forbindelse'
-                    ' til internettet.',
-                'NoConnectionToInternet');
-          }
         });
-      }
-      else {
-        unknownErrorDialog('UnknownError');
-      }
-    });
-  }
+      }).catchError((Object error) {
+        if(error is ApiException){
+          creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
+              error.errorKey.toString());
+        }
+        else if(error is SocketException){
+          authBloc.checkInternetConnection().then((bool hasInternetConnection) {
+            if (hasInternetConnection) {
+              // Checking server connection, if true check username/password
+              authBloc.getApiConnection().then((bool hasServerConnection) {
+                if (hasServerConnection) {
+                  unknownErrorDialog(error.message);
+                }
+                else{
+                  creatingNotifyDialog(
+                      'Der er i øjeblikket'
+                          ' ikke forbindelse til serveren.',
+                      'ServerConnectionError');
+                }
+              }).catchError((Object error){
+                unknownErrorDialog(error.toString());
+              });
+            } else {
+              creatingNotifyDialog(
+                  'Der er ingen forbindelse'
+                      ' til internettet.',
+                  'NoConnectionToInternet');
+            }
+          });
+        }
+        else {
+          unknownErrorDialog('UnknownError');
+        }
+      });
+    }
   /// Function that creates the notify dialog,
   /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
@@ -120,7 +122,7 @@ class LoginScreenState extends State<LoginScreen> {
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
-    
+
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
@@ -152,7 +154,7 @@ class LoginScreenState extends State<LoginScreen> {
                             border: Border.all(
                                 color: theme.GirafColors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
                         child: TextField(
@@ -177,7 +179,7 @@ class LoginScreenState extends State<LoginScreen> {
                             border: Border.all(
                                 color: theme.GirafColors.grey, width: 1),
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
+                            const BorderRadius.all(Radius.circular(20.0)),
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
@@ -218,29 +220,49 @@ class LoginScreenState extends State<LoginScreen> {
                     // Autologin button, only used for debugging
                     environment.getVar<bool>('DEBUG')
                         ? Container(
-                            child: Transform.scale(
-                              scale: 1.2,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: const Text(
-                                  'Auto-Login',
-                                  key: Key('AutoLoginKey'),
-                                  style:
-                                      TextStyle(color: theme.GirafColors.white),
-                                ),
-                                onPressed: () {
-                                  usernameCtrl.text =
-                                      environment.getVar<String>('USERNAME');
-                                  passwordCtrl.text =
-                                      environment.getVar<String>('PASSWORD');
-                                  loginAction(context);
-                                },
-                                color: theme.GirafColors.loginButtonColor,
-                              ),
-                            ),
-                          )
+                      child: Transform.scale(
+                        scale: 1.3,
+                        child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: const Text(
+                            'Auto-Login',
+                            key: Key('AutoLoginKey'),
+                            style:
+                            TextStyle(color: theme.GirafColors.white),
+                          ),
+                          onPressed: () {
+                            usernameCtrl.text =
+                                environment.getVar<String>('USERNAME');
+                            passwordCtrl.text =
+                                environment.getVar<String>('PASSWORD');
+                            loginAction(context);
+                          },
+                          color: theme.GirafColors.loginButtonColor,
+                        ),
+                      ),
+                    )
                         : Container(),
+                    RaisedButton(
+                      key: const Key('LoginBtnKey'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: const Text(
+                        'Pictogram login',
+                        style: TextStyle(color: theme.GirafColors.white),
+                      ),
+                      onPressed: () {
+                        // push the pictogram login screen
+                        Routes.push(context, CitizenLoginScreen(authBloc)).then((result) => {
+                          if(result != null){
+                            usernameCtrl.text = 'citizenTest',
+                            passwordCtrl.text = result,
+                            loginAction(context),
+                          }
+                        });
+                      },
+                      color: theme.GirafColors.loginButtonColor,
+                    ),
                   ],
                 ),
               )

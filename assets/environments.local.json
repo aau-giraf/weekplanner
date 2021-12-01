@@ -1,6 +1,6 @@
 {
-  "SERVER_HOST": "http://10.0.2.2:5000",
+  "SERVER_HOST": "https://localhost:1690",
   "DEBUG": true,
-  "USERNAME": "Graatand",
+  "USERNAME": "Guardian-dev",
   "PASSWORD": "password"
 }

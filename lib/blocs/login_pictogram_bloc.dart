@@ -6,19 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 
-///Bloc for the creation of a citizens password
+///Bloc for the control of a pictograms for the citizens password
 class LoginPictogramBloc extends BlocBase{
 
   ///Constructor for the bloc
   LoginPictogramBloc(this._api){
     this.getPictograms(100);
+    loginList = [];
     for (int i = 0; i < loginSize; i++ ){
       loginList.add(null);
     }
   }
 
-  /// Random char to satisfy query
-  static const String query = 'd';
+  /// Empty string to satisfy query
+  static const String query = '';
   /// First page as static
   static const int page = 1;
 
@@ -52,7 +53,7 @@ class LoginPictogramBloc extends BlocBase{
   ///Login list
   List<PictogramModel> loginList = [];
 
-  ///Initializes a search for pictograms from the server w
+  ///Initializes a search for pictograms from the server
   /// Uses a given search query
   //TODO(kristnaKris): should have its own api call to specific pictograms specified for login
   /// The results are published in [pictograms].
@@ -94,12 +95,30 @@ class LoginPictogramBloc extends BlocBase{
     _selectedPictograms.add(loginList);
   }
 
+  ///Returns true if there is a null in the loginList
+  bool nullInLogin (){
+    bool foundNull = false;
+    for(int i = 0; i < loginSize; i++){
+      if(loginList[i] == null){
+        foundNull = true;
+        return foundNull;
+      }
+    }
+    return foundNull;
+  }
+
   ///finds the first null element of the loginList
   int getNextNull (){
     int index = loginList.indexOf(null);
     return index;
   }
 
+  void reset(){
+    loginList.clear();
+    for (int i = 0; i < loginSize; i++ ){
+      loginList.add(null);
+    }
+  }
 
   @override
   void dispose() {
