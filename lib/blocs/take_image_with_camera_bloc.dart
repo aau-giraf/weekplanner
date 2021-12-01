@@ -36,8 +36,6 @@ class TakePictureWithCameraBloc extends BlocBase {
   final rx_dart.BehaviorSubject<bool> _isUploading =
   rx_dart.BehaviorSubject<bool>.seeded(false);
 
-  AccessLevel _accessLevel = AccessLevel.PUBLIC;
-
   /// pushes an imagePicker screen, then sets the pictogram image,
   /// to the selected image from the gallery
   void takePictureWithCamera() {
@@ -56,21 +54,6 @@ class TakePictureWithCameraBloc extends BlocBase {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
-    }
-  }
-
-  /// set accessLevel for the pictogram
-  void setAccessLevel(String access) {
-    _accessString.add(access);
-    switch (access) {
-      case 'Beskyttet':
-        _accessLevel = AccessLevel.PROTECTED;
-        break;
-      case 'Privat':
-        _accessLevel = AccessLevel.PRIVATE;
-        break;
-      default:
-        _accessLevel = AccessLevel.PUBLIC;
     }
   }
 
@@ -95,7 +78,7 @@ class TakePictureWithCameraBloc extends BlocBase {
     _isUploading.add(true);
     return _api.pictogram
         .create(PictogramModel(
-      accessLevel: _accessLevel,
+      accessLevel: AccessLevel.PRIVATE,
       title: _pictogramName,
     ))
         .flatMap((PictogramModel pictogram) {
