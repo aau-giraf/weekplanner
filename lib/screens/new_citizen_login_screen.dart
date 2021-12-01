@@ -64,7 +64,7 @@ class NewCitizenLoginScreen extends StatelessWidget {
             ),
             Padding(
                 padding:
-                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
+                const EdgeInsets.only(left: 16, top: 26, right: 16, bottom: 2.5),
                 child: StreamBuilder<List<PictogramModel>>(
                   stream: _citizenLoginBloc.selectedPictograms,
                   initialData: const <PictogramModel> [],
@@ -111,8 +111,8 @@ class NewCitizenLoginScreen extends StatelessWidget {
     return Column(
         children: [
           GridView.count(
-              crossAxisCount: 6,
-              children: List.generate(24, (index) =>
+              crossAxisCount: 8,
+              children: List.generate(40, (index) =>
               _citizenLoginBloc.loadingPictograms == false ?
               PictogramImage(
                   pictogram: snapshot.data.elementAt(index),
@@ -133,21 +133,40 @@ class NewCitizenLoginScreen extends StatelessWidget {
       (BuildContext context, AsyncSnapshot<List<PictogramModel>> snapshot) {
     return Column(
         children: [
-          GridView.count(
-              crossAxisCount: _citizenLoginBloc.loginSize,
-              children: List.generate(_citizenLoginBloc.loginSize, (index) =>
-              _citizenLoginBloc.loadingPictograms == false
-                  && snapshot.data.elementAt(index) != null  ?
-              PictogramImage(
-                  pictogram: snapshot.data.elementAt(index),
-                  onPressed: () => _citizenLoginBloc.update(null, index)
-              )
-                  : Center(
-                child: Text(
-                  'Login field $index',
-                  style: Theme.of(context).textTheme.headline5,),
-              )
-              ), shrinkWrap: true),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.black26
+            ),
+            child:GridView.count(
+                crossAxisCount: _citizenLoginBloc.loginSize,
+                children: List.generate(_citizenLoginBloc.loginSize, (index) =>
+                _citizenLoginBloc.loadingPictograms == false
+                    && snapshot.data.elementAt(index) != null  ?
+                Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(40),
+                      child: PictogramImage(
+                          pictogram: snapshot.data.elementAt(index),
+                          onPressed: () => _citizenLoginBloc.update(null, index)
+                      ),
+                    )
+                )
+                    : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.white70
+                      ),
+                    ),
+                  ),
+                )
+                ), shrinkWrap: true),
+          )
         ]
     );
   }

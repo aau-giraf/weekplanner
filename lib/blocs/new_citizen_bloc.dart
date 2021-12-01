@@ -73,6 +73,8 @@ class NewCitizenBloc extends BlocBase {
         role: Role.Citizen
     );
   }
+
+
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>
       rx_dart.Rx.combineLatest4<bool, bool, bool, bool, bool>(
