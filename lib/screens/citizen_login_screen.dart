@@ -26,7 +26,6 @@ class CitizenLoginScreen extends StatelessWidget {
   final AuthBloc _authBloc;
   final LoginPictogramBloc _loginPictogramBloc = di.getDependency<LoginPictogramBloc>();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,13 +90,10 @@ class CitizenLoginScreen extends StatelessWidget {
                       icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                       text: 'Login',
                       isEnabled: true,
+                      isEnabledStream: true as Stream<bool>,//TODO should implement stream
                       onPressed: () {
                         if(_loginPictogramBloc.nullInLogin() != true){
-                          String stringArray = '';
-                          for(int i = 0; i < _loginPictogramBloc.loginSize; i++){
-                            stringArray = stringArray + (_loginPictogramBloc.loginList[i].id).toString();
-                          }
-                          Routes.pop(context, stringArray);
+                          Routes.pop(context, _loginPictogramBloc.loginString);
                         }
                       },
                     ),
@@ -148,9 +144,15 @@ class CitizenLoginScreen extends StatelessWidget {
                   onPressed: () => _loginPictogramBloc.update(null, index)
               )
                   : Center(
-                child: Text(
-                  'Login field $index',
-                  style: Theme.of(context).textTheme.headline5,),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.white70
+                    ),
+                  ),
+                ),
               )
               ), shrinkWrap: true),
         ]

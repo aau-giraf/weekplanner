@@ -124,8 +124,13 @@ class NewCitizenScreen extends StatelessWidget {
                   isEnabledStream: _bloc.allInputsAreValidStream,
                   onPressed: () {
                     Routes.push(context, NewCitizenLoginScreen(_bloc))
-                        .then((_) => Routes.pop(context))
-                        .then((_) => _bloc.resetBloc());
+                        .then((response) => {
+                          _bloc.resetBloc(),
+                          if(response != null){
+                            Routes.pop(context, response)
+                          }
+                        }
+                    );
                   },
                 ),
               ),

@@ -86,11 +86,15 @@ class NewCitizenLoginScreen extends StatelessWidget {
                       isEnabled: false,
                       isEnabledStream: _citizenBloc.allInputsAreValidStream,
                       onPressed: () {
-                        _citizenBloc.createCitizen()
-                            .listen((GirafUserModel response) {
-                          if (response != null) {
-                            Routes.pop<GirafUserModel>(context, response);
-                            _citizenBloc.resetBloc();
+                        _citizenBloc.createTrustee()
+                            .listen((GirafUserModel result) {
+                          if (result != null) {
+                            _citizenBloc.createCitizen(_citizenLoginBloc.loginString)
+                                .listen((GirafUserModel response) {
+                              Routes.pop<GirafUserModel>(context, response);
+                              _citizenBloc.resetBloc();
+                            }).onError((Object error) =>
+                                _translator.catchApiError(error, context));;
                           }
                         }).onError((Object error) =>
                             _translator.catchApiError(error, context));
@@ -118,7 +122,7 @@ class NewCitizenLoginScreen extends StatelessWidget {
                   pictogram: snapshot.data.elementAt(index),
                   onPressed: () =>
                       _citizenLoginBloc.update(snapshot.data.elementAt(index),
-                          _citizenLoginBloc.getNextNull())
+                      _citizenLoginBloc.getNextNull())
               )
                   : Loading()
               ), shrinkWrap: true

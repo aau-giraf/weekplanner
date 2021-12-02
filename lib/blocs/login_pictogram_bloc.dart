@@ -30,6 +30,9 @@ class LoginPictogramBloc extends BlocBase {
   ///Stream listening for pictograms to input in login field
   Stream <List<PictogramModel>> get selectedPictograms => _selectedPictograms.stream;
 
+  /// Gives information about whether pictogram login is valid.
+  //TODO Stream<bool> get LoginIsValidStream =>
+
 
   final rx_dart.BehaviorSubject<List<PictogramModel>> _pictograms =
   rx_dart.BehaviorSubject<List<PictogramModel>>();
@@ -49,6 +52,8 @@ class LoginPictogramBloc extends BlocBase {
 
   ///Size of login field
   final int loginSize = 4;
+
+  String loginString = '';
 
   ///Login list
   List<PictogramModel> loginList = [];
@@ -91,6 +96,12 @@ class LoginPictogramBloc extends BlocBase {
     loginList.removeAt(index);
     loginList.insert(index, pictogram);
     _selectedPictograms.add(loginList);
+    if(nullInLogin() != true){
+      loginString = '';
+      for(int i = 0; i < loginSize; i++){
+        loginString = loginString + (loginList[i].id).toString();
+      }
+    }
   }
 
   ///Returns true if there is a null in the loginList
