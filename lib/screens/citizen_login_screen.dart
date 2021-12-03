@@ -28,11 +28,27 @@ class CitizenLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return Scaffold(
         appBar: GirafAppBar(
           title: 'Borger login',
         ),
-        body: ListView (
+        body: Container(
+        width: screenSize.width,
+        height: screenSize.height,
+        padding: portrait
+            ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
+            : const EdgeInsets.fromLTRB(200, 0, 200, 8),
+        decoration: const BoxDecoration(
+          // The background of the login-screen
+          image: DecorationImage(
+            image: AssetImage('assets/login_screen_background_image.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: ListView (
           children: <Widget>[
             Padding(
                 padding:
@@ -90,7 +106,7 @@ class CitizenLoginScreen extends StatelessWidget {
                       icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                       text: 'Login',
                       isEnabled: true,
-                      isEnabledStream: true as Stream<bool>,//TODO should implement stream
+                      //isEnabledStream: true as Stream<bool>,//TODO should implement stream
                       onPressed: () {
                         if(_loginPictogramBloc.nullInLogin() != true){
                           Routes.pop(context, _loginPictogramBloc.loginString);
@@ -102,6 +118,7 @@ class CitizenLoginScreen extends StatelessWidget {
             )
           ],
         )
+      )
     );
   }
 
