@@ -9,6 +9,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/login_pictogram_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import '../style/custom_color.dart' as theme;
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import '../di.dart';
@@ -100,18 +101,26 @@ class CitizenLoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: GirafButton(
-                      key: const Key('loginButton'),
-                      icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                      text: 'Login',
-                      isEnabled: true,
-                      //isEnabledStream: true as Stream<bool>,//TODO should implement stream
-                      onPressed: () {
-                        if(_loginPictogramBloc.nullInLogin() != true){
-                          Routes.pop(context, _loginPictogramBloc.loginString);
-                        }
-                      },
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
+                    child: Container(
+                      child: Transform.scale(
+                        scale: 1.5,
+                        child: RaisedButton(
+                          key: const Key('loginButton'),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: theme.GirafColors.white),
+                          ),
+                          onPressed: () {
+                            if(_loginPictogramBloc.nullInLogin() != true){
+                              Routes.pop(context, _loginPictogramBloc.loginString);
+                            }
+                          },
+                          color: theme.GirafColors.loginButtonColor,
+                        ),
+                      ),
                     ),
                   ),
                 ]
