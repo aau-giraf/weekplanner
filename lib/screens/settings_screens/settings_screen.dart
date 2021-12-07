@@ -74,7 +74,7 @@ class SettingsScreen extends StatelessWidget {
                               context, ColorThemeSelectorScreen(user: _user));
                           settingsModel.weekDayColors = result;
                           _settingsBloc.updateSettings(_user.id, settingsModel)
-                              .take(1).listen((SettingsModel settings) {
+                              .listen((_) {
                             _settingsBloc.loadSettings(_user);
                           });
                       },
@@ -89,9 +89,9 @@ class SettingsScreen extends StatelessWidget {
                           if (result != null){
                             settingsModel.completeMark = result;
                             _settingsBloc.updateSettings(
-                                _user.id, settingsModel).
-                            listen((SettingsModel model) {
-                              _settingsBloc.loadSettings(_user);
+                                _user.id, settingsModel)
+                              .listen((_) {
+                                _settingsBloc.loadSettings(_user);
                             });
                           }
                       },
@@ -125,18 +125,19 @@ class SettingsScreen extends StatelessWidget {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Ugeplan', <SettingsSectionItem>[
               SettingsArrowButton(
-                'Antal dage',
-                    () async { final Object result = await Routes.push(
-                        context, NumberOfDaysScreen(_user));
-                    if(result != null) {
-                      settingsModel.nrOfDaysToDisplay = result;
-                      _settingsBloc.updateSettings(
-                          _user.id, settingsModel).listen(
-                              (SettingsModel response) {
-                            _settingsBloc.loadSettings(_user);
-                          });
-                    }
-                              },
+                'Antal dage', () async {
+                  final Object result = await Routes.push(
+                      context, NumberOfDaysScreen(_user));
+                  if(result != null) {
+                    settingsModel.nrOfDaysToDisplay = result;
+                    _settingsBloc.updateSettings(
+                        _user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                      }
+                    );
+                  }
+                },
                 titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
                     ? 'En dag'
                     : settingsModel.nrOfDaysToDisplay == 2
@@ -148,12 +149,9 @@ class SettingsScreen extends StatelessWidget {
               SettingsCheckMarkButton.fromBoolean(
                   settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
                 settingsModel.pictogramText = !settingsModel.pictogramText;
-                _settingsBloc
-                    .updateSettings(_user.id, settingsModel)
-                    .listen((SettingsModel response) {
-                  if (response != null) {
-                    _settingsBloc.loadSettings(_user);
-                  }
+                _settingsBloc.updateSettings(_user.id, settingsModel)
+                    .listen((_) {
+                  _settingsBloc.loadSettings(_user);
                 });
               }),
             ]);
@@ -177,9 +175,8 @@ class SettingsScreen extends StatelessWidget {
                   _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
                 _settingsModel.lockTimerControl =
                 !_settingsModel.lockTimerControl;
-                _settingsBloc
-                    .updateSettings(_user.id, _settingsModel)
-                    .listen((SettingsModel response) {
+                _settingsBloc.updateSettings(_user.id, _settingsModel)
+                    .listen((_) {
                   _settingsBloc.loadSettings(_user);
                 });
               })
@@ -225,24 +222,24 @@ class SettingsScreen extends StatelessWidget {
             final DefaultTimer userTimer = settingsSnapshot.data.defaultTimer;
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Tidsrepræsentation', <SettingsSectionItem>[
-              SettingsArrowButton(
-                'Indstillinger for tidsrepræsentation',
-                    () async { final Object result = await Routes
-                        .push(context, TimeRepresentationScreen(_user));
-                        settingsModel.defaultTimer = result;
-                        _settingsBloc.updateSettings(_user.id, settingsModel)
-                          .listen((SettingsModel response) {
-                            _settingsBloc.loadSettings(_user);
-                          });
-                    },
-                titleTrailing: Image(
-                    width: 50,
-                    height: 50,
-                    image: AssetImage(userTimer == DefaultTimer.PieChart
-                        ? 'assets/timer/piechart_icon.png'
-                        : userTimer == DefaultTimer.Hourglass
-                        ? 'assets/timer/hourglass_icon.png'
-                        : 'assets/timer/countdowntimer_icon.png')),
+              SettingsArrowButton('Indstillinger for tidsrepræsentation',
+                  () async {
+                final Object result = await Routes
+                    .push(context, TimeRepresentationScreen(_user));
+                settingsModel.defaultTimer = result;
+                _settingsBloc.updateSettings(_user.id, settingsModel)
+                  .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                });
+              },
+              titleTrailing: Image(
+                  width: 50,
+                  height: 50,
+                  image: AssetImage(userTimer == DefaultTimer.PieChart
+                      ? 'assets/timer/piechart_icon.png'
+                      : userTimer == DefaultTimer.Hourglass
+                      ? 'assets/timer/hourglass_icon.png'
+                      : 'assets/timer/countdowntimer_icon.png')),
               )
             ]);
           } else {

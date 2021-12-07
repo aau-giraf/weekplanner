@@ -285,9 +285,9 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
-  Stream<SettingsModel> updateSettings(String id, SettingsModel settings) {
+  Stream<bool> updateSettings(String id, SettingsModel settings) {
     _mockSettings = settings;
-    return Stream<SettingsModel>.value(_mockSettings);
+    return Stream<bool>.value(true);
   }
 }
 

@@ -77,7 +77,7 @@ void main() {
     // Mocks the api call to update settings
     when(api.user.updateSettings(any, any)).thenAnswer((Invocation inv) {
       settings = updatedSettings;
-      return Stream<SettingsModel>.value(updatedSettings);
+      return Stream<bool>.value(true);
     });
 
     settingsBloc = SettingsBloc(api);

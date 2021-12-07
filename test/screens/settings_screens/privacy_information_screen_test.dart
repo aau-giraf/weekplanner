@@ -48,7 +48,7 @@ void main() {
         lockTimerControl: false);
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
-      return Stream<SettingsModel>.value(mockSettings);
+      return Stream<bool>.value(true);
     });
 
     di.clearAll();
