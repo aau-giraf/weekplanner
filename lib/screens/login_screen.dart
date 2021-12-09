@@ -256,7 +256,7 @@ class LoginScreenState extends State<LoginScreen> {
                         Routes.push(context, CitizenLoginScreen(authBloc))
                             .then((result) => {
                           if(result != null){
-                            usernameCtrl.text = authBloc.token.toString(),
+                            usernameCtrl.text = 'tempCitizenToken',
                             passwordCtrl.text = result,
                           }
                         }).then((_) => loginAction(context),);

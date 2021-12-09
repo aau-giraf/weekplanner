@@ -88,18 +88,12 @@ class NewCitizenLoginScreen extends StatelessWidget {
                       text: 'Gem borger',
                       isEnabled: true,
                       onPressed: () {
-                        _citizenBloc.createTrustee()
-                            .listen((GirafUserModel result) {
-                          if (result != null) {
-                            _citizenBloc.createCitizen(_citizenLoginBloc.loginString)
+                        _citizenBloc.createCitizen(_citizenLoginBloc.loginString)
                                 .listen((GirafUserModel response) {
                               Routes.pop<GirafUserModel>(context, response);
                               _citizenBloc.resetBloc();
                             }).onError((Object error) =>
-                                _translator.catchApiError(error, context));;
-                          }
-                        }).onError((Object error) =>
-                            _translator.catchApiError(error, context));
+                                _translator.catchApiError(error, context));
                       },
                     ),
                   ),

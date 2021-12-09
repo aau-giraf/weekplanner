@@ -20,7 +20,6 @@ class CitizenLoginScreen extends StatelessWidget {
 
   /// Constructor for CitizenLoginScreen()
   CitizenLoginScreen(this._authBloc){
-    _authBloc.pictogramAuthentication();
     _loginPictogramBloc.reset();
   }
 

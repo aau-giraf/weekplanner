@@ -51,17 +51,6 @@ void main() {
 
   });
 
-  test('Should save a new trustee', async((DoneFn done) {
-    bloc.onUsernameChange.add(user.username);
-    bloc.onPasswordChange.add('1234');
-    bloc.onPasswordVerifyChange.add('1234');
-    bloc.onDisplayNameChange.add(user.displayName);
-    bloc.createTrustee();
-
-    verify(bloc.createTrustee());
-    done();
-  }));
-
   test('Should save a new Citizen', async((DoneFn done) {
     bloc.onUsernameChange.add(user.username);
     String citizenLogin = '1234';

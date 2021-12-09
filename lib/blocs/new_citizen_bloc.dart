@@ -65,11 +65,9 @@ class NewCitizenBloc extends BlocBase {
 
   /// Method called with information about the new citizen.
   Stream<GirafUserModel> createCitizen(String citizenLogin) {
-        String citizenUsername = '';
         //TODO Shall be replaced with a backend generated token
-        citizenUsername = usernameController.value + 'Token';
         return _api.account.register(
-            citizenUsername,
+            usernameController.value,
             citizenLogin,
             displayNameController.value,
             departmentId: _user.department,
@@ -78,7 +76,7 @@ class NewCitizenBloc extends BlocBase {
       }
 
   /// Method called with information about the trustee attached to the citizen.
-  Stream<GirafUserModel> createTrustee() {
+  /*Stream<GirafUserModel> createTrustee() {
     return _api.account.register(
         usernameController.value,
         passwordController.value,
@@ -86,7 +84,7 @@ class NewCitizenBloc extends BlocBase {
         departmentId: _user.department,
         role: Role.Trustee
     );
-  }
+  }*/
 
 
   /// Gives information about whether all inputs are valid.
