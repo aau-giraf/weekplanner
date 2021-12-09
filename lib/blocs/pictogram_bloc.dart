@@ -49,7 +49,7 @@ class PictogramBloc extends BlocBase {
   ScrollController sc = ScrollController();
 
   /// Boolean used to specify if currently fetching pictograms from server.
-  bool loadingPictograms = false;
+  bool  loadingPictograms = false;
 
   /// Boolean used to specify if more pictograms are able to be loaded.
   bool reachedLastPictogram = false;

@@ -16,13 +16,14 @@ import '../routes.dart';
 class NewCitizenLoginScreen extends StatelessWidget {
 
   /// Constructor for NewCitizenLoginScreen()
-  NewCitizenLoginScreen(this._citizenBloc)
-      : _citizenLoginBloc = di.getDependency<LoginPictogramBloc>();
+  NewCitizenLoginScreen(this._citizenBloc){
+    _citizenLoginBloc.reset();
+  }
 
 
 
   final ApiErrorTranslater _translator = ApiErrorTranslater();
-  final LoginPictogramBloc _citizenLoginBloc;
+  final LoginPictogramBloc _citizenLoginBloc= di.getDependency<LoginPictogramBloc>();
   final NewCitizenBloc _citizenBloc;
 
   @override
@@ -64,14 +65,16 @@ class NewCitizenLoginScreen extends StatelessWidget {
             ),
             Padding(
                 padding:
-                const EdgeInsets.only(left: 16, top: 26, right: 16, bottom: 2.5),
+                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
                 child: StreamBuilder<List<PictogramModel>>(
                   stream: _citizenLoginBloc.selectedPictograms,
-                  initialData: const <PictogramModel> [],
+                  initialData: const <PictogramModel> [null, null, null, null],
                   builder: (
                       BuildContext context,
                       AsyncSnapshot<List<PictogramModel>> snapshot) =>
-                      buildPictogramInput(context, snapshot),
+                  snapshot != null ?
+                  buildPictogramInput(context, snapshot) :
+                  const Center(child: CircularProgressIndicator()),
                 )
             ),
             Row(
@@ -83,8 +86,7 @@ class NewCitizenLoginScreen extends StatelessWidget {
                       key: const Key('saveButton'),
                       icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                       text: 'Gem borger',
-                      isEnabled: false,
-                      isEnabledStream: _citizenBloc.allInputsAreValidStream,
+                      isEnabled: true,
                       onPressed: () {
                         _citizenBloc.createTrustee()
                             .listen((GirafUserModel result) {
@@ -146,17 +148,9 @@ class NewCitizenLoginScreen extends StatelessWidget {
                 children: List.generate(_citizenLoginBloc.loginSize, (index) =>
                 _citizenLoginBloc.loadingPictograms == false
                     && snapshot.data.elementAt(index) != null  ?
-                Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: PictogramImage(
-                          pictogram: snapshot.data.elementAt(index),
-                          onPressed: () => _citizenLoginBloc.update(null, index)
-                      ),
-                    )
+                PictogramImage(
+                    pictogram: snapshot.data.elementAt(index),
+                    onPressed: () => _citizenLoginBloc.update(null, index)
                 )
                     : Center(
                   child: Padding(

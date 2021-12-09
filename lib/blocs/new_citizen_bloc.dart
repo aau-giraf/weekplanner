@@ -66,7 +66,8 @@ class NewCitizenBloc extends BlocBase {
   /// Method called with information about the new citizen.
   Stream<GirafUserModel> createCitizen(String citizenLogin) {
         String citizenUsername = '';
-        citizenUsername = usernameController.value + 'token';//TODO To be considered
+        //TODO Shall be replaced with a backend generated token
+        citizenUsername = usernameController.value + 'Token';
         return _api.account.register(
             citizenUsername,
             citizenLogin,

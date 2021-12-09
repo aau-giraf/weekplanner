@@ -34,8 +34,19 @@ class AuthBloc extends BlocBase {
   /// Stream that streams status of last login attemp from popup.
   Stream<bool> get loginAttempt =>_loginAttempt.stream;
 
+  Stream<String> get token => _token.stream;
+
+  final rx_dart.BehaviorSubject<String> _token =
+      rx_dart.BehaviorSubject<String>.seeded('tempCitizenToken');
+
   final rx_dart.BehaviorSubject<bool> _loginAttempt =
   rx_dart.BehaviorSubject<bool>.seeded(false);
+
+  /// Authenticate the fetch of pictograms
+  Future<void> pictogramAuthentication() async {
+    //Grants access to the pictograms through the token
+    _api.account.login(token.toString(), '1111');
+  }
 
   /// Authenticates the user with the given [username] and [password]
   Future<void> authenticate(String username, String password) async {

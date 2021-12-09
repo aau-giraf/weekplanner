@@ -20,6 +20,7 @@ class CitizenLoginScreen extends StatelessWidget {
 
   /// Constructor for CitizenLoginScreen()
   CitizenLoginScreen(this._authBloc){
+    _authBloc.pictogramAuthentication();
     _loginPictogramBloc.reset();
   }
 
@@ -78,9 +79,7 @@ class CitizenLoginScreen extends StatelessWidget {
                   builder: (
                       BuildContext context,
                       AsyncSnapshot<List<PictogramModel>> snapshot) =>
-                        snapshot != null ?
-                        buildPictogramSelection(context, snapshot) :
-                        const Center(child: CircularProgressIndicator()),
+                        buildPictogramSelection(context, snapshot),
                 )
             ),
             Padding(

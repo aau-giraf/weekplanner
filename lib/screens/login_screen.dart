@@ -253,13 +253,13 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: () {
                         // push the pictogram login screen
-                        Routes.push(context, CitizenLoginScreen(authBloc)).then((result) => {
+                        Routes.push(context, CitizenLoginScreen(authBloc))
+                            .then((result) => {
                           if(result != null){
-                            usernameCtrl.text = 'citizenTest',
+                            usernameCtrl.text = authBloc.token.toString(),
                             passwordCtrl.text = result,
-                            loginAction(context),
                           }
-                        });
+                        }).then((_) => loginAction(context),);
                       },
                       color: theme.GirafColors.loginButtonColor,
                     ),
