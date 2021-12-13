@@ -1,3 +1,4 @@
+import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
@@ -6,11 +7,16 @@ import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+
+final Api _api = di.getDependency<Api>();
+
 
 void main() {
   // Register all dependencies for injector
   Bootstrap.register();
   WidgetsFlutterBinding.ensureInitialized();
+
   /***
    * The weekplanner will by default run towards the dev-enviroment
    * Use the "environments.local.json" for running against your local web-api
@@ -26,7 +32,9 @@ bool lastState = false;
 
 /// Stores if this is first time,
 /// since this fixes a bug with logging in first time
-bool first = true;
+bool firstTimeLogIn = true;
+
+
 void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
@@ -37,10 +45,20 @@ void _runApp() {
           stream: di
               .getDependency<AuthBloc>()
               .loggedIn
-              .where((bool currentState) => lastState != currentState || first),
+              .where((bool currentState) =>
+                      lastState != currentState || firstTimeLogIn),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             lastState = snapshot.data;
-            first = false;
+            //To make sure we only listen to the stream once we take advantage
+            // of firstTimeLogin bool value
+            if(firstTimeLogIn== true){
+              _api.connectivity.connectivityStream.listen((dynamic event) {
+                if(event == false){
+                  lostConnectionDialog(context);
+                }
+              });
+            }
+            firstTimeLogIn = false;
             if (snapshot.data) {
               // In case logged in show ChooseCitizenScreen
               return ChooseCitizenScreen();
@@ -50,4 +68,15 @@ void _runApp() {
               return LoginScreen();
             }
           })));
+}
+
+/// Lost connection dialog
+void lostConnectionDialog(BuildContext context) {
+  showDialog<Center>(
+    context: context,
+    builder: (BuildContext context) {
+      return const GirafNotifyDialog(
+          title: 'Mistet forbindelse',
+          description: 'Ændringer bliver gemt når du får forbindelse igen');
+    });
 }
