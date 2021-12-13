@@ -1,6 +1,4 @@
 import 'package:api_client/api/account_api.dart';
-import 'package:api_client/api/connectivity_api.dart';
-import 'package:api_client/api/status_api.dart';
 import 'package:api_client/api_client.dart';
 import 'package:api_client/persistence/persistence_client.dart';
 import 'package:http/http.dart' as http;
@@ -26,9 +24,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
       : super(
-        HttpClient(baseUrl: null, persist: persist),
-        ConnectivityApi(StatusApi(HttpClient(baseUrl: null, persist: persist))),
-        persist);
+        HttpClient(baseUrl: null, persist: persist), persist);
 
   /// override of the register function, which returns an error
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
