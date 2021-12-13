@@ -51,7 +51,6 @@ class AuthBloc extends BlocBase {
       if (status) {
         // Get the role of a specific user
         _api.user.role(username).listen((int role) async {
-
           if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
           }
