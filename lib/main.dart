@@ -53,7 +53,6 @@ void _runApp() {
             // of firstTimeLogin bool value
             if(firstTimeLogIn== true){
               _api.connectivity.connectivityStream.listen((dynamic event) {
-                print(event);
                 if(event == false){
                   lostConnectionDialog(context);
                 }
