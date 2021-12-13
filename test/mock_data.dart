@@ -275,6 +275,11 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
+  Stream<int> role(String username) {
+    return Stream<int>.value(Role.Guardian.index);
+  }
+
+  @override
   Stream<SettingsModel> getSettings(String id) {
     return Stream<SettingsModel>.value(_mockSettings);
   }
