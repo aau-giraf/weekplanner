@@ -60,7 +60,6 @@ class AuthBloc extends BlocBase {
           else {
             setMode(WeekplanMode.citizen);
           }
-
           _loggedIn.add(status);
           loggedInUsername = username;
           completer.complete();
