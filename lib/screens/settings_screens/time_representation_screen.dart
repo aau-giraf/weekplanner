@@ -50,12 +50,9 @@ class TimeRepresentationScreen extends StatelessWidget {
                       SettingsCheckMarkButton(DefaultTimer.Numeric,
                           _settingsModel.defaultTimer, 'Nedtælling', () {
                         _settingsModel.defaultTimer = DefaultTimer.Numeric;
-                        _settingsBloc
-                            .updateSettings(_user.id, _settingsModel)
-                            .listen((SettingsModel response) {
-                          if (response != null) {
-                            Routes.pop(context, DefaultTimer.Numeric);
-                          }
+                        _settingsBloc.updateSettings(_user.id, _settingsModel)
+                            .listen((_) {
+                          Routes.pop(context, DefaultTimer.Numeric);
                         });
                       }, DefaultTimer.Numeric)
                     ]),

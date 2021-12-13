@@ -23,7 +23,8 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 /// where listen().onError could catch it
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
-      : super(HttpClient(baseUrl: null, persist: persist), persist);
+      : super(
+        HttpClient(baseUrl: null, persist: persist), persist);
 
   /// override of the register function, which returns an error
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise

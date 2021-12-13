@@ -33,9 +33,9 @@ class MockUserApi extends Mock implements UserApi {
   }
 
   @override
-  Stream<SettingsModel> updateSettings(String id, SettingsModel settings) {
+  Stream<bool> updateSettings(String id, SettingsModel settings) {
     mockSettings = settings;
-    return Stream<SettingsModel>.value(mockSettings);
+    return Stream<bool>.value(true);
   }
 
   static List<WeekdayColorModel> createWeekDayColors() {

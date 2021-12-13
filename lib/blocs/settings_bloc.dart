@@ -38,10 +38,9 @@ class SettingsBloc extends BlocBase {
   }
 
   /// Update an existing settingsModel
-  Stream<SettingsModel> updateSettings(
+  Stream<void> updateSettings(
       String userId, SettingsModel settingsModel) {
-    return _api.user
-        .updateSettings(userId, settingsModel);
+    return _api.user.updateSettings(userId, settingsModel);
   }
 
   /// Set the theme to be used
