@@ -22,6 +22,7 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
+  environment.setFile('assets/environments.dev.json').whenComplete(() {
     _runApp();
   });
 }
@@ -68,14 +69,15 @@ void _runApp() {
               return LoginScreen();
             }
           })));
+}
 
-  }
-void lostConnectionDialog(BuildContext context){
+/// Lost connection dialog
+void lostConnectionDialog(BuildContext context) {
   showDialog<Center>(
-      context: context,
-      builder: (BuildContext context) {
-        return GirafNotifyDialog(
-            title: "Mistet forbindelse",
-            description: "Ændringer bliver gemt når du får forbindelse igen");
-      });
+    context: context,
+    builder: (BuildContext context) {
+      return const GirafNotifyDialog(
+          title: 'Mistet forbindelse',
+          description: 'Ændringer bliver gemt når du får forbindelse igen');
+    });
 }
