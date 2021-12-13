@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/api_exception.dart';
 import 'package:flutter/material.dart';
@@ -35,28 +36,24 @@ class LoginScreenState extends State<LoginScreen> {
   /// Stores the login status, used for dismissing the LoadingSpinner
   bool loginStatus = false;
 
-  /// Indicates if the loading spinner has been popped in this instance of the
-  /// screen.
-  bool _popCalled = false;
-
   /// This is called when login should be triggered
   void loginAction(BuildContext context) {
     showLoadingSpinner(context, true);
     currentContext = context;
     loginStatus = false;
     authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
-      .then((dynamic result){
-        authBloc.loggedIn.listen((bool snapshot) {
+      .then((dynamic result) {
+      StreamSubscription<bool> loginListener;
+         loginListener = authBloc.loggedIn.listen((bool snapshot) {
           loginStatus = snapshot;
-          if (snapshot && !_popCalled) {
+          // Return if logging out
+          if (snapshot) {
             // Pop the loading spinner
             Routes.pop(context);
-            _popCalled = true;
-          } else {
-            creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
-                'kontakt en administrator', 'UnknownError');
           }
-        });
+          // Stop listening for future logins
+          loginListener.cancel();
+         });
     }).catchError((Object error) {
       if(error is ApiException){
         creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',

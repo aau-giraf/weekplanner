@@ -75,27 +75,6 @@ class TakePictureWithCamera extends StatelessWidget {
                         borderRadius: BorderRadius.circular(50))),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 20),
-              child: StreamBuilder<String>(
-                  stream: _takePictureWithCamera.accessLevel,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    return DropdownButton<String>(
-                      value: snapshot.data,
-                      onChanged: (String newValue) {
-                        _takePictureWithCamera.setAccessLevel(newValue);
-                      },
-                      items: <String>['Institution', 'Privat']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    );
-                  }),
-            ),
           ],
         ),
         Container(
@@ -199,6 +178,8 @@ class TakePictureWithCamera extends StatelessWidget {
 
   Widget _displayImage(File image) {
     return Container(
+        height: screenHeight / 2,
+        width: screenWidth / 2,
       child: Image.file(image),
       decoration: BoxDecoration(
         borderRadius: _imageBorder,
