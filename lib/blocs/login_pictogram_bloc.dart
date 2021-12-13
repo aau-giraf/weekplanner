@@ -58,21 +58,11 @@ class LoginPictogramBloc extends BlocBase {
   ///Login list
   List<PictogramModel> loginList = [];
 
-  /// Authenticate the fetch of pictograms
-  Future<void> pictogramAuthentication() async {
-    //Grants automatic access to the backend
-    await _api.account.login(
-        environment.getVar<String>('USERNAME'),
-        environment.getVar<String>('PASSWORD')
-    );
-  }
-
   ///Initializes a search for pictograms from the server
   /// Uses a given search query
   //TODO(kristnaKris): should have its own api call to specific pictograms specified for login
   /// The results are published in [pictograms].
   void getPictograms(int size) async {
-    await pictogramAuthentication();
 
     loadingPictograms = true;
     if (_debounceTimer != null) {
