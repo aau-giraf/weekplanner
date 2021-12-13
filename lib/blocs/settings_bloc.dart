@@ -38,7 +38,7 @@ class SettingsBloc extends BlocBase {
   }
 
   /// Update an existing settingsModel
-  Stream<bool> updateSettings(
+  Stream<void> updateSettings(
       String userId, SettingsModel settingsModel) {
     return _api.user.updateSettings(userId, settingsModel);
   }
