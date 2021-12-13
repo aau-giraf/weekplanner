@@ -14,44 +14,7 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 
 import '../mock_data.dart';
 void main() {
-  MockPictogramApi pictogramApi;
   LoginPictogramBloc bloc;
-  Api api;
-
-  setUp(() {
-    api = Api('any');
-    pictogramApi = MockPictogramApi();
-
-     bloc = LoginPictogramBloc(api);
-  });
-
-  test('Test getPictograms adding 1 pictogram from mocked api to stream', async((DoneFn done) {
-    const String query = '';
-    int count = 0;
-    int latestPage = 1;
-
-    when(pictogramApi.getAll(page: latestPage,
-        pageSize: pageSize, query: query)).thenAnswer(
-            (_) =>
-        rx_dart.BehaviorSubject<List<PictogramModel>>
-            .seeded(<PictogramModel>[]));
-
-    bloc.pictograms.listen((List<PictogramModel> response) {
-      switch (count) {
-        case 0:
-          expect(response, isNull);
-          break;
-        case 1:
-          verify(pictogramApi.getAll(page: latestPage,
-              pageSize: pageSize, query: query));
-          done();
-          break;
-      }
-      count++;
-    });
-
-    bloc.getPictograms(1);
-    }));
 
   test('Should reset bloc', async((DoneFn done) {
     bloc.pictograms.listen((_) {}, onDone: done);
