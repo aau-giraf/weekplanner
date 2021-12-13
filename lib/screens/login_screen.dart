@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -252,14 +253,22 @@ class LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(color: theme.GirafColors.white),
                       ),
                       onPressed: () {
-                        // push the pictogram login screen
-                        Routes.push(context, CitizenLoginScreen(authBloc))
-                            .then((result) => {
-                          if(result != null){
+                        //Auto login to gain access to api
+                        usernameCtrl.text =
+                            environment.getVar<String>('USERNAME');
+                        passwordCtrl.text =
+                        environment.getVar<String>('PASSWORD');
+                        loginAction(context);
+                        //pushes a new login screen
+                        Routes.push(context, LoginScreen()).then((value) => {
+                          Routes.push(context, CitizenLoginScreen(authBloc))
+                              .then((result) => {
+                            if(result != null){
                             usernameCtrl.text = 'tempCitizenToken',
                             passwordCtrl.text = result,
-                          }
-                        }).then((_) => loginAction(context),);
+                            }
+                          }).then((_) => loginAction(context),)
+                        });
                       },
                       color: theme.GirafColors.loginButtonColor,
                     ),
