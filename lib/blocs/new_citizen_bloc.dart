@@ -73,6 +73,18 @@ class NewCitizenBloc extends BlocBase {
         role: Role.Citizen
     );
   }
+
+  /// Method called with information about the trustee attached to the citizen.
+  Stream<GirafUserModel> createTrustee() {
+    return _api.account.register(
+        usernameController.value,
+        passwordController.value,
+        displayNameController.value,
+        departmentId: _user.department,
+        role: Role.Trustee
+    );
+  }
+
   /// Gives information about whether all inputs are valid.
   Stream<bool> get allInputsAreValidStream =>
       rx_dart.Rx.combineLatest4<bool, bool, bool, bool, bool>(
