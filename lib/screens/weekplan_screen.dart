@@ -84,7 +84,8 @@ class WeekplanScreen extends StatelessWidget {
                 }
                 : <AppBarIcon, VoidCallback> {
                   // Show icons for citizen role
-                  AppBarIcon.changeToGuardian: () {}
+                  AppBarIcon.changeToGuardian: () {},
+                  AppBarIcon.logout: () {}
                 },
                 isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
               ),
