@@ -473,7 +473,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               title: 'Slet ugeplaner',
               description: 'Vil du slette ' +
                   widget._weekBloc.getNumberOfMarkedWeekModels().toString() +
-                  '${widget._weekBloc.getNumberOfMarkedWeekModels() == 1 ? ' ugeplan' : ' ugeplaner'}?',
+                  '${widget._weekBloc.getNumberOfMarkedWeekModels() == 1
+                      ? ' ugeplan' : ' ugeplaner'}?',
               confirmButtonText: 'Slet',
               confirmButtonIcon:
                   const ImageIcon(AssetImage('assets/icons/delete.png')),
