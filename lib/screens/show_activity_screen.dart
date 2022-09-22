@@ -695,12 +695,20 @@ class ShowActivityScreen extends StatelessWidget {
 
                     final GirafButton completeButton = GirafButton(
                         key: const Key('CompleteStateToggleButton'),
-                        onPressed: () {
+                        onPressed: activitySnapshot.data.state !=
+                            ActivityState.Canceled ? () {
                           _activityBloc.completeActivity();
-                        },
+                        }: null,
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
-                        width: 100,
+                        text: activitySnapshot.data.state !=
+                            ActivityState.Completed
+                            ? ''
+                            : 'Fortryd',
+                        width: activitySnapshot.data.state !=
+                            ActivityState.Completed
+                            ? 100
+                            : 125,
                         icon: activitySnapshot.data.state !=
                             ActivityState.Completed
                             ? const ImageIcon(
