@@ -697,8 +697,8 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CompleteStateToggleButton'),
                         onPressed:  () {
                           _activityBloc.completeActivity();
-                          Routes.pop(context);
-                          Navigator.pushAndRemoveUntil(
+                          Routes.pop(context); //This removes current context so back button correctly navigates
+                          Navigator.pushAndRemoveUntil( //This creates new context at current screen (refreshes)
                             context,
                             MaterialPageRoute<void>(builder: (context) =>
                                 ShowActivityScreen(_activity, _girafUser)),
@@ -731,8 +731,8 @@ class ShowActivityScreen extends StatelessWidget {
                           _activityBloc.cancelActivity();
                           _activity.state =
                               _activityBloc.getActivity().state;
-                          Routes.pop(context);
-                          Navigator.pushAndRemoveUntil(
+                          Routes.pop(context); //This removes current context so back button correctly navigates
+                          Navigator.pushAndRemoveUntil( //This creates new context at current screen (refreshes)
                             context,
                             MaterialPageRoute<void>(builder: (context) =>
                                 ShowActivityScreen(_activity, _girafUser)),
