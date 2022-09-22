@@ -139,7 +139,9 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       showOldWeeks
           ? Expanded(
               flex: 5,
-              child: _buildWeekplanGridview(context, oldWeekModels, false))
+              child: Container(
+                  color: Colors.grey.shade600,
+                  child: _buildWeekplanGridview(context, oldWeekModels, false)))
           : Container(),
     ]));
   }
@@ -222,8 +224,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               onTap: () =>
                   handleOnTap(context, weekplan, inEditModeSnapshot.data),
               child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                    Colors.grey, current ? BlendMode.dst : BlendMode.modulate),
+                colorFilter: ColorFilter.mode(Colors.grey.shade400,
+                    current ? BlendMode.dst : BlendMode.modulate),
                 child: Card(
                     child: Column(
                   children: <Widget>[
