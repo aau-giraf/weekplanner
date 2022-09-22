@@ -151,11 +151,6 @@ class ToolbarBloc extends BlocBase {
       tooltip: 'Tilbage',
       onPressed: () {
         Routes.pop(context);
-
-        //WillPopScope(
-          //  onWillPop: () async => false,
-           // child: //you root widget,
-       // );
       },
     );
   }
