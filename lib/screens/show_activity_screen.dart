@@ -695,10 +695,16 @@ class ShowActivityScreen extends StatelessWidget {
 
                     final GirafButton completeButton = GirafButton(
                         key: const Key('CompleteStateToggleButton'),
-                        onPressed: activitySnapshot.data.state !=
-                            ActivityState.Canceled ? () {
+                        onPressed:  () {
                           _activityBloc.completeActivity();
-                        }: null,
+                          Routes.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute<void>(builder: (context) =>
+                                ShowActivityScreen(_activity, _girafUser)),
+                                (Route<dynamic> route) => true,
+                          );
+                        },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
                         text: activitySnapshot.data.state !=
@@ -725,6 +731,13 @@ class ShowActivityScreen extends StatelessWidget {
                           _activityBloc.cancelActivity();
                           _activity.state =
                               _activityBloc.getActivity().state;
+                          Routes.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute<void>(builder: (context) =>
+                                ShowActivityScreen(_activity, _girafUser)),
+                                (Route<dynamic> route) => true,
+                          );
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Completed,
