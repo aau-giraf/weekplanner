@@ -76,16 +76,17 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
         ),
         body: _buildWeekplanColumnview(context));
   }
-
+  // Entire screen
   Widget _buildWeekplanColumnview(BuildContext context) {
     final Stream<List<WeekModel>> weekModels = widget._weekBloc.weekModels;
     final Stream<List<WeekModel>> oldWeekModels =
         widget._weekBloc.oldWeekModels;
-
+    // Container which holds all of the UI elements on the screen
     return Container(
-        child: Column(children: <Widget>[
+      child: Column(children: <Widget>[
       Expanded(
           flex: 5, child: _buildWeekplanGridview(context, weekModels, true)),
+      // Overstået Uger bar
       InkWell(
         child: Container(
           color: Colors.grey,
@@ -103,6 +104,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
               showOldWeeks
+              // Icons for showing and hiding the old weeks are inside this
+              // When the old weeks are shown, show the hide icon
                   ? Expanded(
                       flex: 1,
                       child: IconButton(
@@ -116,6 +119,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                         },
                       ),
                     )
+              // Icons for showing and hiding the old weeks are inside this
+              // When the old weeks are hidden, show the hide icon
                   : Expanded(
                       flex: 1,
                       child: IconButton(
@@ -139,10 +144,11 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       showOldWeeks
           ? Expanded(
               flex: 5,
-              child: Container(
-                  color: Colors.grey.shade600,
-                  child: _buildWeekplanGridview(context, oldWeekModels, false)))
-          : Container(),
+              child: Container( // Container with old weeks if shown
+                // Background color of the old weeks
+                color: Colors.grey.shade600,
+                child: _buildWeekplanGridview(context, oldWeekModels, false)))
+          : Container(), // Empty container if old weeks are hidden
     ]));
   }
 
@@ -224,6 +230,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               onTap: () =>
                   handleOnTap(context, weekplan, inEditModeSnapshot.data),
               child: ColorFiltered(
+                // Color of each of the Overstået Uger cards
                 colorFilter: ColorFilter.mode(Colors.grey.shade400,
                     current ? BlendMode.dst : BlendMode.modulate),
                 child: Card(
