@@ -698,11 +698,14 @@ class ShowActivityScreen extends StatelessWidget {
                         onPressed:  () {
                           _activityBloc.completeActivity();
                           Routes.pop(context);
-                          //This removes current context so back button correctly navigates
+                          //This removes current context
+                          // so back button correctly navigates
                           Navigator.pushAndRemoveUntil(
-                            //This creates new context at current screen (refreshes)
+                            //This creates new context at current screen
+                            // (refreshes)
                             context,
-                            MaterialPageRoute<void>(builder: (BuildContext context) =>
+                            MaterialPageRoute<void>(builder:
+                                (BuildContext context) =>
                                 ShowActivityScreen(_activity, _girafUser)),
                                 (Route<dynamic> route) => true,
                           );
@@ -716,7 +719,7 @@ class ShowActivityScreen extends StatelessWidget {
                         width: activitySnapshot.data.state !=
                             ActivityState.Completed
                             ? 100
-                            : 125,
+                            : 130,
                         icon: activitySnapshot.data.state !=
                             ActivityState.Completed
                             ? const ImageIcon(
@@ -734,11 +737,14 @@ class ShowActivityScreen extends StatelessWidget {
                           _activity.state =
                               _activityBloc.getActivity().state;
                           Routes.pop(context);
-                          //This removes current context so back button correctly navigates
+                          //This removes current context
+                          // so back button correctly navigates
                           Navigator.pushAndRemoveUntil(
-                            //This creates new context at current screen (refreshes)
+                            //This creates new context at current screen
+                            // (refreshes)
                             context,
-                            MaterialPageRoute<void>(builder: (BuildContext context) =>
+                            MaterialPageRoute<void>(builder:
+                                (BuildContext context) =>
                                 ShowActivityScreen(_activity, _girafUser)),
                                 (Route<dynamic> route) => true,
                           );
