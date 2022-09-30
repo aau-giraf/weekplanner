@@ -67,40 +67,37 @@ class SettingsScreen extends StatelessWidget {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Tema', <SettingsSectionItem>[
-              SettingsArrowButton(
-                  'Farver på ugeplan',
-                      () async {
-                          final Object result = await Routes.push(
-                              context, ColorThemeSelectorScreen(user: _user));
-                          settingsModel.weekDayColors = result;
-                          _settingsBloc.updateSettings(_user.id, settingsModel)
-                              .listen((_) {
-                            _settingsBloc.loadSettings(_user);
-                          });
-                      },
+              SettingsArrowButton('Farver på ugeplan', () async {
+                final Object result = await Routes.push(
+                    context, ColorThemeSelectorScreen(user: _user));
+                settingsModel.weekDayColors = result;
+                _settingsBloc
+                    .updateSettings(_user.id, settingsModel)
+                    .listen((_) {
+                  _settingsBloc.loadSettings(_user);
+                });
+              },
                   titleTrailing: ThemeBox.fromHexValues(
                       settingsModel.weekDayColors[0].hexColor,
                       settingsModel.weekDayColors[1].hexColor)),
-              SettingsArrowButton(
-                  'Tegn for udførelse',
-                      () async {
-                          final Object result =  await Routes.push(context,
-                          CompletedActivityIconScreen(_user));
-                          if (result != null){
-                            settingsModel.completeMark = result;
-                            _settingsBloc.updateSettings(
-                                _user.id, settingsModel)
-                              .listen((_) {
-                                _settingsBloc.loadSettings(_user);
-                            });
-                          }
-                      },
-                  titleTrailing: Text(
-                      settingsModel.completeMark == CompleteMark.Checkmark
+              SettingsArrowButton('Tegn for udførelse', () async {
+                final Object result = await Routes.push(
+                    context, CompletedActivityIconScreen(_user));
+                if (result != null) {
+                  settingsModel.completeMark = result;
+                  _settingsBloc
+                      .updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  });
+                }
+              },
+                  titleTrailing: Text(settingsModel.completeMark ==
+                          CompleteMark.Checkmark
                       ? 'Flueben'
                       : settingsModel.completeMark == CompleteMark.MovedRight
-                      ? 'Lav aktiviteten grå'
-                      : 'Fjern aktiviteten'))
+                          ? 'Lav aktiviteten grå'
+                          : 'Fjern aktiviteten'))
             ]);
           } else {
             return const Center(
@@ -125,31 +122,32 @@ class SettingsScreen extends StatelessWidget {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Ugeplan', <SettingsSectionItem>[
               SettingsArrowButton(
-                'Antal dage', () async {
-                  final Object result = await Routes.push(
-                      context, NumberOfDaysScreen(_user));
-                  if(result != null) {
+                'Antal dage',
+                () async {
+                  final Object result =
+                      await Routes.push(context, NumberOfDaysScreen(_user));
+                  if (result != null) {
                     settingsModel.nrOfDaysToDisplay = result;
-                    _settingsBloc.updateSettings(
-                        _user.id, settingsModel)
-                      .listen((_) {
-                        _settingsBloc.loadSettings(_user);
-                      }
-                    );
+                    _settingsBloc
+                        .updateSettings(_user.id, settingsModel)
+                        .listen((_) {
+                      _settingsBloc.loadSettings(_user);
+                    });
                   }
                 },
                 titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
                     ? 'En dag'
                     : settingsModel.nrOfDaysToDisplay == 2
-                    ? 'To dage'
-                    : settingsModel.nrOfDaysToDisplay == 5
-                    ? 'Mandag til fredag'
-                    : 'Mandag til søndag'),
+                        ? 'To dage'
+                        : settingsModel.nrOfDaysToDisplay == 5
+                            ? 'Mandag til fredag'
+                            : 'Mandag til søndag'),
               ),
               SettingsCheckMarkButton.fromBoolean(
                   settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
                 settingsModel.pictogramText = !settingsModel.pictogramText;
-                _settingsBloc.updateSettings(_user.id, settingsModel)
+                _settingsBloc
+                    .updateSettings(_user.id, settingsModel)
                     .listen((_) {
                   _settingsBloc.loadSettings(_user);
                 });
@@ -174,8 +172,9 @@ class SettingsScreen extends StatelessWidget {
               SettingsCheckMarkButton.fromBoolean(
                   _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
                 _settingsModel.lockTimerControl =
-                !_settingsModel.lockTimerControl;
-                _settingsBloc.updateSettings(_user.id, _settingsModel)
+                    !_settingsModel.lockTimerControl;
+                _settingsBloc
+                    .updateSettings(_user.id, _settingsModel)
                     .listen((_) {
                   _settingsBloc.loadSettings(_user);
                 });
@@ -203,13 +202,10 @@ class SettingsScreen extends StatelessWidget {
           return SettingsSection('Privatliv', <SettingsSectionItem>[
             SettingsArrowButton(
               'Privatlivsinformationer',
-                  () =>
-                      Routes.push(context, PrivacyInformationScreen())
-                          .then((Object object) =>
-                          _settingsBloc.loadSettings(_user)),
+              () => Routes.push(context, PrivacyInformationScreen())
+                  .then((Object object) => _settingsBloc.loadSettings(_user)),
             ),
           ]);
-
         });
   }
 
@@ -222,24 +218,26 @@ class SettingsScreen extends StatelessWidget {
             final DefaultTimer userTimer = settingsSnapshot.data.defaultTimer;
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Tidsrepræsentation', <SettingsSectionItem>[
-              SettingsArrowButton('Indstillinger for tidsrepræsentation',
-                  () async {
-                final Object result = await Routes
-                    .push(context, TimeRepresentationScreen(_user));
-                settingsModel.defaultTimer = result;
-                _settingsBloc.updateSettings(_user.id, settingsModel)
-                  .listen((_) {
+              SettingsArrowButton(
+                'Indstillinger for tidsrepræsentation',
+                () async {
+                  final Object result = await Routes.push(
+                      context, TimeRepresentationScreen(_user));
+                  settingsModel.defaultTimer = result;
+                  _settingsBloc
+                      .updateSettings(_user.id, settingsModel)
+                      .listen((_) {
                     _settingsBloc.loadSettings(_user);
-                });
-              },
-              titleTrailing: Image(
-                  width: 50,
-                  height: 50,
-                  image: AssetImage(userTimer == DefaultTimer.PieChart
-                      ? 'assets/timer/piechart_icon.png'
-                      : userTimer == DefaultTimer.Hourglass
-                      ? 'assets/timer/hourglass_icon.png'
-                      : 'assets/timer/countdowntimer_icon.png')),
+                  });
+                },
+                titleTrailing: Image(
+                    width: 50,
+                    height: 50,
+                    image: AssetImage(userTimer == DefaultTimer.PieChart
+                        ? 'assets/timer/piechart_icon.png'
+                        : userTimer == DefaultTimer.Hourglass
+                            ? 'assets/timer/hourglass_icon.png'
+                            : 'assets/timer/countdowntimer_icon.png')),
               )
             ]);
           } else {
