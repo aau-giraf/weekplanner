@@ -13,6 +13,7 @@ import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'time_representation_screen.dart';
+import 'package:weekplanner/screens/settings_screens/user_settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
@@ -189,9 +190,43 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildUserSettings() {
-    return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-      SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-    ]);
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            final SettingsModel settingsModel = settingsSnapshot.data;
+            return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
+              SettingsArrowButton(
+                _user.displayName + ' indstillinger',
+                    () async {
+                  final Object result =
+                    await Routes.push(context, UserSettingsScreen(_user));
+                  if (result != null) {
+                    settingsModel.nrOfDaysToDisplay = result;
+                    _settingsBloc
+                        .updateSettings(_user.id, settingsModel)
+                        .listen((_) {
+                      _settingsBloc.loadSettings(_user);
+                    });
+                  }
+                },
+              ),
+            ]);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+
+
+
+              /*
+        return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
+          SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
+        ]);
+              */
   }
 
   Widget _buildPrivacySection() {
