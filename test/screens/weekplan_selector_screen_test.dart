@@ -266,7 +266,7 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GridView),
-        findsNWidgets(2));
+        findsNWidgets(1));
   });
 
   testWidgets('Weekmodels exist with the expected names',
