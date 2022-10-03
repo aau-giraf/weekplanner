@@ -261,7 +261,7 @@ void main() {
     expect(find.text('Overståede uger'), findsOneWidget);
   });
 
-  testWidgets('Should have two GridView Widgets', (WidgetTester tester) async {
+  testWidgets('Should have one GridView Widget', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
 
@@ -275,6 +275,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pump(Duration.zero);
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     expect(find.text('Tilføj ugeplan'), findsOneWidget);
     expect(find.text(nameWeekModel1), findsOneWidget);
     expect(find.text(nameWeekModel2), findsOneWidget);
@@ -285,7 +290,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pump(Duration.zero);
 
-    expect(find.text('Uge: 1      År: 2020'), findsNWidgets(2));
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     expect(find.byKey(const Key('weekYear')), findsNWidgets(2));
   });
 
@@ -347,6 +356,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -368,6 +382,11 @@ void main() {
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
@@ -396,6 +415,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
@@ -412,6 +436,11 @@ void main() {
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
     expect(find.text(nameWeekModel1), findsOneWidget);
@@ -434,10 +463,15 @@ void main() {
     expect(find.byKey(const Key('ConfirmDialogCancelButton')), findsOneWidget);
   });
 
-  testWidgets('Marking an weekmodel and deleting removes it',
+  testWidgets('Marking a weekmodel and deleting removes it',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
     expect(find.text(nameWeekModel1), findsOneWidget);
@@ -461,6 +495,11 @@ void main() {
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
@@ -493,6 +532,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -519,6 +563,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
@@ -535,6 +584,11 @@ void main() {
           (WidgetTester tester) async {
         await tester
             .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+        await tester.pumpAndSettle();
+
+        // Expands the old week section
+        expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+        await tester.tap(find.byKey(const Key('ShowOldWeeks')));
         await tester.pumpAndSettle();
 
         await tester.tap(find.byTooltip('Rediger'));
@@ -572,6 +626,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
@@ -592,6 +651,11 @@ void main() {
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -621,6 +685,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.byTooltip('Rediger'));
     await tester.pumpAndSettle();
 
@@ -638,6 +707,11 @@ void main() {
       'and the CopyResolverScreen comes up', (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
+    await tester.pumpAndSettle();
+
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Rediger'));
@@ -671,6 +745,11 @@ void main() {
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
 
+    // Expands the old week section
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+    await tester.pumpAndSettle();
+
     expect(find.byKey(Key(weekModel1.name)), findsOneWidget);
     expect(find.byKey(Key(mockWeekModel.name)), findsNothing);
     expect(find.byKey(Key(weekModel2.name)), findsOneWidget);
@@ -696,15 +775,15 @@ void main() {
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pump();
-    expect(find.byKey(const Key('HideOldWeeks')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('HideOldWeeks')));
-    await tester.pumpAndSettle();
     expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
-    expect(find.byKey(const Key('HideOldWeeks')), findsNothing);
-    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('ShowOldWeeks')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('HideOldWeeks')), findsOneWidget);
     expect(find.byKey(const Key('ShowOldWeeks')), findsNothing);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('HideOldWeeks')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+    expect(find.byKey(const Key('HideOldWeeks')), findsNothing);
   });
 }
