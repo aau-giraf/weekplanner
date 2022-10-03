@@ -72,10 +72,10 @@ void main() {
     expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
   });
 
-  testWidgets('Has option, Vis kun i dag', (WidgetTester tester) async {
+  testWidgets('Has option, Vis i dag', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.text('Vis kun i dag'), findsOneWidget);
+    expect(find.text('Vis i dag'), findsOneWidget);
   });
 
   testWidgets('Has option, Vis to dage', (WidgetTester tester) async {

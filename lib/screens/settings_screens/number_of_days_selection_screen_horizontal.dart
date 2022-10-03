@@ -14,9 +14,9 @@ import '../../di.dart';
 import '../../routes.dart';
 
 /// Screen where the user can select how many days to show for a citizen
-class NumberOfDaysScreen extends StatelessWidget {
+class NumberOfDaysScreenHorizontal extends StatelessWidget {
   /// Constructor
-  NumberOfDaysScreen(DisplayNameModel user) : _user = user {
+  NumberOfDaysScreenHorizontal(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -38,11 +38,11 @@ class NumberOfDaysScreen extends StatelessWidget {
 
                 return ListView(
                   children: <Widget>[
-                    SettingsSection('Antal dage der vises når enheden er på højkant', <SettingsSectionItem>[
+                    SettingsSection('Antal dage der vises når enheden er på langs', <SettingsSectionItem>[
                       SettingsCheckMarkButton(
                           1, _settingsModel.nrOfDaysToDisplay, 'Vis i dag',
-                          () {
-                  Routes.pop(context, 1);
+                              () {
+                            Routes.pop(context, 1);
                           }),
                       SettingsCheckMarkButton(
                           2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
@@ -54,7 +54,7 @@ class NumberOfDaysScreen extends StatelessWidget {
                           5,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til fredag', () {
-                            Routes.pop(context, 5);
+                        Routes.pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
                           7,
