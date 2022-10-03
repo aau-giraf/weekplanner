@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -12,9 +13,6 @@ import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
-import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
 import '../../style/custom_color.dart' as theme;
 
 class ChangePasswordScreen extends StatelessWidget {
@@ -28,9 +26,13 @@ class ChangePasswordScreen extends StatelessWidget {
   final TextEditingController usernameCtrl = TextEditingController();
 
   /// This is the password control, that allows for password extraction
-  final TextEditingController passwordCtrl = TextEditingController();
+  final TextEditingController currentPasswordCtrl = TextEditingController();
+  final TextEditingController newPasswordCtrl = TextEditingController();
+  final TextEditingController repeatNewPasswordCtrl = TextEditingController();
+
   final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final AuthBloc authBloc = di.getDependency<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class ChangePasswordScreen extends StatelessWidget {
                         child: TextField(
                           key: const Key('PasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
-                          controller: passwordCtrl,
+                          controller: currentPasswordCtrl,
                           obscureText: true,
                           decoration: const InputDecoration(
                             hintText: 'Adgangskode',
@@ -111,7 +113,7 @@ class ChangePasswordScreen extends StatelessWidget {
                         child: TextField(
                           key: const Key('PasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
-                          controller: passwordCtrl,
+                          controller: newPasswordCtrl,
                           obscureText: true,
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Adgangskode',
@@ -141,7 +143,7 @@ class ChangePasswordScreen extends StatelessWidget {
                         child: TextField(
                           key: const Key('PasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
-                          controller: passwordCtrl,
+                          controller: repeatNewPasswordCtrl,
                           obscureText: true,
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Gentag adgangskode',
@@ -165,7 +167,9 @@ class ChangePasswordScreen extends StatelessWidget {
                               'Gem',
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              showLoadingSpinner(context, true);
+                            },
                             color: theme.GirafColors.dialogButton,
                           ),
                         ),
@@ -177,5 +181,10 @@ class ChangePasswordScreen extends StatelessWidget {
             ]),
       ),
     );
+  }
+
+  void AuthPassword(String password) {
+    authBloc.authenticate(_user.displayName, password);
+    //.then((dynamic result) => )
   }
 }
