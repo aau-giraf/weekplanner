@@ -1,25 +1,26 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/api_exception.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_arrow_button.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
 import '../../style/custom_color.dart' as theme;
 
-class ChangePassword extends StatefulWidget {
-  @override
-  LoginScreenState createState() => LoginScreenState();
-}
-
-/// This is the login state
-class LoginScreenState extends State<ChangePassword> {
-  /// AuthBloC used to communicate with API
-  final AuthBloc authBloc = di.getDependency<AuthBloc>();
+class ChangePasswordScreen extends StatelessWidget {
+  ChangePasswordScreen(DisplayNameModel user) : _user = user {
+    _settingsBloc.loadSettings(_user);
+  }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -28,89 +29,17 @@ class LoginScreenState extends State<ChangePassword> {
 
   /// This is the password control, that allows for password extraction
   final TextEditingController passwordCtrl = TextEditingController();
-
-  /// Stores the context
-  BuildContext currentContext;
-
-  /// Stores the login status, used for dismissing the LoadingSpinner
-  bool loginStatus = false;
-
-  /// This is called when login should be triggered
-  void loginAction(BuildContext context) {
-    showLoadingSpinner(context, true);
-    currentContext = context;
-    loginStatus = false;
-    authBloc
-        .authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
-        .then((dynamic result) {
-      StreamSubscription<bool> loginListener;
-      loginListener = authBloc.loggedIn.listen((bool snapshot) {
-        loginStatus = snapshot;
-        // Return if logging out
-        if (snapshot) {
-          // Pop the loading spinner
-          Routes.pop(context);
-        }
-        // Stop listening for future logins
-        loginListener.cancel();
-      });
-    }).catchError((Object error) {
-      if (error is ApiException) {
-        creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
-            error.errorKey.toString());
-      } else if (error is SocketException) {
-        authBloc.checkInternetConnection().then((bool hasInternetConnection) {
-          if (hasInternetConnection) {
-            // Checking server connection, if true check username/password
-            authBloc.getApiConnection().then((bool hasServerConnection) {
-              if (hasServerConnection) {
-                unknownErrorDialog(error.message);
-              } else {
-                creatingNotifyDialog(
-                    'Der er i øjeblikket'
-                        ' ikke forbindelse til serveren.',
-                    'ServerConnectionError');
-              }
-            }).catchError((Object error) {
-              unknownErrorDialog(error.toString());
-            });
-          } else {
-            creatingNotifyDialog(
-                'Der er ingen forbindelse'
-                    ' til internettet.',
-                'NoConnectionToInternet');
-          }
-        });
-      } else {
-        unknownErrorDialog('UnknownError');
-      }
-    });
-  }
-
-  void creatingNotifyDialog(String description, String key) {
-    /// Remove the loading spinner
-    Routes.pop(currentContext);
-
-    /// Show the new NotifyDialog
-    showDialog<Center>(
-        barrierDismissible: false,
-        context: currentContext,
-        builder: (BuildContext context) {
-          return GirafNotifyDialog(
-              title: 'Fejl', description: description, key: Key(key));
-        });
-  }
-
-  /// Create an unknown error dialog
-  void unknownErrorDialog(String key) {
-    creatingNotifyDialog(
-        'Der skete en ukendt fejl, prøv igen eller '
-            'kontakt en administrator',
-        'key');
-  }
+  final DisplayNameModel _user;
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: GirafAppBar(title: 'Skift password'),
+        body: buildPasswordChange(context));
+  }
+
+  Widget buildPasswordChange(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final bool portrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
@@ -125,26 +54,22 @@ class LoginScreenState extends State<ChangePassword> {
         padding: portrait
             ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
             : const EdgeInsets.fromLTRB(200, 0, 200, 8),
-        decoration: const BoxDecoration(
-          // The background of the login-screen
-          image: DecorationImage(
-            image: AssetImage('assets/login_screen_background_image.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              getLogo(keyboard, portrait),
               Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
+                    const Text(
+                      'Nuværende adgangskode',
+                      style: TextStyle(
+                        fontSize: GirafFont.large,
+                      ),
+                    ),
                     Padding(
-                      padding: portrait
-                          ? const EdgeInsets.fromLTRB(0, 20, 0, 10)
-                          : const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(
@@ -152,20 +77,25 @@ class LoginScreenState extends State<ChangePassword> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20.0)),
                             color: theme.GirafColors.white),
-                        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          key: const Key('UsernameKey'),
+                          key: const Key('PasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
-                          controller: usernameCtrl,
-                          keyboardType: TextInputType.text,
-                          // Use email input type for emails.
-                          decoration: const InputDecoration.collapsed(
-                            hintText: 'Brugernavn',
+                          controller: passwordCtrl,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            hintText: 'Adgangskode',
                             hintStyle: TextStyle(
                                 color: theme.GirafColors.loginFieldText),
                             fillColor: theme.GirafColors.white,
                           ),
                         ),
+                      ),
+                    ),
+                    const Text(
+                      'Ny adgangskode',
+                      style: TextStyle(
+                        fontSize: GirafFont.large,
                       ),
                     ),
                     Padding(
@@ -192,6 +122,36 @@ class LoginScreenState extends State<ChangePassword> {
                         ),
                       ),
                     ),
+                    const Text(
+                      'Gentag ny adgangskode',
+                      style: TextStyle(
+                        fontSize: GirafFont.large,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: theme.GirafColors.grey, width: 1),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20.0)),
+                            color: theme.GirafColors.white),
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          key: const Key('PasswordKey'),
+                          style: const TextStyle(fontSize: GirafFont.large),
+                          controller: passwordCtrl,
+                          obscureText: true,
+                          decoration: const InputDecoration.collapsed(
+                            hintText: 'Gentag adgangskode',
+                            hintStyle: TextStyle(
+                                color: theme.GirafColors.loginFieldText),
+                            fillColor: theme.GirafColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                       child: Container(
@@ -202,61 +162,20 @@ class LoginScreenState extends State<ChangePassword> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             child: const Text(
-                              'Login',
+                              'Gem',
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
-                            onPressed: () {
-                              loginAction(context);
-                            },
-                            color: theme.GirafColors.loginButtonColor,
+                            onPressed: () {},
+                            color: theme.GirafColors.dialogButton,
                           ),
                         ),
                       ),
                     ),
-                    // Autologin button, only used for debugging
-                    environment.getVar<bool>('DEBUG')
-                        ? Container(
-                            child: Transform.scale(
-                              scale: 1.2,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: const Text(
-                                  'Auto-Login',
-                                  key: Key('AutoLoginKey'),
-                                  style:
-                                      TextStyle(color: theme.GirafColors.white),
-                                ),
-                                onPressed: () {
-                                  usernameCtrl.text =
-                                      environment.getVar<String>('USERNAME');
-                                  passwordCtrl.text =
-                                      environment.getVar<String>('PASSWORD');
-                                  loginAction(context);
-                                },
-                                color: theme.GirafColors.loginButtonColor,
-                              ),
-                            ),
-                          )
-                        : Container(),
                   ],
                 ),
               )
             ]),
       ),
     );
-  }
-
-  /// Returns the giraf logo
-  Widget getLogo(bool keyboard, bool portrait) {
-    if (keyboard && !portrait) {
-      return Container();
-    }
-
-    @override
-    Widget build(BuildContext context) {
-      // TODO: implement build
-      throw UnimplementedError();
-    }
   }
 }

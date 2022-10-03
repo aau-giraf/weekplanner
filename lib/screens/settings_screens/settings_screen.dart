@@ -5,6 +5,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/settings_screens/change_password_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
@@ -196,12 +197,29 @@ class SettingsScreen extends StatelessWidget {
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data;
-            return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
+            return SettingsSection(
+                'Bruger indstillinger', <SettingsSectionItem>[
               SettingsArrowButton(
                 _user.displayName + ' indstillinger',
-                    () async {
+                () async {
                   final Object result =
-                    await Routes.push(context, UserSettingsScreen(_user));
+                      await Routes.push(context, SettingsScreen(_user));
+                  if (result != null) {
+                    settingsModel.nrOfDaysToDisplay = result;
+                    _settingsBloc
+                        .updateSettings(_user.id, settingsModel)
+                        .listen((_) {
+                      _settingsBloc.loadSettings(_user);
+                    });
+                  }
+                },
+              ),
+              SettingsArrowButton('Skift brugernavn', () {}),
+              SettingsArrowButton(
+                'Skift kodeord',
+                () async {
+                  final Object result =
+                      await Routes.push(context, ChangePasswordScreen(_user));
                   if (result != null) {
                     settingsModel.nrOfDaysToDisplay = result;
                     _settingsBloc
@@ -220,9 +238,7 @@ class SettingsScreen extends StatelessWidget {
           }
         });
 
-
-
-              /*
+    /*
         return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
           SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
         ]);
