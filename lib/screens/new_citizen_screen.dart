@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/new_citizen_bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
+import 'package:weekplanner/blocs/new_citizen_bloc.dart';
+import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatelessWidget {
@@ -18,6 +22,9 @@ class NewCitizenScreen extends StatelessWidget {
 
   final ApiErrorTranslater _translator = ApiErrorTranslater();
   final NewCitizenBloc _bloc;
+
+  final TakePictureWithCameraBloc _takePictureWithCamera =
+      di.getDependency<TakePictureWithCameraBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -121,12 +128,21 @@ class NewCitizenScreen extends StatelessWidget {
               style: TextStyle(fontSize: GirafFont.small),
             ),
           ),
+          const AspectRatio(
+            aspectRatio: 4,
+            child: CircleAvatar(
+              key: Key('WidgetAvatar'),
+              radius: 150,
+              backgroundImage:
+                  AssetImage('assets/read.jpg'),
+            ),
+          ),
           Row(
             //mainAxisAlignment:,
             children: <Widget>[
               Padding(
                 padding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 child: GirafButton(
                   key: const Key('TilføjFraGalleriButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
@@ -136,12 +152,19 @@ class NewCitizenScreen extends StatelessWidget {
               ),
               Padding(
                 padding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                 child: GirafButton(
-                  key: const Key('TilføjFraGalleriButton'),
+                  key: const Key('TagBillede'),
                   icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
                   text: 'Tag billede',
-                  onPressed: () {},
+                  onPressed: _takePictureWithCamera.takePictureWithCamera,
+                  /*child: StreamBuilder<File>(
+                      stream: _takePictureWithCamera.file,
+                      builder: (BuildContext context,
+                              AsyncSnapshot<File> snapshot) =>
+                          snapshot.data != null
+                              ? _displayImage(snapshot.data)
+                              : _displayIfNoImage()),*/
                 ),
               ),
             ],
@@ -169,7 +192,7 @@ class NewCitizenScreen extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
