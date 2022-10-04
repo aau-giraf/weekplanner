@@ -58,6 +58,8 @@ class WeekplanDayColumn extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
+  bool isToday;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekdayModel>(
@@ -74,6 +76,7 @@ class WeekplanDayColumn extends StatelessWidget {
   }
 
   Column _day(WeekdayModel weekday, BuildContext context) {
+    isToday = DateTime.now().weekday.toInt()-1 == dayOfTheWeek.index;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -119,14 +122,35 @@ class WeekplanDayColumn extends StatelessWidget {
       color: theme.GirafColors.buttonColor,
       child: ListTile(
         contentPadding: const EdgeInsets.all(0.0), // Sets padding in cards
-        title: AutoSizeText(
-          translation,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30.0,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
+        title: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            // Stroked text as border.
+            AutoSizeText(
+              translation,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: isToday ? 40 : 30,
+                foreground: Paint()
+                  ..style = isToday ? PaintingStyle.stroke : PaintingStyle.fill
+                  ..strokeWidth = 5
+                  ..color = Colors.black,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+            ),
+            // Solid text as fill.
+            AutoSizeText(
+              translation,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: isToday ? 40 : 30,
+                color: isToday ? Color(int.parse('0xffffffff')) : Colors.black,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+            ),
+          ],
         ),
       ),
     );
