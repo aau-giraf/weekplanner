@@ -166,7 +166,7 @@ void main() {
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
 
-    expect(find.byType(GirafButton), findsNWidgets(1));
+    expect(find.byType(GirafButton), findsNWidgets(3));
   });
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
