@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/api_exception.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
@@ -63,7 +62,7 @@ class LoginScreenState extends State<LoginScreen> {
       }
       else if(error is SocketException){
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
-          //Er ikke sikker på den her try-catch nogen singe "catcher"
+          //Er ikke sikker på den her try-catch nogen sinde "catcher"
           try {
             if (hasInternetConnection) {
               // Checking server connection, if true check username/password
