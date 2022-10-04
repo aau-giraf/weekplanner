@@ -64,8 +64,11 @@ class LoginScreenState extends State<LoginScreen> {
           if (hasInternetConnection) {
             // Checking server connection, if true check username/password
             authBloc.getApiConnection().then((bool hasServerConnection) {
-              if (hasServerConnection) {
-                unknownErrorDialog(error.message);
+              if (hasServerConnection)
+              {
+                creatingNotifyDialog('Der er forbindelse'
+                    'til serveren, men der opstod et problem',
+                    error.message);
               }
               else{
                 creatingNotifyDialog(
@@ -73,7 +76,9 @@ class LoginScreenState extends State<LoginScreen> {
                         ' ikke forbindelse til serveren.',
                     'ServerConnectionError');
               }
-            }).catchError((Object error){
+            }).catchError((Object error)
+            //UNKNOWN ERROR HERE:
+            {
              unknownErrorDialog(error.toString());
             });
           } else {
@@ -84,8 +89,10 @@ class LoginScreenState extends State<LoginScreen> {
           }
         });
       }
-      else {
-        unknownErrorDialog('UnknownError');
+      else
+        //UNKNOWN ERROR HERE:
+      {
+        unknownErrorDialog('Testing');
       }
     });
   }
