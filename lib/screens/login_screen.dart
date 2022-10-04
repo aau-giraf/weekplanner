@@ -61,6 +61,7 @@ class LoginScreenState extends State<LoginScreen> {
       }
       else if(error is SocketException){
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
+          // Try catch den her, i stedet for else med fejl????
           if (hasInternetConnection) {
             // Checking server connection, if true check username/password
             authBloc.getApiConnection().then((bool hasServerConnection) {
@@ -77,7 +78,6 @@ class LoginScreenState extends State<LoginScreen> {
                     'ServerConnectionError');
               }
             }).catchError((Object error)
-            //UNKNOWN ERROR HERE:
             {
              unknownErrorDialog(error.toString());
             });
@@ -90,9 +90,9 @@ class LoginScreenState extends State<LoginScreen> {
         });
       }
       else
-        //UNKNOWN ERROR HERE:
       {
-        unknownErrorDialog('Testing');
+        unknownErrorDialog('The error is neither an Api problem nor'
+            'a socket problem');
       }
     });
   }
