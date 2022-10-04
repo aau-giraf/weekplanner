@@ -218,8 +218,8 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                 'Skift kodeord',
                 () async {
-                  final Object result =
-                      await Routes.push(context, ChangePasswordScreen(_user));
+                  final Object result = await Routes.push(
+                      context, ChangePasswordScreen(_user, null));
                   if (result != null) {
                     settingsModel.nrOfDaysToDisplay = result;
                     _settingsBloc

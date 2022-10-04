@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/giraf_user_model.dart';
@@ -16,7 +17,9 @@ import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
 
 class ChangePasswordScreen extends StatelessWidget {
-  ChangePasswordScreen(DisplayNameModel user) : _user = user {
+  ChangePasswordScreen(DisplayNameModel user, Api api)
+      : _user = user,
+        _api = api {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -33,6 +36,9 @@ class ChangePasswordScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
+  final Api _api;
+
+  //const ChangePasswordScreen({Key key, this._user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +51,18 @@ class ChangePasswordScreen extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
     final bool portrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool landscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     ///Used to check if the keyboard is visible
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
-      body: Container(
-        width: screenSize.width,
-        height: screenSize.height,
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
         padding: portrait
-            ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
-            : const EdgeInsets.fromLTRB(200, 0, 200, 8),
+            ? const EdgeInsets.fromLTRB(50, 300, 50, 0)
+            : const EdgeInsets.fromLTRB(200, 125, 200, 8),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,7 +92,7 @@ class ChangePasswordScreen extends StatelessWidget {
                           style: const TextStyle(fontSize: GirafFont.large),
                           controller: currentPasswordCtrl,
                           obscureText: true,
-                          decoration: const InputDecoration(
+                          decoration: const InputDecoration.collapsed(
                             hintText: 'Adgangskode',
                             hintStyle: TextStyle(
                                 color: theme.GirafColors.loginFieldText),
@@ -168,7 +175,10 @@ class ChangePasswordScreen extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              showLoadingSpinner(context, true);
+                              ChangePassword(
+                                  "id-placeholder",
+                                  currentPasswordCtrl.text,
+                                  newPasswordCtrl.text);
                             },
                             color: theme.GirafColors.dialogButton,
                           ),
@@ -183,8 +193,8 @@ class ChangePasswordScreen extends StatelessWidget {
     );
   }
 
-  void AuthPassword(String password) {
-    authBloc.authenticate(_user.displayName, password);
-    //.then((dynamic result) => )
+  //This function, found in the account_api, handles the password change, when the "Gem"-button is clicked
+  void ChangePassword(String id, String newPassword, String oldPassword) {
+    _api.account.changePasswordWithOld(id, oldPassword, newPassword);
   }
 }
