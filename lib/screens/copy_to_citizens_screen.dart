@@ -158,9 +158,10 @@ class CopyToCitizensScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Giraf3ButtonDialog(
-          title: 'Kopiér konflikt',
-          description: 'Der er $conflicts konflikt(er)!',
-          option1Text: 'Ændr',
+          title: 'Håndter konflikt',
+          description: 'Der er '
+              '$conflicts konflikt${conflicts == 1 ? '': 'er'}',
+          option1Text: 'Rediger',
           option1OnPressed: () {
             Routes.pop(context);
             Routes.push(

@@ -93,13 +93,16 @@ class CopyResolveScreen extends StatelessWidget {
         builder: (BuildContext dialogContext) {
           return GirafConfirmDialog(
             key: const Key('OverwriteCopyDialogKey'),
-            title: 'Lav ny ugeplan til at kopiere',
+            title: 'Erstat eksisterende ugeplan',
             description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
-                ', år: $year) hos $numberOfConflicts af borgerne. '
+                ', år: $year) hos $numberOfConflicts '
+                '${numberOfConflicts == 1
+                ? "bruger. "
+                : "brugere. "}'
                 'Vil du overskrive '
                 '${numberOfConflicts == 1
                   ? "denne ugeplan"
-                  : "disse ugeplaner"} ?',
+                  : "disse ugeplaner"}?',
             confirmButtonText: 'Ja',
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),

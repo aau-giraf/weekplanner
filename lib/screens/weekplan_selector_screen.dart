@@ -389,7 +389,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       reload |= list.length < 3;
     });
     if (markedCount > 1) {
-      const String description = 'Der kan kun redigeres en uge ad gangen';
+      const String description = 'Der kan kun redigeres en ugeplan af gangen';
       showDialog<Center>(
           barrierDismissible: false,
           context: context,
