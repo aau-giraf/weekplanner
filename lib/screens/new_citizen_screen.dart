@@ -4,8 +4,10 @@ import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatelessWidget {
@@ -110,6 +112,39 @@ class NewCitizenScreen extends StatelessWidget {
                     obscureText: true,
                   );
                 }),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            //child: Text('Profil billede af borger (valgfri):'),
+            child: AutoSizeText(
+              'Profil billede af borger (valgfri):',
+              style: TextStyle(fontSize: GirafFont.small),
+            ),
+          ),
+          Row(
+            //mainAxisAlignment:,
+            children: <Widget>[
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: GirafButton(
+                  key: const Key('TilføjFraGalleriButton'),
+                  icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                  text: 'Tilføj fra galleri',
+                  onPressed: () {},
+                ),
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                child: GirafButton(
+                  key: const Key('TilføjFraGalleriButton'),
+                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
+                  text: 'Tag billede',
+                  onPressed: () {},
+                ),
+              ),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
