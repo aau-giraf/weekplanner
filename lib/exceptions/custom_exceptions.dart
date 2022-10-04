@@ -1,10 +1,10 @@
 /// The file containing all custom exceptions, which
-/// are relevant for the weekplaner (Not ApiClient)
-class serverException implements Exception
+/// are relevant for the weekplanner (Not ApiClient)
+class ServerException implements Exception
 {
+  /// Constructor for the exception
+  ServerException(this.errorCause);
+
   /// The cause of the error
   String errorCause;
-
-  /// Constructor for the exception
-  serverException(this.errorCause);
 }
