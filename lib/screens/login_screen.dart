@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/api_exception.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
@@ -9,6 +10,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import 'package:weekplanner/exceptions/custom_exceptions.dart';
 import '../style/custom_color.dart' as theme;
 
 /// Logs the user in
@@ -61,36 +63,39 @@ class LoginScreenState extends State<LoginScreen> {
       }
       else if(error is SocketException){
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
-          // Try catch den her, i stedet for else med fejl????
-          if (hasInternetConnection) {
-            // Checking server connection, if true check username/password
-            authBloc.getApiConnection().then((bool hasServerConnection) {
-              if (hasServerConnection)
-              {
-                creatingNotifyDialog('Der er forbindelse'
-                    'til serveren, men der opstod et problem',
-                    error.message);
-              }
-              else{
-                creatingNotifyDialog(
-                    'Der er i øjeblikket'
-                        ' ikke forbindelse til serveren.',
-                    'ServerConnectionError');
-              }
-            }).catchError((Object error)
-            {
-             unknownErrorDialog(error.toString());
-            });
-          } else {
-            creatingNotifyDialog(
-                'Der er ingen forbindelse'
-                    ' til internettet.',
-                'NoConnectionToInternet');
+          try {
+            if (hasInternetConnection) {
+              // Checking server connection, if true check username/password
+              authBloc.getApiConnection().then((bool hasServerConnection) {
+                if (hasServerConnection) {
+                  creatingNotifyDialog(
+                      'Der er forbindelse'
+                          ' til serveren, men der opstod et problem',
+                      error.message);
+                }
+                else {
+                  creatingNotifyDialog(
+                      'Der er i øjeblikket'
+                          ' ikke forbindelse til serveren.',
+                      'ServerConnectionError');
+                }
+              }).catchError((Object error) {
+                unknownErrorDialog(error.toString());
+              });
+            }
+            else {
+              creatingNotifyDialog(
+                  'Der er ingen forbindelse'
+                      ' til internettet.',
+                  'NoConnectionToInternet');
+            }
+          }
+          catch(Err) {
+            throw new serverException(Err);
           }
         });
       }
-      else
-      {
+      else {
         unknownErrorDialog('The error is neither an Api problem nor'
             'a socket problem');
       }
