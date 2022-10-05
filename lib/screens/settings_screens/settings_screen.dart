@@ -154,6 +154,15 @@ class SettingsScreen extends StatelessWidget {
                   _settingsBloc.loadSettings(_user);
                 });
               }),
+              SettingsCheckMarkButton.fromBoolean(
+                //Ingen backend implementeret, KUN VISUELT
+                  settingsModel.pictogramText, 'Vis bekræftelse popups', () {
+                    //pictogramText skal erstattes med showPopup, som også skal laves i backend
+                _settingsBloc.updateSettings(_user.id, settingsModel)
+                    .listen((_) {
+                  _settingsBloc.loadSettings(_user);
+                });
+              }),
             ]);
           } else {
             return const Center(
