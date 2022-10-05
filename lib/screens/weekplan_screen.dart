@@ -403,7 +403,10 @@ class WeekplanScreen extends StatelessWidget {
                       key: const Key('SingleWeekdayRow'),
                       children: <Widget>[
                         const Spacer(flex: 1),
-                        weekDays.first,
+                        // The Container is used to set the width of the column
+                        // to half the width of the screen
+                        Container(width: MediaQuery.of(context).size.width / 2,
+                            child: weekDays.first),
                         const Spacer(flex: 1),
                       ],
                     );
