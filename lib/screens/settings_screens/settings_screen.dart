@@ -27,6 +27,7 @@ import 'package:weekplanner/widgets/settings_widgets/'
     'settings_theme_display_box.dart';
 import '../../di.dart';
 import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
+import 'change_username_screen.dart';
 import 'completed_activity_icon_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
@@ -214,7 +215,19 @@ class SettingsScreen extends StatelessWidget {
                   }
                 },
               ),
-              SettingsArrowButton('Skift brugernavn', () {}),
+              SettingsArrowButton('Skift brugernavn',
+                    () async {
+                final Object result =
+                await Routes.push(context, ChangeUsernameScreen(_user));
+                if (result != null) {
+                  settingsModel.nrOfDaysToDisplay = result;
+                  _settingsBloc
+                      .updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  });
+                }
+              },),
               SettingsArrowButton(
                 'Skift kodeord',
                 () async {
