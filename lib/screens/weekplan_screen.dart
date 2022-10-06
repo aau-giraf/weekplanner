@@ -276,11 +276,6 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-
-
-
-
-
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildRemoveDialog(BuildContext context) {
     return showDialog<Center>(

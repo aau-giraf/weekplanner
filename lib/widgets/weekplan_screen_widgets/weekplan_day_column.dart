@@ -226,6 +226,22 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
+  /// Sets all activites to Normal state
+  /// Then marks the first Normal activity to Active
+  void markCurrent(WeekdayModel weekdayModel){
+    for (ActivityModel activity in weekdayModel.activities){
+      if(activity.state == ActivityState.Active){
+        activity.state = ActivityState.Normal;
+      }
+    }
+    for (ActivityModel activity in weekdayModel.activities){
+      if(activity.state == ActivityState.Normal){
+        activity.state = ActivityState.Active;
+        break;
+      }
+    }
+  }
+
   /// Builds a day's activities
   StreamBuilder<List<ActivityModel>> _buildDayActivities( WeekdayModel weekday){
 
@@ -241,6 +257,9 @@ class WeekplanDayColumn extends StatelessWidget {
                 return Expanded(
                   child: ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
+                      if(isToday) {
+                        markCurrent(weekday);
+                      }
                       if ( index >= weekday.activities.length ) {
                         return StreamBuilder<bool>(
                             stream: weekplanBloc.activityPlaceholderVisible,
@@ -265,7 +284,8 @@ class WeekplanDayColumn extends StatelessWidget {
                               }
                               return _pictogramIconStack(context, index,
                                   weekday, editModeSnapshot.data);
-                            });
+                            }
+                            );
                       }
                     },
                     itemCount: weekday.activities.length + 1,
@@ -530,7 +550,7 @@ class WeekplanDayColumn extends StatelessWidget {
                                         newPictogram
                                       ],
                                       order: weekday.activities.length,
-                                      state: ActivityState.Active,
+                                      state: ActivityState.Normal,
                                       isChoiceBoard: false),
                                   weekday.day.index);
                             }

@@ -249,6 +249,13 @@ class ActivityCard extends StatelessWidget {
             color: theme.GirafColors.red,
             size: MediaQuery.of(context).size.width,
           );
+        case ActivityState.Active:
+          return Icon(
+            Icons.brightness_1_outlined,
+            key: const Key('IconActive'),
+            color: theme.GirafColors.amber,
+            size: MediaQuery.of(context).size.width,
+          );
         default:
           return Container(
             width: 0,
