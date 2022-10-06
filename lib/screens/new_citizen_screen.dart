@@ -7,6 +7,8 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
+enum Roles {guardian, trustee, citizen}
+
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatefulWidget {
   /// Constructor for the NewCitizenScreen()
@@ -22,6 +24,7 @@ class NewCitizenScreen extends StatefulWidget {
 
 class _NewCitizenScreenState extends State<NewCitizenScreen> {
   final ApiErrorTranslater _translator = ApiErrorTranslater();
+  Roles _role = Roles.citizen;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,64 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           : 'Navn skal udfyldes',
                     ),
                     onChanged: widget._bloc.onDisplayNameChange.add,
+                  );
+                }),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
+            child: StreamBuilder<bool>(
+                stream: widget._bloc.validDisplayNameStream,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  return Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget> [
+                          Expanded(
+                            child: ListTile(
+                              title: const Text('Guardian'),
+                              leading: Radio<Roles> (
+                                value: Roles.guardian,
+                                groupValue: _role,
+                                onChanged: (Roles value) {
+                                  setState(() {
+                                    _role = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListTile(
+                              title: const Text('Trustee'),
+                              leading: Radio<Roles> (
+                                value: Roles.trustee,
+                                groupValue: _role,
+                                onChanged: (Roles value) {
+                                  setState(() {
+                                    _role = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListTile(
+                              title: const Text('Citizen'),
+                              leading: Radio<Roles> (
+                                value: Roles.citizen,
+                                groupValue: _role,
+                                onChanged: (Roles value) {
+                                  setState(() {
+                                    _role = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   );
                 }),
           ),
@@ -129,13 +190,38 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   isEnabled: false,
                   isEnabledStream: widget._bloc.allInputsAreValidStream,
                   onPressed: () {
-                    widget._bloc.createCitizen().listen((GirafUserModel response) {
-                      if (response != null) {
-                        Routes.pop<GirafUserModel>(context, response);
-                        widget._bloc.resetBloc();
-                      }
-                    }).onError((Object error) =>
-                        _translator.catchApiError(error, context));
+                    switch(_role) {
+                      case Roles.guardian:
+                        widget._bloc.createGuardian()
+                            .listen((GirafUserModel response) {
+                          if (response != null) {
+                            Routes.pop<GirafUserModel>(context, response);
+                            widget._bloc.resetBloc();
+                          }})
+                            .onError((Object error) =>
+                            _translator.catchApiError(error, context));
+                        break;
+                      case Roles.trustee:
+                        widget._bloc.createTrustee()
+                            .listen((GirafUserModel response) {
+                          if (response != null) {
+                            Routes.pop<GirafUserModel>(context, response);
+                            widget._bloc.resetBloc();
+                          }})
+                            .onError((Object error) =>
+                            _translator.catchApiError(error, context));
+                        break;
+                      case Roles.citizen:
+                        widget._bloc.createCitizen()
+                            .listen((GirafUserModel response) {
+                          if (response != null) {
+                            Routes.pop<GirafUserModel>(context, response);
+                            widget._bloc.resetBloc();
+                          }})
+                            .onError((Object error) =>
+                            _translator.catchApiError(error, context));
+                        break;
+                    }
                   },
                 ),
               ),
