@@ -13,6 +13,8 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
+import '../style/custom_color.dart' as theme;
 
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatelessWidget {
@@ -20,6 +22,7 @@ class NewCitizenScreen extends StatelessWidget {
   NewCitizenScreen() : _bloc = di.getDependency<NewCitizenBloc>() {
     _bloc.initialize();
   }
+
   ///Variable representing the screen height
   dynamic screenHeight;
 
@@ -30,15 +33,124 @@ class NewCitizenScreen extends StatelessWidget {
   final NewCitizenBloc _bloc;
 
   final TakePictureWithCameraBloc _takePictureWithCamera =
-    di.getDependency<TakePictureWithCameraBloc>();
+      di.getDependency<TakePictureWithCameraBloc>();
 
   final UploadFromGalleryBloc _uploadFromGallery =
-    di.getDependency<UploadFromGalleryBloc>();
+      di.getDependency<UploadFromGalleryBloc>();
+
+  final BorderRadius _imageBorder = BorderRadius.circular(25);
+
+  Widget _buildBody(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        _buildImageBox(),
+      ],
+      //),
+    );
+  }
+
+  Widget _buildImageBox() {
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Container(
+          child: FlatButton(
+            onPressed: _takePictureWithCamera.takePictureWithCamera,
+            child: StreamBuilder<File>(
+                stream: _takePictureWithCamera.file,
+                builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+                    snapshot.data != null
+                        ? _displayImage(snapshot.data)
+                        : _displayIfNoImage()),
+          ),
+        ));
+  }
+
+  Widget _displayImage(File image) {
+    return Container(
+      margin: const EdgeInsets.all(10.0),
+      height: screenHeight / 2,
+      width: screenWidth / 2,
+      child: CircleAvatar(
+        key: Key('WidgetAvatar'),
+        radius: 1,
+        foregroundImage: FileImage(image),
+        backgroundImage: AssetImage('assets/login_screen_background_image.png'),
+      ),
+      );
+  }
+
+  Widget _displayIfNoImage() {
+    return Container(
+      height: screenHeight / 3,
+      width: screenWidth / 3,
+      decoration: BoxDecoration(
+          border: Border.all(
+            width: 4,
+            color: theme.GirafColors.black,
+          ),
+          color: theme.GirafColors.white70,
+          borderRadius: _imageBorder),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Image.asset(
+            'assets/icons/gallery.png',
+            color: theme.GirafColors.black,
+            scale: .75,
+          ),
+          const Text(
+            '',
+            style: TextStyle(
+                color: theme.GirafColors.black, fontSize: GirafFont.medium),
+          )
+        ],
+      ),
+    );
+  }
+  @override
+  Widget build3(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      appBar: GirafAppBar(title: 'Tilføj fra galleri'),
+      body: StreamBuilder<bool>(
+          stream: _uploadFromGallery.isUploading,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return snapshot.hasData && snapshot.data
+                ? const LoadingSpinnerWidget()
+                : _buildBody(context);
+          }),
+    );
+  }
+  @override
+  Widget build2(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      appBar: GirafAppBar(title: 'Tilføj fra kamera'),
+      body: StreamBuilder<bool>(
+          stream: _takePictureWithCamera.isUploading,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return snapshot.hasData && snapshot.data
+                ? const LoadingSpinnerWidget()
+                : _buildBody(context);
+          }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+    body:
+    StreamBuilder<bool>(
+        stream: _takePictureWithCamera.isUploading,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          return snapshot.hasData && snapshot.data
+              ? const LoadingSpinnerWidget()
+              : _buildBody(context);
+        });
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny borger',
@@ -139,47 +251,63 @@ class NewCitizenScreen extends StatelessWidget {
               style: TextStyle(fontSize: GirafFont.small),
             ),
           ),
+
+          /// Profile preview picture
           Center(
-            child: Container(
-              margin: const EdgeInsets.all(10.0),
-              width: screenWidth / 2,
-              height: screenHeight / 2,
-              child: const CircleAvatar(
-                key: Key('WidgetAvatar'),
-                radius: 1,
-                foregroundImage: NetworkImage('https://docs.flutter.dev/assets/images/shared/brand/flutter/logo/flutter-lockup.png'),
-                backgroundImage: AssetImage('assets/login_screen_background_image.png'),
-              ),
-            ),
+            child: StreamBuilder<File>(
+                stream: _takePictureWithCamera.file,
+                builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+                  snapshot.data != null
+                        ? _displayImage(snapshot.data)
+                        : _displayIfNoImage()),
           ),
+          Center(
+            child: StreamBuilder<File>(
+                stream: _uploadFromGallery.file,
+                builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+                snapshot.data != null
+                    ? _displayImage(snapshot.data)
+                    : _displayIfNoImage()),
+          ),
+
           Row(
             //mainAxisAlignment:,
             children: <Widget>[
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+
+                /// Add from gallery button
                 child: GirafButton(
                   key: const Key('TilføjFraGalleriButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Tilføj fra galleri',
                   onPressed: _uploadFromGallery.chooseImageFromGallery,
+                  child: StreamBuilder<File>(
+                      stream: _uploadFromGallery.file,
+                      builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+                          snapshot.data != null
+                              ? _displayImage(snapshot.data)
+                              : _displayIfNoImage()),
                 ),
               ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+
+                /// Take picture button
                 child: GirafButton(
                   key: const Key('TagBillede'),
                   icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
                   text: 'Tag billede',
                   onPressed: _takePictureWithCamera.takePictureWithCamera,
-                  /*child: StreamBuilder<File>(
+                  child: StreamBuilder<File>(
                       stream: _takePictureWithCamera.file,
                       builder: (BuildContext context,
                               AsyncSnapshot<File> snapshot) =>
                           snapshot.data != null
                               ? _displayImage(snapshot.data)
-                              : _displayIfNoImage()),*/
+                              : _displayIfNoImage()),
                 ),
               ),
             ],
