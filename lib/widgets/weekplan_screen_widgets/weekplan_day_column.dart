@@ -58,8 +58,6 @@ class WeekplanDayColumn extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
 
-  bool isToday;
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekdayModel>(
@@ -76,7 +74,6 @@ class WeekplanDayColumn extends StatelessWidget {
   }
 
   Column _day(WeekdayModel weekday, BuildContext context) {
-    isToday = DateTime.now().weekday.toInt()-1 == dayOfTheWeek.index;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -130,9 +127,9 @@ class WeekplanDayColumn extends StatelessWidget {
               translation,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: isToday ? 40 : 30,
+                fontSize: isToday() ? 40 : 30,
                 foreground: Paint()
-                  ..style = isToday ? PaintingStyle.stroke : PaintingStyle.fill
+                  ..style = isToday() ? PaintingStyle.stroke : PaintingStyle.fill
                   ..strokeWidth = 5
                   ..color = Colors.black,
               ),
@@ -144,8 +141,10 @@ class WeekplanDayColumn extends StatelessWidget {
               translation,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: isToday ? 40 : 30,
-                color: isToday ? Color(int.parse('0xffffffff')) : Colors.black,
+                fontSize: isToday() ? 40 : 30,
+                color: isToday()
+                    ? Color(int.parse('0xffffffff'))
+                    : Colors.black,
               ),
               textAlign: TextAlign.center,
               maxLines: 1,
@@ -217,6 +216,12 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
+  /// Returns true if the field dayOfTheWeek matches with today's date
+  /// This function is mainly used for highlighting today's date on the weekplan
+  bool isToday(){
+    return DateTime.now().weekday.toInt()-1 == dayOfTheWeek.index;
+  }
+
   /// Unmarks all activities for a given day
   void unmarkAllDayActivities(WeekdayModel weekdayModel) {
     for (ActivityModel activity in weekdayModel.activities) {
@@ -257,7 +262,7 @@ class WeekplanDayColumn extends StatelessWidget {
                 return Expanded(
                   child: ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
-                      if(isToday) {
+                      if(isToday()) {
                         markCurrent(weekday);
                       }
                       if ( index >= weekday.activities.length ) {
@@ -272,7 +277,8 @@ class WeekplanDayColumn extends StatelessWidget {
                                 child: _dragTargetPlaceholder(index, weekday),
                               );
                             });
-                      } else {
+                      }
+                      else {
                         return StreamBuilder<WeekplanMode>(
                             stream: _authBloc.mode,
                             initialData: WeekplanMode.guardian,
@@ -284,8 +290,8 @@ class WeekplanDayColumn extends StatelessWidget {
                               }
                               return _pictogramIconStack(context, index,
                                   weekday, editModeSnapshot.data);
-                            }
-                            );
+                              }
+                        );
                       }
                     },
                     itemCount: weekday.activities.length + 1,
