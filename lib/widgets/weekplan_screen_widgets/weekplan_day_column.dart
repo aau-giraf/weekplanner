@@ -129,7 +129,9 @@ class WeekplanDayColumn extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: isToday() ? 40 : 30,
                 foreground: Paint()
-                  ..style = isToday() ? PaintingStyle.stroke : PaintingStyle.fill
+                  ..style = isToday()
+                      ? PaintingStyle.stroke
+                      : PaintingStyle.fill
                   ..strokeWidth = 5
                   ..color = Colors.black,
               ),
