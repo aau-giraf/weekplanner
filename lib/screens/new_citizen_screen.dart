@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
+import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
@@ -19,15 +20,25 @@ class NewCitizenScreen extends StatelessWidget {
   NewCitizenScreen() : _bloc = di.getDependency<NewCitizenBloc>() {
     _bloc.initialize();
   }
+  ///Variable representing the screen height
+  dynamic screenHeight;
+
+  ///Variable representing the screen width
+  dynamic screenWidth;
 
   final ApiErrorTranslater _translator = ApiErrorTranslater();
   final NewCitizenBloc _bloc;
 
   final TakePictureWithCameraBloc _takePictureWithCamera =
-      di.getDependency<TakePictureWithCameraBloc>();
+    di.getDependency<TakePictureWithCameraBloc>();
+
+  final UploadFromGalleryBloc _uploadFromGallery =
+    di.getDependency<UploadFromGalleryBloc>();
 
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny borger',
@@ -128,13 +139,17 @@ class NewCitizenScreen extends StatelessWidget {
               style: TextStyle(fontSize: GirafFont.small),
             ),
           ),
-          const AspectRatio(
-            aspectRatio: 4,
-            child: CircleAvatar(
-              key: Key('WidgetAvatar'),
-              radius: 150,
-              backgroundImage:
-                  AssetImage('assets/read.jpg'),
+          Center(
+            child: Container(
+              margin: const EdgeInsets.all(10.0),
+              width: screenWidth / 2,
+              height: screenHeight / 2,
+              child: const CircleAvatar(
+                key: Key('WidgetAvatar'),
+                radius: 1,
+                foregroundImage: NetworkImage('https://docs.flutter.dev/assets/images/shared/brand/flutter/logo/flutter-lockup.png'),
+                backgroundImage: AssetImage('assets/login_screen_background_image.png'),
+              ),
             ),
           ),
           Row(
@@ -147,7 +162,7 @@ class NewCitizenScreen extends StatelessWidget {
                   key: const Key('TilføjFraGalleriButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Tilføj fra galleri',
-                  onPressed: () {},
+                  onPressed: _uploadFromGallery.chooseImageFromGallery,
                 ),
               ),
               Padding(
