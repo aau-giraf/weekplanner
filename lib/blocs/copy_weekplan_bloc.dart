@@ -3,6 +3,7 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
+import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
@@ -22,7 +23,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
 
   /// Copies weekplan to all selected citizens
   // ignore: avoid_void_async
-  Future<List<bool>> copyWeekplan(WeekModel weekModel,
+  Future<List<bool>> copyWeekplan(List<WeekModel> weekModelList,
       DisplayNameModel currentUser, bool forThisCitizen) async {
     List<DisplayNameModel> users = <DisplayNameModel>[];
     if (forThisCitizen) {
@@ -33,45 +34,24 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
 
     final List<Future<bool>> callFutures = <Future<bool>>[];
     for (DisplayNameModel user in users) {
-      final Completer<bool> callCompleter = Completer<bool>();
-      _api.week
-        .update(user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
-        .take(1)
-        .listen((WeekModel weekModel) {
+      for (WeekModel weekModel in weekModelList){
+        final Completer<bool> callCompleter = Completer<bool>();
+        _api.week
+            .update(
+            user.id, weekModel.weekYear, weekModel.weekNumber, weekModel)
+            .take(1)
+            .listen((WeekModel weekModel) {
           final bool done = weekModel != null;
           callCompleter.complete(done);
         });
 
-      callFutures.add(callCompleter.future);
+        callFutures.add(callCompleter.future);
+      }
+
     }
     return Future.wait(callFutures);
   }
 
-  /// Returns a list of all users which already have a weekplan in the same week
-  Future<List<DisplayNameModel>> getConflictingUsers(
-      List<DisplayNameModel> users, WeekModel weekModel) async {
-    final List<DisplayNameModel> conflictingUsers = <DisplayNameModel>[];
-    for (DisplayNameModel user in users) {
-      if (await isConflictingUser(user, weekModel)) {
-        conflictingUsers.add(user);
-      }
-    }
-    return conflictingUsers;
-  }
-
-  /// Checks if any user has a conflicting weekplan
-  Future<int> numberOfConflictingUsers(WeekModel weekModel,
-      DisplayNameModel currentUser, bool forThisCitizen) async {
-    final List<DisplayNameModel> users = forThisCitizen
-        ? <DisplayNameModel>[currentUser]
-        : _markedUserModels.value;
-
-    final List<DisplayNameModel> conflictingUsers =
-        await getConflictingUsers(users, weekModel);
-    return conflictingUsers.length;
-  }
-
-  /// Compares a single Citizen's Weekplans with the copied weekplan
   Future<bool> isConflictingUser(
       DisplayNameModel user, WeekModel weekModel) async {
     bool daysAreEmpty = true;
@@ -98,6 +78,51 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     return !daysAreEmpty;
   }
 
+    /// Returns a list of all users which already have a
+    /// weekplan in the same week
+    Future<List<DisplayNameModel>> getConflictingUsers(
+        DisplayNameModel currentUser, WeekModel weekModel) async {
+
+      final List<DisplayNameModel> users = _markedUserModels.value.isEmpty ?
+      [currentUser] : _markedUserModels.value ;
+      final List<DisplayNameModel> conflictingUsers = <DisplayNameModel>[];
+
+      for (DisplayNameModel user in users) {
+        if (await isConflictingUser(user, weekModel)) {
+          conflictingUsers.add(user);
+        }
+      }
+      return conflictingUsers;
+    }
+
+    ///Returns a list with the names of all users with a conflict
+  Future<List<String>> getAllConflictingUsers(
+      DisplayNameModel currentUser, List<WeekModel> weekModelList) async {
+    Future<List<String>> futureResult;
+    List<String> result = <String>[];
+    for (WeekModel weekModel in weekModelList) {
+      await getConflictingUsers(
+          currentUser, weekModel).then((List<DisplayNameModel> nameList) {
+        for (DisplayNameModel displayNameModel in nameList) {
+          result.add(displayNameModel.displayName);
+        }
+      });
+    }
+    return result;
+  }
+
+  /// Checks if any user has a conflicting weekplan
+  Future<int> numberOfConflictingUsers(List<WeekModel> weekModelList,
+      DisplayNameModel currentUser, bool forThisCitizen) async {
+    int result = 0;
+    for (WeekModel weekModel in weekModelList){
+
+      final List<DisplayNameModel> conflictingUsers =
+      await getConflictingUsers(currentUser, weekModel);
+      result += conflictingUsers.length;
+    }
+    return result;
+  }
   /// Adds a new marked week model to the stream
   void toggleMarkedUserModel(DisplayNameModel user) {
     final List<DisplayNameModel> localMarkedUserModels =

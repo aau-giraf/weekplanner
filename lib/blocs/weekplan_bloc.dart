@@ -222,10 +222,25 @@ class WeekplanBloc extends BlocBase {
               order: _week.days[dayOfWeek].activities.length,
               isChoiceBoard: activity.isChoiceBoard,
               state: ActivityState.Normal,
-              title: activity.title);
+              title: activity.title,
+              choiceBoardName: activity.choiceBoardName.toString(),
+              timer: activity.timer
+          );
 
           // Add the copy to the specified day
+          for (int i = 0; i < 5; i++){
+            print("hej");
+            print(i);
+          }
+          String hej = activity.choiceBoardName;
+          print('old: $hej');
+          String hej2 = newActivity.choiceBoardName;
+          print('new $hej2');
+          print(activity.isChoiceBoard);
+
+
           _week.days[dayOfWeek].activities.add(newActivity);
+          print('TEST: ${_week.days[dayOfWeek].activities[0].choiceBoardName}');
           daysToUpdate.add(_week.days[dayOfWeek]);
         }
       }
@@ -349,12 +364,17 @@ class WeekplanBloc extends BlocBase {
     for(WeekdayModel day in days){
       _api.week.updateDay(user.id, _week.weekYear, _week.weekNumber, day)
           .listen((WeekdayModel newDay) {
+        print('TEST2 ${newDay.activities[0].choiceBoardName}');
+        print('day: ${day.activities[0].choiceBoardName}');
             _weekDayStreams[newDay.day.index-_firstDay].add(newDay);
             _week.days[newDay.day.index] = newDay;
-      }).onError((Object error) {
-        return Future<void>.error(error);
+            print('TEST3 ${newDay.activities[0].choiceBoardName}');
       });
-    }
+
+    //       .onError((Object error) {
+    //     return Future<void>.error(error);
+    //   });
+    // }
     return Future<void>.value();
   }
 

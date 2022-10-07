@@ -10,17 +10,18 @@ import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../routes.dart';
 import '../style/custom_color.dart' as theme;
 
 /// The screen to choose a citizen
 class CopyToCitizensScreen extends StatelessWidget {
-  /// <param name="model">WeekModel that should be copied
-  CopyToCitizensScreen(this._copiedWeekModel, this._currentUser);
+  /// <param name='model'>WeekModel that should be copied
+  CopyToCitizensScreen(this._copiedWeekModelList, this._currentUser);
 
+  final List<WeekModel> _copiedWeekModelList;
   final CopyWeekplanBloc _bloc = di.getDependency<CopyWeekplanBloc>();
-  final WeekModel _copiedWeekModel;
   final DisplayNameModel _currentUser;
 
   @override
@@ -75,14 +76,23 @@ class CopyToCitizensScreen extends StatelessWidget {
                           child: GirafButton(
                             key: const Key('AcceptButton'),
                             onPressed: () async {
-                              _bloc
+                              await _bloc
                                 .numberOfConflictingUsers(
-                                _copiedWeekModel, _currentUser, false)
+                                _copiedWeekModelList, _currentUser, false)
                                 .then((int conflicts) {
                                   if (conflicts > 0) {
-                                    _showConflictDialog(context, conflicts);
+                                    _copiedWeekModelList.length > 1 ?
+                                    _showConflictDialogMultiplePlans(
+                                      context, conflicts,
+                                        _bloc.getAllConflictingUsers(
+                                            _currentUser, _copiedWeekModelList))
+                                        : _showConflictDialog(
+                                          context, conflicts,
+                                        _bloc.getAllConflictingUsers(
+                                            _currentUser,
+                                            _copiedWeekModelList));
                                   } else {
-                                    _bloc.copyWeekplan(_copiedWeekModel,
+                                    _bloc.copyWeekplan(_copiedWeekModelList,
                                       _currentUser, false);
                                     Routes.goHome(context);
                                     Routes.push(context,
@@ -151,41 +161,93 @@ class CopyToCitizensScreen extends StatelessWidget {
     }
   }
 
-  ///Builds dialog box to fix conflict
-  Future<Center> _showConflictDialog(BuildContext context, int conflicts) {
+  ///Builds dialog box to fix conflicts for a single WeekPlan
+  Future<Center> _showConflictDialog(BuildContext context, int conflicts,
+      Future<List<String>> futureUserList) async {
+    final List<String> userList = (await futureUserList).toSet().toList();
+    String userStringList = userList[0];
+    for (int i = 1; i < userList.length - 1; i++){
+      userStringList += ', ${userList[i]}';
+    }
+    if (userList.length > 1) {
+      userStringList += ' og ${userList[userList.length - 1]}';
+    }
+
+      return showDialog<Center>(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return Giraf3ButtonDialog(
+              title: 'Håndter konflikt',
+              description: userStringList.length < 500 ? '${userList.length == 1
+                  ? '' : 'Følgende borgere: '}'
+                  '$userStringList har i alt $conflicts '
+                  'konflikt${conflicts > 1 ? 'er' : ''}.' : '${userList.length}'
+                  'antal borgere har i alt $conflicts konflikt${conflicts > 1 ?
+              'er' : ''}.',
+              option1Text: 'Rediger',
+              option1OnPressed: () {
+                Routes.pop(context);
+                Routes.push(
+                    context,
+                    CopyResolveScreen(
+                      currentUser: _currentUser,
+                      weekModel: _copiedWeekModelList[0],
+                      copyBloc: _bloc,
+                      forThisCitizen: false,
+                    ));
+              },
+              option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+              option2Text: 'Overskriv',
+              option2OnPressed: () {
+                _bloc.copyWeekplan(_copiedWeekModelList, _currentUser, false)
+                    .then((_) {
+                  Routes.goHome(context);
+                  Routes.push(context,
+                      WeekplanSelectorScreen(_currentUser));
+                });
+              },
+              option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+            );
+          });
+  }
+
+  ///Builds dialog box to fix conflicts for multiple WeekPlans
+  Future<Center> _showConflictDialogMultiplePlans(
+      BuildContext context, int conflicts,
+      Future<List<String>> futureUserList ) async{
+    final List<String> userList = (await futureUserList).toSet().toList();
+    String userStringList = userList[0];
+    for (int i = 1; i < userList.length - 1; i++){
+      userStringList += ', ${userList[i]}';
+    }
+    if (userList.length > 1) {
+      userStringList += ' og ${userList[userList.length - 1]}';
+    }
     return showDialog<Center>(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return Giraf3ButtonDialog(
-          title: 'Håndter konflikt',
-          description: 'Der er '
-              '$conflicts konflikt${conflicts == 1 ? '': 'er'}',
-          option1Text: 'Rediger',
-          option1OnPressed: () {
-            Routes.pop(context);
-            Routes.push(
-              context,
-              CopyResolveScreen(
-                currentUser: _currentUser,
-                weekModel: _copiedWeekModel,
-                copyBloc: _bloc,
-                forThisCitizen: false,
-              ));
-          },
-          option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-          option2Text: 'Overskriv',
-          option2OnPressed: () {
-            _bloc.copyWeekplan(_copiedWeekModel, _currentUser, false)
-              .then((_) {
-              Routes.goHome(context);
-              Routes.push(context,
-                WeekplanSelectorScreen(_currentUser));
-            });
-          },
-          option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-        );
-      });
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+            title: 'Håndter konflikt',
+            description: userStringList.length < 500 ? '${userList.length == 1
+                ? '' : 'Følgende borgere: '}'
+                '$userStringList har i alt $conflicts '
+                'konflikt${conflicts > 1 ? 'er' : ''}.' : '${userList.length} '
+                'antal borgere har i alt $conflicts konflikt${conflicts > 1 ?
+                'er' : ''}.',
+            confirmButtonText: 'Overskriv',
+            confirmOnPressed: () {
+              _bloc.copyWeekplan(_copiedWeekModelList, _currentUser, false)
+                  .then((_) {
+                Routes.goHome(context);
+                Routes.push(context,
+                    WeekplanSelectorScreen(_currentUser));
+              });
+            },
+            confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+          );
+        });
   }
 
   Future<Center> _showCopySuccessDialog(BuildContext context) {

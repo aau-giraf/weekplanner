@@ -338,6 +338,7 @@ class ShowActivityScreen extends StatelessWidget {
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
     String inputtext = _activity.choiceBoardName;
+    print('search: $inputtext');
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),

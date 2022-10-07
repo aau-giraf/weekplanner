@@ -39,7 +39,7 @@ class CopyResolveScreen extends StatelessWidget {
   /// The user that is being copied from
   final DisplayNameModel currentUser;
 
-  /// The weekModel that is being copied
+  /// The weekModelList that is being copied
   final WeekModel weekModel;
 
   @override
@@ -51,10 +51,11 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        final WeekModel newWeekModel = _bloc.createNewWeekmodel(weekModel);
+        final WeekModel newWeekModel = _bloc.createNewWeekmodel(
+            weekModel);
 
         final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
-            newWeekModel, currentUser, forThisCitizen);
+            [newWeekModel], currentUser, forThisCitizen);
 
         bool toCopy = true;
         if (numberOfConflicts > 0) {
@@ -68,7 +69,7 @@ class CopyResolveScreen extends StatelessWidget {
 
         if (toCopy) {
           copyBloc
-              .copyWeekplan(newWeekModel, currentUser, forThisCitizen)
+              .copyWeekplan([newWeekModel], currentUser, forThisCitizen)
               .then((_) {
             Routes.goHome(context);
             Routes.push(context, WeekplanSelectorScreen(currentUser));

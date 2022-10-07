@@ -339,6 +339,18 @@ class WeekplansBloc extends BlocBase {
     return completer.future;
   }
 
+  Future<List<WeekModel>> getMarkedWeeks() async {
+    final List<WeekModel> weekList = <WeekModel>[];
+    for (WeekModel weekModel in _markedWeekModels.value){
+      final Completer<WeekModel> completer = Completer<WeekModel>();
+      _api.week
+          .get(_user.id, weekModel.weekYear, weekModel.weekNumber)
+          .listen((WeekModel weekModel) => completer.complete(weekModel));
+      weekList.add(await completer.future);
+    }
+    return weekList;
+  }
+
   /// Toggles edit mode
   void toggleEditMode() {
     if (_editMode.value) {
