@@ -138,32 +138,50 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   Future<Center> _selectedPictogramFromChoiceBoard(
       BuildContext context, List<Widget> pictograms, int index) {
-    return showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return GirafConfirmDialog(
-              key: const Key('PictogramSelectorConfirmDialog'),
-              title: 'Vælg aktivitet',
-              description: 'Vil du vælge aktiviteten ' +
-                  _activity.pictograms[index].title,
-              confirmButtonText: 'Ja',
-              confirmButtonIcon:
-                  const ImageIcon(AssetImage('assets/icons/accept.png')),
-              confirmOnPressed: () {
-                _activity.isChoiceBoard = false;
-                final List<PictogramModel> _pictogramModels = <PictogramModel>[
-                  _activity.pictograms[index]
-                ];
-                _activity.pictograms = _pictogramModels;
+    if(false) {
+      return showDialog<Center>(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return GirafConfirmDialog(
+                key: const Key('PictogramSelectorConfirmDialog'),
+                title: 'Vælg aktivitet',
+                description: 'Vil du vælge aktiviteten ' +
+                    _activity.pictograms[index].title,
+                confirmButtonText: 'Ja',
+                confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/accept.png')),
+                confirmOnPressed: () {
+                  _activity.isChoiceBoard = false;
+                  final List<PictogramModel> _pictogramModels = <
+                      PictogramModel>[
+                    _activity.pictograms[index]
+                  ];
+                  _activity.pictograms = _pictogramModels;
 
-                _activityBloc.update();
-                _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
-                  Routes.pop(context);
-                });
-                // Closes the dialog box
-              },
-              cancelOnPressed: () {});
-        });
+                  _activityBloc.update();
+                  _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
+                    Routes.pop(context);
+                  });
+                  // Closes the dialog box
+                },
+                cancelOnPressed: () {});
+          });
+    }
+    else{
+      _activity.isChoiceBoard = false;
+      final List<PictogramModel> _pictogramModels = <
+          PictogramModel>[
+        _activity.pictograms[index]
+      ];
+      _activity.pictograms = _pictogramModels;
+
+      _activityBloc.update();
+      _activityBloc.load(_activity, _user);
+      //Refreshes weekplan to make the change visible to the citizen
+      _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
+        Routes.pop(context);
+      });//Closes choiceboard
+    }
   }
 }
