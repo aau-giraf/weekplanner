@@ -154,6 +154,7 @@ void main() {
           weekModel: weekplan1,
           forThisCitizen: true)));
 
+
       expect(find.text(weekplan1.weekNumber.toString()), findsOneWidget);
       expect(find.text(weekplan1.weekYear.toString()), findsOneWidget);
       expect(find.text(weekplan1.name), findsOneWidget);
@@ -163,13 +164,22 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('3'), findsOneWidget);
 
+      await tester.enterText(
+          find.byKey(const Key('WeekYearTextFieldKey')), '2020');
+      await tester.pumpAndSettle();
+      expect(find.text('2020'), findsOneWidget);
+
       expect(find.byKey(const Key('CopyResolveSaveButton')), findsOneWidget);
       await tester.tap(find.byKey(const Key('CopyResolveSaveButton')));
       await tester.pumpAndSettle();
 
       expect(find.byType(WeekplanSelectorScreen), findsOneWidget);
 
-      expect(find.text('Uge: 3      År: 2020'), findsOneWidget);
+      // Expands the old week section
+      expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('ShowOldWeeks')));
+      await tester.pumpAndSettle();
+
       expect(find.text('weekplan1'), findsNWidgets(2));
     });
 
