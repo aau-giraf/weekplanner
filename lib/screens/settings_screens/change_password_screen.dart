@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
+import 'package:api_client/http/http.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:quiver/async.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -17,9 +19,7 @@ import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
 
 class ChangePasswordScreen extends StatelessWidget {
-  ChangePasswordScreen(DisplayNameModel user, Api api)
-      : _user = user,
-        _api = api {
+  ChangePasswordScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -36,7 +36,7 @@ class ChangePasswordScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
-  final Api _api;
+  final Api _api = di.getDependency<Api>();
 
   //const ChangePasswordScreen({Key key, this._user}) : super(key: key);
 
@@ -175,9 +175,7 @@ class ChangePasswordScreen extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              ChangePassword(
-                                  "id-placeholder",
-                                  currentPasswordCtrl.text,
+                              ChangePassword(_user, currentPasswordCtrl.text,
                                   newPasswordCtrl.text);
                             },
                             color: theme.GirafColors.dialogButton,
@@ -194,7 +192,54 @@ class ChangePasswordScreen extends StatelessWidget {
   }
 
   //This function, found in the account_api, handles the password change, when the "Gem"-button is clicked
-  void ChangePassword(String id, String newPassword, String oldPassword) {
-    _api.account.changePasswordWithOld(id, oldPassword, newPassword);
+  void ChangePassword(
+      DisplayNameModel user, String oldPassword, String newPassword) {
+    //authBloc.authenticate(user.displayName, oldPassword);
+
+    String guardian;
+
+    Stream<List<DisplayNameModel>> guardians = _api.user.getGuardians(user.id);
+    Future<List<DisplayNameModel>> GetGuardians(
+        Stream<List<DisplayNameModel>> stream) async {
+      await for (final value in stream) {
+        print(value.first.displayName);
+        guardian = value
+            .firstWhere((element) => element.displayName == "dev-guardian")
+            .id;
+        print(guardian);
+        //_api.account.changePasswordWithOld(guardian, "password", "password1");
+
+      }
+    }
+
+    //API-tests
+    Stream<bool> account = _api.account.changePasswordWithOld(
+        "61863405-b7e7-4c40-9c53-713ad191d094", oldPassword, newPassword);
+    //Til fremtids-JJ: Det er ovenstående der giver fejl (og printer) kh fortids-JJ
+
+    Stream<GirafUserModel> guardianUser = _api.user.get(guardian);
+
+    Future<GirafUserModel> GetGuardianUser(Stream<GirafUserModel> strum) async {
+      await for (final value in strum) {
+        //print(value.displayName);
+        //authBloc.authenticate(value.username, "password");
+        //_api.account.changePasswordWithOld(value.id, "password", "password1");
+      }
+    }
+
+    Future<bool> ChangePasswordForAccount(Stream<bool> passStream) async {
+      //Stream<bool>.fromFuture(Future.error(Exception()));
+      await for (final value in passStream) {
+        //print(value);
+        //_api.account.changePasswordWithOld(guardian, "password", "password1");
+      }
+    }
+
+    GetGuardianUser(guardianUser);
+    GetGuardians(guardians);
+    ChangePasswordForAccount(account);
+
+    //print(_api.user.get("72398352-dde6-48db-b1c8-ab73f45978f6"));
+    //print("id: " + user.id + " name: " + user.displayName);
   }
 }

@@ -1,3 +1,5 @@
+import 'package:api_client/api/account_api.dart';
+import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
@@ -37,7 +39,6 @@ class SettingsScreen extends StatelessWidget {
   }
 
   final DisplayNameModel _user;
-
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
@@ -218,8 +219,8 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                 'Skift kodeord',
                 () async {
-                  final Object result = await Routes.push(
-                      context, ChangePasswordScreen(_user, null));
+                  final Object result =
+                      await Routes.push(context, ChangePasswordScreen(_user));
                   if (result != null) {
                     settingsModel.nrOfDaysToDisplay = result;
                     _settingsBloc
