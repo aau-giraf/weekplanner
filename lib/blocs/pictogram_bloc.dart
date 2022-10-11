@@ -15,17 +15,19 @@ const int pageSize = 24;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
+
   /// Pictogram Business Logic Component
   ///
   /// Gives the ability to search for pictograms and await the results.
   PictogramBloc(this._api){
+
     // Listens for if view is scrolled to the bottom
     sc.addListener(() {
       if (sc.position.pixels >= sc.position.maxScrollExtent) {
         extendSearch();
       }
     });
-    search('');
+search('');
 
   }
 
@@ -75,7 +77,8 @@ class PictogramBloc extends BlocBase {
     /*if (query.isEmpty) {
       return;
     }*/
-
+    //ensures that it always starts with the  first pictograms
+    latestPage = 1;
     loadingPictograms = true;
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
@@ -109,7 +112,7 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void extendSearch() {
-    if (reachedLastPictogram || latestQuery == null || latestQuery.isEmpty) {
+    if (reachedLastPictogram || latestQuery == null) {
       return;
     }
 
