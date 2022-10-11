@@ -9,7 +9,8 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
-
+import 'package:weekplanner/blocs/activity_bloc.dart';
+import 'package:weekplanner/di.dart';
 /// Logic for activities
 class TimerBloc extends BlocBase {
   /// Constructor taking the API
@@ -19,6 +20,7 @@ class TimerBloc extends BlocBase {
 
   ActivityModel _activityModel;
   DisplayNameModel _user;
+  ActivityBloc _activityBloc;
 
   /// Stream for the progress of the timer.
   Stream<double> get timerProgressStream => _timerProgressStream.stream;
@@ -69,6 +71,8 @@ class TimerBloc extends BlocBase {
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity, {DisplayNameModel user}) {
     _activityModel = activity;
+    _activityBloc = di.getDependency<ActivityBloc>();
+    _activityBloc.load(activity, user);
 
     if (user != null) {
       _user = user;
@@ -197,6 +201,7 @@ class TimerBloc extends BlocBase {
       _timerStream = _countDown.listen((CountdownTimer c) {
         updateTimerProgress(c);
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
+          _activityBloc.completeActivity();
           playSound();
           _timerRunningModeStream.add(TimerRunningMode.completed);
         }
@@ -206,6 +211,7 @@ class TimerBloc extends BlocBase {
       _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {});
+
     }
   }
 

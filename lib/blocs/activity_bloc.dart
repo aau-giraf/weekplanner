@@ -14,7 +14,7 @@ class ActivityBloc extends BlocBase {
   /// Initializes values
   ActivityBloc(this._api);
 
-  /// Stream for updated ActivityModel.
+  /// Stream for  updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
