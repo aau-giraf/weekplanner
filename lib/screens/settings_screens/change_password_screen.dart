@@ -198,7 +198,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
     String guardian;
 
-    Stream<List<DisplayNameModel>> guardians = _api.user.getGuardians(user.id);
+    //Stream<List<DisplayNameModel>> guardians = _api.user.getGuardians(user.id);
     Future<List<DisplayNameModel>> GetGuardians(
         Stream<List<DisplayNameModel>> stream) async {
       await for (final value in stream) {
@@ -213,21 +213,10 @@ class ChangePasswordScreen extends StatelessWidget {
     }
 
     //API-tests
-    Stream<bool> account = _api.account.changePasswordWithOld(
+    Stream<bool> passStream = _api.account.changePasswordWithOld(
         "61863405-b7e7-4c40-9c53-713ad191d094", oldPassword, newPassword);
-    //Til fremtids-JJ: Det er ovenstående der giver fejl (og printer) kh fortids-JJ
 
-    Stream<GirafUserModel> guardianUser = _api.user.get(guardian);
-
-    Future<GirafUserModel> GetGuardianUser(Stream<GirafUserModel> strum) async {
-      await for (final value in strum) {
-        //print(value.displayName);
-        //authBloc.authenticate(value.username, "password");
-        //_api.account.changePasswordWithOld(value.id, "password", "password1");
-      }
-    }
-
-    Future<bool> ChangePasswordForAccount(Stream<bool> passStream) async {
+    Future ChangePasswordForAccount(Stream<bool> passStream) async {
       //Stream<bool>.fromFuture(Future.error(Exception()));
       await for (final value in passStream) {
         //print(value);
@@ -235,11 +224,7 @@ class ChangePasswordScreen extends StatelessWidget {
       }
     }
 
-    GetGuardianUser(guardianUser);
-    GetGuardians(guardians);
-    ChangePasswordForAccount(account);
-
-    //print(_api.user.get("72398352-dde6-48db-b1c8-ab73f45978f6"));
-    //print("id: " + user.id + " name: " + user.displayName);
+    //GetGuardians(guardians);
+    ChangePasswordForAccount(passStream);
   }
 }
