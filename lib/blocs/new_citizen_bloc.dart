@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -27,6 +29,15 @@ class NewCitizenBloc extends BlocBase {
    /// This field controls the password verification input field
   final rx_dart.BehaviorSubject<String> passwordVerifyController =
       rx_dart.BehaviorSubject<String>();
+
+  final rx_dart.BehaviorSubject<File> _file = rx_dart.BehaviorSubject<File>();
+  /// Publishes the image file, while it is not null
+  Stream<File> get file => _file.stream.where((File f) => f != null);
+  /// Publishes if the input fields are filled
+  Stream<bool> get isInputValid => _isInputValid.stream;
+
+  final rx_dart.BehaviorSubject<bool> _isInputValid =
+  rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Handles when the entered display name is changed.
   Sink<String> get onDisplayNameChange => displayNameController.sink;
@@ -61,6 +72,41 @@ class NewCitizenBloc extends BlocBase {
     _api.user.me().listen((GirafUserModel user) {
       _user = user;
     });
+  }
+
+  /// pushes an imagePicker screen, then sets the pictogram image,
+  /// to the selected image from the gallery
+  void takePictureWithCamera() {
+    ImagePicker.pickImage(source: ImageSource.camera).then((File f) {
+      if (f != null) {
+        _publishImage(f);
+        _checkInput();
+      }
+    });
+  }
+
+  /// pushes an imagePicker screen, then sets the profile picture image,
+  /// to the selected image from the gallery
+  void chooseImageFromGallery() {
+    ImagePicker.pickImage(source: ImageSource.gallery).then((File f) {
+      if (f != null) {
+        _publishImage(f);
+        _checkInput();
+      }
+    });
+  }
+
+  void _publishImage(File file) {
+    _file.add(file);
+  }
+
+  /// Checks if the input fields are filled out
+  void _checkInput() {
+    if (_file.value != null) {
+      _isInputValid.add(true);
+    } else {
+      _isInputValid.add(false);
+    }
   }
 
   /// Method called with information about the new citizen.
@@ -146,6 +192,7 @@ class NewCitizenBloc extends BlocBase {
     usernameController.close();
     passwordController.close();
     passwordVerifyController.close();
+    _file.close();
+    _isInputValid.close();
   }
-
 }

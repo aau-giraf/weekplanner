@@ -8,15 +8,16 @@ import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:image/image.dart';
 
-/// Bloc for retriving an image from a phones gallery,
+/// Bloc for retrieving an image from a phones gallery,
 /// and send it to the pictogram database
 class TakePictureWithCameraBloc extends BlocBase {
-  ///
+  ///Constructor for the bloc
   TakePictureWithCameraBloc(this._api);
+
   final Api _api;
   String _pictogramName;
 
-  /// Publishes the image file, while it is nut null
+  /// Publishes the image file, while it is not null
   Stream<File> get file => _file.stream.where((File f) => f != null);
 
   /// Publishes true while waiting for the pictogram to be uploaded
@@ -73,7 +74,7 @@ class TakePictureWithCameraBloc extends BlocBase {
   }
 
   /// Creates a [PictogramModel]
-  /// from the seleted [Image], [AccessLevel], and title
+  /// from the selected [Image], [AccessLevel], and title
   Stream<PictogramModel> createPictogram() {
     _isUploading.add(true);
     return _api.pictogram
