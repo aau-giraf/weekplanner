@@ -535,17 +535,36 @@ class ShowActivityScreen extends StatelessWidget {
                     ? const Key('TimerPauseButtonKey')
                     : const Key('TimerPlayButtonKey'),
                 onPressed: () {
-                  !timerRunningSnapshot.hasData
-                      ? _timerBloc.playTimer()
-                      // ignore: unnecessary_statements
-                      : (timerRunningSnapshot.data == TimerRunningMode.running
-                          ? _timerBloc.pauseTimer()
-                          : timerRunningSnapshot.data == TimerRunningMode.paused
-                              ? _timerBloc.playTimer()
-                              : timerRunningSnapshot.data ==
-                                      TimerRunningMode.completed
-                                  ? _buildRestartTimerDialog(overallContext)
-                                  : _restartTimer());
+                  if(!timerRunningSnapshot.hasData) {
+                    throw Exception("Error");
+                  }
+                  switch(timerRunningSnapshot.data){
+                    case TimerRunningMode.initialized:
+                    {
+                      _timerBloc.playTimer();
+                      break;
+                    }
+                    case TimerRunningMode.stopped:
+                    {
+                      _timerBloc.playTimer();
+                      break;
+                    }
+                    case TimerRunningMode.running:
+                    {
+                      _timerBloc.pauseTimer();
+                      break;
+                    }
+                    case TimerRunningMode.paused:
+                    {
+                      _timerBloc.playTimer();
+                      break;
+                    }
+                    case TimerRunningMode.completed:
+                    {
+                      _buildRestartTimerDialog(overallContext);
+                      break;
+                    }
+                  }
                 },
                 icon: (timerRunningSnapshot.hasData
                         ? timerRunningSnapshot.data == TimerRunningMode.running
@@ -665,12 +684,6 @@ class ShowActivityScreen extends StatelessWidget {
             },
           );
         });
-  }
-
-  /// Restarts timer.
-  void _restartTimer() {
-    _timerBloc.stopTimer();
-    _timerBloc.playTimer();
   }
 
   /// Builds the button that changes the state of the activity. The content
