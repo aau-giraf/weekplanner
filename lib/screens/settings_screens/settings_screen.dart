@@ -7,8 +7,8 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'number_of_days_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'color_theme_selection_screen.dart';
+//import 'package:weekplanner/screens/settings_screens/'
+//    'color_theme_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
@@ -21,8 +21,8 @@ import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_checkboxButton.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_item.dart';
-import 'package:weekplanner/widgets/settings_widgets/'
-    'settings_theme_display_box.dart';
+//import 'package:weekplanner/widgets/settings_widgets/'
+//    'settings_theme_display_box.dart';
 import '../../di.dart';
 import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
 import 'completed_activity_icon_selection_screen.dart';
@@ -49,9 +49,9 @@ class SettingsScreen extends StatelessWidget {
     return ListView(
       children: <Widget>[
         _buildThemeSection(context),
-        _buildOrientationSection(),
+        //_buildOrientationSection(),
         _buildWeekPlanSection(context),
-        _buildTimerSection(context),
+        //_buildTimerSection(context),
         _buildTimeRepresentationSettings(context),
         _buildUserSettings(),
         _buildPrivacySection()
@@ -67,6 +67,7 @@ class SettingsScreen extends StatelessWidget {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Tema', <SettingsSectionItem>[
+              /*
               SettingsArrowButton(
                   'Farver på ugeplan',
                       () async {
@@ -81,6 +82,7 @@ class SettingsScreen extends StatelessWidget {
                   titleTrailing: ThemeBox.fromHexValues(
                       settingsModel.weekDayColors[0].hexColor,
                       settingsModel.weekDayColors[1].hexColor)),
+               */
               SettingsArrowButton(
                   'Tegn for udførelse',
                       () async {
@@ -110,11 +112,13 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
+  /*
   Widget _buildOrientationSection() {
     return SettingsSection('Orientering', <SettingsSectionItem>[
       SettingsCheckMarkButton(5, 5, 'Landskab', () {}),
     ]);
   }
+  */
 
   Widget _buildWeekPlanSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
@@ -163,6 +167,7 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
+  /*
   Widget _buildTimerSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
@@ -188,11 +193,36 @@ class SettingsScreen extends StatelessWidget {
           }
         });
   }
+  */
 
   Widget _buildUserSettings() {
+    /*
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
       SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
     ]);
+     */
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            final SettingsModel settingsModel = settingsSnapshot.data;
+            return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
+              SettingsCheckMarkButton.fromBoolean(
+                  settingsModel.lockTimerControl, 'Giv borger adgang til deres indstillinger.', () {
+                settingsModel.lockTimerControl = !settingsModel.lockTimerControl;
+                _settingsBloc.updateSettings(_user.id, settingsModel)
+                    .listen((_) {
+                  _settingsBloc.loadSettings(_user);
+                });
+              }),
+            ]);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 
   Widget _buildPrivacySection() {
