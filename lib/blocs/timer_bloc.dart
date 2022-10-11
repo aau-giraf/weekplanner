@@ -14,7 +14,6 @@ import 'package:weekplanner/models/enums/timer_running_mode.dart';
 class TimerBloc extends BlocBase {
   /// Constructor taking the API
   TimerBloc(this._api);
-
   final Api _api;
 
   ActivityModel _activityModel;
@@ -61,7 +60,7 @@ class TimerBloc extends BlocBase {
   static final AudioPlayer _volumePlayer = AudioPlayer();
 
   final AudioCache _audioPlayer =
-      AudioCache(prefix: 'audio/', fixedPlayer: _volumePlayer);
+      AudioCache(prefix: 'assets/audio/', fixedPlayer: _volumePlayer);
 
   final String _audioFile = 'dingSound.wav';
   final int _updatePeriod = 1000;
@@ -158,6 +157,7 @@ class TimerBloc extends BlocBase {
           if (_activityModel.timer.progress >=
               _activityModel.timer.fullLength) {
             _timerRunningModeStream.add(TimerRunningMode.completed);
+
           }
         } else {
           _timerProgressStream.add(1);
