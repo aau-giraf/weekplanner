@@ -16,8 +16,11 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 * Preview 1 picture instead of 2 ✔
 * Build widgets refactored into 1 widget ✔
 * Circle avatar for preview ✔
-* Crop picture correctly on both vertical and horizontal
+* Crop picture correctly on both vertical and horizontal ✔
+* Reset preview picture ✔
 * Upload chosen picture to citizen profile when "Gem borger" is pressed
+*   Figure out how pictogrammer is uploaded and stored on save
+*
 * Display chosen citizen picture in Citizen overview
 *
 *
@@ -39,41 +42,14 @@ class NewCitizenScreen extends StatelessWidget {
   final ApiErrorTranslater _translator = ApiErrorTranslater();
   final NewCitizenBloc _bloc;
 
-/* final BorderRadius _imageBorder = BorderRadius.circular(25);
-Widget _buildBody(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        //_buildImageBox(),
-      ],
-      //),
-    );
-  }
-
-  Widget _buildImageBox() {
-    return Padding(
-        padding: const EdgeInsets.only(bottom: 15),
-        child: Container(
-          child: CircleAvatar(
-            child: StreamBuilder<File>(
-                stream: _takePictureWithCamera.file,
-                builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
-                    snapshot.data != null
-                        ? _displayImage(snapshot.data)
-                        : _displayIfNoImage()),
-          ),
-        ));
-  }
-*/
   Widget _displayImage(File image) {
     return Container(
       //margin: const EdgeInsets.all(10.0),
-      height: screenHeight / 2,
-      width: screenWidth / 2,
       child: CircleAvatar(
-        key: Key('WidgetAvatar'),
-        radius: 1,
+        key: const Key('WidgetAvatar'),
+        radius: 200,
         foregroundImage: FileImage(image),
-        backgroundImage: AssetImage('assets/login_screen_background_image.png'),
+        backgroundImage: const AssetImage('assets/login_screen_background_image.png'),
       ),
     );
   }
@@ -81,11 +57,9 @@ Widget _buildBody(BuildContext context) {
   Widget _displayIfNoImage() {
     return Container(
       //margin: const EdgeInsets.all(10.0),
-      height: screenHeight / 2,
-      width: screenWidth / 2,
-      child: CircleAvatar(
-        radius: 1,
-        backgroundImage: AssetImage('assets/login_screen_background_image.png'),
+      child: const CircleAvatar(
+        radius: 200,
+        foregroundImage: AssetImage('assets/login_screen_background_image.png'),
       ),
     );
   }
@@ -196,7 +170,7 @@ Widget _buildBody(BuildContext context) {
             ),
           ),
 
-          /// Profile preview pictures
+          /// Profile preview picture
           Center(
             child: StreamBuilder<File>(
                 stream: _bloc.file,

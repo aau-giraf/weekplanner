@@ -184,6 +184,7 @@ class NewCitizenBloc extends BlocBase {
     passwordController.sink.add(null);
     passwordVerifyController.sink.add(null);
     _user = null;
+    _file.add(null);
   }
 
   @override
