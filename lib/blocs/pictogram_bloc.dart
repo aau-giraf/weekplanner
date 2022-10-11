@@ -25,6 +25,8 @@ class PictogramBloc extends BlocBase {
         extendSearch();
       }
     });
+    search('');
+
   }
 
   /// This stream is where all results from searching for pictograms are put in.
@@ -70,9 +72,9 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-    if (query.isEmpty) {
+    /*if (query.isEmpty) {
       return;
-    }
+    }*/
 
     loadingPictograms = true;
     if (_debounceTimer != null) {
