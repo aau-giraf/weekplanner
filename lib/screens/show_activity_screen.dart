@@ -90,14 +90,10 @@ class ShowActivityScreen extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: GirafAppBar(
-            title: 'Aktivitet',
-            appBarIcons: (mode == WeekplanMode.guardian)
-            ? <AppBarIcon, VoidCallback>{
-                AppBarIcon.changeToCitizen: () {}
-            }
-            : <AppBarIcon, VoidCallback>{
-                AppBarIcon.changeToGuardian: () {}
-            },
+          title: 'Aktivitet',
+          appBarIcons: (mode == WeekplanMode.guardian)
+              ? <AppBarIcon, VoidCallback>{AppBarIcon.changeToCitizen: () {}}
+              : <AppBarIcon, VoidCallback>{AppBarIcon.changeToGuardian: () {}},
         ),
         body: childContainer);
   }
@@ -126,8 +122,8 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-                   (activitySnapshot.data.state == ActivityState.Canceled ||
-                    activitySnapshot.data.state == ActivityState.Completed))
+                    (activitySnapshot.data.state == ActivityState.Canceled ||
+                        activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -145,7 +141,8 @@ class ShowActivityScreen extends StatelessWidget {
                     activitySnapshot.hasData &&
                     authSnapshot.data != WeekplanMode.citizen &&
                     (activitySnapshot.data.state != ActivityState.Canceled &&
-                    activitySnapshot.data.state != ActivityState.Completed)) {
+                        activitySnapshot.data.state !=
+                            ActivityState.Completed)) {
                   return _buildChoiceBoardButton(context);
                 } else {
                   return _buildEmptyContainer();
@@ -331,7 +328,7 @@ class ShowActivityScreen extends StatelessWidget {
                     ),
                   ),
                 );
-            });
+              });
         });
   }
 
@@ -388,8 +385,11 @@ class ShowActivityScreen extends StatelessWidget {
                 child: StreamBuilder<ActivityModel>(
                     stream: _activityBloc.activityModelStream,
                     builder: (BuildContext context,
-                        AsyncSnapshot<ActivityModel> snapshot) {
-                      if (snapshot.data == null) {
+                        AsyncSnapshot<ActivityModel> snapshot1) {
+                      return StreamBuilder<TimerRunningMode>(
+                          stream: _timerBloc.timerRunningMode, builder: (BuildContext context,
+                          AsyncSnapshot<TimerRunningMode> snapshot2) {
+                      if (snapshot1.data == null) {
                         return const CircularProgressIndicator();
                       }
                       return Column(
@@ -405,7 +405,7 @@ class ShowActivityScreen extends StatelessWidget {
                                           _activity, _activityBloc, _girafUser)
                                       : buildLoadPictogramImage()),
                               _buildActivityStateIcon(
-                                  context, snapshot.data.state),
+                                  context, snapshot1.data.state, snapshot2.data),
                             ],
                           ),
                           Visibility(
@@ -415,7 +415,8 @@ class ShowActivityScreen extends StatelessWidget {
                           ),
                         ],
                       );
-                    }))),
+                    });
+  }))),
       ),
       buildButtonBar(),
       _activityBloc.getActivity().isChoiceBoard
@@ -702,49 +703,48 @@ class ShowActivityScreen extends StatelessWidget {
                             ActivityState.Canceled,
                         width: 100,
                         icon: activitySnapshot.data.state !=
-                            ActivityState.Completed
+                                ActivityState.Completed
                             ? const ImageIcon(
-                            AssetImage('assets/icons/accept.png'),
-                            color: theme.GirafColors.green)
+                                AssetImage('assets/icons/accept.png'),
+                                color: theme.GirafColors.green)
                             : const ImageIcon(
-                            AssetImage('assets/icons/undo.png'),
-                            color: theme.GirafColors.blue));
+                                AssetImage('assets/icons/undo.png'),
+                                color: theme.GirafColors.blue));
 
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
                       final GirafButton cancelButton = GirafButton(
                         key: const Key('CancelStateToggleButton'),
                         onPressed: () {
                           _activityBloc.cancelActivity();
-                          _activity.state =
-                              _activityBloc.getActivity().state;
+                          _activity.state = _activityBloc.getActivity().state;
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Completed,
                         text: activitySnapshot.data.state !=
-                            ActivityState.Canceled
+                                ActivityState.Canceled
                             ? 'Aflys'
                             : 'Fortryd',
                         icon: activitySnapshot.data.state !=
-                            ActivityState.Canceled
+                                ActivityState.Canceled
                             ? const ImageIcon(
-                            AssetImage('assets/icons/cancel.png'),
-                            color: theme.GirafColors.red)
+                                AssetImage('assets/icons/cancel.png'),
+                                color: theme.GirafColors.red)
                             : const ImageIcon(
-                            AssetImage('assets/icons/undo.png'),
-                            color: theme.GirafColors.blue),
+                                AssetImage('assets/icons/undo.png'),
+                                color: theme.GirafColors.blue),
                       );
 
                       if (_activity.isChoiceBoard) {
                         return Container(
-                            child: Row(children: <Widget>[
-                              cancelButton]));
+                            child: Row(children: <Widget>[cancelButton]));
                       } else {
                         return Container(
                             child: Row(children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 40.0),
-                                child: completeButton),
-                              cancelButton]));
+                          Padding(
+                              padding: const EdgeInsets.only(right: 40.0),
+                              child: completeButton),
+                          cancelButton
+                        ]));
                       }
                     } else {
                       return completeButton;
@@ -834,10 +834,11 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the icon that displays the activity's state
-  Stack _buildActivityStateIcon(BuildContext context, ActivityState state) {
-    if (state == ActivityState.Completed) {
-      return Stack(children: <Widget>[
+  Stack _buildActivityStateIcon(BuildContext context, ActivityState state, TimerRunningMode timemode) {
+    print("sugoma dickma");
 
+    if (state == ActivityState.Completed  || TimerRunningMode.completed == timemode  ) {
+      return Stack(children: <Widget>[
         Container(
           child: ImageIcon(
             const AssetImage('assets/icons/bigAcceptBorder.png'),
@@ -845,19 +846,16 @@ class ShowActivityScreen extends StatelessWidget {
             color: theme.GirafColors.black,
             size: MediaQuery.of(context).size.width,
           ),
-        )
-        ,
-
+        ),
         Container(
           child: ImageIcon(
-            const AssetImage('assets/icons/bigAccept.png'),
+            const AssetImage('assets/icons/gallery.png'),
             key: const Key('IconCompletedBorder'),
             color: theme.GirafColors.green,
             size: MediaQuery.of(context).size.width,
           ),
         )
-      ]
-      );
+      ]);
     } else if (state == ActivityState.Canceled) {
       return Stack(children: <Widget>[
         Container(
@@ -876,11 +874,9 @@ class ShowActivityScreen extends StatelessWidget {
             size: MediaQuery.of(context).size.width,
           ),
         ),
-
-      ]
-      );
+      ]);
     } else {
-      return Stack(children: <Widget> [Container()]);
+      return Stack(children: <Widget>[Container()]);
     }
   }
 }

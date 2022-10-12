@@ -203,14 +203,14 @@ class TimerBloc extends BlocBase {
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
           _activityBloc.completeActivity();
           playSound();
+          _activityBloc.update();
+
           _timerRunningModeStream.add(TimerRunningMode.completed);
         }
       });
       _timerRunningModeStream.add(TimerRunningMode.running);
 
-      _api.activity
-          .update(_activityModel, _user.id)
-          .listen((ActivityModel activity) {});
+
 
     }
   }
