@@ -1,9 +1,18 @@
+import 'dart:async';
+
+import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
+import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
@@ -13,13 +22,20 @@ import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
+  ChooseCitizenScreen(this._api);
+  final Api _api;
+
   @override
-  _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState();
+  _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState(_api);
 }
 
 class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
+  _ChooseCitizenScreenState(this._api);
+
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final Api _api;
 
   @override
   Widget build(BuildContext context) {
@@ -83,70 +99,83 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
   /// Builds the list of citizens together with the "add citizen" button
   List<Widget> _buildCitizenSelectionList(BuildContext context,
-    AsyncSnapshot<List<DisplayNameModel>> snapshot) {
+      AsyncSnapshot<List<DisplayNameModel>> snapshot) {
     final List<Widget> list = snapshot.data
         .map<Widget>((DisplayNameModel user) =>
         CitizenAvatar(
-            displaynameModel: user,
-            onPressed: () => _pushWeekplanSelector(user),
+          displaynameModel: user,
+          onPressed: () => _pushWeekplanSelector(user),
 
         )).toList();
 
-    list.insert(0, FlatButton(
-      onPressed: () async {
-        final Object result =  await Routes.push(context, NewCitizenScreen());
-        final DisplayNameModel newUser = DisplayNameModel.fromGirafUser(result);
-        list.add(CitizenAvatar(
-              displaynameModel: newUser,
-              onPressed: () => _pushWeekplanSelector(newUser)
-          )
-        );
-        ///Update the screen with the new citizen
-        _bloc.updateBloc();
-        setState(() {});
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 30),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: LayoutBuilder(builder:
-              (BuildContext context, BoxConstraints constraints) {
-                return Icon(
-                    Icons.person_add,
-                    size: constraints.biggest.height
-                );
-              }),
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                minWidth: 200.0,
-                maxWidth: 200.0,
-                minHeight: 15.0,
-                maxHeight: 50.0,
-              ),
-                child: const Center(
-                  child: AutoSizeText(
-                    'Tilføj Borger',
-                    style: TextStyle(fontSize: GirafFont.large),
-                  ),
-                )
+    /// Defines variables needed to check user role
+    int lenght = list.length;
+
+    String username = _authBloc.loggedInUsername;
+
+    /// Checks user role and gives option to add Citizen if user is Guardian
+    _api.user.role(username).listen((int role) async {
+      if (role == Role.Guardian.index) {
+        list.insert(lenght, FlatButton(
+          onPressed: () async {
+            final Object result =  await Routes.push(context, NewCitizenScreen());
+            final DisplayNameModel newUser = DisplayNameModel.fromGirafUser(result);
+            list.add(CitizenAvatar(
+                displaynameModel: newUser,
+                onPressed: () => _pushWeekplanSelector(newUser)
             )
-          ],
-        ),
-      ),
-    )
-    );
+            );
+
+            ///Update the screen with the new citizen
+            _bloc.updateBloc();
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return Icon(
+                        Icons.person_add,
+                        size: constraints.biggest.height
+                    );
+                  }),
+                ),
+                ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 200.0,
+                      maxWidth: 200.0,
+                      minHeight: 15.0,
+                      maxHeight: 50.0,
+                    ),
+                    child: const Center(
+                      child: AutoSizeText(
+                        'Tilføj Borger',
+                        style: TextStyle(fontSize: GirafFont.large),
+                      ),
+                    )
+                )
+              ],
+            ),
+          ),
+        )
+        );
+      }
+    });
+
+
     return list;
   }
 
   Future<void> _pushWeekplanSelector(DisplayNameModel user) async{
-      bool repush = true;
-      while (repush) {
-        final bool result = await Routes.push<bool>(context,
-            WeekplanSelectorScreen(user));
-        repush = result?? false;
-      }
-      return;
+    bool repush = true;
+    while (repush) {
+      final bool result = await Routes.push<bool>(context,
+          WeekplanSelectorScreen(user));
+      repush = result?? false;
+    }
+    return;
   }
 }
