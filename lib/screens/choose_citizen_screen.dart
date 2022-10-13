@@ -105,9 +105,9 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         )).toList();
 
     /// Defines variables needed to check user role
-    int lenght = list.length;
+    final int lenght = list.length;
 
-    String username = _authBloc.loggedInUsername;
+    final String username = _authBloc.loggedInUsername;
 
     /// Checks user role and gives option to add Citizen if user is Guardian
     _api.user.role(username).listen((int role) async {
