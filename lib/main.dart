@@ -11,7 +11,6 @@ import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 final Api _api = di.getDependency<Api>();
 
-
 void main() {
   // Register all dependencies for injector
   Bootstrap.register();
@@ -22,7 +21,7 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
-  environment.setFile('assets/environments.dev.json').whenComplete(() {
+  environment.setFile('assets/environments.local.json').whenComplete(() {
     _runApp();
   });
 }
@@ -34,7 +33,6 @@ bool lastState = false;
 /// since this fixes a bug with logging in first time
 bool firstTimeLogIn = true;
 
-
 void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
@@ -42,18 +40,16 @@ void _runApp() {
       //debugShowCheckedModeBanner: false,
       home: StreamBuilder<bool>(
           initialData: false,
-          stream: di
-              .getDependency<AuthBloc>()
-              .loggedIn
-              .where((bool currentState) =>
-                      lastState != currentState || firstTimeLogIn),
+          stream: di.getDependency<AuthBloc>().loggedIn.where(
+              (bool currentState) =>
+                  lastState != currentState || firstTimeLogIn),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             lastState = snapshot.data;
             //To make sure we only listen to the stream once we take advantage
             // of firstTimeLogin bool value
-            if(firstTimeLogIn== true){
+            if (firstTimeLogIn == true) {
               _api.connectivity.connectivityStream.listen((dynamic event) {
-                if(event == false){
+                if (event == false) {
                   lostConnectionDialog(context);
                 }
               });
@@ -73,10 +69,10 @@ void _runApp() {
 /// Lost connection dialog
 void lostConnectionDialog(BuildContext context) {
   showDialog<Center>(
-    context: context,
-    builder: (BuildContext context) {
-      return const GirafNotifyDialog(
-          title: 'Mistet forbindelse',
-          description: 'Ændringer bliver gemt når du får forbindelse igen');
-    });
+      context: context,
+      builder: (BuildContext context) {
+        return const GirafNotifyDialog(
+            title: 'Mistet forbindelse',
+            description: 'Ændringer bliver gemt når du får forbindelse igen');
+      });
 }

@@ -42,25 +42,25 @@ class LoginScreenState extends State<LoginScreen> {
     showLoadingSpinner(context, true);
     currentContext = context;
     loginStatus = false;
-    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
-      .then((dynamic result) {
+    authBloc
+        .authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
+        .then((dynamic result) {
       StreamSubscription<bool> loginListener;
-         loginListener = authBloc.loggedIn.listen((bool snapshot) {
-          loginStatus = snapshot;
-          // Return if logging out
-          if (snapshot) {
-            // Pop the loading spinner
-            Routes.pop(context);
-          }
-          // Stop listening for future logins
-          loginListener.cancel();
-         });
+      loginListener = authBloc.loggedIn.listen((bool snapshot) {
+        loginStatus = snapshot;
+        // Return if logging out
+        if (snapshot) {
+          // Pop the loading spinner
+          Routes.pop(context);
+        }
+        // Stop listening for future logins
+        loginListener.cancel();
+      });
     }).catchError((Object error) {
-      if(error is ApiException){
+      if (error is ApiException) {
         creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
             error.errorKey.toString());
-      }
-      else if(error is SocketException){
+      } else if (error is SocketException) {
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
           //Er ikke sikker på den her try-catch nogen sinde "catcher"
           try {
@@ -70,10 +70,9 @@ class LoginScreenState extends State<LoginScreen> {
                 if (hasServerConnection) {
                   creatingNotifyDialog(
                       'Der er forbindelse'
-                          ' til serveren, men der opstod et problem',
+                      ' til serveren, men der opstod et problem',
                       error.message);
-                }
-                else {
+                } else {
                   creatingNotifyDialog(
                       'Der er i øjeblikket'
                           ' ikke forbindelse til serveren.',
@@ -82,25 +81,23 @@ class LoginScreenState extends State<LoginScreen> {
               }).catchError((Object error) {
                 unknownErrorDialog(error.toString());
               });
-            }
-            else {
+            } else {
               creatingNotifyDialog(
                   'Der er ingen forbindelse'
                       ' til internettet.',
                   'NoConnectionToInternet');
             }
-          }
-          catch(Err) {
-            throw new ServerException(Err);
+          } catch (Err) {
+            throw ServerException(Err);
           }
         });
-      }
-      else {
+      } else {
         unknownErrorDialog('The error is neither an Api problem nor'
             'a socket problem');
       }
     });
   }
+
   /// Function that creates the notify dialog,
   /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
@@ -116,10 +113,13 @@ class LoginScreenState extends State<LoginScreen> {
               title: 'Fejl', description: description, key: Key(key));
         });
   }
+
   /// Create an unknown error dialog
-  void unknownErrorDialog(String key){
-    creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
-        'kontakt en administrator', 'key');
+  void unknownErrorDialog(String key) {
+    creatingNotifyDialog(
+        'Der skete en ukendt fejl, prøv igen eller '
+            'kontakt en administrator',
+        'key');
   }
 
   @override
@@ -132,7 +132,6 @@ class LoginScreenState extends State<LoginScreen> {
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
-    
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
@@ -274,5 +273,4 @@ class LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.only(bottom: 10),
     );
   }
-
 }
