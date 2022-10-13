@@ -74,11 +74,10 @@ search('');
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-    /*if (query.isEmpty) {
-      return;
-    }*/
-    //ensures that it always starts with the  first pictograms
+
+    //ensures that it always shows the first pictograms in the database
     latestPage = 1;
+
     loadingPictograms = true;
     if (_debounceTimer != null) {
       _debounceTimer.cancel();
