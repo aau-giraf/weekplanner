@@ -18,7 +18,7 @@ import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
-  const ChooseCitizenScreen(this._api);
+  ChooseCitizenScreen(this._api);
   final Api _api;
 
   @override
