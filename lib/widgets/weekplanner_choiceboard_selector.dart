@@ -1,6 +1,7 @@
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -111,34 +112,44 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   Widget _displayPictogram(
       BuildContext context, List<Widget> pictograms, int index) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.2,
-      width: MediaQuery.of(context).size.height * 0.2,
-      child: FittedBox(
-        child: GestureDetector(
-            onTap: () {
-              _selectedPictogramFromChoiceBoard(context, pictograms, index)
-                  .then((_) {
-                Routes.pop(context);
-              });
-            },
-            child: Container(
-              constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-                maxHeight: double.infinity,
-              ),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: theme.GirafColors.blueBorderColor, width: 1)),
-              child: pictograms[index],
-            )),
-      ),
-    );
+   return StreamBuilder<SettingsModel>(
+     builder: (BuildContext context,
+     AsyncSnapshot<SettingsModel> settingSnapshot) {
+       return SizedBox(
+         height: MediaQuery.of(context).size.height * 0.2,
+         width: MediaQuery.of(context).size.height * 0.2,
+         child: FittedBox(
+           child: GestureDetector(
+               onTap: () {
+                 if(settingSnapshot.data.showPopup) {
+                 _selectPictogramFromChoiceBoardPopup(context, pictograms, index)
+                     .then((_) {
+                 Routes.pop(context);
+                 });
+                 }
+                 else{
+                   _selectPictogramFromChoiceboard(context, index);
+                 }
+               },
+               child: Container(
+                 constraints: const BoxConstraints(
+                   maxWidth: double.infinity,
+                   maxHeight: double.infinity,
+                 ),
+                 decoration: BoxDecoration(
+                     border: Border.all(
+                         color: theme.GirafColors.blueBorderColor, width: 1)),
+                 child: pictograms[index],
+               )),
+         ),
+       );
+     }
+   );
   }
 
-  Future<Center> _selectedPictogramFromChoiceBoard(
+  //Shows a popup when selecting a pictogram on a choiceboard
+  Future<Center> _selectPictogramFromChoiceBoardPopup(
       BuildContext context, List<Widget> pictograms, int index) {
-    if(false) {
       return showDialog<Center>(
           barrierDismissible: false,
           context: context,
@@ -152,23 +163,15 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                 confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
                 confirmOnPressed: () {
-                  _activity.isChoiceBoard = false;
-                  final List<PictogramModel> _pictogramModels = <
-                      PictogramModel>[
-                    _activity.pictograms[index]
-                  ];
-                  _activity.pictograms = _pictogramModels;
-
-                  _activityBloc.update();
-                  _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
-                    Routes.pop(context);
-                  });
-                  // Closes the dialog box
+                  _selectPictogramFromChoiceboard(context, index);
                 },
                 cancelOnPressed: () {});
           });
     }
-    else{
+
+    //Changes activity type so it is not a choiceboard, and only keeps the
+    //selected pictogram in the activity
+    void _selectPictogramFromChoiceboard(BuildContext context, int index){
       _activity.isChoiceBoard = false;
       final List<PictogramModel> _pictogramModels = <
           PictogramModel>[
@@ -177,11 +180,9 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
       _activity.pictograms = _pictogramModels;
 
       _activityBloc.update();
-      _activityBloc.load(_activity, _user);
-      //Refreshes weekplan to make the change visible to the citizen
       _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
         Routes.pop(context);
-      });//Closes choiceboard
+      });
+      //Closes the dialog box
     }
-  }
 }

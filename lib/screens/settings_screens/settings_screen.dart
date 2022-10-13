@@ -147,22 +147,21 @@ class SettingsScreen extends StatelessWidget {
                     : 'Mandag til søndag'),
               ),
               SettingsCheckMarkButton.fromBoolean(
-                  settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
-                settingsModel.pictogramText = !settingsModel.pictogramText;
-                _settingsBloc.updateSettings(_user.id, settingsModel)
-                    .listen((_) {
-                  _settingsBloc.loadSettings(_user);
-                });
-              }),
+                settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
+                  settingsModel.pictogramText = !settingsModel.pictogramText;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  });
+                }),
               SettingsCheckMarkButton.fromBoolean(
-                //Ingen backend implementeret, KUN VISUELT
-                  settingsModel.pictogramText, 'Vis bekræftelse popups', () {
-                    //pictogramText skal erstattes med showPopup, som også skal laves i backend
-                _settingsBloc.updateSettings(_user.id, settingsModel)
-                    .listen((_) {
-                  _settingsBloc.loadSettings(_user);
-                });
-              }),
+                settingsModel.showPopup, 'Vis bekræftelse popups', () {
+                  settingsModel.showPopup = !settingsModel.showPopup;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  });
+                }),
             ]);
           } else {
             return const Center(
