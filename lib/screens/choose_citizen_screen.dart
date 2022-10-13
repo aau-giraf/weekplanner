@@ -18,7 +18,7 @@ import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
-   const ChooseCitizenScreen(this._api);
+  const ChooseCitizenScreen(this._api);
   final Api _api;
 
   @override
@@ -105,12 +105,8 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         )).toList();
 
     /// Defines variables needed to check user role
-
-    // ignore: prefer_final_locals
     int lenght = list.length;
 
-
-    // ignore: prefer_final_locals
     String username = _authBloc.loggedInUsername;
 
     /// Checks user role and gives option to add Citizen if user is Guardian
@@ -120,8 +116,9 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
           onPressed: () async {
             final Object result =
             await Routes.push(context, NewCitizenScreen());
-            final DisplayNameModel newUser
-            = DisplayNameModel.fromGirafUser(result);
+            final DisplayNameModel newUser =
+            DisplayNameModel.fromGirafUser(result);
+
             list.add(CitizenAvatar(
                 displaynameModel: newUser,
                 onPressed: () => _pushWeekplanSelector(newUser)
