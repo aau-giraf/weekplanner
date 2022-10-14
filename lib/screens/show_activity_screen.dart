@@ -692,7 +692,7 @@ class ShowActivityScreen extends StatelessWidget {
 
                     final GirafButton completeButton = GirafButton(
                         key: const Key('CompleteStateToggleButton'),
-                        onPressed: () {
+                        onPressed:  () {
                           _activityBloc.completeActivity();
                           Routes.pop(context);
                           //This removes current context
@@ -710,13 +710,9 @@ class ShowActivityScreen extends StatelessWidget {
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
                         text: activitySnapshot.data.state !=
-                                ActivityState.Completed
-                            ? ''
+                            ActivityState.Completed
+                            ? 'Afslut'
                             : 'Fortryd',
-                        width: activitySnapshot.data.state !=
-                                ActivityState.Completed
-                            ? 100
-                            : 130,
                         icon: activitySnapshot.data.state !=
                                 ActivityState.Completed
                             ? const ImageIcon(
@@ -731,7 +727,8 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CancelStateToggleButton'),
                         onPressed: () {
                           _activityBloc.cancelActivity();
-                          _activity.state = _activityBloc.getActivity().state;
+                          _activity.state =
+                              _activityBloc.getActivity().state;
                           Routes.pop(context);
                           //This removes current context
                           // so back button correctly navigates
@@ -739,10 +736,10 @@ class ShowActivityScreen extends StatelessWidget {
                             //This creates new context at current screen
                             // (refreshes)
                             context,
-                            MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    ShowActivityScreen(_activity, _girafUser)),
-                            (Route<dynamic> route) => true,
+                            MaterialPageRoute<void>(builder:
+                                (BuildContext context) =>
+                                ShowActivityScreen(_activity, _girafUser)),
+                                (Route<dynamic> route) => true,
                           );
                         },
                         isEnabled: activitySnapshot.data.state !=
