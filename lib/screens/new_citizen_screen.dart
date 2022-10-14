@@ -181,6 +181,7 @@ class NewCitizenScreen extends StatelessWidget {
           ),
           Row(
             //mainAxisAlignment:,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding:
@@ -223,10 +224,10 @@ class NewCitizenScreen extends StatelessWidget {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 child: GirafButton(
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
