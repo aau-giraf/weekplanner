@@ -124,6 +124,15 @@ class ShowActivityScreen extends StatelessWidget {
 
     // All the buttons excluding the activity itself
     final List<Widget> buttons = <Widget>[];
+    buttons.add(Container(
+      margin: const EdgeInsets.all(10),
+      width: 200,
+      height: 200,
+      child:
+      CitizenAvatar(
+        displaynameModel: _girafUser,
+      )
+    ));
     buttons.add(
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
@@ -156,14 +165,6 @@ class ShowActivityScreen extends StatelessWidget {
                 }
               });
         }));
-    buttons.add(Container(
-        width: 200,
-        height: 200,
-        child:
-        CitizenAvatar(
-          displaynameModel: _girafUser,
-        )
-    ));
 
     final Orientation orientation = MediaQuery.of(context).orientation;
 
