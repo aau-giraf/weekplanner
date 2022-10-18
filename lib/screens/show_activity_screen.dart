@@ -156,6 +156,14 @@ class ShowActivityScreen extends StatelessWidget {
                 }
               });
         }));
+    buttons.add(Container(
+        width: 200,
+        height: 200,
+        child:
+        CitizenAvatar(
+          displaynameModel: _girafUser,
+        )
+    ));
 
     final Orientation orientation = MediaQuery.of(context).orientation;
 
@@ -345,14 +353,6 @@ class ShowActivityScreen extends StatelessWidget {
     return Card(
         child: Column(children: <Widget>[
       const Center(child: Padding(padding: EdgeInsets.all(8.0))),
-      Container(
-        width: 200,
-        height: 200,
-        child:
-      CitizenAvatar(
-        displaynameModel: _girafUser,
-        )
-      ),
       Visibility(
         visible: _activity.isChoiceBoard,
         child: Row(

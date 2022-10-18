@@ -241,10 +241,12 @@ class WeekplanDayColumn extends StatelessWidget {
         activity.state = ActivityState.Normal;
       }
     }
-    for (ActivityModel activity in weekdayModel.activities){
-      if(activity.state == ActivityState.Normal){
-        activity.state = ActivityState.Active;
-        break;
+    if(isToday()){
+      for (ActivityModel activity in weekdayModel.activities){
+        if(activity.state == ActivityState.Normal){
+          activity.state = ActivityState.Active;
+          break;
+        }
       }
     }
   }
@@ -264,9 +266,7 @@ class WeekplanDayColumn extends StatelessWidget {
                 return Expanded(
                   child: ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
-                      if(isToday()) {
-                        markCurrent(weekday);
-                      }
+                      markCurrent(weekday);
                       if ( index >= weekday.activities.length ) {
                         return StreamBuilder<bool>(
                             stream: weekplanBloc.activityPlaceholderVisible,
