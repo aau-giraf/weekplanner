@@ -1,4 +1,4 @@
-/*
+
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
@@ -52,7 +52,8 @@ void main() {
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
     di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
   });
-
+}
+/*
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen(api)));
     expect(find.byType(ChooseCitizenScreen), findsOneWidget);
@@ -94,3 +95,4 @@ void main() {
 }
 
 */
+
