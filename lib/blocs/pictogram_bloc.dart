@@ -27,8 +27,6 @@ class PictogramBloc extends BlocBase {
         extendSearch();
       }
     });
-search('');
-
   }
 
   /// This stream is where all results from searching for pictograms are put in.
@@ -87,6 +85,7 @@ search('');
     List<PictogramModel> _resultPlaceholder;
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
       //Timer for sending an error if getting pictogram results takes too long
+
       Timer(const Duration(milliseconds: _timeoutTime), () {
         if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
           _pictograms.addError('Søgningen gav ingen resultater. '
