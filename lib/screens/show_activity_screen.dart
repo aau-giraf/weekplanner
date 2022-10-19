@@ -126,8 +126,8 @@ class ShowActivityScreen extends StatelessWidget {
     final List<Widget> buttons = <Widget>[];
     buttons.add(Container(
       margin: const EdgeInsets.all(10),
-      width: 200,
-      height: 200,
+      width: 150,
+      height: 150,
       child:
       CitizenAvatar(
         displaynameModel: _girafUser,
