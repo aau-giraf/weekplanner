@@ -158,7 +158,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                 _activity.pictograms = _pictogramModels;
 
                 _activityBloc.update();
-                _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
+                _activityBloc.activityModelStream.listen((_) {
                   Routes.pop(context);
                 });
                 // Closes the dialog box
