@@ -37,6 +37,13 @@ class ShowActivityScreen extends StatelessWidget {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
+    _timerBloc.timerRunningMode.listen((TimerRunningMode mode) {
+      if(mode == TimerRunningMode.completed)
+        {
+          _activityBloc.completeActivity();
+
+        }
+    });
   }
 
   final DisplayNameModel _girafUser;
