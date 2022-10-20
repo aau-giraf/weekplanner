@@ -29,10 +29,10 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get markedWeekModels => _markedWeekModels.stream;
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _weekModel =
-      rx_dart.BehaviorSubject<List<WeekModel>>();
+  rx_dart.BehaviorSubject<List<WeekModel>>();
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _oldWeekModel =
-      rx_dart.BehaviorSubject<List<WeekModel>>();
+  rx_dart.BehaviorSubject<List<WeekModel>>();
 
   /// This is a stream where all the old [WeekModel] are put in,
   /// and this is the stream to listen to,
@@ -40,13 +40,13 @@ class WeekplansBloc extends BlocBase {
   Stream<List<WeekModel>> get oldWeekModels => _oldWeekModel.stream;
 
   final rx_dart.BehaviorSubject<List<WeekNameModel>> _weekNameModelsList =
-      rx_dart.BehaviorSubject<List<WeekNameModel>>();
+  rx_dart.BehaviorSubject<List<WeekNameModel>>();
 
   final rx_dart.BehaviorSubject<bool> _editMode =
-      rx_dart.BehaviorSubject<bool>.seeded(false);
+  rx_dart.BehaviorSubject<bool>.seeded(false);
 
   final rx_dart.BehaviorSubject<List<WeekModel>> _markedWeekModels =
-      rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
+  rx_dart.BehaviorSubject<List<WeekModel>>.seeded(<WeekModel>[]);
 
   final Api _api;
   DisplayNameModel _user;
@@ -91,10 +91,10 @@ class WeekplansBloc extends BlocBase {
     getWeekDetails(weekPlanNames, weekDetails, oldWeekDetails);
 
     final Stream<List<WeekModel>> getWeekPlans =
-        reformatWeekDetailsToObservableList(weekDetails);
+    reformatWeekDetailsToObservableList(weekDetails);
 
     final Stream<List<WeekModel>> getOldWeekPlans =
-        reformatWeekDetailsToObservableList(oldWeekDetails);
+    reformatWeekDetailsToObservableList(oldWeekDetails);
 
     getWeekPlans
         .take(1)
@@ -114,13 +114,13 @@ class WeekplansBloc extends BlocBase {
       List<Stream<WeekModel>> details) {
     // ignore: always_specify_types
     return details.isEmpty
-        // Ignore type specification; Stream<WeekModel>
-        //   does not contain .empty()
-        // ignore: always_specify_types
+    // Ignore type specification; Stream<WeekModel>
+    //   does not contain .empty()
+    // ignore: always_specify_types
         ? const Stream.empty()
         : details.length == 1
-            ? details[0].map((WeekModel plan) => <WeekModel>[plan])
-            : rx_dart.Rx.combineLatestList(details);
+        ? details[0].map((WeekModel plan) => <WeekModel>[plan])
+        : rx_dart.Rx.combineLatestList(details);
   }
 
   /// Makes API calls to get the weekplan details
