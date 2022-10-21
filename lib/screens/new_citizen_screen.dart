@@ -26,6 +26,11 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
   final ApiErrorTranslater _translator = ApiErrorTranslater();
   Roles _role = Roles.citizen;
 
+  void previousRoute(GirafUserModel response) {
+    Routes.pop<GirafUserModel>(context, response);
+    widget._bloc.resetBloc();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,8 +200,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         widget._bloc.createGuardian()
                             .listen((GirafUserModel response) {
                           if (response != null) {
-                            Routes.pop<GirafUserModel>(context, response);
-                            widget._bloc.resetBloc();
+                            previousRoute(response);
                           }})
                             .onError((Object error) =>
                             _translator.catchApiError(error, context));
@@ -205,8 +209,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         widget._bloc.createTrustee()
                             .listen((GirafUserModel response) {
                           if (response != null) {
-                            Routes.pop<GirafUserModel>(context, response);
-                            widget._bloc.resetBloc();
+                            previousRoute(response);
                           }})
                             .onError((Object error) =>
                             _translator.catchApiError(error, context));
@@ -215,8 +218,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         widget._bloc.createCitizen()
                             .listen((GirafUserModel response) {
                           if (response != null) {
-                            Routes.pop<GirafUserModel>(context, response);
-                            widget._bloc.resetBloc();
+                            previousRoute(response);
                           }})
                             .onError((Object error) =>
                             _translator.catchApiError(error, context));
