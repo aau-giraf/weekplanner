@@ -12,6 +12,7 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_piechart.dart';
 
 import '../../di.dart';
 import '../../style/custom_color.dart' as theme;
@@ -19,12 +20,14 @@ import '../../style/custom_color.dart' as theme;
 /// Widget used for activities in the weekplan screen.
 class ActivityCard extends StatelessWidget {
   /// Constructor
-  ActivityCard(this._activity, this._user) {
+  ActivityCard(this._activity,this._timerBloc, this._user) {
     _settingsBloc.loadSettings(_user);
+
+
   }
 
   final ActivityModel _activity;
-
+  final TimerBloc _timerBloc;
   final DisplayNameModel _user;
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
@@ -202,11 +205,21 @@ class ActivityCard extends StatelessWidget {
       ActivityState state,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
+
     if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
       final WeekplanMode role = weekModeSnapShot.data;
       final SettingsModel settings = settingsSnapShot.data;
 
       switch (state) {
+
+        case ActivityState.Normal:
+          if( _activity.timer.paused) {
+              break;
+            }
+
+          return Container( child: TimerPiechart(_timerBloc),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height);
         case ActivityState.Completed:
           if (role == WeekplanMode.guardian) {
             return Icon(
@@ -234,7 +247,7 @@ class ActivityCard extends StatelessWidget {
                   height: MediaQuery.of(context).size.width,
                   width: MediaQuery.of(context).size.width);
             } else if (settings.completeMark == CompleteMark.Removed) {
-              //This case should be handled by _shouldActivityBeVisible
+              //This case should be handled by _shouldActivityBeVisiblei
               return Container(
                 width: 0,
                 height: 0,

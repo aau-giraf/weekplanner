@@ -35,7 +35,7 @@ import '../style/custom_color.dart' as theme;
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(this._activity, this._girafUser,this._weekplanBloc, this._weekday, {Key key} )
+  ShowActivityScreen(this._activity, this._girafUser,this._weekplanBloc,this._timerBloc, this._weekday, {Key key} )
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
@@ -51,7 +51,6 @@ class ShowActivityScreen extends StatelessWidget {
     _activityBloc.activityModelStream.listen((ActivityModel activity) {
         if(activity.state == ActivityState.Completed)
         {
-            print("sus");
             _weekplanBloc.getWeekday(_weekday.day);
         }
     });
@@ -62,7 +61,7 @@ class ShowActivityScreen extends StatelessWidget {
 
   final PictogramImageBloc _pictoImageBloc =
       di.getDependency<PictogramImageBloc>();
-  final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
+  final TimerBloc _timerBloc;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();

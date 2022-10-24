@@ -11,6 +11,7 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/di.dart';
+
 /// Logic for activities
 class TimerBloc extends BlocBase {
   /// Constructor taking the API
@@ -93,12 +94,11 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
     _timerProgressNumeric.add(_durationToTimestamp(duration));
-   /* _api.activity
+    _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
-
-    });*/
+    });
   }
 
   List<int> _durationToTimestamp(Duration duration) {
@@ -132,6 +132,11 @@ class TimerBloc extends BlocBase {
             milliseconds: _activityModel.timer.fullLength -
                 _activityModel.timer.progress));
         // Checks if the timer is running
+        print(DateTime.now().toString());
+        _activityModel.timer.startTime.isBefore(DateTime.now())
+            ? print("ja")
+            : print("nej");
+        !_activityModel.timer.paused ? print("test") : print("sus");
         if ((_activityModel.timer.startTime.isBefore(DateTime.now()) ||
                 _activityModel.timer.startTime
                     .isAtSameMomentAs(DateTime.now())) &&
@@ -161,11 +166,6 @@ class TimerBloc extends BlocBase {
               milliseconds: _activityModel.timer.fullLength -
                   _activityModel.timer.progress)));
 
-          if (_activityModel.timer.progress >=
-              _activityModel.timer.fullLength) {
-            _timerRunningModeStream.add(TimerRunningMode.completed);
-
-          }
         } else {
           _timerProgressStream.add(1);
           if (_countDown != null) {
@@ -188,7 +188,7 @@ class TimerBloc extends BlocBase {
     if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
-
+      _activityModel.timer.progress = 0;
       _stopwatch = Stopwatch();
       // Calculates the end time
       final DateTime _endTime = _activityModel.timer.startTime.add(Duration(
@@ -205,14 +205,17 @@ class TimerBloc extends BlocBase {
         updateTimerProgress(c);
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
           playSound();
-
           _timerRunningModeStream.add(TimerRunningMode.completed);
         }
       });
+
       _timerRunningModeStream.add(TimerRunningMode.running);
 
-
-
+      _api.activity
+          .update(_activityModel, _user.id)
+          .listen((ActivityModel activity) {
+        _activityModel = activity;
+      });
     }
   }
 
@@ -250,11 +253,11 @@ class TimerBloc extends BlocBase {
       _resetCounterAndStopwatch();
       _timerRunningModeStream.add(TimerRunningMode.paused);
 
-      /*_api.activity
+      _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {
-            _activityModel = activity;
-      });*/
+        _activityModel = activity;
+      });
     }
   }
 
@@ -270,12 +273,11 @@ class TimerBloc extends BlocBase {
       _timerProgressNumeric.add(_durationToTimestamp(
           Duration(milliseconds: _activityModel.timer.fullLength)));
 
-      /*_api.activity
+      _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {
         _activityModel = activity;
-
-      });*/
+      });
     }
   }
 
@@ -285,12 +287,11 @@ class TimerBloc extends BlocBase {
     _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
 
-    /*_api.activity
+    _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
-
-    });*/
+    });
   }
 
   void _resetCounterAndStopwatch() {

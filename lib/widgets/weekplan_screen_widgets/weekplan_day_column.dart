@@ -12,6 +12,7 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
@@ -56,7 +57,9 @@ class WeekplanDayColumn extends StatelessWidget {
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  TimerBloc _timerBloc = di.getDependency<TimerBloc>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -442,7 +445,7 @@ class WeekplanDayColumn extends StatelessWidget {
           });
     }
     else if(!inEditMode){
-      Routes.push(context, ShowActivityScreen(activities[index], user, weekplanBloc, weekday))
+      Routes.push(context, ShowActivityScreen(activities[index], user, weekplanBloc,_timerBloc, weekday))
           .whenComplete(() {weekplanBloc.getWeekday(weekday.day)
           .catchError((Object error) {
             creatingNotifyDialog(error, context);
@@ -468,9 +471,9 @@ class WeekplanDayColumn extends StatelessWidget {
               border: Border.all(
                   color: Colors.black,
                   width: MediaQuery.of(context).size.width * 0.1)),
-          child: ActivityCard(activities[index], user));
+          child: ActivityCard(activities[index], _timerBloc, user));
     } else {
-      return ActivityCard(activities[index], user);
+      return ActivityCard(activities[index], _timerBloc, user);
     }
   }
 
