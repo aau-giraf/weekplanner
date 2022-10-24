@@ -21,10 +21,9 @@ class TimerBloc extends BlocBase {
   ActivityModel _activityModel;
   DisplayNameModel _user;
   ActivityBloc _activityBloc;
-
   /// Stream for the progress of the timer.
   Stream<double> get timerProgressStream => _timerProgressStream.stream;
-
+  bool _doNotInit;
   /// stream for checking if the timer is running
   Stream<TimerRunningMode> get timerRunningMode =>
       _timerRunningModeStream.stream;
@@ -201,6 +200,11 @@ class TimerBloc extends BlocBase {
         updateTimerProgress(c);
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
           playSound();
+          _api.activity
+              .update(_activityModel, _user.id)
+              .listen((ActivityModel activity) {
+            _activityModel = activity;
+          });
           _timerRunningModeStream.add(TimerRunningMode.completed);
         }
       });
@@ -297,7 +301,7 @@ class TimerBloc extends BlocBase {
       _countDown.cancel();
       _timerStream.cancel();
     }
-
+    _doNotInit = true;
     _stopwatch = null;
     _countDown = null;
     _timerStream = null;

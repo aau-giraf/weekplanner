@@ -14,6 +14,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -37,6 +38,13 @@ class WeekplanDayColumn extends StatelessWidget {
     @required this.streamIndex
   }) {
     _settingsBloc.loadSettings(user);
+    _timerBloc.timerRunningMode.listen((TimerRunningMode mode) {
+      if(mode == TimerRunningMode.completed)
+      {
+
+        _activityBloc.completeActivity();
+      }
+    });
 
   }
 
