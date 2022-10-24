@@ -35,7 +35,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GirafAppBar(
-        title: 'Ny borger',
+        title: 'Ny bruger',
       ),
       body: ListView(
         children: <Widget>[
@@ -191,7 +191,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 child: GirafButton(
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                  text: 'Gem borger',
+                  text: 'Gem bruger',
                   isEnabled: false,
                   isEnabledStream: widget._bloc.allInputsAreValidStream,
                   onPressed: () {
