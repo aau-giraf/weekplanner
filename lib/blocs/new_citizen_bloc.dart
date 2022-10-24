@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:image/image.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:api_client/api/api.dart';
@@ -37,6 +39,8 @@ class NewCitizenBloc extends BlocBase {
   Stream<bool> get isInputValid => _isInputValid.stream;
 
   final rx_dart.BehaviorSubject<bool> _isInputValid =
+  rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _isUploading =
   rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Handles when the entered display name is changed.
@@ -109,14 +113,20 @@ class NewCitizenBloc extends BlocBase {
     }
   }
 
+  Uint8List _encodePng(File file) {
+    return encodePng(copyResize(decodeImage(file.readAsBytesSync()),
+        width: 512)); // 512 bytes chosen as a reasonable input size.
+  }
+
   /// Method called with information about the new citizen.
   Stream<GirafUserModel> createCitizen() {
     return _api.account.register(
         usernameController.value,
         passwordController.value,
         displayNameController.value,
+        _encodePng(_file.value),
         departmentId: _user.department,
-        role: Role.Citizen
+        role: Role.Citizen,
     );
   }
 
@@ -126,6 +136,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value,
         passwordController.value,
         displayNameController.value,
+        _encodePng(_file.value),
         departmentId: _user.department,
         role: Role.Trustee
     );
