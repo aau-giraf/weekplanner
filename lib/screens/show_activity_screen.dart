@@ -2,14 +2,17 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
@@ -32,7 +35,7 @@ import '../style/custom_color.dart' as theme;
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(this._activity, this._girafUser, {Key key})
+  ShowActivityScreen(this._activity, this._girafUser,this._weekplanBloc, this._weekday, {Key key} )
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
@@ -42,6 +45,14 @@ class ShowActivityScreen extends StatelessWidget {
         {
           _activityBloc.completeActivity();
 
+        }
+    });
+
+    _activityBloc.activityModelStream.listen((ActivityModel activity) {
+        if(activity.state == ActivityState.Completed)
+        {
+            print("sus");
+            _weekplanBloc.getWeekday(_weekday.day);
         }
     });
   }
@@ -55,7 +66,8 @@ class ShowActivityScreen extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-
+  final WeekplanBloc _weekplanBloc;
+  final WeekdayModel _weekday;
   /// Textfield controller
   final TextEditingController tec = TextEditingController();
 

@@ -93,12 +93,12 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
     _timerProgressNumeric.add(_durationToTimestamp(duration));
-    _api.activity
+   /* _api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
 
-    });
+    });*/
   }
 
   List<int> _durationToTimestamp(Duration duration) {
@@ -250,11 +250,11 @@ class TimerBloc extends BlocBase {
       _resetCounterAndStopwatch();
       _timerRunningModeStream.add(TimerRunningMode.paused);
 
-      _api.activity
+      /*_api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {
             _activityModel = activity;
-      });
+      });*/
     }
   }
 
@@ -270,12 +270,12 @@ class TimerBloc extends BlocBase {
       _timerProgressNumeric.add(_durationToTimestamp(
           Duration(milliseconds: _activityModel.timer.fullLength)));
 
-      _api.activity
+      /*_api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {
         _activityModel = activity;
 
-      });
+      });*/
     }
   }
 
@@ -285,12 +285,12 @@ class TimerBloc extends BlocBase {
     _activityModel.timer = null;
     _timerInstantiatedStream.add(false);
 
-    _api.activity
+    /*_api.activity
         .update(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
 
-    });
+    });*/
   }
 
   void _resetCounterAndStopwatch() {
