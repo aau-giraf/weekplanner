@@ -132,11 +132,7 @@ class TimerBloc extends BlocBase {
             milliseconds: _activityModel.timer.fullLength -
                 _activityModel.timer.progress));
         // Checks if the timer is running
-        print(DateTime.now().toString());
-        _activityModel.timer.startTime.isBefore(DateTime.now())
-            ? print("ja")
-            : print("nej");
-        !_activityModel.timer.paused ? print("test") : print("sus");
+
         if ((_activityModel.timer.startTime.isBefore(DateTime.now()) ||
                 _activityModel.timer.startTime
                     .isAtSameMomentAs(DateTime.now())) &&
@@ -273,11 +269,11 @@ class TimerBloc extends BlocBase {
       _timerProgressNumeric.add(_durationToTimestamp(
           Duration(milliseconds: _activityModel.timer.fullLength)));
 
-      _api.activity
+   /*   _api.activity
           .update(_activityModel, _user.id)
           .listen((ActivityModel activity) {
         _activityModel = activity;
-      });
+      });*/
     }
   }
 

@@ -37,6 +37,7 @@ class WeekplanDayColumn extends StatelessWidget {
     @required this.streamIndex
   }) {
     _settingsBloc.loadSettings(user);
+
   }
 
   /// The day of the week
@@ -57,8 +58,8 @@ class WeekplanDayColumn extends StatelessWidget {
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
-  TimerBloc _timerBloc = di.getDependency<TimerBloc>();
+  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
 
 
   @override

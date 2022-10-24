@@ -40,17 +40,21 @@ class ShowActivityScreen extends StatelessWidget {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
+    _timerBloc.load(_activity, user: _girafUser);
+    _timerBloc.initTimer();
     _timerBloc.timerRunningMode.listen((TimerRunningMode mode) {
       if(mode == TimerRunningMode.completed)
         {
-          _activityBloc.completeActivity();
+          print("SUSSY AMONGUS");
 
+          _activityBloc.completeActivity();
         }
     });
 
     _activityBloc.activityModelStream.listen((ActivityModel activity) {
         if(activity.state == ActivityState.Completed)
         {
+          print("BAKKUS AMONGUS");
             _weekplanBloc.getWeekday(_weekday.day);
         }
     });
@@ -77,8 +81,7 @@ class ShowActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
-    _timerBloc.load(_activity, user: _girafUser);
-    _timerBloc.initTimer();
+
 
     ///Used to check if the keyboard is visible
     return StreamBuilder<WeekplanMode>(
