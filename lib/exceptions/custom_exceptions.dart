@@ -8,3 +8,12 @@ class ServerException implements Exception
   /// The cause of the error
   String errorCause;
 }
+
+class SaveButtonException implements Exception
+{
+  /// Constructor for the exception
+  SaveButtonException(this.errorCause);
+
+  /// The cause of the error
+  String errorCause;
+}

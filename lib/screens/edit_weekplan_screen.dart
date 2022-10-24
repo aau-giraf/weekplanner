@@ -8,6 +8,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/input_fields_weekplan.dart';
+import 'package:weekplanner/exceptions/custom_exceptions.dart';
 
 ///This screen is called when you edit a week plan
 class EditWeekPlanScreen extends StatelessWidget {
@@ -43,8 +44,16 @@ class EditWeekPlanScreen extends StatelessWidget {
             oldWeekModel: weekModel,
             selectorBloc: selectorBloc);
 
-        if (result != null) {
-          Routes.pop<WeekModel>(context, result);
+        try
+        {
+          if (result != null) {
+            Routes.pop<WeekModel>(context, result);
+          }
+        }
+        catch(Error)
+        {
+          throw SaveButtonException('Something went wrong while building the save button' + 
+          '\n Error: ' + Error);
         }
       },
     );

@@ -63,7 +63,8 @@ class LoginScreenState extends State<LoginScreen> {
       } else if (error is SocketException) {
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
           //Er ikke sikker på den her try-catch nogen sinde "catcher"
-          try {
+          try
+          {
             if (hasInternetConnection) {
               // Checking server connection, if true check username/password
               authBloc.getApiConnection().then((bool hasServerConnection) {
@@ -87,8 +88,11 @@ class LoginScreenState extends State<LoginScreen> {
                       ' til internettet.',
                   'NoConnectionToInternet');
             }
-          } catch (Err) {
-            throw ServerException(Err);
+          }
+          catch (Err)
+          {
+            throw ServerException('There was an error with the server' + '\n Error: '
+            + Error);
           }
         });
       } else {
