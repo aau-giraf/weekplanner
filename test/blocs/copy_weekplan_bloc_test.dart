@@ -55,6 +55,7 @@ void main() {
   Api api;
   DisplayNameModel user;
   WeekModel weekplan1;
+  WeekModel weekplan2;
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -87,7 +88,31 @@ void main() {
       });
     }
 
-    bloc.copyWeekplan(weekplan1, user, false);
+    bloc.copyWeekplan([weekplan1], user, false);
+
+    bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
+      for (DisplayNameModel user in markedUsers){
+        expect(map.containsKey(user.id), true);
+        expect(map[user.id], weekplan1);
+      }
+      done();
+    });
+
+  }));
+
+  test('Test whether the copyToCitizens method '
+      'copies multiple weekplans to the citizens', async((DoneFn done) {
+
+    for (int i = 0; i < 10; i++) {
+      final DisplayNameModel user = DisplayNameModel(
+          displayName: 'Hans', role: Role.Citizen.toString(), id: i.toString());
+      bloc.toggleMarkedUserModel(user);
+      bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
+        expect(markedUsers.contains(user), true);
+      });
+    }
+
+    bloc.copyWeekplan([weekplan1, weekplan2], user, false);
 
     bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
       for (DisplayNameModel user in markedUsers){

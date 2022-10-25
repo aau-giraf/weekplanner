@@ -228,19 +228,8 @@ class WeekplanBloc extends BlocBase {
           );
 
           // Add the copy to the specified day
-          for (int i = 0; i < 5; i++){
-            print("hej");
-            print(i);
-          }
-          String hej = activity.choiceBoardName;
-          print('old: $hej');
-          String hej2 = newActivity.choiceBoardName;
-          print('new $hej2');
-          print(activity.isChoiceBoard);
-
 
           _week.days[dayOfWeek].activities.add(newActivity);
-          print('TEST: ${_week.days[dayOfWeek].activities[0].choiceBoardName}');
           daysToUpdate.add(_week.days[dayOfWeek]);
         }
       }
@@ -369,12 +358,10 @@ class WeekplanBloc extends BlocBase {
             _weekDayStreams[newDay.day.index-_firstDay].add(newDay);
             _week.days[newDay.day.index] = newDay;
             print('TEST3 ${newDay.activities[0].choiceBoardName}');
+      }).onError((Object error) {
+        return Future<void>.error(error);
       });
-
-    //       .onError((Object error) {
-    //     return Future<void>.error(error);
-    //   });
-    // }
+    }
     return Future<void>.value();
   }
 

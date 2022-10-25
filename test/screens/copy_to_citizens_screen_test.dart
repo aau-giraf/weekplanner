@@ -113,14 +113,14 @@ void main() {
     final WeekModel weekplan1 = WeekModel(
         thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(weekplan1, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen([weekplan1], mockUser)));
     expect(find.byType(CopyToCitizensScreen), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen([mockWeek], mockUser)));
     await tester.pumpAndSettle();
     bloc.citizen.listen((List<DisplayNameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
@@ -142,7 +142,7 @@ void main() {
       'Test whether it copies to citizens when pressing the accept button',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen([mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     bloc.toggleMarkedUserModel(user1);
@@ -164,7 +164,7 @@ void main() {
       'Testing that it launches the conflict dialog when there are conflicts',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen([mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     bloc.toggleMarkedUserModel(user1);
