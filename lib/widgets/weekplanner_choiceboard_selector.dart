@@ -21,6 +21,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   WeekplannerChoiceboardSelector(this._activity, this._activityBloc,
       this._user) {
     _activityBloc.load(_activity, _user);
+    _settingsBloc.loadSettings(_user);
   }
 
   final ActivityModel _activity;
