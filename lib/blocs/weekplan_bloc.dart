@@ -21,7 +21,7 @@ class WeekplanBloc extends BlocBase {
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   final List<rx_dart.BehaviorSubject<WeekdayModel>> _weekDayStreams =
-      <rx_dart.BehaviorSubject<WeekdayModel>>[];
+  <rx_dart.BehaviorSubject<WeekdayModel>>[];
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -42,18 +42,19 @@ class WeekplanBloc extends BlocBase {
   final rx_dart.BehaviorSubject<bool> _editMode
   = rx_dart.BehaviorSubject<bool>.seeded(false);
   final rx_dart.BehaviorSubject<List<ActivityModel>> _markedActivities =
-      rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+  rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
   final rx_dart.BehaviorSubject<UserWeekModel> _userWeek =
-      rx_dart.BehaviorSubject<UserWeekModel>();
+  rx_dart.BehaviorSubject<UserWeekModel>();
   final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
-      rx_dart.BehaviorSubject<bool>.seeded(false);
+  rx_dart.BehaviorSubject<bool>.seeded(false);
 
-  WeekModel _week ;
+  WeekModel _week;
+
   int _daysToDisplay = 0;
   int _firstDay = 0;
 
   /// Set how many days are displayed and which day is the first
-  void setDaysToDisplay(int numDays, int firstDay){
+  void setDaysToDisplay(int numDays, int firstDay) {
     _daysToDisplay = numDays;
     _firstDay = firstDay;
   }
@@ -63,23 +64,23 @@ class WeekplanBloc extends BlocBase {
     _api.week
         .get(user.id, week.weekYear, week.weekNumber)
         .listen((WeekModel loadedWeek) {
-          _week = loadedWeek;
+      _week = loadedWeek;
       _userWeek.add(UserWeekModel(loadedWeek, user));
-    }).onError((Object error){
+    }).onError((Object error) {
       return Future<void>.error(error);
     });
     return Future<void>.value();
   }
 
   /// Get the current week fresh from the api
-  Future<void> loadWeek(DisplayNameModel user) async{
+  Future<void> loadWeek(DisplayNameModel user) async {
     _api.week
         .get(user.id, _week.weekYear, _week.weekNumber)
         .listen((WeekModel loadedWeek) {
       _userWeek.add(UserWeekModel(loadedWeek, user));
       _week = loadedWeek;
-      for(int i = 0; i < _daysToDisplay; i++){
-        _weekDayStreams[i].add(loadedWeek.days[i-_firstDay]);
+      for (int i = 0; i < _daysToDisplay; i++) {
+        _weekDayStreams[i].add(loadedWeek.days[i - _firstDay]);
       }
     }).onError((Object error) {
       return Future<void>.error(error);
@@ -109,19 +110,19 @@ class WeekplanBloc extends BlocBase {
   }
 
   /// Getter for weekdaystreams
-  Stream<WeekdayModel> getWeekdayStream(int index){
+  Stream<WeekdayModel> getWeekdayStream(int index) {
     return _weekDayStreams[index].stream;
   }
 
   /// Add a new weekdaystream
-  void addWeekdayStream(){
+  void addWeekdayStream() {
     _weekDayStreams.add(rx_dart.BehaviorSubject<WeekdayModel>
-        .seeded(_week.days[_firstDay+_weekDayStreams.length]));
+        .seeded(_week.days[_firstDay + _weekDayStreams.length]));
   }
 
   /// Clear weekdaystreams list
-  void clearWeekdayStreams(){
-    for(rx_dart.BehaviorSubject<WeekdayModel> i in _weekDayStreams){
+  void clearWeekdayStreams() {
+    for (rx_dart.BehaviorSubject<WeekdayModel> i in _weekDayStreams) {
       i.close();
     }
     _weekDayStreams.clear();
@@ -140,17 +141,16 @@ class WeekplanBloc extends BlocBase {
     final List<WeekdayModel> daysToUpdate = <WeekdayModel>[];
     for (ActivityModel activity in _markedActivities.value) {
       activity.state = ActivityState.Canceled;
-      for(WeekdayModel day in _week.days){
-        if(day.activities.contains(activity)){
+      for (WeekdayModel day in _week.days) {
+        if (day.activities.contains(activity)) {
           daysToUpdate.add(day);
         }
       }
     }
     clearMarkedActivities();
-    updateWeekdays(daysToUpdate).catchError((Object error){
+    updateWeekdays(daysToUpdate).catchError((Object error) {
       return Future<void>.error(error);
     });
-
   }
 
   /// Delete the marked activities when the trash button is clicked
@@ -158,39 +158,40 @@ class WeekplanBloc extends BlocBase {
     final List<WeekdayModel> daysToUpdate = <WeekdayModel>[];
 
     for (ActivityModel activity in _markedActivities.value) {
-      for(WeekdayModel day in _week.days){
-        if(day.activities.contains(activity)){
+      for (WeekdayModel day in _week.days) {
+        if (day.activities.contains(activity)) {
           day.activities.remove(activity);
           daysToUpdate.add(day);
         }
       }
     }
     clearMarkedActivities();
-    updateWeekdays(daysToUpdate).catchError((Object error){
+    updateWeekdays(daysToUpdate).catchError((Object error) {
       return Future<void>.error(error);
     });
-
   }
-/// Set the marked activities as resumed
-  Future<void> undoMarkedActivities() async{
+
+  /// Set the marked activities as resumed
+  Future<void> undoMarkedActivities() async {
     final List<WeekdayModel> daysToUpdate = <WeekdayModel>[];
     for (ActivityModel activity in _markedActivities.value) {
       activity.state = ActivityState.Active;
-      for(WeekdayModel day in _week.days){
-        if(day.activities.contains(activity)){
+      for (WeekdayModel day in _week.days) {
+        if (day.activities.contains(activity)) {
           daysToUpdate.add(day);
         }
       }
     }
     clearMarkedActivities();
-    updateWeekdays(daysToUpdate).catchError((Object error){
+    updateWeekdays(daysToUpdate).catchError((Object error) {
       return Future<void>.error(error);
     });
   }
-/// Set the marked activities as resumed
+
+  /// Set the marked activities as resumed
   // ignore: non_constant_identifier_names
-  void UndoMarkedActivities(){
-   final WeekModel week = _userWeek.value.week;
+  void UndoMarkedActivities() {
+    final WeekModel week = _userWeek.value.week;
     final DisplayNameModel user = _userWeek.value.user;
 
     for (ActivityModel activity in _markedActivities.value) {
@@ -204,7 +205,6 @@ class WeekplanBloc extends BlocBase {
     });
 
     clearMarkedActivities();
-
   }
 
   /// Copies the marked activities to the given days
@@ -236,10 +236,9 @@ class WeekplanBloc extends BlocBase {
     }
 
     clearMarkedActivities();
-    updateWeekdays(daysToUpdate).catchError((Object error){
+    updateWeekdays(daysToUpdate).catchError((Object error) {
       return Future<void>.error(error);
     });
-
   }
 
   /// Toggles edit mode
@@ -265,19 +264,20 @@ class WeekplanBloc extends BlocBase {
 
   /// Adds an activity to the given day.
   Future<void> addActivity(ActivityModel activity, int day) {
-
     final Completer<void> completer = Completer<void>();
     final DisplayNameModel user = _userWeek.value.user;
     _api.activity.add(activity, user.id, _week.name, _week.weekYear,
         _week.weekNumber, _week.days[day].day)
         .listen((ActivityModel ac) {
-          _week.days[day].activities.add(ac);
-          updateWeekdays(<WeekdayModel>[_week.days[day]])
-            .catchError((Object error){
-              completer.completeError(error);
-          });
-          completer.complete();
-        }).onError((Object error){ completer.completeError(error);});
+      _week.days[day].activities.add(ac);
+      updateWeekdays(<WeekdayModel>[_week.days[day]])
+          .catchError((Object error) {
+        completer.completeError(error);
+      });
+      completer.complete();
+    }).onError((Object error) {
+      completer.completeError(error);
+    });
 
     Future.wait(<Future<void>>[completer.future]);
     return completer.future;
@@ -289,7 +289,7 @@ class WeekplanBloc extends BlocBase {
   }
 
   /// Reorders activities between same or different days.
-  Future<void> reorderActivities (ActivityModel activity, Weekday dayFrom,
+  Future<void> reorderActivities(ActivityModel activity, Weekday dayFrom,
       Weekday dayTo, int newOrder) async {
     // Removed from dayFrom, the day the pictogram is dragged from
     int dayLength = _week.days[dayFrom.index].activities.length;
@@ -300,13 +300,12 @@ class WeekplanBloc extends BlocBase {
     }
 
 
-
     _week.days[dayFrom.index].activities.removeWhere(
-            (ActivityModel a)=> a.id == activity.id);
+            (ActivityModel a) => a.id == activity.id);
     daysToUpdate.add(_week.days[dayFrom.index]);
 
     activity.order = dayFrom == dayTo &&
-            _week.days[dayTo.index].activities.length == newOrder - 1
+        _week.days[dayTo.index].activities.length == newOrder - 1
         ? newOrder - 1
         : newOrder;
 
@@ -317,30 +316,30 @@ class WeekplanBloc extends BlocBase {
       _week.days[dayTo.index].activities[i].order += 1;
     }
 
-    if(dayFrom != dayTo){
+    if (dayFrom != dayTo) {
       daysToUpdate.add(_week.days[dayTo.index]);
     }
     _week.days[dayTo.index].activities.insert(activity.order, activity);
 
     updateWeekdays(daysToUpdate)
-        .catchError((Object error){
+        .catchError((Object error) {
       return Future<void>.error(error);
     });
     return Future<void>.value();
   }
 
-  Stream<bool> _atLeastOneActivityMarked(){
+  Stream<bool> _atLeastOneActivityMarked() {
     return _markedActivities.map((List<ActivityModel> activities) =>
     activities.isNotEmpty);
   }
 
   /// Method to get a single weekday from the api
-  Future<void> getWeekday(Weekday day) async{
+  Future<void> getWeekday(Weekday day) async {
     final DisplayNameModel user = _userWeek.value.user;
     _api.week.getDay(user.id, _week.weekYear, _week.weekNumber, day)
         .listen((WeekdayModel newDay) {
-        _weekDayStreams[newDay.day.index-_firstDay].add(newDay);
-    }).onError((Object error){
+      _weekDayStreams[newDay.day.index - _firstDay].add(newDay);
+    }).onError((Object error) {
       return Future<void>.error(error);
     });
 
@@ -348,16 +347,14 @@ class WeekplanBloc extends BlocBase {
   }
 
   /// Method to update a given list of weekdays
-  Future<void> updateWeekdays(List<WeekdayModel> days) async{
+  Future<void> updateWeekdays(List<WeekdayModel> days) async {
     final DisplayNameModel user = _userWeek.value.user;
-    for(WeekdayModel day in days){
+    for (WeekdayModel day in days) {
       _api.week.updateDay(user.id, _week.weekYear, _week.weekNumber, day)
           .listen((WeekdayModel newDay) {
-        print('TEST2 ${newDay.activities[0].choiceBoardName}');
-        print('day: ${day.activities[0].choiceBoardName}');
-            _weekDayStreams[newDay.day.index-_firstDay].add(newDay);
-            _week.days[newDay.day.index] = newDay;
-            print('TEST3 ${newDay.activities[0].choiceBoardName}');
+        _weekDayStreams[newDay.day.index - _firstDay].add(newDay);
+        _week.days[newDay.day.index] = newDay;
+        print('TEST3 ${newDay.activities[0].choiceBoardName}');
       }).onError((Object error) {
         return Future<void>.error(error);
       });
