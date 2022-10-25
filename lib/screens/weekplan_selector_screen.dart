@@ -41,7 +41,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
 }
 
 class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
-  bool showOldWeeks = true;
+  bool showOldWeeks = false;
 
   void _toggleOldWeeks() {
     setState(
@@ -141,14 +141,15 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           _toggleOldWeeks();
         },
       ),
-      showOldWeeks
-          ? Expanded(
+
+        Visibility(
+          visible: showOldWeeks,
+            child: Expanded(
               flex: 5,
               child: Container( // Container with old weeks if shown
                 // Background color of the old weeks
                 color: Colors.grey.shade600,
-                child: _buildWeekplanGridview(context, oldWeekModels, false)))
-          : Container(), // Empty container if old weeks are hidden
+                child: _buildWeekplanGridview(context, oldWeekModels, false))))
     ]));
   }
 
