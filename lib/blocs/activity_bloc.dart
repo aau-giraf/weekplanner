@@ -1,5 +1,7 @@
 
 import 'dart:async';
+import 'dart:ui';
+
 import 'package:api_client/models/displayname_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -7,7 +9,6 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/alternate_name_model.dart';
-
 /// Logic for activities
 class ActivityBloc extends BlocBase {
   /// Default Constructor.
@@ -16,7 +17,7 @@ class ActivityBloc extends BlocBase {
 
   /// Stream for  updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
-
+  StreamSubscription<ActivityModel> _subscription;
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
       rx_dart.BehaviorSubject<ActivityModel>();
@@ -35,6 +36,24 @@ class ActivityBloc extends BlocBase {
   /// Return the current ActivityModel
   ActivityModel getActivity(){
     return _activityModel;
+  }
+  VoidCallback _handler;
+  void AddHandlerToActivityStateOnce(VoidCallback handler)
+  {
+    if(_handler != null )
+      {
+        _subscription.cancel();
+      }
+
+    _handler = handler;
+    _subscription = activityModelStream.listen((activity) {
+      if(activity.state == ActivityState.Completed)
+      {
+        print("PLS BE MERCY FULL");
+        handler();
+      }
+    });
+
   }
 
   /// Mark the selected activity as complete. Toggle function, if activity is

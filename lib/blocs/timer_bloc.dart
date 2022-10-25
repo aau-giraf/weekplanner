@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -17,16 +19,15 @@ class TimerBloc extends BlocBase {
   /// Constructor taking the API
   TimerBloc(this._api);
   final Api _api;
-
   ActivityModel _activityModel;
   DisplayNameModel _user;
   ActivityBloc _activityBloc;
   /// Stream for the progress of the timer.
   Stream<double> get timerProgressStream => _timerProgressStream.stream;
-  bool _doNotInit;
   /// stream for checking if the timer is running
   Stream<TimerRunningMode> get timerRunningMode =>
       _timerRunningModeStream.stream;
+  StreamSubscription<TimerRunningMode> _subscription;
 
   /// Stream for checking if the timer is instantiated.
   Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
@@ -70,16 +71,36 @@ class TimerBloc extends BlocBase {
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity, {DisplayNameModel user}) {
     _activityModel = activity;
-    _activityBloc = di.getDependency<ActivityBloc>();
-    _activityBloc.load(activity, user);
-
     if (user != null) {
       _user = user;
     }
 
+
     _timerInstantiatedStream.add(_activityModel.timer != null);
   }
 
+  void GetActivityBloc(ActivityBloc activityBloc)
+  {
+    _activityBloc = activityBloc;
+
+  }
+  void AddHandlerToRunningModeOnce(VoidCallback handler)
+  {
+      if(_subscription != null)
+        {
+          return;
+        }
+
+    _subscription = timerRunningMode.listen((mode) {
+        if(mode == TimerRunningMode.completed)
+          {
+
+            _activityBloc.completeActivity();
+
+          }
+    });
+
+  }
   /// Adds a timer to the activity loaded into the timerBloc.
   /// By default the timer will be paused.
   void addTimer(Duration duration) {
@@ -94,7 +115,7 @@ class TimerBloc extends BlocBase {
     _timerProgressStream.add(0);
     _timerProgressNumeric.add(_durationToTimestamp(duration));
     _api.activity
-        .update(_activityModel, _user.id)
+        .updateTimer(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
     });
@@ -124,6 +145,9 @@ class TimerBloc extends BlocBase {
   /// Else it will be paused.
   void initTimer() {
     // Checks if a stopWatch exist
+
+    if(_activityModel.state == ActivityState.Completed)
+        return;
     if (_stopwatch == null) {
       if (_activityModel.timer != null) {
         // Calculates the end time of the timer
@@ -180,6 +204,7 @@ class TimerBloc extends BlocBase {
   /// Updates the timer in the database accordingly.
   void playTimer() {
     // Makes sure that a timer exists
+
     if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
@@ -200,11 +225,6 @@ class TimerBloc extends BlocBase {
         updateTimerProgress(c);
         if (_stopwatch.isRunning && DateTime.now().isAfter(_endTime)) {
           playSound();
-          _api.activity
-              .update(_activityModel, _user.id)
-              .listen((ActivityModel activity) {
-            _activityModel = activity;
-          });
           _timerRunningModeStream.add(TimerRunningMode.completed);
         }
       });
@@ -212,7 +232,7 @@ class TimerBloc extends BlocBase {
       _timerRunningModeStream.add(TimerRunningMode.running);
 
       _api.activity
-          .update(_activityModel, _user.id)
+          .updateTimer(_activityModel, _user.id)
           .listen((ActivityModel activity) {
         _activityModel = activity;
       });
@@ -254,7 +274,7 @@ class TimerBloc extends BlocBase {
       _timerRunningModeStream.add(TimerRunningMode.paused);
 
       _api.activity
-          .update(_activityModel, _user.id)
+          .updateTimer(_activityModel, _user.id)
           .listen((ActivityModel activity) {
         _activityModel = activity;
       });
@@ -273,11 +293,11 @@ class TimerBloc extends BlocBase {
       _timerProgressNumeric.add(_durationToTimestamp(
           Duration(milliseconds: _activityModel.timer.fullLength)));
 
-   /*   _api.activity
-          .update(_activityModel, _user.id)
+     _api.activity
+          .updateTimer(_activityModel, _user.id)
           .listen((ActivityModel activity) {
         _activityModel = activity;
-      });*/
+      });
     }
   }
 
@@ -288,7 +308,7 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(false);
 
     _api.activity
-        .update(_activityModel, _user.id)
+        .updateTimer(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
     });
@@ -301,7 +321,6 @@ class TimerBloc extends BlocBase {
       _countDown.cancel();
       _timerStream.cancel();
     }
-    _doNotInit = true;
     _stopwatch = null;
     _countDown = null;
     _timerStream = null;

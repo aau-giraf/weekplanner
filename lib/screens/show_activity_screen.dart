@@ -35,28 +35,22 @@ import '../style/custom_color.dart' as theme;
 /// Screen to show information about an activity, and change the state of it.
 class ShowActivityScreen extends StatelessWidget {
   /// Constructor
-  ShowActivityScreen(this._activity, this._girafUser,this._weekplanBloc,this._timerBloc, this._weekday, {Key key} )
+  ShowActivityScreen(this._activity, this._girafUser, this._weekplanBloc,
+      this._timerBloc, this._weekday,
+      {Key key})
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
     _settingsBloc.loadSettings(_girafUser);
     _timerBloc.load(_activity, user: _girafUser);
     _timerBloc.initTimer();
-    _timerBloc.timerRunningMode.listen((TimerRunningMode mode) {
-      if(mode == TimerRunningMode.completed)
-        {
-          print("SUSSY AMONGUS");
-
-          _activityBloc.completeActivity();
-        }
+    _timerBloc.GetActivityBloc(_activityBloc);
+    _timerBloc.AddHandlerToRunningModeOnce(() {
+      _activityBloc.completeActivity();
     });
 
-    _activityBloc.activityModelStream.listen((ActivityModel activity) {
-        if(activity.state == ActivityState.Completed)
-        {
-          print("BAKKUS AMONGUS");
-            _weekplanBloc.getWeekday(_weekday.day);
-        }
+    _activityBloc.AddHandlerToActivityStateOnce(() {
+      _weekplanBloc.getWeekday(_weekday.day);
     });
   }
 
@@ -71,6 +65,7 @@ class ShowActivityScreen extends StatelessWidget {
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final WeekplanBloc _weekplanBloc;
   final WeekdayModel _weekday;
+
   /// Textfield controller
   final TextEditingController tec = TextEditingController();
 
@@ -83,13 +78,17 @@ class ShowActivityScreen extends StatelessWidget {
     final Orientation orientation = MediaQuery.of(context).orientation;
 
 
-    ///Used to check if the keyboard is visible
-    return StreamBuilder<WeekplanMode>(
-        stream: _authBloc.mode,
-        builder: (BuildContext context, AsyncSnapshot<WeekplanMode> snapshot) {
-          return buildScreenFromOrientation(
-              orientation, context, snapshot.data);
-        });
+
+                ///Used to check if the keyboard is visible
+                return StreamBuilder<WeekplanMode>(
+                    stream: _authBloc.mode,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<WeekplanMode> snapshot) {
+                      return buildScreenFromOrientation(
+                          orientation, context, snapshot.data);
+                    });
+
+
   }
 
   /// Build the activity screens in a row or column
@@ -408,36 +407,39 @@ class ShowActivityScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<ActivityModel> snapshot1) {
                       return StreamBuilder<TimerRunningMode>(
-                          stream: _timerBloc.timerRunningMode, builder: (BuildContext context,
-                          AsyncSnapshot<TimerRunningMode> snapshot2) {
-                      if (snapshot1.data == null) {
-                        return const CircularProgressIndicator();
-                      }
-                      return Column(
-                        children: <Widget>[
-                          Stack(
-                            alignment: AlignmentDirectional.center,
-                            children: <Widget>[
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.width,
-                                  child: _activity.isChoiceBoard
-                                      ? ChoiceBoard(
-                                          _activity, _activityBloc, _girafUser)
-                                      : buildLoadPictogramImage()),
-                              _buildActivityStateIcon(
-                                  context, snapshot1.data.state, snapshot2.data),
-                            ],
-                          ),
-                          Visibility(
-                            visible: !_activity.isChoiceBoard,
-                            child: PictogramText(_activity, _girafUser,
-                                minFontSize: 50),
-                          ),
-                        ],
-                      );
-                    });
-  }))),
+                          stream: _timerBloc.timerRunningMode,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<TimerRunningMode> snapshot2) {
+                            if (snapshot1.data == null) {
+                              return const CircularProgressIndicator();
+                            }
+                            return Column(
+                              children: <Widget>[
+                                Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height:
+                                            MediaQuery.of(context).size.width,
+                                        child: _activity.isChoiceBoard
+                                            ? ChoiceBoard(_activity,
+                                                _activityBloc, _girafUser)
+                                            : buildLoadPictogramImage()),
+                                    _buildActivityStateIcon(context,
+                                        snapshot1.data.state, snapshot2.data),
+                                  ],
+                                ),
+                                Visibility(
+                                  visible: !_activity.isChoiceBoard,
+                                  child: PictogramText(_activity, _girafUser,
+                                      minFontSize: 50),
+                                ),
+                              ],
+                            );
+                          });
+                    }))),
       ),
       buildButtonBar(),
       _activityBloc.getActivity().isChoiceBoard
@@ -557,35 +559,35 @@ class ShowActivityScreen extends StatelessWidget {
                     ? const Key('TimerPauseButtonKey')
                     : const Key('TimerPlayButtonKey'),
                 onPressed: () {
-                  if(!timerRunningSnapshot.hasData) {
+                  if (!timerRunningSnapshot.hasData) {
                     throw Exception("Error");
                   }
-                  switch(timerRunningSnapshot.data){
+                  switch (timerRunningSnapshot.data) {
                     case TimerRunningMode.initialized:
-                    {
-                      _timerBloc.playTimer();
-                      break;
-                    }
+                      {
+                        _timerBloc.playTimer();
+                        break;
+                      }
                     case TimerRunningMode.stopped:
-                    {
-                      _timerBloc.playTimer();
-                      break;
-                    }
+                      {
+                        _timerBloc.playTimer();
+                        break;
+                      }
                     case TimerRunningMode.running:
-                    {
-                      _timerBloc.pauseTimer();
-                      break;
-                    }
+                      {
+                        _timerBloc.pauseTimer();
+                        break;
+                      }
                     case TimerRunningMode.paused:
-                    {
-                      _timerBloc.playTimer();
-                      break;
-                    }
+                      {
+                        _timerBloc.playTimer();
+                        break;
+                      }
                     case TimerRunningMode.completed:
-                    {
-                      _buildRestartTimerDialog(overallContext);
-                      break;
-                    }
+                      {
+                        _buildRestartTimerDialog(overallContext);
+                        break;
+                      }
                   }
                 },
                 icon: (timerRunningSnapshot.hasData
@@ -868,10 +870,12 @@ class ShowActivityScreen extends StatelessWidget {
   }
 
   /// Builds the icon that displays the activity's state
-  Stack _buildActivityStateIcon(BuildContext context, ActivityState state, TimerRunningMode timemode) {
+  Stack _buildActivityStateIcon(
+      BuildContext context, ActivityState state, TimerRunningMode timemode) {
     print("sugoma dickma");
 
-    if (state == ActivityState.Completed  || TimerRunningMode.completed == timemode  ) {
+    if (state == ActivityState.Completed ||
+        TimerRunningMode.completed == timemode) {
       return Stack(children: <Widget>[
         Container(
           child: ImageIcon(
