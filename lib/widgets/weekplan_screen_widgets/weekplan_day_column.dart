@@ -233,20 +233,23 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
-  /// Sets all activites to Normal state
-  /// Then marks the first Normal activity to Active
+  /// Marks the first Normal activity to Active
   void markCurrent(WeekdayModel weekdayModel){
-    for (ActivityModel activity in weekdayModel.activities){
-      if(activity.state == ActivityState.Active){
-        activity.state = ActivityState.Normal;
-      }
-    }
     if(isToday()){
       for (ActivityModel activity in weekdayModel.activities){
         if(activity.state == ActivityState.Normal){
           activity.state = ActivityState.Active;
           break;
         }
+      }
+    }
+  }
+
+  /// Sets all activites to Normal state
+  void resetActiveMarks(WeekdayModel weekdayModel){
+    for (ActivityModel activity in weekdayModel.activities){
+      if(activity.state == ActivityState.Active){
+        activity.state = ActivityState.Normal;
       }
     }
   }
@@ -271,6 +274,7 @@ class WeekplanDayColumn extends StatelessWidget {
                       return Expanded(
                         child: ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
+                            resetActiveMarks(weekday);
                             if(settingsSnapshot.hasData &&
                                 settingsSnapshot.data.nrOfDaysToDisplay == 1){
                               markCurrent(weekday);
