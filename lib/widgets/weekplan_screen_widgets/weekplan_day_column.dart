@@ -271,10 +271,8 @@ class WeekplanDayColumn extends StatelessWidget {
                       return Expanded(
                         child: ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
-                            final bool markCondition =
-                                settingsSnapshot.data.nrOfDaysToDisplay == 1
-                                    ?? false;
-                            if(markCondition){
+                            if(settingsSnapshot.hasData &&
+                                settingsSnapshot.data.nrOfDaysToDisplay == 1){
                               markCurrent(weekday);
                             }
                             if (index >= weekday.activities.length) {
