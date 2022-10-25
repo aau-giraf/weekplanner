@@ -11,9 +11,9 @@ class ServerException implements Exception {
   String details;
 }
 
-class SaveButtonException implements Exception {
+class EditWeekPlanButtonException implements Exception {
   /// Constructor for the exception
-  SaveButtonException(this.errorCause, this.details);
+  EditWeekPlanButtonException(this.errorCause, this.details);
 
   /// The cause of the error
   String errorCause;
