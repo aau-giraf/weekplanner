@@ -159,7 +159,7 @@ class SettingsScreen extends StatelessWidget {
                   settingsModel.showPopup = !settingsModel.showPopup;
                   _settingsBloc.updateSettings(_user.id, settingsModel)
                       .listen((_) {
-                    _settingsBloc.loadSettings(_user);
+                        _settingsBloc.loadSettings(_user);
                   });
                 }),
             ]);

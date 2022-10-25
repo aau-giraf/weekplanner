@@ -5,6 +5,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
@@ -27,6 +28,10 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   final DisplayNameModel _user;
 
   final ActivityBloc _activityBloc;
+
+  /// The settings bloc which we get the settings from, you need to make sure
+  /// you have loaded settings into it before hand otherwise text is never build
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +118,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   Widget _displayPictogram(
       BuildContext context, List<Widget> pictograms, int index) {
    return StreamBuilder<SettingsModel>(
+     stream: _settingsBloc.settings,
      builder: (BuildContext context,
      AsyncSnapshot<SettingsModel> settingSnapshot) {
        return SizedBox(
@@ -122,9 +128,9 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
            child: GestureDetector(
                onTap: () {
                  if(settingSnapshot.data.showPopup) {
-                 _selectPictogramFromChoiceBoardPopup(context, pictograms, index)
-                     .then((_) {
-                 Routes.pop(context);
+                   _selectPictogramFromChoiceBoardPopup(context, pictograms, index)
+                       .then((_) {
+                   Routes.pop(context);
                  });
                  }
                  else{
