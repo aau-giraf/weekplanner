@@ -263,42 +263,57 @@ class WeekplanDayColumn extends StatelessWidget {
               stream: weekplanBloc.editMode,
               builder:
                   (BuildContext context, AsyncSnapshot<bool> editModeSnapshot) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (BuildContext context, int index) {
-                      markCurrent(weekday);
-                      if ( index >= weekday.activities.length ) {
-                        return StreamBuilder<bool>(
-                            stream: weekplanBloc.activityPlaceholderVisible,
-                            initialData: false,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<bool> snapshot) {
-                              return Visibility(
-                                key: const Key('GreyDragVisibleKey'),
-                                visible: snapshot.data,
-                                child: _dragTargetPlaceholder(index, weekday),
+                    return StreamBuilder<SettingsModel>(
+                        stream: _settingsBloc.settings,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<SettingsModel> settingsSnapshot)
+                    {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (BuildContext context, int index) {
+                            final bool markCondition =
+                                settingsSnapshot.data.nrOfDaysToDisplay == 1
+                                    ?? false;
+                            if(markCondition){
+                              markCurrent(weekday);
+                            }
+                            if (index >= weekday.activities.length) {
+                              return StreamBuilder<bool>(
+                                  stream: weekplanBloc
+                                      .activityPlaceholderVisible,
+                                  initialData: false,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<bool> snapshot) {
+                                    return Visibility(
+                                      key: const Key('GreyDragVisibleKey'),
+                                      visible: snapshot.data,
+                                      child: _dragTargetPlaceholder(
+                                          index, weekday),
+                                    );
+                                  });
+                            }
+                            else {
+                              return StreamBuilder<WeekplanMode>(
+                                  stream: _authBloc.mode,
+                                  initialData: WeekplanMode.guardian,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<WeekplanMode> snapshot) {
+                                    if (snapshot.data ==
+                                        WeekplanMode.guardian) {
+                                      return _dragTargetPictogram(
+                                          index, weekday,
+                                          editModeSnapshot.data, context);
+                                    }
+                                    return _pictogramIconStack(context, index,
+                                        weekday, editModeSnapshot.data);
+                                  }
                               );
-                            });
-                      }
-                      else {
-                        return StreamBuilder<WeekplanMode>(
-                            stream: _authBloc.mode,
-                            initialData: WeekplanMode.guardian,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<WeekplanMode> snapshot) {
-                              if (snapshot.data == WeekplanMode.guardian) {
-                                return _dragTargetPictogram(index, weekday,
-                                    editModeSnapshot.data, context);
-                              }
-                              return _pictogramIconStack(context, index,
-                                  weekday, editModeSnapshot.data);
-                              }
-                        );
-                      }
-                    },
-                    itemCount: weekday.activities.length + 1,
-                  ),
-                );
+                            }
+                          },
+                          itemCount: weekday.activities.length + 1,
+                        ),
+                      );
+                    });
               });
         });
   }
