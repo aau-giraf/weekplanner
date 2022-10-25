@@ -42,7 +42,7 @@ void main() {
 
 
     when(api.account.register(
-        any, any, any,
+        any, any, any, any,
         departmentId: anyNamed('departmentId'), role:  anyNamed('role')))
         .thenAnswer((_) {
       return Stream<GirafUserModel>.value(user);

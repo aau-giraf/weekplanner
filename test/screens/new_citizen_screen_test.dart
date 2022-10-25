@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api_client.dart';
 import 'package:api_client/persistence/persistence_client.dart';
@@ -30,7 +32,7 @@ class MockAccountApi extends AccountApi {
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
   @override
   Stream<GirafUserModel> register(
-      String username, String password, String displayName,
+      String username, String password, String displayName, Uint8List profilePicture,
       {@required int departmentId, @required Role role}) {
     final Map<String, dynamic> body = <String, dynamic>{
       'username': username,

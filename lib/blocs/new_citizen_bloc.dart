@@ -114,9 +114,11 @@ class NewCitizenBloc extends BlocBase {
   }
 
   Uint8List _encodePng(File file) {
-    return encodePng(copyResize(decodeImage(file.readAsBytesSync()),
-        width: 512)); // 512 bytes chosen as a reasonable input size.
-  }
+    return file != null
+      ? encodePng(copyResize(decodeImage(file.readAsBytesSync()),
+          width: 512)) // 512 bytes chosen as a reasonable input size.
+      : null;
+    }
 
   /// Method called with information about the new citizen.
   Stream<GirafUserModel> createCitizen() {
