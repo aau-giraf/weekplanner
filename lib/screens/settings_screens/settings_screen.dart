@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/'
-    'number_of_days_selection_screen.dart';
+    'number_of_days_selection_screen_vertical.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'number_of_days_selection_screen_horizontal.dart';
 import 'package:weekplanner/screens/settings_screens/'
@@ -129,7 +129,7 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                 'Antal dage der vises når enheden er på højkant', () async {
                   final Object result = await Routes.push(
-                      context, NumberOfDaysScreen(_user));
+                      context, NumberOfDaysScreenVertical(_user));
                   if(result != null) {
                     settingsModel.nrOfDaysToDisplay = result;
                     _settingsBloc.updateSettings(
