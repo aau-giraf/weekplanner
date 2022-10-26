@@ -24,7 +24,7 @@ class EditWeekPlanScreen extends StatelessWidget {
   /// The current week model that should be edited
   final WeekModel weekModel;
 
-  /// This bloc is thex  bloc from the week plan selector screen it is needed in
+  /// This bloc is the bloc from the week plan selector screen it is needed in
   /// in order to delete the week plan
   final WeekplansBloc selectorBloc;
   final EditWeekplanBloc _bloc;

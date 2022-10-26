@@ -21,7 +21,7 @@ class WeekplanBloc extends BlocBase {
   Stream<UserWeekModel> get userWeek => _userWeek.stream;
 
   final List<rx_dart.BehaviorSubject<WeekdayModel>> _weekDayStreams =
-  <rx_dart.BehaviorSubject<WeekdayModel>>[];
+    <rx_dart.BehaviorSubject<WeekdayModel>>[];
 
   /// The stream that emits whether in editMode or not
   Stream<bool> get editMode => _editMode.stream;
@@ -40,13 +40,13 @@ class WeekplanBloc extends BlocBase {
   /// The API
   final Api _api;
   final rx_dart.BehaviorSubject<bool> _editMode
-  = rx_dart.BehaviorSubject<bool>.seeded(false);
+    = rx_dart.BehaviorSubject<bool>.seeded(false);
   final rx_dart.BehaviorSubject<List<ActivityModel>> _markedActivities =
-  rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
+    rx_dart.BehaviorSubject<List<ActivityModel>>.seeded(<ActivityModel>[]);
   final rx_dart.BehaviorSubject<UserWeekModel> _userWeek =
-  rx_dart.BehaviorSubject<UserWeekModel>();
+    rx_dart.BehaviorSubject<UserWeekModel>();
   final rx_dart.BehaviorSubject<bool> _activityPlaceholderVisible =
-  rx_dart.BehaviorSubject<bool>.seeded(false);
+    rx_dart.BehaviorSubject<bool>.seeded(false);
 
   WeekModel _week;
 

@@ -55,7 +55,7 @@ class CopyResolveScreen extends StatelessWidget {
             weekModel);
 
         final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
-            [newWeekModel], currentUser, forThisCitizen);
+            <WeekModel>[newWeekModel], currentUser, forThisCitizen);
 
         bool toCopy = true;
         if (numberOfConflicts > 0) {
@@ -69,7 +69,8 @@ class CopyResolveScreen extends StatelessWidget {
 
         if (toCopy) {
           copyBloc
-              .copyWeekplan([newWeekModel], currentUser, forThisCitizen)
+              .copyWeekplan(
+              <WeekModel>[newWeekModel], currentUser, forThisCitizen)
               .then((_) {
             Routes.goHome(context);
             Routes.push(context, WeekplanSelectorScreen(currentUser));

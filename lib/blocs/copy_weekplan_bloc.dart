@@ -3,7 +3,6 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 
@@ -51,7 +50,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     }
     return Future.wait(callFutures);
   }
-
+  ///Checks whether a user has a conflict with a weekModel
   Future<bool> isConflictingUser(
       DisplayNameModel user, WeekModel weekModel) async {
     bool daysAreEmpty = true;
@@ -84,7 +83,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
         DisplayNameModel currentUser, WeekModel weekModel) async {
 
       final List<DisplayNameModel> users = _markedUserModels.value.isEmpty ?
-      [currentUser] : _markedUserModels.value ;
+        <DisplayNameModel>[currentUser] : _markedUserModels.value ;
       final List<DisplayNameModel> conflictingUsers = <DisplayNameModel>[];
 
       for (DisplayNameModel user in users) {
@@ -98,8 +97,7 @@ class CopyWeekplanBloc extends ChooseCitizenBloc {
     ///Returns a list with the names of all users with a conflict
   Future<List<String>> getAllConflictingUsers(
       DisplayNameModel currentUser, List<WeekModel> weekModelList) async {
-    Future<List<String>> futureResult;
-    List<String> result = <String>[];
+    final List<String> result = <String>[];
     for (WeekModel weekModel in weekModelList) {
       await getConflictingUsers(
           currentUser, weekModel).then((List<DisplayNameModel> nameList) {

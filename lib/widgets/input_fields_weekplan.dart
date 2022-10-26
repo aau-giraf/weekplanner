@@ -44,16 +44,13 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
       _weekNumberInputField(),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
+        children: <Widget>[
         //Stack(
           Align(
             alignment: Alignment.centerLeft,
             child: Container(
               child: _pictogramInputField(),
-          )
-
-
-          ),
+          )),
           Align(
             alignment: Alignment.center,
             child: Container(

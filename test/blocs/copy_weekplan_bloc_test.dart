@@ -55,7 +55,6 @@ void main() {
   Api api;
   DisplayNameModel user;
   WeekModel weekplan1;
-  WeekModel weekplan2;
   setUp(() {
     api = Api('any');
     api.user = MockUserApi();
@@ -65,8 +64,6 @@ void main() {
         displayName: 'Hans', role: Role.Citizen.toString(), id: '1');
     weekplan1 = WeekModel(
       thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
-    weekplan2 = WeekModel(
-        thumbnail: null, name: 'weekplan2', weekYear: 2021, weekNumber: 32);
   });
 
   test('toggleMarkedUserModel', async((DoneFn done) {
@@ -90,7 +87,7 @@ void main() {
       });
     }
 
-    bloc.copyWeekplan([weekplan1], user, false);
+    bloc.copyWeekplan(<WeekModel>[weekplan1], user, false);
 
     bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
       for (DisplayNameModel user in markedUsers){
