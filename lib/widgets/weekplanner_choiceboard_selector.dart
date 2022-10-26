@@ -129,7 +129,8 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
            child: GestureDetector(
                onTap: () {
                  if(settingSnapshot.data.showPopup) {
-                   _selectPictogramFromChoiceBoardPopup(context, pictograms, index)
+                   _selectPictogramFromChoiceBoardPopup(context,
+                     pictograms, index)
                        .then((_) {
                    Routes.pop(context);
                  });
