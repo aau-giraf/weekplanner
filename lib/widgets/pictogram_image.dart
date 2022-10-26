@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -15,17 +16,18 @@ class PictogramImage extends StatelessWidget {
   /// authenticated request is then made to the back-end to load the image.
   ///
   /// The [onPressed] function will be called every time the image is pressed
-  PictogramImage({
-    Key key,
-    @required this.pictogram,
-    @required this.onPressed,
-    this.haveRights = false
-  }) : super(key: key) {
+  PictogramImage(
+      {Key key,
+      @required this.pictogram,
+      @required this.onPressed,
+      this.haveRights = false})
+      : super(key: key) {
     _bloc.load(pictogram);
   }
 
   /// Provided Pictogram to load
   final PictogramModel pictogram;
+
   /// haveRights returns true if the current active user have the rights to the
   /// pictogram.
   final bool haveRights;
@@ -35,79 +37,85 @@ class PictogramImage extends StatelessWidget {
   final VoidCallback onPressed;
 
   final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
+
+
   final Widget _loading = Center(
       child: Container(
-          width: 100, height: 100, child: const CircularProgressIndicator()
-      )
-  );
+          width: 100, height: 100, child: const CircularProgressIndicator()));
 
-  Future<Center> _confirmDeleteDialog(
-      BuildContext context
-      ){
+  Future<Center> _confirmDeleteDialog(BuildContext context) {
     return showDialog<Center>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context){
+        builder: (BuildContext context) {
           return GirafConfirmDialog(
               title: 'Slet piktogram',
               description: 'Vil du slette det markerede piktogram?',
               confirmButtonText: 'Slet',
-              confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
-              confirmOnPressed: (){
-
-                if (!_bloc.delete(pictogram)){
+              confirmButtonIcon:
+                  const ImageIcon(AssetImage('assets/icons/delete.png')),
+              confirmOnPressed: () {
+                if (!_bloc.delete(pictogram)) {
                   _notifyErrorOnDeleteDialog(context);
                 }
                 Routes.pop(context);
-              }
-          );
-        }
-    );
+              });
+        });
   }
 
-  Future<Center> _notifyErrorOnDeleteDialog(BuildContext context){
+  Future<Center> _notifyErrorOnDeleteDialog(BuildContext context) {
     return showDialog<Center>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context){
-        return const GirafNotifyDialog(
-          title: 'Det valgte piktogram kunne ikke slettes',
-          description: 'Piktogrammet kunne ikke slettes, prøv igen. '
-              'Hvis fejlen gentager sig, kontakt en administrator.',
-        );
-      }
-    );
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+            title: 'Det valgte piktogram kunne ikke slettes',
+            description: 'Piktogrammet kunne ikke slettes, prøv igen. '
+                'Hvis fejlen gentager sig, kontakt en administrator.',
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
-      child: Card(
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: Container(
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: Stack(
-                children: <Widget>[
-                   StreamBuilder<Image>(
-                    stream: _bloc.image,
-                    builder:
-                      (BuildContext context, AsyncSnapshot<Image> snapshot) =>
-                      snapshot.data ?? _loading),
-              haveRights ? Positioned(
-                top: 5,
-                right: 5,
-                child: GirafButton(
-                  onPressed: () {_confirmDeleteDialog(context);},
-                  icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
-                  text: 'Slet',
-                ),
-              ) : Container(),
-          ])
+        onTap: onPressed,
+        child: Card(
+            child: FittedBox(
+                fit: BoxFit.contain,
+                child: Container(
+                    child: Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Stack(children: <Widget>[
+                          //The column contains the pictogram image and title
+                          Column(children: <Widget>[
+                            StreamBuilder<Image>(
+                                stream: _bloc.image,
+                                builder: (BuildContext context,
+                                        AsyncSnapshot<Image> snapshot) =>
+                                    snapshot.data ?? _loading),
+
+                        StreamBuilder<String>(
+                            stream: _bloc.title,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) =>
+                                Text(snapshot.data??'')),
+                          ]),
+                          haveRights ? Positioned(
+                            top: 5,
+                            right: 5,
+                            child: GirafButton(
+                              onPressed: () {_confirmDeleteDialog(context);},
+                              icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                              text: 'Slet',
+                            ),
+                          ) : Container(),
+                        ]
+                        )
+                    )
+                )
+            )
         )
-    )
-    )));
+    );
   }
 }
