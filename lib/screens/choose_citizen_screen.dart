@@ -110,10 +110,12 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
     final String username = _authBloc.loggedInUsername;
 
+    final int role = _authBloc.loggedInRole;
+
     /// Checks user role and gives option to add Citizen if user is Guardian
-    _api.user.role(username).listen((int role) async {
+
       if (role == Role.Guardian.index) {
-        list.insert(lenght, FlatButton(
+        list.insert(0, FlatButton(
           onPressed: () async {
             final Object result =
             await Routes.push(context, NewCitizenScreen());
@@ -162,7 +164,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         )
         );
       }
-    });
+
 
 
     return list;
