@@ -48,12 +48,15 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
         //Stack(
           Align(
             alignment: Alignment.centerLeft,
-            child: _pictogramInputField(),
+            child: Container(
+              child: _pictogramInputField(),
+          )
+
+
           ),
           Align(
             alignment: Alignment.center,
             child: Container(
-              width: MediaQuery.of(context).size.width / 3,
               height: 100,
               child: widget.button,
             )

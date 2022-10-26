@@ -33,6 +33,8 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../test_image.dart';
 
@@ -604,7 +606,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Fejl'), findsOneWidget);
-        expect(find.text('Der kan kun redigeres en uge ad gangen'),
+        expect(find.text('Der kan kun redigeres en ugeplan af gangen'),
             findsOneWidget);
       });
 
@@ -641,7 +643,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Fortryd'), findsOneWidget);
-    expect(find.text('Anden borger'), findsOneWidget);
+    expect(find.text('Andre borgere'), findsOneWidget);
     expect(find.text('Denne borger'), findsOneWidget);
   });
 
@@ -670,10 +672,10 @@ void main() {
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
-        widget is GirafNotifyDialog &&
-            widget.title == 'Fejl' &&
+        widget is GirafConfirmDialog &&
+            widget.title == 'Kopiér ugeplaner' &&
             widget.description ==
-                'Der skal markeres præcis én uge for at kopiere'),
+                'Hvor vil du kopiére de valgte ugeplaner hen?'),
         findsOneWidget);
   });
 
@@ -705,10 +707,10 @@ void main() {
   testWidgets(
       'Test if when pressing “kopier her” a copy is made '
       'and the CopyResolverScreen comes up', (WidgetTester tester) async {
+    //tester.binding.window.physicalSizeTestValue = Size(2000, 2050);
     await tester
         .pumpWidget(MaterialApp(home: WeekplanSelectorScreen(mockUser)));
     await tester.pumpAndSettle();
-
     // Expands the old week section
     expect(find.byKey(const Key('ShowOldWeeks')), findsOneWidget);
     await tester.tap(find.byKey(const Key('ShowOldWeeks')));

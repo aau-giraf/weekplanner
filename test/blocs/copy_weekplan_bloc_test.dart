@@ -65,6 +65,8 @@ void main() {
         displayName: 'Hans', role: Role.Citizen.toString(), id: '1');
     weekplan1 = WeekModel(
       thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
+    weekplan2 = WeekModel(
+        thumbnail: null, name: 'weekplan2', weekYear: 2021, weekNumber: 32);
   });
 
   test('toggleMarkedUserModel', async((DoneFn done) {
@@ -99,28 +101,5 @@ void main() {
     });
 
   }));
-
-  test('Test whether the copyToCitizens method '
-      'copies multiple weekplans to the citizens', async((DoneFn done) {
-
-    for (int i = 0; i < 10; i++) {
-      final DisplayNameModel user = DisplayNameModel(
-          displayName: 'Hans', role: Role.Citizen.toString(), id: i.toString());
-      bloc.toggleMarkedUserModel(user);
-      bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
-        expect(markedUsers.contains(user), true);
-      });
-    }
-
-    bloc.copyWeekplan([weekplan1, weekplan2], user, false);
-
-    bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
-      for (DisplayNameModel user in markedUsers){
-        expect(map.containsKey(user.id), true);
-        expect(map[user.id], weekplan1);
-      }
-      done();
-    });
-
-  }));
+  
 }

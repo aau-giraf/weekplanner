@@ -422,16 +422,6 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   ///Builds dialog box to select where to copy weekplan or cancel
   Future<Center> _buildCopyDialog(BuildContext context) async {
-    // if (widget._weekBloc.getNumberOfMarkedWeekModels() > 1) {
-    //   return showDialog<Center>(
-    //       barrierDismissible: false,
-    //       context: context,
-    //       builder: (BuildContext context) {
-    //         return const GirafNotifyDialog(
-    //             title: 'Fejl',
-    //             description: 'Der skal markeres præcis én uge for at kopiere');
-    //       });
-    // }
     if (widget._weekBloc.getNumberOfMarkedWeekModels() < 1) {
       return null;
     }
@@ -444,7 +434,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           builder: (BuildContext context) {
             return GirafConfirmDialog(
               title: 'Kopiér ugeplaner',
-              description: 'Hvor vil du kopiére de valgte ugeplaner hen? ',
+              description: 'Hvor vil du kopiére de valgte ugeplaner hen?',
               confirmButtonText: 'Andre borgere',
               confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/copy.png')),
@@ -458,7 +448,8 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       );
     }
     else{
-      final List<WeekModel> weekModelList = await widget._weekBloc.getMarkedWeeks();
+      final List<WeekModel> weekModelList =
+        await widget._weekBloc.getMarkedWeeks();
       return showDialog<Center>(
           barrierDismissible: false,
           context: context,

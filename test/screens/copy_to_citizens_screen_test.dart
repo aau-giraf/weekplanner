@@ -131,7 +131,7 @@ void main() {
 
   testWidgets('Has Accept and Cancel buttons', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen([mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('AcceptButton')), findsOneWidget);

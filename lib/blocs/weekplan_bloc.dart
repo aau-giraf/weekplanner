@@ -354,7 +354,6 @@ class WeekplanBloc extends BlocBase {
           .listen((WeekdayModel newDay) {
         _weekDayStreams[newDay.day.index - _firstDay].add(newDay);
         _week.days[newDay.day.index] = newDay;
-        print('TEST3 ${newDay.activities[0].choiceBoardName}');
       }).onError((Object error) {
         return Future<void>.error(error);
       });
