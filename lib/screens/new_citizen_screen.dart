@@ -49,8 +49,9 @@ class NewCitizenScreen extends StatelessWidget {
       child: CircleAvatar(
         key: const Key('WidgetAvatar'),
         radius: 200,
-        foregroundImage: FileImage(image),
-        backgroundImage: const AssetImage('assets/login_screen_background_image.png'),
+        /*foregroundImage: FileImage(image),
+        backgroundImage: const AssetImage('assets/login_screen_background_image.png'),*/
+        backgroundImage: FileImage(image),
       ),
     );
   }
