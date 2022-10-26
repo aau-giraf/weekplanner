@@ -18,8 +18,8 @@ import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
-  // ignore: prefer_const_constructors_in_immutables
-  ChooseCitizenScreen(this._api);
+
+  const ChooseCitizenScreen(this._api);
   final Api _api;
 
   @override
@@ -106,16 +106,13 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         )).toList();
 
     /// Defines variables needed to check user role
-    final int lenght = list.length;
-
-    final String username = _authBloc.loggedInUsername;
 
     final int role = _authBloc.loggedInRole;
 
     /// Checks user role and gives option to add Citizen if user is Guardian
-
+    _api.user.me();
       if (role == Role.Guardian.index) {
-        list.insert(0, FlatButton(
+        list.insert(0, TextButton(
           onPressed: () async {
             final Object result =
             await Routes.push(context, NewCitizenScreen());
@@ -138,10 +135,11 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                 Expanded(
                   child: LayoutBuilder(builder:
                       (BuildContext context, BoxConstraints constraints) {
-                    return Icon(
-                        Icons.person_add,
-                        size: constraints.biggest.height
-                    );
+                        return Icon(
+                          Icons.person_add,
+                          size: constraints.biggest.height,
+                          color: Colors.black,
+                        );
                   }),
                 ),
                 ConstrainedBox(
@@ -154,7 +152,8 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                     child: const Center(
                       child: AutoSizeText(
                         'Tilføj Borger',
-                        style: TextStyle(fontSize: GirafFont.large),
+                        style: TextStyle(fontSize: GirafFont.large,
+                            color: Colors.black)
                       ),
                     )
                 )
