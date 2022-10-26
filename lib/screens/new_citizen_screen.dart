@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
@@ -179,16 +180,63 @@ class NewCitizenScreen extends StatelessWidget {
                         ? _displayImage(snapshot.data)
                         : _displayIfNoImage()),
           ),
+
+
+
+/*
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GirafButton(
+                  key: const Key('saveButton'),
+                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+                  text: 'Gem borger',
+                  isEnabled: false,
+                  isEnabledStream: _bloc.allInputsAreValidStream,
+                  onPressed: () {
+                  _bloc.createCitizen().listen((GirafUserModel response) {
+                  if (response != null) {
+                  Routes.pop<GirafUserModel>(context, response);
+                  _bloc.resetBloc();
+                  }
+                  }).onError((Object error) =>
+                  _translator.catchApiError(error, context));
+                  },
+                  ),
+
+              GirafButton(
+                key: const Key('saveButton'),
+                icon: const ImageIcon(AssetImage('assets/icons/save.png')),
+                text: 'Gem borger',
+                isEnabled: false,
+                isEnabledStream: _bloc.allInputsAreValidStream,
+                onPressed: () {
+                  _bloc.createCitizen().listen((GirafUserModel response) {
+                    if (response != null) {
+                      Routes.pop<GirafUserModel>(context, response);
+                      _bloc.resetBloc();
+                    }
+                  }).onError((Object error) =>
+                      _translator.catchApiError(error, context));
+                },
+              ),
+
+            ],
+          ),
+
+
+*/
+
+
+
+
           Row(
             //mainAxisAlignment:,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-
                 /// Add from gallery button
-                child: GirafButton(
+                GirafButton(
                   key: const Key('TilføjFraGalleriButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Tilføj fra galleri',
@@ -201,13 +249,10 @@ class NewCitizenScreen extends StatelessWidget {
                               ? _displayImage(snapshot.data)
                               : _displayIfNoImage()),
                 ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+
 
                 /// Take picture button
-                child: GirafButton(
+                GirafButton(
                   key: const Key('TagBillede'),
                   icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
                   text: 'Tag billede',
@@ -220,15 +265,12 @@ class NewCitizenScreen extends StatelessWidget {
                               ? _displayImage(snapshot.data)
                               : _displayIfNoImage()),
                 ),
-              ),
             ],
           ),
+
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                child: GirafButton(
+                GirafButton(
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   text: 'Gem borger',
@@ -244,9 +286,9 @@ class NewCitizenScreen extends StatelessWidget {
                         _translator.catchApiError(error, context));
                   },
                 ),
-              ),
             ],
           ),
+
         ],
       ),
     );

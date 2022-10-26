@@ -25,14 +25,13 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 /// where listen().onError could catch it
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
-      : super(
-        HttpClient(baseUrl: null, persist: persist), persist);
+      : super(HttpClient(baseUrl: null, persist: persist), persist);
 
   /// override of the register function, which returns an error
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
   @override
-  Stream<GirafUserModel> register(
-      String username, String password, String displayName, Uint8List profilePicture,
+  Stream<GirafUserModel> register(String username, String password,
+      String displayName, Uint8List profilePicture,
       {@required int departmentId, @required Role role}) {
     final Map<String, dynamic> body = <String, dynamic>{
       'username': username,
@@ -106,12 +105,10 @@ class MockNewCitizenBloc extends NewCitizenBloc {
       Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validUsernameStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validUsernameStream => Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validPasswordStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validPasswordStream => Stream<bool>.value(acceptAllInputs);
 
   @override
   Stream<bool> get validPasswordVerificationStream =>
@@ -165,11 +162,14 @@ void main() {
     expect(find.byType(TextFormField), findsNWidgets(4));
   });
 
+
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pumpAndSettle();
 
-    expect(find.byType(GirafButton), findsNWidgets(3));
+    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
   });
+
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
@@ -213,7 +213,8 @@ void main() {
 
     expect(
         tester
-            .widget<GirafButton>(find.byKey(const Key('saveButton')))
+            .widget<GirafButton>(
+                find.byKey(const Key('saveButton'), skipOffstage: false))
             .isEnabled,
         isFalse);
   });
