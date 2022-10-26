@@ -269,6 +269,7 @@ class NewCitizenScreen extends StatelessWidget {
           ),
 
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
                 GirafButton(
                   key: const Key('saveButton'),
