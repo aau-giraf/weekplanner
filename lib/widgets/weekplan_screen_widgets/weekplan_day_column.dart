@@ -385,8 +385,10 @@ class WeekplanDayColumn extends StatelessWidget {
                                 key: Key(weekday.day.index.toString() +
                                     currActivity.id.toString()),
                                 onTap: () {
+
                                   if (modeSnapshot.data ==
-                                      WeekplanMode.guardian) {
+                                      WeekplanMode.guardian ||
+                                      modeSnapshot.data == WeekplanMode.trustee) {
                                     _handleOnTapActivity(
                                         inEditMode,
                                         isMarked,
@@ -396,7 +398,7 @@ class WeekplanDayColumn extends StatelessWidget {
                                         context,
                                         weekday);
                                   } else {
-                                    _handleOnTapActivity(
+                                    _handleActivity(
                                         false,
                                         false,
                                         true,
@@ -425,7 +427,30 @@ class WeekplanDayColumn extends StatelessWidget {
       ),
     );
   }
+  void _handleActivity(
+      bool inEditMode,
+      bool isMarked,
+      bool isCitizen,
+      List<ActivityModel> activities,
+      int index,
+      BuildContext context,
+      WeekdayModel weekday
+      ) {
+    final ActivityModel activistModel = activities[index];
+    _activityBloc.load(activistModel, user);
+    _activityBloc.AccesWeekPlanBloc(weekplanBloc, weekday);
+    _timerBloc.load(activistModel);
+    _timerBloc.GetActivityBloc(_activityBloc);
+    _activityBloc.AddHandlerToActivityStateOnce();
+    _timerBloc.AddHandlerToRunningModeOnce();
+    _timerBloc.initTimer();
 
+    if (activistModel.timer == null) {
+      _activityBloc.completeActivity();
+    } else {
+      _timerBloc.playTimer();
+    }
+  }
   /// Handles tap on an activity
   void _handleOnTapActivity(
       bool inEditMode,

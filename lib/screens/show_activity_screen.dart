@@ -41,17 +41,14 @@ class ShowActivityScreen extends StatelessWidget {
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
+    _activityBloc.AccesWeekPlanBloc(_weekplanBloc, _weekday);
     _settingsBloc.loadSettings(_girafUser);
     _timerBloc.load(_activity, user: _girafUser);
     _timerBloc.initTimer();
     _timerBloc.GetActivityBloc(_activityBloc);
-    _timerBloc.AddHandlerToRunningModeOnce(() {
-      _activityBloc.completeActivity();
-    });
+    _timerBloc.AddHandlerToRunningModeOnce();
 
-    _activityBloc.AddHandlerToActivityStateOnce(() {
-      _weekplanBloc.getWeekday(_weekday.day);
-    });
+    _activityBloc.AddHandlerToActivityStateOnce();
   }
 
   final DisplayNameModel _girafUser;

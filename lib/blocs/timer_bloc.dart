@@ -84,7 +84,7 @@ class TimerBloc extends BlocBase {
     _activityBloc = activityBloc;
 
   }
-  void AddHandlerToRunningModeOnce(VoidCallback handler)
+  void AddHandlerToRunningModeOnce()
   {
       if(_subscription != null)
         {

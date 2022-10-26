@@ -3,12 +3,14 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/alternate_name_model.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 /// Logic for activities
 class ActivityBloc extends BlocBase {
   /// Default Constructor.
@@ -21,7 +23,8 @@ class ActivityBloc extends BlocBase {
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
       rx_dart.BehaviorSubject<ActivityModel>();
-
+  WeekplanBloc _weekplanBloc;
+  WeekdayModel _weekday;
   final Api _api;
   ActivityModel _activityModel;
   DisplayNameModel _user;
@@ -33,25 +36,26 @@ class ActivityBloc extends BlocBase {
     _user = user;
     _activityModelStream.add(activityModel);
   }
+  
+  void AccesWeekPlanBloc(WeekplanBloc weekplanBloc, WeekdayModel weekday)
+  {
+    _weekplanBloc = weekplanBloc;
+    _weekday = weekday;
+  }
+  
   /// Return the current ActivityModel
   ActivityModel getActivity(){
     return _activityModel;
   }
-  VoidCallback _handler;
-  void AddHandlerToActivityStateOnce(VoidCallback handler)
+  void AddHandlerToActivityStateOnce()
   {
-    if(_handler != null )
-      {
-        _subscription.cancel();
-      }
-
-    _handler = handler;
+    if(_subscription != null ) {
+      return;
+    }
+    
     _subscription = activityModelStream.listen((activity) {
-      if(activity.state == ActivityState.Completed)
-      {
-        print("PLS BE MERCY FULL");
-        handler();
-      }
+
+        _weekplanBloc.getWeekday(_weekday.day);
     });
 
   }
