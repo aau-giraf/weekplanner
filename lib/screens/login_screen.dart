@@ -87,10 +87,10 @@ class LoginScreenState extends State<LoginScreen> {
                       ' til internettet.',
                   'NoConnectionToInternet');
             }
-          } catch (Error) {
+          } catch (Err) {
             throw ServerException(
-                'There was an error with the server' + '\n Error: ',
-                Error.toString());
+                'There was an error with the server' '\n Error: ',
+                Err.toString());
           }
         });
       } else {

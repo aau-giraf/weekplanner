@@ -48,11 +48,11 @@ class EditWeekPlanScreen extends StatelessWidget {
           if (result != null) {
             Routes.pop<WeekModel>(context, result);
           }
-        } catch (Error) {
+        } catch (Err) {
           throw EditWeekPlanButtonException(
-              'Something went wrong while building the save button' +
-                  '\n Error: ',
-              Error.toString());
+              'Something went wrong while building the save button'
+              '\n Error: ',
+              Err.toString());
         }
       },
     );
