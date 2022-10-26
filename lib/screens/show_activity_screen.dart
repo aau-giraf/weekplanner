@@ -869,18 +869,21 @@ class ShowActivityScreen extends StatelessWidget {
   /// Builds the icon that displays the activity's state
   Stack _buildActivityStateIcon(
       BuildContext context, ActivityState state, TimerRunningMode timemode) {
-    print("sugoma dickma");
+
 
     if (state == ActivityState.Completed ||
         TimerRunningMode.completed == timemode) {
       return Stack(children: <Widget>[
         Container(
-          child: ImageIcon(
-            const AssetImage('assets/icons/bigAcceptBorder.png'),
-            key: const Key('IconCompleted'),
-            color: theme.GirafColors.black,
-            size: MediaQuery.of(context).size.width,
-          ),
+          child: Icon(
+        Icons.check,
+        key: const Key('IconComplete'),
+        color: theme.GirafColors.green,
+        size: MediaQuery
+            .of(context)
+            .size
+            .width,
+      ),
         ),
         Container(
           child: ImageIcon(
