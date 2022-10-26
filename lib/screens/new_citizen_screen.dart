@@ -182,8 +182,6 @@ class NewCitizenScreen extends StatelessWidget {
                         : _displayIfNoImage()),
           ),
 
-
-
 /*
 
           Row(
@@ -225,19 +223,18 @@ class NewCitizenScreen extends StatelessWidget {
 
             ],
           ),
-
-
 */
-
-
-
 
           Row(
             //mainAxisAlignment:,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+
                 /// Add from gallery button
-                GirafButton(
+                child: GirafButton(
                   key: const Key('TilføjFraGalleriButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Tilføj fra galleri',
@@ -250,10 +247,15 @@ class NewCitizenScreen extends StatelessWidget {
                               ? _displayImage(snapshot.data)
                               : _displayIfNoImage()),
                 ),
-
+                /*const Padding(padding: EdgeInsets.symmetric(vertical: 10,
+                    horizontal: 16),),*/
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
 
                 /// Take picture button
-                GirafButton(
+                child: GirafButton(
                   key: const Key('TagBillede'),
                   icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
                   text: 'Tag billede',
@@ -266,13 +268,17 @@ class NewCitizenScreen extends StatelessWidget {
                               ? _displayImage(snapshot.data)
                               : _displayIfNoImage()),
                 ),
+              ),
             ],
           ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-                GirafButton(
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: GirafButton(
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   text: 'Gem borger',
@@ -288,9 +294,9 @@ class NewCitizenScreen extends StatelessWidget {
                         _translator.catchApiError(error, context));
                   },
                 ),
+              ),
             ],
           ),
-
         ],
       ),
     );

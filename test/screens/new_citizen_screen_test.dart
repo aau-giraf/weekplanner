@@ -162,14 +162,18 @@ void main() {
     expect(find.byType(TextFormField), findsNWidgets(4));
   });
 
-
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
+    await tester.pump();
+    /*
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
     await tester.pumpAndSettle();
+     */
 
     expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
   });
-
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
@@ -209,6 +213,8 @@ void main() {
   testWidgets('Save button is disabled by default',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
     await tester.pump();
 
     expect(
@@ -231,10 +237,14 @@ void main() {
     await tester.enterText(find.byKey(const Key('passwordField')), 'password');
     await tester.enterText(
         find.byKey(const Key('passwordVerifyField')), 'password');
-
-    await tester.tap(find.byKey(const Key('saveButton')));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
+
+    await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('ErrorMessageDialog'), skipOffstage: false),
+        findsNWidgets(1));
   });
   testWidgets('New user so, no error message should appear',
       (WidgetTester tester) async {
@@ -248,7 +258,11 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('passwordVerifyField')), 'password');
 
-    await tester.tap(find.byKey(const Key('saveButton')));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
   });
@@ -265,8 +279,14 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('passwordVerifyField')), 'password');
 
-    await tester.tap(find.byKey(const Key('saveButton')));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
+
+    await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('ErrorMessageDialog'), skipOffstage: false),
+        findsNWidgets(1));
   });
 }
