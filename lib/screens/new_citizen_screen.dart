@@ -60,7 +60,7 @@ class NewCitizenScreen extends StatelessWidget {
       //margin: const EdgeInsets.all(10.0),
       child: const CircleAvatar(
         radius: 200,
-        foregroundImage: AssetImage('assets/login_screen_background_image.png'),
+        backgroundImage: AssetImage('assets/login_screen_background_image.png'),
       ),
     );
   }
