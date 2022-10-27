@@ -5,8 +5,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen_portrait.dart';
-import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen_landscape.dart';
+import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'color_theme_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
@@ -127,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                 'Antal dage der vises når enheden er på højkant', () async {
                   final Object result = await Routes.push(
-                      context, NumberOfDaysScreenPortrait(_user));
+                      context, NumberOfDaysScreen(_user, true));
                   if(result != null) {
                     settingsModel.nrOfDaysToDisplayPortrait = result;
                     _settingsBloc.updateSettings(
@@ -138,12 +137,13 @@ class SettingsScreen extends StatelessWidget {
                     );
                   }
                 },
-                titleTrailing: Text(nrOfDaysToString(settingsModel.nrOfDaysToDisplayPortrait)),
+                titleTrailing: Text(nrOfDaysToString(
+                    settingsModel.nrOfDaysToDisplayPortrait)),
               ),
               SettingsArrowButton(
                 'Antal dage der vises når enheden er på langs', () async {
                 final Object result = await Routes.push(
-                    context, NumberOfDaysScreenLandscape(_user));
+                    context, NumberOfDaysScreen(_user, false));
                 if(result != null) {
                   settingsModel.nrOfDaysToDisplayLandscape = result;
                   _settingsBloc.updateSettings(
