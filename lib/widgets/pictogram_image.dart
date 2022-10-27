@@ -87,19 +87,21 @@ class PictogramImage extends StatelessWidget {
                     child: Directionality(
                         textDirection: TextDirection.ltr,
                         child: Stack(children: <Widget>[
-                          //The column contains the pictogram image and title
+                          //The column widget contains the pictogram image and title
                           Column(children: <Widget>[
                             StreamBuilder<Image>(
                                 stream: _bloc.image,
                                 builder: (BuildContext context,
                                         AsyncSnapshot<Image> snapshot) =>
                                     snapshot.data ?? _loading),
-
                         StreamBuilder<String>(
                             stream: _bloc.title,
                             builder: (BuildContext context,
                                 AsyncSnapshot<String> snapshot) =>
+                            //Display the title, if it is null display nothing
                                 Text(snapshot.data??'')),
+
+
                           ]),
                           haveRights ? Positioned(
                             top: 5,
