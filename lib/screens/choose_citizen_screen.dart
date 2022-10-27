@@ -139,8 +139,25 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                     ))
               ],
             ),
-          ),
-        ));
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                minWidth: 200.0,
+                maxWidth: 200.0,
+                minHeight: 15.0,
+                maxHeight: 50.0,
+              ),
+                child: const Center(
+                  child: AutoSizeText(
+                    'Tilføj Bruger',
+                    style: TextStyle(fontSize: GirafFont.large),
+                  ),
+                )
+            )
+          ],
+        ),
+      ),
+    )
+    );
     return list;
   }
 
