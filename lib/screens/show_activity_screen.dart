@@ -505,6 +505,8 @@ class ShowActivityScreen extends StatelessWidget {
       stream: _settingsBloc.settings,
       builder: (BuildContext timerButtonsContext,
           AsyncSnapshot<SettingsModel> settingsSnapshot) {
+        if( !settingsSnapshot.hasData || !settingsSnapshot.data.lockTimerControl)
+          return Container(width: 0,height: 0);
         return Visibility(
           visible: timerInitSnapshot.hasData ? timerInitSnapshot.data : false,
           key: const Key('TimerOverallButtonVisibilityKey'),
@@ -538,6 +540,7 @@ class ShowActivityScreen extends StatelessWidget {
         stream: _timerBloc.timerRunningMode,
         builder: (BuildContext timerRunningContext,
             AsyncSnapshot<TimerRunningMode> timerRunningSnapshot) {
+
           return Visibility(
             visible: modeSnapshot.data == WeekplanMode.guardian ||
                 ((settingsSnapshot.hasData &&
@@ -603,6 +606,7 @@ class ShowActivityScreen extends StatelessWidget {
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
       AsyncSnapshot<SettingsModel> settingsSnapshot) {
+
     return Visibility(
       visible: modeSnapshot.data == WeekplanMode.guardian ||
           (settingsSnapshot.hasData && !settingsSnapshot.data.lockTimerControl),
@@ -640,6 +644,7 @@ class ShowActivityScreen extends StatelessWidget {
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
       AsyncSnapshot<SettingsModel> settingsSnapshot) {
+
     return Visibility(
       // The delete button is only visible when in guardian mode,
       // since a citizen should not be able to delete the timer.
