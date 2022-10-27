@@ -324,12 +324,6 @@ class WeekplanScreen extends StatelessWidget {
     final List<Widget> weekDays = <Widget>[];
     final Orientation orientation = MediaQuery.of(context).orientation;
     final int _weekday = DateTime.now().weekday - 1;// monday = 0, sunday = 6
-    final int daysToDisplayPortrait = 1; //skal modtages fra settings i stedet
-    final int daysToDisplayLandscape = 7; //skal modtages fra settings i stedet
-    final bool displayDaysRelativePortrait = true; //skal modtages fra settings i stedet
-    final bool displayDaysRelativeLandscape = false; //skal modtages fra settings i stedet
-
-
 
     int _weekdayCounter;
     return StreamBuilder<WeekplanMode>(
@@ -355,15 +349,14 @@ class WeekplanScreen extends StatelessWidget {
                     AsyncSnapshot<SettingsModel> settingsSnapshot) {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
-                    //final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
                     int _daysToDisplay;
                     bool _displayDaysRelative;
                     if (orientation == Orientation.portrait) {
-                        _daysToDisplay = daysToDisplayPortrait;
-                        _displayDaysRelative = displayDaysRelativePortrait;
+                        _daysToDisplay = _settingsModel.nrOfDaysToDisplayPortrait;
+                        _displayDaysRelative = _settingsModel.displayDaysRelativePortrait;
                     } else if (orientation == Orientation.landscape) {
-                        _daysToDisplay = daysToDisplayLandscape;
-                        _displayDaysRelative = displayDaysRelativeLandscape;
+                        _daysToDisplay = _settingsModel.nrOfDaysToDisplayLandscape;
+                        _displayDaysRelative = _settingsModel.displayDaysRelativeLandscape;
                     }
 
                     // If the option of showing 1 or 2 days is chosen the

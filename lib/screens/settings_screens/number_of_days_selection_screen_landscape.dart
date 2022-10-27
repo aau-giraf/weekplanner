@@ -14,9 +14,9 @@ import '../../di.dart';
 import '../../routes.dart';
 
 /// Screen where the user can select how many days to show for a citizen
-class NumberOfDaysScreenVertical extends StatelessWidget {
+class NumberOfDaysScreenLandscape extends StatelessWidget {
   /// Constructor
-  NumberOfDaysScreenVertical(DisplayNameModel user) : _user = user {
+  NumberOfDaysScreenLandscape(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
   }
 
@@ -38,30 +38,32 @@ class NumberOfDaysScreenVertical extends StatelessWidget {
 
                 return ListView(
                   children: <Widget>[
-                    SettingsSection(
-                        'Antal dage der vises når enheden er på højkant',
-                        <SettingsSectionItem>[
+                    SettingsSection('Antal dage der vises når enheden er på langs', <SettingsSectionItem>[
                       SettingsCheckMarkButton(
-                          1, _settingsModel.nrOfDaysToDisplay, 'Vis i dag',
-                          () {
-                  Routes.pop(context, 1);
+                          1, _settingsModel.nrOfDaysToDisplayLandscape, 'Vis i dag',
+                              () {
+                            _settingsModel.displayDaysRelativeLandscape = true;
+                            Routes.pop(context, 1);
                           }),
                       SettingsCheckMarkButton(
-                          2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
+                          2, _settingsModel.nrOfDaysToDisplayLandscape, 'Vis to dage',
                               () {
+                                _settingsModel.displayDaysRelativeLandscape = true;
                             Routes.pop(context, 2);
                           }),
 
                       SettingsCheckMarkButton(
                           5,
-                          _settingsModel.nrOfDaysToDisplay,
+                          _settingsModel.nrOfDaysToDisplayLandscape,
                           'Vis mandag til fredag', () {
-                            Routes.pop(context, 5);
+                        _settingsModel.displayDaysRelativeLandscape = false;
+                        Routes.pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
                           7,
-                          _settingsModel.nrOfDaysToDisplay,
+                          _settingsModel.nrOfDaysToDisplayLandscape,
                           'Vis mandag til søndag', () {
+                        _settingsModel.displayDaysRelativeLandscape = false;
                         Routes.pop(context, 7);
                       }),
                     ]),
