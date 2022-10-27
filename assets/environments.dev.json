@@ -1,5 +1,5 @@
 {
-  "SERVER_HOST": "http://srv.giraf.cs.aau.dk/DEV/API",
+  "SERVER_HOST": "http://10.0.2.2:5000",
   "DEBUG": true,
   "USERNAME": "Graatand",
   "PASSWORD": "password"
