@@ -143,6 +143,10 @@ class MockActivityApi extends Mock implements ActivityApi {
   Stream<ActivityModel> update(ActivityModel activity, String userId) {
     return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
+  @override
+  Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
 }
 
 class MockPictogramApi extends Mock implements PictogramApi {
@@ -499,7 +503,7 @@ void main() {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Canceled;
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsNothing);
@@ -553,7 +557,7 @@ void main() {
     mockActivity.pictograms = <PictogramModel>[mockPictograms.first];
 
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNothing);
@@ -567,7 +571,7 @@ void main() {
     mockActivity.pictograms = mockPictograms.sublist(0, 2); // 2 parts in list
 
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(2));
@@ -581,7 +585,7 @@ void main() {
     mockActivity.pictograms = mockPictograms.sublist(0, 3); // 3 parts in list
 
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(3));
@@ -595,7 +599,7 @@ void main() {
     mockActivity.pictograms = mockPictograms;
 
     await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
+        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser,weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(4));
@@ -986,7 +990,7 @@ void main() {
 
     expect(mockActivity.state, ActivityState.Normal);
   });
-  
+
   testWidgets('Button for save alternate name to'
       ' activity is rendered in guardian mode', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);

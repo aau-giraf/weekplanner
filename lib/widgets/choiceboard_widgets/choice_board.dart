@@ -22,6 +22,7 @@ class ChoiceBoard extends StatelessWidget {
 
     for (int i = 0; i < _activity.pictograms.length; i++) {
       _parts.add(
+
           ChoiceBoardPart(_activity.pictograms[i], _bloc, _activity, _user));
     }
 
