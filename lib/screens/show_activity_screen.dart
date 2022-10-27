@@ -505,8 +505,6 @@ class ShowActivityScreen extends StatelessWidget {
       stream: _settingsBloc.settings,
       builder: (BuildContext timerButtonsContext,
           AsyncSnapshot<SettingsModel> settingsSnapshot) {
-        if( !settingsSnapshot.hasData || !settingsSnapshot.data.lockTimerControl)
-          return Container(width: 0,height: 0);
         return Visibility(
           visible: timerInitSnapshot.hasData ? timerInitSnapshot.data : false,
           key: const Key('TimerOverallButtonVisibilityKey'),
