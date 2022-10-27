@@ -82,16 +82,21 @@ class CopyToCitizensScreen extends StatelessWidget {
                                 _copiedWeekModelList, _currentUser, false)
                                 .then((int conflicts) {
                                   if (conflicts > 0) {
-                                    _copiedWeekModelList.length > 1 ?
-                                    _showConflictDialogMultiplePlans(
-                                      context, conflicts,
-                                        _bloc.getAllConflictingUsers(
-                                            _currentUser, _copiedWeekModelList))
-                                        : _showConflictDialog(
+                                    if (_copiedWeekModelList.length == 1){
+                                      _showConflictDialog(
                                           context, conflicts,
-                                        _bloc.getAllConflictingUsers(
-                                            _currentUser,
-                                            _copiedWeekModelList));
+                                          _bloc.getAllConflictingUsers(
+                                              _currentUser,
+                                              _copiedWeekModelList));
+                                    }
+                                    else{
+                                      _showConflictDialogMultiplePlans(
+                                          context, conflicts,
+                                          _bloc.getAllConflictingUsers(
+                                              _currentUser, _copiedWeekModelList
+                                          )
+                                      );
+                                    }
                                   } else {
                                     _bloc.copyWeekplan(_copiedWeekModelList,
                                       _currentUser, false);
