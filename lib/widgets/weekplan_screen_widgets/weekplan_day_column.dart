@@ -270,7 +270,7 @@ class WeekplanDayColumn extends StatelessWidget {
                         stream: _settingsBloc.settings,
                         builder: (BuildContext context,
                             AsyncSnapshot<SettingsModel> settingsSnapshot)
-                    {
+                      {
                       return Expanded(
                         child: ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
