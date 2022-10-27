@@ -734,12 +734,27 @@ class ShowActivityScreen extends StatelessWidget {
 
                     final GirafButton completeButton = GirafButton(
                         key: const Key('CompleteStateToggleButton'),
-                        onPressed: () {
+                        onPressed:  () {
                           _activityBloc.completeActivity();
+                          Routes.pop(context);
+                          //This removes current context
+                          // so back button correctly navigates
+                          Navigator.pushAndRemoveUntil(
+                            //This creates new context at current screen
+                            // (refreshes)
+                            context,
+                            MaterialPageRoute<void>(builder:
+                                (BuildContext context) =>
+                                ShowActivityScreen(_activity, _girafUser,_weekplanBloc,_timerBloc,_weekday)),
+                                (Route<dynamic> route) => true,
+                          );
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
-                        width: 100,
+                        text: activitySnapshot.data.state !=
+                            ActivityState.Completed
+                            ? 'Afslut'
+                            : 'Fortryd',
                         icon: activitySnapshot.data.state !=
                                 ActivityState.Completed
                             ? const ImageIcon(
@@ -754,8 +769,9 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CancelStateToggleButton'),
                         onPressed: () {
                           _activityBloc.cancelActivity();
+
                           _activity.state = _activityBloc.getActivity().state;
-                        },
+        },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Completed,
                         text: activitySnapshot.data.state !=
