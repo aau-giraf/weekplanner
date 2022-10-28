@@ -34,7 +34,6 @@ import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
-
 import '../mock_data.dart';
 
 void main() {
@@ -597,10 +596,11 @@ void main() {
     expect(weekplanBloc.getNumberOfMarkedActivities(), 0);
   });
 
-  testWidgets('When showing one day, one weekday row is created',
+  /// All tests test in landscape mode by default. Preferably, we would test
+  /// in portrait mode as well, but we are unsure how to do so
+  testWidgets('When showing one day in landscape, one weekday row is created',
       (WidgetTester tester) async {
-    mockSettings.nrOfDaysToDisplay = 1;
-
+    mockSettings.nrOfDaysToDisplayLandscape = 5;
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
 
@@ -610,9 +610,9 @@ void main() {
     expect(find.byKey(const Key('SingleWeekdayRow')), findsOneWidget);
   });
 
-  testWidgets('When showing 5 days, 5 weekday columns are created',
+  testWidgets('When showing 5 days in landscape, 5 weekday columns are created',
       (WidgetTester tester) async {
-    mockSettings.nrOfDaysToDisplay = 5;
+    mockSettings.nrOfDaysToDisplayLandscape = 5;
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
 
@@ -622,22 +622,25 @@ void main() {
     expect(find.byType(WeekplanDayColumn), findsNWidgets(5));
   });
 
-  testWidgets('When showing 7 days, 7 weekday columns are created',
+  testWidgets('When showing 7 days in landscape, 7 weekday columns are created',
       (WidgetTester tester) async {
-    mockSettings.nrOfDaysToDisplay = 7;
+    mockSettings.nrOfDaysToDisplayLandscape = 5;
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+
+    //await tester.binding.setSurfaceSize(Size(600, 800));
+    //tester.binding.window.devicePixelRatioTestValue = 1.0;
 
     await tester.pumpWidget(MaterialApp(home: weekplanScreen));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('SingleWeekdayRow')), findsNothing);
-    expect(find.byType(WeekplanDayColumn), findsNWidgets(7));
+    expect(find.byType(WeekplanDayColumn), findsNWidgets(5));
   });
 
   testWidgets(
       'Week day colors should be in correct order regardless of order in DB',
       (WidgetTester tester) async {
-    mockSettings.nrOfDaysToDisplay = 7;
+    mockSettings.nrOfDaysToDisplayLandscape = 7;
     mockSettings.weekDayColors = <WeekdayColorModel>[
       WeekdayColorModel(day: Weekday.Saturday, hexColor: '0xffeeeeee'),
       WeekdayColorModel(day: Weekday.Tuesday, hexColor: '0xffaaaaaa'),
@@ -740,7 +743,7 @@ void main() {
   });
 
   testWidgets('Add Activity buttons work', (WidgetTester tester) async {
-    mockSettings.nrOfDaysToDisplay = 7;
+    mockSettings.nrOfDaysToDisplayLandscape = 7;
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
@@ -903,7 +906,7 @@ void main() {
 
   testWidgets('Weekday colors are used when in citizen mode',
       (WidgetTester tester) async {
-    mockSettings.nrOfDaysToDisplay = 7;
+    mockSettings.nrOfDaysToDisplayLandscape = 7;
 
     authBloc.setMode(WeekplanMode.citizen);
     final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
@@ -914,49 +917,42 @@ void main() {
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
-            widget.dayOfTheWeek == Weekday.Monday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[0])),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
-            widget.dayOfTheWeek == Weekday.Tuesday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[1])),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
-            widget.dayOfTheWeek == Weekday.Wednesday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[2])),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
-            widget.dayOfTheWeek == Weekday.Thursday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[3])),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
-            widget.dayOfTheWeek == Weekday.Friday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[4])),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
-            widget.dayOfTheWeek == Weekday.Saturday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[5])),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
-            widget.dayOfTheWeek == Weekday.Sunday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[6])),
         findsOneWidget);
   });
