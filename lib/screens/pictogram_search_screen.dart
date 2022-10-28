@@ -82,6 +82,7 @@ class _PictogramSearchState extends State<PictogramSearch> {
                                     haveRights: widget.user == null || pictogram.userId
                                         == null ? false :
                                     pictogram.userId == widget.user.id,
+                                    needsTitle: true,
                                     onPressed: () =>
                                         Routes.pop(context, pictogram)))
                                     .toList(),

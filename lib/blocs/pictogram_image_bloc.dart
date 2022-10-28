@@ -17,11 +17,11 @@ class PictogramImageBloc extends BlocBase {
   /// Provides loaded pictogram-images
   Stream<Image> get image => _image.stream;
 
-
   final rx_dart.BehaviorSubject<Image> _image
   = rx_dart.BehaviorSubject<Image>();
 
   Stream<String> get title => _title.stream;
+
   final rx_dart.BehaviorSubject<String> _title
   = rx_dart.BehaviorSubject<String>();
 
@@ -31,6 +31,7 @@ class PictogramImageBloc extends BlocBase {
   static final Queue<int> _cacheQueue = Queue<int>();
   static const int _cacheMaxSize = 100;
 
+
   /// Lock for adding pictograms to cache
   static Mutex lock = Mutex();
 
@@ -39,6 +40,9 @@ class PictogramImageBloc extends BlocBase {
   /// The [pictogram] model should contain an ID which the API can then fetch.
   void load(PictogramModel pictogram) {
     _api.pictogram.getImage(pictogram.id).listen(_image.add);
+  }
+
+  void loadTitle(PictogramModel pictogram){
     _api.pictogram.getTitle(pictogram.id).listen(_title.add);
   }
 

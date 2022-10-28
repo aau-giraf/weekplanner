@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -20,7 +19,8 @@ class PictogramImage extends StatelessWidget {
       {Key key,
       @required this.pictogram,
       @required this.onPressed,
-      this.haveRights = false})
+      this.haveRights = false,
+        this.needsTitle = false})
       : super(key: key) {
     _bloc.load(pictogram);
   }
@@ -32,12 +32,14 @@ class PictogramImage extends StatelessWidget {
   /// pictogram.
   final bool haveRights;
 
+  ///needsTitle is true if the a title should be displayed along with the image
+  final bool needsTitle;
+
   /// The provided callback function which will be called on
   /// every press of the image
   final VoidCallback onPressed;
 
   final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
-
 
   final Widget _loading = Center(
       child: Container(
@@ -76,6 +78,17 @@ class PictogramImage extends StatelessWidget {
         });
   }
 
+  ///Loads the title of the pictograms and displays them
+  Widget showTitle() {
+    _bloc.loadTitle(pictogram);
+    return StreamBuilder<String>(
+        stream: _bloc.title,
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
+            //Display the title, if it is null display nothing
+            Text(snapshot.data ?? '')
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -87,37 +100,38 @@ class PictogramImage extends StatelessWidget {
                     child: Directionality(
                         textDirection: TextDirection.ltr,
                         child: Stack(children: <Widget>[
-                          //The column widget contains the pictogram image and title
-                          Column(children: <Widget>[
-                            StreamBuilder<Image>(
+                          //If needsTitle=true display picture and title,
+                          // else only show picture
+                          needsTitle
+                              ? Column(
+                              children: <Widget>[
+                                StreamBuilder<Image>(
                                 stream: _bloc.image,
                                 builder: (BuildContext context,
                                         AsyncSnapshot<Image> snapshot) =>
                                     snapshot.data ?? _loading),
-                        StreamBuilder<String>(
-                            stream: _bloc.title,
-                            builder: (BuildContext context,
-                                AsyncSnapshot<String> snapshot) =>
-                            //Display the title, if it is null display nothing
-                                Text(snapshot.data??'')),
-
-
-                          ]),
-                          haveRights ? Positioned(
-                            top: 5,
-                            right: 5,
-                            child: GirafButton(
-                              onPressed: () {_confirmDeleteDialog(context);},
-                              icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
-                              text: 'Slet',
-                            ),
-                          ) : Container(),
-                        ]
-                        )
-                    )
-                )
-            )
-        )
-    );
+                            showTitle(),
+                          ]
+                          ):
+                          StreamBuilder<Image>(
+                              stream: _bloc.image,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<Image> snapshot) =>
+                              snapshot.data ?? _loading),
+                          haveRights
+                              ? Positioned(
+                                  top: 5,
+                                  right: 5,
+                                  child: GirafButton(
+                                    onPressed: () {
+                                      _confirmDeleteDialog(context);
+                                    },
+                                    icon: const ImageIcon(
+                                        AssetImage('assets/icons/gallery.png')),
+                                    text: 'Slet',
+                                  ),
+                                )
+                              : Container(),
+                        ]))))));
   }
 }
