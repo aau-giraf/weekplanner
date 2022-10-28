@@ -62,6 +62,28 @@ void main() {
     done();
   }));
 
+  test('Should save a new guardian', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.displayName);
+    bloc.createGuardian();
+
+    verify(bloc.createGuardian());
+    done();
+  }));
+
+  test('Should save a new trustee', async((DoneFn done) {
+    bloc.onUsernameChange.add(user.username);
+    bloc.onPasswordChange.add('1234');
+    bloc.onPasswordVerifyChange.add('1234');
+    bloc.onDisplayNameChange.add(user.displayName);
+    bloc.createTrustee();
+
+    verify(bloc.createTrustee());
+    done();
+  }));
+
   test('All inputs are valid', async((DoneFn done) {
     bloc.onUsernameChange.add(user.username);
     bloc.onPasswordChange.add('1234');
