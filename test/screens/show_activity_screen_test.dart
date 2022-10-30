@@ -681,7 +681,7 @@ void main() {
       'Test rendering of content of initialized timer buttons guardian mode',
       (WidgetTester tester) async {
     await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel(),weekplanBloc,timerBloc,mockWeedDayModel)));
+        .pumpWidget(MaterialApp(home: MockScreen(mockActivity,weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
