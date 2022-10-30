@@ -21,6 +21,10 @@ class MockActivityApi extends Mock implements ActivityApi {
   Stream<ActivityModel> update(ActivityModel activity, String userId) {
     return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
+  @override
+  Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
 }
 
 void main() {

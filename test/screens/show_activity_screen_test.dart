@@ -769,7 +769,7 @@ void main() {
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     final StreamSubscription<TimerRunningMode> listenForNotInitialized =
         timerBloc.timerRunningMode.listen((TimerRunningMode running) {
-      expect(running, TimerRunningMode.not_initialized);
+      expect(running, TimerRunningMode.initialized);
       checkNotRun.complete();
     });
     await checkNotRun.future;
@@ -814,9 +814,9 @@ void main() {
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 1, 0, 0);
     await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+
     sleep(const Duration(seconds: 2));
     await tester.pumpAndSettle(const Duration(seconds: 2));
-
     final StreamSubscription<TimerRunningMode> listenForCompleted =
         timerBloc.timerRunningMode.listen((TimerRunningMode m) {
       expect(m, TimerRunningMode.completed);

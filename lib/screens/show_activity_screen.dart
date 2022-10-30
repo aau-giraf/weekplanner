@@ -44,7 +44,6 @@ class ShowActivityScreen extends StatelessWidget {
     _activityBloc.AccesWeekPlanBloc(_weekplanBloc, _weekday);
     _settingsBloc.loadSettings(_girafUser);
     _timerBloc.load(_activity, user: _girafUser);
-    _timerBloc.initTimer();
     _timerBloc.GetActivityBloc(_activityBloc);
     _timerBloc.AddHandlerToRunningModeOnce();
 
@@ -73,10 +72,10 @@ class ShowActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
+    _timerBloc.initTimer();
 
 
-
-                ///Used to check if the keyboard is visible
+    ///Used to check if the keyboard is visible
                 return StreamBuilder<WeekplanMode>(
                     stream: _authBloc.mode,
                     builder: (BuildContext context,
@@ -552,8 +551,8 @@ class ShowActivityScreen extends StatelessWidget {
               // depending on whether the timer is running.
               child: GirafButton(
                 key: (timerRunningSnapshot.hasData
-                        ? timerRunningSnapshot.data == TimerRunningMode.running
-                        : false)
+                    ? timerRunningSnapshot.data == TimerRunningMode.running
+                    : false)
                     ? const Key('TimerPauseButtonKey')
                     : const Key('TimerPlayButtonKey'),
                 onPressed: () {

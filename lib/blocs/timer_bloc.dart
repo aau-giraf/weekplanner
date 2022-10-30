@@ -114,15 +114,19 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
     _timerProgressNumeric.add(_durationToTimestamp(duration));
+
     _api.activity
         .updateTimer(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
+
     });
+    initTimer();
+
   }
 
   List<int> _durationToTimestamp(Duration duration) {
-    final List<int> timestamp = List<int>(3);
+    final List<int> timestamp = List<int>.filled(3,0);
     timestamp[0] = duration.inHours;
     timestamp[1] = duration.inMinutes.remainder(60);
     timestamp[2] = duration.inSeconds.remainder(60);
@@ -146,8 +150,7 @@ class TimerBloc extends BlocBase {
   void initTimer() {
     // Checks if a stopWatch exist
 
-    if(_activityModel.state == ActivityState.Completed)
-        return;
+
     if (_stopwatch == null) {
       if (_activityModel.timer != null) {
         // Calculates the end time of the timer
