@@ -681,7 +681,7 @@ void main() {
       'Test rendering of content of initialized timer buttons guardian mode',
       (WidgetTester tester) async {
     await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel(),weekplanBloc,timerBloc,mockWeedDayModel)));
+        .pumpWidget(MaterialApp(home: MockScreen(mockActivity,weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
@@ -806,7 +806,7 @@ void main() {
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
   });
 
-  testWidgets('Test that play button appears when timer is complete',
+  testWidgets('Test that play button does not appear when timer is complete',
       (WidgetTester tester) async {
     final Completer<bool> checkCompleted = Completer<bool>();
     await tester
@@ -819,28 +819,24 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     final StreamSubscription<TimerRunningMode> listenForCompleted =
         timerBloc.timerRunningMode.listen((TimerRunningMode m) {
-      expect(m, TimerRunningMode.completed);
+      expect(m, TimerRunningMode.stopped);
       checkCompleted.complete();
     });
     await checkCompleted.future;
     listenForCompleted.cancel();
 
-    expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerPlayButtonKey')), findsNothing);
   });
 
-  testWidgets('Test that restart dialog pops up when timer is restarted',
+  testWidgets('Test that Stop dialog pops up when timer is stopped',
       (WidgetTester tester) async {
     await tester
         .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel(),weekplanBloc,timerBloc,mockWeedDayModel)));
     await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester, 1, 0, 0);
-    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-    sleep(const Duration(seconds: 2));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+    await _openTimePickerAndConfirm(tester, 1, 1, 1);
+    await tester.tap(find.byKey(const Key('TimerStopButtonKey')));
     await tester.pumpAndSettle();
-
-    expect(find.byKey(const Key('TimerRestartDialogKey')), findsOneWidget);
+    expect(find.byKey(const Key('TimerStopConfirmDialogKey')), findsOneWidget);
   });
 
   testWidgets('Only have a play button for timer when lockTimerControl is true',

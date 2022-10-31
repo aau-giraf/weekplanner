@@ -550,11 +550,13 @@ class ShowActivityScreen extends StatelessWidget {
               // Button has different icons and press logic
               // depending on whether the timer is running.
               child: GirafButton(
+
                 key: (timerRunningSnapshot.hasData
                     ? timerRunningSnapshot.data == TimerRunningMode.running
                     : false)
                     ? const Key('TimerPauseButtonKey')
                     : const Key('TimerPlayButtonKey'),
+
                 onPressed: () {
                   if (!timerRunningSnapshot.hasData) {
                     throw Exception("Error");
@@ -580,11 +582,8 @@ class ShowActivityScreen extends StatelessWidget {
                         _timerBloc.playTimer();
                         break;
                       }
-                    case TimerRunningMode.completed:
-                      {
-                        _buildRestartTimerDialog(overallContext);
-                        break;
-                      }
+
+
                   }
                 },
                 icon: (timerRunningSnapshot.hasData
@@ -596,6 +595,11 @@ class ShowActivityScreen extends StatelessWidget {
             ),
           );
         });
+  }
+  /// Restarts timer.
+  void _restartTimer() {
+    _timerBloc.stopTimer();
+    _timerBloc.playTimer();
   }
 
   Widget _stopButton(
@@ -675,7 +679,16 @@ class ShowActivityScreen extends StatelessWidget {
       ),
     );
   }
+   Key _timerKey(AsyncSnapshot<TimerRunningMode> timerRunningSnapshot)
+  {
+    if(!timerRunningSnapshot.hasData ||
+        timerRunningSnapshot.data != TimerRunningMode.running)
+    {
+        return const Key('TimerPlayButtonKey');
+    }
 
+    return const Key('TimerPauseButtonKey');
+}
   /// Returns a dialog where time can be decided for an activity(timer)
   void _buildTimerDialog(BuildContext context) {
     showDialog<Center>(
@@ -733,18 +746,9 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CompleteStateToggleButton'),
                         onPressed:  () {
                           _activityBloc.completeActivity();
-                          Routes.pop(context);
                           //This removes current context
                           // so back button correctly navigates
-                          Navigator.pushAndRemoveUntil(
-                            //This creates new context at current screen
-                            // (refreshes)
-                            context,
-                            MaterialPageRoute<void>(builder:
-                                (BuildContext context) =>
-                                ShowActivityScreen(_activity, _girafUser,_weekplanBloc,_timerBloc,_weekday)),
-                                (Route<dynamic> route) => true,
-                          );
+
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
