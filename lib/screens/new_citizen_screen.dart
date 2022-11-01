@@ -7,21 +7,35 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
+enum Roles {guardian, trustee, citizen}
+
 /// Screen for creating a new citizen
-class NewCitizenScreen extends StatelessWidget {
+class NewCitizenScreen extends StatefulWidget {
   /// Constructor for the NewCitizenScreen()
   NewCitizenScreen() : _bloc = di.getDependency<NewCitizenBloc>() {
     _bloc.initialize();
   }
 
-  final ApiErrorTranslater _translator = ApiErrorTranslater();
   final NewCitizenBloc _bloc;
+
+  @override
+  _NewCitizenScreenState createState() => _NewCitizenScreenState();
+}
+
+class _NewCitizenScreenState extends State<NewCitizenScreen> {
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
+  Roles _role = Roles.citizen;
+
+  void previousRoute(GirafUserModel response) {
+    Routes.pop<GirafUserModel>(context, response);
+    widget._bloc.resetBloc();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GirafAppBar(
-        title: 'Ny borger',
+        title: 'Ny bruger',
       ),
       body: ListView(
         children: <Widget>[
@@ -29,7 +43,7 @@ class NewCitizenScreen extends StatelessWidget {
             padding:
                 const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
             child: StreamBuilder<bool>(
-                stream: _bloc.validDisplayNameStream,
+                stream: widget._bloc.validDisplayNameStream,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   return TextFormField(
                     key: const Key('displayNameField'),
@@ -38,18 +52,76 @@ class NewCitizenScreen extends StatelessWidget {
                           const OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Navn',
                       errorText: (snapshot?.data == true) &&
-                              _bloc.displayNameController.value != null
+                              widget._bloc.displayNameController.value != null
                           ? null
                           : 'Navn skal udfyldes',
                     ),
-                    onChanged: _bloc.onDisplayNameChange.add,
+                    onChanged: widget._bloc.onDisplayNameChange.add,
+                  );
+                }),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 16, top: 6, right: 16, bottom: 2.5),
+            child: StreamBuilder<bool>(
+                stream: widget._bloc.validDisplayNameStream,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  return Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget> [
+                          Expanded(
+                            child: ListTile(
+                              title: const Text('Guardian'),
+                              leading: Radio<Roles> (
+                                value: Roles.guardian,
+                                groupValue: _role,
+                                onChanged: (Roles value) {
+                                  setState(() {
+                                    _role = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListTile(
+                              title: const Text('Trustee'),
+                              leading: Radio<Roles> (
+                                value: Roles.trustee,
+                                groupValue: _role,
+                                onChanged: (Roles value) {
+                                  setState(() {
+                                    _role = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListTile(
+                              title: const Text('Citizen'),
+                              leading: Radio<Roles> (
+                                value: Roles.citizen,
+                                groupValue: _role,
+                                onChanged: (Roles value) {
+                                  setState(() {
+                                    _role = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   );
                 }),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: StreamBuilder<bool>(
-                stream: _bloc.validUsernameStream,
+                stream: widget._bloc.validUsernameStream,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   return TextFormField(
                     key: const Key('usernameField'),
@@ -58,20 +130,20 @@ class NewCitizenScreen extends StatelessWidget {
                           const OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Brugernavn',
                       errorText: (snapshot?.data == true) &&
-                              _bloc.usernameController.value != null
+                              widget._bloc.usernameController.value != null
                           ? null
                           // cant make it shorter because of the string
                           // ignore: lines_longer_than_80_chars
                           : 'Brugernavn er tomt eller indeholder et ugyldigt tegn',
                     ),
-                    onChanged: _bloc.onUsernameChange.add,
+                    onChanged: widget._bloc.onUsernameChange.add,
                   );
                 }),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: StreamBuilder<bool>(
-                stream: _bloc.validPasswordStream,
+                stream: widget._bloc.validPasswordStream,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   return TextFormField(
                     key: const Key('passwordField'),
@@ -80,13 +152,13 @@ class NewCitizenScreen extends StatelessWidget {
                           const OutlineInputBorder(borderSide: BorderSide()),
                       labelText: 'Kodeord',
                       errorText: (snapshot?.data == true) &&
-                              _bloc.passwordController.value != null
+                              widget._bloc.passwordController.value != null
                           ? null
                           // cant make it shorter because of the string
                           // ignore: lines_longer_than_80_chars
                           : 'Kodeord må ikke indeholde mellemrum eller være tom',
                     ),
-                    onChanged: _bloc.onPasswordChange.add,
+                    onChanged: widget._bloc.onPasswordChange.add,
                     obscureText: true,
                   );
                 }),
@@ -94,7 +166,7 @@ class NewCitizenScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             child: StreamBuilder<bool>(
-                stream: _bloc.validPasswordVerificationStream,
+                stream: widget._bloc.validPasswordVerificationStream,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   return TextFormField(
                     key: const Key('passwordVerifyField'),
@@ -106,7 +178,7 @@ class NewCitizenScreen extends StatelessWidget {
                           ? null
                           : 'Kodeord skal være ens',
                     ),
-                    onChanged: _bloc.onPasswordVerifyChange.add,
+                    onChanged: widget._bloc.onPasswordVerifyChange.add,
                     obscureText: true,
                   );
                 }),
@@ -119,17 +191,39 @@ class NewCitizenScreen extends StatelessWidget {
                 child: GirafButton(
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                  text: 'Gem borger',
+                  text: 'Gem bruger',
                   isEnabled: false,
-                  isEnabledStream: _bloc.allInputsAreValidStream,
+                  isEnabledStream: widget._bloc.allInputsAreValidStream,
                   onPressed: () {
-                    _bloc.createCitizen().listen((GirafUserModel response) {
-                      if (response != null) {
-                        Routes.pop<GirafUserModel>(context, response);
-                        _bloc.resetBloc();
-                      }
-                    }).onError((Object error) =>
-                        _translator.catchApiError(error, context));
+                    switch(_role) {
+                      case Roles.guardian:
+                        widget._bloc.createGuardian()
+                            .listen((GirafUserModel response) {
+                          if (response != null) {
+                            previousRoute(response);
+                          }})
+                            .onError((Object error) =>
+                            _translator.catchApiError(error, context));
+                        break;
+                      case Roles.trustee:
+                        widget._bloc.createTrustee()
+                            .listen((GirafUserModel response) {
+                          if (response != null) {
+                            previousRoute(response);
+                          }})
+                            .onError((Object error) =>
+                            _translator.catchApiError(error, context));
+                        break;
+                      case Roles.citizen:
+                        widget._bloc.createCitizen()
+                            .listen((GirafUserModel response) {
+                          if (response != null) {
+                            previousRoute(response);
+                          }})
+                            .onError((Object error) =>
+                            _translator.catchApiError(error, context));
+                        break;
+                    }
                   },
                 ),
               ),
