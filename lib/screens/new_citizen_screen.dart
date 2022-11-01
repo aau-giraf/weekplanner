@@ -7,7 +7,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
-enum Roles {guardian, trustee, citizen}
+enum Roles { guardian, trustee, citizen }
 
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatefulWidget {
@@ -69,16 +69,18 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   return Column(
                     children: <Widget>[
                       Row(
-                        children: <Widget> [
+                        children: <Widget>[
                           Expanded(
                             child: ListTile(
                               title: const Text('Guardian'),
-                              leading: Radio<Roles> (
+                              leading: Radio<Roles>(
                                 value: Roles.guardian,
                                 groupValue: _role,
                                 onChanged: (Roles value) {
                                   setState(() {
                                     _role = value;
+                                    widget._bloc.usePicPassword =
+                                        value == Roles.citizen;
                                   });
                                 },
                               ),
@@ -87,12 +89,14 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           Expanded(
                             child: ListTile(
                               title: const Text('Trustee'),
-                              leading: Radio<Roles> (
+                              leading: Radio<Roles>(
                                 value: Roles.trustee,
                                 groupValue: _role,
                                 onChanged: (Roles value) {
                                   setState(() {
                                     _role = value;
+                                    widget._bloc.usePicPassword =
+                                        value == Roles.citizen;
                                   });
                                 },
                               ),
@@ -101,12 +105,14 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           Expanded(
                             child: ListTile(
                               title: const Text('Citizen'),
-                              leading: Radio<Roles> (
+                              leading: Radio<Roles>(
                                 value: Roles.citizen,
                                 groupValue: _role,
                                 onChanged: (Roles value) {
                                   setState(() {
                                     _role = value;
+                                    widget._bloc.usePicPassword =
+                                        value == Roles.citizen;
                                   });
                                 },
                               ),
@@ -139,6 +145,24 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                     onChanged: widget._bloc.onUsernameChange.add,
                   );
                 }),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text('Brug piktogram password?'),
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  child: Switch.adaptive(
+                      value: widget._bloc.usePicPassword,
+                      onChanged: _role == Roles.citizen
+                          ? (bool value) {
+                              setState(() {
+                                widget._bloc.usePicPassword = value;
+                              });
+                            }
+                          : null))
+            ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
@@ -195,33 +219,36 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   isEnabled: false,
                   isEnabledStream: widget._bloc.allInputsAreValidStream,
                   onPressed: () {
-                    switch(_role) {
+                    switch (_role) {
                       case Roles.guardian:
-                        widget._bloc.createGuardian()
+                        widget._bloc
+                            .createGuardian()
                             .listen((GirafUserModel response) {
                           if (response != null) {
                             previousRoute(response);
-                          }})
-                            .onError((Object error) =>
-                            _translator.catchApiError(error, context));
+                          }
+                        }).onError((Object error) =>
+                                _translator.catchApiError(error, context));
                         break;
                       case Roles.trustee:
-                        widget._bloc.createTrustee()
+                        widget._bloc
+                            .createTrustee()
                             .listen((GirafUserModel response) {
                           if (response != null) {
                             previousRoute(response);
-                          }})
-                            .onError((Object error) =>
-                            _translator.catchApiError(error, context));
+                          }
+                        }).onError((Object error) =>
+                                _translator.catchApiError(error, context));
                         break;
                       case Roles.citizen:
-                        widget._bloc.createCitizen()
+                        widget._bloc
+                            .createCitizen()
                             .listen((GirafUserModel response) {
                           if (response != null) {
                             previousRoute(response);
-                          }})
-                            .onError((Object error) =>
-                            _translator.catchApiError(error, context));
+                          }
+                        }).onError((Object error) =>
+                                _translator.catchApiError(error, context));
                         break;
                     }
                   },
