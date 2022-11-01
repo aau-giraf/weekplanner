@@ -79,7 +79,8 @@ class _PictogramSearchState extends State<PictogramSearch> {
                                     .map((PictogramModel pictogram)
                                 => PictogramImage(
                                     pictogram: pictogram,
-                                    haveRights: widget.user == null || pictogram.userId
+                                    haveRights: widget.user == null
+                                        || pictogram.userId
                                         == null ? false :
                                     pictogram.userId == widget.user.id,
                                     needsTitle: true,

@@ -20,11 +20,6 @@ class PictogramImageBloc extends BlocBase {
   final rx_dart.BehaviorSubject<Image> _image
   = rx_dart.BehaviorSubject<Image>();
 
-  Stream<String> get title => _title.stream;
-
-  final rx_dart.BehaviorSubject<String> _title
-  = rx_dart.BehaviorSubject<String>();
-
   final Api _api;
 
   static final Map<int, Image> _cache = <int, Image>{};
@@ -40,10 +35,6 @@ class PictogramImageBloc extends BlocBase {
   /// The [pictogram] model should contain an ID which the API can then fetch.
   void load(PictogramModel pictogram) {
     _api.pictogram.getImage(pictogram.id).listen(_image.add);
-  }
-
-  void loadTitle(PictogramModel pictogram){
-    _api.pictogram.getTitle(pictogram.id).listen(_title.add);
   }
 
   /// Initialize loading of a specific [PictogramModel] from its [id].
@@ -102,6 +93,5 @@ class PictogramImageBloc extends BlocBase {
   @override
   void dispose() {
     _image.close();
-    _title.close();
   }
 }

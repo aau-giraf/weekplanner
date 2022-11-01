@@ -78,16 +78,6 @@ class PictogramImage extends StatelessWidget {
         });
   }
 
-  ///Loads the title of the pictograms and displays them
-  Widget showTitle() {
-    _bloc.loadTitle(pictogram);
-    return StreamBuilder<String>(
-        stream: _bloc.title,
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
-            //Display the title, if it is null display nothing
-            Text(snapshot.data ?? '')
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +100,7 @@ class PictogramImage extends StatelessWidget {
                                 builder: (BuildContext context,
                                         AsyncSnapshot<Image> snapshot) =>
                                     snapshot.data ?? _loading),
-                            showTitle(),
+                        Text(pictogram.title),
                           ]
                           ):
                           StreamBuilder<Image>(
@@ -118,6 +108,7 @@ class PictogramImage extends StatelessWidget {
                               builder: (BuildContext context,
                                   AsyncSnapshot<Image> snapshot) =>
                               snapshot.data ?? _loading),
+                          //delete button
                           haveRights
                               ? Positioned(
                                   top: 5,
