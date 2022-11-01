@@ -135,6 +135,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                   );
                 }),
               ),
+
               ConstrainedBox(
                   constraints: const BoxConstraints(
                     minWidth: 200.0,
