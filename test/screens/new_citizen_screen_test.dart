@@ -237,15 +237,18 @@ void main() {
     await tester.enterText(find.byKey(const Key('passwordField')), 'password');
     await tester.enterText(
         find.byKey(const Key('passwordVerifyField')), 'password');
-    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
-    await gesture.moveBy(const Offset(0, -300));
-    await tester.pumpAndSettle();
 
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 75));
+    await gesture.moveBy(const Offset(0, -75));
+    await tester.pumpAndSettle();
+    
     await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
     await tester.pumpAndSettle();
+
     expect(find.byKey(const Key('ErrorMessageDialog'), skipOffstage: false),
         findsNWidgets(1));
   });
+
   testWidgets('New user so, no error message should appear',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
@@ -266,6 +269,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
   });
+
   testWidgets('Unexpected error from the api_client',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));

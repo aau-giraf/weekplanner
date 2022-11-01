@@ -182,49 +182,6 @@ class NewCitizenScreen extends StatelessWidget {
                         : _displayIfNoImage()),
           ),
 
-/*
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              GirafButton(
-                  key: const Key('saveButton'),
-                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                  text: 'Gem borger',
-                  isEnabled: false,
-                  isEnabledStream: _bloc.allInputsAreValidStream,
-                  onPressed: () {
-                  _bloc.createCitizen().listen((GirafUserModel response) {
-                  if (response != null) {
-                  Routes.pop<GirafUserModel>(context, response);
-                  _bloc.resetBloc();
-                  }
-                  }).onError((Object error) =>
-                  _translator.catchApiError(error, context));
-                  },
-                  ),
-
-              GirafButton(
-                key: const Key('saveButton'),
-                icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                text: 'Gem borger',
-                isEnabled: false,
-                isEnabledStream: _bloc.allInputsAreValidStream,
-                onPressed: () {
-                  _bloc.createCitizen().listen((GirafUserModel response) {
-                    if (response != null) {
-                      Routes.pop<GirafUserModel>(context, response);
-                      _bloc.resetBloc();
-                    }
-                  }).onError((Object error) =>
-                      _translator.catchApiError(error, context));
-                },
-              ),
-
-            ],
-          ),
-*/
-
           Row(
             //mainAxisAlignment:,
             mainAxisAlignment: MainAxisAlignment.center,
