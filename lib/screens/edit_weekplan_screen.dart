@@ -50,7 +50,7 @@ class EditWeekPlanScreen extends StatelessWidget {
           }
         } catch (Err) {
           throw EditWeekPlanButtonException(
-              'Something went wrong while building the save button'
+              'Something went wrong while building the edit week plan button'
               '\n Error: ',
               Err.toString());
         }
