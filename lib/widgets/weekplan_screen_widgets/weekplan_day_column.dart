@@ -275,10 +275,7 @@ class WeekplanDayColumn extends StatelessWidget {
                         child: ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
                             resetActiveMarks(weekday);
-                            if(settingsSnapshot.hasData &&
-                                settingsSnapshot.data.nrOfDaysToDisplay == 1){
-                              markCurrent(weekday);
-                            }
+                            markCurrent(weekday);
                             if (index >= weekday.activities.length) {
                               return StreamBuilder<bool>(
                                   stream: weekplanBloc
