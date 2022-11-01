@@ -61,7 +61,7 @@ void _runApp() {
             firstTimeLogIn = false;
             if (snapshot.data) {
               // In case logged in show ChooseCitizenScreen
-              return ChooseCitizenScreen(_api);
+              return ChooseCitizenScreen();
             } else {
               // Not loggedIn pop context to login screen.
               Routes.goHome(context);

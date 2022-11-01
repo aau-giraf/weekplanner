@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -18,21 +17,18 @@ import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
-  ///ChooseCitizenScreen
-  const ChooseCitizenScreen(this._api);
-  final Api _api;
 
   @override
-  _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState(_api);
+  _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState();
 }
 
 class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
-  _ChooseCitizenScreenState(this._api);
+
 
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final Api _api;
+
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +103,6 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
     /// Defines variables needed to check user role
     final int role = _authBloc.loggedInRole;
-    _api.user.me();
 
     /// Checks user role and gives option to add Citizen if user is Guardian
     if (role == Role.Guardian.index) {

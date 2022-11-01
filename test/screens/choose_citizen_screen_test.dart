@@ -56,18 +56,18 @@ void main() {
 
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen(api)));
+    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     expect(find.byType(ChooseCitizenScreen), findsOneWidget);
   });
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen(api)));
+    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
-    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen(api)));
+    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
     bloc.citizen.listen((List<DisplayNameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
@@ -78,7 +78,7 @@ void main() {
 
   testWidgets('Has Citizens Text [Name] (4)', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
-    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen(api)));
+    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
     bloc.citizen.listen((List<DisplayNameModel> response) {
       expect(find.byType(CitizenAvatar), findsNWidgets(response.length));
@@ -89,7 +89,7 @@ void main() {
 
   testWidgets('Has add citizen button', (WidgetTester tester) async {
     final int role = authBloc.loggedInRole;
-    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen(api)));
+    await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
     if(role == Role.Guardian.index) {
       expect(find.byType(FlatButton), findsNWidgets(1));
