@@ -116,6 +116,7 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
                                   /// Pop the loading spinner doesnt work because we are in a pop-up
 
                                   UpdateUser(girafUser);
+                                  newUsernameCtrl.clear();
                                   Routes.pop(currentContext);
                                 }
                                 /// Stop listening for future logins
@@ -185,6 +186,7 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
   Future UpdateUser(Stream<GirafUserModel> userStream) async{
     await for (final value in userStream){
       value.username = newUsernameCtrl.text;
+      value.displayName = newUsernameCtrl.text;
       _api.user.update(value);
     }
   }
@@ -283,6 +285,8 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
     currentContext = context;
     Stream<GirafUserModel> girafUser = await _api.user.get(widget._user.id);
 
+    if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
+      creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
     ///Missing check for if the new username is already in the database.
     if (newUsernameCtrl.text == widget._user.displayName)
       creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn.", "");
@@ -290,7 +294,6 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
       creatingErrorDialog("Udfyld venligst nyt brugernavn.", "");
     else if (newUsernameCtrl.text != widget._user.displayName) {
       UsernameConfirmationDialog(girafUser);
-      setState(() {});
     }
   }
 }
