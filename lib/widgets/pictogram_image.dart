@@ -43,7 +43,7 @@ class PictogramImage extends StatelessWidget {
 
   final Widget _loading = Center(
       child: Container(
-          width: 100, height: 100, child: const CircularProgressIndicator()));
+          width: 200, height: 200, child: const CircularProgressIndicator()));
 
   Future<Center> _confirmDeleteDialog(BuildContext context) {
     return showDialog<Center>(
@@ -95,11 +95,18 @@ class PictogramImage extends StatelessWidget {
                           needsTitle
                               ? Column(
                               children: <Widget>[
-                                StreamBuilder<Image>(
-                                stream: _bloc.image,
-                                builder: (BuildContext context,
-                                        AsyncSnapshot<Image> snapshot) =>
-                                    snapshot.data ?? _loading),
+                                Stack(children:  <Widget>[
+                                  Container(
+                                    //200x200 is the size of the pictograms,
+                                    //this is added so the text does not scale
+                                    width:200,
+                                    height: 200,
+                                  ),
+                                  StreamBuilder<Image>(
+                                      stream: _bloc.image,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<Image> snapshot) =>
+                                      snapshot.data ?? _loading)]),
                         Text(pictogram.title),
                           ]
                           ):
