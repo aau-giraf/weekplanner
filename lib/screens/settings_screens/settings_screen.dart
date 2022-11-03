@@ -158,19 +158,27 @@ class SettingsScreen extends StatelessWidget {
                   (settingsModel.nrOfDaysToDisplayLandscape)),
               ),
               SettingsCheckMarkButton.fromBoolean(
-                  settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
-                settingsModel.pictogramText = !settingsModel.pictogramText;
-                _settingsBloc.updateSettings(_user.id, settingsModel)
-                    .listen((_) {
-                  _settingsBloc.loadSettings(_user);
-                });
-              }),
+                settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
+                  settingsModel.pictogramText = !settingsModel.pictogramText;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                  });
+                }),
+              SettingsCheckMarkButton.fromBoolean(
+                settingsModel.showPopup, 'Vis bekræftelse popups', () {
+                  settingsModel.showPopup = !settingsModel.showPopup;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                  });
+                }),
             ]);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
         });
   }
 
@@ -194,20 +202,20 @@ class SettingsScreen extends StatelessWidget {
             final SettingsModel _settingsModel = settingsSnapshot.data;
             return SettingsSection('Tid', <SettingsSectionItem>[
               SettingsCheckMarkButton.fromBoolean(
-                  _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
-                _settingsModel.lockTimerControl =
-                !_settingsModel.lockTimerControl;
-                _settingsBloc.updateSettings(_user.id, _settingsModel)
-                    .listen((_) {
-                  _settingsBloc.loadSettings(_user);
-                });
+                _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
+                  _settingsModel.lockTimerControl =
+                  !_settingsModel.lockTimerControl;
+                  _settingsBloc.updateSettings(_user.id, _settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                  });
               })
             ]);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
         });
   }
 
@@ -219,27 +227,23 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildPrivacySection() {
     return StreamBuilder<SettingsModel>(
-        stream: _settingsBloc.settings,
-        builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      stream: _settingsBloc.settings,
+      builder: (BuildContext context,
+        AsyncSnapshot<SettingsModel> settingsSnapshot) {
           return SettingsSection('Privatliv', <SettingsSectionItem>[
-            SettingsArrowButton(
-              'Privatlivsinformationer',
-                  () =>
-                      Routes.push(context, PrivacyInformationScreen())
-                          .then((Object object) =>
-                          _settingsBloc.loadSettings(_user)),
+            SettingsArrowButton('Privatlivsinformationer', () =>
+              Routes.push(context, PrivacyInformationScreen())
+                .then((Object object) => _settingsBloc.loadSettings(_user)),
             ),
           ]);
-
-        });
+      });
   }
 
   Widget _buildTimeRepresentationSettings(BuildContext context) {
     return StreamBuilder<SettingsModel>(
-        stream: _settingsBloc.settings,
-        builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      stream: _settingsBloc.settings,
+      builder: (BuildContext context,
+        AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final DefaultTimer userTimer = settingsSnapshot.data.defaultTimer;
             final SettingsModel settingsModel = settingsSnapshot.data;
@@ -265,10 +269,10 @@ class SettingsScreen extends StatelessWidget {
               )
             ]);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        });
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+      });
   }
 }
