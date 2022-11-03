@@ -39,7 +39,7 @@ class CopyResolveScreen extends StatelessWidget {
   /// The user that is being copied from
   final DisplayNameModel currentUser;
 
-  /// The weekModel that is being copied
+  /// The weekModelList that is being copied
   final WeekModel weekModel;
 
   @override
@@ -51,10 +51,11 @@ class CopyResolveScreen extends StatelessWidget {
       isEnabled: false,
       isEnabledStream: _bloc.allInputsAreValidStream,
       onPressed: () async {
-        final WeekModel newWeekModel = _bloc.createNewWeekmodel(weekModel);
+        final WeekModel newWeekModel = _bloc.createNewWeekmodel(
+            weekModel);
 
         final int numberOfConflicts = await copyBloc.numberOfConflictingUsers(
-            newWeekModel, currentUser, forThisCitizen);
+            <WeekModel>[newWeekModel], currentUser, forThisCitizen);
 
         bool toCopy = true;
         if (numberOfConflicts > 0) {
@@ -68,7 +69,8 @@ class CopyResolveScreen extends StatelessWidget {
 
         if (toCopy) {
           copyBloc
-              .copyWeekplan(newWeekModel, currentUser, forThisCitizen)
+              .copyWeekplan(
+              <WeekModel>[newWeekModel], currentUser, forThisCitizen)
               .then((_) {
             Routes.goHome(context);
             Routes.push(context, WeekplanSelectorScreen(currentUser));
@@ -93,13 +95,16 @@ class CopyResolveScreen extends StatelessWidget {
         builder: (BuildContext dialogContext) {
           return GirafConfirmDialog(
             key: const Key('OverwriteCopyDialogKey'),
-            title: 'Lav ny ugeplan til at kopiere',
+            title: 'Erstat eksisterende ugeplan',
             description: 'Der eksisterer allerede en ugeplan (uge: $weekNumber'
-                ', år: $year) hos $numberOfConflicts af borgerne. '
+                ', år: $year) hos $numberOfConflicts '
+                '${numberOfConflicts == 1
+                ? "bruger. "
+                : "brugere. "}'
                 'Vil du overskrive '
                 '${numberOfConflicts == 1
                   ? "denne ugeplan"
-                  : "disse ugeplaner"} ?',
+                  : "disse ugeplaner"}?',
             confirmButtonText: 'Ja',
             confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
