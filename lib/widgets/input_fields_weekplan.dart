@@ -170,7 +170,7 @@ class InputFieldsWeekPlanState extends State<InputFieldsWeekPlan> {
   }
 
   void _openPictogramSearch(BuildContext context, NewWeekplanBloc bloc) {
-    Routes.push<PictogramModel>(context, PictogramSearch(user: null,))
+    Routes.push<PictogramModel>(context, const PictogramSearch(user: null,))
         .then((PictogramModel pictogram) {
       if (pictogram != null) {
         bloc.onThumbnailChanged.add(pictogram);
