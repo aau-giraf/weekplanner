@@ -145,7 +145,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                   ),
                   child: const Center(
                     child: AutoSizeText(
-                        'Tilføj Borger',
+                        'Tilføj Bruger',
                         style: TextStyle(fontSize: GirafFont.large,
                             color: Colors.black)
                     ),
