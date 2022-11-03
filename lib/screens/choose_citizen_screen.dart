@@ -1,3 +1,5 @@
+import 'package:api_client/api/api.dart';
+import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +24,12 @@ class ChooseCitizenScreen extends StatefulWidget {
 class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
 
+  final Api _api = di.getDependency<Api>();
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
+//_api.user.getUserByName("Guardian-dev")
     final bool portrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 

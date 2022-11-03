@@ -10,11 +10,11 @@ class ChooseCitizenBloc extends BlocBase {
   /// Default Constructor
   ChooseCitizenBloc(this._api) {
     updateBloc();
-    GetCurrentUser();
   }
 
   /// The stream holding the citizens
   Stream<List<DisplayNameModel>> get citizen => _citizens.stream;
+  //Stream<GirafUserModel> get guardian => _currentUser.stream;
 
   /// Update the block with current users
   void updateBloc() {
@@ -35,15 +35,22 @@ class ChooseCitizenBloc extends BlocBase {
     _citizens.close();
   }
 
-  GirafUserModel GetCurrentUser() {
+  Stream<GirafUserModel> get guardian {
+    return _api.user.get("61863405-b7e7-4c40-9c53-713ad191d094");
+  }
+
+  /*GirafUserModel GetCurrentUser() {
     GirafUserModel _user;
-    _api.user.get("61863405-b7e7-4c40-9c53-713ad191d094").listen((user) {
+    _api.user
+        .get("61863405-b7e7-4c40-9c53-713ad191d094")
+        .listen((GirafUserModel user) {
       print("FetchUser found: " + user.displayName);
       _user = user;
+      _currentUser.add(_user);
       //return DisplayNameModel.fromGirafUser(user);
     }).onDone(() {
       print("Done fetching user " + _user.displayName);
       return _user;
     });
-  }
+  }*/
 }

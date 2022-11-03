@@ -13,6 +13,7 @@ import 'package:weekplanner/screens/settings_screens/'
     'color_theme_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
+import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -41,33 +42,23 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   GirafUserModel _user;
   String appBarTitleText = "Placeholder";
 
-  Future<GirafUserModel> FetchUser() async {
-    GirafUserModel user = await _cBloc.GetCurrentUser();
+  /*Future<GirafUserModel> FetchUser() async {
+    return await _cBloc.GetCurrentUser();
     setState(() {
-      _user = user;
-      if (_user != null) {
-        print("User found: " + _user.displayName);
-        return user;
-      } else {
-        print(_user.displayName + "Not found");
-      }
+      appBarTitleText = "New placeholder";
     });
-  }
+    //return user;
+  }*/
 
   void InitState() {
     super.initState();
-    FetchUser()
-        .then((value) => _user = value)
-        .whenComplete(() => print("Usersettings got user"));
-    _settingsBloc.loadSettingsGirafUser(_user);
+    //_user = FetchUser();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(
-          title: appBarTitleText + ' indstillinger',
-        ),
+        appBar: GirafAppBar(title: appBarTitleText + ' Indstillinger'),
         body: _buildAllSettings(context));
   }
 
@@ -78,7 +69,44 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   }
 
   Widget _buildUserSettings() {
-    return StreamBuilder<SettingsModel>(
+    return Scaffold(
+        appBar: GirafAppBar(
+          title: appBarTitleText + ' indstillinger',
+        ),
+        body: StreamBuilder<GirafUserModel>(
+            stream: _cBloc.guardian,
+            builder:
+                (BuildContext context, AsyncSnapshot<GirafUserModel> snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                print("Active state: ${snapshot.connectionState}");
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return Center(child: Text("Error occured"));
+                } else if (snapshot.hasData) {
+                  print("Snapshot has Girafuser: " + snapshot.data.displayName);
+                  _user = snapshot.data;
+
+                  setState(() {
+                    appBarTitleText = _user.displayName;
+                    _settingsBloc.loadSettingsGirafUser(_user);
+                  });
+                } else {
+                  print("Empty snapshot");
+                  return Center(child: Text("Empty snapshot / No data"));
+                }
+              } else {
+                print(snapshot.connectionState);
+                return Center(
+                  child: Text('State: ${snapshot.connectionState}'),
+                );
+              }
+            }));
+
+    /*return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
@@ -90,7 +118,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               child: CircularProgressIndicator(),
             );
           }
-        });
+        });*/
 
     /*
         return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
@@ -99,12 +127,12 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               */
   }
 
-  /*Widget _buildChangePasswordAndUsername(BuildContext context) {
+  Widget _buildChangePasswordAndUsername(BuildContext context) {
     return SettingsSection(
         "_user.displayName" + ' - skift personlig information',
         <SettingsSectionItem>[
           SettingsArrowButton('Skift brugernavn', () {}),
           SettingsArrowButton('Skift kodeord', () {}),
         ]);
-  }*/
+  }
 }
