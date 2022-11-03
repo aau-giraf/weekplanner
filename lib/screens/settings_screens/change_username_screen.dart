@@ -22,6 +22,7 @@ import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Screen for changing username
+/*
 class ChangeUsernameScreen  extends StatefulWidget {
   /// Constructor
   ChangeUsernameScreen(DisplayNameModel user) : _user = user {
@@ -32,9 +33,15 @@ class ChangeUsernameScreen  extends StatefulWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   @override State<StatefulWidget> createState() =>  ChangeUsernameScreenState();
 }
+ */
 
 /// State for ChangeUsernameScreen
-class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
+class ChangeUsernameScreen  extends StatelessWidget {
+  /// Constructor
+  ChangeUsernameScreen(DisplayNameModel user) : _user = user {
+    _settingsBloc.loadSettings(_user);
+  }
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
 
@@ -45,7 +52,8 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
 
   /// Using the authBloc makes it possible to find the user that is logged in.
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
-
+  final DisplayNameModel _user;
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final Api _api = di.getDependency<Api>();
   BuildContext currentContext;
   bool loginStatus = false;
@@ -116,7 +124,6 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
                                   /// Pop the loading spinner doesnt work because we are in a pop-up
 
                                   UpdateUser(girafUser);
-                                  newUsernameCtrl.clear();
                                   Routes.pop(currentContext);
                                 }
                                 /// Stop listening for future logins
@@ -194,7 +201,7 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: GirafAppBar(title: 'Skift brugernavn på bruger: ' + widget._user.displayName),
+        appBar: GirafAppBar(title: 'Skift brugernavn på bruger: ' + _user.displayName),
         body: buildUsernameChange(context));
   }
 
@@ -244,7 +251,7 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
                           obscureText: false,
                           decoration:
                             InputDecoration.collapsed(
-                              hintText: widget._user.displayName,
+                              hintText: _user.displayName,
                               hintStyle: TextStyle(
                                   color: theme.GirafColors.loginFieldText),
                             fillColor: theme.GirafColors.white,
@@ -283,16 +290,16 @@ class ChangeUsernameScreenState  extends State<ChangeUsernameScreen> {
 
   void UpdateUsername(BuildContext context) async {
     currentContext = context;
-    Stream<GirafUserModel> girafUser = await _api.user.get(widget._user.id);
+    Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
 
-    if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
-      creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
+    //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
+      //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
     ///Missing check for if the new username is already in the database.
-    if (newUsernameCtrl.text == widget._user.displayName)
+    if (newUsernameCtrl.text == _user.displayName)
       creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn.", "");
     else if (newUsernameCtrl.text == "")
       creatingErrorDialog("Udfyld venligst nyt brugernavn.", "");
-    else if (newUsernameCtrl.text != widget._user.displayName) {
+    else if (newUsernameCtrl.text != _user.displayName) {
       UsernameConfirmationDialog(girafUser);
     }
   }
