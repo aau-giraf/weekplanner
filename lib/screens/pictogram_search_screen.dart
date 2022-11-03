@@ -18,7 +18,7 @@ import '../style/custom_color.dart' as theme;
 class PictogramSearch extends StatefulWidget {
 
   /// Constructor
-  PictogramSearch({@required this.user});
+  const PictogramSearch({@required this.user});
 
   /// The current authenticated user
   final DisplayNameModel user;

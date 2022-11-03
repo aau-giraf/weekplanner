@@ -1,4 +1,3 @@
-import 'package:api_client/api/pictogram_api.dart';
 import 'package:api_client/api_client.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
