@@ -162,7 +162,6 @@ void main() {
       (WidgetTester tester) async{
     await tester.pumpWidget(MaterialApp(
         home: NumberOfDaysScreen(user, true),
-        // ignore: always_specify_types
         navigatorObservers: [mockObserver]
     ));
     verify(mockObserver.didPush(any, any));
@@ -180,7 +179,6 @@ void main() {
       (WidgetTester tester) async{
     await tester.pumpWidget(MaterialApp(
         home: NumberOfDaysScreen(user, false),
-        // ignore: always_specify_types
         navigatorObservers: [mockObserver]
     ));
     verify(mockObserver.didPush(any, any));

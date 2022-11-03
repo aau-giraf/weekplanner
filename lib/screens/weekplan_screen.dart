@@ -334,7 +334,6 @@ class WeekplanScreen extends StatelessWidget {
             final WeekplanMode role = weekModeSnapshot.data;
 
             if (role == WeekplanMode.guardian) {
-              //weekDays.clear();
               _weekplanBloc.clearWeekdayStreams();
               _weekplanBloc.setDaysToDisplay(7, 0);
 
@@ -367,7 +366,6 @@ class WeekplanScreen extends StatelessWidget {
                       _weekdayCounter = 0;
                     }
                     // Adding the selected number of days to weekDays
-                    //weekDays.clear();
                     _weekplanBloc.clearWeekdayStreams();
                     _weekplanBloc.setDaysToDisplay(_daysToDisplay,
                         _weekdayCounter);
@@ -396,8 +394,6 @@ class WeekplanScreen extends StatelessWidget {
                       key: const Key('SingleWeekdayRow'),
                       children: <Widget>[
                         const Spacer(flex: 1),
-                        // The Container is used to set the width of the column
-                        // to half the width of the screen
                         weekDays.first,
                         const Spacer(flex: 1),
                       ],
