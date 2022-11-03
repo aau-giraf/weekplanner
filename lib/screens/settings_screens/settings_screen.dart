@@ -154,7 +154,8 @@ class SettingsScreen extends StatelessWidget {
                   );
                 }
               },
-                titleTrailing: Text(nrOfDaysToString(settingsModel.nrOfDaysToDisplayLandscape)),
+                titleTrailing: Text(nrOfDaysToString
+                  (settingsModel.nrOfDaysToDisplayLandscape)),
               ),
               SettingsCheckMarkButton.fromBoolean(
                   settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
