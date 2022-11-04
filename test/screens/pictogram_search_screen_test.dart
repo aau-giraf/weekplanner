@@ -59,8 +59,6 @@ void main() {
 
   testWidgets('Camera button shows', (WidgetTester tester) async {
 
-    //final Completer<bool> done = Completer<bool>();
-
     when(pictogramApi.getAll(page: bloc.latestPage,
         pageSize: pageSize, query: '')).thenAnswer(
             (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
