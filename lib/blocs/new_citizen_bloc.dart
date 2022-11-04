@@ -13,7 +13,6 @@ class NewCitizenBloc extends BlocBase {
 
   final Api _api;
   GirafUserModel _user;
-  bool usePicPassword = false;
 
   /// This field controls the display name input field
   final rx_dart.BehaviorSubject<String> displayNameController =
@@ -31,6 +30,10 @@ class NewCitizenBloc extends BlocBase {
   final rx_dart.BehaviorSubject<String> passwordVerifyController =
       rx_dart.BehaviorSubject<String>();
 
+  /// This field controls the switch for pictogram password
+  final rx_dart.BehaviorSubject<bool> usePictogramPasswordController =
+      rx_dart.BehaviorSubject<bool>();
+
   /// Handles when the entered display name is changed.
   Sink<String> get onDisplayNameChange => displayNameController.sink;
 
@@ -42,6 +45,10 @@ class NewCitizenBloc extends BlocBase {
 
   /// Handles when the entered password verification is changed.
   Sink<String> get onPasswordVerifyChange => passwordVerifyController.sink;
+
+  /// Handles when the switch for pictogram password is changed.
+  Sink<bool> get onUsePictogramPasswordChange =>
+      usePictogramPasswordController.sink;
 
   /// Validation stream for display name
   Stream<bool> get validDisplayNameStream =>
@@ -61,6 +68,10 @@ class NewCitizenBloc extends BlocBase {
           passwordController.hasValue ? passwordController : '',
           passwordVerifyController,
           (String a, String b) => a == b);
+
+  /// Validation stream for determining if the user wants to use Pictogram PW
+  Stream<bool> get usePictogramPasswordStream =>
+      usePictogramPasswordController.stream.transform(_usePictogramPassword);
 
   /// Updates the current user(guardian)
   /// Necessary to call in case another user logs in without terminating the app
@@ -92,15 +103,26 @@ class NewCitizenBloc extends BlocBase {
         departmentId: _user.department, role: Role.Guardian);
   }
 
-  /// Gives information about whether all inputs are valid.
+  /// Gives information about whether all inputs are valid,
+  /// if the user does not want to use a pictogram password.
   Stream<bool> get allInputsAreValidStream =>
-      rx_dart.Rx.combineLatest4<bool, bool, bool, bool, bool>(
-              validDisplayNameStream,
-              validUsernameStream,
-              validPasswordStream,
-              validPasswordVerificationStream,
-              (bool a, bool b, bool c, bool d) => a && b && c && d)
-          .asBroadcastStream();
+      rx_dart.Rx.combineLatest5<bool, bool, bool, bool, bool, bool>(
+          validDisplayNameStream,
+          validUsernameStream,
+          validPasswordStream,
+          validPasswordVerificationStream,
+          usePictogramPasswordStream,
+          (bool a, bool b, bool c, bool d, bool e) =>
+              a && b && c && d && !e).asBroadcastStream();
+
+  /// Gives information about whether all inputs are valid,
+  /// if the user wants to use a pictogram password.
+  Stream<bool> get validUsePictogramStream =>
+      rx_dart.Rx.combineLatest3<bool, bool, bool, bool>(
+          validDisplayNameStream,
+          validUsernameStream,
+          usePictogramPasswordStream,
+          (bool a, bool b, bool c) => a && b && c).asBroadcastStream();
 
   /// Stream for display name validation
   final StreamTransformer<String, bool> _displayNameValidation =
@@ -138,12 +160,20 @@ class NewCitizenBloc extends BlocBase {
     }
   });
 
+  /// Stream for pictogram PW
+  final StreamTransformer<bool, bool> _usePictogramPassword =
+      StreamTransformer<bool, bool>.fromHandlers(
+          handleData: (bool input, EventSink<bool> sink) {
+    sink.add(input);
+  });
+
   ///Resets bloc so no information is stored
   void resetBloc() {
     displayNameController.sink.add(null);
     usernameController.sink.add(null);
     passwordController.sink.add(null);
     passwordVerifyController.sink.add(null);
+    usePictogramPasswordController.sink.add(false);
     _user = null;
   }
 
@@ -153,5 +183,6 @@ class NewCitizenBloc extends BlocBase {
     usernameController.close();
     passwordController.close();
     passwordVerifyController.close();
+    usePictogramPasswordController.close();
   }
 }

@@ -79,8 +79,8 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 onChanged: (Roles value) {
                                   setState(() {
                                     _role = value;
-                                    widget._bloc.usePicPassword =
-                                        value == Roles.citizen;
+                                    widget._bloc.onUsePictogramPasswordChange
+                                        .add(value == Roles.citizen);
                                   });
                                 },
                               ),
@@ -95,8 +95,8 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 onChanged: (Roles value) {
                                   setState(() {
                                     _role = value;
-                                    widget._bloc.usePicPassword =
-                                        value == Roles.citizen;
+                                    widget._bloc.onUsePictogramPasswordChange
+                                        .add(value == Roles.citizen);
                                   });
                                 },
                               ),
@@ -111,8 +111,8 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 onChanged: (Roles value) {
                                   setState(() {
                                     _role = value;
-                                    widget._bloc.usePicPassword =
-                                        value == Roles.citizen;
+                                    widget._bloc.onUsePictogramPasswordChange
+                                        .add(value == Roles.citizen);
                                   });
                                 },
                               ),
@@ -153,15 +153,21 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
               Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  child: Switch.adaptive(
-                      value: widget._bloc.usePicPassword,
-                      onChanged: _role == Roles.citizen
-                          ? (bool value) {
-                              setState(() {
-                                widget._bloc.usePicPassword = value;
-                              });
-                            }
-                          : null))
+                  child: StreamBuilder<Object>(
+                      stream: null,
+                      builder: (context, snapshot) {
+                        return Switch.adaptive(
+                            value: widget
+                                ._bloc.usePictogramPasswordController.value,
+                            onChanged: _role == Roles.citizen
+                                ? (bool value) {
+                                    setState(() {
+                                      widget._bloc.onUsePictogramPasswordChange
+                                          .add(value);
+                                    });
+                                  }
+                                : null);
+                      }))
             ],
           ),
           Padding(
@@ -171,6 +177,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   return TextFormField(
                     key: const Key('passwordField'),
+                    enabled: !widget._bloc.usePictogramPasswordController.value,
                     decoration: InputDecoration(
                       border:
                           const OutlineInputBorder(borderSide: BorderSide()),
@@ -194,6 +201,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   return TextFormField(
                     key: const Key('passwordVerifyField'),
+                    enabled: !widget._bloc.usePictogramPasswordController.value,
                     decoration: InputDecoration(
                       border:
                           const OutlineInputBorder(borderSide: BorderSide()),
@@ -251,6 +259,19 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 _translator.catchApiError(error, context));
                         break;
                     }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: GirafButton(
+                  key: const Key('nextButton'),
+                  icon: const ImageIcon(AssetImage('assets/icons/accept.png')),
+                  text: 'Videre',
+                  isEnabled: false,
+                  isEnabledStream: widget._bloc.validUsePictogramStream,
+                  onPressed: () {
+                    print('Videre pressed');
                   },
                 ),
               ),
