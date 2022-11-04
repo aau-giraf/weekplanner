@@ -4,7 +4,6 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -12,6 +11,7 @@ import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:flutter/material.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -40,9 +40,11 @@ void main() {
   ChooseCitizenBloc bloc;
   ToolbarBloc toolbarBloc;
   Api api;
+  AuthBloc authBloc;
   setUp(() {
     di.clearAll();
     api = Api('any');
+    authBloc = AuthBloc(api);
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
@@ -51,6 +53,7 @@ void main() {
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
     di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
   });
+
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
@@ -85,9 +88,16 @@ void main() {
   });
 
   testWidgets('Has add citizen button', (WidgetTester tester) async {
+    final int role = authBloc.loggedInRole;
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-
-    expect(find.byType(FlatButton), findsNWidgets(1));
+    if(role == Role.Guardian.index) {
+      expect(find.byType(FlatButton), findsNWidgets(1));
+    } else {
+      expect(find.byType(FlatButton), findsNWidgets(0));
+    }
   });
 }
+
+
+

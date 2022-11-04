@@ -14,6 +14,7 @@ class AuthBloc extends BlocBase {
   /// String is used then changing from citizen to guardian mode
   /// the username is saved so only the password is needed.
   String loggedInUsername;
+  int loggedInRole;
 
   final Api _api;
 
@@ -62,6 +63,7 @@ class AuthBloc extends BlocBase {
           }
           _loggedIn.add(status);
           loggedInUsername = username;
+          loggedInRole = role;
           completer.complete();
         }).onError((Object error) {
           completer.completeError(error);
