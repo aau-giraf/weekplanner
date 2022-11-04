@@ -4,6 +4,7 @@ import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/new_pictogram_password_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
@@ -271,7 +272,12 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   isEnabled: false,
                   isEnabledStream: widget._bloc.validUsePictogramStream,
                   onPressed: () {
-                    print('Videre pressed');
+                    Navigator.push(
+                      context,
+                      // ignore: always_specify_types
+                      MaterialPageRoute<void>(
+                          builder: (context) => NewPictogramPasswordScreen()),
+                    );
                   },
                 ),
               ),
