@@ -96,10 +96,11 @@ class TimerBloc extends BlocBase {
   }
 
   List<int> _durationToTimestamp(Duration duration) {
-    final List<int> timestamp = List<int>(3);
-    timestamp[0] = duration.inHours;
-    timestamp[1] = duration.inMinutes.remainder(60);
-    timestamp[2] = duration.inSeconds.remainder(60);
+    final List<int> timestamp = [
+      duration.inHours,
+      duration.inMinutes.remainder(60),
+      duration.inSeconds.remainder(60)
+    ];
     timestamp[2] += _checkAndAddRemainingSecond(duration);
     return timestamp;
   }

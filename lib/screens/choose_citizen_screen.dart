@@ -104,10 +104,15 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     /// Defines variables needed to check user role
     final int role = _authBloc.loggedInRole;
 
+    final ButtonStyle brugerStyle = TextButton.styleFrom(
+      primary: Colors.black
+    );
+
     /// Checks user role and gives option to add Citizen if user is Guardian
     if (role == Role.Guardian.index) {
-      list.insert(0, FlatButton(
-        onPressed: () async {
+      list.insert(0, TextButton(
+          style: brugerStyle,
+          onPressed: () async {
           final Object result =
           await Routes.push(context, NewCitizenScreen());
           final DisplayNameModel newUser =
