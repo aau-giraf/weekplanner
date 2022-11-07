@@ -11,6 +11,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -44,6 +45,7 @@ void main() {
   DisplayNameModel user;
   WeekplanBloc weekplanBloc;
   AuthBloc authBloc;
+  Api api;
 
   setUp(() {
     MockData mockData;
@@ -53,8 +55,8 @@ void main() {
     mockActivities = mockData.mockActivities;
     mockPictograms = mockData.mockPictograms;
     user = mockData.mockUser;
-
-    final Api api = mockData.mockApi;
+api = mockData.mockApi;
+api.pictogram=MockPictogramApi();
 
     authBloc = AuthBloc(api);
     authBloc.setMode(WeekplanMode.guardian);
@@ -763,6 +765,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(PictogramSearch), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 11000));
+
   });
 
   testWidgets('Completed activities displayed correctly in Guardian Mode',
