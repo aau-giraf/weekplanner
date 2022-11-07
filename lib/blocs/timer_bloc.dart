@@ -111,7 +111,6 @@ class TimerBloc extends BlocBase {
         fullLength: duration.inMilliseconds,
         paused: true);
     // Update the streams
-    _timerInstantiatedStream.add(true);
     _timerProgressStream.add(0);
     _timerProgressNumeric.add(_durationToTimestamp(duration));
 
