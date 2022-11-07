@@ -15,15 +15,28 @@ import '../style/custom_color.dart' as theme;
 ///
 /// This screen will return `null` back is pressed, otherwise it will return the
 /// chosen pictogram.
-class PictogramSearch extends StatelessWidget {
+class PictogramSearch extends StatefulWidget {
 
   /// Constructor
-  PictogramSearch({@required this.user});
-
-  final PictogramBloc _bloc = di.getDependency<PictogramBloc>();
+  const PictogramSearch({@required this.user});
 
   /// The current authenticated user
   final DisplayNameModel user;
+
+  @override
+  _PictogramSearchState createState() => _PictogramSearchState();
+}
+
+class _PictogramSearchState extends State<PictogramSearch> {
+  final PictogramBloc _bloc = di.getDependency<PictogramBloc>();
+
+
+  //Search after pictograms when the page loads
+  @override
+  void initState(){
+    super.initState();
+    _bloc.search('');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +79,11 @@ class PictogramSearch extends StatelessWidget {
                                     .map((PictogramModel pictogram)
                                 => PictogramImage(
                                     pictogram: pictogram,
-                                    haveRights: user == null || pictogram.userId
+                                    haveRights: widget.user == null
+                                        || pictogram.userId
                                         == null ? false :
-                                    pictogram.userId == user.id,
+                                    pictogram.userId == widget.user.id,
+                                    needsTitle: true,
                                     onPressed: () =>
                                         Routes.pop(context, pictogram)))
                                     .toList(),
