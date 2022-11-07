@@ -276,7 +276,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       context,
                       // ignore: always_specify_types
                       MaterialPageRoute<void>(
-                          builder: (context) => NewPictogramPasswordScreen()),
+                          builder: (context) => NewPictogramPasswordScreen(
+                              widget._bloc.usernameController.value,
+                              widget._bloc.displayNameController.value)),
                     );
                   },
                 ),
