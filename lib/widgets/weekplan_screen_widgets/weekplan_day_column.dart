@@ -474,6 +474,10 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
+  final ButtonStyle addActivityStyle = ElevatedButton.styleFrom(
+    primary: theme.GirafColors.buttonColor,
+  );
+
   Container _buildAddActivityButton(WeekdayModel weekday, BuildContext context){
     return Container(
         padding: EdgeInsets.symmetric(
@@ -490,10 +494,10 @@ class WeekplanDayColumn extends StatelessWidget {
                     AsyncSnapshot<WeekplanMode> snapshot) {
                   return Visibility(
                     visible: snapshot.data == WeekplanMode.guardian,
-                    child: RaisedButton(
+                    child: ElevatedButton(
+                      style: addActivityStyle,
                         key: const Key('AddActivityButton'),
                         child: Image.asset('assets/icons/add.png'),
-                        color: theme.GirafColors.buttonColor,
                         onPressed: () async {
                           Routes.push(context, PictogramSearch(user: user,))
                               .then((Object object) {
