@@ -92,9 +92,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
     if(role == Role.Guardian.index) {
-      expect(find.byType(FlatButton), findsNWidgets(1));
+      expect(find.byType(TextButton), findsNWidgets(1));
     } else {
-      expect(find.byType(FlatButton), findsNWidgets(0));
+      expect(find.byType(TextButton), findsNWidgets(0));
     }
   });
 }
