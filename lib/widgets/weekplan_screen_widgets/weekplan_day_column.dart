@@ -402,7 +402,7 @@ class WeekplanDayColumn extends StatelessWidget {
                                         context,
                                         weekday);
                                   } else {
-                                    _handleActivity(
+                                    _handleOnTapActivity(
                                         false,
                                         false,
                                         true,
@@ -432,12 +432,8 @@ class WeekplanDayColumn extends StatelessWidget {
     );
   }
   void _handleActivity(
-      bool inEditMode,
-      bool isMarked,
-      bool isCitizen,
       List<ActivityModel> activities,
       int index,
-      BuildContext context,
       WeekdayModel weekday
       ) {
     final ActivityModel activistModel = activities[index];
@@ -467,6 +463,7 @@ class WeekplanDayColumn extends StatelessWidget {
     build(context);
     if (inEditMode) {
       if (isMarked) {
+
         weekplanBloc.removeMarkedActivity(activities[index]);
       } else {
         weekplanBloc.addMarkedActivity(activities[index]);
@@ -481,7 +478,10 @@ class WeekplanDayColumn extends StatelessWidget {
             return WeekplannerChoiceboardSelector(
                 activities[index], _activityBloc, user);
           });
-    }
+    } else if (isCitizen)
+      {
+        _handleActivity(activities,index,weekday);
+      }
     else if(!inEditMode){
       Routes.push(context, ShowActivityScreen(activities[index], user, weekplanBloc,_timerBloc[index], weekday))
           .whenComplete(() {weekplanBloc.getWeekday(weekday.day)
