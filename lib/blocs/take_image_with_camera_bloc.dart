@@ -39,9 +39,9 @@ class TakePictureWithCameraBloc extends BlocBase {
   /// pushes an imagePicker screen, then sets the pictogram image,
   /// to the selected image from the gallery
   void takePictureWithCamera() {
-    ImagePicker.pickImage(source: ImageSource.camera).then<dynamic>((File f) {
+    ImagePicker().pickImage(source: ImageSource.camera).then<dynamic>((XFile f) {
       if (f != null) {
-        _publishImage(f);
+        _publishImage(File(f.path));
         _checkInput();
       }
     });

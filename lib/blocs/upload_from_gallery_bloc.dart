@@ -39,9 +39,9 @@ class UploadFromGalleryBloc extends BlocBase {
   /// pushes an imagePicker screen, then sets the pictogram image,
   /// to the selected image from the gallery
   void chooseImageFromGallery() {
-    ImagePicker.pickImage(source: ImageSource.gallery).then<dynamic>((File f) {
+    ImagePicker().pickImage(source: ImageSource.gallery).then<dynamic>((XFile f) {
       if (f != null) {
-        _publishImage(f);
+        _publishImage(File(f.path));
         _checkInput();
       }
     });
