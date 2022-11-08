@@ -34,7 +34,7 @@ class Bootstrap {
       return Api(environment.getVar('SERVER_HOST'));
     });
 
-    di.registerSingleton((Injector i) {
+    di.registerSingleton<AuthBloc>((Injector i) {
       return AuthBloc(i.get<Api>());
     });
 
@@ -73,7 +73,7 @@ class Bootstrap {
       return EditWeekplanBloc(i.get<Api>());
     });
 
-    di.registerDependency<AddActivityBloc>((_) {
+    di.registerDependency<AddActivityBloc>(() {
       return AddActivityBloc();
     });
 
@@ -85,7 +85,7 @@ class Bootstrap {
       return SettingsBloc(i.get());
     });
 
-    di.registerDependency((Injector i) {
+    di.registerDependency<UploadFromGalleryBloc>((Injector i) {
       return UploadFromGalleryBloc(i.get<Api>());
     });
 
@@ -105,7 +105,7 @@ class Bootstrap {
       return CopyResolveBloc(i.get<Api>());
     });
 
-    di.registerDependency((Injector i) {
+    di.registerDependency<TakePictureWithCameraBloc>((Injector i) {
       return TakePictureWithCameraBloc(i.get<Api>());
     });
 

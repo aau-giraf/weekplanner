@@ -452,7 +452,7 @@ void main() {
           fieldDelimiter: ',', textDelimiter: '"',
           textEndDelimiter: '"', eol: ';');
 
-      final List<List<dynamic>> datesAndWeeks = converter.convert(csv);
+      final List<List<dynamic>> datesAndWeeks = converter.convert<dynamic>(csv);
 
       for (int i = 0; i < datesAndWeeks.length; i++) {
 
