@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api_client.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -11,6 +16,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -22,6 +28,8 @@ import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
+
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -34,9 +42,19 @@ import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
-
+import 'package:api_client/models/activity_model.dart';
 import '../mock_data.dart';
+class MockActivityApi extends Mock implements ActivityApi {
+  @override
+  Stream<ActivityModel> update(ActivityModel activity, String userId) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
 
+  @override
+  Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
+}
 void main() {
   WeekModel mockWeek;
   SettingsModel mockSettings;
@@ -953,14 +971,72 @@ void main() {
             widget.color == getColorFromWeekdayColorModel(expectedColors[5])),
         findsOneWidget);
 
-    expect(
+    expect  (
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.dayOfTheWeek == Weekday.Sunday &&
             widget.color == getColorFromWeekdayColorModel(expectedColors[6])),
         findsOneWidget);
   });
+
+  testWidgets('Aciticy card starts time when activated and shows it for citizen',
+    (WidgetTester tester) async {
+
+      await tester.runAsync(() async {
+        final Completer<bool> checkCompleted = Completer<bool>();
+
+        mockActivities[2].state = ActivityState.Normal;
+      mockActivities[2].timer.paused = true;
+      mockActivities[2].timer.fullLength = 100;
+      mockWeek.days[0].activities.add(mockActivities[2]);
+      authBloc.setMode(WeekplanMode.citizen);
+      final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+      await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
+          mockActivities[2].id.toString())));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+      Future.delayed(Duration(seconds: 2), () async {
+        checkCompleted.complete();
+        await checkCompleted.future;
+        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+        });
+
+
+      });
+
+  });
+
+  testWidgets('Aciticy card has completed icon when activity is completed',
+          (WidgetTester tester) async {
+
+
+        await tester.runAsync(() async {
+          mockActivities[0].state = ActivityState.Normal;
+          mockWeek.days[0].activities.add(mockActivities[0]);
+          authBloc.setMode(WeekplanMode.citizen);
+          final WeekplanScreen weekplanScreen = WeekplanScreen(
+              mockWeek, user);
+          await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+
+          await tester.pumpAndSettle();
+          await tester.tap(
+              find.byKey(Key(mockWeek.days[0].day.index.toString() +
+                  mockActivities[0].id.toString())));
+          await tester.pumpAndSettle();
+          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+
+        });
+
+  });
+
 }
+
+
+
 
 Color getColorFromWeekdayColorModel(WeekdayColorModel weekdayColorModel) {
   final String hexColor = weekdayColorModel.hexColor;
@@ -993,4 +1069,5 @@ void expectColorDayMatch(Weekday day, String color) {
       (Widget widget) => widget is Card && widget.key == Key(dayString));
 
   expect(find.descendant(of: findColor, matching: findTitle), findsOneWidget);
+
 }

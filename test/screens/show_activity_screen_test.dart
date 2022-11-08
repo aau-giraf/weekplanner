@@ -1149,27 +1149,35 @@ void main() {
 
   testWidgets('Activity title is updated on button press',
       (WidgetTester tester) async {
-    authBloc.setMode(WeekplanMode.guardian);
-    mockActivity.isChoiceBoard = false;
+        await tester.runAsync(() async {
+          authBloc.setMode(WeekplanMode.guardian);
+          mockActivity.isChoiceBoard = false;
 
-    await tester.pumpWidget(MaterialApp(
-        home: ShowActivityScreen(mockActivity, mockUser2, weekplanBloc,
-            timerBloc, mockWeekDayModel())));
+          await tester.pumpWidget(MaterialApp(
+              home: ShowActivityScreen(mockActivity, mockUser2, weekplanBloc,
+                  timerBloc, mockWeekDayModel())));
 
-    await tester.pump();
+          await tester.pump();
 
-    expect(bloc.getActivity().title, 'blå');
-    await tester.enterText(
-        find.byKey(const Key('AlternateNameTextField')), 'test');
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
-    await tester.pumpAndSettle();
+          expect(bloc
+              .getActivity()
+              .title, 'blå');
+          await tester.enterText(
+              find.byKey(const Key('AlternateNameTextField')), 'test');
+          await tester.pumpAndSettle();
+          await tester.tap(
+              find.byKey(const Key('SavePictogramTextForCitizenBtn')));
+          await tester.pumpAndSettle();
 
-    expect(bloc.getActivity().title, 'test');
+          expect(bloc
+              .getActivity()
+              .title, 'test');
+        });
   });
 
   testWidgets('Activity title is set to pictogram title on button press',
       (WidgetTester tester) async {
+
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
 
@@ -1190,5 +1198,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(mockActivity.title, mockPictograms.first.title);
-  });
+    });
+
+
+
+
+
 }
+
+

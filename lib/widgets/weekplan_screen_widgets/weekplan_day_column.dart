@@ -390,8 +390,7 @@ class WeekplanDayColumn extends StatelessWidget {
                                     currActivity.id.toString()),
                                 onTap: () {
 
-                                  if (modeSnapshot.data ==
-                                      WeekplanMode.guardian ||
+                                  if (modeSnapshot.data == WeekplanMode.guardian ||
                                       modeSnapshot.data == WeekplanMode.trustee) {
                                     _handleOnTapActivity(
                                         inEditMode,
@@ -439,7 +438,7 @@ class WeekplanDayColumn extends StatelessWidget {
     final ActivityModel activistModel = activities[index];
     _activityBloc.load(activistModel, user);
     _activityBloc.AccesWeekPlanBloc(weekplanBloc, weekday);
-    _timerBloc[index].load(activistModel);
+    _timerBloc[index].load(activistModel,user: user);
     _timerBloc[index].GetActivityBloc(_activityBloc);
     _activityBloc.AddHandlerToActivityStateOnce();
     _timerBloc[index].AddHandlerToRunningModeOnce();

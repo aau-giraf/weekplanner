@@ -24,6 +24,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 
 import 'test_image.dart';
 
@@ -312,6 +313,12 @@ class MockActivityApi extends Mock implements ActivityApi {
     return Stream<ActivityModel>.value(activity);
   }
 
+
+    @override
+    Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
+      return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+
+  }
   @override
   Stream<ActivityModel> add(ActivityModel activity, String userId,
       String weekplanName, int weekYear, int weekNumber, Weekday weekDay) {
