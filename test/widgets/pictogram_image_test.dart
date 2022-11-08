@@ -48,7 +48,7 @@ void main() {
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
-    di.registerDependency<PictogramImageBloc>((_) => bloc);
+    di.registerDependency<PictogramImageBloc>(() => bloc);
   });
 
   testWidgets('takes PictogramModel and VoidCallback',

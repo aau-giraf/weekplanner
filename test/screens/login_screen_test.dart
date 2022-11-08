@@ -107,9 +107,9 @@ void main() {
   setUp(() {
     bloc = MockAuthBloc();
     di.clearAll();
-    di.registerDependency<AuthBloc>((_) => bloc);
+    di.registerDependency<AuthBloc>(() => bloc);
     di.registerDependency<ChooseCitizenBloc>(
-            (_) => ChooseCitizenBloc(Api('Any')));
+            () => ChooseCitizenBloc(Api('Any')));
   });
 
   testWidgets('Has Auto-Login button in DEBUG mode',

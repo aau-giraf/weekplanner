@@ -47,11 +47,11 @@ void main() {
     authBloc = AuthBloc(api);
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
     toolbarBloc = ToolbarBloc();
-    di.registerDependency<ChooseCitizenBloc>((_) => bloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
+    di.registerDependency<ChooseCitizenBloc>(() => bloc);
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => toolbarBloc);
   });
 
 

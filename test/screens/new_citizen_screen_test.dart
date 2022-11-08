@@ -141,9 +141,9 @@ void main() {
     mockNewCitizenBloc = MockNewCitizenBloc(api);
 
     di.clearAll();
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<NewCitizenBloc>((_) => mockNewCitizenBloc);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<NewCitizenBloc>(() => mockNewCitizenBloc);
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {

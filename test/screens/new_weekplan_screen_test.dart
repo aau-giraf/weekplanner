@@ -115,14 +115,14 @@ void main() {
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => mockWeekplanSelector);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<WeekplansBloc>(() => mockWeekplanSelector);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<PictogramBloc>(() => PictogramBloc(api));
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
 
     mockBloc = MockNewWeekplanBloc(api);
-    di.registerDependency<NewWeekplanBloc>((_) => mockBloc);
+    di.registerDependency<NewWeekplanBloc>(() => mockBloc);
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {

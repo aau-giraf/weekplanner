@@ -48,7 +48,7 @@ class MockScreen extends StatelessWidget {
 void main() {
   setUp(() {
     di.clearAll();
-    di.registerDependency<CopyActivitiesBloc>((_) => CopyActivitiesBloc());
+    di.registerDependency<CopyActivitiesBloc>(() => CopyActivitiesBloc());
   });
 
   testWidgets('Test if Confirm Dialog is shown', (WidgetTester tester) async {

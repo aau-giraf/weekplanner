@@ -84,11 +84,11 @@ void main() {
       showPopup: false,
     );
 
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     settingsBloc = SettingsBloc(api);
     settingsBloc.loadSettings(user);
-    di.registerDependency<SettingsBloc>((_) => settingsBloc);
+    di.registerDependency<SettingsBloc>(() => settingsBloc);
   });
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {

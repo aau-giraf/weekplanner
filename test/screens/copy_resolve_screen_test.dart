@@ -127,14 +127,14 @@ void main() {
     });
 
     di.clearAll();
-    di.registerDependency<EditWeekplanBloc>((_) => EditWeekplanBloc(api));
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<CopyResolveBloc>((_) => bloc);
-    di.registerDependency<CopyWeekplanBloc>((_) => CopyWeekplanBloc(api));
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
+    di.registerDependency<EditWeekplanBloc>(() => EditWeekplanBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<CopyResolveBloc>(() => bloc);
+    di.registerDependency<CopyWeekplanBloc>(() => CopyWeekplanBloc(api));
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<WeekplansBloc>(() => WeekplansBloc(api));
   });
 
   testWidgets('Renders CopyResolveScreen', (WidgetTester tester) async {

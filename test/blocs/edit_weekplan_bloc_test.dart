@@ -66,7 +66,7 @@ void main() {
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
-    di.registerSingleton<WeekplansBloc>((_) => mockWeekplanSelector);
+    di.registerSingleton<WeekplansBloc>(() => mockWeekplanSelector);
 
     bloc = EditWeekplanBloc(api);
     bloc.initialize(mockUser);

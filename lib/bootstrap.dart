@@ -30,7 +30,7 @@ class Bootstrap {
   /// NB:
   /// Singleton restricts the instantiation of a class to one 'single' instance
   static void register() {
-    di.registerSingleton((_) {
+    di.registerSingleton(() {
       return Api(environment.getVar('SERVER_HOST'));
     });
 
@@ -46,7 +46,7 @@ class Bootstrap {
       return WeekplansBloc(i.getDependency<Api>());
     });
 
-    di.registerDependency<ToolbarBloc>((_) {
+    di.registerDependency<ToolbarBloc>(() {
       return ToolbarBloc();
     });
     di.registerDependency<ChooseCitizenBloc>((Injector i) {
@@ -89,7 +89,7 @@ class Bootstrap {
       return UploadFromGalleryBloc(i.getDependency<Api>());
     });
 
-    di.registerDependency<CopyActivitiesBloc>((_) {
+    di.registerDependency<CopyActivitiesBloc>(() {
       return CopyActivitiesBloc();
     });
 

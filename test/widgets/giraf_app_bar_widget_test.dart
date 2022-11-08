@@ -81,9 +81,9 @@ void main() {
   setUp(() {
     di.clearAll();
     authBloc = MockAuth();
-    di.registerDependency<AuthBloc>((_) => authBloc);
+    di.registerDependency<AuthBloc>(() => authBloc);
     bloc = ToolbarBloc();
-    di.registerDependency<ToolbarBloc>((_) => bloc);
+    di.registerDependency<ToolbarBloc>(() => bloc);
   });
 
   // Used to wrap a widget into a materialapp, otherwise the widget is not
@@ -95,8 +95,8 @@ void main() {
   }
 
   void setupAlternativeDependencies() {
-    di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
+    di.registerDependency<AuthBloc>(() => MockAuthBloc(api), override: true);
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc(), override: true);
   }
 
 

@@ -40,7 +40,7 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
 
     di.clearAll();
-    di.registerDependency<TimerBloc>((_) => timerMock);
+    di.registerDependency<TimerBloc>(() => timerMock);
   });
 
   tearDown(() {
