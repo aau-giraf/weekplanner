@@ -1,5 +1,7 @@
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/pictogram_widgets/pictogram_login_widget.dart';
 
 class NewPictogramPasswordScreen extends StatelessWidget {
   @override
@@ -16,6 +18,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold));
             }),
           ),
+          PictogramLogin(const <PictogramModel>[])
         ]));
   }
 }
