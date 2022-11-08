@@ -54,9 +54,9 @@ class WeekplanDayColumn extends StatelessWidget {
   /// Index of the weekday in the weekdayStreams list
   final int streamIndex;
 
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final ActivityBloc _activityBloc = di.get<ActivityBloc>();
 
   @override
   Widget build(BuildContext context) {

@@ -39,7 +39,7 @@ class PictogramImage extends StatelessWidget {
   /// every press of the image
   final VoidCallback onPressed;
 
-  final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
+  final PictogramImageBloc _bloc = di.get<PictogramImageBloc>();
 
   final Widget _loading = Center(
       child: Container(

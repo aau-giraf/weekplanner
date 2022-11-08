@@ -28,7 +28,7 @@ class PictogramSearch extends StatefulWidget {
 }
 
 class _PictogramSearchState extends State<PictogramSearch> {
-  final PictogramBloc _bloc = di.getDependency<PictogramBloc>();
+  final PictogramBloc _bloc = di.get<PictogramBloc>();
 
 
   //Search after pictograms when the page loads

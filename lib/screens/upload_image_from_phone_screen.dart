@@ -20,7 +20,7 @@ class UploadImageFromPhone extends StatelessWidget {
   UploadImageFromPhone({Key key}) : super(key: key);
 
   final UploadFromGalleryBloc _uploadFromGallery =
-  di.getDependency<UploadFromGalleryBloc>();
+  di.get<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
 

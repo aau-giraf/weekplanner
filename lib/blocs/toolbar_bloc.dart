@@ -25,7 +25,7 @@ class ToolbarBloc extends BlocBase {
   /// The current visibility of the edit-button.
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
 
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
   void updateIcons(Map<AppBarIcon, VoidCallback> icons, BuildContext context) {

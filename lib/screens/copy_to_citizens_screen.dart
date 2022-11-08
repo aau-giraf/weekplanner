@@ -22,7 +22,7 @@ class CopyToCitizensScreen extends StatelessWidget {
 
 
   final List<WeekModel> _copiedWeekModelList;
-  final CopyWeekplanBloc _bloc = di.getDependency<CopyWeekplanBloc>();
+  final CopyWeekplanBloc _bloc = di.get<CopyWeekplanBloc>();
   final DisplayNameModel _currentUser;
 
   @override

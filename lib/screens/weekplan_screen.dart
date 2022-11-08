@@ -40,9 +40,9 @@ class WeekplanScreen extends StatelessWidget {
     _settingsBloc.loadSettings(_user);
   }
 
-  final WeekplanBloc _weekplanBloc = di.getDependency<WeekplanBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final WeekplanBloc _weekplanBloc = di.get<WeekplanBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
   final DisplayNameModel _user;
   final WeekModel _week;
 

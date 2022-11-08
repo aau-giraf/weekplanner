@@ -43,11 +43,11 @@ class ShowActivityScreen extends StatelessWidget {
   final ActivityModel _activity;
 
   final PictogramImageBloc _pictoImageBloc =
-      di.getDependency<PictogramImageBloc>();
-  final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+      di.get<PictogramImageBloc>();
+  final TimerBloc _timerBloc = di.get<TimerBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final ActivityBloc _activityBloc = di.get<ActivityBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
 
   /// Textfield controller
   final TextEditingController tec = TextEditingController();

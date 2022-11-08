@@ -32,7 +32,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   /// The settings bloc which we get the settings from, you need to make sure
   /// you have loaded settings into it before hand otherwise text is never build
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   }
 
   Widget _getPictogram(PictogramModel pictogram) {
-    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    final PictogramImageBloc bloc = di.get<PictogramImageBloc>();
     bloc.loadPictogramById(pictogram.id);
     return StreamBuilder<Image>(
       stream: bloc.image,

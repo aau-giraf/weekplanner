@@ -36,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
 
   final DisplayNameModel _user;
 
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {

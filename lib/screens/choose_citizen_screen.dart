@@ -26,8 +26,8 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
 
 
-  final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final ChooseCitizenBloc _bloc = di.get<ChooseCitizenBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
 
 
   @override

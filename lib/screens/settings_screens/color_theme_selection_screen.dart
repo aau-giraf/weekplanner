@@ -18,7 +18,7 @@ class ColorThemeSelectorScreen extends StatelessWidget {
     _settingsBloc.loadSettings(_user);
   }
 
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
   final DisplayNameModel _user;
 
   @override

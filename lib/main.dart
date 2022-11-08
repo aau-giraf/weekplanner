@@ -9,7 +9,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
-final Api _api = di.getDependency<Api>();
+final Api _api = di.get<Api>();
 
 
 void main() {
@@ -43,7 +43,7 @@ void _runApp() {
       home: StreamBuilder<bool>(
           initialData: false,
           stream: di
-              .getDependency<AuthBloc>()
+              .get<AuthBloc>()
               .loggedIn
               .where((bool currentState) =>
                       lastState != currentState || firstTimeLogIn),

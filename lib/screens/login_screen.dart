@@ -20,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 /// This is the login state
 class LoginScreenState extends State<LoginScreen> {
   /// AuthBloC used to communicate with API
-  final AuthBloc authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc authBloc = di.get<AuthBloc>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

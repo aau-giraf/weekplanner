@@ -20,7 +20,7 @@ class TakePictureWithCamera extends StatelessWidget {
   TakePictureWithCamera({Key key}) : super(key: key);
 
   final TakePictureWithCameraBloc _takePictureWithCamera =
-  di.getDependency<TakePictureWithCameraBloc>();
+  di.get<TakePictureWithCameraBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
   ///height of screen

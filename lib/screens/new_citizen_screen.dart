@@ -12,7 +12,7 @@ enum Roles {guardian, trustee, citizen}
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatefulWidget {
   /// Constructor for the NewCitizenScreen()
-  NewCitizenScreen() : _bloc = di.getDependency<NewCitizenBloc>() {
+  NewCitizenScreen() : _bloc = di.get<NewCitizenBloc>() {
     _bloc.initialize();
   }
 
