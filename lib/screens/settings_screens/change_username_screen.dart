@@ -21,21 +21,6 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
 
-/// Screen for changing username
-/*
-class ChangeUsernameScreen  extends StatefulWidget {
-  /// Constructor
-  ChangeUsernameScreen(DisplayNameModel user) : _user = user {
-    _settingsBloc.loadSettings(_user);
-  }
-
-  final DisplayNameModel _user;
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  @override State<StatefulWidget> createState() =>  ChangeUsernameScreenState();
-}
- */
-
-/// State for ChangeUsernameScreen
 class ChangeUsernameScreen  extends StatelessWidget {
   /// Constructor
   ChangeUsernameScreen(DisplayNameModel user) : _user = user {
@@ -82,6 +67,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    key: const Key('UsernameConfirmationDialogPasswordForm'),
                     obscureText: true,
                     controller: confirmUsernameCtrl,
                     decoration: const InputDecoration(
@@ -95,6 +81,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GirafButton(
+                          key: const Key('UsernameConfirmationDialogCancelButton'),
                           text: "Fortryd",
                           width: 121,
                           icon: const ImageIcon(
@@ -119,7 +106,6 @@ class ChangeUsernameScreen  extends StatelessWidget {
                               StreamSubscription<bool> loginListener;
                               loginListener = authBloc.loggedIn.listen((bool snapshot) {
                                 loginStatus = snapshot;
-                                // Return if logging out
                                 if (snapshot) {
                                   /// Pop the loading spinner doesnt work because we are in a pop-up
 
@@ -193,7 +179,6 @@ class ChangeUsernameScreen  extends StatelessWidget {
   Future UpdateUser(Stream<GirafUserModel> userStream) async{
     await for (final value in userStream){
       value.username = newUsernameCtrl.text;
-      value.displayName = newUsernameCtrl.text;
       _api.user.update(value);
     }
   }
@@ -265,7 +250,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
                         child: Transform.scale(
                           scale: 1.5,
                           child: RaisedButton(
-                            key: const Key('LoginBtnKey'),
+                            key: const Key('SaveUsernameKey'),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             child: const Text(
@@ -292,9 +277,10 @@ class ChangeUsernameScreen  extends StatelessWidget {
     currentContext = context;
     Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
 
+    /// This if-statement should be implemented when the getUserByName method is implemented correctly
+    /// This should check if the new username is already in the database.
     //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
       //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
-    ///Missing check for if the new username is already in the database.
     if (newUsernameCtrl.text == _user.displayName)
       creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn.", "");
     else if (newUsernameCtrl.text == "")
