@@ -102,10 +102,10 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         )).toList();
 
     /// Defines variables needed to check user role
-    final int role = _authBloc.loggedInRole;
+    final Role role = _authBloc.loggedInUser.role;
 
     /// Checks user role and gives option to add Citizen if user is Guardian
-    if (role == Role.Guardian.index) {
+    if (role == Role.Guardian) {
       list.insert(0, FlatButton(
         onPressed: () async {
           final Object result =
