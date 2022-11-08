@@ -8,7 +8,9 @@ class NewPictogramPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(title: 'Ny bruger'),
-        body: ListView(children: <Widget>[
+        body: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: StreamBuilder<bool>(builder: (context, snapshot) {
@@ -18,7 +20,9 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold));
             }),
           ),
-          PictogramLogin(const <PictogramModel>[])
+          Flexible(
+              child: PictogramLogin(const <PictogramModel>[])
+          )
         ]));
   }
 }

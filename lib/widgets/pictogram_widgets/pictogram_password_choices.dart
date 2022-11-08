@@ -19,8 +19,6 @@ class PictogramChoices extends StatelessWidget {
     @required this.pictogramOptions,
   });
 
-
-
   final Api _api = di.getDependency<Api>();
   /// List of the possible pictograms in the passsword
   final List<PictogramModel> pictogramOptions;
@@ -76,39 +74,90 @@ class PictogramChoices extends StatelessWidget {
           }
         });
   }
+
   Stream<List<PictogramModel>> getStream() async*{
-    int receivedValues = 0;
-    List<PictogramModel> list = [];
-    for (int i = 0; receivedValues < 10; i++) {
-      PictogramModel nextValue;
-      _api.pictogram.get(i).listen((PictogramModel value) {
-        if (value != null) {
-          nextValue = value;
-          receivedValues++;
-        }
-      });
-      list.add(nextValue);
-    }
-    yield list;
+    // int receivedValues = 0;
+    // List<PictogramModel> list = [];
+    // for (int i = 0; receivedValues < 10; i++) {
+    //   PictogramModel nextValue;
+    //   _api.pictogram.get(i).listen((PictogramModel value) {
+    //     if (value != null) {
+    //       nextValue = value;
+    //       receivedValues++;
+    //     }
+    //   });
+    //   list.add(nextValue);
+    // }
+    // yield list;
   }
   @override
    Widget build (BuildContext context) {
-
-
-    return Column(
-        children: <Widget>[
-          Expanded(
-          child: StreamBuilder<List<PictogramModel>>(
-            stream: getStream(),
-            initialData: const <PictogramModel>[],
-            //
-
-            //
-            )
-        ),
-          const Text('Hejsa')
-        ]
-    );
+    // return Column(
+    //     children: <Widget>[
+          return Flexible(
+            fit: FlexFit.loose,
+            child:
+                Container(
+                  height: 500,
+                  width: 500,
+                  child:
+                    StreamBuilder<List<PictogramModel>>(
+                        stream: getStream(),
+                        initialData: const <PictogramModel>[],
+                        /////////////////////////////////////////////////////////////////////////////
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<PictogramModel>> snapshot) {
+                          return const Text('Hejsa');
+                        }
+                    )
+                )
+          // Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: 20),
+          //     child:
+          );
+         // ),
+         // ),
+    // if (false) {
+    // return Column(
+    // children: <Widget> [
+    // Flexible(
+    // child: GridView.count(
+    // crossAxisCount: 4,
+    // children: snapshot.data
+    //     .map((PictogramModel pictogram)
+    // => PictogramImage(
+    // pictogram: pictogram,
+    // haveRights: true,
+    // onPressed: () =>
+    // Routes.pop(context, pictogram)))
+    //     .toList(),
+    // )
+    // ),
+    //
+    // Container()
+    // ]
+    // );
+    // } else if (snapshot.hasError) {
+    // // return InkWell(
+    // // key: const Key('timeoutWidget'),
+    // // child: Padding(
+    // // padding: const EdgeInsets.symmetric(horizontal: 20),
+    // // child: Text(snapshot.error.toString()),
+    // // ),
+    // // );
+    //   return const Text('Hejsa');
+    // } else {
+    // //return const Center(child: CircularProgressIndicator());
+    //   return const Text('Hejsa');
+    // }
+    // }),
+    //         ),
+    //         //////////////////////////////////////////////////////////////////////////////
+    //         ),
+        //),
+        //   const Text('Hejsa')
+        // ]);
+    // );
     //);
   }
 }
