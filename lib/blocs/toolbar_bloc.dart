@@ -241,7 +241,7 @@ class ToolbarBloc extends BlocBase {
                     .style,
                 children: <TextSpan>[
                   TextSpan(
-                      text: _authBloc.loggedInUsername,
+                      text: _authBloc.loggedInUser.username,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
@@ -266,7 +266,7 @@ class ToolbarBloc extends BlocBase {
                 ? () {
               if (_clickable) {
                 _clickable = false;
-                loginFromPopUp(context, _authBloc.loggedInUsername,
+                loginFromPopUp(context, _authBloc.loggedInUser.username,
                     passwordCtrl.value.text);
                 // Timer makes it clicable again after 2 seconds.
                 Timer(const Duration(milliseconds: 2000), () {
