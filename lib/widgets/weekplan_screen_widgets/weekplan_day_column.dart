@@ -439,7 +439,7 @@ class WeekplanDayColumn extends StatelessWidget {
     final ActivityModel activistModel = activities[index];
     if(activistModel.state == ActivityState.Completed ||
         (activistModel.timer != null &&
-        activities[index].timer.paused == false)) {
+            activistModel.timer.paused == false)) {
         return;
       }
     _activityBloc.load(activistModel, user);
