@@ -81,6 +81,7 @@ void main() {
       weekDayColors: MockUserApi.createWeekDayColors(),
       lockTimerControl: false,
       pictogramText: false,
+      showPopup: false,
     );
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
@@ -149,6 +150,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(true, mockSettings.pictogramText);
+  });
+
+  testWidgets('Vis popup knap opdaterer indstillinger',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+
+        expect(false, mockSettings.showPopup);
+
+        await tester.tap(find.text('Vis bekræftelse popups'));
+        await tester.pumpAndSettle();
+
+        expect(true, mockSettings.showPopup);
   });
 
   testWidgets('Settings has TimerControl checkbox without an checkmark',
