@@ -435,7 +435,13 @@ class WeekplanDayColumn extends StatelessWidget {
       int index,
       WeekdayModel weekday
       ) {
+
     final ActivityModel activistModel = activities[index];
+    if(activistModel.state == ActivityState.Completed ||
+        (activistModel.timer != null &&
+        activities[index].timer.paused == false)) {
+        return;
+      }
     _activityBloc.load(activistModel, user);
     _activityBloc.AccesWeekPlanBloc(weekplanBloc, weekday);
     _timerBloc[index].load(activistModel,user: user);
