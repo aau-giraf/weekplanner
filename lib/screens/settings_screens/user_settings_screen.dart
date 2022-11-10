@@ -36,14 +36,6 @@ import 'completed_activity_icon_selection_screen.dart';
 class UserSettingsScreen extends StatelessWidget {
   final ChooseCitizenBloc _cBloc = di.getDependency<ChooseCitizenBloc>();
 
-/*Future<GirafUserModel> FetchUser() async {
-    return await _cBloc.GetCurrentUser();
-    setState(() {
-      appBarTitleText = "New placeholder";
-    });
-    //return user;
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,34 +76,5 @@ class UserSettingsScreen extends StatelessWidget {
             );
           }
         });
-
-    /*return StreamBuilder<SettingsModel>(
-        stream: _settingsBloc.settings,
-        builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
-          if (settingsSnapshot.hasData) {
-            final SettingsModel settingsModel = settingsSnapshot.data;
-            return UserSettingsScreen();
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        });*/
-
-    /*
-        return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-          SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-        ]);
-              */
-  }
-
-  Widget _buildChangePasswordAndUsername() {
-    return SettingsSection(
-        "_user.displayName" + ' - skift personlig information',
-        <SettingsSectionItem>[
-          SettingsArrowButton('Skift brugernavn', () {}),
-          SettingsArrowButton('Skift kodeord', () {}),
-        ]);
   }
 }

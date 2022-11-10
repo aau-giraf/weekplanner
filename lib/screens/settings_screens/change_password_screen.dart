@@ -19,9 +19,7 @@ import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
 
 class ChangePasswordScreen extends StatelessWidget {
-  ChangePasswordScreen(DisplayNameModel user) : _user = user {
-    _settingsBloc.loadSettings(_user);
-  }
+  ChangePasswordScreen(DisplayNameModel user) : _user = user {}
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -198,23 +196,9 @@ class ChangePasswordScreen extends StatelessWidget {
 
     String guardian;
 
-    //Stream<List<DisplayNameModel>> guardians = _api.user.getGuardians(user.id);
-    Future<List<DisplayNameModel>> GetGuardians(
-        Stream<List<DisplayNameModel>> stream) async {
-      await for (final value in stream) {
-        print(value.first.displayName);
-        guardian = value
-            .firstWhere((element) => element.displayName == "dev-guardian")
-            .id;
-        print(guardian);
-        //_api.account.changePasswordWithOld(guardian, "password", "password1");
-
-      }
-    }
-
     //API-tests
-    Stream<bool> passStream = _api.account.changePasswordWithOld(
-        "61863405-b7e7-4c40-9c53-713ad191d094", oldPassword, newPassword);
+    Stream<bool> passStream =
+        _api.account.changePasswordWithOld(_user.id, oldPassword, newPassword);
 
     Future ChangePasswordForAccount(Stream<bool> passStream) async {
       //Stream<bool>.fromFuture(Future.error(Exception()));
