@@ -44,7 +44,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
   bool loginStatus = false;
 
   /// Function that creates a dialog that confirms the user.
-  void UsernameConfirmationDialog(Stream<GirafUserModel> girafUser){
+  void usernameConfirmationDialog(Stream<GirafUserModel> girafUser){
     showDialog<Center>(
         barrierDismissible: false,
         context: currentContext,
@@ -98,52 +98,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
                               color: theme.GirafColors.transparentBlack
                           ),
                           onPressed: () async {
-                            loginStatus = false;
-
-                            /// This authenticates the user with username and password.
-                            await authBloc.authenticateFromPopUp(authBloc.loggedInUsername, confirmUsernameCtrl.text)
-                                .then((dynamic result) {
-                              StreamSubscription<bool> loginListener;
-                              loginListener = authBloc.loggedIn.listen((bool snapshot) {
-                                loginStatus = snapshot;
-                                if (snapshot) {
-                                  /// Pop the loading spinner doesnt work because we are in a pop-up
-
-                                  UpdateUser(girafUser);
-                                  Routes.pop(currentContext);
-                                }
-                                /// Stop listening for future logins
-                                loginListener.cancel();
-                              });
-                            }).catchError((Object error) {
-                                if(error is ApiException){
-                                  creatingErrorDialog("Forkert adgangskode.", error.errorKey.toString());
-                                } else if(error is SocketException){
-                                  authBloc.checkInternetConnection().then((bool hasInternetConnection) {
-                                    if (hasInternetConnection) {
-                                      /// Checking server connection, if true check username/password
-                                      authBloc.getApiConnection().then((bool hasServerConnection) {
-                                        if (hasServerConnection) {
-                                          unknownErrorDialog(error.message);
-                                        }
-                                        else{
-                                          creatingErrorDialog(
-                                              'Der er i øjeblikket ikke forbindelse til serveren.',
-                                              'ServerConnectionError');
-                                        }
-                                      }).catchError((Object error){
-                                        unknownErrorDialog(error.toString());
-                                      });
-                                    } else {
-                                      creatingErrorDialog(
-                                          'Der er ingen forbindelse til internettet.',
-                                          'NoConnectionToInternet');
-                                    }
-                                  });
-                                } else {
-                                  unknownErrorDialog('UnknownError');
-                                }
-                            });
+                            confirmUser(girafUser);
                           }
                       ),
                     ],
@@ -155,6 +110,57 @@ class ChangeUsernameScreen  extends StatelessWidget {
         }
         );
   }
+
+  void confirmUser(Stream<GirafUserModel> girafUser) async {
+    loginStatus = false;
+
+    /// This authenticates the user with username and password.
+    await authBloc.authenticateFromPopUp(authBloc.loggedInUsername, confirmUsernameCtrl.text)
+        .then((dynamic result) {
+      StreamSubscription<bool> loginListener;
+      loginListener = authBloc.loggedIn.listen((bool snapshot) {
+        loginStatus = snapshot;
+        if (snapshot) {
+          /// Pop the loading spinner doesnt work because we are in a pop-up
+
+          updateUser(girafUser);
+          Routes.pop(currentContext);
+        }
+        /// Stop listening for future logins
+        loginListener.cancel();
+      });
+    }).catchError((Object error) {
+      if(error is ApiException){
+        creatingErrorDialog("Forkert adgangskode.", error.errorKey.toString());
+      } else if(error is SocketException){
+        authBloc.checkInternetConnection().then((bool hasInternetConnection) {
+          if (hasInternetConnection) {
+            /// Checking server connection, if true check username/password
+            authBloc.getApiConnection().then((bool hasServerConnection) {
+              if (hasServerConnection) {
+                unknownErrorDialog(error.message);
+              }
+              else{
+                creatingErrorDialog(
+                    'Der er i øjeblikket ikke forbindelse til serveren.',
+                    'ServerConnectionError');
+              }
+            }).catchError((Object error){
+              unknownErrorDialog(error.toString());
+            });
+          } else {
+            creatingErrorDialog(
+                'Der er ingen forbindelse til internettet.',
+                'NoConnectionToInternet');
+          }
+        });
+      } else {
+        unknownErrorDialog('UnknownError');
+      }
+    });
+  }
+
+
 
   /// Function that creates the notify dialog,
   /// depeninding which login error occured
@@ -176,7 +182,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
   }
 
   /// Updates the user with new username
-  Future UpdateUser(Stream<GirafUserModel> userStream) async{
+  Future updateUser(Stream<GirafUserModel> userStream) async{
     await for (final value in userStream){
       value.username = newUsernameCtrl.text;
       _api.user.update(value);
@@ -258,7 +264,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              UpdateUsername(context);
+                              updateUsername(context);
                             },
                             color: theme.GirafColors.dialogButton,
                           ),
@@ -273,9 +279,12 @@ class ChangeUsernameScreen  extends StatelessWidget {
     );
   }
 
-  void UpdateUsername(BuildContext context) async {
+  void updateUsername(BuildContext context) async {
     currentContext = context;
     Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
+
+    //_api.user.getCitizens()
+    // _api.user.getGuardians()
 
     /// This if-statement should be implemented when the getUserByName method is implemented correctly
     /// This should check if the new username is already in the database.
@@ -286,7 +295,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
     else if (newUsernameCtrl.text == "")
       creatingErrorDialog("Udfyld venligst nyt brugernavn.", "");
     else if (newUsernameCtrl.text != _user.displayName) {
-      UsernameConfirmationDialog(girafUser);
+      usernameConfirmationDialog(girafUser);
     }
   }
 }
