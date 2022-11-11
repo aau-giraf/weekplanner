@@ -29,8 +29,8 @@ class MockChangeUsernameScreen extends Mock implements ChangeUsernameScreen {
     super.toString();
   }
 }
-
  */
+
 
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
@@ -54,6 +54,10 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
 }
 
 class MockAuthBloc extends Mock implements AuthBloc {
+
+  @override
+  String loggedInUsername = "testUsername";
+
   /*
   @override
   Stream<bool> get loggedIn => _loggedIn.stream;
@@ -152,11 +156,12 @@ void main() {
     await expect(find.byKey(const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
   });
 
-  testWidgets("Login to confirm user is a guardian, no error", (WidgetTester tester) async {
+  testWidgets("Login to confirm user is a guardian, causing ApiException error", (WidgetTester tester) async {
     final screen = ChangeUsernameScreen(user);
-    await tester.pumpWidget(MaterialApp(home: screen));
 
-    when(screen.authBloc.authenticateFromPopUp("someUsername", "somePassword")).thenAnswer((_) => Future.error(ApiException));
+    when(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).thenAnswer((_) => Future.error(ApiException));
+
+    await tester.pumpWidget(MaterialApp(home: screen));
 
     await tester.pump();
 
@@ -170,36 +175,36 @@ void main() {
     await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
     await tester.pump();
 
+    //await screen.authBloc.authenticateFromPopUp("someUsername", "somePassword");
 
-    //expect(find.byKey(const Key('')), findsOneWidget);
-    //expect(find.byType(GirafNotifyDialog), findsOneWidget);
-
-    //verify(authBloc.authenticateFromPopUp("someUsername", "somePassword"));
-
-    //verify(authBloc.authenticateFromPopUp("someUsername", "somePassword"));
-    verify(authBloc);
-
-    //expect(find.text("Forkert adgangskode."), findsOneWidget);
-    //expect(find.text("Der er i øjeblikket ikke forbindelse til serveren."), findsOneWidget);
+    verify(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).called(1);
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
 
 
-  test("Login to confirm user is a guardian, causing error", () async{
-    //final mockLoginScreen = MockChangeUsernameScreen();
-      
-    
+  testWidgets("Login to confirm user is a guardian, no error", (WidgetTester tester) async {
+    final screen = ChangeUsernameScreen(user);
 
-    //mockLoginScreen.usernameConfirmationDialog(user);
+    when(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).thenAnswer((_) => Future.value(true));
 
+    await tester.pumpWidget(MaterialApp(home: screen));
 
-    when(authBloc.authenticateFromPopUp("someUsername", "somePassword")).thenAnswer((_) => Future.error(ApiException));
+    await tester.pump();
 
+    await tester.enterText(find.byKey(const Key('UsernameKey')), 'testUsername');
+    await tester.tap(find.byKey(const Key('SaveUsernameKey')));
+    await tester.pump();
 
+    await expect(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), findsOneWidget);
+    await expect(find.byKey(const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
+    await tester.enterText(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), 'testPassword');
+    await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
+    await tester.pump();
 
-    //expect(authBloc.authenticateFromPopUp("someUsername", "somePassword"), find.byKey(Key(ErrorKey.InvalidCredentials.toString())));
+    await screen.authBloc.authenticateFromPopUp("someUsername", "somePassword");
 
-
-
+    verify(screen.authBloc.authenticateFromPopUp("someUsername", "somePassword")).called(1);
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
 
 
