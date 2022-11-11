@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/error_key.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -18,141 +18,19 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
-import 'package:weekplanner/providers/environment_provider.dart' as environment;
-import 'package:weekplanner/style/font_size.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
 
-import '../../widgets/giraf_app_bar_widget_test.dart';
-
-class MockChangeUsernameScreen extends ChangeUsernameScreen {
-  MockChangeUsernameScreen(DisplayNameModel user) : super(user);
-
+import 'package:rxdart/rxdart.dart' as rx_dart;
+/*
+class MockChangeUsernameScreen extends Mock implements ChangeUsernameScreen {
   @override
-  void usernameConfirmationDialog(Stream<GirafUserModel> girafUser){
-    showDialog<Center>(
-        barrierDismissible: false,
-        context: currentContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            titlePadding: const EdgeInsets.all(0.0),
-            title: Center(
-                child: GirafTitleHeader( title: "Verificer bruger", )),
-            content: Form(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                    child: Text('For at skifte brugernavn, indtast dit kodeord for \n${authBloc.loggedInUsername}',
-                      style: TextStyle(
-                        fontSize: GirafFont.small,
-                      ),
-                    ),
-                  ),
-                  TextFormField(
-                    key: const Key('UsernameConfirmationDialogPasswordForm'),
-                    obscureText: true,
-                    controller: confirmUsernameCtrl,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      labelText: 'Kodeord',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  Padding(padding: const EdgeInsets.fromLTRB(0, 15, 0, 0)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GirafButton(
-                          key: const Key('UsernameConfirmationDialogCancelButton'),
-                          text: "Fortryd",
-                          width: 121,
-                          icon: const ImageIcon(
-                            AssetImage('assets/icons/cancel.png'),
-                          ),
-                          onPressed: () => Navigator.pop(context)
-                      ),
-                      GirafButton(
-                          key: const Key('UsernameConfirmationDialogSaveButton'),
-                          text: "Gem",
-                          width: 121,
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/accept.png'),
-                          ),
-                          onPressed: () async {
-                            loginStatus = false;
-
-                            /// This authenticates the user with username and password.
-                            await authBloc.authenticateFromPopUp(authBloc.loggedInUsername, confirmUsernameCtrl.text)
-                                .then((dynamic result) {
-                              StreamSubscription<bool> loginListener;
-                              loginListener = authBloc.loggedIn.listen((bool snapshot) {
-                                loginStatus = snapshot;
-                                if (snapshot) {
-                                  /// Pop the loading spinner doesnt work because we are in a pop-up
-
-                                  updateUser(girafUser);
-                                  Routes.pop(currentContext);
-                                }
-                                /// Stop listening for future logins
-                                loginListener.cancel();
-                              });
-                            }).catchError((Object error) {
-                              if(error is ApiException){
-                                creatingErrorDialog("Forkert adgangskode.", error.errorKey.toString());
-                              } else if(error is SocketException){
-                                authBloc.checkInternetConnection().then((bool hasInternetConnection) {
-                                  if (hasInternetConnection) {
-                                    /// Checking server connection, if true check username/password
-                                    authBloc.getApiConnection().then((bool hasServerConnection) {
-                                      if (hasServerConnection) {
-                                        unknownErrorDialog(error.message);
-                                      }
-                                      else{
-                                        creatingErrorDialog(
-                                            'Der er i øjeblikket ikke forbindelse til serveren.',
-                                            'ServerConnectionError');
-                                      }
-                                    }).catchError((Object error){
-                                      unknownErrorDialog(error.toString());
-                                    });
-                                  } else {
-                                    creatingErrorDialog(
-                                        'Der er ingen forbindelse til internettet.',
-                                        'NoConnectionToInternet');
-                                  }
-                                });
-                              } else {
-                                unknownErrorDialog('UnknownError');
-                              }
-                            });
-                          }
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        }
-    );
-  }
-
-  /// Function that creates the notify dialog,
-  /// depeninding which login error occured
-  void creatingErrorDialog(String description, String key) {
-    /// Show the new NotifyDialog
-    showDialog<Center>(
-        barrierDismissible: false,
-        context: currentContext,
-        builder: (BuildContext context) {
-          return GirafNotifyDialog(
-              title: 'Fejl', description: description, key: Key(key));
-        });
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
+    super.toString();
   }
 }
+
+ */
 
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
@@ -175,6 +53,30 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   }
 }
 
+class MockAuthBloc extends Mock implements AuthBloc {
+  /*
+  @override
+  Stream<bool> get loggedIn => _loggedIn.stream;
+  final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
+      .seeded(false);
+
+  @override
+  String loggedInUsername;
+
+  @override
+  Future<void> authenticateFromPopUp(String username, String password) async {
+    // Mock the API and allow these 2 users to ?login?
+    final bool status = (username == 'testUsername' && password == 'testPassword');
+    // If there is a successful login, remove the loading spinner,
+    // and push the status to the stream
+    if (status) {
+      loggedInUsername = username;
+    }
+    _loggedIn.add(status);
+  }
+  */
+}
+
 void main() {
   Api api;
   MockAuthBloc authBloc;
@@ -186,10 +88,10 @@ void main() {
    di.clearAll();
    api = Api('any');
    api.user = MockUserApi();
-   authBloc = MockAuthBloc(api);
+   authBloc = MockAuthBloc();
    mockObserver = MockUserApi();
 
-   di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+   di.registerDependency<AuthBloc>((_) => MockAuthBloc());
    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
    di.registerDependency<Api>((_) => Api('any'));
@@ -251,28 +153,52 @@ void main() {
   });
 
   testWidgets("Login to confirm user is a guardian, no error", (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
+    final screen = ChangeUsernameScreen(user);
+    await tester.pumpWidget(MaterialApp(home: screen));
+
+    when(screen.authBloc.authenticateFromPopUp("someUsername", "somePassword")).thenAnswer((_) => Future.error(ApiException));
+
     await tester.pump();
 
-    await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
+    await tester.enterText(find.byKey(const Key('UsernameKey')), 'testUsername');
     await tester.tap(find.byKey(const Key('SaveUsernameKey')));
     await tester.pump();
 
     await expect(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), findsOneWidget);
     await expect(find.byKey(const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
-    await tester.enterText(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), 'wrongPassword');
+    await tester.enterText(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), 'testPassword');
     await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
     await tester.pump();
+
+
+    //expect(find.byKey(const Key('')), findsOneWidget);
+    //expect(find.byType(GirafNotifyDialog), findsOneWidget);
+
+    //verify(authBloc.authenticateFromPopUp("someUsername", "somePassword"));
+
+    //verify(authBloc.authenticateFromPopUp("someUsername", "somePassword"));
+    verify(authBloc);
+
+    //expect(find.text("Forkert adgangskode."), findsOneWidget);
+    //expect(find.text("Der er i øjeblikket ikke forbindelse til serveren."), findsOneWidget);
   });
 
 
   test("Login to confirm user is a guardian, causing error", () async{
-    final mockLoginScreen = MockChangeUsernameScreen(user);
+    //final mockLoginScreen = MockChangeUsernameScreen();
+      
+    
+
+    //mockLoginScreen.usernameConfirmationDialog(user);
+
 
     when(authBloc.authenticateFromPopUp("someUsername", "somePassword")).thenAnswer((_) => Future.error(ApiException));
 
 
-    //expect(authBloc.authenticateFromPopUp("someUsername", "somePassword"), find.wid)
+
+    //expect(authBloc.authenticateFromPopUp("someUsername", "somePassword"), find.byKey(Key(ErrorKey.InvalidCredentials.toString())));
+
+
 
   });
 
