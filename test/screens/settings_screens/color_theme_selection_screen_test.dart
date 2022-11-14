@@ -77,7 +77,8 @@ void main() {
         nrOfDaysToDisplay: 1,
         pictogramText: false,
         weekDayColors: MockUserApi.createWeekDayColors(),
-        lockTimerControl: false);
+        lockTimerControl: false,
+        showPopup: false);
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
       return Stream<bool>.value(true);

@@ -1,6 +1,6 @@
 {
   "SERVER_HOST": "https://srv.giraf.cs.aau.dk/DEV/API",
   "DEBUG": true,
-  "USERNAME": "Graatand",
+  "USERNAME": "guardian-dev",
   "PASSWORD": "password"
 }
