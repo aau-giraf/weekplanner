@@ -77,15 +77,21 @@ class ShowActivityScreen extends StatelessWidget {
       Orientation orientation, BuildContext context, WeekplanMode mode) {
     Widget childContainer;
 
-    if (orientation == Orientation.portrait) {
-      childContainer = Column(
-        children: buildScreen(context, mode),
-      );
-    } else if (orientation == Orientation.landscape) {
-      childContainer = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: buildScreen(context, mode),
-      );
+    try {
+      if (orientation == Orientation.portrait) {
+        childContainer = Column(
+          children: buildScreen(context, mode),
+        );
+      } else if (orientation == Orientation.landscape) {
+        childContainer = Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: buildScreen(context, mode),
+        );
+      }
+    } catch(Err) {
+      throw OrientationException('Something is wrong with the screen orientation'
+              '\n Error: ',
+              Err.toString());
     }
     return Scaffold(
         resizeToAvoidBottomInset: false,
