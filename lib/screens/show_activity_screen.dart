@@ -589,6 +589,7 @@ class ShowActivityScreen extends StatelessWidget {
                     case TimerRunningMode.completed:
                       {
                         _timerBloc.stopTimer();
+                        break;
                       }
                   }
                 },
