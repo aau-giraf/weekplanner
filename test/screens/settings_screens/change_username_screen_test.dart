@@ -4,7 +4,6 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/error_key.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -20,16 +19,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
-
-import 'package:rxdart/rxdart.dart' as rx_dart;
-/*
-class MockChangeUsernameScreen extends Mock implements ChangeUsernameScreen {
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
-    super.toString();
-  }
-}
- */
 
 
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
@@ -54,31 +43,7 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
 }
 
 class MockAuthBloc extends Mock implements AuthBloc {
-
-  @override
-  String loggedInUsername = "testUsername";
-
-  /*
-  @override
-  Stream<bool> get loggedIn => _loggedIn.stream;
-  final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
-      .seeded(false);
-
-  @override
-  String loggedInUsername;
-
-  @override
-  Future<void> authenticateFromPopUp(String username, String password) async {
-    // Mock the API and allow these 2 users to ?login?
-    final bool status = (username == 'testUsername' && password == 'testPassword');
-    // If there is a successful login, remove the loading spinner,
-    // and push the status to the stream
-    if (status) {
-      loggedInUsername = username;
-    }
-    _loggedIn.add(status);
-  }
-  */
+  @override String loggedInUsername = "testUsername";
 }
 
 void main() {
@@ -87,6 +52,7 @@ void main() {
   NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(displayName: "John", role: Role.Citizen.toString(), id: '1');
+  final GirafUserModel girafUser = GirafUserModel(displayName: "GuardianName", role: Role.Guardian, id: '2');
 
   setUp(() {
    di.clearAll();
@@ -156,15 +122,12 @@ void main() {
     await expect(find.byKey(const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
   });
 
-  testWidgets("Login to confirm user is a guardian, causing ApiException error", (WidgetTester tester) async {
+  testWidgets("Login to confirm user is a Guardian (wrong password), causing ApiException error", (WidgetTester tester) async {
     final screen = ChangeUsernameScreen(user);
-
     when(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).thenAnswer((_) => Future.error(ApiException));
-
+    
     await tester.pumpWidget(MaterialApp(home: screen));
-
     await tester.pump();
-
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'testUsername');
     await tester.tap(find.byKey(const Key('SaveUsernameKey')));
     await tester.pump();
@@ -182,15 +145,13 @@ void main() {
   });
 
 
-  testWidgets("Login to confirm user is a guardian, no error", (WidgetTester tester) async {
+  testWidgets("Login to confirm user is a Guardian, no error", (WidgetTester tester) async {
     final screen = ChangeUsernameScreen(user);
-
     when(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).thenAnswer((_) => Future.value(true));
+    when(screen.authBloc.loggedIn).thenAnswer((realInvocation) => Stream.value(true));
 
     await tester.pumpWidget(MaterialApp(home: screen));
-
     await tester.pump();
-
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'testUsername');
     await tester.tap(find.byKey(const Key('SaveUsernameKey')));
     await tester.pump();
@@ -201,14 +162,11 @@ void main() {
     await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
     await tester.pump();
 
-    await screen.authBloc.authenticateFromPopUp("someUsername", "somePassword");
+    verify(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).called(1);
+    verify(screen.authBloc.loggedIn);
 
-    verify(screen.authBloc.authenticateFromPopUp("someUsername", "somePassword")).called(1);
-    expect(find.byType(GirafNotifyDialog), findsOneWidget);
+    expect(find.byKey(const Key('UsernameKey')), findsOneWidget);
   });
-
-
-
 
 
 }

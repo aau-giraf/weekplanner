@@ -123,8 +123,6 @@ class ChangeUsernameScreen  extends StatelessWidget {
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
-          /// Pop the loading spinner doesnt work because we are in a pop-up
-
           updateUser(girafUser);
           Routes.pop(currentContext);
         }
@@ -161,7 +159,6 @@ class ChangeUsernameScreen  extends StatelessWidget {
       }
     });
   }
-
 
 
   /// Function that creates the notify dialog,
