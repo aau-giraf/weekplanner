@@ -41,7 +41,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
 }
 
 class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
-  bool showOldWeeks = true;
+  bool showOldWeeks = false;
 
   void _toggleOldWeeks() {
     setState(
@@ -141,14 +141,15 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
           _toggleOldWeeks();
         },
       ),
-      showOldWeeks
-          ? Expanded(
+
+        Visibility(
+          visible: showOldWeeks,
+            child: Expanded(
               flex: 5,
               child: Container( // Container with old weeks if shown
                 // Background color of the old weeks
                 color: Colors.grey.shade600,
-                child: _buildWeekplanGridview(context, oldWeekModels, false)))
-          : Container(), // Empty container if old weeks are hidden
+                child: _buildWeekplanGridview(context, oldWeekModels, false))))
     ]));
   }
 
@@ -389,7 +390,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       reload |= list.length < 3;
     });
     if (markedCount > 1) {
-      const String description = 'Der kan kun redigeres en uge ad gangen';
+      const String description = 'Der kan kun redigeres en ugeplan af gangen';
       showDialog<Center>(
           barrierDismissible: false,
           context: context,
@@ -420,50 +421,66 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
   }
 
   ///Builds dialog box to select where to copy weekplan or cancel
-  Future<Center> _buildCopyDialog(BuildContext context) {
-    if (widget._weekBloc.getNumberOfMarkedWeekModels() > 1) {
+  Future<Center> _buildCopyDialog(BuildContext context) async {
+    if (widget._weekBloc.getNumberOfMarkedWeekModels() < 1) {
+      return null;
+    }
+    else if (widget._weekBloc.getNumberOfMarkedWeekModels() != 1){
+      final List<WeekModel> weekModelList =
+        await widget._weekBloc.getMarkedWeeks();
       return showDialog<Center>(
           barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
-            return const GirafNotifyDialog(
-                title: 'Fejl',
-                description: 'Der skal markeres præcis én uge for at kopiere');
-          });
-    }
-    if (widget._weekBloc.getNumberOfMarkedWeekModels() < 1) {
-      return null;
-    }
-    return showDialog<Center>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return Giraf3ButtonDialog(
-            title: 'Kopiér ugeplaner',
-            description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
-            option1Text: 'Anden borger',
-            option1OnPressed: () {
-              widget._weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
+            return GirafConfirmDialog(
+              title: 'Kopiér ugeplaner',
+              description: 'Hvor vil du kopiére de valgte ugeplaner hen?',
+              confirmButtonText: 'Andre borgere',
+              confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/copy.png')),
+              confirmOnPressed: () {
                 Routes.push(
-                    context, CopyToCitizensScreen(weekmodel, widget._user));
-              });
-            },
-            option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-            option2Text: 'Denne borger',
-            option2OnPressed: () {
-              widget._weekBloc.getMarkedWeekModel().then((WeekModel weekmodel) {
+                    context, CopyToCitizensScreen(
+                    weekModelList, widget._user));
+              },
+            );
+          }
+      );
+    }
+    else{
+      final List<WeekModel> weekModelList =
+        await widget._weekBloc.getMarkedWeeks();
+      return showDialog<Center>(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return Giraf3ButtonDialog(
+              title: 'Kopiér ugeplaner',
+              description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
+              option1Text: 'Andre borgere',
+              option1OnPressed: () {
                 Routes.push(
+                    context, CopyToCitizensScreen(
+                    weekModelList, widget._user));
+              },
+              option1Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+              option2Text: 'Denne borger',
+              option2OnPressed: () {
+                  widget._weekBloc.getMarkedWeekModel().then((
+                      WeekModel weekmodel) {
+                    Routes.push(
                     context,
                     CopyResolveScreen(
-                      currentUser: widget._user,
-                      weekModel: weekmodel,
-                      forThisCitizen: true,
+                    currentUser: widget._user,
+                    weekModel: weekmodel,
+                    forThisCitizen: true,
                     ));
-              });
-            },
-            option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
-          );
-        });
+                  });
+              },
+              option2Icon: const ImageIcon(AssetImage('assets/icons/copy.png')),
+            );
+          });
+    }
   }
 
   /// Builds dialog box to confirm/cancel deletion

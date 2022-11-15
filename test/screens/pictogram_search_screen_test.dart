@@ -58,22 +58,53 @@ void main() {
   });
 
   testWidgets('Camera button shows', (WidgetTester tester) async {
+
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: '')).thenAnswer(
+            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[pictogramModel]));
+
     await tester.pumpWidget(MaterialApp(
       home: PictogramSearch(user: user),
     ));
     await tester.pumpAndSettle();
 
     expect(find.text('Tag billede'), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 11000));
+
+
   });
 
   testWidgets('renders', (WidgetTester tester) async {
+    final Completer<bool> done = Completer<bool>();
+
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: '')).thenAnswer(
+            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[pictogramModel]));
+
     await tester.pumpWidget(MaterialApp(
         home: PictogramSearch(
       user: user,
     )));
+
+    await tester.pump(const Duration(milliseconds: 41000));
+
+    bloc.pictograms.listen((List<PictogramModel> images) async {
+      await tester.pump();
+      expect(find.byType(PictogramImage), findsNWidgets(1));
+      done.complete(true);
+    });
+    await done.future;
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
+    when(pictogramApi.getAll(page: bloc.latestPage,
+        pageSize: pageSize, query: '')).thenAnswer(
+            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[pictogramModel]));
+
     await tester.pumpWidget(MaterialApp(
         home: PictogramSearch(
       user: user,
@@ -81,6 +112,8 @@ void main() {
 
     expect(find.byWidgetPredicate((Widget widget) => widget is GirafAppBar),
         findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 11000));
   });
 
   testWidgets('Display spinner on loading', (WidgetTester tester) async {

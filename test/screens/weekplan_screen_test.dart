@@ -11,6 +11,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -34,6 +35,7 @@ import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 
 import '../mock_data.dart';
 
@@ -45,6 +47,7 @@ void main() {
   DisplayNameModel user;
   WeekplanBloc weekplanBloc;
   AuthBloc authBloc;
+  Api api;
 
   setUp(() {
     MockData mockData;
@@ -54,8 +57,8 @@ void main() {
     mockActivities = mockData.mockActivities;
     mockPictograms = mockData.mockPictograms;
     user = mockData.mockUser;
-
-    final Api api = mockData.mockApi;
+api = mockData.mockApi;
+api.pictogram=MockPictogramApi();
 
     authBloc = AuthBloc(api);
     authBloc.setMode(WeekplanMode.guardian);
@@ -740,6 +743,13 @@ void main() {
   });
 
   testWidgets('Add Activity buttons work', (WidgetTester tester) async {
+
+    when(api.pictogram.getAll(page: 1,
+        pageSize: pageSize, query: '')).thenAnswer(
+            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[mockPictograms[0]]));
+
+
     mockSettings.nrOfDaysToDisplay = 7;
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
@@ -750,6 +760,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(PictogramSearch), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 11000));
+
   });
 
   testWidgets('Completed activities displayed correctly in Guardian Mode',

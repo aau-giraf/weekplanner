@@ -58,7 +58,7 @@ class MockPictogramApi extends Mock implements PictogramApi {}
 final PictogramModel mockPictogram = PictogramModel(
     id: 1,
     lastEdit: null,
-    title: null,
+    title: 'title',
     accessLevel: null,
     imageUrl: 'http://any.tld',
     imageHash: null);
@@ -307,6 +307,10 @@ void main() {
 
   testWidgets('Click on thumbnail redirects to pictogram search screen',
           (WidgetTester tester) async {
+            when(api.pictogram.getAll(page: 1,
+                pageSize: pageSize, query: '')).thenAnswer(
+                    (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+                    <PictogramModel>[mockPictogram]));
         mockBloc.acceptAllInputs = true;
         await tester.pumpWidget(
           MaterialApp(
@@ -320,7 +324,9 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(PictogramSearch), findsOneWidget);
-      });
+            await tester.pump(const Duration(milliseconds: 11000));
+
+          });
 
   testWidgets(
       'Click on save weekplan button saves weekplan and return saved weekplan',
