@@ -26,9 +26,9 @@ import '../weekplanner_choiceboard_selector.dart';
 import 'activity_card.dart';
 
 /// Widget used to create a single column in the weekplan screen.
-class WeekplanDayColumn extends StatelessWidget {
+class WeekplanActivitiesColumn extends StatelessWidget {
   /// Constructor
-  WeekplanDayColumn({
+  WeekplanActivitiesColumn({
     @required this.dayOfTheWeek,
     @required this.color,
     @required this.user,
@@ -77,10 +77,10 @@ class WeekplanDayColumn extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        _translateWeekDay(weekday.day),
-        _buildDaySelectorButtons(context, weekday),
+        ///_translateWeekDay(weekday.day),
+        ///_buildDaySelectorButtons(context, weekday),
         _buildDayActivities(weekday),
-        _buildAddActivityButton(weekday, context)
+        ///_buildAddActivityButton(weekday, context)
       ],
     );
   }
@@ -218,10 +218,10 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
-  /// Returns true if the field dayOfTheWeek matches with today's date
-  /// This function is mainly used for highlighting today's date on the weekplan
+  /// Maybe remove this function
   bool isToday(){
-    return DateTime.now().weekday.toInt()-1 == dayOfTheWeek.index;
+    return true;
+    //return DateTime.now().weekday.toInt()-1 == dayOfTheWeek.index;
   }
 
   /// Unmarks all activities for a given day

@@ -1,9 +1,11 @@
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
+import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -20,7 +22,9 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
+import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_activities_column.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -317,6 +321,7 @@ class WeekplanScreen extends StatelessWidget {
       theme.GirafColors.sundayColor
     ];
     final List<Widget> weekDays = <Widget>[];
+    final List<Widget> dailyActivities = <Widget>[];
 
     final int _weekday = DateTime.now().weekday.toInt();
     int _weekdayCounter = 0;
@@ -352,6 +357,7 @@ class WeekplanScreen extends StatelessWidget {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
+                    final int _activitiesToDisplay = _settingsModel.nrOfActivitiesToDisplay;
 
                     _weekdayCounter = 0;
                     // If the option of showing 1 or 2 days is chosen the
@@ -373,14 +379,14 @@ class WeekplanScreen extends StatelessWidget {
                           .hexColor
                           .replaceFirst('#', '0xff');
                       weekDays.add(Expanded(
-                        child: WeekplanDayColumn(
-                          dayOfTheWeek: Weekday.values[_weekdayCounter],
-                          color: Color(int.parse(dayColor)),
-                          weekplanBloc: _weekplanBloc,
-                          user: _user,
-                          streamIndex: i,
+                          child: WeekplanDayColumn(
+                            dayOfTheWeek: Weekday.values[_weekdayCounter],
+                            color: Color(int.parse(dayColor)),
+                            weekplanBloc: _weekplanBloc,
+                            user: _user,
+                            streamIndex: i,
                           )
-                        )
+                      )
                       );
                       _weekplanBloc.addWeekdayStream();
                       if (_daysToDisplay == 2 && _weekdayCounter == 6) {
@@ -395,19 +401,90 @@ class WeekplanScreen extends StatelessWidget {
                         _weekdayCounter += 1;
                       }
                     }
-                  }
+                    if (_settingsModel.showOnlyActivities == false) {
+                      if (weekDays.length == 1) {
+                        dailyActivities.add(Expanded(
+                            child: WeekplanActivitiesColumn(
+                              dayOfTheWeek: Weekday.values[_weekdayCounter],
+                              color: Colors.amber,
+                              weekplanBloc: _weekplanBloc,
+                              user: _user,
+                              streamIndex: 0,
+                            )
+                        )
+                        );
+                        return Row(
+                          key: const Key('SingleWeekdayRow'),
+                          children: <Widget>[
+                            const Spacer(flex: 1),
+                            dailyActivities.first,
+                            const Spacer(flex: 1),
+                          ],
+                        );
+                      } else {
+                        return Row(children: weekDays);
+                      }
+                    } else {
+                      return StreamBuilder<WeekdayModel>(
+                        stream: _weekplanBloc.getWeekdayStream(0),
+                        builder: (BuildContext context,
+                          AsyncSnapshot<WeekdayModel> weekdaySnapshot){
+                          if(weekdaySnapshot.hasData) {
+                            if(weekdaySnapshot.data.activities.isNotEmpty) {
+                              int activeIndex = 0;
+                              for(int i=0; i<weekdaySnapshot.data.activities.length; i++){
+                                if(weekdaySnapshot.data.activities[i].state == ActivityState.Active){
+                                  activeIndex = i;
+                                  break;
+                                }
+                              }
+                              dailyActivities.add(Expanded(
+                                  child: ActivityCard(
+                                      weekdaySnapshot.data.activities[activeIndex],
+                                      _user
+                                  )
+                              )
+                              );
+                            return Row(
+                              key: const Key('SingleWeekdayRow'),
+                              children: <Widget>[
+                                const Spacer(flex: 1),
+                                dailyActivities.first,
+                                const Spacer(flex: 1),
+                              ],
+                            );
+                          } else {
+                              return Row(
+                                key: const Key('SingleWeekdayRowNoActivity'),
+                                children: <Widget>[
+                                  Container()
+                                ],
+                              );
+                            }
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        });
+                    }
+                    } /**/ else {
+                  return const Center(
+                  child: CircularProgressIndicator(),
+                  );
+                  } /*
                   if (weekDays.length == 1) {
                     return Row(
                       key: const Key('SingleWeekdayRow'),
                       children: <Widget>[
-                        const Spacer(flex: 2),
+                        const Spacer(flex: 1),
                         weekDays.first,
-                        const Spacer(flex: 2),
+                        const Spacer(flex: 1),
                       ],
                     );
                   } else {
                     return Row(children: weekDays);
-                  }
+                  }*/
                 },
               );
             }
