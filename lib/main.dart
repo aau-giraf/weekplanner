@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/bootstrap.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/choose_citizen_screen.dart';
+import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
-final Api _api = di.get<Api>();
-
+///Public api instance
+final Api api = di.get<Api>();
 
 void main() {
   // Register all dependencies for injector
-  Bootstrap bootstrap = Bootstrap();
-  bootstrap.register(_api);
+  Bootstrap().register();
   WidgetsFlutterBinding.ensureInitialized();
 
   /***
@@ -53,7 +52,7 @@ void _runApp() {
             //To make sure we only listen to the stream once we take advantage
             // of firstTimeLogin bool value
             if(firstTimeLogIn== true){
-              _api.connectivity.connectivityStream.listen((dynamic event) {
+              api.connectivity.connectivityStream.listen((dynamic event) {
                 if(event == false){
                   lostConnectionDialog(context);
                 }

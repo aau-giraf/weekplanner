@@ -1,4 +1,3 @@
-import 'package:injector/injector.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
@@ -29,7 +28,7 @@ class Bootstrap {
   ///
   /// NB:
   /// Singleton restricts the instantiation of a class to one 'single' instance
-  void register(Api api) {
+  void register() {
 
     di.registerSingleton(() {
       return Api(environment.getVar('SERVER_HOST'));
@@ -37,42 +36,42 @@ class Bootstrap {
 
     di.registerSingleton<AuthBloc>(() {
 
-      return AuthBloc(api);
+      return AuthBloc(di.get<Api>());
     });
 
     di.registerDependency<WeekplanBloc>(() {
-      return WeekplanBloc(api);
+      return WeekplanBloc(di.get<Api>());
     });
 
     di.registerDependency<WeekplansBloc>(() {
-      return WeekplansBloc(api);
+      return WeekplansBloc(di.get<Api>());
     });
 
     di.registerDependency<ToolbarBloc>(() {
       return ToolbarBloc();
     });
     di.registerDependency<ChooseCitizenBloc>(() {
-      return ChooseCitizenBloc(api);
+      return ChooseCitizenBloc(di.get<Api>());
     });
 
     di.registerDependency<PictogramBloc>(() {
-      return PictogramBloc(api);
+      return PictogramBloc(di.get<Api>());
     });
 
     di.registerDependency<PictogramImageBloc>(() {
-      return PictogramImageBloc(api);
+      return PictogramImageBloc(di.get<Api>());
     });
 
     di.registerSingleton<NewWeekplanBloc>(() {
-      return NewWeekplanBloc(api);
+      return NewWeekplanBloc(di.get<Api>());
     });
 
     di.registerSingleton<NewCitizenBloc>(() {
-      return NewCitizenBloc(api);
+      return NewCitizenBloc(di.get<Api>());
     });
 
     di.registerDependency<EditWeekplanBloc>(() {
-      return EditWeekplanBloc(api);
+      return EditWeekplanBloc(di.get<Api>());
     });
 
     di.registerDependency<AddActivityBloc>(() {
@@ -80,15 +79,15 @@ class Bootstrap {
     });
 
     di.registerDependency<ActivityBloc>(() {
-      return ActivityBloc(api);
+      return ActivityBloc(di.get<Api>());
     });
 
     di.registerDependency<SettingsBloc>(() {
-      return SettingsBloc(api);
+      return SettingsBloc(di.get<Api>());
     });
 
     di.registerDependency<UploadFromGalleryBloc>(() {
-      return UploadFromGalleryBloc(api);
+      return UploadFromGalleryBloc(di.get<Api>());
     });
 
     di.registerDependency<CopyActivitiesBloc>(() {
@@ -96,19 +95,19 @@ class Bootstrap {
     });
 
     di.registerDependency<TimerBloc>(() {
-      return TimerBloc(api);
+      return TimerBloc(di.get<Api>());
     });
 
     di.registerDependency<CopyWeekplanBloc>(() {
-      return CopyWeekplanBloc(api);
+      return CopyWeekplanBloc(di.get<Api>());
     });
 
     di.registerDependency<CopyResolveBloc>(() {
-      return CopyResolveBloc(api);
+      return CopyResolveBloc(di.get<Api>());
     });
 
     di.registerDependency<TakePictureWithCameraBloc>(() {
-      return TakePictureWithCameraBloc(api);
+      return TakePictureWithCameraBloc(di.get<Api>());
     });
 
   }
