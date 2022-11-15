@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';
@@ -15,7 +14,6 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
@@ -52,7 +50,6 @@ void main() {
   NavigatorObserver mockObserver;
 
   final DisplayNameModel user = DisplayNameModel(displayName: "John", role: Role.Citizen.toString(), id: '1');
-  final GirafUserModel girafUser = GirafUserModel(displayName: "GuardianName", role: Role.Guardian, id: '2');
 
   setUp(() {
    di.clearAll();
@@ -137,8 +134,6 @@ void main() {
     await tester.enterText(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), 'testPassword');
     await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
     await tester.pump();
-
-    //await screen.authBloc.authenticateFromPopUp("someUsername", "somePassword");
 
     verify(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).called(1);
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
