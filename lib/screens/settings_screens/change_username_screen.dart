@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
@@ -40,6 +41,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
   final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final Api _api = di.getDependency<Api>();
+  final ToolbarBloc toolbarBloc = di.getDependency<ToolbarBloc>();
   BuildContext currentContext;
   bool loginStatus = false;
 
@@ -121,8 +123,6 @@ class ChangeUsernameScreen  extends StatelessWidget {
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
-          /// Pop the loading spinner doesnt work because we are in a pop-up
-
           updateUser(girafUser);
           Routes.pop(currentContext);
         }
@@ -159,7 +159,6 @@ class ChangeUsernameScreen  extends StatelessWidget {
       }
     });
   }
-
 
 
   /// Function that creates the notify dialog,
@@ -281,7 +280,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
 
   void updateUsername(BuildContext context) async {
     currentContext = context;
-    Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
+    //Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
 
     //_api.user.getCitizens()
     // _api.user.getGuardians()
@@ -291,11 +290,11 @@ class ChangeUsernameScreen  extends StatelessWidget {
     //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
       //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
     if (newUsernameCtrl.text == _user.displayName)
-      creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn.", "");
+      creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn.", "NewUsernameEqualOld");
     else if (newUsernameCtrl.text == "")
-      creatingErrorDialog("Udfyld venligst nyt brugernavn.", "");
+      creatingErrorDialog("Udfyld venligst nyt brugernavn.", "NewUsernameEmpty");
     else if (newUsernameCtrl.text != _user.displayName) {
-      usernameConfirmationDialog(girafUser);
+      usernameConfirmationDialog(await _api.user.get(_user.id));
     }
   }
 }
