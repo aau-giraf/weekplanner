@@ -7,8 +7,8 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'number_of_days_selection_screen.dart';
-//import 'package:weekplanner/screens/settings_screens/'
-//    'color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/'
+    'color_theme_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
@@ -21,8 +21,8 @@ import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_checkboxButton.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_item.dart';
-//import 'package:weekplanner/widgets/settings_widgets/'
-//    'settings_theme_display_box.dart';
+import 'package:weekplanner/widgets/settings_widgets/'
+    'settings_theme_display_box.dart';
 import '../../di.dart';
 import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
 import 'completed_activity_icon_selection_screen.dart';
@@ -67,7 +67,6 @@ class SettingsScreen extends StatelessWidget {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Tema', <SettingsSectionItem>[
-              /*
               SettingsArrowButton(
                   'Farver på ugeplan',
                       () async {
@@ -82,7 +81,6 @@ class SettingsScreen extends StatelessWidget {
                   titleTrailing: ThemeBox.fromHexValues(
                       settingsModel.weekDayColors[0].hexColor,
                       settingsModel.weekDayColors[1].hexColor)),
-               */
               SettingsArrowButton(
                   'Tegn for udførelse',
                       () async {
