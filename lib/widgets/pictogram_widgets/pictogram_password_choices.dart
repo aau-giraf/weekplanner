@@ -29,88 +29,74 @@ class PictogramChoices extends StatelessWidget {
   void onPressed(){
     return;
   }
-  Widget getGarbageStream() {
-    return StreamBuilder<List<PictogramModel>>(
-        stream: _bloc.pictograms,
-        initialData: const <PictogramModel>[],
-        builder: (BuildContext context,
-            AsyncSnapshot<List<PictogramModel>> snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-                children: <Widget> [
-                  Expanded(
-                      child: GridView.count(
-                          crossAxisCount: 4,
-                          children: snapshot.data
-                              .map((PictogramModel pictogram)
-                          => PictogramImage(
-                              pictogram: pictogram,
-                              haveRights: true,
-                              onPressed: () =>
-                                  Routes.pop(context, pictogram)))
-                              .toList(),
-                      )
-                  ),
-                  _bloc.loadingPictograms == true
-                      ? Container(
-                    height: 80,
-                    child: const Center(
-                        child: CircularProgressIndicator()
-                    ),
-                  )
-                      : Container()
-                ]
-            );
-          } else if (snapshot.hasError) {
-            return InkWell(
-              key: const Key('timeoutWidget'),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(snapshot.error.toString()),
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+
+  Stream<List<PictogramModel>> getStream() async* {
+    final List<PictogramModel> list = List<PictogramModel>.filled(10, null);
+    yield list;
+    for (int i = 1; i < 11; i++){
+      await for (final PictogramModel model in _api.pictogram.get(i)){
+        list[i-1] = model;
+        yield list;
+      }
+    }
   }
 
-  Stream<List<PictogramModel>> getStream() async*{
-    // int receivedValues = 0;
-    // List<PictogramModel> list = [];
-    // for (int i = 0; receivedValues < 10; i++) {
-    //   PictogramModel nextValue;
-    //   _api.pictogram.get(i).listen((PictogramModel value) {
-    //     if (value != null) {
-    //       nextValue = value;
-    //       receivedValues++;
-    //     }
-    //   });
-    //   list.add(nextValue);
-    // }
-    // yield list;
-  }
   @override
    Widget build (BuildContext context) {
     // return Column(
     //     children: <Widget>[
-          return Flexible(
-            fit: FlexFit.loose,
-            child:
-                Container(
+                return Container(
                   height: 500,
                   width: 500,
                   child:
                     StreamBuilder<List<PictogramModel>>(
                         stream: getStream(),
-                        initialData: const <PictogramModel>[],
                         /////////////////////////////////////////////////////////////////////////////
                         builder: (BuildContext context,
                             AsyncSnapshot<List<PictogramModel>> snapshot) {
-                          return const Text('Hejsa');
+                          if (snapshot.hasError){
+                            print(snapshot);
+                            return const Text("error");
+                          }
+                          else if (snapshot.hasData){
+
+
+                          return Expanded(
+                            child: GridView.count(
+                              crossAxisCount: 5,
+                                children:
+                                snapshot.data.map<Widget>((PictogramModel e) {
+                                if (e == null) {
+                                return Container(
+                                height: 80,
+                                child: const Center(
+                                child: CircularProgressIndicator()
+                                ),
+                                );
+                                } else{
+                                return PictogramImage(
+                                pictogram: e,
+                                onPressed: onPressed
+                                );
+                                }
+                                }).toList()
+                            )
+                          );
+
+                          }
+                          else{
+                            return const Text('Smerte');
+                          }
+                          return const Text('John choice');
+
+
+
+
+                        /////////////////77
+
                         }
                     )
-                )
+
           // Padding(
           //     padding: const EdgeInsets.symmetric(horizontal: 20),
           //     child:
@@ -160,4 +146,5 @@ class PictogramChoices extends StatelessWidget {
     // );
     //);
   }
+
 }

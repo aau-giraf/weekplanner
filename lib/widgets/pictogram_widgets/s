@@ -1,0 +1,15 @@
+                            snapshot.data.map<Widget>((PictogramModel e) {
+                              if (e == null) {
+                                return Container(
+                                  height: 80,
+                                  child: const Center(
+                                  child: CircularProgressIndicator()
+                                  ),
+                                );
+                              } else{
+                                return PictogramImage(
+                                  pictogram: e,
+                                  onPressed: onPressed
+                                );
+                              }
+                            });
