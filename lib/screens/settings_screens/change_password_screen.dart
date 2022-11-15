@@ -7,13 +7,16 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
@@ -35,6 +38,7 @@ class ChangePasswordScreen extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final Api _api = di.getDependency<Api>();
+  ChangeUsernameScreen changeUsernameScreen;
 
   //const ChangePasswordScreen({Key key, this._user}) : super(key: key);
 
@@ -173,8 +177,12 @@ class ChangePasswordScreen extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              ChangePassword(_user, currentPasswordCtrl.text,
-                                  newPasswordCtrl.text);
+                              try {
+                                ChangePassword(_user, currentPasswordCtrl.text,
+                                    newPasswordCtrl.text);
+                              } on ApiException catch (e) {
+                                print(e.errorMessage);
+                              }
                             },
                             color: theme.GirafColors.dialogButton,
                           ),
@@ -193,14 +201,16 @@ class ChangePasswordScreen extends StatelessWidget {
   void ChangePassword(
       DisplayNameModel user, String oldPassword, String newPassword) {
     //authBloc.authenticate(user.displayName, oldPassword);
+    _api.account
+        .changePasswordWithOld(_user.id, oldPassword, newPassword)
+        .listen((status) {
+      print("Status: " + status.toString());
+    }).onData((data) {
+      print("Data: " + data.toString());
+    });
+  }
 
-    String guardian;
-
-    //API-tests
-    Stream<bool> passStream =
-        _api.account.changePasswordWithOld(_user.id, oldPassword, newPassword);
-
-    Future ChangePasswordForAccount(Stream<bool> passStream) async {
+  /*Future ChangePasswordForAccount(Stream<bool> passStream) async {
       //Stream<bool>.fromFuture(Future.error(Exception()));
       await for (final value in passStream) {
         //print(value);
@@ -209,6 +219,5 @@ class ChangePasswordScreen extends StatelessWidget {
     }
 
     //GetGuardians(guardians);
-    ChangePasswordForAccount(passStream);
-  }
+    ChangePasswordForAccount(passStream);*/
 }
