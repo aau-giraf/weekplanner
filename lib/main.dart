@@ -14,7 +14,8 @@ final Api _api = di.get<Api>();
 
 void main() {
   // Register all dependencies for injector
-  Bootstrap.register();
+  Bootstrap bootstrap = Bootstrap();
+  bootstrap.register(_api);
   WidgetsFlutterBinding.ensureInitialized();
 
   /***

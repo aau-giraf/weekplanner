@@ -29,50 +29,50 @@ class Bootstrap {
   ///
   /// NB:
   /// Singleton restricts the instantiation of a class to one 'single' instance
-  static void register() {
-    final Injector i = Injector();
+  void register(Api api) {
+
     di.registerSingleton(() {
       return Api(environment.getVar('SERVER_HOST'));
     });
 
     di.registerSingleton<AuthBloc>(() {
 
-      return AuthBloc(i.get<Api>());
+      return AuthBloc(api);
     });
 
     di.registerDependency<WeekplanBloc>(() {
-      return WeekplanBloc(i.get<Api>());
+      return WeekplanBloc(api);
     });
 
     di.registerDependency<WeekplansBloc>(() {
-      return WeekplansBloc(i.get<Api>());
+      return WeekplansBloc(api);
     });
 
     di.registerDependency<ToolbarBloc>(() {
       return ToolbarBloc();
     });
     di.registerDependency<ChooseCitizenBloc>(() {
-      return ChooseCitizenBloc(i.get<Api>());
+      return ChooseCitizenBloc(api);
     });
 
     di.registerDependency<PictogramBloc>(() {
-      return PictogramBloc(i.get<Api>());
+      return PictogramBloc(api);
     });
 
     di.registerDependency<PictogramImageBloc>(() {
-      return PictogramImageBloc(i.get<Api>());
+      return PictogramImageBloc(api);
     });
 
     di.registerSingleton<NewWeekplanBloc>(() {
-      return NewWeekplanBloc(i.get<Api>());
+      return NewWeekplanBloc(api);
     });
 
     di.registerSingleton<NewCitizenBloc>(() {
-      return NewCitizenBloc(i.get<Api>());
+      return NewCitizenBloc(api);
     });
 
     di.registerDependency<EditWeekplanBloc>(() {
-      return EditWeekplanBloc(i.get<Api>());
+      return EditWeekplanBloc(api);
     });
 
     di.registerDependency<AddActivityBloc>(() {
@@ -80,15 +80,15 @@ class Bootstrap {
     });
 
     di.registerDependency<ActivityBloc>(() {
-      return ActivityBloc(i.get<Api>());
+      return ActivityBloc(api);
     });
 
     di.registerDependency<SettingsBloc>(() {
-      return SettingsBloc(i.get());
+      return SettingsBloc(api);
     });
 
     di.registerDependency<UploadFromGalleryBloc>(() {
-      return UploadFromGalleryBloc(i.get<Api>());
+      return UploadFromGalleryBloc(api);
     });
 
     di.registerDependency<CopyActivitiesBloc>(() {
@@ -96,19 +96,19 @@ class Bootstrap {
     });
 
     di.registerDependency<TimerBloc>(() {
-      return TimerBloc(i.get<Api>());
+      return TimerBloc(api);
     });
 
     di.registerDependency<CopyWeekplanBloc>(() {
-      return CopyWeekplanBloc(i.get<Api>());
+      return CopyWeekplanBloc(api);
     });
 
     di.registerDependency<CopyResolveBloc>(() {
-      return CopyResolveBloc(i.get<Api>());
+      return CopyResolveBloc(api);
     });
 
     di.registerDependency<TakePictureWithCameraBloc>(() {
-      return TakePictureWithCameraBloc(i.get<Api>());
+      return TakePictureWithCameraBloc(api);
     });
 
   }
