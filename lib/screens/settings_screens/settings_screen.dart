@@ -49,11 +49,11 @@ class SettingsScreen extends StatelessWidget {
     return ListView(
       children: <Widget>[
         _buildThemeSection(context),
-        //_buildOrientationSection(),
+        _buildOrientationSection(),
         _buildWeekPlanSection(context),
-        //_buildTimerSection(context),
+        _buildTimerSection(context),
         _buildTimeRepresentationSettings(context),
-        _buildUserSettings(),
+        _buildUserSettings(context),
         _buildPrivacySection()
       ],
     );
@@ -112,13 +112,13 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
-  /*
+
   Widget _buildOrientationSection() {
     return SettingsSection('Orientering', <SettingsSectionItem>[
       SettingsCheckMarkButton(5, 5, 'Landskab', () {}),
     ]);
   }
-  */
+
 
   Widget _buildWeekPlanSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
@@ -167,7 +167,7 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
-  /*
+
   Widget _buildTimerSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
@@ -193,14 +193,9 @@ class SettingsScreen extends StatelessWidget {
           }
         });
   }
-  */
 
-  Widget _buildUserSettings() {
-    /*
-    return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-      SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-    ]);
-     */
+
+  Widget _buildUserSettings(BuildContext context) {
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
@@ -209,11 +204,13 @@ class SettingsScreen extends StatelessWidget {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
               SettingsCheckMarkButton.fromBoolean(
-                  settingsModel.lockTimerControl, 'Giv borger adgang til deres indstillinger.', () {
-                settingsModel.lockTimerControl = !settingsModel.lockTimerControl;
-                _settingsBloc.updateSettings(_user.id, settingsModel)
-                    .listen((_) {
-                  _settingsBloc.loadSettings(_user);
+                  settingsModel.showSettingsForCitizen,
+                    'Giv borger adgang til deres indstillinger.', () {
+                  settingsModel.showSettingsForCitizen =
+                    !settingsModel.showSettingsForCitizen;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
                 });
               }),
             ]);

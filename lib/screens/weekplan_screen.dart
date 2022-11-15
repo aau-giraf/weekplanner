@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:api_client/api/api_exception.dart';
+import 'package:api_client/http/http_mock.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -6,6 +10,7 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
@@ -46,6 +51,7 @@ class WeekplanScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final WeekModel _week;
 
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekplanMode>(
@@ -59,18 +65,19 @@ class WeekplanScreen extends StatelessWidget {
             onWillPop: () async =>
                 weekModeSnapshot.data == WeekplanMode.guardian,
             child: Scaffold(
-              appBar: GirafAppBar(
+            appBar: GirafAppBar(
                 title: _user.displayName + ' - ' + _week.name,
                 appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
                     ? <AppBarIcon, VoidCallback> {
                   // Show icons for guardian role
                   AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                   AppBarIcon.changeToCitizen: () {},
-                  AppBarIcon.logout: () {},
                   AppBarIcon.settings: () =>
                       Routes.push<WeekModel>(context,
                           SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user))
+                          _settingsBloc.loadSettings(_user)),
+                  AppBarIcon.logout: () {}
+
                 }
                 : (weekModeSnapshot.data == WeekplanMode.trustee)
                     ? <AppBarIcon, VoidCallback> {
@@ -80,12 +87,23 @@ class WeekplanScreen extends StatelessWidget {
                   AppBarIcon.settings: () =>
                       Routes.push<WeekModel>(context,
                           SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user))
+                          _settingsBloc.loadSettings(_user)),
+                  AppBarIcon.logout: () {}
+                }
+                :(weekModeSnapshot.data == WeekplanMode.citizen &&
+                    _settingsBloc.getShowSettingsForCitizen())
+                    ? <AppBarIcon, VoidCallback> {
+                      AppBarIcon.changeToGuardian: () {},
+                  AppBarIcon.settings: () =>
+                      Routes.push<WeekModel>(context,
+                          SettingsScreen(_user)).then((WeekModel newWeek) =>
+                          _settingsBloc.loadSettings(_user)),
+                      AppBarIcon.logout: () {}
                 }
                 : <AppBarIcon, VoidCallback> {
                   // Show icons for citizen role
                   AppBarIcon.changeToGuardian: () {},
-                  AppBarIcon.logout: () {}
+                  AppBarIcon.logout: () {},
                 },
                 isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
               ),
