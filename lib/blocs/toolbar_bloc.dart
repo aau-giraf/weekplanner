@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
@@ -26,6 +30,10 @@ class ToolbarBloc extends BlocBase {
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
   final AuthBloc _authBloc = di.get<AuthBloc>();
+  final Api _api = di.get<Api>();
+
+  /// Store guardian user name related to logged in user.
+  String _userNameOfGuardian;
 
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
   void updateIcons(Map<AppBarIcon, VoidCallback> icons, BuildContext context) {
@@ -46,7 +54,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Find the icon picture based on the input enum
   void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
-      VoidCallback callback, BuildContext context) {
+      VoidCallback callback, BuildContext context) async {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept(callback));
@@ -73,6 +81,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconChangeToCitizen(context));
         break;
       case AppBarIcon.changeToGuardian:
+        await _setUserNameOfGuardian();
         _iconsToAdd.add(_createIconChangeToGuardian(context));
         break;
       case AppBarIcon.copy:
@@ -241,7 +250,7 @@ class ToolbarBloc extends BlocBase {
                     .style,
                 children: <TextSpan>[
                   TextSpan(
-                      text: _authBloc.loggedInUser.username,
+                      text: _userNameOfGuardian,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
@@ -266,7 +275,7 @@ class ToolbarBloc extends BlocBase {
                 ? () {
               if (_clickable) {
                 _clickable = false;
-                loginFromPopUp(context, _authBloc.loggedInUser.username,
+                loginFromPopUp(context, _userNameOfGuardian,
                     passwordCtrl.value.text);
                 // Timer makes it clicable again after 2 seconds.
                 Timer(const Duration(milliseconds: 2000), () {
@@ -283,6 +292,38 @@ class ToolbarBloc extends BlocBase {
             color: theme.GirafColors.dialogButton,
           )
         ]);
+  }
+
+  /// Set user name of the guardian that is related to logged in user
+  Future<void> _setUserNameOfGuardian() async {
+    final Completer<void> completer = Completer<void>();
+
+    switch (_authBloc.loggedInUser.role) {
+      case Role.Citizen:
+        // Get guardians for logged in citizen
+        _api.user.getGuardians(_authBloc.loggedInUser.id)
+          .listen((List<DisplayNameModel> event) {
+            // DisplayNameModel does not have userName, only displayName
+            // Therefore use id to set userName of guardian
+            _api.user.get(event.first.id).listen((GirafUserModel event) {
+              _userNameOfGuardian = event.username;  
+            }).onError((Object error) {
+              completer.completeError(error);
+            });
+        }).onError((Object error) {
+          completer.completeError(error);
+        });
+        break;
+      case Role.Guardian:
+        _userNameOfGuardian = _authBloc.loggedInUser.username;
+        break;
+      default:
+        break;
+    }
+
+    completer.complete();
+    Future.wait(<Future<void>>[completer.future]);
+    return completer.future;
   }
 
   IconButton _createIconCopy(VoidCallback callback) {
