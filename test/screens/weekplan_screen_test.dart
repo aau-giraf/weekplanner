@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api_client.dart';
@@ -7,7 +6,6 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
-import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
@@ -43,11 +41,8 @@ import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
-import 'package:api_client/models/activity_model.dart';
-
-import 'package:rxdart/rxdart.dart' as rx_dart;
-
 import '../mock_data.dart';
+
 class MockActivityApi extends Mock implements ActivityApi {
   @override
   Stream<ActivityModel> update(ActivityModel activity, String userId) {
@@ -993,7 +988,8 @@ api.pictogram=MockPictogramApi();
         findsOneWidget);
   });
 
-  testWidgets('Aciticy card starts time when activated and shows it for citizen',
+  testWidgets('Aciticy card starts time when activated'
+      ' and shows it for citizen',
     (WidgetTester tester) async {
 
       await tester.runAsync(() async {
@@ -1013,7 +1009,8 @@ api.pictogram=MockPictogramApi();
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-      Future.delayed(Duration(seconds: 2), () async {
+        // ignore: always_specify_types
+        Future.delayed(const Duration(seconds: 2), () async {
         checkCompleted.complete();
         await checkCompleted.future;
         expect(find.byKey(const Key('IconComplete')), findsOneWidget);
@@ -1046,7 +1043,8 @@ api.pictogram=MockPictogramApi();
         });
 
   });
-  testWidgets('click actitivty card for citizen does nothing if the activity is completed or the timer is running',
+  testWidgets('click actitivty card for citizen does nothing '
+      'if the activity is completed or the timer is running',
           (WidgetTester tester) async {
 
         await tester.runAsync(() async {
@@ -1061,23 +1059,24 @@ api.pictogram=MockPictogramApi();
           await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
           await tester.pumpAndSettle();
-          await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
-              mockActivities[2].id.toString())));
+          await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
+              + mockActivities[2].id.toString())));
           await tester.pumpAndSettle();
 
           expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-          await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
-              mockActivities[2].id.toString())));
+          await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
+              + mockActivities[2].id.toString())));
 
           expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-
+          // ignore: always_specify_types
           Future.delayed(const Duration(seconds: 2), () async {
             checkCompleted.complete();
             await checkCompleted.future;
 
             expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-            await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
-                mockActivities[2].id.toString())));
+            await tester.tap(find.byKey(Key(
+                mockWeek.days[0].day.index.toString()
+                + mockActivities[2].id.toString())));
 
             expect(find.byKey(const Key('IconComplete')), findsOneWidget);
 

@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/activity_model.dart';
@@ -16,7 +15,6 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
-import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -64,9 +62,9 @@ class WeekplanDayColumn extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final List<TimerBloc> _timerBloc = <TimerBloc>[];
-  void CreateTimerBlocs(int NumofTimeBlocs)
+  void createTimerBlocs(int numOfTimeBlocs)
   {
-        for(int i = 0; i  < NumofTimeBlocs- _timerBloc.length; i++)
+        for(int i = 0; i  < numOfTimeBlocs- _timerBloc.length; i++)
           {
             _timerBloc.add(di.getDependency<TimerBloc>());
           }
@@ -80,7 +78,7 @@ class WeekplanDayColumn extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<WeekdayModel> snapshot) {
           if (snapshot.hasData) {
             final WeekdayModel _dayModel = snapshot.data;
-        CreateTimerBlocs(_dayModel.activities.length);
+        createTimerBlocs(_dayModel.activities.length);
             return Card(color: color, child: _day(_dayModel, context));
           } else {
             return const Center(child: CircularProgressIndicator());
@@ -343,7 +341,7 @@ class WeekplanDayColumn extends StatelessWidget {
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final ActivityModel currActivity = weekday.activities[index];
 
-    CreateTimerBlocs(weekday.activities.length);
+    createTimerBlocs(weekday.activities.length);
 
     final bool isMarked = weekplanBloc.isActivityMarked(currActivity);
 
@@ -390,8 +388,10 @@ class WeekplanDayColumn extends StatelessWidget {
                                     currActivity.id.toString()),
                                 onTap: () {
 
-                                  if (modeSnapshot.data == WeekplanMode.guardian ||
-                                      modeSnapshot.data == WeekplanMode.trustee) {
+                                  if (modeSnapshot.data == WeekplanMode.guardian
+                                      ||
+                                      modeSnapshot.data == WeekplanMode.trustee)
+                                  {
                                     _handleOnTapActivity(
                                         inEditMode,
                                         isMarked,
@@ -443,11 +443,11 @@ class WeekplanDayColumn extends StatelessWidget {
         return;
       }
     _activityBloc.load(activistModel, user);
-    _activityBloc.AccesWeekPlanBloc(weekplanBloc, weekday);
+    _activityBloc.accesWeekPlanBloc(weekplanBloc, weekday);
     _timerBloc[index].load(activistModel,user: user);
-    _timerBloc[index].GetActivityBloc(_activityBloc);
-    _activityBloc.AddHandlerToActivityStateOnce();
-    _timerBloc[index].AddHandlerToRunningModeOnce();
+    _timerBloc[index].getActivityBloc(_activityBloc);
+    _activityBloc.addHandlerToActivityStateOnce();
+    _timerBloc[index].addHandlerToRunningModeOnce();
     _timerBloc[index].initTimer();
 
     if (activistModel.timer == null) {
@@ -488,7 +488,8 @@ class WeekplanDayColumn extends StatelessWidget {
         _handleActivity(activities,index,weekday);
       }
     else if(!inEditMode){
-      Routes.push(context, ShowActivityScreen(activities[index], user, weekplanBloc,_timerBloc[index], weekday))
+      Routes.push(context, ShowActivityScreen(activities[index],
+          user, weekplanBloc,_timerBloc[index], weekday))
           .whenComplete(() {weekplanBloc.getWeekday(weekday.day)
           .catchError((Object error) {
             creatingNotifyDialog(error, context);

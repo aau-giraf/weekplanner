@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
-import 'package:weekplanner/di.dart';
+
+import '../models/enums/timer_running_mode.dart';
 
 /// Logic for activities
 class TimerBloc extends BlocBase {
@@ -30,7 +29,7 @@ class TimerBloc extends BlocBase {
   StreamSubscription<TimerRunningMode> _subscription;
 
   /// Stream for checking if the timer is instantiated.
-  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream;
+  Stream<bool> get timerIsInstantiated => _timerInstantiatedStream.stream; // ignore: cancel_subscriptions
 
   /// rx_dart.BehaviorSubject for the progress of the timer.
   final rx_dart.BehaviorSubject<double> _timerProgressStream =
@@ -63,7 +62,7 @@ class TimerBloc extends BlocBase {
   static final AudioPlayer _volumePlayer = AudioPlayer();
 
   final AudioCache _audioPlayer =
-      AudioCache(prefix: 'assets/audio/', fixedPlayer: _volumePlayer);
+      AudioCache(prefix: 'audio/', fixedPlayer: _volumePlayer);
 
   final String _audioFile = 'dingSound.wav';
   final int _updatePeriod = 1000;
@@ -79,19 +78,19 @@ class TimerBloc extends BlocBase {
     _timerInstantiatedStream.add(_activityModel.timer != null);
   }
 
-  void GetActivityBloc(ActivityBloc activityBloc)
+  void getActivityBloc(ActivityBloc activityBloc)
   {
     _activityBloc = activityBloc;
 
   }
-  void AddHandlerToRunningModeOnce()
+  void addHandlerToRunningModeOnce()
   {
       if(_subscription != null)
         {
           return;
         }
 
-    _subscription = timerRunningMode.listen((mode) {
+    _subscription = timerRunningMode.listen((TimerRunningMode mode) {
         if(mode == TimerRunningMode.completed)
           {
 

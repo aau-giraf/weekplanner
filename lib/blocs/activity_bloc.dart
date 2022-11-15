@@ -1,6 +1,6 @@
 
 import 'dart:async';
-import 'dart:ui';
+
 
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -19,7 +19,7 @@ class ActivityBloc extends BlocBase {
 
   /// Stream for  updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
-  StreamSubscription<ActivityModel> _subscription;
+  StreamSubscription<ActivityModel> _subscription; // ignore: cancel_subscriptions
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
       rx_dart.BehaviorSubject<ActivityModel>();
@@ -37,7 +37,7 @@ class ActivityBloc extends BlocBase {
     _activityModelStream.add(activityModel);
   }
   
-  void AccesWeekPlanBloc(WeekplanBloc weekplanBloc, WeekdayModel weekday)
+  void accesWeekPlanBloc(WeekplanBloc weekplanBloc, WeekdayModel weekday)
   {
     _weekplanBloc = weekplanBloc;
     _weekday = weekday;
@@ -47,13 +47,13 @@ class ActivityBloc extends BlocBase {
   ActivityModel getActivity(){
     return _activityModel;
   }
-  void AddHandlerToActivityStateOnce()
+  void addHandlerToActivityStateOnce()
   {
     if(_subscription != null ) {
       return;
     }
     
-    _subscription = activityModelStream.listen((activity) {
+    _subscription = activityModelStream.listen((ActivityModel activity) {
 
         _weekplanBloc.getWeekday(_weekday.day);
     });

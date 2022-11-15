@@ -218,7 +218,9 @@ class ActivityCard extends StatelessWidget {
         switch (state) {
           case ActivityState.Normal:
             if(snapshot1.hasData && snapshot1.data != TimerRunningMode.running)
+            {
               break;
+            }
             return Container(child: TimerPiechart(_timerBloc),
                 width: MediaQuery
                     .of(context)

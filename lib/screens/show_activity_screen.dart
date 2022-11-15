@@ -2,7 +2,6 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
-import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_model.dart';
@@ -41,13 +40,13 @@ class ShowActivityScreen extends StatelessWidget {
       : super(key: key) {
     _pictoImageBloc.load(_activity.pictograms.first);
     _activityBloc.load(_activity, _girafUser);
-    _activityBloc.AccesWeekPlanBloc(_weekplanBloc, _weekday);
+    _activityBloc.accesWeekPlanBloc(_weekplanBloc, _weekday);
     _settingsBloc.loadSettings(_girafUser);
     _timerBloc.load(_activity, user: _girafUser);
-    _timerBloc.GetActivityBloc(_activityBloc);
-    _timerBloc.AddHandlerToRunningModeOnce();
+    _timerBloc.getActivityBloc(_activityBloc);
+    _timerBloc.addHandlerToRunningModeOnce();
 
-    _activityBloc.AddHandlerToActivityStateOnce();
+    _activityBloc.addHandlerToActivityStateOnce();
   }
 
   final DisplayNameModel _girafUser;
@@ -559,7 +558,7 @@ class ShowActivityScreen extends StatelessWidget {
 
                 onPressed: () {
                   if (!timerRunningSnapshot.hasData) {
-                    throw Exception("Error");
+                    throw Exception('Error');
                   }
                   switch (timerRunningSnapshot.data) {
                     case TimerRunningMode.initialized:
@@ -602,11 +601,6 @@ class ShowActivityScreen extends StatelessWidget {
             ),
           );
         });
-  }
-  /// Restarts timer.
-  void _restartTimer() {
-    _timerBloc.stopTimer();
-    _timerBloc.playTimer();
   }
 
   Widget _stopButton(
@@ -686,16 +680,7 @@ class ShowActivityScreen extends StatelessWidget {
       ),
     );
   }
-   Key _timerKey(AsyncSnapshot<TimerRunningMode> timerRunningSnapshot)
-  {
-    if(!timerRunningSnapshot.hasData ||
-        timerRunningSnapshot.data != TimerRunningMode.running)
-    {
-        return const Key('TimerPlayButtonKey');
-    }
 
-    return const Key('TimerPauseButtonKey');
-}
   /// Returns a dialog where time can be decided for an activity(timer)
   void _buildTimerDialog(BuildContext context) {
     showDialog<Center>(
@@ -703,29 +688,6 @@ class ShowActivityScreen extends StatelessWidget {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return GirafActivityTimerPickerDialog(_activity, _timerBloc);
-        });
-  }
-
-  /// Returns a dialog where the timer can be restarted.
-  void _buildRestartTimerDialog(BuildContext context) {
-    showDialog<Center>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return GirafConfirmDialog(
-            key: const Key('TimerRestartDialogKey'),
-            title: 'Genstart Timer',
-            description: 'Vil du genstarte '
-                'timeren?',
-            confirmButtonText: 'Genstart',
-            confirmButtonIcon:
-                const ImageIcon(AssetImage('assets/icons/play.png')),
-            confirmOnPressed: () {
-              _timerBloc.stopTimer();
-              _timerBloc.playTimer();
-              Routes.pop(context);
-            },
-          );
         });
   }
 

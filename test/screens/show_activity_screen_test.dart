@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
@@ -24,7 +23,6 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:injector/injector.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -871,7 +869,8 @@ void main() {
       await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
 
       await tester.pumpAndSettle();
-      Future.delayed(Duration(seconds: 2), () async {
+      // ignore: always_specify_types
+       Future.delayed(const Duration(seconds: 2), () async {
         final StreamSubscription<TimerRunningMode> listenForCompleted =
             timerBloc.timerRunningMode.skip(1).listen((TimerRunningMode m) {
           expect(m, TimerRunningMode.completed);
@@ -1035,10 +1034,11 @@ void main() {
   });
 
   testWidgets(
-      'Activity state is normal when an activity has been cancelled and non-cancelled and timer added', (WidgetTester tester) async {
+      'Activity state is normal when an activity has been cancelled and'
+          ' non-cancelled and timer added', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
 
-    ActivityModel activistModel = makeNewActivityModel();
+    final ActivityModel activistModel = makeNewActivityModel();
     await tester.pumpWidget(MaterialApp(
         home: ShowActivityScreen(activistModel, mockUser, weekplanBloc,
             timerBloc, mockWeekDayModel())));
@@ -1110,7 +1110,8 @@ void main() {
   });
 
   testWidgets(
-      'Button for update activity title to pictogram title is not rendered in citizen mode', (WidgetTester tester) async {
+      'Button for update activity title to pictogram title'
+          ' is not rendered in citizen mode', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.isChoiceBoard = false;
     await tester.pumpWidget(MaterialApp(
@@ -1123,7 +1124,8 @@ void main() {
   });
 
   testWidgets(
-      'Button for save alternate name to activity title is not rendered while isChoiceBoard is true', (WidgetTester tester) async {
+      'Button for save alternate name to activity title is not rendered'
+          ' while isChoiceBoard is true', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = true;
     await tester.pumpWidget(MaterialApp(
@@ -1135,7 +1137,8 @@ void main() {
         find.byKey(const Key('SavePictogramTextForCitizenBtn')), findsNothing);
   });
 
-  testWidgets('Button for update activity title to pictogram title is not rendered while isChoiceBoard is true', (WidgetTester tester) async {
+  testWidgets('Button for update activity title to pictogram title is not'
+      ' rendered while isChoiceBoard is true', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = true;
     await tester.pumpWidget(MaterialApp(
