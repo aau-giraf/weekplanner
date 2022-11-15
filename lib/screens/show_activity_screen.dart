@@ -582,8 +582,10 @@ class ShowActivityScreen extends StatelessWidget {
                         _timerBloc.playTimer();
                         break;
                       }
-
-
+                    case TimerRunningMode.not_initialized:
+                      {
+                        break;
+                      }
                   }
                 },
                 icon: (timerRunningSnapshot.hasData
