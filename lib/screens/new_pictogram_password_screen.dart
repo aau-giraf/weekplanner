@@ -1,6 +1,9 @@
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -14,6 +17,8 @@ class NewPictogramPasswordScreen extends StatelessWidget {
   }
 
   final NewPictogramPasswordBloc _bloc;
+
+  final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +45,20 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   text: 'Gem bruger',
-                  isEnabled: false,
-                  onPressed: () {},
+                  isEnabled: true,
+                  onPressed: () {
+                    _bloc.createCitizen().listen((GirafUserModel response) {
+                      if (response != null) {
+                        Routes.pop(context, response);
+                        Routes.pop(context, response);
+
+                        // Maybe not needed, as the
+                        // initialize method already resets
+                        _bloc.reset();
+                      }
+                    }).onError((Object error) =>
+                        _translator.catchApiError(error, context));
+                  },
                 );
               },
             ),

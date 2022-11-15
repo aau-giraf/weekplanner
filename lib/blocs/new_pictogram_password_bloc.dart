@@ -19,12 +19,23 @@ class NewPictogramPasswordBloc extends BlocBase {
   /// The display name for the citizen that one is creating a password for.
   String displayName;
 
+  /// Creates a user with the given information.
+  Stream<GirafUserModel> createCitizen() {
+    return _api.account.register(userName, "password", displayName,
+        departmentId: _user.department, role: Role.Citizen);
+  }
+
+  /// Initializes the bloc.
   void initialize(String _userName, String _displayName) {
     reset();
     userName = _userName;
     displayName = _displayName;
+    _api.user.me().listen((GirafUserModel user) {
+      _user = user;
+    });
   }
 
+  /// Resets the blocs variables, so that no information is stored.
   void reset() {
     userName = null;
     displayName = null;

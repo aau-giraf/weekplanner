@@ -176,22 +176,26 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
             child: StreamBuilder<bool>(
                 stream: widget._bloc.validPasswordStream,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  return TextFormField(
-                    key: const Key('passwordField'),
-                    enabled: !widget._bloc.usePictogramPasswordController.value,
-                    decoration: InputDecoration(
-                      border:
-                          const OutlineInputBorder(borderSide: BorderSide()),
-                      labelText: 'Kodeord',
-                      errorText: (snapshot?.data == true) &&
-                              widget._bloc.passwordController.value != null
-                          ? null
-                          // cant make it shorter because of the string
-                          // ignore: lines_longer_than_80_chars
-                          : 'Kodeord må ikke indeholde mellemrum eller være tom',
+                  return Visibility(
+                    visible: !widget._bloc.usePictogramPasswordController.value,
+                    child: TextFormField(
+                      key: const Key('passwordField'),
+                      enabled:
+                          !widget._bloc.usePictogramPasswordController.value,
+                      decoration: InputDecoration(
+                        border:
+                            const OutlineInputBorder(borderSide: BorderSide()),
+                        labelText: 'Kodeord',
+                        errorText: (snapshot?.data == true) &&
+                                widget._bloc.passwordController.value != null
+                            ? null
+                            // cant make it shorter because of the string
+                            // ignore: lines_longer_than_80_chars
+                            : 'Kodeord må ikke indeholde mellemrum eller være tom',
+                      ),
+                      onChanged: widget._bloc.onPasswordChange.add,
+                      obscureText: true,
                     ),
-                    onChanged: widget._bloc.onPasswordChange.add,
-                    obscureText: true,
                   );
                 }),
           ),
@@ -200,19 +204,23 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
             child: StreamBuilder<bool>(
                 stream: widget._bloc.validPasswordVerificationStream,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  return TextFormField(
-                    key: const Key('passwordVerifyField'),
-                    enabled: !widget._bloc.usePictogramPasswordController.value,
-                    decoration: InputDecoration(
-                      border:
-                          const OutlineInputBorder(borderSide: BorderSide()),
-                      labelText: 'Gentag kodeord',
-                      errorText: (snapshot?.data == true)
-                          ? null
-                          : 'Kodeord skal være ens',
+                  return Visibility(
+                    visible: !widget._bloc.usePictogramPasswordController.value,
+                    child: TextFormField(
+                      key: const Key('passwordVerifyField'),
+                      enabled:
+                          !widget._bloc.usePictogramPasswordController.value,
+                      decoration: InputDecoration(
+                        border:
+                            const OutlineInputBorder(borderSide: BorderSide()),
+                        labelText: 'Gentag kodeord',
+                        errorText: (snapshot?.data == true)
+                            ? null
+                            : 'Kodeord skal være ens',
+                      ),
+                      onChanged: widget._bloc.onPasswordVerifyChange.add,
+                      obscureText: true,
                     ),
-                    onChanged: widget._bloc.onPasswordVerifyChange.add,
-                    obscureText: true,
                   );
                 }),
           ),
