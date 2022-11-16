@@ -46,7 +46,6 @@ class MockChangeUsernameScreen extends Mock implements ChangeUsernameScreen{
       super.toString();
     }
 }
-
  */
 
 void main() {
@@ -149,6 +148,7 @@ void main() {
     await tester.pump();
 
     verify(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).called(1);
+    verify(screen.authBloc.loggedIn);
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
   });
 
@@ -157,7 +157,7 @@ void main() {
     final screen = ChangeUsernameScreen(user);
     when(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).thenAnswer((_) => Future.value(true));
     //when(screen.authBloc.loggedIn).thenAnswer((realInvocation) => Stream.value(true));
-    //when(await api.user.get(girafUser.id)).thenAnswer((realInvocation) => Stream.value(girafUser));
+    when(await api.user.get(any)).thenAnswer((realInvocation) => Stream.value(girafUser));
 
     await tester.pumpWidget(MaterialApp(home: screen));
     await tester.pump();
@@ -171,8 +171,8 @@ void main() {
     await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
     await tester.pump();
 
-    //verify(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).called(1);
-    //verify(screen.authBloc.loggedIn);
+    verify(screen.authBloc.authenticateFromPopUp("testUsername", "testPassword")).called(1);
+    verify(screen.authBloc.loggedIn);
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
     //expect(find.byKey(const Key('ChangesCompleted')), findsOneWidget);
   });
