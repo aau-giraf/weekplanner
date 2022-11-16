@@ -141,6 +141,7 @@ void main() {
     mockNewCitizenBloc = MockNewCitizenBloc(api);
 
     di.clearAll();
+    di.registerDependency<Api>((_) => api);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<NewCitizenBloc>((_) => mockNewCitizenBloc);

@@ -14,6 +14,7 @@ void main() {
   setUp(() {
     di.clearAll();
     api = Api('any');
+    di.registerDependency<Api>((_) => api);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     bloc = ToolbarBloc();
     di.registerDependency<ToolbarBloc>((_) => bloc);
