@@ -1,6 +1,4 @@
-
 import 'dart:async';
-
 
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/weekday_model.dart';
