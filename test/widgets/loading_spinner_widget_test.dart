@@ -47,7 +47,8 @@ void main() {
     await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     await tester.pump();
-    await tester.tap(find.byKey(const Key('SecondButton')));
+    await tester.tap(find.byKey(const Key('SecondButton')),
+        warnIfMissed: false);
     await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
