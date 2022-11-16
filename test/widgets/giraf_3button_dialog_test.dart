@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
+import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 class MockScreen extends StatelessWidget {
   @override

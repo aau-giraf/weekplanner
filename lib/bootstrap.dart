@@ -1,6 +1,10 @@
+import 'package:api_client/api/api.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
+import 'package:weekplanner/blocs/add_activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
+import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
@@ -9,17 +13,13 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
-import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
-import 'package:weekplanner/blocs/add_activity_bloc.dart';
+import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
-import 'package:weekplanner/blocs/copy_activities_bloc.dart';
-import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 
 /// Bootstrap the project
 class Bootstrap {

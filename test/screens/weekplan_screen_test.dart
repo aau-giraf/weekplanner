@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
@@ -35,7 +36,6 @@ import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
 
 import '../mock_data.dart';
 

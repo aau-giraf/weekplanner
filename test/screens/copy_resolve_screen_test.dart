@@ -1,3 +1,4 @@
+import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -19,7 +20,6 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/copy_resolve_screen.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}

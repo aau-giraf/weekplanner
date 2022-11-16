@@ -20,7 +20,7 @@ packages:
     description:
       path: "."
       ref: "migration/584"
-      resolved-ref: "6adfe7eae33e2a2af608a97a6db825500506afd6"
+      resolved-ref: "3bd4fcecd87e08591adc159df67b4131b6abe927"
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"

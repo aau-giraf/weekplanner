@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:image/image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:image/image.dart';
 
 /// Bloc for retriving an image from a phones gallery,
 /// and send it to the pictogram database
@@ -39,7 +40,9 @@ class UploadFromGalleryBloc extends BlocBase {
   /// pushes an imagePicker screen, then sets the pictogram image,
   /// to the selected image from the gallery
   void chooseImageFromGallery() {
-    ImagePicker().pickImage(source: ImageSource.gallery).then<dynamic>((XFile f) {
+    ImagePicker()
+        .pickImage(source: ImageSource.gallery)
+        .then<dynamic>((XFile f) {
       if (f != null) {
         _publishImage(File(f.path));
         _checkInput();
@@ -49,7 +52,8 @@ class UploadFromGalleryBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null && _pictogramName != null &&
+    if (_file.value != null &&
+        _pictogramName != null &&
         _pictogramName.isNotEmpty) {
       _isInputValid.add(true);
     } else {

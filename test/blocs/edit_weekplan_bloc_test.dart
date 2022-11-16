@@ -4,11 +4,11 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
+import 'package:async_test/async_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
-import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
-import 'package:async_test/async_test.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 

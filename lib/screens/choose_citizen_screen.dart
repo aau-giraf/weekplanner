@@ -11,9 +11,9 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {

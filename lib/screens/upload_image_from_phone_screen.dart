@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';

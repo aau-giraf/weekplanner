@@ -1,5 +1,8 @@
 import 'dart:async';
+
+import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -11,12 +14,11 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
+
 import '../blocs/pictogram_bloc_test.dart';
 import '../test_image.dart';
 

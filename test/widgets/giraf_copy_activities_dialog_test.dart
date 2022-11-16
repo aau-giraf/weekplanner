@@ -2,10 +2,10 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
+import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
-import 'package:weekplanner/di.dart';
 
 
 List<bool> checkboxValues = <bool>[];

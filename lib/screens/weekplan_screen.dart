@@ -4,7 +4,6 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
