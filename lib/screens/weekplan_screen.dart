@@ -67,7 +67,7 @@ class WeekplanScreen extends StatelessWidget {
                   AppBarIcon.changeToCitizen: () {},
                   AppBarIcon.logout: () {},
                   AppBarIcon.settings: () =>
-                      Routes.push<WeekModel>(context,
+                      Routes().push<WeekModel>(context,
                           SettingsScreen(_user)).then((WeekModel newWeek) =>
                           _settingsBloc.loadSettings(_user))
                 }
@@ -77,7 +77,7 @@ class WeekplanScreen extends StatelessWidget {
                   AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                   AppBarIcon.changeToCitizen: () {},
                   AppBarIcon.settings: () =>
-                      Routes.push<WeekModel>(context,
+                      Routes().push<WeekModel>(context,
                           SettingsScreen(_user)).then((WeekModel newWeek) =>
                           _settingsBloc.loadSettings(_user))
                 }
@@ -197,7 +197,7 @@ class WeekplanScreen extends StatelessWidget {
   void _copyActivities(List<bool> days, BuildContext context) {
     _weekplanBloc.copyMarkedActivities(days)
         .catchError((Object error){buildErrorDialog(context, error);});
-    Routes.pop(context);
+    Routes().pop(context);
     _weekplanBloc.toggleEditMode();
   }
 
@@ -242,7 +242,7 @@ class WeekplanScreen extends StatelessWidget {
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }
@@ -270,7 +270,7 @@ class WeekplanScreen extends StatelessWidget {
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }
@@ -304,7 +304,7 @@ class WeekplanScreen extends StatelessWidget {
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }

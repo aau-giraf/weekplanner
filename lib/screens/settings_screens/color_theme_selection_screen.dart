@@ -51,23 +51,23 @@ class ColorThemeSelectorScreen extends StatelessWidget {
     final List<SettingsSectionItem> settingsList = <SettingsSectionItem>[];
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
-        WeekplanColorTheme.standardColorSetting(),
+        WeekplanColorTheme().standardColorSetting(),
         _settingsModel.weekDayColors,
         'Standard', () {
-          Routes.pop(context, WeekplanColorTheme.standardColorSetting());
+          Routes().pop(context, WeekplanColorTheme().standardColorSetting());
     }));
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
-        WeekplanColorTheme.blueWhiteColorSetting(),
+        WeekplanColorTheme().blueWhiteColorSetting(),
         _settingsModel.weekDayColors,
         'Blå/Hvid', () {
-      Routes.pop(context, WeekplanColorTheme.blueWhiteColorSetting());
+      Routes().pop(context, WeekplanColorTheme().blueWhiteColorSetting());
     }));
     settingsList.add(SettingsColorThemeCheckMarkButton(
-        WeekplanColorTheme.greyWhiteColorSetting(),
+        WeekplanColorTheme().greyWhiteColorSetting(),
         _settingsModel.weekDayColors,
         'Grå/Hvid', () {
-      Routes.pop(context, WeekplanColorTheme.greyWhiteColorSetting());
+      Routes().pop(context, WeekplanColorTheme().greyWhiteColorSetting());
     }));
 
     return settingsList;

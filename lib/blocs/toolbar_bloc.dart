@@ -150,7 +150,7 @@ class ToolbarBloc extends BlocBase {
       icon: Image.asset('assets/icons/back.png'),
       tooltip: 'Tilbage',
       onPressed: () {
-        Routes.pop(context);
+        Routes().pop(context);
       },
     );
   }
@@ -203,7 +203,7 @@ class ToolbarBloc extends BlocBase {
                   description: 'Vil du skifte til borger tilstand?',
                   confirmOnPressed: () {
                     _authBloc.setMode(WeekplanMode.citizen);
-                    Routes.pop(context);
+                    Routes().pop(context);
                   },
                   title: 'Skift til borger',
                 );
@@ -342,7 +342,7 @@ class ToolbarBloc extends BlocBase {
                     const ImageIcon(AssetImage('assets/icons/logout.png')),
                 confirmOnPressed: () {
                   _authBloc.logout();
-                  Routes.goHome(context);
+                  Routes().goHome(context);
                 },
               );
             });
@@ -435,9 +435,9 @@ class ToolbarBloc extends BlocBase {
       _loginStatus = snapshot;
       if (snapshot && !_popCalled) {
         // Pop the loading spinner
-        Routes.pop(context);
+        Routes().pop(context);
         // Pop the pop up.
-        Routes.pop(context);
+        Routes().pop(context);
         _popCalled = true;
       }
     });
@@ -449,7 +449,7 @@ class ToolbarBloc extends BlocBase {
   void _showFailureDialog() {
     if (!_loginStatus) {
       //Pop the loading spinner.
-      Routes.pop(_currentContext);
+      Routes().pop(_currentContext);
       showDialog<Center>(
           barrierDismissible: false,
           context: _currentContext,

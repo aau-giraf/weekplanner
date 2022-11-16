@@ -32,12 +32,12 @@ class MockScreen extends StatelessWidget {
             option1Text: 'testOpt1',
             option1Icon: const ImageIcon(null),
             option1OnPressed: () {
-              Routes.pop(context);
+              Routes().pop(context);
             },
             option2Text: 'testOpt2',
             option2Icon: const ImageIcon(null),
             option2OnPressed: () {
-              Routes.pop(context);
+              Routes().pop(context);
             });
         });
   }

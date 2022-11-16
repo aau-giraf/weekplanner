@@ -44,19 +44,19 @@ class CompletedActivityIconScreen extends StatelessWidget {
                           0,
                           _settingsModel.completeMark,
                           'Fjern aktiviteten for borgeren', () {
-                              Routes.pop(context, CompleteMark.Removed);
+                              Routes().pop(context, CompleteMark.Removed);
                           }),
                       SettingsCheckMarkButton(
                           1,
                           _settingsModel.completeMark,
                           'Flueben', () {
-                        Routes.pop(context, CompleteMark.Checkmark);
+                        Routes().pop(context, CompleteMark.Checkmark);
                       }),
                       SettingsCheckMarkButton(
                           2,
                           _settingsModel.completeMark,
                           'Lav aktiviteten grå', () {
-                        Routes.pop(context, CompleteMark.MovedRight);
+                        Routes().pop(context, CompleteMark.MovedRight);
                       }),
                     ]),
                   ],

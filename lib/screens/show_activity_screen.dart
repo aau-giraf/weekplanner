@@ -199,7 +199,7 @@ class ShowActivityScreen extends StatelessWidget {
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
                       onTap: () async {
-                        await Routes.push(
+                        await Routes().push(
                             context,
                             PictogramSearch(
                               user: _girafUser,
@@ -589,7 +589,7 @@ class ShowActivityScreen extends StatelessWidget {
                         const ImageIcon(AssetImage('assets/icons/stop.png')),
                     confirmOnPressed: () {
                       _timerBloc.stopTimer();
-                      Routes.pop(context);
+                      Routes().pop(context);
                     },
                   );
                 });
@@ -628,7 +628,7 @@ class ShowActivityScreen extends StatelessWidget {
                         const ImageIcon(AssetImage('assets/icons/delete.png')),
                     confirmOnPressed: () {
                       _timerBloc.deleteTimer();
-                      Routes.pop(context);
+                      Routes().pop(context);
                     },
                   );
                 });
@@ -666,7 +666,7 @@ class ShowActivityScreen extends StatelessWidget {
             confirmOnPressed: () {
               _timerBloc.stopTimer();
               _timerBloc.playTimer();
-              Routes.pop(context);
+              Routes().pop(context);
             },
           );
         });
@@ -702,7 +702,7 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CompleteStateToggleButton'),
                         onPressed: () {
                           _activityBloc.completeActivity();
-                          Routes.pop(context);
+                          Routes().pop(context);
                           //This removes current context
                           // so back button correctly navigates
                           Navigator.pushAndRemoveUntil(
@@ -736,7 +736,7 @@ class ShowActivityScreen extends StatelessWidget {
                         onPressed: () {
                           _activityBloc.cancelActivity();
                           _activity.state = _activityBloc.getActivity().state;
-                          Routes.pop(context);
+                          Routes().pop(context);
                           //This removes current context
                           // so back button correctly navigates
                           Navigator.pushAndRemoveUntil(

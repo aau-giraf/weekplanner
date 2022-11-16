@@ -72,8 +72,8 @@ class CopyResolveScreen extends StatelessWidget {
               .copyWeekplan(
               <WeekModel>[newWeekModel], currentUser, forThisCitizen)
               .then((_) {
-            Routes.goHome(context);
-            Routes.push(context, WeekplanSelectorScreen(currentUser));
+            Routes().goHome(context);
+            Routes().push(context, WeekplanSelectorScreen(currentUser));
           });
         }
       },

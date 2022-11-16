@@ -41,7 +41,7 @@ class MockLoginScreenState extends LoginScreenState {
   @override
   void creatingNotifyDialog(String description, String key) {
     /// Remove the loading spinner
-    Routes.pop(currentContext);
+    Routes().pop(currentContext);
     /// Show the new NotifyDialog
     showDialog<Center>(
         barrierDismissible: false,

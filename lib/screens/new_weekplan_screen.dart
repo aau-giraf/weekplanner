@@ -38,7 +38,7 @@ class NewWeekplanScreen extends StatelessWidget {
           existingWeekPlans: existingWeekPlans,
         );
         if (newWeekPlan != null) {
-          Routes.pop<WeekModel>(context, newWeekPlan);
+          Routes().pop<WeekModel>(context, newWeekPlan);
         }
       },
     );

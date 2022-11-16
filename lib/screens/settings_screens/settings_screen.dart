@@ -70,7 +70,7 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                   'Farver på ugeplan',
                       () async {
-                          final Object result = await Routes.push(
+                          final Object result = await Routes().push(
                               context, ColorThemeSelectorScreen(user: _user));
                           settingsModel.weekDayColors = result;
                           _settingsBloc.updateSettings(_user.id, settingsModel)
@@ -84,7 +84,7 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                   'Tegn for udførelse',
                       () async {
-                          final Object result =  await Routes.push(context,
+                          final Object result =  await Routes().push(context,
                           CompletedActivityIconScreen(_user));
                           if (result != null){
                             settingsModel.completeMark = result;
@@ -126,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
             return SettingsSection('Ugeplan', <SettingsSectionItem>[
               SettingsArrowButton(
                 'Antal dage', () async {
-                  final Object result = await Routes.push(
+                  final Object result = await Routes().push(
                       context, NumberOfDaysScreen(_user));
                   if(result != null) {
                     settingsModel.nrOfDaysToDisplay = result;
@@ -210,7 +210,7 @@ class SettingsScreen extends StatelessWidget {
         AsyncSnapshot<SettingsModel> settingsSnapshot) {
           return SettingsSection('Privatliv', <SettingsSectionItem>[
             SettingsArrowButton('Privatlivsinformationer', () =>
-              Routes.push(context, PrivacyInformationScreen())
+              Routes().push(context, PrivacyInformationScreen())
                 .then((Object object) => _settingsBloc.loadSettings(_user)),
             ),
           ]);
@@ -228,7 +228,7 @@ class SettingsScreen extends StatelessWidget {
             return SettingsSection('Tidsrepræsentation', <SettingsSectionItem>[
               SettingsArrowButton('Indstillinger for tidsrepræsentation',
                   () async {
-                final Object result = await Routes
+                final Object result = await Routes()
                     .push(context, TimeRepresentationScreen(_user));
                 settingsModel.defaultTimer = result;
                 _settingsBloc.updateSettings(_user.id, settingsModel)

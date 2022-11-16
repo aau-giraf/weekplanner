@@ -64,7 +64,7 @@ void _runApp() {
               return ChooseCitizenScreen();
             } else {
               // Not loggedIn pop context to login screen.
-              Routes.goHome(context);
+              Routes().goHome(context);
               return LoginScreen();
             }
           })));

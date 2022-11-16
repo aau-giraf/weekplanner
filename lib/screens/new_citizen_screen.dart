@@ -34,7 +34,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
   Roles _role = Roles.citizen;
 
   void previousRoute(GirafUserModel response) {
-    Routes.pop<GirafUserModel>(context, response);
+    Routes().pop<GirafUserModel>(context, response);
     widget._bloc.resetBloc();
   }
 

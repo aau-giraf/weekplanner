@@ -19,7 +19,7 @@ class MockScreen extends StatelessWidget {
           ElevatedButton(
               key: const Key('SecondButton'),
               onPressed: () {
-                Routes.pop(context);
+                Routes().pop(context);
               },
               child: const Text('')),
         ],

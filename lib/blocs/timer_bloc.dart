@@ -60,9 +60,6 @@ class TimerBloc extends BlocBase {
   // Audio player used for ding sound.
   static final AudioPlayer _volumePlayer = AudioPlayer();
 
-  final AudioCache _audioPlayer =
-      AudioCache(prefix: 'audio/');
-
   final AssetSource _audioFile = AssetSource('audio/dingSound.wav');
   final int _updatePeriod = 1000;
 
@@ -96,11 +93,11 @@ class TimerBloc extends BlocBase {
   }
 
   List<int> _durationToTimestamp(Duration duration) {
-    var _inHours = duration.inHours;
-    var _inMinutes = duration.inMinutes.remainder(60);
-    var _inSeconds = duration.inSeconds.remainder(60);
+    final int _inHours = duration.inHours;
+    final int _inMinutes = duration.inMinutes.remainder(60);
+    final int _inSeconds = duration.inSeconds.remainder(60);
 
-    final List<int> timestamp = [
+    final List<int> timestamp = <int>[
       _inHours,
       _inMinutes,
       _inSeconds

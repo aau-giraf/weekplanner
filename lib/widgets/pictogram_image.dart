@@ -61,7 +61,7 @@ class PictogramImage extends StatelessWidget {
                 if (!_bloc.delete(pictogram)) {
                   _notifyErrorOnDeleteDialog(context);
                 }
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }

@@ -86,7 +86,7 @@ class _PictogramSearchState extends State<PictogramSearch> {
                                     pictogram.userId == widget.user.id,
                                     needsTitle: true,
                                     onPressed: () =>
-                                        Routes.pop(context, pictogram)))
+                                        Routes().pop(context, pictogram)))
                                     .toList(),
                                 controller: _bloc.sc
                             )
@@ -144,7 +144,7 @@ class _PictogramSearchState extends State<PictogramSearch> {
                             buttonKey: 'TilføjFraGalleriButton',
                             assetPath: 'assets/icons/gallery.png',
                             dialogFunction: (BuildContext context) {
-                              Routes.push(
+                              Routes().push(
                                   context, UploadImageFromPhone());
                             }
                           ),
@@ -153,7 +153,7 @@ class _PictogramSearchState extends State<PictogramSearch> {
                               buttonKey: 'TagBilledeButton',
                               assetPath: 'assets/icons/camera.png',
                               dialogFunction: (BuildContext context) {
-                                Routes.push(
+                                Routes().push(
                                     context, TakePictureWithCamera());
                               }
                           )

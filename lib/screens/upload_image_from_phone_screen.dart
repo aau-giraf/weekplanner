@@ -84,7 +84,7 @@ class UploadImageFromPhone extends StatelessWidget {
             text: 'Gem',
             onPressed: () {
               _uploadFromGallery.createPictogram().listen((PictogramModel p) {
-                Routes.pop(context, p);
+                Routes().pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
               });

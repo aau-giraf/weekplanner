@@ -40,18 +40,18 @@ class TimeRepresentationScreen extends StatelessWidget {
                         'Vælg Tidsrepræsentation', <SettingsSectionItem>[
                       SettingsCheckMarkButton(DefaultTimer.PieChart,
                           _settingsModel.defaultTimer, 'Standard', () {
-                            Routes.pop(context, DefaultTimer.PieChart);
+                            Routes().pop(context, DefaultTimer.PieChart);
                       }, DefaultTimer.PieChart),
                       SettingsCheckMarkButton(DefaultTimer.Hourglass,
                           _settingsModel.defaultTimer, 'Timeglas', () {
-                            Routes.pop(context, DefaultTimer.Hourglass);
+                            Routes().pop(context, DefaultTimer.Hourglass);
                       }, DefaultTimer.Hourglass),
                       SettingsCheckMarkButton(DefaultTimer.Numeric,
                           _settingsModel.defaultTimer, 'Nedtælling', () {
                         _settingsModel.defaultTimer = DefaultTimer.Numeric;
                         _settingsBloc.updateSettings(_user.id, _settingsModel)
                             .listen((_) {
-                          Routes.pop(context, DefaultTimer.Numeric);
+                          Routes().pop(context, DefaultTimer.Numeric);
                         });
                       }, DefaultTimer.Numeric)
                     ]),

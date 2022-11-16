@@ -63,7 +63,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
                         child: GirafButton(
                           key: const Key('ChoiceBoardDialogCancelButton'),
-                          onPressed: () => Routes.pop(context),
+                          onPressed: () => Routes().pop(context),
                           icon: const ImageIcon(
                               AssetImage('assets/icons/cancel.png')),
                         )),
@@ -131,7 +131,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                    _selectPictogramFromChoiceBoardPopup(context,
                      pictograms, index)
                        .then((_) {
-                   Routes.pop(context);
+                   Routes().pop(context);
                  });
                  }
                  else{
@@ -188,7 +188,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
       _activityBloc.update();
       _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
-        Routes.pop(context);
+        Routes().pop(context);
       });
       //Closes the dialog box
     }

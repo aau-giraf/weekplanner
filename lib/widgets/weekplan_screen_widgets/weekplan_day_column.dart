@@ -442,7 +442,7 @@ class WeekplanDayColumn extends StatelessWidget {
           });
     }
     else if(!inEditMode){
-      Routes.push(context, ShowActivityScreen(activities[index], user))
+      Routes().push(context, ShowActivityScreen(activities[index], user))
           .whenComplete(() {weekplanBloc.getWeekday(weekday.day)
           .catchError((Object error) {
             creatingNotifyDialog(error, context);
@@ -500,7 +500,7 @@ class WeekplanDayColumn extends StatelessWidget {
                         key: const Key('AddActivityButton'),
                         child: Image.asset('assets/icons/add.png'),
                         onPressed: () async {
-                          Routes.push(context, PictogramSearch(user: user,))
+                          Routes().push(context, PictogramSearch(user: user,))
                               .then((Object object) {
                             if (object is PictogramModel) {
                               final PictogramModel newPictogram = object;

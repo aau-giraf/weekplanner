@@ -89,7 +89,7 @@ class TakePictureWithCamera extends StatelessWidget {
             onPressed: () {
               _takePictureWithCamera.createPictogram().listen((PictogramModel p)
               {
-                Routes.pop(context, p);
+                Routes().pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
               });

@@ -39,7 +39,7 @@ class MockScreen extends StatelessWidget {
               confirmButtonIcon: const ImageIcon(null),
               confirmOnPressed: (List<bool> days, BuildContext context) {
                 checkboxValues = days;
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }

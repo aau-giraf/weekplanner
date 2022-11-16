@@ -50,7 +50,7 @@ class LoginScreenState extends State<LoginScreen> {
         // Return if logging out
         if (snapshot) {
           // Pop the loading spinner
-          Routes.pop(context);
+          Routes().pop(context);
         }
         // Stop listening for future logins
         loginListener.cancel();
@@ -92,7 +92,7 @@ class LoginScreenState extends State<LoginScreen> {
   /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
     /// Remove the loading spinner
-    Routes.pop(currentContext);
+    Routes().pop(currentContext);
 
     /// Show the new NotifyDialog
     showDialog<Center>(

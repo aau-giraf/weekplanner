@@ -44,7 +44,7 @@ class EditWeekPlanScreen extends StatelessWidget {
             selectorBloc: selectorBloc);
 
         if (result != null) {
-          Routes.pop<WeekModel>(context, result);
+          Routes().pop<WeekModel>(context, result);
         }
       },
     );

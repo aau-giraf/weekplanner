@@ -114,7 +114,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
           style: brugerStyle,
           onPressed: () async {
           final Object result =
-          await Routes.push(context, NewCitizenScreen());
+          await Routes().push(context, NewCitizenScreen());
           final DisplayNameModel newUser =
           DisplayNameModel.fromGirafUser(result);
           list.add(CitizenAvatar(
@@ -171,7 +171,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   Future<void> _pushWeekplanSelector(DisplayNameModel user) async{
     bool repush = true;
     while (repush) {
-      final bool result = await Routes.push<bool>(context,
+      final bool result = await Routes().push<bool>(context,
           WeekplanSelectorScreen(user));
       repush = result?? false;
     }
