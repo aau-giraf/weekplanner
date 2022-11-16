@@ -9,20 +9,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
-import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
 
-class ChangeUsernameScreen  extends StatelessWidget {
+
+/// Change username screen
+class ChangeUsernameScreen extends StatelessWidget {
   /// Constructor
   ChangeUsernameScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
@@ -44,8 +42,97 @@ class ChangeUsernameScreen  extends StatelessWidget {
   BuildContext currentContext;
   bool loginStatus = false;
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: GirafAppBar(title: 'Skift brugernavn'),
+        body: buildUsernameChange(context));
+  }
 
-  /// Function that creates a dialog that confirms the user.
+  /// Change username screen build
+  Widget buildUsernameChange(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final bool portrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    ///Used to check if the keyboard is visible
+    final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
+
+    return Scaffold(
+      body: Container(
+        width: screenSize.width,
+        height: screenSize.height,
+        padding: portrait
+            ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
+            : const EdgeInsets.fromLTRB(200, 0, 200, 8),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    const Text(
+                      'Nyt brugernavn',
+                      style: TextStyle(
+                        fontSize: GirafFont.large,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: theme.GirafColors.grey, width: 1),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20.0)),
+                            color: theme.GirafColors.white),
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          key: const Key('UsernameKey'),
+                          style: const TextStyle(fontSize: GirafFont.large),
+                          controller: newUsernameCtrl,
+                          obscureText: false,
+                          decoration:
+                            const InputDecoration.collapsed(
+                              hintStyle: TextStyle(
+                                  color: theme.GirafColors.loginFieldText),
+                            fillColor: theme.GirafColors.white,
+                            ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      child: Container(
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: RaisedButton(
+                            key: const Key('SaveUsernameKey'),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            child: const Text(
+                              'Gem',
+                              style: TextStyle(color: theme.GirafColors.white),
+                            ),
+                            onPressed: () {
+                              verifyUsername(context);
+                            },
+                            color: theme.GirafColors.dialogButton,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ]),
+      ),
+    );
+  }
+
+  /// Method that creates a dialog that confirms the user.
   void usernameConfirmationDialog(Stream<GirafUserModel> girafUser){
     showDialog<Center>(
         barrierDismissible: false,
@@ -110,9 +197,11 @@ class ChangeUsernameScreen  extends StatelessWidget {
             ),
           );
         }
-        );
+    );
   }
 
+  /// This method checks if the password is correct
+  /// if not, an error dialog will be displayed
   void confirmUser(Stream<GirafUserModel> girafUser) async {
     loginStatus = false;
 
@@ -168,134 +257,8 @@ class ChangeUsernameScreen  extends StatelessWidget {
   }
 
 
-  /// Function that creates the notify dialog,
-  /// depeninding which login error occured
-  void creatingErrorDialog(String description, String key) {
-    /// Show the new NotifyDialog
-    showDialog<Center>(
-        barrierDismissible: false,
-        context: currentContext,
-        builder: (BuildContext context) {
-          return GirafNotifyDialog(
-              title: 'Fejl', description: description, key: Key(key));
-        });
-  }
-
-  /// Create an unknown error dialog
-  void unknownErrorDialog(String key){
-    creatingErrorDialog('Der skete en ukendt fejl, prøv igen eller '
-        'kontakt en administrator', 'key');
-  }
-
-  /// Updates the user with new username
-  Future updateUser(Stream<GirafUserModel> userStream) async{
-    await for (final value in userStream){
-      value.username = newUsernameCtrl.text;
-      _api.user.update(value);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: GirafAppBar(title: 'Skift brugernavn på bruger: ' + _user.displayName),
-        body: buildUsernameChange(context));
-  }
-
-  Widget buildUsernameChange(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final bool portrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
-    ///Used to check if the keyboard is visible
-    final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
-
-    return Scaffold(
-      body: Container(
-        width: screenSize.width,
-        height: screenSize.height,
-        padding: portrait
-            ? const EdgeInsets.fromLTRB(50, 0, 50, 0)
-            : const EdgeInsets.fromLTRB(200, 0, 200, 8),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    const Text(
-                      'Nyt brugernavn',
-                      style: TextStyle(
-                        fontSize: GirafFont.large,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: theme.GirafColors.grey, width: 1),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20.0)),
-                            color: theme.GirafColors.white),
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          key: const Key('UsernameKey'),
-                          style: const TextStyle(fontSize: GirafFont.large),
-                          controller: newUsernameCtrl,
-                          obscureText: false,
-                          decoration:
-                            InputDecoration.collapsed(
-                              hintText: _user.displayName,
-                              hintStyle: TextStyle(
-                                  color: theme.GirafColors.loginFieldText),
-                            fillColor: theme.GirafColors.white,
-                            ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: Container(
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: RaisedButton(
-                            key: const Key('SaveUsernameKey'),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: const Text(
-                              'Gem',
-                              style: TextStyle(color: theme.GirafColors.white),
-                            ),
-                            onPressed: () {
-                              updateUsername(context);
-                            },
-                            color: theme.GirafColors.dialogButton,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ]),
-      ),
-    );
-  }
-
-  /// This method is used to extract a GirafUserModel object from the stream.
-  Future<GirafUserModel> GetGirafUser(Stream<GirafUserModel> stream) async {
-    GirafUserModel girafUser;
-
-    await for(var value in stream){
-      girafUser = value;
-    }
-    return girafUser;
-  }
-
-  Future<void> updateUsername(BuildContext context) async {
+  /// This method verifies the username.
+  Future<void> verifyUsername(BuildContext context) async {
     currentContext = context;
     final girafUser = await GetGirafUser(_api.user.me());
 
@@ -309,6 +272,40 @@ class ChangeUsernameScreen  extends StatelessWidget {
       creatingErrorDialog("Udfyld venligst nyt brugernavn", "NewUsernameEmpty");
     else if (newUsernameCtrl.text != girafUser.username) {
       usernameConfirmationDialog(await _api.user.get(_user.id));
+    }
+  }
+
+  /// Function that creates the notify dialog,
+  /// depeninding which login error occured
+  void creatingErrorDialog(String description, String key) {
+    /// Show the new NotifyDialog
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: currentContext,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl', description: description, key: Key(key));
+        });
+  }
+
+  /// This method is used to extract a GirafUserModel object from the stream.
+  Future<GirafUserModel> GetGirafUser(Stream<GirafUserModel> stream) async {
+    GirafUserModel girafUser;
+    await for(var value in stream) { girafUser = value; }
+    return girafUser;
+  }
+
+  /// Create an unknown error dialog
+  void unknownErrorDialog(String key){
+    creatingErrorDialog('Der skete en ukendt fejl, prøv igen eller '
+        'kontakt en administrator', 'key');
+  }
+
+  /// Updates the user with new username
+  Future updateUser(Stream<GirafUserModel> userStream) async{
+    await for (final value in userStream){
+      value.username = newUsernameCtrl.text;
+      _api.user.update(value);
     }
   }
 }
