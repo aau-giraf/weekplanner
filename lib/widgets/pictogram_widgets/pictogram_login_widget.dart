@@ -26,9 +26,11 @@ class PictogramLogin extends StatelessWidget {
     //return GestureDetector(
     return Column(
           children: <Widget>[
-            Flexible(
-                child: PictogramChoices(pictogramOptions: pictogramOptions)
-            )
+            //Flexible(
+              const Text("hej")
+    //)
+                //child: PictogramChoices()
+
             ,
             const Text('Hejsa')
           ]
