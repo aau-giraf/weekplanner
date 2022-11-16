@@ -7,7 +7,7 @@ import '../style/custom_color.dart' as theme;
 /// An AlertDialog for notifications, with a title and description as input.
 /// The only action that the dialog can do is pressing okay, as the
 /// dialog is intended to only notify the user.
-/// Other dialogs can be seen at: https://github.com/aau-giraf/wiki/blob/master/design_guide/dialog.md
+/// Other dialogs can be seen at: https://aau-giraf.github.io/wiki/UI_Design/Design_Guide/dialog/
 class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
   ///The dialog displays the title and description, with a button
   ///to conform the notification, which simply closes the dialog.
