@@ -51,6 +51,7 @@ void main() {
     api.user = MockUserApi();
     mockObserver = MockUserApi();
 
+    di.registerDependency<Api>((_) => api);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));

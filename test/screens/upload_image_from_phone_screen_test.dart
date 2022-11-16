@@ -63,6 +63,7 @@ void main() {
     di.clearAll();
     di.registerDependency<UploadFromGalleryBloc>((_) => bloc);
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<Api>((_) => api);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
   });
 

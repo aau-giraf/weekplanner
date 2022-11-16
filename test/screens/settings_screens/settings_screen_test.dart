@@ -84,6 +84,7 @@ void main() {
       showPopup: false,
     );
 
+    di.registerDependency<Api>((_) => api);
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
     settingsBloc = SettingsBloc(api);
