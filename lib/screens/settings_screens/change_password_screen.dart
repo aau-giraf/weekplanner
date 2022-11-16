@@ -213,7 +213,8 @@ class ChangePasswordScreen extends StatelessWidget {
       });
     }).catchError((Object error) {
       if (error is ApiException) {
-        print("ApiExceptionCaught" + error.errorMessage);
+        print("ApiExceptionCaught: " + error.errorMessage);
+        creatingErrorDialog("Forkert adgangskode", "WrongPassword");
       } else {
         print("Other error");
       }
@@ -242,8 +243,7 @@ class ChangePasswordScreen extends StatelessWidget {
     //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
     //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
     if (newPasswordCtrl.text != repeatNewPasswordCtrl.text)
-      creatingErrorDialog(
-          "Nyt brugernavn må ikke være det samme som det nuværende brugernavn.",
+      creatingErrorDialog("Den gentagne adgangskode stemmer ikke overens",
           "NewPasswordNotRepeated");
     else if (currentPasswordCtrl.text == "" ||
         newPasswordCtrl.text == "" ||
