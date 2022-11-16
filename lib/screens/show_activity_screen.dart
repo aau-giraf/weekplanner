@@ -42,8 +42,7 @@ class ShowActivityScreen extends StatelessWidget {
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
 
-  final PictogramImageBloc _pictoImageBloc =
-      di.get<PictogramImageBloc>();
+  final PictogramImageBloc _pictoImageBloc = di.get<PictogramImageBloc>();
   final TimerBloc _timerBloc = di.get<TimerBloc>();
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
   final ActivityBloc _activityBloc = di.get<ActivityBloc>();
@@ -332,9 +331,13 @@ class ShowActivityScreen extends StatelessWidget {
         });
   }
 
+  /// Button style for the choice board
   final ButtonStyle choiceBoardStyle = ElevatedButton.styleFrom(
-    primary: theme.GirafColors.gradientDefaultOrange,
-    onSurface: theme.GirafColors.gradientDisabledOrange,
+    backgroundColor: theme.GirafColors.gradientDefaultOrange,
+    disabledForegroundColor:
+        theme.GirafColors.gradientDisabledOrange.withOpacity(0.38),
+    disabledBackgroundColor:
+        theme.GirafColors.gradientDisabledOrange.withOpacity(0.12),
     padding: const EdgeInsets.all(8.0),
   );
 

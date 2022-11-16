@@ -474,8 +474,9 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
+  /// Button style for the add activity screen
   final ButtonStyle addActivityStyle = ElevatedButton.styleFrom(
-    primary: theme.GirafColors.buttonColor,
+    backgroundColor: theme.GirafColors.buttonColor,
   );
 
   Container _buildAddActivityButton(WeekdayModel weekday, BuildContext context){

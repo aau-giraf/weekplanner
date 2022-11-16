@@ -12,8 +12,9 @@ class AuthBloc extends BlocBase {
   AuthBloc(this._api);
 
   /// String is used then changing from citizen to guardian mode
-  /// the username is saved so only the password is needed.
   String loggedInUsername;
+
+  /// the username is saved so only the password is needed.
   int loggedInRole;
 
   final Api _api;
