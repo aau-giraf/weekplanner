@@ -105,7 +105,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     final int role = _authBloc.loggedInRole;
 
     final ButtonStyle brugerStyle = TextButton.styleFrom(
-      primary: Colors.black
+      foregroundColor: Colors.black
     );
 
     /// Checks user role and gives option to add Citizen if user is Guardian

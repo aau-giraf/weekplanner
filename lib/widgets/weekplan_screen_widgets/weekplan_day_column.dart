@@ -289,7 +289,7 @@ class WeekplanDayColumn extends StatelessWidget {
         return LongPressDraggable<Tuple2<ActivityModel, Weekday>>(
           data: Tuple2<ActivityModel, Weekday>(
               weekday.activities[index], weekday.day),
-          dragAnchor: DragAnchor.pointer,
+          dragAnchorStrategy: pointerDragAnchorStrategy,
           child: _pictogramIconStack(context, index, weekday, inEditMode),
           childWhenDragging: Opacity(
               opacity: 0.5,

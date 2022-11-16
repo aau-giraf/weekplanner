@@ -122,7 +122,7 @@ class LoginScreenState extends State<LoginScreen> {
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
     final ButtonStyle girafButtonStyle = ElevatedButton.styleFrom(
-      primary: theme.GirafColors.loginButtonColor,
+      backgroundColor: theme.GirafColors.loginButtonColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),
