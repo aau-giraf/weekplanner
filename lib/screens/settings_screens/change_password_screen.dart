@@ -38,7 +38,7 @@ class ChangePasswordScreen extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final Api _api = di.getDependency<Api>();
-  ChangeUsernameScreen changeUsernameScreen;
+  BuildContext currentContext;
 
   //const ChangePasswordScreen({Key key, this._user}) : super(key: key);
 
@@ -177,12 +177,7 @@ class ChangePasswordScreen extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              try {
-                                ChangePassword(_user, currentPasswordCtrl.text,
-                                    newPasswordCtrl.text);
-                              } on ApiException catch (e) {
-                                print(e.errorMessage);
-                              }
+                              validatePasswords(context);
                             },
                             color: theme.GirafColors.dialogButton,
                           ),
@@ -199,14 +194,29 @@ class ChangePasswordScreen extends StatelessWidget {
 
   //This function, found in the account_api, handles the password change, when the "Gem"-button is clicked
   void ChangePassword(
-      DisplayNameModel user, String oldPassword, String newPassword) {
+      DisplayNameModel user, String oldPassword, String newPassword) async {
     //authBloc.authenticate(user.displayName, oldPassword);
-    _api.account
-        .changePasswordWithOld(_user.id, oldPassword, newPassword)
-        .listen((status) {
-      print("Status: " + status.toString());
-    }).onData((data) {
-      print("Data: " + data.toString());
+    bool loginStatus = false;
+
+    await authBloc
+        .authenticate(authBloc.loggedInUsername, oldPassword)
+        .then((dynamic result) {
+      StreamSubscription<bool> loginListener;
+      loginListener = authBloc.loggedIn.listen((bool snapshot) {
+        loginStatus = snapshot;
+        if (snapshot) {
+          _api.account.changePasswordWithOld(user.id, oldPassword, newPassword);
+        }
+
+        /// Stop listening for future logins
+        loginListener.cancel();
+      });
+    }).catchError((Object error) {
+      if (error is ApiException) {
+        print("ApiExceptionCaught" + error.errorMessage);
+      } else {
+        print("Other error");
+      }
     });
   }
 
@@ -220,4 +230,38 @@ class ChangePasswordScreen extends StatelessWidget {
 
     //GetGuardians(guardians);
     ChangePasswordForAccount(passStream);*/
+  void validatePasswords(BuildContext context) async {
+    //Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
+    currentContext = context;
+
+    //_api.user.getCitizens()
+    // _api.user.getGuardians()
+
+    /// This if-statement should be implemented when the getUserByName method is implemented correctly
+    /// This should check if the new username is already in the database.
+    //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
+    //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
+    if (newPasswordCtrl.text != repeatNewPasswordCtrl.text)
+      creatingErrorDialog(
+          "Nyt brugernavn må ikke være det samme som det nuværende brugernavn.",
+          "NewPasswordNotRepeated");
+    else if (currentPasswordCtrl.text == "" ||
+        newPasswordCtrl.text == "" ||
+        repeatNewPasswordCtrl == "")
+      creatingErrorDialog("Udfyld venligst.", "NewPasswordEmpty");
+    else {
+      ChangePassword(_user, currentPasswordCtrl.text, newPasswordCtrl.text);
+    }
+  }
+
+  void creatingErrorDialog(String description, String key) {
+    /// Show the new NotifyDialog
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: currentContext,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: 'Fejl', description: description, key: Key(key));
+        });
+  }
 }
