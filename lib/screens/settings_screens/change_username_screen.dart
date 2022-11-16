@@ -41,9 +41,9 @@ class ChangeUsernameScreen  extends StatelessWidget {
   final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final Api _api = di.getDependency<Api>();
-  final ToolbarBloc toolbarBloc = di.getDependency<ToolbarBloc>();
   BuildContext currentContext;
   bool loginStatus = false;
+
 
   /// Function that creates a dialog that confirms the user.
   void usernameConfirmationDialog(Stream<GirafUserModel> girafUser){
@@ -125,6 +125,13 @@ class ChangeUsernameScreen  extends StatelessWidget {
         if (snapshot) {
           updateUser(girafUser);
           Routes.pop(currentContext);
+          showDialog<Center>(
+              barrierDismissible: false,
+              context: currentContext,
+              builder: (BuildContext context) {
+                return GirafNotifyDialog(
+                    title: 'Brugernavn er gemt', description: 'Dine ændringer er blevet gemt', key: Key("ChangesCompleted"));
+              });
         }
         /// Stop listening for future logins
         loginListener.cancel();
@@ -142,7 +149,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
               }
               else{
                 creatingErrorDialog(
-                    'Der er i øjeblikket ikke forbindelse til serveren.',
+                    'Der er i øjeblikket ikke forbindelse til serveren',
                     'ServerConnectionError');
               }
             }).catchError((Object error){
@@ -150,7 +157,7 @@ class ChangeUsernameScreen  extends StatelessWidget {
             });
           } else {
             creatingErrorDialog(
-                'Der er ingen forbindelse til internettet.',
+                'Der er ingen forbindelse til internettet',
                 'NoConnectionToInternet');
           }
         });
@@ -278,22 +285,29 @@ class ChangeUsernameScreen  extends StatelessWidget {
     );
   }
 
-  void updateUsername(BuildContext context) async {
-    currentContext = context;
-    //Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
+  /// This method is used to extract a GirafUserModel object from the stream.
+  Future<GirafUserModel> GetGirafUser(Stream<GirafUserModel> stream) async {
+    GirafUserModel girafUser;
 
-    //_api.user.getCitizens()
-    // _api.user.getGuardians()
+    await for(var value in stream){
+      girafUser = value;
+    }
+    return girafUser;
+  }
+
+  Future<void> updateUsername(BuildContext context) async {
+    currentContext = context;
+    final girafUser = await GetGirafUser(_api.user.me());
 
     /// This if-statement should be implemented when the getUserByName method is implemented correctly
     /// This should check if the new username is already in the database.
     //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
-      //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
-    if (newUsernameCtrl.text == _user.displayName)
-      creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn.", "NewUsernameEqualOld");
+      //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget", "");
+    if (newUsernameCtrl.text == girafUser.username)
+      creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn", "NewUsernameEqualOld");
     else if (newUsernameCtrl.text == "")
-      creatingErrorDialog("Udfyld venligst nyt brugernavn.", "NewUsernameEmpty");
-    else if (newUsernameCtrl.text != _user.displayName) {
+      creatingErrorDialog("Udfyld venligst nyt brugernavn", "NewUsernameEmpty");
+    else if (newUsernameCtrl.text != girafUser.username) {
       usernameConfirmationDialog(await _api.user.get(_user.id));
     }
   }
