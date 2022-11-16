@@ -85,9 +85,10 @@ void main() {
     });
 
     di.clearAll();
-    di.registerDependency<AuthBloc>(() => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
-    di.registerDependency<SettingsBloc>(() => settingsBloc);
+    di.registerDependency<Api>((_) => api);
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<SettingsBloc>((_) => settingsBloc);
   });
 
   testWidgets('Renders  ColorThemeSelectorScreen', (WidgetTester tester) async {

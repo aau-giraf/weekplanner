@@ -48,7 +48,8 @@ void main() {
     authBloc = AuthBloc(api);
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
-    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<Api>((_) => api);
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     toolbarBloc = ToolbarBloc();
     di.registerDependency<ChooseCitizenBloc>(() => bloc);
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
@@ -89,11 +90,11 @@ void main() {
   });
 
   testWidgets('Has add citizen button', (WidgetTester tester) async {
-    final int role = authBloc.loggedInRole;
+    final Role role = authBloc.loggedInUser.role;
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-    if(role == Role.Guardian.index) {
-      expect(find.byType(TextButton), findsNWidgets(1));
+    if(role == Role.Guardian) {
+      expect(find.byType(FlatButton), findsNWidgets(1));
     } else {
       expect(find.byType(TextButton), findsNWidgets(0));
     }

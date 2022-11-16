@@ -54,9 +54,10 @@ void main() {
     bloc = MockTakePictureBloc(api);
 
     di.clearAll();
-    di.registerDependency<TakePictureWithCameraBloc>(() => bloc);
-    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
-    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<TakePictureWithCameraBloc>((_) => bloc);
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<Api>((_) => api);
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {

@@ -219,13 +219,14 @@ void main() {
     setupApiCalls();
 
     di.clearAll();
-    di.registerDependency<WeekplansBloc>(() => bloc);
-    di.registerDependency<EditWeekplanBloc>(() => editBloc);
-    di.registerDependency<AuthBloc>(() => AuthBloc(api));
-    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
-    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
-    di.registerDependency<CopyResolveBloc>(() => CopyResolveBloc(api));
-    di.registerDependency<CopyWeekplanBloc>(() => CopyWeekplanBloc(api));
+    di.registerDependency<WeekplansBloc>((_) => bloc);
+    di.registerDependency<EditWeekplanBloc>((_) => editBloc);
+    di.registerDependency<Api>((_) => api);
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<CopyResolveBloc>((_) => CopyResolveBloc(api));
+    di.registerDependency<CopyWeekplanBloc>((_) => CopyWeekplanBloc(api));
     editBloc = EditWeekplanBloc(api);
     di.registerDependency<WeekplanBloc>(() => WeekplanBloc(api));
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
