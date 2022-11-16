@@ -262,17 +262,12 @@ class ChangeUsernameScreen extends StatelessWidget {
     currentContext = context;
     final girafUser = await GetGirafUser(_api.user.me());
 
-    /// This if-statement should be implemented when the getUserByName method is implemented correctly
-    /// This should check if the new username is already in the database.
-    //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
-      //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget", "");
     if (newUsernameCtrl.text == girafUser.username)
       creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn", "NewUsernameEqualOld");
     else if (newUsernameCtrl.text == "")
       creatingErrorDialog("Udfyld venligst nyt brugernavn", "NewUsernameEmpty");
-    else if (newUsernameCtrl.text != girafUser.username) {
+    else if (newUsernameCtrl.text != girafUser.username)
       usernameConfirmationDialog(await _api.user.get(_user.id));
-    }
   }
 
   /// Function that creates the notify dialog,
