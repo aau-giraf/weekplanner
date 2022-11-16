@@ -267,7 +267,7 @@ class WeekplansBloc extends BlocBase {
     final List<WeekModel> localWeekModels = _weekModel.hasValue ?
     _weekModel.value : null;
     final List<WeekModel> oldLocalWeekModels = _oldWeekModel.hasValue ?
-    _oldWeekModel.value : null;
+    _oldWeekModel.value.toList() : null;
     // Updates the weekplan in the database
     for (WeekModel weekModel in _markedWeekModels.value) {
       _api.week
