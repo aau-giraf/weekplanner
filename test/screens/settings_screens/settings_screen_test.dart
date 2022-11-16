@@ -195,4 +195,10 @@ void main() {
             widget.text == 'Lås tidsstyring'),
         findsOneWidget);
   });
+
+  testWidgets('Settings has Slet bruger button',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        expect(find.text('Slet bruger'), findsOneWidget);
+      });
 }
