@@ -205,7 +205,12 @@ class ChangePasswordScreen extends StatelessWidget {
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
-          _api.account.changePasswordWithOld(user.id, oldPassword, newPassword);
+          print("Snapshot: " + snapshot.toString());
+          _api.account
+              .changePasswordWithOld(user.id, oldPassword, newPassword)
+              .listen((status) {
+            print("Status: " + status.toString());
+          });
         }
 
         /// Stop listening for future logins
@@ -218,7 +223,11 @@ class ChangePasswordScreen extends StatelessWidget {
       } else {
         print("Other error");
       }
-    });
+    }).whenComplete(() => GirafNotifyDialog(
+              key: (Key("PasswordChanged")),
+              title: "Adgangskoden ændret.",
+              description: "Adgangskoden er blevet ændret.",
+            ));
   }
 
   /*Future ChangePasswordForAccount(Stream<bool> passStream) async {
