@@ -299,27 +299,29 @@ class ToolbarBloc extends BlocBase {
   Future<void> _setUserNameOfGuardian() async {
     final Completer<void> completer = Completer<void>();
 
-    switch (_authBloc.loggedInUser.role) {
-      case Role.Citizen:
-        // Get guardians for logged in citizen
-        _api.user.getGuardians(_authBloc.loggedInUser.id)
-          .listen((List<DisplayNameModel> event) {
-            // DisplayNameModel does not have userName, only displayName
-            // Therefore use id to set userName of guardian
-            _api.user.get(event.first.id).listen((GirafUserModel event) {
-              _userNameOfGuardian = event.username;  
-            }).onError((Object error) {
-              completer.completeError(error);
-            });
-        }).onError((Object error) {
-          completer.completeError(error);
-        });
-        break;
-      case Role.Guardian:
-        _userNameOfGuardian = _authBloc.loggedInUser.username;
-        break;
-      default:
-        break;
+    if (_authBloc.loggedInUser?.role != null) {
+      switch (_authBloc.loggedInUser.role) {
+        case Role.Citizen:
+          // Get guardians for logged in citizen
+          _api.user.getGuardians(_authBloc.loggedInUser.id)
+            .listen((List<DisplayNameModel> event) {
+              // DisplayNameModel does not have userName, only displayName
+              // Therefore use id to set userName of guardian
+              _api.user.get(event.first.id).listen((GirafUserModel event) {
+                _userNameOfGuardian = event.username;  
+              }).onError((Object error) {
+                completer.completeError(error);
+              });
+          }).onError((Object error) {
+            completer.completeError(error);
+          });
+          break;
+        case Role.Guardian:
+          _userNameOfGuardian = _authBloc.loggedInUser.username;
+          break;
+        default:
+          break;
+      }
     }
 
     completer.complete();
