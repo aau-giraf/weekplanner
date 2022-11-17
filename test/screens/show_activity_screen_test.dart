@@ -322,6 +322,7 @@ void main() {
     di.clearAll();
     di.registerDependency<ActivityBloc>(() => bloc);
     di.registerDependency<AuthBloc>(() => authBloc);
+    di.registerDependency<Api>(() => api);
     di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<TimerBloc>(() => timerBloc);

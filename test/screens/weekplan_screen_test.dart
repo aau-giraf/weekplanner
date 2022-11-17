@@ -69,6 +69,7 @@ api.pictogram=MockPictogramApi();
     // We register the dependencies needed to build different widgets
     di.registerDependency<AuthBloc>(() => authBloc);
     di.registerDependency<WeekplanBloc>(() => weekplanBloc);
+    di.registerDependency<Api>(() => api);
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));

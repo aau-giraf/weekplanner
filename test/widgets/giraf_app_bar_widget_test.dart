@@ -80,7 +80,7 @@ void main() {
 
   setUp(() {
     di.clearAll();
-    di.registerDependency<Api>((_) => api);
+    di.registerDependency<Api>(() => api);
     authBloc = MockAuth();
     di.registerDependency<AuthBloc>(() => authBloc);
     bloc = ToolbarBloc();
