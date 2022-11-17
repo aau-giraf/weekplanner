@@ -26,21 +26,24 @@ class ChangeUsernameScreen extends StatelessWidget {
     _settingsBloc.loadSettings(_user);
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+  final GlobalKey<FormState> _outerForm= GlobalKey<FormState>();
+  final GlobalKey<FormState> _innerForm = GlobalKey<FormState>();
 
   /// This is the username control, that allows for username extraction
   final TextEditingController usernameCtrl = TextEditingController();
+  /// This is the username control, that allows for new username extraction
   final TextEditingController newUsernameCtrl = TextEditingController();
+  /// This is the username control,
+  /// that allows for username confirmation extraction
   final TextEditingController confirmUsernameCtrl = TextEditingController();
 
   /// Using the authBloc makes it possible to find the user that is logged in.
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
-  final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final Api _api = di.getDependency<Api>();
-  BuildContext currentContext;
-  bool loginStatus = false;
+  final DisplayNameModel _user;
+  BuildContext currentContext; //ignore: public_member_api_docs
+  bool loginStatus = false; //ignore: public_member_api_docs
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,7 @@ class ChangeUsernameScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Form(
-                key: _formKey,
+                key: _outerForm,
                 child: Column(
                   children: <Widget>[
                     const Text(
@@ -99,6 +102,7 @@ class ChangeUsernameScreen extends StatelessWidget {
                               hintStyle: TextStyle(
                                   color: theme.GirafColors.loginFieldText),
                             fillColor: theme.GirafColors.white,
+                              hintText: 'Brugernavn',
                             ),
                         ),
                       ),
@@ -140,10 +144,10 @@ class ChangeUsernameScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return AlertDialog(
             titlePadding: const EdgeInsets.all(0.0),
-            title: Center(
+            title: const Center(
                 child: GirafTitleHeader( title: "Verificer bruger", )),
             content: Form(
-              key: _formKey1,
+              key: _innerForm,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
