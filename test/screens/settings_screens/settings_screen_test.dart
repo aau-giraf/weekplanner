@@ -17,6 +17,7 @@ import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
 SettingsModel mockSettings;
@@ -208,6 +209,6 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
-    expect(find.text('For at slette denne bruger'), findsOneWidget);
+    expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
 }

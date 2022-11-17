@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
         _buildWeekPlanSection(context),
         _buildTimerSection(context),
         _buildTimeRepresentationSettings(context),
-        _buildUserSettings(),
+        _buildUserSettings(context),
         _buildPrivacySection()
       ],
     );
@@ -199,20 +199,29 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
-  Widget _buildUserSettings() {
+  Widget _buildUserSettings(BuildContext context) {
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
       SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-      SettingsDeleteButton('Slet bruger', () {return GirafConfirmDialog(
-        confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
-        confirmButtonText: 'Slet',
-        description: 'For at slette denne bruger, indtast ${_user.displayName} i feltet herunder ',
-        confirmOnPressed: (){
+      SettingsDeleteButton('Slet bruger', () {showDialog<Center>(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+    return GirafConfirmDialog(
+    title: 'Slet Bruger',
+    description: 'For at slette denne bruger, indtast ${_user.displayName} i feltet herunder',
+    confirmButtonText: 'Slet',
+    confirmButtonIcon:
+    const ImageIcon(AssetImage('assets/icons/delete.png')),
+    confirmOnPressed: () {},
+    );
+    });
 
-        },
-        title: 'Slet bruger'
-      );}),
+  }    ),
     ]);
   }
+
+
+
 
   Widget _buildPrivacySection() {
     return StreamBuilder<SettingsModel>(
