@@ -26,6 +26,7 @@ class PictogramImageBloc extends BlocBase {
   static final Queue<int> _cacheQueue = Queue<int>();
   static const int _cacheMaxSize = 100;
 
+
   /// Lock for adding pictograms to cache
   static Mutex lock = Mutex();
 
