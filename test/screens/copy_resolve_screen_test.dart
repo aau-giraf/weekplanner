@@ -127,6 +127,7 @@ void main() {
     });
 
     di.clearAll();
+    di.registerDependency<Api>((_) => api);
     di.registerDependency<EditWeekplanBloc>((_) => EditWeekplanBloc(api));
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));

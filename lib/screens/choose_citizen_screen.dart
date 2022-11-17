@@ -102,60 +102,62 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         )).toList();
 
     /// Defines variables needed to check user role
-    final Role role = _authBloc.loggedInUser.role;
+    final Role role = _authBloc.loggedInUser?.role;
 
-    /// Checks user role and gives option to add Citizen if user is Guardian
-    if (role == Role.Guardian) {
-      list.insert(0, FlatButton(
-        onPressed: () async {
-          final Object result =
-          await Routes.push(context, NewCitizenScreen());
-          final DisplayNameModel newUser =
-          DisplayNameModel.fromGirafUser(result);
-          list.add(CitizenAvatar(
-              displaynameModel: newUser,
-              onPressed: () => _pushWeekplanSelector(newUser)
-          )
-          );
+    if (role != null) {
+      /// Checks user role and gives option to add Citizen if user is Guardian
+      if (role == Role.Guardian) {
+        list.insert(0, FlatButton(
+          onPressed: () async {
+            final Object result =
+            await Routes.push(context, NewCitizenScreen());
+            final DisplayNameModel newUser =
+            DisplayNameModel.fromGirafUser(result);
+            list.add(CitizenAvatar(
+                displaynameModel: newUser,
+                onPressed: () => _pushWeekplanSelector(newUser)
+            )
+            );
 
-          ///Update the screen with the new citizen
-          _bloc.updateBloc();
-          setState(() {});
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  return Icon(
-                    Icons.person_add,
-                    size: constraints.biggest.height,
-                  );
-                }),
-              ),
+            ///Update the screen with the new citizen
+            _bloc.updateBloc();
+            setState(() {});
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return Icon(
+                      Icons.person_add,
+                      size: constraints.biggest.height,
+                    );
+                  }),
+                ),
 
-              ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minWidth: 200.0,
-                    maxWidth: 200.0,
-                    minHeight: 15.0,
-                    maxHeight: 50.0,
-                  ),
-                  child: const Center(
-                    child: AutoSizeText(
-                        'Tilføj Bruger',
-                        style: TextStyle(fontSize: GirafFont.large,
-                            color: Colors.black)
+                ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 200.0,
+                      maxWidth: 200.0,
+                      minHeight: 15.0,
+                      maxHeight: 50.0,
                     ),
-                  )
-              )
-            ],
+                    child: const Center(
+                      child: AutoSizeText(
+                          'Tilføj Bruger',
+                          style: TextStyle(fontSize: GirafFont.large,
+                              color: Colors.black)
+                      ),
+                    )
+                )
+              ],
+            ),
           ),
-        ),
-      )
-      );
+        )
+        );
+      }
     }
 
 
