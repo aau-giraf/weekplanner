@@ -30,7 +30,6 @@ import 'activity_card.dart';
 class WeekplanDayColumn extends StatelessWidget {
   /// Constructor
   WeekplanDayColumn({
-    @required this.dayOfTheWeek,
     @required this.color,
     @required this.user,
     @required this.weekplanBloc,
@@ -38,9 +37,6 @@ class WeekplanDayColumn extends StatelessWidget {
   }) {
     _settingsBloc.loadSettings(user);
   }
-
-  /// The day of the week
-  final Weekday dayOfTheWeek;
 
   /// The color that the column should be painted
   final Color color;
@@ -353,29 +349,11 @@ class WeekplanDayColumn extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> settingsSnapshot) {
                       if (settingsSnapshot.hasData && modeSnapshot.hasData) {
-                        double _width = 1;
-                        final int _daysToDisplay =
-                            settingsSnapshot.data.nrOfDaysToDisplay;
-
-                        if (MediaQuery.of(context).orientation ==
-                            Orientation.portrait) {
-                          if (modeSnapshot.data == WeekplanMode.citizen) {
-                            if (_daysToDisplay == 1) {
-                              _width = 1;
-                            }
-                          }
-                        } else if (MediaQuery.of(context).orientation ==
-                            Orientation.landscape) {
-                          if (modeSnapshot.data == WeekplanMode.citizen) {
-                            if (_daysToDisplay == 1) {
-                              _width = 1;
-                            }
-                          }
-                        }
+                        const double _width = 1;
                         return SizedBox(
                             // MediaQuery.of(context).size.width / 3,
                             width: MediaQuery.of(context).size.width / _width,
-                            //  MediaQuery.of(context).size.width / 1,
+                            //  MediaQuery.of(_context).size.width / 1,
                             child: Container(
                               child: GestureDetector(
                                 key: Key(weekday.day.index.toString() +
