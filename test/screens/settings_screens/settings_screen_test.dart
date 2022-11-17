@@ -15,6 +15,7 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
+import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
@@ -201,4 +202,12 @@ void main() {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         expect(find.text('Slet bruger'), findsOneWidget);
       });
+
+  testWidgets('Slet bruger show popup on click',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.tap(find.text('Slet bruger'));
+    await tester.pumpAndSettle();
+    expect(find.text('For at slette denne bruger'), findsOneWidget);
+  });
 }

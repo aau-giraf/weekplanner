@@ -14,6 +14,7 @@ import 'package:weekplanner/screens/settings_screens/'
 import 'package:weekplanner/screens/settings_screens/'
     'time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_delete_button.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
@@ -201,7 +202,15 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildUserSettings() {
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
       SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-      SettingsDeleteButton('Slet bruger', () {}),
+      SettingsDeleteButton('Slet bruger', () {return GirafConfirmDialog(
+        confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
+        confirmButtonText: 'Slet',
+        description: 'For at slette denne bruger, indtast ${_user.displayName} i feltet herunder ',
+        confirmOnPressed: (){
+
+        },
+        title: 'Slet bruger'
+      );}),
     ]);
   }
 
