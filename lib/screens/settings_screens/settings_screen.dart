@@ -220,13 +220,22 @@ class SettingsScreen extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               const TextSpan(text: ' i feltet herunder')
             ]
-        )
+        ),
+    ),
+    inputField: const TextField(
+      decoration: InputDecoration(
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        border: OutlineInputBorder(),
+        labelText: 'Indtast navn',
+      ),
     ),
     confirmButtonText: 'Slet',
     confirmButtonIcon:
     const ImageIcon(AssetImage('assets/icons/delete.png')),
     confirmOnPressed: () {},
     );
+
+
     });
 
   }    ),

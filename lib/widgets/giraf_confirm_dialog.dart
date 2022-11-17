@@ -16,6 +16,7 @@ class GirafConfirmDialog extends StatelessWidget {
       @required this.title,
       this.description,
         this.descriptionRichText,
+        this.inputField,
       @required this.confirmButtonText,
       @required this.confirmButtonIcon,
       @required this.confirmOnPressed,
@@ -34,6 +35,9 @@ class GirafConfirmDialog extends StatelessWidget {
   ///encountered problem
   ///this version allows for formatting, such as text styling
   final RichText descriptionRichText;
+
+  ///text field for optional input
+  final TextField inputField;
 
   ///text on the confirm button, describing the confirmed action
   final String confirmButtonText;
@@ -74,7 +78,14 @@ class GirafConfirmDialog extends StatelessWidget {
                   description ?? '',
                   textAlign: TextAlign.center,
                 ),
-              ))
+              )),
+    inputField != null?
+    Expanded(
+    child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child:inputField
+    )
+    ):Container(),
             ],
           ),
           Padding(
