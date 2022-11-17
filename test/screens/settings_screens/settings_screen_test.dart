@@ -224,6 +224,5 @@ void main() {
                   'indtast ' + user.displayName)),
           findsOneWidget,
         );
-
-          });
+  });
 }
