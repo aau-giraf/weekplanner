@@ -313,12 +313,11 @@ class MockActivityApi extends Mock implements ActivityApi {
     return Stream<ActivityModel>.value(activity);
   }
 
-
-    @override
-    Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
+  @override
+  Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
       return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
-
   }
+
   @override
   Stream<ActivityModel> add(ActivityModel activity, String userId,
       String weekplanName, int weekYear, int weekNumber, Weekday weekDay) {

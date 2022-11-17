@@ -18,7 +18,6 @@ class TimerPiechart extends StatelessWidget {
         stream: _timerBloc.timerProgressStream,
         builder: (BuildContext timerProgressContext,
             AsyncSnapshot<double> timerProgressSnapshot) {
-
           return Container(
             decoration: const ShapeDecoration(
                 shape: CircleBorder(

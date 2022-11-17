@@ -23,8 +23,6 @@ class ActivityCard extends StatelessWidget {
   /// Constructor
   ActivityCard(this._activity,this._timerBloc, this._user) {
     _settingsBloc.loadSettings(_user);
-
-
   }
 
   final ActivityModel _activity;
@@ -217,8 +215,8 @@ class ActivityCard extends StatelessWidget {
 
         switch (state) {
           case ActivityState.Normal:
-            if(snapshot1.hasData && snapshot1.data != TimerRunningMode.running)
-            {
+            if (snapshot1.hasData &&
+                snapshot1.data != TimerRunningMode.running) {
               break;
             }
             return Container(child: TimerPiechart(_timerBloc),

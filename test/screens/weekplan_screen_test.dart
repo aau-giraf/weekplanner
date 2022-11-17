@@ -27,7 +27,6 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
-
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -54,6 +53,7 @@ class MockActivityApi extends Mock implements ActivityApi {
     return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
 }
+
 void main() {
   WeekModel mockWeek;
   SettingsModel mockSettings;
@@ -980,7 +980,7 @@ api.pictogram=MockPictogramApi();
             widget.color == getColorFromWeekdayColorModel(expectedColors[5])),
         findsOneWidget);
 
-    expect  (
+    expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is WeekplanDayColumn &&
             widget.dayOfTheWeek == Weekday.Sunday &&
@@ -991,106 +991,90 @@ api.pictogram=MockPictogramApi();
   testWidgets('Aciticy card starts time when activated'
       ' and shows it for citizen',
     (WidgetTester tester) async {
-
       await tester.runAsync(() async {
         final Completer<bool> checkCompleted = Completer<bool>();
 
         mockActivities[2].state = ActivityState.Normal;
-      mockActivities[2].timer.paused = true;
-      mockActivities[2].timer.fullLength = 100;
-      mockWeek.days[0].activities.add(mockActivities[2]);
-      authBloc.setMode(WeekplanMode.citizen);
-      final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
-      await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+        mockActivities[2].timer.paused = true;
+        mockActivities[2].timer.fullLength = 100;
+        mockWeek.days[0].activities.add(mockActivities[2]);
+        authBloc.setMode(WeekplanMode.citizen);
+        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString() +
           mockActivities[2].id.toString())));
-      await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-        // ignore: always_specify_types
-        Future.delayed(const Duration(seconds: 2), () async {
-        checkCompleted.complete();
-        await checkCompleted.future;
-        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+          // ignore: always_specify_types
+          Future.delayed(const Duration(seconds: 2), () async {
+          checkCompleted.complete();
+          await checkCompleted.future;
+          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
         });
-
-
       });
-
   });
 
   testWidgets('Aciticy card has completed icon when activity is completed',
-          (WidgetTester tester) async {
+    (WidgetTester tester) async {
+      await tester.runAsync(() async {
+        mockActivities[0].state = ActivityState.Normal;
+        mockWeek.days[0].activities.add(mockActivities[0]);
+        authBloc.setMode(WeekplanMode.citizen);
+        final WeekplanScreen weekplanScreen = WeekplanScreen(
+          mockWeek, user);
+        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-
-        await tester.runAsync(() async {
-          mockActivities[0].state = ActivityState.Normal;
-          mockWeek.days[0].activities.add(mockActivities[0]);
-          authBloc.setMode(WeekplanMode.citizen);
-          final WeekplanScreen weekplanScreen = WeekplanScreen(
-              mockWeek, user);
-          await tester.pumpWidget(MaterialApp(home: weekplanScreen));
-
-          await tester.pumpAndSettle();
-          await tester.tap(
-              find.byKey(Key(mockWeek.days[0].day.index.toString() +
-                  mockActivities[0].id.toString())));
-          await tester.pumpAndSettle();
-          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.byKey(Key(mockWeek.days[0].day.index.toString() +
+              mockActivities[0].id.toString())));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('IconComplete')), findsOneWidget);
         });
-
   });
+
   testWidgets('click actitivty card for citizen does nothing '
       'if the activity is completed or the timer is running',
-          (WidgetTester tester) async {
+    (WidgetTester tester) async {
+      await tester.runAsync(() async {
+        final Completer<bool> checkCompleted = Completer<bool>();
 
-        await tester.runAsync(() async {
-          final Completer<bool> checkCompleted = Completer<bool>();
+        mockActivities[2].state = ActivityState.Normal;
+        mockActivities[2].timer.paused = true;
+        mockActivities[2].timer.fullLength = 100;
+        mockWeek.days[0].activities.add(mockActivities[2]);
+        authBloc.setMode(WeekplanMode.citizen);
+        final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
+        await tester.pumpWidget(MaterialApp(home: weekplanScreen));
 
-          mockActivities[2].state = ActivityState.Normal;
-          mockActivities[2].timer.paused = true;
-          mockActivities[2].timer.fullLength = 100;
-          mockWeek.days[0].activities.add(mockActivities[2]);
-          authBloc.setMode(WeekplanMode.citizen);
-          final WeekplanScreen weekplanScreen = WeekplanScreen(mockWeek, user);
-          await tester.pumpWidget(MaterialApp(home: weekplanScreen));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
+            + mockActivities[2].id.toString())));
+        await tester.pumpAndSettle();
 
-          await tester.pumpAndSettle();
-          await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
+        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+        await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
               + mockActivities[2].id.toString())));
-          await tester.pumpAndSettle();
 
-          expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-          await tester.tap(find.byKey(Key(mockWeek.days[0].day.index.toString()
+        expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
+        // ignore: always_specify_types
+        Future.delayed(const Duration(seconds: 2), () async {
+          checkCompleted.complete();
+          await checkCompleted.future;
+
+          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+          await tester.tap(find.byKey(Key(
+              mockWeek.days[0].day.index.toString()
               + mockActivities[2].id.toString())));
 
-          expect(find.byKey(const Key('TimerInitKey')), findsOneWidget);
-          // ignore: always_specify_types
-          Future.delayed(const Duration(seconds: 2), () async {
-            checkCompleted.complete();
-            await checkCompleted.future;
-
-            expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-            await tester.tap(find.byKey(Key(
-                mockWeek.days[0].day.index.toString()
-                + mockActivities[2].id.toString())));
-
-            expect(find.byKey(const Key('IconComplete')), findsOneWidget);
-
-          });
-
+          expect(find.byKey(const Key('IconComplete')), findsOneWidget);
         });
-
       });
-
-
+    });
 }
-
-
-
 
 Color getColorFromWeekdayColorModel(WeekdayColorModel weekdayColorModel) {
   final String hexColor = weekdayColorModel.hexColor;
@@ -1123,5 +1107,4 @@ void expectColorDayMatch(Weekday day, String color) {
       (Widget widget) => widget is Card && widget.key == Key(dayString));
 
   expect(find.descendant(of: findColor, matching: findTitle), findsOneWidget);
-
 }

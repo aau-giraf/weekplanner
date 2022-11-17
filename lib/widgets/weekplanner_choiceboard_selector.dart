@@ -158,8 +158,6 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   //Shows a popup when selecting a pictogram on a choiceboard
   Future<Center> _selectPictogramFromChoiceBoardPopup(
       BuildContext context, List<Widget> pictograms, int index) {
-
-
       return showDialog<Center>(
           barrierDismissible: false,
           context: context,
@@ -195,5 +193,4 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
       });
       //Closes the dialog box
     }
-
 }

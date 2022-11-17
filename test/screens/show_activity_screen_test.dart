@@ -54,8 +54,8 @@ class MockUserApi extends Mock implements UserApi {
 class MockAuth extends Mock implements AuthBloc {
   @override
   Stream<bool> get loggedIn => _loggedIn.stream;
-  final rx_dart.BehaviorSubject<bool> _loggedIn =
-      rx_dart.BehaviorSubject<bool>.seeded(true);
+  final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
+      .seeded(true);
 
   @override
   Stream<WeekplanMode> get mode => _mode.stream;

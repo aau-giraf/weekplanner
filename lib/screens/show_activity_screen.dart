@@ -43,7 +43,7 @@ class ShowActivityScreen extends StatelessWidget {
     _activityBloc.accesWeekPlanBloc(_weekplanBloc, _weekday);
     _settingsBloc.loadSettings(_girafUser);
     _timerBloc.load(_activity, user: _girafUser);
-    _timerBloc.getActivityBloc(_activityBloc);
+    _timerBloc.setActivityBloc(_activityBloc);
     _timerBloc.addHandlerToRunningModeOnce();
 
     _activityBloc.addHandlerToActivityStateOnce();
@@ -73,17 +73,14 @@ class ShowActivityScreen extends StatelessWidget {
     final Orientation orientation = MediaQuery.of(context).orientation;
     _timerBloc.initTimer();
 
-
     ///Used to check if the keyboard is visible
-                return StreamBuilder<WeekplanMode>(
-                    stream: _authBloc.mode,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<WeekplanMode> snapshot) {
-                      return buildScreenFromOrientation(
-                          orientation, context, snapshot.data);
-                    });
-
-
+    return StreamBuilder<WeekplanMode>(
+        stream: _authBloc.mode,
+        builder: (BuildContext context,
+            AsyncSnapshot<WeekplanMode> snapshot) {
+          return buildScreenFromOrientation(
+              orientation, context, snapshot.data);
+        });
   }
 
   /// Build the activity screens in a row or column
@@ -137,8 +134,8 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
-                    (activitySnapshot.data.state == ActivityState.Canceled ||
-                        activitySnapshot.data.state == ActivityState.Completed))
+                  (activitySnapshot.data.state == ActivityState.Canceled ||
+                   activitySnapshot.data.state == ActivityState.Completed))
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -536,7 +533,6 @@ class ShowActivityScreen extends StatelessWidget {
         stream: _timerBloc.timerRunningMode,
         builder: (BuildContext timerRunningContext,
             AsyncSnapshot<TimerRunningMode> timerRunningSnapshot) {
-
           return Visibility(
             visible: modeSnapshot.data == WeekplanMode.guardian ||
                 ((settingsSnapshot.hasData &&
@@ -549,47 +545,33 @@ class ShowActivityScreen extends StatelessWidget {
               // Button has different icons and press logic
               // depending on whether the timer is running.
               child: GirafButton(
-
                 key: (timerRunningSnapshot.hasData
                     ? timerRunningSnapshot.data == TimerRunningMode.running
                     : false)
                     ? const Key('TimerPauseButtonKey')
                     : const Key('TimerPlayButtonKey'),
-
                 onPressed: () {
                   if (!timerRunningSnapshot.hasData) {
                     throw Exception('Error');
                   }
                   switch (timerRunningSnapshot.data) {
                     case TimerRunningMode.initialized:
-                      {
-                        _timerBloc.playTimer();
-                        break;
-                      }
                     case TimerRunningMode.stopped:
-                      {
-                        _timerBloc.playTimer();
-                        break;
-                      }
-                    case TimerRunningMode.running:
-                      {
+                    case TimerRunningMode.paused: {
+                      _timerBloc.playTimer();
+                      break;
+                    }
+                    case TimerRunningMode.running: {
                         _timerBloc.pauseTimer();
                         break;
-                      }
-                    case TimerRunningMode.paused:
-                      {
-                        _timerBloc.playTimer();
+                    }
+                    case TimerRunningMode.not_initialized: {
                         break;
-                      }
-                    case TimerRunningMode.not_initialized:
-                      {
-                        break;
-                      }
-                    case TimerRunningMode.completed:
-                      {
+                    }
+                    case TimerRunningMode.completed: {
                         _timerBloc.stopTimer();
                         break;
-                      }
+                    }
                   }
                 },
                 icon: (timerRunningSnapshot.hasData
@@ -608,7 +590,6 @@ class ShowActivityScreen extends StatelessWidget {
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
       AsyncSnapshot<SettingsModel> settingsSnapshot) {
-
     return Visibility(
       visible: modeSnapshot.data == WeekplanMode.guardian ||
           (settingsSnapshot.hasData && !settingsSnapshot.data.lockTimerControl),
@@ -646,7 +627,6 @@ class ShowActivityScreen extends StatelessWidget {
       AsyncSnapshot<bool> timerInitSnapshot,
       AsyncSnapshot<WeekplanMode> modeSnapshot,
       AsyncSnapshot<SettingsModel> settingsSnapshot) {
-
     return Visibility(
       // The delete button is only visible when in guardian mode,
       // since a citizen should not be able to delete the timer.
@@ -715,9 +695,6 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CompleteStateToggleButton'),
                         onPressed:  () {
                           _activityBloc.completeActivity();
-                          //This removes current context
-                          // so back button correctly navigates
-
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
@@ -726,13 +703,13 @@ class ShowActivityScreen extends StatelessWidget {
                             ? 'Afslut'
                             : 'Fortryd',
                         icon: activitySnapshot.data.state !=
-                                ActivityState.Completed
+                            ActivityState.Completed
                             ? const ImageIcon(
-                                AssetImage('assets/icons/accept.png'),
-                                color: theme.GirafColors.green)
+                            AssetImage('assets/icons/accept.png'),
+                            color: theme.GirafColors.green)
                             : const ImageIcon(
-                                AssetImage('assets/icons/undo.png'),
-                                color: theme.GirafColors.blue));
+                            AssetImage('assets/icons/undo.png'),
+                            color: theme.GirafColors.blue));
 
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
                       final GirafButton cancelButton = GirafButton(
@@ -741,21 +718,21 @@ class ShowActivityScreen extends StatelessWidget {
                           _activityBloc.cancelActivity();
 
                           _activity.state = _activityBloc.getActivity().state;
-        },
+                        },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Completed,
                         text: activitySnapshot.data.state !=
-                                ActivityState.Canceled
+                            ActivityState.Canceled
                             ? 'Aflys'
                             : 'Fortryd',
                         icon: activitySnapshot.data.state !=
-                                ActivityState.Canceled
+                            ActivityState.Canceled
                             ? const ImageIcon(
-                                AssetImage('assets/icons/cancel.png'),
-                                color: theme.GirafColors.red)
+                            AssetImage('assets/icons/cancel.png'),
+                            color: theme.GirafColors.red)
                             : const ImageIcon(
-                                AssetImage('assets/icons/undo.png'),
-                                color: theme.GirafColors.blue),
+                            AssetImage('assets/icons/undo.png'),
+                            color: theme.GirafColors.blue),
                       );
 
                       if (_activity.isChoiceBoard) {

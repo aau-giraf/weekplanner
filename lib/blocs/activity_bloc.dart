@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
@@ -9,18 +8,20 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/alternate_name_model.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+
 /// Logic for activities
 class ActivityBloc extends BlocBase {
   /// Default Constructor.
   /// Initializes values
   ActivityBloc(this._api);
 
-  /// Stream for  updated ActivityModel.
+  /// Stream for updated ActivityModel.
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
   StreamSubscription<ActivityModel> _subscription; // ignore: cancel_subscriptions
   /// rx_dart.BehaviorSubject for the updated ActivityModel.
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
       rx_dart.BehaviorSubject<ActivityModel>();
+
   WeekplanBloc _weekplanBloc;
   WeekdayModel _weekday;
   final Api _api;
@@ -35,8 +36,7 @@ class ActivityBloc extends BlocBase {
     _activityModelStream.add(activityModel);
   }
   
-  void accesWeekPlanBloc(WeekplanBloc weekplanBloc, WeekdayModel weekday)
-  {
+  void accesWeekPlanBloc(WeekplanBloc weekplanBloc, WeekdayModel weekday) {
     _weekplanBloc = weekplanBloc;
     _weekday = weekday;
   }
@@ -45,17 +45,15 @@ class ActivityBloc extends BlocBase {
   ActivityModel getActivity(){
     return _activityModel;
   }
-  void addHandlerToActivityStateOnce()
-  {
-    if(_subscription != null ) {
+
+  void addHandlerToActivityStateOnce() {
+    if (_subscription != null ) {
       return;
     }
     
     _subscription = activityModelStream.listen((ActivityModel activity) {
-
-        _weekplanBloc.getWeekday(_weekday.day);
+      _weekplanBloc.getWeekday(_weekday.day);
     });
-
   }
 
   /// Mark the selected activity as complete. Toggle function, if activity is

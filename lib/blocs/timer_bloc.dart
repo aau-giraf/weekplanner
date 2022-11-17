@@ -17,12 +17,16 @@ import '../models/enums/timer_running_mode.dart';
 class TimerBloc extends BlocBase {
   /// Constructor taking the API
   TimerBloc(this._api);
+
   final Api _api;
+
   ActivityModel _activityModel;
   DisplayNameModel _user;
   ActivityBloc _activityBloc;
+
   /// Stream for the progress of the timer.
   Stream<double> get timerProgressStream => _timerProgressStream.stream;
+
   /// stream for checking if the timer is running
   Stream<TimerRunningMode> get timerRunningMode =>
       _timerRunningModeStream.stream;
@@ -74,32 +78,25 @@ class TimerBloc extends BlocBase {
       _user = user;
     }
 
-
     _timerInstantiatedStream.add(_activityModel.timer != null);
   }
 
-  void getActivityBloc(ActivityBloc activityBloc)
-  {
+  void setActivityBloc(ActivityBloc activityBloc) {
     _activityBloc = activityBloc;
-
   }
-  void addHandlerToRunningModeOnce()
-  {
-      if(_subscription != null)
-        {
-          return;
-        }
+
+  void addHandlerToRunningModeOnce() {
+    if(_subscription != null) {
+      return;
+    }
 
     _subscription = timerRunningMode.listen((TimerRunningMode mode) {
-        if(mode == TimerRunningMode.completed)
-          {
-
-            _activityBloc.completeActivity();
-
-          }
+      if (mode == TimerRunningMode.completed) {
+        _activityBloc.completeActivity();
+      }
     });
-
   }
+
   /// Adds a timer to the activity loaded into the timerBloc.
   /// By default the timer will be paused.
   void addTimer(Duration duration) {
@@ -119,10 +116,8 @@ class TimerBloc extends BlocBase {
         .updateTimer(_activityModel, _user.id)
         .listen((ActivityModel activity) {
       _activityModel = activity;
-
     });
     initTimer();
-
   }
 
   List<int> _durationToTimestamp(Duration duration) {
@@ -149,7 +144,6 @@ class TimerBloc extends BlocBase {
   /// Else it will be paused.
   void initTimer() {
     // Checks if a stopWatch exist
-
     if (_stopwatch == null) {
       if (_activityModel.timer != null) {
         // Calculates the end time of the timer
@@ -158,8 +152,8 @@ class TimerBloc extends BlocBase {
                 _activityModel.timer.progress));
         // Checks if the timer is running
         if ((_activityModel.timer.startTime.isBefore(DateTime.now()) ||
-            _activityModel.timer.startTime
-                .isAtSameMomentAs(DateTime.now())) &&
+                _activityModel.timer.startTime
+                    .isAtSameMomentAs(DateTime.now())) &&
             DateTime.now().isBefore(endTime) &&
             !_activityModel.timer.paused) {
           _timerRunningModeStream.add(TimerRunningMode.running);
@@ -209,7 +203,6 @@ class TimerBloc extends BlocBase {
   /// Updates the timer in the database accordingly.
   void playTimer() {
     // Makes sure that a timer exists
-
     if (_activityModel.timer != null && _activityModel.timer.paused) {
       _activityModel.timer.paused = false;
       _activityModel.timer.startTime = DateTime.now();
@@ -233,7 +226,6 @@ class TimerBloc extends BlocBase {
           _timerRunningModeStream.add(TimerRunningMode.completed);
         }
       });
-
       _timerRunningModeStream.add(TimerRunningMode.running);
 
       _api.activity
@@ -246,6 +238,7 @@ class TimerBloc extends BlocBase {
 
   /// Calculate progress and write it to the _timerProgressStream
   void updateTimerProgress(CountdownTimer c) {
+    // please somebody fix this
     _timerProgressStream.add((1 -
                 (1 /
                     _activityModel.timer.fullLength *
@@ -326,6 +319,7 @@ class TimerBloc extends BlocBase {
       _countDown.cancel();
       _timerStream.cancel();
     }
+
     _stopwatch = null;
     _countDown = null;
     _timerStream = null;
