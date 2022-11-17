@@ -47,7 +47,6 @@ void main() {
       timerSeconds: 1,
       activitiesCount: 1,
       theme: GirafTheme.GirafYellow,
-      nrOfDaysToDisplay: 1,
       weekDayColors: null,
       pictogramText: false,
   );
@@ -60,7 +59,6 @@ void main() {
       timerSeconds: 2,
       activitiesCount: 3,
       theme: GirafTheme.GirafYellow,
-      nrOfDaysToDisplay: 2,
       weekDayColors: null,
       pictogramText: true,
   );
