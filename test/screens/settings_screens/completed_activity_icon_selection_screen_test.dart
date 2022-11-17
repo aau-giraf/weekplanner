@@ -30,7 +30,6 @@ class MockUserApi extends Mock implements NavigatorObserver, UserApi {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
-        nrOfDaysToDisplay: null,
         weekDayColors: null);
 
     return Stream<SettingsModel>.value(settingsModel);
