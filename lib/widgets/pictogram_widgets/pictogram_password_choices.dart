@@ -17,8 +17,11 @@ class PictogramChoices extends StatefulWidget {
 }
 
 /// The pictograms to choose between for the code.
-/// If these are changed every previously made passwords will become unusable
+/// If these are changed all previously made passwords will become unusable
 const List<int> CHOSENPICTOGRAMS = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+/// The maximum width that is shared by both gridviews
+const double _MAXWIDTH = 500;
 
 class _PictogramChoiceState extends State<PictogramChoices> {
   /// Api to use for pictogram calls
@@ -93,21 +96,25 @@ class _PictogramChoiceState extends State<PictogramChoices> {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      //First column element
-      Container(
-          width: 500,
-          height: 500,
-          child: StreamBuilder<List<PictogramModel>>(
-              stream: _pictogramChoices,
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<PictogramModel>> snapshot) {
-                if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return const Text('Fejl i forbindelse med piktogrammer.');
-                } else if (snapshot.hasData) {
-                  return Expanded(
-                      child: GridView.count(
+      // Grid view with available pictograms
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+              constraints: const BoxConstraints(
+                  maxHeight: double.infinity, maxWidth: _MAXWIDTH),
+              child: StreamBuilder<List<PictogramModel>>(
+                  stream: _pictogramChoices,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<PictogramModel>> snapshot) {
+                    if (snapshot.hasError) {
+                      print(snapshot.error);
+                      return const Text('Fejl i forbindelse med piktogrammer.');
+                    } else if (snapshot.hasData) {
+                      return GridView.count(
+                          shrinkWrap: true,
                           crossAxisCount: 5,
+                          physics: const NeverScrollableScrollPhysics(),
                           children: snapshot.data
                               .map<Widget>((PictogramModel pictogram) {
                             if (pictogram == null) {
@@ -121,16 +128,31 @@ class _PictogramChoiceState extends State<PictogramChoices> {
                                   pictogram: pictogram,
                                   onPressed: () => addToPass(pictogram));
                             }
-                          }).toList()));
-                } else {
-                  return const Text('Fejl');
-                }
-              })),
-      //Second column element
-      Container(
-          width: 500,
-          height: 500,
-          child: GridView.count(crossAxisCount: 4, children: passwordList())),
+                          }).toList());
+                    } else {
+                      return const Text('Fejl');
+                    }
+                  })),
+        ],
+      ),
+      // This acts as a spacer.
+      const SizedBox(
+        height: 40,
+      ),
+      // Password grid view
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+              constraints: const BoxConstraints(
+                  maxHeight: double.infinity, maxWidth: _MAXWIDTH),
+              child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 20,
+                  children: passwordList())),
+        ],
+      ),
     ]);
   }
 }
