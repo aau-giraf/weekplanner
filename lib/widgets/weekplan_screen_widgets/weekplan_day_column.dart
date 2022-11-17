@@ -59,13 +59,11 @@ class WeekplanDayColumn extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
   final List<TimerBloc> _timerBloc = <TimerBloc>[];
-  void createTimerBlocs(int numOfTimeBlocs)
-  {
+  void createTimerBlocs(int numOfTimeBlocs) {
     for (int i = 0; i  < numOfTimeBlocs- _timerBloc.length; i++) {
       _timerBloc.add(di.getDependency<TimerBloc>());
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -383,7 +381,6 @@ class WeekplanDayColumn extends StatelessWidget {
                                 key: Key(weekday.day.index.toString() +
                                     currActivity.id.toString()),
                                 onTap: () {
-
                                   if (modeSnapshot.data == WeekplanMode.guardian
                                       ||
                                       modeSnapshot.data == WeekplanMode.trustee)
@@ -429,15 +426,13 @@ class WeekplanDayColumn extends StatelessWidget {
   void _handleActivity(
       List<ActivityModel> activities,
       int index,
-      WeekdayModel weekday
-      ) {
-
+      WeekdayModel weekday) {
     final ActivityModel activistModel = activities[index];
     if(activistModel.state == ActivityState.Completed ||
         (activistModel.timer != null &&
             activistModel.timer.paused == false)) {
         return;
-      }
+    }
     _activityBloc.load(activistModel, user);
     _activityBloc.accesWeekPlanBloc(weekplanBloc, weekday);
     _timerBloc[index].load(activistModel,user: user);
