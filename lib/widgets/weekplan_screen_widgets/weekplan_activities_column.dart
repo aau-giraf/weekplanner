@@ -310,7 +310,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                       if (settingsSnapshot.hasData && modeSnapshot.hasData) {
                         double _width = 1;
                         final int _daysToDisplay =
-                            settingsSnapshot.data.nrOfDaysToDisplay;
+                            settingsSnapshot.data.nrOfDaysToDisplayLandscape;
 
                         if (MediaQuery.of(context).orientation ==
                             Orientation.portrait) {

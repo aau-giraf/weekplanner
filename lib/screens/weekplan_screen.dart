@@ -349,6 +349,8 @@ class WeekplanScreen extends StatelessWidget {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     int _daysToDisplay;
+                    int _activitiesToDisplay =
+                        _settingsModel.nrOfActivitiesToDisplay;
                     bool _displayDaysRelative;
                     if (orientation == Orientation.portrait) {
                         _daysToDisplay =
@@ -404,13 +406,14 @@ class WeekplanScreen extends StatelessWidget {
                         return Row(children: weekDays);
                       }
                     } else {
+                      final int today = DateTime.now().weekday-1;
                       dailyActivities.add(Expanded(
                         child: WeekplanActivitiesColumn(
-                          dayOfTheWeek: Weekday.values[_weekdayCounter],
+                          dayOfTheWeek: Weekday.values[today],
                           color: Colors.amber,
                           weekplanBloc: _weekplanBloc,
                           user: _user,
-                          streamIndex: 0,
+                          streamIndex: today,
                           activitiesToDisplay: _activitiesToDisplay,
                         )
                       )

@@ -464,7 +464,7 @@ api.pictogram=MockPictogramApi();
 
   testWidgets('Marking an activity as current and updating work',
           (WidgetTester tester) async {
-    mockSettings.nrOfDaysToDisplay = 1;
+    mockSettings.nrOfDaysToDisplayLandscape = 1;
     final int weekDay = DateTime.now().weekday.toInt()-1;
     mockWeek.days[weekDay].activities.add(mockActivities[0]);
     mockWeek.days[weekDay].activities.add(mockActivities[1]);

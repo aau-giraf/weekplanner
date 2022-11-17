@@ -123,9 +123,9 @@ class WeekplanDayColumn extends StatelessWidget {
               translation,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: isToday() ? 40 : 30,
+                fontSize: isToday(day) ? 40 : 30,
                 foreground: Paint()
-                  ..style = isToday()
+                  ..style = isToday(day)
                       ? PaintingStyle.stroke
                       : PaintingStyle.fill
                   ..strokeWidth = 5
@@ -139,8 +139,8 @@ class WeekplanDayColumn extends StatelessWidget {
               translation,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: isToday() ? 40 : 30,
-                color: isToday()
+                fontSize: isToday(day) ? 40 : 30,
+                color: isToday(day)
                     ? Color(int.parse('0xffffffff'))
                     : Colors.black,
               ),
@@ -216,8 +216,8 @@ class WeekplanDayColumn extends StatelessWidget {
 
   /// Returns true if the field dayOfTheWeek matches with today's date
   /// This function is mainly used for highlighting today's date on the weekplan
-  bool isToday(){
-    return DateTime.now().weekday.toInt()-1 == dayOfTheWeek.index;
+  bool isToday(Weekday weekday){
+    return DateTime.now().weekday.toInt()-1 == weekday.index;
   }
 
   /// Unmarks all activities for a given day
@@ -231,7 +231,7 @@ class WeekplanDayColumn extends StatelessWidget {
 
   /// Marks the first Normal activity to Active
   void markCurrent(WeekdayModel weekdayModel){
-    if(isToday()){
+    if(isToday(weekdayModel.day)){
       for (ActivityModel activity in weekdayModel.activities){
         if(activity.state == ActivityState.Normal){
           activity.state = ActivityState.Active;
