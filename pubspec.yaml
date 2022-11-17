@@ -27,7 +27,6 @@ dependencies:
   material_design_icons_flutter: ^3.2.3895
   data_connection_checker: ^0.3.4
   audioplayers:
-  test: ^1.16.5
 
 dev_dependencies:
   async_test:
