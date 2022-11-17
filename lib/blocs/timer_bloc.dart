@@ -74,6 +74,7 @@ class TimerBloc extends BlocBase {
   /// Loads the activity that should be used in the timerBloc
   void load(ActivityModel activity, {DisplayNameModel user}) {
     _activityModel = activity;
+    
     if (user != null) {
       _user = user;
     }

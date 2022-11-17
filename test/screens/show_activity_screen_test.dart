@@ -1201,12 +1201,5 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(mockActivity.title, mockPictograms.first.title);
-    });
-
-
-
-
-
+  });
 }
-
-
