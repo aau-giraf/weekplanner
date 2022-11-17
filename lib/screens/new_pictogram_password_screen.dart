@@ -21,6 +21,9 @@ class NewPictogramPasswordScreen extends StatelessWidget {
 
   final NewPictogramPasswordBloc _bloc;
 
+  final PictogramChoices _pictogramChoices =
+      PictogramChoices(key: Key('picChoices'));
+
   final ApiErrorTranslater _translator = ApiErrorTranslater();
 
   @override
@@ -39,6 +42,12 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                       fontSize: 28,
                       fontWeight: FontWeight.bold));
             }),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _pictogramChoices,
+            ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
@@ -66,7 +75,6 @@ class NewPictogramPasswordScreen extends StatelessWidget {
               },
             ),
           ),
-          Flexible(child: PictogramChoices())
         ]));
   }
 }
