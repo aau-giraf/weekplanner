@@ -5,6 +5,8 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:api_client/api/api.dart';
 
+///Widget to show possible pictograms for pictogram password
+///and the currently input pictograms
 class PictogramChoices extends StatefulWidget {
   ///Widget with the possible pictograms in the code and the currently picked
   /// pictograms in the code.
@@ -21,7 +23,7 @@ class PictogramChoices extends StatefulWidget {
 const List<int> CHOSENPICTOGRAMS = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 /// The maximum width that is shared by both gridviews
-const double _MAXWIDTH = 500;
+const double MAXWIDTH = 500;
 
 class _PictogramChoiceState extends State<PictogramChoices> {
   /// Api to use for pictogram calls
@@ -80,9 +82,10 @@ class _PictogramChoiceState extends State<PictogramChoices> {
       Widget widget;
       if (pictogram == null) {
         widget = Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: const Color(0xFFe0dede),
+          ),
         );
       } else {
         widget = PictogramImage(
@@ -102,7 +105,7 @@ class _PictogramChoiceState extends State<PictogramChoices> {
         children: <Widget>[
           Container(
               constraints: const BoxConstraints(
-                  maxHeight: double.infinity, maxWidth: _MAXWIDTH),
+                  maxHeight: double.infinity, maxWidth: MAXWIDTH),
               child: StreamBuilder<List<PictogramModel>>(
                   stream: _pictogramChoices,
                   builder: (BuildContext context,
@@ -137,22 +140,27 @@ class _PictogramChoiceState extends State<PictogramChoices> {
       ),
       // This acts as a spacer.
       const SizedBox(
-        height: 40,
+        height: 10,
       ),
       // Password grid view
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              constraints: const BoxConstraints(
-                  maxHeight: double.infinity, maxWidth: _MAXWIDTH),
-              child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 20,
-                  children: passwordList())),
-        ],
-      ),
+      Container(
+        color: Colors.grey,
+        width: MediaQuery.of(context).size.width,
+        height: 120,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+                constraints: const BoxConstraints(
+                    maxHeight: double.infinity, maxWidth: MAXWIDTH),
+                child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 20,
+                    children: passwordList())),
+          ],
+        ),
+      )
     ]);
   }
 }
