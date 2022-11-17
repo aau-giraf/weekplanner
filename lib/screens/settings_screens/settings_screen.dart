@@ -182,6 +182,8 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
+  /// Takes in one of the possible nrOfDaysToDisplay,
+  ///  and returns its corresponding string
   String nrOfDaysToString(int nrOfDaysToDisplay)
   {
     switch(nrOfDaysToDisplay)
@@ -190,6 +192,8 @@ class SettingsScreen extends StatelessWidget {
       case 2: {return 'To dage';}
       case 5: {return 'Mandag til fredag';}
       case 7: {return 'Mandag til søndag';}
+      default: throw Exception(nrOfDaysToDisplay.toString() + ' is not a valid '
+          'value for nrOfDaysToDisplay. It must be either 1,2,5, or 7');
     }
   }
 
