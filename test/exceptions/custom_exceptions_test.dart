@@ -7,7 +7,7 @@ void main() {
   }
 
   void throwEditWeekplanButtonException() {
-    throw EditWeekPlanButtonException('Test', 'Test');
+    throw EditWeekplanButtonException('Test', 'Test');
   }
 
   void throwOrientationException() {
@@ -20,7 +20,7 @@ void main() {
 
   test('Should throw EditWeekplanButtonException', () {
     expect(throwEditWeekplanButtonException,
-        throwsA(isA<EditWeekPlanButtonException>()));
+        throwsA(isA<EditWeekplanButtonException>()));
   });
 
   test('Should throw OrientationException', () {
