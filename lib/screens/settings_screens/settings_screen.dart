@@ -208,7 +208,17 @@ class SettingsScreen extends StatelessWidget {
     builder: (BuildContext context) {
     return GirafConfirmDialog(
     title: 'Slet Bruger',
-    description: 'For at slette denne bruger, indtast ${_user.displayName} i feltet herunder',
+    descriptionRichText: RichText(
+        text: TextSpan(
+            style: const TextStyle(color: Colors.black, fontSize: 18, fontFamily: 'Quicksand'),
+            children: [
+              const TextSpan(text: 'For at slette denne bruger, indtast '),
+              TextSpan(text: _user.displayName,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              const TextSpan(text: ' i feltet herunder')
+            ]
+        )
+    ),
     confirmButtonText: 'Slet',
     confirmButtonIcon:
     const ImageIcon(AssetImage('assets/icons/delete.png')),

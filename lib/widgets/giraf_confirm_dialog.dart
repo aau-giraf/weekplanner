@@ -15,6 +15,7 @@ class GirafConfirmDialog extends StatelessWidget {
       {Key key,
       @required this.title,
       this.description,
+        this.descriptionRichText,
       @required this.confirmButtonText,
       @required this.confirmButtonIcon,
       @required this.confirmOnPressed,
@@ -27,6 +28,12 @@ class GirafConfirmDialog extends StatelessWidget {
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
   final String description;
+
+
+  ///description of the dialogBox, displayed under the header, describing the
+  ///encountered problem
+  ///this version allows for formatting, such as text styling
+  final RichText descriptionRichText;
 
   ///text on the confirm button, describing the confirmed action
   final String confirmButtonText;
@@ -62,7 +69,7 @@ class GirafConfirmDialog extends StatelessWidget {
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Text(
+                child: descriptionRichText ?? Text(
                   //if description is null, its replaced with empty.
                   description ?? '',
                   textAlign: TextAlign.center,
