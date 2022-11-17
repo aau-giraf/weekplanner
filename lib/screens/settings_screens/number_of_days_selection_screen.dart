@@ -14,12 +14,18 @@ import '../../di.dart';
 import '../../routes.dart';
 
 /// Screen where the user can select how many days to show for a citizen
+/// This class is used for both the settings screen for portrait mode and for
+/// landscape mode
 class NumberOfDaysScreen extends StatelessWidget {
   /// Constructor
-  NumberOfDaysScreen(DisplayNameModel user) : _user = user {
+  NumberOfDaysScreen(DisplayNameModel user, bool isPortrait) : _user = user {
+    // Determines whether this settings screen is the one for portrait mode or
+    // the one for landscape mode
+    _isPortrait = isPortrait;
     _settingsBloc.loadSettings(_user);
   }
 
+  bool _isPortrait;
   final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   //Dette er en kommentar:)
@@ -35,30 +41,38 @@ class NumberOfDaysScreen extends StatelessWidget {
                 AsyncSnapshot<SettingsModel> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
                 final SettingsModel _settingsModel = settingsSnapshot.data;
+                final int _numberOfDaysToDisplay = _isPortrait
+                    ? _settingsModel.nrOfDaysToDisplayPortrait
+                    : _settingsModel.nrOfDaysToDisplayLandscape;
 
                 return ListView(
                   children: <Widget>[
-                    SettingsSection('Antal dage', <SettingsSectionItem>[
+                    SettingsSection(
+                        'Antal dage der vises når enheden er på langs',
+                        <SettingsSectionItem>[
                       SettingsCheckMarkButton(
-                          1, _settingsModel.nrOfDaysToDisplay, 'Vis kun i dag',
-                          () {
-                        Routes.pop(context, 1);
-                      }),
+                          1, _numberOfDaysToDisplay, 'Vis i dag',
+                              () {
+                                setDisplayDaysRelative(_settingsModel, true);
+                            Routes.pop(context, 1);
+                          }),
                       SettingsCheckMarkButton(
-                          2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
-                          () {
-                        Routes.pop(context, 2);
-                      }),
+                          2, _numberOfDaysToDisplay, 'Vis to dage',
+                              () {
+                                setDisplayDaysRelative(_settingsModel, true);
+                            Routes.pop(context, 2);
+                          }),
+
                       SettingsCheckMarkButton(
-                          5,
-                          _settingsModel.nrOfDaysToDisplay,
-                          'Vis mandag til fredag', () {
+                          5, _numberOfDaysToDisplay, 'Vis mandag til fredag',
+                              () {
+                                setDisplayDaysRelative(_settingsModel, false);
                         Routes.pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
-                          7,
-                          _settingsModel.nrOfDaysToDisplay,
+                          7, _numberOfDaysToDisplay,
                           'Vis mandag til søndag', () {
+                              setDisplayDaysRelative(_settingsModel, false);
                         Routes.pop(context, 7);
                       }),
                     ]),
@@ -71,4 +85,13 @@ class NumberOfDaysScreen extends StatelessWidget {
               }
             }));
   }
+
+  // Sets whether the number of days should be displayed relative to the
+  // current day
+  void setDisplayDaysRelative(SettingsModel settingsModel, bool isRelative)
+  {
+    _isPortrait ? settingsModel.displayDaysRelativePortrait = isRelative
+        : settingsModel.displayDaysRelativeLandscape = isRelative;
+  }
 }
+

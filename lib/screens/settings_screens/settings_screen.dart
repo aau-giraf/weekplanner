@@ -7,9 +7,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screens/change_password_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'number_of_days_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'color_theme_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
@@ -126,26 +124,38 @@ class SettingsScreen extends StatelessWidget {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Ugeplan', <SettingsSectionItem>[
               SettingsArrowButton(
-                'Antal dage',
-                () async {
-                  final Object result =
-                      await Routes.push(context, NumberOfDaysScreen(_user));
-                  if (result != null) {
-                    settingsModel.nrOfDaysToDisplay = result;
-                    _settingsBloc
-                        .updateSettings(_user.id, settingsModel)
-                        .listen((_) {
-                      _settingsBloc.loadSettings(_user);
-                    });
+                'Antal dage der vises når enheden er på højkant', () async {
+                  final Object result = await Routes.push(
+                      context, NumberOfDaysScreen(_user, true));
+                  if(result != null) {
+                    settingsModel.nrOfDaysToDisplayPortrait = result;
+                    _settingsBloc.updateSettings(
+                        _user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                      }
+                    );
                   }
                 },
-                titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
-                    ? 'En dag'
-                    : settingsModel.nrOfDaysToDisplay == 2
-                        ? 'To dage'
-                        : settingsModel.nrOfDaysToDisplay == 5
-                            ? 'Mandag til fredag'
-                            : 'Mandag til søndag'),
+                titleTrailing: Text(nrOfDaysToString(
+                    settingsModel.nrOfDaysToDisplayPortrait)),
+              ),
+              SettingsArrowButton(
+                'Antal dage der vises når enheden er på langs', () async {
+                final Object result = await Routes.push(
+                    context, NumberOfDaysScreen(_user, false));
+                if(result != null) {
+                  settingsModel.nrOfDaysToDisplayLandscape = result;
+                  _settingsBloc.updateSettings(
+                      _user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  }
+                  );
+                }
+              },
+                titleTrailing: Text(nrOfDaysToString
+                  (settingsModel.nrOfDaysToDisplayLandscape)),
               ),
               SettingsCheckMarkButton.fromBoolean(
                 settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
@@ -170,6 +180,17 @@ class SettingsScreen extends StatelessWidget {
               );
             }
         });
+  }
+
+  String nrOfDaysToString(int nrOfDaysToDisplay)
+  {
+    switch(nrOfDaysToDisplay)
+    {
+      case 1: {return 'En dag';}
+      case 2: {return 'To dage';}
+      case 5: {return 'Mandag til fredag';}
+      case 7: {return 'Mandag til søndag';}
+    }
   }
 
   Widget _buildTimerSection(BuildContext context) {
