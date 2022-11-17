@@ -208,7 +208,8 @@ class SettingsScreen extends StatelessWidget {
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data;
-            return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
+            return SettingsSection('Bruger indstillinger',
+                <SettingsSectionItem>[
               SettingsCheckMarkButton.fromBoolean(
                   settingsModel.showSettingsForCitizen,
                     'Giv borger adgang til deres indstillinger.', () {

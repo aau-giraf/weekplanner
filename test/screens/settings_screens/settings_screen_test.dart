@@ -1,6 +1,7 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
@@ -17,6 +18,9 @@ import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
+
+import '../copy_to_citizens_screen_test.dart';
+import '../edit_weekplan_screen_test.dart';
 
 SettingsModel mockSettings;
 
@@ -72,16 +76,19 @@ void main() {
     api.user = MockUserApi();
 
     mockSettings = SettingsModel(
-      orientation: null,
-      completeMark: null,
-      cancelMark: null,
-      defaultTimer: null,
-      theme: null,
-      nrOfDaysToDisplay: 1,
-      weekDayColors: MockUserApi.createWeekDayColors(),
-      lockTimerControl: false,
-      pictogramText: false,
-      showPopup: false,
+        orientation: null,
+        completeMark: null,
+        cancelMark: null,
+        defaultTimer: DefaultTimer.Hourglass,
+        theme: null,
+        nrOfDaysToDisplay: 1,
+        lockTimerControl: false,
+        pictogramText: false,
+        showPopup: false,
+        nrOfActivitiesToDisplay: null,
+        showOnlyActivities: false,
+        showSettingsForCitizen: false,
+        weekDayColors: MockUserApi.createWeekDayColors(),
     );
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
@@ -123,11 +130,11 @@ void main() {
     expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
-  testWidgets('Settings has Brugerindstillinger section',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.text('Bruger indstillinger'), findsOneWidget);
-    expect(find.text(user.displayName + ' indstillinger'), findsOneWidget);
+  testWidgets('Settings has Bruger indstillinger section',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        expect(find.text('Bruger indstillinger'), findsOneWidget);
+        expect(find.text('Giv borger adgang til deres indstillinger.'), findsOneWidget);
   });
 
   testWidgets('Farver på ugeplan button changes screen',
