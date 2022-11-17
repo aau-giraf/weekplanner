@@ -11,10 +11,10 @@ class ServerException implements Exception {
   String details;
 }
 
-/// EditWeekPlanButtonException
-class EditWeekPlanButtonException implements Exception {
+/// EditWeekplanButtonException
+class EditWeekplanButtonException implements Exception {
   /// Constructor for the exception
-  EditWeekPlanButtonException(this.errorCause, this.details);
+  EditWeekplanButtonException(this.errorCause, this.details);
 
   /// The cause of the error
   String errorCause;

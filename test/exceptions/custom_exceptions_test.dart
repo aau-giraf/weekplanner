@@ -1,15 +1,29 @@
-import 'package:quiver/iterables.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/exceptions/custom_exceptions.dart';
 
 void main() {
-  test('when start > stop', () {
-    try {
-      range(5, 3);
-    } on ArgumentError catch (e) {
-      expect(e.message, 'start must be less than stop');
-      return;
-    }
+  void throwServerException() {
     throw ServerException('Test', 'Test');
+  }
+
+  void throwEditWeekplanButtonException() {
+    throw EditWeekPlanButtonException('Test', 'Test');
+  }
+
+  void throwOrientationException() {
+    throw OrientationException('Test', 'Test');
+  }
+
+  test('Should throw ServerException', () {
+    expect(throwServerException, throwsA(isA<ServerException>()));
+  });
+
+  test('Should throw EditWeekplanButtonException', () {
+    expect(throwEditWeekplanButtonException,
+        throwsA(isA<EditWeekPlanButtonException>()));
+  });
+
+  test('Should throw OrientationException', () {
+    expect(throwOrientationException, throwsA(isA<OrientationException>()));
   });
 }
