@@ -192,12 +192,10 @@ class ChangePasswordScreen extends StatelessWidget {
     );
   }
 
-  //This function, found in the account_api, handles the password change, when the "Gem"-button is clicked
   void ChangePassword(
       DisplayNameModel user, String oldPassword, String newPassword) async {
-    //authBloc.authenticate(user.displayName, oldPassword);
     bool loginStatus = false;
-
+    //Checks if user is logged in
     await authBloc
         .authenticate(authBloc.loggedInUsername, oldPassword)
         .then((dynamic result) {
@@ -205,11 +203,13 @@ class ChangePasswordScreen extends StatelessWidget {
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
-          print("Snapshot: " + snapshot.toString());
+          //This function, found in the account_api, handles the password change, when the "Gem"-button is clicked
           _api.account
               .changePasswordWithOld(user.id, oldPassword, newPassword)
-              .listen((status) {
-            print("Status: " + status.toString());
+              .listen((_) {})
+              .onDone(() {
+            CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
+                "PasswordChanged");
           });
         }
 
@@ -218,59 +218,38 @@ class ChangePasswordScreen extends StatelessWidget {
       });
     }).catchError((Object error) {
       if (error is ApiException) {
-        print("ApiExceptionCaught: " + error.errorMessage);
-        creatingErrorDialog("Forkert adgangskode", "WrongPassword");
+        CreateDialog("Fejl", "Forkert adgangskode", "WrongPassword");
       } else {
-        print("Other error");
+        CreateDialog("Fejl", "Der skete en ukendt fejl", "UnknownErrorOccured");
       }
-    }).whenComplete(() => GirafNotifyDialog(
-              key: (Key("PasswordChanged")),
-              title: "Adgangskoden ændret.",
-              description: "Adgangskoden er blevet ændret.",
-            ));
+    });
   }
 
-  /*Future ChangePasswordForAccount(Stream<bool> passStream) async {
-      //Stream<bool>.fromFuture(Future.error(Exception()));
-      await for (final value in passStream) {
-        //print(value);
-        //_api.account.changePasswordWithOld(guardian, "password", "password1");
-      }
-    }
-
-    //GetGuardians(guardians);
-    ChangePasswordForAccount(passStream);*/
+  ///Functionality for validating whether input fields are empty
+  ///and whether the repeated password for confirmation is the same as the new password
   void validatePasswords(BuildContext context) async {
-    //Stream<GirafUserModel> girafUser = await _api.user.get(_user.id);
     currentContext = context;
 
-    //_api.user.getCitizens()
-    // _api.user.getGuardians()
-
-    /// This if-statement should be implemented when the getUserByName method is implemented correctly
-    /// This should check if the new username is already in the database.
-    //if(await _api.user.getUserByName(newUsernameCtrl.text).isEmpty != null)
-    //creatingErrorDialog("Brugernavnet ${newUsernameCtrl.text} er allerede taget.", "");
     if (newPasswordCtrl.text != repeatNewPasswordCtrl.text)
-      creatingErrorDialog("Den gentagne adgangskode stemmer ikke overens",
+      CreateDialog("Fejl", "Den gentagne adgangskode stemmer ikke overens",
           "NewPasswordNotRepeated");
     else if (currentPasswordCtrl.text == "" ||
         newPasswordCtrl.text == "" ||
-        repeatNewPasswordCtrl == "")
-      creatingErrorDialog("Udfyld venligst.", "NewPasswordEmpty");
-    else {
+        repeatNewPasswordCtrl == "") {
+      CreateDialog("Fejl", "Udfyld venligst alle felterne", "NewPasswordEmpty");
+    } else {
       ChangePassword(_user, currentPasswordCtrl.text, newPasswordCtrl.text);
     }
   }
 
-  void creatingErrorDialog(String description, String key) {
+  void CreateDialog(String title, String description, String key) {
     /// Show the new NotifyDialog
     showDialog<Center>(
         barrierDismissible: false,
         context: currentContext,
         builder: (BuildContext context) {
           return GirafNotifyDialog(
-              title: 'Fejl', description: description, key: Key(key));
+              title: title, description: description, key: Key(key));
         });
   }
 }
