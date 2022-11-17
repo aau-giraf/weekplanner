@@ -351,11 +351,15 @@ class WeekplanScreen extends StatelessWidget {
                     int _daysToDisplay;
                     bool _displayDaysRelative;
                     if (orientation == Orientation.portrait) {
-                        _daysToDisplay = _settingsModel.nrOfDaysToDisplayPortrait;
-                        _displayDaysRelative = _settingsModel.displayDaysRelativePortrait;
+                        _daysToDisplay =
+                            _settingsModel.nrOfDaysToDisplayPortrait;
+                        _displayDaysRelative =
+                            _settingsModel.displayDaysRelativePortrait;
                     } else if (orientation == Orientation.landscape) {
-                        _daysToDisplay = _settingsModel.nrOfDaysToDisplayLandscape;
-                        _displayDaysRelative = _settingsModel.displayDaysRelativeLandscape;
+                        _daysToDisplay =
+                            _settingsModel.nrOfDaysToDisplayLandscape;
+                        _displayDaysRelative =
+                            _settingsModel.displayDaysRelativeLandscape;
                     }
 
                     // If the option of showing 1 or 2 days is chosen the
