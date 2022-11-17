@@ -357,7 +357,8 @@ class WeekplanScreen extends StatelessWidget {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
-                    final int _activitiesToDisplay = _settingsModel.nrOfActivitiesToDisplay;
+                    final int _activitiesToDisplay =
+                        _settingsModel.nrOfActivitiesToDisplay;
 
                     _weekdayCounter = 0;
                     // If the option of showing 1 or 2 days is chosen the
@@ -422,7 +423,7 @@ class WeekplanScreen extends StatelessWidget {
                           weekplanBloc: _weekplanBloc,
                           user: _user,
                           streamIndex: 0,
-                          activitiesToDisplay: _activitiesToDisplay
+                          activitiesToDisplay: _activitiesToDisplay,
                         )
                       )
                       );
@@ -434,51 +435,6 @@ class WeekplanScreen extends StatelessWidget {
                           const Spacer(flex: 1),
                         ],
                       );
-                      /*
-                      return StreamBuilder<WeekdayModel>(
-                        stream: _weekplanBloc.getWeekdayStream(0),
-                        builder: (BuildContext context,
-                          AsyncSnapshot<WeekdayModel> weekdaySnapshot){
-                          if(weekdaySnapshot.hasData) {
-                            if(weekdaySnapshot.data.activities.isNotEmpty) {
-                              int activeIndex = 0;
-                              for(int i=0; i<weekdaySnapshot.data.activities.length; i++){
-                                if(weekdaySnapshot.data.activities[i].state == ActivityState.Active){
-                                  activeIndex = i;
-                                  break;
-                                }
-                              }
-                              /*dailyActivities.add(Expanded(
-                                  child: ActivityCard(
-                                      weekdaySnapshot.data.activities[activeIndex],
-                                      _user
-                                  )
-                              )
-                              );*/
-
-                            return Row(
-                              key: const Key('SingleWeekdayRow'),
-                              children: <Widget>[
-                                const Spacer(flex: 1),
-                                dailyActivities.first,
-                                const Spacer(flex: 1),
-                              ],
-                            );
-                          } else {
-                              return Row(
-                                key: const Key('SingleWeekdayRowNoActivity'),
-                                children: <Widget>[
-                                  Container()
-                                ],
-                              );
-                            }
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        });
-                      */
                     }
                     } else {
                   return const Center(

@@ -269,13 +269,32 @@ class ActivityCard extends StatelessWidget {
             color: theme.GirafColors.red,
             size: MediaQuery.of(context).size.width,
           );
+          break;
         case ActivityState.Active:
-          return Icon(
-            Icons.brightness_1_outlined,
-            key: const Key('IconActive'),
-            color: theme.GirafColors.amber,
-            size: MediaQuery.of(context).size.width,
-          );
+          if(role == WeekplanMode.guardian || role == WeekplanMode.trustee){
+            return Icon(
+              Icons.brightness_1_outlined,
+              key: const Key('IconActive'),
+              color: theme.GirafColors.amber,
+              size: MediaQuery.of(context).size.width,
+            );
+          }
+          if(role == WeekplanMode.citizen
+              && settings.nrOfActivitiesToDisplay > 1){
+            return Icon(
+              Icons.brightness_1_outlined,
+              key: const Key('IconActive'),
+              color: theme.GirafColors.amber,
+              size: MediaQuery.of(context).size.width,
+            );
+          }
+          else{
+            return Container(
+              width: 0,
+              height: 0,
+            );
+          }
+          break;
         default:
           return Container(
             width: 0,
@@ -340,6 +359,7 @@ class ActivityCard extends StatelessWidget {
         child: CitizenAvatar(
           displaynameModel: _user,
           hideName: true,
-        ));
+        )
+    );
   }
 }
