@@ -211,4 +211,19 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
   });
+
+  testWidgets('Delete confirm dialog display the right name',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.tap(find.text('Slet bruger'));
+        await tester.pumpAndSettle();
+        expect(
+          find.byWidgetPredicate((Widget widget) =>
+          widget is RichText &&
+              widget.text.toPlainText().contains(
+                  'indtast ' + user.displayName)),
+          findsOneWidget,
+        );
+
+          });
 }
