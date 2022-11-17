@@ -16,7 +16,7 @@ import '../../routes.dart';
 /// Screen where the user can select how many days to show for a citizen
 /// This class is used for both the settings screen for portrait mode and for
 /// landscape mode
-class NumberOfDaysScreen extends StatelessWidget {
+class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
   /// Constructor
   NumberOfDaysScreen(DisplayNameModel user, bool isPortrait) : _user = user {
     // Determines whether this settings screen is the one for portrait mode or
