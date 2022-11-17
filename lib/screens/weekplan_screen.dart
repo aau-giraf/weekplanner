@@ -403,21 +403,11 @@ class WeekplanScreen extends StatelessWidget {
                     }
                     if (_settingsModel.showOnlyActivities == false) {
                       if (weekDays.length == 1) {
-                        dailyActivities.add(Expanded(
-                            child: WeekplanActivitiesColumn(
-                              dayOfTheWeek: Weekday.values[_weekdayCounter],
-                              color: Colors.amber,
-                              weekplanBloc: _weekplanBloc,
-                              user: _user,
-                              streamIndex: 0,
-                            )
-                        )
-                        );
                         return Row(
                           key: const Key('SingleWeekdayRow'),
                           children: <Widget>[
                             const Spacer(flex: 1),
-                            dailyActivities.first,
+                            weekDays.first,
                             const Spacer(flex: 1),
                           ],
                         );
@@ -425,6 +415,26 @@ class WeekplanScreen extends StatelessWidget {
                         return Row(children: weekDays);
                       }
                     } else {
+                      dailyActivities.add(Expanded(
+                        child: WeekplanActivitiesColumn(
+                          dayOfTheWeek: Weekday.values[_weekdayCounter],
+                          color: Colors.amber,
+                          weekplanBloc: _weekplanBloc,
+                          user: _user,
+                          streamIndex: 0,
+                          activitiesToDisplay: _activitiesToDisplay
+                        )
+                      )
+                      );
+                      return Row(
+                        key: const Key('SingleWeekdayRow'),
+                        children: <Widget>[
+                          const Spacer(flex: 1),
+                          dailyActivities.first,
+                          const Spacer(flex: 1),
+                        ],
+                      );
+                      /*
                       return StreamBuilder<WeekdayModel>(
                         stream: _weekplanBloc.getWeekdayStream(0),
                         builder: (BuildContext context,
@@ -438,13 +448,14 @@ class WeekplanScreen extends StatelessWidget {
                                   break;
                                 }
                               }
-                              dailyActivities.add(Expanded(
+                              /*dailyActivities.add(Expanded(
                                   child: ActivityCard(
                                       weekdaySnapshot.data.activities[activeIndex],
                                       _user
                                   )
                               )
-                              );
+                              );*/
+
                             return Row(
                               key: const Key('SingleWeekdayRow'),
                               children: <Widget>[
@@ -467,24 +478,13 @@ class WeekplanScreen extends StatelessWidget {
                             );
                           }
                         });
+                      */
                     }
-                    } /**/ else {
+                    } else {
                   return const Center(
                   child: CircularProgressIndicator(),
                   );
-                  } /*
-                  if (weekDays.length == 1) {
-                    return Row(
-                      key: const Key('SingleWeekdayRow'),
-                      children: <Widget>[
-                        const Spacer(flex: 1),
-                        weekDays.first,
-                        const Spacer(flex: 1),
-                      ],
-                    );
-                  } else {
-                    return Row(children: weekDays);
-                  }*/
+                  }
                 },
               );
             }

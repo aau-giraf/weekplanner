@@ -33,7 +33,8 @@ class WeekplanActivitiesColumn extends StatelessWidget {
     @required this.color,
     @required this.user,
     @required this.weekplanBloc,
-    @required this.streamIndex
+    @required this.streamIndex,
+    @required this.activitiesToDisplay
   }) {
     _settingsBloc.loadSettings(user);
   }
@@ -53,6 +54,8 @@ class WeekplanActivitiesColumn extends StatelessWidget {
 
   /// Index of the weekday in the weekdayStreams list
   final int streamIndex;
+
+  final int activitiesToDisplay;
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
   final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
@@ -85,6 +88,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
     );
   }
 
+  /*
   Card _translateWeekDay(Weekday day) {
     String translation;
     switch (day) {
@@ -156,7 +160,9 @@ class WeekplanActivitiesColumn extends StatelessWidget {
       ),
     );
   }
+  */
 
+  /*
   ///Builds the selector buttons day
   Container _buildDaySelectorButtons(
       BuildContext context, WeekdayModel weekDay) {
@@ -208,6 +214,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
       },
     ));
   }
+  */
 
   /// Marks all activities for a given day
   void markAllDayActivities(WeekdayModel weekdayModel) {
@@ -539,6 +546,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
     }
   }
 
+  /*
   Container _buildAddActivityButton(WeekdayModel weekday, BuildContext context){
     return Container(
         padding: EdgeInsets.symmetric(
@@ -582,6 +590,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
           ),
         ));
   }
+  */
 
   /// Function that creates the notify dialog,
   /// depeninding which error occured
