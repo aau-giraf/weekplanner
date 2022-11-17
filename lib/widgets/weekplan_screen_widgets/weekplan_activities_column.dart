@@ -3,10 +3,8 @@ import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/weekday_model.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -14,13 +12,11 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
 
 import '../../di.dart';
 import '../../routes.dart';
 import '../../style/custom_color.dart' as theme;
-import '../giraf_button_widget.dart';
 import '../giraf_notify_dialog.dart';
 import '../weekplanner_choiceboard_selector.dart';
 import 'activity_card.dart';
@@ -55,6 +51,8 @@ class WeekplanActivitiesColumn extends StatelessWidget {
   /// Index of the weekday in the weekdayStreams list
   final int streamIndex;
 
+  /// The number of activities to display if the option to only show activities
+  /// is enabled
   final int activitiesToDisplay;
 
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();

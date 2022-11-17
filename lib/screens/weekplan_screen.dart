@@ -1,11 +1,9 @@
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
-import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -22,7 +20,6 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_activities_column.dart';
 
@@ -349,7 +346,7 @@ class WeekplanScreen extends StatelessWidget {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     int _daysToDisplay;
-                    int _activitiesToDisplay =
+                    final int _activitiesToDisplay =
                         _settingsModel.nrOfActivitiesToDisplay;
                     bool _displayDaysRelative;
                     if (orientation == Orientation.portrait) {
@@ -465,7 +462,7 @@ class WeekplanScreen extends StatelessWidget {
               title: 'Fejl', description: message, key: key);
         });
   }
-  //adds a single day to a week based on  and the specified color
+  ///adds a single day to a week based on  and the specified color
   void addDayToWeek(List<Widget> weekDays, int nthDayToAdd, Color dayColor) {
     weekDays.add(Expanded(
         child: WeekplanDayColumn(
