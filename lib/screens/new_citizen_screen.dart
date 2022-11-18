@@ -69,8 +69,8 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
 
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery.of(context).size.height;
-    screenWidth = MediaQuery.of(context).size.width;
+    widget.screenHeight = MediaQuery.of(context).size.height;
+    widget.screenWidth = MediaQuery.of(context).size.width;
     body:
     return Scaffold(
       appBar: GirafAppBar(
@@ -234,11 +234,11 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
           /// Profile preview picture
           Center(
             child: StreamBuilder<File>(
-                stream: _bloc.file,
+                stream: widget._bloc.file,
                 builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
                     snapshot.data != null
-                        ? _displayImage(snapshot.data)
-                        : _displayIfNoImage()),
+                        ? widget._displayImage(snapshot.data)
+                        : widget._displayIfNoImage()),
           ),
 
           Row(
@@ -254,14 +254,14 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   key: const Key('TilføjFraGalleriButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
                   text: 'Tilføj fra galleri',
-                  onPressed: _bloc.chooseImageFromGallery,
+                  onPressed: widget._bloc.chooseImageFromGallery,
                   child: StreamBuilder<File>(
-                      stream: _bloc.file,
+                      stream: widget._bloc.file,
                       builder: (BuildContext context,
                               AsyncSnapshot<File> snapshot) =>
                           snapshot.data != null
-                              ? _displayImage(snapshot.data)
-                              : _displayIfNoImage()),
+                              ? widget._displayImage(snapshot.data)
+                              : widget._displayIfNoImage()),
                 ),
                 /*const Padding(padding: EdgeInsets.symmetric(vertical: 10,
                     horizontal: 16),),*/
@@ -275,14 +275,14 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   key: const Key('TagBillede'),
                   icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
                   text: 'Tag billede',
-                  onPressed: _bloc.takePictureWithCamera,
+                  onPressed: widget._bloc.takePictureWithCamera,
                   child: StreamBuilder<File>(
-                      stream: _bloc.file,
+                      stream: widget._bloc.file,
                       builder: (BuildContext context,
                               AsyncSnapshot<File> snapshot) =>
                           snapshot.data != null
-                              ? _displayImage(snapshot.data)
-                              : _displayIfNoImage()),
+                              ? widget._displayImage(snapshot.data)
+                              : widget._displayIfNoImage()),
                 ),
               ),
             ],
