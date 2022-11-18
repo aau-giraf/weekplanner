@@ -138,19 +138,7 @@ void main() {
         expect(find.text('Giv borger adgang til deres indstillinger.'), findsOneWidget);
   });
 
-  testWidgets('showSettingsForCitizen button updates setting',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.pumpAndSettle();
-        expect(false, mockSettings.showSettingsForCitizen);
-
-        await tester.tap(find.text('Giv borger adgang til deres indstillinger.'));
-        await tester.pumpAndSettle();
-
-        expect(true, mockSettings.showSettingsForCitizen);
-      });
-
-
+ 
   testWidgets('Farver på ugeplan button changes screen',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
@@ -173,6 +161,19 @@ void main() {
     expect(true, mockSettings.pictogramText);
   });
 
+  testWidgets('Vis popup knap opdaterer indstillinger',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+
+        expect(false, mockSettings.showPopup);
+
+        await tester.tap(find.text('Vis bekræftelse popups'));
+
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+        expect(true, mockSettings.showPopup);
+  });
 
   testWidgets('Settings has TimerControl checkbox without an checkmark',
       (WidgetTester tester) async {
