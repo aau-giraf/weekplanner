@@ -21,7 +21,6 @@ class MockAuth extends Mock implements AuthBloc {
   final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
       .seeded(true);
 
-  @override
   String loggedInUsername = 'Graatand';
 
 

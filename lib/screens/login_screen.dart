@@ -199,10 +199,13 @@ class LoginScreenState extends State<LoginScreen> {
                       child: Container(
                         child: Transform.scale(
                           scale: 1.5,
-                          child: RaisedButton(
+                          child: ElevatedButton(
                             key: const Key('LoginBtnKey'),
-                            shape: RoundedRectangleBorder(
+                            style: ElevatedButton.styleFrom(
+                              primary: theme.GirafColors.loginButtonColor,
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
+                            ),
                             child: const Text(
                               'Login',
                               style: TextStyle(color: theme.GirafColors.white),
@@ -210,7 +213,6 @@ class LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               loginAction(context);
                             },
-                            color: theme.GirafColors.loginButtonColor,
                           ),
                         ),
                       ),
@@ -220,9 +222,12 @@ class LoginScreenState extends State<LoginScreen> {
                         ? Container(
                             child: Transform.scale(
                               scale: 1.2,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: theme.GirafColors.loginButtonColor,
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0)),
+                                ),
                                 child: const Text(
                                   'Auto-Login',
                                   key: Key('AutoLoginKey'),
@@ -236,7 +241,6 @@ class LoginScreenState extends State<LoginScreen> {
                                       environment.getVar<String>('PASSWORD');
                                   loginAction(context);
                                 },
-                                color: theme.GirafColors.loginButtonColor,
                               ),
                             ),
                           )

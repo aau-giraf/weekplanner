@@ -11,6 +11,7 @@ import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
+import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/style/font_size.dart';
@@ -107,7 +108,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     if (role != null) {
       /// Checks user role and gives option to add Citizen if user is Guardian
       if (role == Role.Guardian) {
-        list.insert(0, FlatButton(
+        list.insert(0, TextButton(
           onPressed: () async {
             final Object result =
             await Routes.push(context, NewCitizenScreen());
@@ -133,6 +134,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                     return Icon(
                       Icons.person_add,
                       size: constraints.biggest.height,
+                      color: GirafColors.black,
                     );
                   }),
                 ),
@@ -148,7 +150,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                       child: AutoSizeText(
                           'Tilføj Bruger',
                           style: TextStyle(fontSize: GirafFont.large,
-                              color: Colors.black)
+                              color: GirafColors.black)
                       ),
                     )
                 )

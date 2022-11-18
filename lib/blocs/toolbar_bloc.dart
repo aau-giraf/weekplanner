@@ -4,7 +4,6 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:quiver/time.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -55,7 +54,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Find the icon picture based on the input enum
   void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
-      VoidCallback callback, BuildContext context) async {
+      VoidCallback callback, BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept(callback));
@@ -82,7 +81,7 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconChangeToCitizen(context));
         break;
       case AppBarIcon.changeToGuardian:
-        await _setUserNameOfGuardian();
+        _setUserNameOfGuardian();
         _iconsToAdd.add(_createIconChangeToGuardian(context));
         break;
       case AppBarIcon.copy:

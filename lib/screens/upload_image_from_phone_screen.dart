@@ -101,7 +101,7 @@ class UploadImageFromPhone extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
-          child: FlatButton(
+          child: TextButton(
             onPressed: _uploadFromGallery.chooseImageFromGallery,
             child: StreamBuilder<File>(
                 stream: _uploadFromGallery.file,

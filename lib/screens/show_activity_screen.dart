@@ -365,11 +365,13 @@ class ShowActivityScreen extends StatelessWidget {
                 ),
               ),
             ),
-            RaisedButton(
+            ElevatedButton(
               key: const Key('ChoiceBoardNameButton'),
-              color: theme.GirafColors.gradientDefaultOrange,
-              disabledColor: theme.GirafColors.gradientDisabledOrange,
-              padding: const EdgeInsets.all(8.0),
+              style:  ElevatedButton.styleFrom(
+                primary: theme.GirafColors.gradientDefaultOrange,
+                onSurface: theme.GirafColors.gradientDisabledOrange,
+                padding: const EdgeInsets.all(8.0),
+              ),
               onPressed: () {
                 _activity.choiceBoardName = inputtext;
                 _activityBloc.update();

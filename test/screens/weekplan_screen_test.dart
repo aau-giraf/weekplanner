@@ -755,9 +755,9 @@ api.pictogram=MockPictogramApi();
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
-    expect(find.byType(RaisedButton), findsNWidgets(7));
+    expect(find.byType(ElevatedButton), findsNWidgets(7));
 
-    await tester.tap(find.byType(RaisedButton).first);
+    await tester.tap(find.byType(ElevatedButton).first);
     await tester.pumpAndSettle();
 
     expect(find.byType(PictogramSearch), findsOneWidget);

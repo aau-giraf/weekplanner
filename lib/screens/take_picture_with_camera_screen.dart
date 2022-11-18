@@ -106,7 +106,7 @@ class TakePictureWithCamera extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
-          child: FlatButton(
+          child: TextButton(
             onPressed: _takePictureWithCamera.takePictureWithCamera,
             child: StreamBuilder<File>(
                 stream: _takePictureWithCamera.file,
