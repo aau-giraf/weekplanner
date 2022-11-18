@@ -39,6 +39,9 @@ jobs:
           path: ${{ matrix.flutter_path }}
       - run: flutter pub get
         name: Get dependencies
+        
+      - run: flutter pub upgrade api_client
+        name: Update api_client
 
       - run: flutter doctor
         name: Doctor
