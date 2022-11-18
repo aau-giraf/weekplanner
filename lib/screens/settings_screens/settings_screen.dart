@@ -52,8 +52,9 @@ class SettingsScreen extends StatelessWidget {
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
         _buildTimerSection(context),
-        _buildTimeRepresentationSettings(context),
         _buildUserSettings(context),
+        _buildTimeRepresentationSettings(context),
+
         _buildPrivacySection()
       ],
     );

@@ -32,16 +32,6 @@ class SettingsBloc extends BlocBase {
   final rx_dart.BehaviorSubject<SettingsModel> _settings =
       rx_dart.BehaviorSubject<SettingsModel>();
 
-  ///Get settings for citizen for toolbar
-  ///and calls recursive if null
-  ///if the stream is null means there is no connection to database
-  bool getShowSettingsForCitizen() {
-    if (_settings.stream.value.showSettingsForCitizen == null){
-      return getShowSettingsForCitizen();
-    }
-    return _settings.stream.value.showSettingsForCitizen;
-  }
-
   /// Load the settings for a user
   void loadSettings(DisplayNameModel user) {
     _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {

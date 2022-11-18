@@ -61,6 +61,11 @@ class WeekplanScreen extends StatelessWidget {
           if (weekModeSnapshot.data == WeekplanMode.citizen) {
             _weekplanBloc.setEditMode(false);
           }
+          return StreamBuilder<SettingsModel>(
+              stream: _settingsBloc.settings,
+              builder: (BuildContext context,
+                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                  final SettingsModel _settingsModel = settingsSnapshot.data;
           return WillPopScope(
             onWillPop: () async =>
                 weekModeSnapshot.data == WeekplanMode.guardian,
@@ -91,7 +96,7 @@ class WeekplanScreen extends StatelessWidget {
                   AppBarIcon.logout: () {}
                 }
                 :(weekModeSnapshot.data == WeekplanMode.citizen &&
-                    _settingsBloc.getShowSettingsForCitizen())
+                    _settingsModel.showSettingsForCitizen == true)
                     ? <AppBarIcon, VoidCallback> {
                       AppBarIcon.changeToGuardian: () {},
                   AppBarIcon.settings: () =>
@@ -114,10 +119,10 @@ class WeekplanScreen extends StatelessWidget {
                     AsyncSnapshot<UserWeekModel> snapshot) {
                   if (snapshot.hasData) {
                     return _buildWeeks(snapshot.data.week, context);
-                  } else {
+                } else {
                     return const Center(
                       child: CircularProgressIndicator(),
-                    );
+                        );
                   }
                 },
               ),
@@ -146,6 +151,7 @@ class WeekplanScreen extends StatelessWidget {
             ),
           );
         });
+    });
   }
 
   /// Builds the BottomAppBar when in edit mode
