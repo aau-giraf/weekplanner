@@ -21,6 +21,7 @@ class GirafButton extends StatefulWidget {
     this.height = 40.0,
     @required this.onPressed,
     this.isEnabled = true,
+    // ignore: avoid_unused_constructor_parameters
     this.isEnabledStream, StreamBuilder<File> child,
   }) : super(key: key);
 

@@ -16,6 +16,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 enum Roles {guardian, trustee, citizen}
 
 /// Screen for creating a new citizen
+// ignore: must_be_immutable
 class NewCitizenScreen extends StatefulWidget {
   /// Constructor for the NewCitizenScreen()
   NewCitizenScreen() : _bloc = di.getDependency<NewCitizenBloc>() {
@@ -28,7 +29,6 @@ class NewCitizenScreen extends StatefulWidget {
   ///Variable representing the screen width
   dynamic screenWidth;
 
-  final ApiErrorTranslater _translator = ApiErrorTranslater();
   final NewCitizenBloc _bloc;
 
   Widget _displayImage(File image) {
@@ -69,7 +69,6 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
   Widget build(BuildContext context) {
     widget.screenHeight = MediaQuery.of(context).size.height;
     widget.screenWidth = MediaQuery.of(context).size.width;
-    body:
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny bruger',
