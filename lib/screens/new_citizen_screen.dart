@@ -37,8 +37,6 @@ class NewCitizenScreen extends StatefulWidget {
       child: CircleAvatar(
         key: const Key('WidgetAvatar'),
         radius: 200,
-        /*foregroundImage: FileImage(image),
-        backgroundImage: const AssetImage('assets/login_screen_background_image.png'),*/
         backgroundImage: FileImage(image),
       ),
     );
@@ -262,9 +260,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           snapshot.data != null
                               ? widget._displayImage(snapshot.data)
                               : widget._displayIfNoImage()),
-                ),
-                /*const Padding(padding: EdgeInsets.symmetric(vertical: 10,
-                    horizontal: 16),),*/
+                ),  
               ),
               Padding(
                 padding:

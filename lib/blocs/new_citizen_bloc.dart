@@ -40,8 +40,6 @@ class NewCitizenBloc extends BlocBase {
 
   final rx_dart.BehaviorSubject<bool> _isInputValid =
   rx_dart.BehaviorSubject<bool>.seeded(false);
-  /*final rx_dart.BehaviorSubject<bool> _isUploading =
-  rx_dart.BehaviorSubject<bool>.seeded(false);*/
 
   /// Handles when the entered display name is changed.
   Sink<String> get onDisplayNameChange => displayNameController.sink;

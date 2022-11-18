@@ -167,10 +167,6 @@ void main() {
     final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
     await gesture.moveBy(const Offset(0, -300));
     await tester.pump();
-    /*
-    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-    await tester.pumpAndSettle();
-     */
 
     expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
   });
