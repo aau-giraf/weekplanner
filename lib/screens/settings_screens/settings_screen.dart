@@ -5,8 +5,7 @@ import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'number_of_days_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'color_theme_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
@@ -125,11 +124,11 @@ class SettingsScreen extends StatelessWidget {
             final SettingsModel settingsModel = settingsSnapshot.data;
             return SettingsSection('Ugeplan', <SettingsSectionItem>[
               SettingsArrowButton(
-                'Antal dage', () async {
+                'Antal dage der vises når enheden er på højkant', () async {
                   final Object result = await Routes.push(
-                      context, NumberOfDaysScreen(_user));
+                      context, NumberOfDaysScreen(_user, true));
                   if(result != null) {
-                    settingsModel.nrOfDaysToDisplay = result;
+                    settingsModel.nrOfDaysToDisplayPortrait = result;
                     _settingsBloc.updateSettings(
                         _user.id, settingsModel)
                       .listen((_) {
@@ -138,29 +137,64 @@ class SettingsScreen extends StatelessWidget {
                     );
                   }
                 },
-                titleTrailing: Text(settingsModel.nrOfDaysToDisplay == 1
-                    ? 'En dag'
-                    : settingsModel.nrOfDaysToDisplay == 2
-                    ? 'To dage'
-                    : settingsModel.nrOfDaysToDisplay == 5
-                    ? 'Mandag til fredag'
-                    : 'Mandag til søndag'),
+                titleTrailing: Text(nrOfDaysToString(
+                    settingsModel.nrOfDaysToDisplayPortrait)),
+              ),
+              SettingsArrowButton(
+                'Antal dage der vises når enheden er på langs', () async {
+                final Object result = await Routes.push(
+                    context, NumberOfDaysScreen(_user, false));
+                if(result != null) {
+                  settingsModel.nrOfDaysToDisplayLandscape = result;
+                  _settingsBloc.updateSettings(
+                      _user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  }
+                  );
+                }
+              },
+                titleTrailing: Text(nrOfDaysToString
+                  (settingsModel.nrOfDaysToDisplayLandscape)),
               ),
               SettingsCheckMarkButton.fromBoolean(
-                  settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
-                settingsModel.pictogramText = !settingsModel.pictogramText;
-                _settingsBloc.updateSettings(_user.id, settingsModel)
-                    .listen((_) {
-                  _settingsBloc.loadSettings(_user);
-                });
-              }),
+                settingsModel.pictogramText, 'Piktogram tekst er synlig', () {
+                  settingsModel.pictogramText = !settingsModel.pictogramText;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                  });
+                }),
+              SettingsCheckMarkButton.fromBoolean(
+                settingsModel.showPopup, 'Vis bekræftelse popups', () {
+                  settingsModel.showPopup = !settingsModel.showPopup;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                  });
+                }),
             ]);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
         });
+  }
+
+  /// Takes in one of the possible nrOfDaysToDisplay,
+  ///  and returns its corresponding string
+  String nrOfDaysToString(int nrOfDaysToDisplay)
+  {
+    switch(nrOfDaysToDisplay)
+    {
+      case 1: {return 'En dag';}
+      case 2: {return 'To dage';}
+      case 5: {return 'Mandag til fredag';}
+      case 7: {return 'Mandag til søndag';}
+      default: throw Exception(nrOfDaysToDisplay.toString() + ' is not a valid '
+          'value for nrOfDaysToDisplay. It must be either 1,2,5, or 7');
+    }
   }
 
   Widget _buildTimerSection(BuildContext context) {
@@ -172,20 +206,20 @@ class SettingsScreen extends StatelessWidget {
             final SettingsModel _settingsModel = settingsSnapshot.data;
             return SettingsSection('Tid', <SettingsSectionItem>[
               SettingsCheckMarkButton.fromBoolean(
-                  _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
-                _settingsModel.lockTimerControl =
-                !_settingsModel.lockTimerControl;
-                _settingsBloc.updateSettings(_user.id, _settingsModel)
-                    .listen((_) {
-                  _settingsBloc.loadSettings(_user);
-                });
+                _settingsModel.lockTimerControl, 'Lås tidsstyring', () {
+                  _settingsModel.lockTimerControl =
+                  !_settingsModel.lockTimerControl;
+                  _settingsBloc.updateSettings(_user.id, _settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                  });
               })
             ]);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
         });
   }
 
@@ -197,27 +231,23 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildPrivacySection() {
     return StreamBuilder<SettingsModel>(
-        stream: _settingsBloc.settings,
-        builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      stream: _settingsBloc.settings,
+      builder: (BuildContext context,
+        AsyncSnapshot<SettingsModel> settingsSnapshot) {
           return SettingsSection('Privatliv', <SettingsSectionItem>[
-            SettingsArrowButton(
-              'Privatlivsinformationer',
-                  () =>
-                      Routes.push(context, PrivacyInformationScreen())
-                          .then((Object object) =>
-                          _settingsBloc.loadSettings(_user)),
+            SettingsArrowButton('Privatlivsinformationer', () =>
+              Routes.push(context, PrivacyInformationScreen())
+                .then((Object object) => _settingsBloc.loadSettings(_user)),
             ),
           ]);
-
-        });
+      });
   }
 
   Widget _buildTimeRepresentationSettings(BuildContext context) {
     return StreamBuilder<SettingsModel>(
-        stream: _settingsBloc.settings,
-        builder: (BuildContext context,
-            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+      stream: _settingsBloc.settings,
+      builder: (BuildContext context,
+        AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final DefaultTimer userTimer = settingsSnapshot.data.defaultTimer;
             final SettingsModel settingsModel = settingsSnapshot.data;
@@ -243,10 +273,10 @@ class SettingsScreen extends StatelessWidget {
               )
             ]);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        });
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+      });
   }
 }

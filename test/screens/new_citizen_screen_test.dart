@@ -192,6 +192,12 @@ void main() {
     expect(find.text('birgit'), findsNWidgets(1));
   });
 
+  testWidgets('Role radio buttons are rendered', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+
+    expect(find.byType(ListTile), findsNWidgets(3));
+  });
+
   testWidgets('You can input a password', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
     await tester.enterText(find.byKey(const Key('passwordField')), 'password');

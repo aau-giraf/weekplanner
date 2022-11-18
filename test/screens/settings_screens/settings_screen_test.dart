@@ -77,10 +77,10 @@ void main() {
       cancelMark: null,
       defaultTimer: null,
       theme: null,
-      nrOfDaysToDisplay: 1,
       weekDayColors: MockUserApi.createWeekDayColors(),
       lockTimerControl: false,
       pictogramText: false,
+      showPopup: false,
     );
 
     di.registerDependency<AuthBloc>((_) => AuthBloc(api));
@@ -117,7 +117,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Ugeplan'), findsOneWidget);
-    expect(find.text('Antal dage'), findsOneWidget);
+    expect(find.text('Antal dage der vises når enheden er på højkant'),
+        findsOneWidget);
+    expect(find.text('Antal dage der vises når enheden er på langs'),
+        findsOneWidget);
     expect(find.text('En dag'), findsOneWidget);
     expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
@@ -149,6 +152,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(true, mockSettings.pictogramText);
+  });
+
+  testWidgets('Vis popup knap opdaterer indstillinger',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+
+        expect(false, mockSettings.showPopup);
+
+        await tester.tap(find.text('Vis bekræftelse popups'));
+        await tester.pumpAndSettle();
+
+        expect(true, mockSettings.showPopup);
   });
 
   testWidgets('Settings has TimerControl checkbox without an checkmark',
