@@ -121,8 +121,6 @@ void main() {
         findsOneWidget);
     expect(find.text('Antal dage der vises når enheden er på langs'),
         findsOneWidget);
-    expect(find.text('En dag'), findsOneWidget);
-    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Brugerindstillinger section',
@@ -186,14 +184,14 @@ void main() {
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-        widget.current == 2 &&
+        widget.current == 1 &&
         widget.text == 'Lås tidsstyring'));
     await tester.pump();
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&
-            widget.current == 1 &&
+            widget.current == 2 &&
             widget.text == 'Lås tidsstyring'),
         findsOneWidget);
   });

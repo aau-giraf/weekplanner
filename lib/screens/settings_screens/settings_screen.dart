@@ -192,10 +192,18 @@ class SettingsScreen extends StatelessWidget {
       case 2: {return 'To dage';}
       case 5: {return 'Mandag til fredag';}
       case 7: {return 'Mandag til søndag';}
-      default: throw Exception(nrOfDaysToDisplay.toString() + ' is not a valid '
-          'value for nrOfDaysToDisplay. It must be either 1,2,5, or 7');
+      default: {
+          if (nrOfDaysToDisplay == null) {
+            //The value can be null in some tests that uses the settingsmodel,
+            // but not the nrOfDaysToDisplay
+            return '';
+          }
+          throw Exception(nrOfDaysToDisplay.toString() + ' is not a valid '
+              'value for nrOfDaysToDisplay. It must be either 1,2,5, or 7');
+        }
+      }
     }
-  }
+
 
   Widget _buildTimerSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
