@@ -1,7 +1,7 @@
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
-import 'package:weekplanner/api/errorcode_translater.dart';
+import 'package:weekplanner/api/errorcode_translator.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_pictogram_password_screen.dart';
@@ -24,7 +24,7 @@ class NewCitizenScreen extends StatefulWidget {
 }
 
 class _NewCitizenScreenState extends State<NewCitizenScreen> {
-  final ApiErrorTranslater _translator = ApiErrorTranslater();
+  final ApiErrorTranslator _translator = ApiErrorTranslator();
   Roles _role = Roles.citizen;
 
   void previousRoute(GirafUserModel response) {

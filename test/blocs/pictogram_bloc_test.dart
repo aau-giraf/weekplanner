@@ -21,6 +21,10 @@ void main() {
     bloc = PictogramBloc(api);
   });
 
+  @override
+  Stream<PictogramModel> get(int id) {
+    print("hej");
+  }
   test('Should be able to search for pictograms', async((DoneFn done) {
     const String query = 'Kat';
     int count = 0;
