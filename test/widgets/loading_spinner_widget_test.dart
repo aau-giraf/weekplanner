@@ -10,16 +10,16 @@ class MockScreen extends StatelessWidget {
       body: Container(
           child: Column(
         children: <Widget>[
-          RaisedButton(
+          ElevatedButton(
               key: const Key('FirstButton'),
               onPressed: () {
                 loadingSpinner(context);
-              }),
-          RaisedButton(
+              }, child: null,),
+          ElevatedButton(
               key: const Key('SecondButton'),
               onPressed: () {
                 Routes.pop(context);
-              }),
+              }, child: null,),
         ],
       )),
     );

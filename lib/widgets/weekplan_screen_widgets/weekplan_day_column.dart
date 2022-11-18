@@ -468,10 +468,12 @@ class WeekplanDayColumn extends StatelessWidget {
                     AsyncSnapshot<WeekplanMode> snapshot) {
                   return Visibility(
                     visible: snapshot.data == WeekplanMode.guardian,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                         key: const Key('AddActivityButton'),
                         child: Image.asset('assets/icons/add.png'),
-                        color: theme.GirafColors.buttonColor,
+                        style: ElevatedButton.styleFrom(
+                          primary: theme.GirafColors.buttonColor,
+                        ),
                         onPressed: () async {
                           Routes.push(context, PictogramSearch(user: user,))
                               .then((Object object) {
