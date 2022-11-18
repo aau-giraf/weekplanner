@@ -225,4 +225,21 @@ void main() {
           findsOneWidget,
         );
   });
+
+  testWidgets('confirm dialog provides an error, if the user wrote the wrong name',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.tap(find.text('Slet bruger'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), "test");
+    await tester.tap(find.text('Slet'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Det indtastede navn er forkert!'), findsOneWidget);
+      }
+  );
+
+
+
+
 }

@@ -79,15 +79,22 @@ class GirafConfirmDialog extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               )),
-    inputField != null?
-    Expanded(
-    child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child:inputField
-    )
-    ):Container(),
+
             ],
           ),
+          inputField != null?
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+          Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child:inputField
+              )
+          )
+                  ]
+              ):Container(),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             child: Row(

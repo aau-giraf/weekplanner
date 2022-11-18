@@ -223,15 +223,16 @@ class SettingsScreen extends StatelessWidget {
         ),
     ),
     inputField: const TextField(
+      style: TextStyle(fontSize: 20),
+      textAlign: TextAlign. center,
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
         border: OutlineInputBorder(),
-        labelText: 'Indtast navn',
+        hintText: 'Indtast navn',
       ),
     ),
     confirmButtonText: 'Slet',
-    confirmButtonIcon:
-    const ImageIcon(AssetImage('assets/icons/delete.png')),
+    confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
     confirmOnPressed: () {},
     );
 
