@@ -10,9 +10,12 @@ import 'package:api_client/api/api.dart';
 class PictogramChoices extends StatefulWidget {
   ///Widget with the possible pictograms in the code and the currently picked
   /// pictograms in the code.
-  const PictogramChoices({
-    Key key,
-  }) : super(key: key);
+  const PictogramChoices({Key key, @required this.onPasswordChanged})
+      : super(key: key);
+
+  /// This function returns the new password every time the password has been
+  /// changed by adding or removing pictogram.
+  final Function onPasswordChanged;
 
   @override
   _PictogramChoiceState createState() => _PictogramChoiceState();
@@ -50,6 +53,7 @@ class _PictogramChoiceState extends State<PictogramChoices> {
     if (index != -1) {
       _inputCode[index] = pictogram;
     }
+    widget.onPasswordChanged(validateAndConvertPass());
     //Reloads the widget with the new input
     setState(() {});
   }
@@ -57,8 +61,25 @@ class _PictogramChoiceState extends State<PictogramChoices> {
   ///Called when a pictogram is pressed in the code and removes the pressed icon
   void removeFromPass(int index) {
     _inputCode[index] = null;
+    widget.onPasswordChanged(validateAndConvertPass());
     //Reloads the widget with the new code
     setState(() {});
+  }
+
+  /// Validates the chosen pictograms and converts them into a string.
+  /// If the input is invalid, null is return. This means that one must
+  /// null-check when using this widget.
+  String validateAndConvertPass() {
+    String output = '';
+    bool valid = true;
+    passwordList().forEach((Widget w) {
+      if (w is PictogramImage) {
+        output += w.pictogram.id.toString();
+      } else {
+        valid = false;
+      }
+    });
+    return (valid == true) ? output : null;
   }
 
   ///

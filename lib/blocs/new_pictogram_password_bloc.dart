@@ -19,9 +19,31 @@ class NewPictogramPasswordBloc extends BlocBase {
   /// The display name for the citizen that one is creating a password for.
   String displayName;
 
+  ///
+  final rx_dart.BehaviorSubject<String> pictogramPasswordController =
+      rx_dart.BehaviorSubject<String>();
+
+  /// To be called whenever somethings needs to be added to the controller
+  Sink<String> get onPictogramPasswordChanged =>
+      pictogramPasswordController.sink;
+
+  Stream<bool> get validPictogramPasswordStream =>
+      pictogramPasswordController.stream.transform(_passwordValidation);
+
+  final StreamTransformer<String, bool> _passwordValidation =
+      StreamTransformer<String, bool>.fromHandlers(
+          handleData: (String input, EventSink<bool> sink) {
+    if (input == null) {
+      sink.add(false);
+    } else {
+      sink.add(true);
+    }
+  });
+
   /// Creates a user with the given information.
   Stream<GirafUserModel> createCitizen() {
-    return _api.account.register(userName, "password", displayName,
+    return _api.account.register(
+        userName, pictogramPasswordController.value, displayName,
         departmentId: _user.department, role: Role.Citizen);
   }
 
@@ -39,10 +61,12 @@ class NewPictogramPasswordBloc extends BlocBase {
   void reset() {
     userName = null;
     displayName = null;
+    pictogramPasswordController.add(null);
+    _user = null;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    pictogramPasswordController.close();
   }
 }
