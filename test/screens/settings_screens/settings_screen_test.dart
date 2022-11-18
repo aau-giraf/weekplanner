@@ -79,7 +79,6 @@ void main() {
       cancelMark: null,
       defaultTimer: null,
       theme: null,
-      nrOfDaysToDisplay: 1,
       weekDayColors: MockUserApi.createWeekDayColors(),
       lockTimerControl: false,
       pictogramText: false,
@@ -120,7 +119,10 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Ugeplan'), findsOneWidget);
-    expect(find.text('Antal dage'), findsOneWidget);
+    expect(find.text('Antal dage der vises når enheden er på højkant'),
+        findsOneWidget);
+    expect(find.text('Antal dage der vises når enheden er på langs'),
+        findsOneWidget);
     expect(find.text('En dag'), findsOneWidget);
     expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
