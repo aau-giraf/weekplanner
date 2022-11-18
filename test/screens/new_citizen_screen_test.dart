@@ -226,7 +226,6 @@ void main() {
             .isEnabled,
         isFalse);
   });
-
   // testWidgets('"Brugernavnet eksisterer allerede" error message',
   //     (WidgetTester tester) async {
   //   await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
@@ -236,14 +235,15 @@ void main() {
   //       find.byKey(const Key('displayNameField')), 'mockDisplayName');
   //   await tester.enterText(
   //       find.byKey(const Key('usernameField')), 'alreadyExists');
+  // ignore: lines_longer_than_80_chars
   //   await tester.enterText(find.byKey(const Key('passwordField')), 'password');
   //   await tester.enterText(
   //       find.byKey(const Key('passwordVerifyField')), 'password');
-
+  // ignore: lines_longer_than_80_chars
   //   final TestGesture gesture = await tester.startGesture(const Offset(0, 75));
   //   await gesture.moveBy(const Offset(0, -75));
   //   await tester.pumpAndSettle();
-    
+      // ignore: lines_longer_than_80_chars
   //   await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
   //   await tester.pumpAndSettle();
 
