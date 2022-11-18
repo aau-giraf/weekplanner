@@ -150,6 +150,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value,
         passwordController.value,
         displayNameController.value,
+         _encodePng(_file.value),
         departmentId: _user.department,
         role: Role.Guardian
     );
