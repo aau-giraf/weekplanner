@@ -165,7 +165,7 @@ class ChangeUsernameScreen extends StatelessWidget {
                     controller: confirmUsernameCtrl,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.lock),
-                      labelText: 'Kodeord',
+                      labelText: 'Adgangskode',
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -180,7 +180,9 @@ class ChangeUsernameScreen extends StatelessWidget {
                           icon: const ImageIcon(
                             AssetImage('assets/icons/cancel.png'),
                             color: theme.GirafColors.transparentBlack,),
-                          onPressed: () => Navigator.pop(context)
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }
                       ),
                       GirafButton(
                           key: const Key('UsernameConfirmationDialogSaveButton'),
@@ -297,7 +299,7 @@ class ChangeUsernameScreen extends StatelessWidget {
   /// Create an unknown error dialog
   void unknownErrorDialog(String key){
     creatingErrorDialog('Der skete en ukendt fejl, prøv igen eller '
-        'kontakt en administrator', 'key');
+        'kontakt en administrator', key);
   }
 
   /// Updates the user with new username
