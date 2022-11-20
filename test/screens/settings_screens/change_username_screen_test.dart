@@ -39,17 +39,14 @@ class MockAuthBloc extends Mock implements AuthBloc {
   final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
       .seeded(false);
 
-  @override String loggedInUsername = 'testUsername';
+  @override String loggedInUsername = "testUsername";
 
   @override
   Future<void> authenticateFromPopUp(String username, String password) async {
     // Mock the API and allow these 2 users to ?login?
-    final bool status = username == 'test' && password == 'test';
+    final bool status = username == 'testUsername' && password == 'test';
     // If there is a successful login, remove the loading spinner,
     // and push the status to the stream
-    if (status) {
-      loggedInUsername = username;
-    }
     _loggedIn.add(status);
   }
 }
@@ -59,13 +56,20 @@ class MockChangeUsernameScreen extends ChangeUsernameScreen{
 
     @override
     void confirmUser(Stream<GirafUserModel> girafUser) {
-        //currentContext = context;
         authBloc.authenticateFromPopUp(
-            newUsernameCtrl.text, confirmUsernameCtrl.text);
+            authBloc.loggedInUsername, confirmUsernameCtrl.text);
 
         authBloc.loggedIn.listen((bool snapshot) {
           loginStatus = snapshot;
-          if (snapshot == false) {
+          if(snapshot){
+            showDialog<Center>(
+                barrierDismissible: false,
+                context: currentContext,
+                builder: (BuildContext context) {
+                  return GirafNotifyDialog(
+                      title: 'Brugernavn er gemt', description: 'Dine ændringer er blevet gemt', key: Key("ChangesCompleted"));
+                });
+          }else if (snapshot == false) {
             if (!loginStatus) {
               creatingErrorDialog(
                   'Forkert adgangskode.', 'WrongPassword');
@@ -115,7 +119,8 @@ void main() {
     expect(find.byType(RaisedButton), findsOneWidget);
   });
 
-  testWidgets('EMPTY new Username ERROR', (WidgetTester tester) async {
+  testWidgets('EMPTY new Username, causing error pop-up',
+          (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
     await tester.pump();
     await tester.enterText(find.byKey(const Key('UsernameKey')), '');
@@ -198,6 +203,8 @@ void main() {
         'UsernameConfirmationDialogSaveButton')));
     await tester.pump();
 
-    expect(screen.authBloc.loggedInUsername, 'test');
+    //expect(screen.authBloc, 'test');
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
+    expect(find.byKey(const Key('ChangesCompleted')), findsOneWidget);
   });
 }
