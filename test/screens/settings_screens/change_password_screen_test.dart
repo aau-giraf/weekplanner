@@ -33,6 +33,7 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   }
 }
 
+//Mock of the AccountAPI to test the changePasswordWithOld-method bypassing http-complications
 class MockAccountApi extends Mock implements AccountApi, NavigatorObserver {
   @override
   Stream<bool> changePasswordWithOld(
@@ -100,6 +101,9 @@ class MockChangePasswordScreen extends ChangePasswordScreen {
           if (response) {
             CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
                 Key("PasswordChanged"));
+          } else {
+            CreateDialog('Forkert adgangskode.', 'The old password is wrong',
+                Key("WrongPassword"));
           }
         });
       }
@@ -208,5 +212,24 @@ void main() {
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
 
     expect(find.byKey(const Key('PasswordChanged')), findsOneWidget);
+  });
+
+  testWidgets("test ChangePassword-method | throws ApiException",
+      (WidgetTester tester) async {
+    final screen = MockChangePasswordScreen(user);
+
+    await tester.pumpWidget(MaterialApp(home: screen));
+    await tester.pump();
+    await tester.enterText(
+        find.byKey(const Key('OldPasswordKey')), 'testWrongPassword');
+    await tester.enterText(
+        find.byKey(const Key('NewPasswordKey')), 'newTestPassword');
+    await tester.enterText(
+        find.byKey(const Key('RepeatedPasswordKey')), 'newTestPassword');
+    await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
+    await tester.pump();
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
+
+    expect(find.byKey(const Key('WrongPassword')), findsOneWidget);
   });
 }
