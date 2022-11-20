@@ -57,11 +57,11 @@ class UserSettingsScreen extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<GirafUserModel> snapshot) {
           if (snapshot.hasData) {
-            print("Snapshot has Girafuser: " + snapshot.data.displayName);
+            print("Snapshot has Girafuser: " + snapshot.data.username);
             DisplayNameModel user =
                 DisplayNameModel.fromGirafUser(snapshot.data);
             return SettingsSection(
-                snapshot.data.displayName + ' - skift personlig information',
+                snapshot.data.username + ' - skift personlig information',
                 <SettingsSectionItem>[
                   SettingsArrowButton('Skift brugernavn', () {
                     Routes.push(context, ChangeUsernameScreen(user));
