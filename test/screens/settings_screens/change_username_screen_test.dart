@@ -39,7 +39,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
       .seeded(false);
 
-  @override String loggedInUsername = "testUsername";
+  @override String loggedInUsername = 'testUsername';
 
   @override
   Future<void> authenticateFromPopUp(String username, String password) async {
@@ -60,14 +60,15 @@ class MockChangeUsernameScreen extends ChangeUsernameScreen{
     @override
     void confirmUser(Stream<GirafUserModel> girafUser) {
         //currentContext = context;
-        authBloc.authenticateFromPopUp(newUsernameCtrl.text, confirmUsernameCtrl.text);
+        authBloc.authenticateFromPopUp(
+            newUsernameCtrl.text, confirmUsernameCtrl.text);
 
         authBloc.loggedIn.listen((bool snapshot) {
           loginStatus = snapshot;
           if (snapshot == false) {
             if (!loginStatus) {
               creatingErrorDialog(
-                  "Forkert adgangskode.", 'WrongPassword');
+                  'Forkert adgangskode.', 'WrongPassword');
             }
           }
         });
@@ -77,120 +78,126 @@ class MockChangeUsernameScreen extends ChangeUsernameScreen{
 
 void main() {
   Api api;
-  MockAuthBloc authBloc;
-  NavigatorObserver mockObserver;
   SettingsBloc settingsBloc;
 
-  final DisplayNameModel user = DisplayNameModel(displayName: "John", role: Role.Citizen.toString(), id: '1');
-  final GirafUserModel girafUser = GirafUserModel(displayName: "guardian", username: "Guardian", role: Role.Guardian, id: '2');
+  final DisplayNameModel user = DisplayNameModel(
+      displayName: 'John', role: Role.Citizen.toString(), id: '1');
 
   setUp(() {
    di.clearAll();
    api = Api('any');
    api.user = MockUserApi();
-   authBloc = MockAuthBloc();
-   mockObserver = MockUserApi();
 
    di.registerDependency<AuthBloc>((_) => MockAuthBloc());
    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-   //di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
    settingsBloc = SettingsBloc(api);
    settingsBloc.loadSettings(user);
    di.registerDependency<SettingsBloc>((_) => settingsBloc);
    di.registerDependency<Api>((_) => api);
   });
 
-  testWidgets("Checks if text is present", (WidgetTester tester) async {
+  testWidgets('Checks if text is present', (WidgetTester tester) async {
    await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
    await tester.pumpAndSettle();
    expect(find.text('Nyt brugernavn'), findsOneWidget);
   });
 
-  testWidgets("Checks if the textfield is present", (WidgetTester tester) async {
+  testWidgets('Checks if the textfield is present',
+          (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
     await tester.pumpAndSettle();
     expect(find.byType(TextField), findsOneWidget);
   });
 
-  testWidgets("Checks if the button is present", (WidgetTester tester) async {
+  testWidgets('Checks if the button is present', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
     await tester.pumpAndSettle();
     expect(find.byType(RaisedButton), findsOneWidget);
   });
 
-  testWidgets("EMPTY new Username ERROR", (WidgetTester tester) async {
-    final screen = ChangeUsernameScreen(user);
-    await tester.pumpWidget(MaterialApp(home: screen));
+  testWidgets('EMPTY new Username ERROR', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
     await tester.pump();
-
     await tester.enterText(find.byKey(const Key('UsernameKey')), '');
     await tester.tap(find.byKey(const Key('SaveUsernameKey')));
     await tester.pump();
 
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
-    expect(find.byKey(Key("NewUsernameEmpty")), findsOneWidget);
+    expect(find.byKey(const Key('NewUsernameEmpty')), findsOneWidget);
   });
 
-  testWidgets("new Username same as old username ERROR", (WidgetTester tester) async {
-    final screen = ChangeUsernameScreen(user);
-    await tester.pumpWidget(MaterialApp(home: screen));
+  testWidgets('new Username same as old username ERROR',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
     await tester.pump();
-
-    await tester.enterText(find.byKey(const Key('UsernameKey')), 'usernameTest');
+    await tester.enterText(find.byKey(
+        const Key('UsernameKey')), 'usernameTest');
     await tester.tap(find.byKey(const Key('SaveUsernameKey')));
     await tester.pump();
 
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
-    expect(find.byKey(Key("NewUsernameEqualOld")), findsOneWidget);
+    expect(find.byKey(const Key('NewUsernameEqualOld')), findsOneWidget);
   });
 
-  testWidgets("Opens the UsernameConfirmationDialog", (WidgetTester tester) async {
-    final screen = ChangeUsernameScreen(user);
-    await tester.pumpWidget(MaterialApp(home: screen));
+  testWidgets('Opens the UsernameConfirmationDialog',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
     await tester.pump();
-
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'John');
     await tester.tap(find.byKey(const Key('SaveUsernameKey')));
     await tester.pump();
 
-    await expect(find.widgetWithText(GirafTitleHeader, "Verificer bruger"), findsOneWidget);
-    await expect(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), findsOneWidget);
-    await expect(find.byKey(const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
+    expect(find.widgetWithText(
+        GirafTitleHeader, 'Verificer bruger'), findsOneWidget);
+    expect(find.byKey(
+        const Key('UsernameConfirmationDialogPasswordForm')), findsOneWidget);
+    expect(find.byKey(
+        const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
   });
   
-  testWidgets('Login to confirm user is a Guardian (wrong password) should show a GirafNotifyDialog', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: MockChangeUsernameScreen(user)));
+  testWidgets('Login to confirm user is a Guardian (wrong password) '
+      'should show a GirafNotifyDialog', (WidgetTester tester) async {
+      await tester.pumpWidget(
+          MaterialApp(home: MockChangeUsernameScreen(user)));
       await tester.pump();
-      await tester.enterText(find.byKey(const Key('UsernameKey')), 'WrongUsername');
+      await tester.enterText(
+          find.byKey(const Key('UsernameKey')), 'WrongUsername');
       await tester.tap(find.byKey(const Key('SaveUsernameKey')));
       await tester.pump();
 
-      await expect(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), findsOneWidget);
-      await expect(find.byKey(const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
-      await tester.enterText(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), 'WrongPassword');
-      await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
+      expect(find.byKey(
+          const Key('UsernameConfirmationDialogPasswordForm')), findsOneWidget);
+      expect(find.byKey(
+          const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
+      await tester.enterText(find.byKey(const
+      Key('UsernameConfirmationDialogPasswordForm')), 'WrongPassword');
+      await tester.tap(find.byKey(
+          const Key('UsernameConfirmationDialogSaveButton')));
       await tester.pump();
 
       expect(find.byType(GirafNotifyDialog), findsOneWidget);
       expect(find.byKey(const Key('WrongPassword')), findsOneWidget);
   });
 
-  testWidgets('Login to confirm user is a Guardian and updating username, should update loggedInUsername',
-          (WidgetTester tester) async {
+  testWidgets('Login to confirm user is a Guardian and updating username, '
+      'should update loggedInUsername', (WidgetTester tester) async {
     final screen = MockChangeUsernameScreen(user);
     await tester.pumpWidget(MaterialApp(home: screen));
     await tester.pump();
-
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
     await tester.tap(find.byKey(const Key('SaveUsernameKey')));
     await tester.pump();
 
-    await expect(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), findsOneWidget);
-    await expect(find.byKey(const Key('UsernameConfirmationDialogSaveButton')), findsOneWidget);
-    await tester.enterText(find.byKey(const Key('UsernameConfirmationDialogPasswordForm')), 'test');
-    await tester.tap(find.byKey(const Key('UsernameConfirmationDialogSaveButton')));
+    expect(find.byKey(const Key(
+        'UsernameConfirmationDialogPasswordForm')), findsOneWidget);
+    expect(find.byKey(const Key(
+        'UsernameConfirmationDialogSaveButton')), findsOneWidget);
+    await tester.enterText(find.byKey(const Key(
+        'UsernameConfirmationDialogPasswordForm')), 'test');
+    await tester.tap(find.byKey(const Key(
+        'UsernameConfirmationDialogSaveButton')));
     await tester.pump();
 
-    expect(screen.authBloc.loggedInUsername, "test");
+    expect(screen.authBloc.loggedInUsername, 'test');
   });
 }
