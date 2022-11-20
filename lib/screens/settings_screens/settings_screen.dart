@@ -15,6 +15,7 @@ import 'package:weekplanner/screens/settings_screens/'
     'time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_delete_button.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
@@ -200,6 +201,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildUserSettings(BuildContext context) {
+    String input='';
     return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
       SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
       SettingsDeleteButton('Slet bruger', () {showDialog<Center>(
@@ -207,7 +209,7 @@ class SettingsScreen extends StatelessWidget {
     context: context,
     builder: (BuildContext context) {
     return GirafConfirmDialog(
-    title: 'Slet Bruger',
+    title: 'Slet bruger',
     descriptionRichText: RichText(
         text: TextSpan(
             style: const TextStyle(
@@ -222,10 +224,11 @@ class SettingsScreen extends StatelessWidget {
             ]
         ),
     ),
-    inputField: const TextField(
-      style: TextStyle(fontSize: 20),
+    inputField: TextField(
+      onChanged: (String text) {input=text;},
+      style: const TextStyle(fontSize: 20),
       textAlign: TextAlign. center,
-      decoration: InputDecoration(
+      decoration:  const InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
         border: OutlineInputBorder(),
         hintText: 'Indtast navn',
@@ -233,17 +236,29 @@ class SettingsScreen extends StatelessWidget {
     ),
     confirmButtonText: 'Slet',
     confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
-    confirmOnPressed: () {},
+    confirmOnPressed: () {
+      //if the correct name is written delete the user, else provide an error
+    if(input==_user.displayName){
+      //delete the user here
+      Routes.goHome(context);
+    }
+    else{
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+        const GirafNotifyDialog(title: 'Fejl',
+            description: 'Det indtastede navn er forkert!')
+      );
+    }
+    },
     );
-
-
-    });
-
-  }    ),
-    ]);
+    }
+    );
+      }
+      ),
+    ]
+    );
   }
-
-
 
 
   Widget _buildPrivacySection() {

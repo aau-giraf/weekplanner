@@ -74,7 +74,7 @@ class GirafConfirmDialog extends StatelessWidget {
                   child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: descriptionRichText ?? Text(
-                  //if description is null, its replaced with empty.
+                  //if description is null, its replaced with an empty string.
                   description ?? '',
                   textAlign: TextAlign.center,
                 ),
@@ -82,6 +82,7 @@ class GirafConfirmDialog extends StatelessWidget {
 
             ],
           ),
+          //if an inputfield is provided, display it
           inputField != null?
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
