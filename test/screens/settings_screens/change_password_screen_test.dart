@@ -1,5 +1,7 @@
 import 'dart:async';
-
+import 'package:api_client/http/http.dart';
+import 'package:http/http.dart' as http;
+import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';
@@ -7,6 +9,7 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
+import 'package:api_client/persistence/persistence_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,6 +30,32 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   Stream<GirafUserModel> me() {
     return Stream<GirafUserModel>.value(
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
+  }
+}
+
+class MockAccountApi extends Mock implements AccountApi, NavigatorObserver {
+  @override
+  Stream<bool> changePasswordWithOld(
+      String id, String oldPassword, String newPassword) {
+    if (oldPassword == 'apiException') {
+      final http.Response mockHttpResponse = http.Response(
+          // ignore: lines_longer_than_80_chars
+          'message: something went wrong, details: unexpected error, errorKey: Error',
+          401);
+      final Stream<Response> mockResponse =
+          Stream<Response>.fromFuture(apiExceptionResponse(mockHttpResponse));
+      return mockResponse.map((Response res) => throw ApiException(res));
+    } else {
+      return Stream<bool>.value(true);
+    }
+  }
+
+  Future<Response> apiExceptionResponse(http.Response response) async {
+    return Response(response, <String, dynamic>{
+      'message': 'something went wrong',
+      'details': 'api error',
+      'errorKey': 'apiException'
+    });
   }
 }
 
@@ -57,17 +86,22 @@ class MockChangePasswordScreen extends ChangePasswordScreen {
   @override
   void ChangePassword(
       DisplayNameModel user, String oldPassword, String newPassword) {
-    //currentContext = context;
+    MockAccountApi account = MockAccountApi();
     authBloc.authenticate("test", currentPasswordCtrl.text);
-
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
       if (snapshot == false) {
         CreateDialog('Forkert adgangskode.', 'The old password is wrong',
             Key("WrongPassword"));
       } else if (snapshot) {
-        CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
-            Key("PasswordChanged"));
+        account
+            .changePasswordWithOld(user.id, currentPasswordCtrl.text, "test")
+            .listen((bool response) {
+          if (response) {
+            CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
+                Key("PasswordChanged"));
+          }
+        });
       }
     });
   }
@@ -87,6 +121,7 @@ void main() {
     api = Api('any');
     api.user = MockUserApi();
     mockObserver = MockUserApi();
+    api.account = MockAccountApi();
 
     di.registerDependency<AuthBloc>((_) => MockAuthBloc());
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
@@ -160,6 +195,7 @@ void main() {
 
   testWidgets("test ChangePassword-method", (WidgetTester tester) async {
     final screen = MockChangePasswordScreen(user);
+
     await tester.pumpWidget(MaterialApp(home: screen));
     await tester.pump();
     await tester.enterText(find.byKey(const Key('OldPasswordKey')), 'test');
@@ -170,6 +206,7 @@ void main() {
     await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
     await tester.pump();
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
+
     expect(find.byKey(const Key('PasswordChanged')), findsOneWidget);
   });
 }

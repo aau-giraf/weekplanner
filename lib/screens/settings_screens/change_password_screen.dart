@@ -201,7 +201,7 @@ class ChangePasswordScreen extends StatelessWidget {
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
-          //This function, found in the account_api, handles the password change, when the "Gem"-button is clicked
+          //This method, found in the account_api, handles the password change, when the "Gem"-button is clicked
           _api.account
               .changePasswordWithOld(user.id, oldPassword, newPassword)
               .listen((_) {})
