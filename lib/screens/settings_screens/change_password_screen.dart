@@ -35,12 +35,9 @@ class ChangePasswordScreen extends StatelessWidget {
   final TextEditingController repeatNewPasswordCtrl = TextEditingController();
 
   final DisplayNameModel _user;
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final Api _api = di.getDependency<Api>();
   BuildContext currentContext;
-
-  //const ChangePasswordScreen({Key key, this._user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +87,7 @@ class ChangePasswordScreen extends StatelessWidget {
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          key: const Key('PasswordKey'),
+                          key: const Key('OldPasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
                           controller: currentPasswordCtrl,
                           obscureText: true,
@@ -120,7 +117,7 @@ class ChangePasswordScreen extends StatelessWidget {
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          key: const Key('PasswordKey'),
+                          key: const Key('NewPasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
                           controller: newPasswordCtrl,
                           obscureText: true,
@@ -150,7 +147,7 @@ class ChangePasswordScreen extends StatelessWidget {
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          key: const Key('PasswordKey'),
+                          key: const Key('RepeatedPasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
                           controller: repeatNewPasswordCtrl,
                           obscureText: true,
@@ -169,7 +166,7 @@ class ChangePasswordScreen extends StatelessWidget {
                         child: Transform.scale(
                           scale: 1.5,
                           child: RaisedButton(
-                            key: const Key('LoginBtnKey'),
+                            key: const Key('ChangePasswordBtnKey'),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             child: const Text(
@@ -209,7 +206,7 @@ class ChangePasswordScreen extends StatelessWidget {
               .listen((_) {})
               .onDone(() {
             CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
-                "PasswordChanged");
+                Key("PasswordChanged"));
           });
         }
 
@@ -218,9 +215,12 @@ class ChangePasswordScreen extends StatelessWidget {
       });
     }).catchError((Object error) {
       if (error is ApiException) {
-        CreateDialog("Fejl", "Forkert adgangskode", "WrongPassword");
+        CreateDialog("Forkert adgangskode",
+            "Den nuværende adgangskode er forkert", Key("WrongPassword"));
       } else {
-        CreateDialog("Fejl", "Der skete en ukendt fejl", "UnknownErrorOccured");
+        print(error.toString());
+        CreateDialog(
+            "Fejl", "Der skete en ukendt fejl", Key("UnknownErrorOccured"));
       }
     });
   }
@@ -232,24 +232,30 @@ class ChangePasswordScreen extends StatelessWidget {
 
     if (newPasswordCtrl.text != repeatNewPasswordCtrl.text)
       CreateDialog("Fejl", "Den gentagne adgangskode stemmer ikke overens",
-          "NewPasswordNotRepeated");
+          Key("NewPasswordNotRepeated"));
     else if (currentPasswordCtrl.text == "" ||
         newPasswordCtrl.text == "" ||
         repeatNewPasswordCtrl == "") {
-      CreateDialog("Fejl", "Udfyld venligst alle felterne", "NewPasswordEmpty");
+      CreateDialog(
+          "Fejl", "Udfyld venligst alle felterne", Key("NewPasswordEmpty"));
+    } else if (newPasswordCtrl.text == currentPasswordCtrl.text) {
+      CreateDialog(
+          "Fejl",
+          "Det nye kodeord må ikke være det samme som det gamle",
+          Key("NewPasswordSameAsOld"));
     } else {
       ChangePassword(_user, currentPasswordCtrl.text, newPasswordCtrl.text);
     }
   }
 
-  void CreateDialog(String title, String description, String key) {
+  void CreateDialog(String title, String description, Key key) {
     /// Show the new NotifyDialog
     showDialog<Center>(
         barrierDismissible: false,
         context: currentContext,
         builder: (BuildContext context) {
           return GirafNotifyDialog(
-              title: title, description: description, key: Key(key));
+              title: title, description: description, key: key);
         });
   }
 }
