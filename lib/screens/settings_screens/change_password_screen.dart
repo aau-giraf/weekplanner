@@ -38,6 +38,7 @@ class ChangePasswordScreen extends StatelessWidget {
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final Api _api = di.getDependency<Api>();
   BuildContext currentContext;
+  bool loginStatus = false; //ignore: public_member_api_docs
 
   @override
   Widget build(BuildContext context) {

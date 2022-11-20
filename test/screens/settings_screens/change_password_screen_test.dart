@@ -19,7 +19,7 @@ import 'package:weekplanner/screens/settings_screens/change_password_screen.dart
 import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
-
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import '../../blocs/auth_bloc.test.dart';
 
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
@@ -32,8 +32,45 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
 
 class MockAuthBloc extends Mock implements AuthBloc {
   @override
-  String loggedInUsername = "testUsername";
-  String password = "password";
+  Stream<bool> get loggedIn => _loggedIn.stream;
+  final rx_dart.BehaviorSubject<bool> _loggedIn =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
+
+  @override
+  String loggedInUsername;
+
+  @override
+  Future<void> authenticate(String username, String password) async {
+    // Mock the API and allow these 2 users to ?login?
+    final bool status = username == 'test' && password == 'test';
+    // If there is a successful login, remove the loading spinner,
+    // and push the status to the stream
+    if (status) {
+      loggedInUsername = username;
+    }
+    _loggedIn.add(status);
+  }
+}
+
+class MockChangePasswordScreen extends ChangePasswordScreen {
+  MockChangePasswordScreen(DisplayNameModel user) : super(user);
+  @override
+  void ChangePassword(
+      DisplayNameModel user, String oldPassword, String newPassword) {
+    //currentContext = context;
+    authBloc.authenticate("test", currentPasswordCtrl.text);
+
+    authBloc.loggedIn.listen((bool snapshot) {
+      loginStatus = snapshot;
+      if (snapshot == false) {
+        CreateDialog('Forkert adgangskode.', 'The old password is wrong',
+            Key("WrongPassword"));
+      } else if (snapshot) {
+        CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
+            Key("PasswordChanged"));
+      }
+    });
+  }
 }
 
 void main() {
@@ -49,10 +86,7 @@ void main() {
     di.clearAll();
     api = Api('any');
     api.user = MockUserApi();
-    api.account = MockAccountApi();
-    authBloc = MockAuthBloc();
     mockObserver = MockUserApi();
-    _mockContext = MockBuildContext();
 
     di.registerDependency<AuthBloc>((_) => MockAuthBloc());
     di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
@@ -125,19 +159,16 @@ void main() {
   });
 
   testWidgets("test ChangePassword-method", (WidgetTester tester) async {
-    final screen = ChangePasswordScreen(user);
-
+    final screen = MockChangePasswordScreen(user);
     await tester.pumpWidget(MaterialApp(home: screen));
-    await tester.enterText(
-        find.byKey(const Key('OldPasswordKey')), 'testPassword');
+    await tester.pump();
+    await tester.enterText(find.byKey(const Key('OldPasswordKey')), 'test');
     await tester.enterText(
         find.byKey(const Key('NewPasswordKey')), 'newTestPassword');
     await tester.enterText(
         find.byKey(const Key('RepeatedPasswordKey')), 'newTestPassword');
-
     await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
     await tester.pump();
-
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
     expect(find.byKey(const Key('PasswordChanged')), findsOneWidget);
   });
