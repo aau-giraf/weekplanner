@@ -35,12 +35,10 @@ class ChangePasswordScreen extends StatelessWidget {
   final TextEditingController repeatNewPasswordCtrl = TextEditingController();
 
   final DisplayNameModel _user;
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final Api _api = di.getDependency<Api>();
-  ChangeUsernameScreen changeUsernameScreen;
-
-  //const ChangePasswordScreen({Key key, this._user}) : super(key: key);
+  BuildContext currentContext;
+  bool loginStatus = false; //ignore: public_member_api_docs
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +88,7 @@ class ChangePasswordScreen extends StatelessWidget {
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          key: const Key('PasswordKey'),
+                          key: const Key('OldPasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
                           controller: currentPasswordCtrl,
                           obscureText: true,
@@ -120,7 +118,7 @@ class ChangePasswordScreen extends StatelessWidget {
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          key: const Key('PasswordKey'),
+                          key: const Key('NewPasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
                           controller: newPasswordCtrl,
                           obscureText: true,
@@ -150,7 +148,7 @@ class ChangePasswordScreen extends StatelessWidget {
                             color: theme.GirafColors.white),
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          key: const Key('PasswordKey'),
+                          key: const Key('RepeatedPasswordKey'),
                           style: const TextStyle(fontSize: GirafFont.large),
                           controller: repeatNewPasswordCtrl,
                           obscureText: true,
@@ -169,7 +167,7 @@ class ChangePasswordScreen extends StatelessWidget {
                         child: Transform.scale(
                           scale: 1.5,
                           child: RaisedButton(
-                            key: const Key('LoginBtnKey'),
+                            key: const Key('ChangePasswordBtnKey'),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                             child: const Text(
@@ -177,12 +175,7 @@ class ChangePasswordScreen extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              try {
-                                ChangePassword(_user, currentPasswordCtrl.text,
-                                    newPasswordCtrl.text);
-                              } on ApiException catch (e) {
-                                print(e.errorMessage);
-                              }
+                              validatePasswords(context);
                             },
                             color: theme.GirafColors.dialogButton,
                           ),
@@ -197,27 +190,73 @@ class ChangePasswordScreen extends StatelessWidget {
     );
   }
 
-  //This function, found in the account_api, handles the password change, when the "Gem"-button is clicked
   void ChangePassword(
-      DisplayNameModel user, String oldPassword, String newPassword) {
-    //authBloc.authenticate(user.displayName, oldPassword);
-    _api.account
-        .changePasswordWithOld(_user.id, oldPassword, newPassword)
-        .listen((status) {
-      print("Status: " + status.toString());
-    }).onData((data) {
-      print("Data: " + data.toString());
+      DisplayNameModel user, String oldPassword, String newPassword) async {
+    bool loginStatus = false;
+    //Checks if user is logged in
+    await authBloc
+        .authenticate(authBloc.loggedInUsername, oldPassword)
+        .then((dynamic result) {
+      StreamSubscription<bool> loginListener;
+      loginListener = authBloc.loggedIn.listen((bool snapshot) {
+        loginStatus = snapshot;
+        if (snapshot) {
+          //This method, found in the account_api, handles the password change, when the "Gem"-button is clicked
+          _api.account
+              .changePasswordWithOld(user.id, oldPassword, newPassword)
+              .listen((_) {})
+              .onDone(() {
+            CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
+                Key("PasswordChanged"));
+          });
+        }
+
+        /// Stop listening for future logins
+        loginListener.cancel();
+      });
+    }).catchError((Object error) {
+      if (error is ApiException) {
+        CreateDialog("Forkert adgangskode",
+            "Den nuværende adgangskode er forkert", Key("WrongPassword"));
+      } else {
+        print(error.toString());
+        CreateDialog(
+            "Fejl", "Der skete en ukendt fejl", Key("UnknownErrorOccured"));
+      }
     });
   }
 
-  /*Future ChangePasswordForAccount(Stream<bool> passStream) async {
-      //Stream<bool>.fromFuture(Future.error(Exception()));
-      await for (final value in passStream) {
-        //print(value);
-        //_api.account.changePasswordWithOld(guardian, "password", "password1");
-      }
-    }
+  ///Functionality for validating whether input fields are empty
+  ///and whether the repeated password for confirmation is the same as the new password
+  void ValidatePasswords(BuildContext context) async {
+    currentContext = context;
 
-    //GetGuardians(guardians);
-    ChangePasswordForAccount(passStream);*/
+    if (newPasswordCtrl.text != repeatNewPasswordCtrl.text)
+      CreateDialog("Fejl", "Den gentagne adgangskode stemmer ikke overens",
+          Key("NewPasswordNotRepeated"));
+    else if (currentPasswordCtrl.text == "" ||
+        newPasswordCtrl.text == "" ||
+        repeatNewPasswordCtrl == "") {
+      CreateDialog(
+          "Fejl", "Udfyld venligst alle felterne", Key("NewPasswordEmpty"));
+    } else if (newPasswordCtrl.text == currentPasswordCtrl.text) {
+      CreateDialog(
+          "Fejl",
+          "Det nye kodeord må ikke være det samme som det gamle",
+          Key("NewPasswordSameAsOld"));
+    } else {
+      ChangePassword(_user, currentPasswordCtrl.text, newPasswordCtrl.text);
+    }
+  }
+
+  void CreateDialog(String title, String description, Key key) {
+    /// Show the new NotifyDialog
+    showDialog<Center>(
+        barrierDismissible: false,
+        context: currentContext,
+        builder: (BuildContext context) {
+          return GirafNotifyDialog(
+              title: title, description: description, key: key);
+        });
+  }
 }

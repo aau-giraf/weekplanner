@@ -37,21 +37,4 @@ class ChooseCitizenBloc extends BlocBase {
 
   Stream<GirafUserModel> get guardian {
     return _api.user.me();
-    //return _api.user.get("61863405-b7e7-4c40-9c53-713ad191d094");
   }
-
-  /*GirafUserModel GetCurrentUser() {
-    GirafUserModel _user;
-    _api.user
-        .get("61863405-b7e7-4c40-9c53-713ad191d094")
-        .listen((GirafUserModel user) {
-      print("FetchUser found: " + user.displayName);
-      _user = user;
-      _currentUser.add(_user);
-      //return DisplayNameModel.fromGirafUser(user);
-    }).onDone(() {
-      print("Done fetching user " + _user.displayName);
-      return _user;
-    });
-  }*/
-}
