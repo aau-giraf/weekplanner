@@ -89,7 +89,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
 class MockChangePasswordScreen extends ChangePasswordScreen {
   MockChangePasswordScreen(DisplayNameModel user) : super(user);
   @override
-  void ChangePassword(
+  void changePassword(
       DisplayNameModel user, String oldPassword, String newPassword) {
     MockAccountApi account = MockAccountApi();
     authBloc.authenticate("test", currentPasswordCtrl.text);
@@ -232,7 +232,6 @@ void main() {
         find.byKey(const Key('RepeatedPasswordKey')), 'newTestPassword');
     await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
     await tester.pump();
-
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
     expect(find.byKey(const Key('WrongPassword')), findsOneWidget);
   });
