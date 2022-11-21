@@ -184,14 +184,15 @@ void main() {
 
     await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-        widget.current == 1 &&
+        widget.current == 2 &&
         widget.text == 'Lås tidsstyring'));
     await tester.pump();
+
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&
-            widget.current == 2 &&
+            widget.current == 1 &&
             widget.text == 'Lås tidsstyring'),
         findsOneWidget);
   });
