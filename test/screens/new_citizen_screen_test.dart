@@ -281,15 +281,18 @@ void main() {
   //       find.byKey(const Key('displayNameField')), 'mockDisplayName');
   //   await tester.enterText(
   //       find.byKey(const Key('usernameField')), 'defaultError');
-  //   await tester.enterText(find.byKey(const Key('passwordField')), 'password');
+  //   await tester.enterText(
+  //       find.byKey(const Key('passwordField')), 'password');
   //   await tester.enterText(
   //       find.byKey(const Key('passwordVerifyField')), 'password');
 
-  //   final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+  //   final TestGesture gesture = await tester.startGesture(
+  //       const Offset(0, 300));
   //   await gesture.moveBy(const Offset(0, -300));
   //   await tester.pumpAndSettle();
 
-  //   await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
+  //   await tester.tap(
+  //       find.byKey(const Key('saveButton'), skipOffstage: false));
   //   await tester.pumpAndSettle();
 
   //   expect(find.byKey(const Key('ErrorMessageDialog'), skipOffstage: false),
