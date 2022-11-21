@@ -228,7 +228,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
   ///Functionality for validating whether input fields are empty
   ///and whether the repeated password for confirmation is the same as the new password
-  void validatePasswords(BuildContext context) async {
+  void ValidatePasswords(BuildContext context) async {
     currentContext = context;
 
     if (newPasswordCtrl.text != repeatNewPasswordCtrl.text)
