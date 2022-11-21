@@ -221,7 +221,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: screen));
     await tester.pump();
     await tester.enterText(
-        find.byKey(const Key('OldPasswordKey')), 'testWrongPassword');
+        find.byKey(const Key('OldPasswordKey')), 'apiException');
     await tester.enterText(
         find.byKey(const Key('NewPasswordKey')), 'newTestPassword');
     await tester.enterText(
