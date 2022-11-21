@@ -121,8 +121,6 @@ void main() {
         findsOneWidget);
     expect(find.text('Antal dage der vises når enheden er på langs'),
         findsOneWidget);
-    expect(find.text('En dag'), findsOneWidget);
-    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
   testWidgets('Settings has Brugerindstillinger section',

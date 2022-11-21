@@ -38,8 +38,9 @@ class SettingsArrowButton extends SettingsSectionItem {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(text),
-          titleTrailing,
+          Flexible(
+          child: Text(text)),
+          titleTrailing
         ],
       );
     }

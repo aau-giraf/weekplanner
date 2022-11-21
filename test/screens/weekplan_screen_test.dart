@@ -10,6 +10,8 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
@@ -754,6 +756,10 @@ api.pictogram=MockPictogramApi();
   });
 
   testWidgets('Add Activity buttons work', (WidgetTester tester) async {
+    when(api.pictogram.getAll(page: 1,
+        pageSize: pageSize, query: '')).thenAnswer(
+            (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+            <PictogramModel>[mockPictograms[0]]));
     mockSettings.nrOfDaysToDisplayLandscape = 7;
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
