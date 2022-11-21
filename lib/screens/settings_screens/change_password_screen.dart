@@ -175,7 +175,7 @@ class ChangePasswordScreen extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              validatePasswords(context);
+                              ValidatePasswords(context);
                             },
                             color: theme.GirafColors.dialogButton,
                           ),
