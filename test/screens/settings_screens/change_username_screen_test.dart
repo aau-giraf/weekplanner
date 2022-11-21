@@ -70,10 +70,8 @@ class MockChangeUsernameScreen extends ChangeUsernameScreen{
                       title: 'Brugernavn er gemt', description: 'Dine ændringer er blevet gemt', key: Key("ChangesCompleted"));
                 });
           }else if (snapshot == false) {
-            if (!loginStatus) {
-              creatingErrorDialog(
-                  'Forkert adgangskode.', 'WrongPassword');
-            }
+            creatingErrorDialog(
+                'Forkert adgangskode.', 'WrongPassword');
           }
         });
     }
@@ -203,7 +201,6 @@ void main() {
         'UsernameConfirmationDialogSaveButton')));
     await tester.pump();
 
-    //expect(screen.authBloc, 'test');
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
     expect(find.byKey(const Key('ChangesCompleted')), findsOneWidget);
   });
