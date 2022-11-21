@@ -1,27 +1,18 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
-import 'package:api_client/http/http.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:quiver/async.dart';
-import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/providers/environment_provider.dart' as environment;
-import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import '../../style/custom_color.dart' as theme;
 
+/// Screen for changing password
 class ChangePasswordScreen extends StatelessWidget {
+  /// Constructor
   ChangePasswordScreen(DisplayNameModel user) : _user = user {}
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -31,12 +22,16 @@ class ChangePasswordScreen extends StatelessWidget {
 
   /// This is the password control, that allows for password extraction
   final TextEditingController currentPasswordCtrl = TextEditingController();
+  /// Password controller, that allows for extracting the new password
   final TextEditingController newPasswordCtrl = TextEditingController();
+  /// Controller for the repeated new password.
   final TextEditingController repeatNewPasswordCtrl = TextEditingController();
 
   final DisplayNameModel _user;
+  /// authbloc
   final AuthBloc authBloc = di.getDependency<AuthBloc>();
   final Api _api = di.getDependency<Api>();
+  /// used for popping the dialog
   BuildContext currentContext;
   bool loginStatus = false; //ignore: public_member_api_docs
 
@@ -47,15 +42,10 @@ class ChangePasswordScreen extends StatelessWidget {
         body: buildPasswordChange(context));
   }
 
+  /// Change password screen build
   Widget buildPasswordChange(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
     final bool portrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    final bool landscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-
-    ///Used to check if the keyboard is visible
-    final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -175,7 +165,7 @@ class ChangePasswordScreen extends StatelessWidget {
                               style: TextStyle(color: theme.GirafColors.white),
                             ),
                             onPressed: () {
-                              ValidatePasswords(context);
+                              validatePasswords(context);
                             },
                             color: theme.GirafColors.dialogButton,
                           ),
@@ -190,24 +180,25 @@ class ChangePasswordScreen extends StatelessWidget {
     );
   }
 
-  void ChangePassword(
-      DisplayNameModel user, String oldPassword, String newPassword) async {
+  /// Authenticate User before changing password to new password.
+  /// After authentication, the method changes the password to the new password.
+  void changePassword(
+      DisplayNameModel user, String oldPassword, String newPassword) {
     bool loginStatus = false;
     //Checks if user is logged in
-    await authBloc
+    authBloc
         .authenticate(authBloc.loggedInUsername, oldPassword)
         .then((dynamic result) {
       StreamSubscription<bool> loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
         loginStatus = snapshot;
         if (snapshot) {
-          //This method, found in the account_api, handles the password change, when the "Gem"-button is clicked
           _api.account
               .changePasswordWithOld(user.id, oldPassword, newPassword)
               .listen((_) {})
               .onDone(() {
-            CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
-                Key("PasswordChanged"));
+            CreateDialog('Kodeord ændret', 'Dit kodeord er blevet ændret',
+                const Key('PasswordChanged'));
           });
         }
 
@@ -216,39 +207,45 @@ class ChangePasswordScreen extends StatelessWidget {
       });
     }).catchError((Object error) {
       if (error is ApiException) {
-        CreateDialog("Forkert adgangskode",
-            "Den nuværende adgangskode er forkert", Key("WrongPassword"));
+        CreateDialog('Forkert adgangskode',
+            'Den nuværende adgangskode er forkert',
+            const Key('WrongPassword'));
       } else {
         print(error.toString());
         CreateDialog(
-            "Fejl", "Der skete en ukendt fejl", Key("UnknownErrorOccured"));
+            'Fejl', 'Der skete en ukendt fejl',
+            const Key('UnknownErrorOccured'));
       }
     });
   }
 
   ///Functionality for validating whether input fields are empty
-  ///and whether the repeated password for confirmation is the same as the new password
-  void ValidatePasswords(BuildContext context) async {
+  ///and whether the repeated password for
+  ///confirmation is the same as the new password
+  void validatePasswords(BuildContext context) {
     currentContext = context;
 
-    if (newPasswordCtrl.text != repeatNewPasswordCtrl.text)
-      CreateDialog("Fejl", "Den gentagne adgangskode stemmer ikke overens",
-          Key("NewPasswordNotRepeated"));
-    else if (currentPasswordCtrl.text == "" ||
-        newPasswordCtrl.text == "" ||
-        repeatNewPasswordCtrl == "") {
+    if (newPasswordCtrl.text != repeatNewPasswordCtrl.text) {
+      CreateDialog('Fejl', 'Den gentagne adgangskode stemmer ikke overens',
+          const Key('NewPasswordNotRepeated'));
+    }
+    else if (currentPasswordCtrl.text == '' ||
+        newPasswordCtrl.text == '' ||
+        repeatNewPasswordCtrl == '') {
       CreateDialog(
-          "Fejl", "Udfyld venligst alle felterne", Key("NewPasswordEmpty"));
+          'Fejl', 'Udfyld venligst alle felterne', Key('NewPasswordEmpty'));
     } else if (newPasswordCtrl.text == currentPasswordCtrl.text) {
       CreateDialog(
-          "Fejl",
-          "Det nye kodeord må ikke være det samme som det gamle",
-          Key("NewPasswordSameAsOld"));
+          'Fejl',
+          'Det nye kodeord må ikke være det samme som det gamle',
+          const Key('NewPasswordSameAsOld'));
     } else {
-      ChangePassword(_user, currentPasswordCtrl.text, newPasswordCtrl.text);
+      changePassword(_user, currentPasswordCtrl.text, newPasswordCtrl.text);
     }
   }
 
+  /// Dialog for notifying the user if the occurrs an error or
+  /// if the password has been changed
   void CreateDialog(String title, String description, Key key) {
     /// Show the new NotifyDialog
     showDialog<Center>(

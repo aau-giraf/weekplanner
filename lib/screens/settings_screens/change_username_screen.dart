@@ -142,7 +142,7 @@ class ChangeUsernameScreen extends StatelessWidget {
           return AlertDialog(
             titlePadding: const EdgeInsets.all(0.0),
             title: const Center(
-                child: GirafTitleHeader( title: "Verificer bruger", )),
+                child: GirafTitleHeader( title: 'Verificer bruger', )),
             content: Form(
               key: _innerForm,
               child: Column(
@@ -150,8 +150,9 @@ class ChangeUsernameScreen extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                    child: Text('For at skifte brugernavn, indtast dit kodeord for \n${authBloc.loggedInUsername}',
-                      style: TextStyle(
+                    child: Text('For at skifte brugernavn, indtast dit '
+                        'kodeord for \n${authBloc.loggedInUsername}',
+                      style: const TextStyle(
                         fontSize: GirafFont.small,
                       ),
                     ),
@@ -166,13 +167,15 @@ class ChangeUsernameScreen extends StatelessWidget {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  Padding(padding: const EdgeInsets.fromLTRB(0, 15, 0, 0)),
+                  const Padding(padding:
+                    EdgeInsets.fromLTRB(0, 15, 0, 0)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GirafButton(
-                          key: const Key('UsernameConfirmationDialogCancelButton'),
-                          text: "Fortryd",
+                          key: const Key(
+                              'UsernameConfirmationDialogCancelButton'),
+                          text: 'Fortryd',
                           width: 121,
                           icon: const ImageIcon(
                             AssetImage('assets/icons/cancel.png'),
@@ -182,8 +185,9 @@ class ChangeUsernameScreen extends StatelessWidget {
                           }
                       ),
                       GirafButton(
-                          key: const Key('UsernameConfirmationDialogSaveButton'),
-                          text: "Gem",
+                          key: const Key(
+                              'UsernameConfirmationDialogSaveButton'),
+                          text: 'Gem',
                           width: 121,
                           icon: const ImageIcon(
                               AssetImage('assets/icons/accept.png'),
@@ -205,11 +209,12 @@ class ChangeUsernameScreen extends StatelessWidget {
 
   /// This method checks if the password is correct
   /// if not, an error dialog will be displayed
-  void confirmUser(Stream<GirafUserModel> girafUser) async {
+  void confirmUser(Stream<GirafUserModel> girafUser) {
     loginStatus = false;
 
     /// This authenticates the user with username and password.
-    await authBloc.authenticateFromPopUp(authBloc.loggedInUsername, confirmUsernameCtrl.text)
+    authBloc.authenticateFromPopUp(
+        authBloc.loggedInUsername, confirmUsernameCtrl.text)
         .then((dynamic result) {
       StreamSubscription<bool> loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {
@@ -221,8 +226,9 @@ class ChangeUsernameScreen extends StatelessWidget {
               barrierDismissible: false,
               context: currentContext,
               builder: (BuildContext context) {
-                return GirafNotifyDialog(
-                    title: 'Brugernavn er gemt', description: 'Dine ændringer er blevet gemt', key: Key("ChangesCompleted"));
+                return const GirafNotifyDialog(
+                    title: 'Brugernavn er gemt', description:
+                'Dine ændringer er blevet gemt', key: Key('ChangesCompleted'));
               });
         }
         /// Stop listening for future logins
@@ -230,7 +236,7 @@ class ChangeUsernameScreen extends StatelessWidget {
       });
     }).catchError((Object error) {
       if(error is ApiException){
-        creatingErrorDialog("Forkert adgangskode.", error.errorKey.toString());
+        creatingErrorDialog('Forkert adgangskode.', error.errorKey.toString());
       } else if(error is SocketException){
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
           if (hasInternetConnection) {
@@ -263,14 +269,16 @@ class ChangeUsernameScreen extends StatelessWidget {
   /// This method verifies the username.
   Future<void> verifyUsername(BuildContext context) async {
     currentContext = context;
-    final girafUser = await GetGirafUser(_api.user.me());
+    final GirafUserModel girafUser = await getGirafUser(_api.user.me());
 
-    if (newUsernameCtrl.text == girafUser.username)
-      creatingErrorDialog("Nyt brugernavn må ikke være det samme som det nuværende brugernavn", "NewUsernameEqualOld");
-    else if (newUsernameCtrl.text == "")
-      creatingErrorDialog("Udfyld venligst nyt brugernavn", "NewUsernameEmpty");
-    else if (newUsernameCtrl.text != girafUser.username)
-      usernameConfirmationDialog(await _api.user.get(_user.id));
+    if (newUsernameCtrl.text == girafUser.username) {
+      creatingErrorDialog('Nyt brugernavn må ikke være det '
+          'samme som det nuværende brugernavn', 'NewUsernameEqualOld');
+    } else if (newUsernameCtrl.text == '') {
+      creatingErrorDialog('Udfyld venligst nyt brugernavn', 'NewUsernameEmpty');
+    } else if (newUsernameCtrl.text != girafUser.username) {
+      usernameConfirmationDialog(_api.user.get(_user.id));
+    }
   }
 
   /// Function that creates the notify dialog,
@@ -287,9 +295,9 @@ class ChangeUsernameScreen extends StatelessWidget {
   }
 
   /// This method is used to extract a GirafUserModel object from the stream.
-  Future<GirafUserModel> GetGirafUser(Stream<GirafUserModel> stream) async {
+  Future<GirafUserModel> getGirafUser(Stream<GirafUserModel> stream) async {
     GirafUserModel girafUser;
-    await for(var value in stream) { girafUser = value; }
+    await for(GirafUserModel value in stream) { girafUser = value; }
     return girafUser;
   }
 
@@ -301,7 +309,7 @@ class ChangeUsernameScreen extends StatelessWidget {
 
   /// Updates the user with new username
   Future updateUser(Stream<GirafUserModel> userStream) async{
-    await for (final value in userStream){
+    await for (final GirafUserModel value in userStream){
       value.username = newUsernameCtrl.text;
       _api.user.update(value);
     }

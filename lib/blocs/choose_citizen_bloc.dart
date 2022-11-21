@@ -14,6 +14,7 @@ class ChooseCitizenBloc extends BlocBase {
 
   /// The stream holding the citizens
   Stream<List<DisplayNameModel>> get citizen => _citizens.stream;
+
   //Stream<GirafUserModel> get guardian => _currentUser.stream;
 
   /// Update the block with current users
@@ -27,14 +28,16 @@ class ChooseCitizenBloc extends BlocBase {
 
   final Api _api;
   final rx_dart.BehaviorSubject<List<DisplayNameModel>> _citizens =
-      rx_dart.BehaviorSubject<List<DisplayNameModel>>.seeded(
-          <DisplayNameModel>[]);
+  rx_dart.BehaviorSubject<List<DisplayNameModel>>.seeded(
+      <DisplayNameModel>[]);
 
   @override
   void dispose() {
     _citizens.close();
   }
 
+  /// Method for finding the currently logged in Guardian
   Stream<GirafUserModel> get guardian {
     return _api.user.me();
   }
+}
