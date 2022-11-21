@@ -341,11 +341,11 @@ class WeekplanDayColumn extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> settingsSnapshot) {
                       if (settingsSnapshot.hasData && modeSnapshot.hasData) {
-                        const double _width = 1;
+                        double _width = 1;
                         return SizedBox(
                             // MediaQuery.of(context).size.width / 3,
                             width: MediaQuery.of(context).size.width / _width,
-                            //  MediaQuery.of(_context).size.width / 1,
+                            //  MediaQuery.of(context).size.width / 1,
                             child: Container(
                               child: GestureDetector(
                                 key: Key(weekday.day.index.toString() +
