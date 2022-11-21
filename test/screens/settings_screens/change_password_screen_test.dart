@@ -45,7 +45,7 @@ class MockAccountApi extends Mock implements AccountApi, NavigatorObserver {
           401);
       final Stream<Response> mockResponse =
           Stream<Response>.fromFuture(apiExceptionResponse(mockHttpResponse));
-      return mockResponse.map((Response res) => throw ApiException(res));
+      return Stream<bool>.value(false);
     } else {
       return Stream<bool>.value(true);
     }
@@ -73,9 +73,13 @@ class MockAuthBloc extends Mock implements AuthBloc {
   Future<void> authenticate(String username, String password) async {
     // Mock the API and allow these 2 users to ?login?
     final bool status = username == 'test' && password == 'test';
+
+    final bool statusEx = username == 'test' && password == 'apiException';
     // If there is a successful login, remove the loading spinner,
     // and push the status to the stream
     if (status) {
+      loggedInUsername = username;
+    } else if (statusEx) {
       loggedInUsername = username;
     }
     _loggedIn.add(status);
@@ -88,7 +92,7 @@ class MockChangePasswordScreen extends ChangePasswordScreen {
   void ChangePassword(
       DisplayNameModel user, String oldPassword, String newPassword) {
     MockAccountApi account = MockAccountApi();
-    authBloc.authenticate("test", currentPasswordCtrl.text);
+    authBloc.authenticate("apiException", currentPasswordCtrl.text);
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
       if (snapshot == false) {
@@ -96,7 +100,7 @@ class MockChangePasswordScreen extends ChangePasswordScreen {
             Key("WrongPassword"));
       } else if (snapshot) {
         account
-            .changePasswordWithOld(user.id, currentPasswordCtrl.text, "test")
+            .changePasswordWithOld(user.id, oldPassword, newPassword)
             .listen((bool response) {
           if (response) {
             CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
@@ -209,6 +213,7 @@ void main() {
         find.byKey(const Key('RepeatedPasswordKey')), 'newTestPassword');
     await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
     await tester.pump();
+    screen.ChangePassword(user, "test", "newTestPassword");
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
 
     expect(find.byKey(const Key('PasswordChanged')), findsOneWidget);
@@ -227,9 +232,10 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('RepeatedPasswordKey')), 'newTestPassword');
     await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
+    //screen.ChangePassword(user, "apiException", "newTestPassword");
     await tester.pump();
-    expect(find.byType(GirafNotifyDialog), findsOneWidget);
 
+    expect(find.byType(GirafNotifyDialog), findsOneWidget);
     expect(find.byKey(const Key('WrongPassword')), findsOneWidget);
   });
 }
