@@ -82,7 +82,6 @@ class _PictogramChoiceState extends State<PictogramChoices> {
     return (valid == true) ? output : null;
   }
 
-  ///
   Stream<List<PictogramModel>> getStream() async* {
     final List<PictogramModel> list =
         List<PictogramModel>.filled(CHOSENPICTOGRAMS.length, null);
@@ -175,6 +174,7 @@ class _PictogramChoiceState extends State<PictogramChoices> {
                 constraints: const BoxConstraints(
                     maxHeight: double.infinity, maxWidth: MAXWIDTH),
                 child: GridView.count(
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     crossAxisCount: 4,
                     crossAxisSpacing: 20,

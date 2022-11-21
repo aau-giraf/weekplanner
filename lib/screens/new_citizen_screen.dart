@@ -150,7 +150,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text('Brug piktogram password?'),
+              const Text('Brug piktogram kode?'),
               Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
@@ -270,6 +270,9 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                     }
                   },
                 ),
+              ),
+              const SizedBox(
+                width: 30,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
