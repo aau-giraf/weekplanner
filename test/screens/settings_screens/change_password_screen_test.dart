@@ -92,7 +92,7 @@ class MockChangePasswordScreen extends ChangePasswordScreen {
   void ChangePassword(
       DisplayNameModel user, String oldPassword, String newPassword) {
     MockAccountApi account = MockAccountApi();
-    authBloc.authenticate("apiException", currentPasswordCtrl.text);
+    authBloc.authenticate("test", currentPasswordCtrl.text);
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
       if (snapshot == false) {
@@ -213,7 +213,6 @@ void main() {
         find.byKey(const Key('RepeatedPasswordKey')), 'newTestPassword');
     await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
     await tester.pump();
-    screen.ChangePassword(user, "test", "newTestPassword");
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
 
     expect(find.byKey(const Key('PasswordChanged')), findsOneWidget);
@@ -232,7 +231,6 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('RepeatedPasswordKey')), 'newTestPassword');
     await tester.tap(find.byKey(const Key('ChangePasswordBtnKey')));
-    //screen.ChangePassword(user, "apiException", "newTestPassword");
     await tester.pump();
 
     expect(find.byType(GirafNotifyDialog), findsOneWidget);
