@@ -39,7 +39,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
       .seeded(false);
 
-  @override String loggedInUsername = "testUsername";
+  @override String loggedInUsername = 'testUsername';
 
   @override
   Future<void> authenticateFromPopUp(String username, String password) async {
@@ -66,8 +66,10 @@ class MockChangeUsernameScreen extends ChangeUsernameScreen{
                 barrierDismissible: false,
                 context: currentContext,
                 builder: (BuildContext context) {
-                  return GirafNotifyDialog(
-                      title: 'Brugernavn er gemt', description: 'Dine ændringer er blevet gemt', key: Key("ChangesCompleted"));
+                  return const GirafNotifyDialog(
+                      title: 'Brugernavn er gemt',
+                      description: 'Dine ændringer er blevet gemt',
+                      key: Key('ChangesCompleted'));
                 });
           }else if (snapshot == false) {
             creatingErrorDialog(
@@ -184,7 +186,7 @@ void main() {
 
   testWidgets('Login to confirm user is a Guardian and updating username, '
       'should update loggedInUsername', (WidgetTester tester) async {
-    final screen = MockChangeUsernameScreen(user);
+    final MockChangeUsernameScreen screen = MockChangeUsernameScreen(user);
     await tester.pumpWidget(MaterialApp(home: screen));
     await tester.pump();
     await tester.enterText(find.byKey(const Key('UsernameKey')), 'test');
