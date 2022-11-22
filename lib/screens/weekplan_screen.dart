@@ -321,10 +321,10 @@ class WeekplanScreen extends StatelessWidget {
       theme.GirafColors.sundayColor
     ];
     final List<Widget> weekDays = <Widget>[];
-    final Orientation orientation = MediaQuery.of(context).orientation;
-    final int _weekday = DateTime.now().weekday - 1;// monday = 0, sunday = 6
 
-    int _weekdayCounter;
+    final int _weekday = DateTime.now().weekday.toInt();
+    int _weekdayCounter = 0;
+
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
         builder: (BuildContext context,
@@ -333,11 +333,19 @@ class WeekplanScreen extends StatelessWidget {
             final WeekplanMode role = weekModeSnapshot.data;
 
             if (role == WeekplanMode.guardian) {
+              weekDays.clear();
               _weekplanBloc.clearWeekdayStreams();
               _weekplanBloc.setDaysToDisplay(7, 0);
-
               for (int i = 0; i < weekModel.days.length; i++) {
-                addDayToWeek(weekDays,i,defaultWeekColors[i]);
+                weekDays.add(Expanded(
+                    child: WeekplanDayColumn(
+                  dayOfTheWeek: Weekday.values[i],
+                  color: defaultWeekColors[i],
+                  weekplanBloc: _weekplanBloc,
+                  user: _user,
+                  streamIndex: i,
+                )));
+                _weekplanBloc.addWeekdayStream();
               }
               return Row(children: weekDays);
             } else if (role == WeekplanMode.citizen) {
@@ -347,33 +355,20 @@ class WeekplanScreen extends StatelessWidget {
                     AsyncSnapshot<SettingsModel> settingsSnapshot) {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
-                    int _daysToDisplay;
-                    bool _displayDaysRelative;
-                    if (orientation == Orientation.portrait) {
-                        _daysToDisplay =
-                            _settingsModel.nrOfDaysToDisplayPortrait;
-                        _displayDaysRelative =
-                            _settingsModel.displayDaysRelativePortrait;
-                    } else if (orientation == Orientation.landscape) {
-                        _daysToDisplay =
-                            _settingsModel.nrOfDaysToDisplayLandscape;
-                        _displayDaysRelative =
-                            _settingsModel.displayDaysRelativeLandscape;
-                    }
+                    final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
 
+                    _weekdayCounter = 0;
                     // If the option of showing 1 or 2 days is chosen the
                     // _weekdayCounter must start from today's date
-                    if (_displayDaysRelative) {
-                      _weekdayCounter = _weekday;
-                    } else { //otherwise it starts from monday
-                      _weekdayCounter = 0;
+                    if (_daysToDisplay == 1 || _daysToDisplay == 2) {
+                      _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
                     }
                     // Adding the selected number of days to weekDays
+                    weekDays.clear();
                     _weekplanBloc.clearWeekdayStreams();
                     _weekplanBloc.setDaysToDisplay(_daysToDisplay,
                         _weekdayCounter);
-                    for (int i = 0; i < _daysToDisplay;
-                    i++, _weekdayCounter++) {
+                    for (int i = 0; i < _daysToDisplay; i++) {
                       // Get color from the citizen's chosen color theme
                       final String dayColor = _settingsModel.weekDayColors
                           .where((WeekdayColorModel w) =>
@@ -381,29 +376,40 @@ class WeekplanScreen extends StatelessWidget {
                           .single
                           .hexColor
                           .replaceFirst('#', '0xff');
-                      addDayToWeek(weekDays,i,Color(int.parse(dayColor)));
+                      weekDays.add(Expanded(
+                        child: WeekplanDayColumn(
+                          dayOfTheWeek: Weekday.values[_weekdayCounter],
+                          color: Color(int.parse(dayColor)),
+                          weekplanBloc: _weekplanBloc,
+                          user: _user,
+                          streamIndex: i,
+                          )
+                        )
+                      );
+                      _weekplanBloc.addWeekdayStream();
                       if (_daysToDisplay == 2 && _weekdayCounter == 6) {
                         break;
                         /* If the user wants two days to display
                          * and today is sunday then it only shows one day
                          */
                       }
+                      if (_weekdayCounter == 6) {
+                        _weekdayCounter = 0;
+                      } else {
+                        _weekdayCounter += 1;
+                      }
                     }
                   }
-                  // if only 1 day should be displayed,
-                  // add padding to both sides
                   if (weekDays.length == 1) {
                     return Row(
                       key: const Key('SingleWeekdayRow'),
                       children: <Widget>[
-                        const Spacer(flex: 1),
+                        const Spacer(flex: 2),
                         weekDays.first,
-                        const Spacer(flex: 1),
+                        const Spacer(flex: 2),
                       ],
                     );
                   } else {
-                    //otherwise just display the selected days in order
-                    // without padding
                     return Row(children: weekDays);
                   }
                 },
@@ -438,18 +444,5 @@ class WeekplanScreen extends StatelessWidget {
           return GirafNotifyDialog(
               title: 'Fejl', description: message, key: key);
         });
-  }
-  //adds a single day to a week based on  and the specified color
-  void addDayToWeek(List<Widget> weekDays, int nthDayToAdd, Color dayColor) {
-    weekDays.add(Expanded(
-        child: WeekplanDayColumn(
-          color: dayColor,
-          weekplanBloc: _weekplanBloc,
-          user: _user,
-          streamIndex: nthDayToAdd,
-        )
-      )
-    );
-    _weekplanBloc.addWeekdayStream();
   }
 }

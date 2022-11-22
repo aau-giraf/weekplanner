@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
@@ -17,13 +23,41 @@ enum Roles {
   citizen }
 
 /// Screen for creating a new citizen
+// ignore: must_be_immutable
 class NewCitizenScreen extends StatefulWidget {
   /// Constructor for the NewCitizenScreen()
   NewCitizenScreen() : _bloc = di.get<NewCitizenBloc>() {
     _bloc.initialize();
   }
 
+  ///Variable representing the screen height
+  dynamic screenHeight;
+
+  ///Variable representing the screen width
+  dynamic screenWidth;
+
   final NewCitizenBloc _bloc;
+
+  Widget _displayImage(File image) {
+    return Container(
+      //margin: const EdgeInsets.all(10.0),
+      child: CircleAvatar(
+        key: const Key('WidgetAvatar'),
+        radius: 200,
+        backgroundImage: FileImage(image),
+      ),
+    );
+  }
+
+  Widget _displayIfNoImage() {
+    return Container(
+      //margin: const EdgeInsets.all(10.0),
+      child: const CircleAvatar(
+        radius: 200,
+        backgroundImage: AssetImage('assets/login_screen_background_image.png'),
+      ),
+    );
+  }
 
   @override
   _NewCitizenScreenState createState() => _NewCitizenScreenState();
@@ -40,6 +74,8 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    widget.screenHeight = MediaQuery.of(context).size.height;
+    widget.screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: GirafAppBar(
         title: 'Ny bruger',
@@ -190,11 +226,76 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                   );
                 }),
           ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            //child: Text('Profil billede af borger (valgfri):'),
+            child: AutoSizeText(
+              'Profil billede af borger (valgfri):',
+              style: TextStyle(fontSize: GirafFont.small),
+            ),
+          ),
+
+          /// Profile preview picture
+          Center(
+            child: StreamBuilder<File>(
+                stream: widget._bloc.file,
+                builder: (BuildContext context, AsyncSnapshot<File> snapshot) =>
+                    snapshot.data != null
+                        ? widget._displayImage(snapshot.data)
+                        : widget._displayIfNoImage()),
+          ),
+
           Row(
+            //mainAxisAlignment:,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+
+                /// Add from gallery button
+                child: GirafButton(
+                  key: const Key('TilføjFraGalleriButton'),
+                  icon: const ImageIcon(AssetImage('assets/icons/gallery.png')),
+                  text: 'Tilføj fra galleri',
+                  onPressed: widget._bloc.chooseImageFromGallery,
+                  child: StreamBuilder<File>(
+                      stream: widget._bloc.file,
+                      builder: (BuildContext context,
+                              AsyncSnapshot<File> snapshot) =>
+                          snapshot.data != null
+                              ? widget._displayImage(snapshot.data)
+                              : widget._displayIfNoImage()),
+                ),  
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+
+                /// Take picture button
+                child: GirafButton(
+                  key: const Key('TagBillede'),
+                  icon: const ImageIcon(AssetImage('assets/icons/camera.png')),
+                  text: 'Tag billede',
+                  onPressed: widget._bloc.takePictureWithCamera,
+                  child: StreamBuilder<File>(
+                      stream: widget._bloc.file,
+                      builder: (BuildContext context,
+                              AsyncSnapshot<File> snapshot) =>
+                          snapshot.data != null
+                              ? widget._displayImage(snapshot.data)
+                              : widget._displayIfNoImage()),
+                ),
+              ),
+            ],
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 child: GirafButton(
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
@@ -238,7 +339,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
