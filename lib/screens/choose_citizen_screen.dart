@@ -101,17 +101,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
           displaynameModel: user,
           onPressed: () => _pushWeekplanSelector(user),
 
-    list.insert(
-        0,
-        FlatButton(
-          onPressed: () async {
-            final Object result =
-                await Routes.push(context, NewCitizenScreen());
-            final DisplayNameModel newUser =
-                DisplayNameModel.fromGirafUser(result);
-            list.add(CitizenAvatar(
-                displaynameModel: newUser,
-                onPressed: () => _pushWeekplanSelector(newUser)));
+        )).toList();
 
     /// Defines variables needed to check user role
     final int role = _authBloc.loggedInRole;
