@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:image/image.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
@@ -27,6 +31,15 @@ class NewCitizenBloc extends BlocBase {
    /// This field controls the password verification input field
   final rx_dart.BehaviorSubject<String> passwordVerifyController =
       rx_dart.BehaviorSubject<String>();
+
+  final rx_dart.BehaviorSubject<File> _file = rx_dart.BehaviorSubject<File>();
+  /// Publishes the image file, while it is not null
+  Stream<File> get file => _file.stream.where((File f) => f != null);
+  /// Publishes if the input fields are filled
+  Stream<bool> get isInputValid => _isInputValid.stream;
+
+  final rx_dart.BehaviorSubject<bool> _isInputValid =
+  rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Handles when the entered display name is changed.
   Sink<String> get onDisplayNameChange => displayNameController.sink;
@@ -63,14 +76,57 @@ class NewCitizenBloc extends BlocBase {
     });
   }
 
+  /// pushes an imagePicker screen, then sets the pictogram image,
+  /// to the selected image from the gallery
+  void takePictureWithCamera() {
+    ImagePicker.pickImage(source: ImageSource.camera).then((File f) {
+      if (f != null) {
+        _publishImage(f);
+        _checkInput();
+      }
+    });
+  }
+
+  /// pushes an imagePicker screen, then sets the profile picture image,
+  /// to the selected image from the gallery
+  void chooseImageFromGallery() {
+    ImagePicker.pickImage(source: ImageSource.gallery).then((File f) {
+      if (f != null) {
+        _publishImage(f);
+        _checkInput();
+      }
+    });
+  }
+
+  void _publishImage(File file) {
+    _file.add(file);
+  }
+
+  /// Checks if the input fields are filled out
+  void _checkInput() {
+    if (_file.value != null) {
+      _isInputValid.add(true);
+    } else {
+      _isInputValid.add(false);
+    }
+  }
+
+  Uint8List _encodePng(File file) {
+    return file != null
+      ? encodePng(copyResize(decodeImage(file.readAsBytesSync()),
+          width: 512)) // 512 bytes chosen as a reasonable input size.
+      : null;
+    }
+
   /// Method called with information about the new citizen.
   Stream<GirafUserModel> createCitizen() {
     return _api.account.register(
         usernameController.value,
         passwordController.value,
         displayNameController.value,
+        _encodePng(_file.value),
         departmentId: _user.department,
-        role: Role.Citizen
+        role: Role.Citizen,
     );
   }
 
@@ -80,6 +136,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value,
         passwordController.value,
         displayNameController.value,
+        _encodePng(_file.value),
         departmentId: _user.department,
         role: Role.Trustee
     );
@@ -91,6 +148,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value,
         passwordController.value,
         displayNameController.value,
+         _encodePng(_file.value),
         departmentId: _user.department,
         role: Role.Guardian
     );
@@ -149,6 +207,7 @@ class NewCitizenBloc extends BlocBase {
     passwordController.sink.add(null);
     passwordVerifyController.sink.add(null);
     _user = null;
+    _file.add(null);
   }
 
   @override
@@ -157,6 +216,7 @@ class NewCitizenBloc extends BlocBase {
     usernameController.close();
     passwordController.close();
     passwordVerifyController.close();
+    _file.close();
+    _isInputValid.close();
   }
-
 }
