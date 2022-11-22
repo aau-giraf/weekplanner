@@ -194,7 +194,8 @@ class SettingsScreen extends StatelessWidget {
       case 7: {return 'Mandag til søndag';}
       default: {
           if (nrOfDaysToDisplay == null) {
-            //The value can be null in some tests that uses the settingsmodel
+            //The value can be null in some tests that uses the settingsmodel,
+            // but does not use the nrOfDaysToDisplay value (so it
             return '';
           }
           throw Exception(nrOfDaysToDisplay.toString() + ' is not a valid '
