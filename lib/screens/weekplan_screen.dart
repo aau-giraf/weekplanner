@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:api_client/api/api_exception.dart';
-import 'package:api_client/http/http_mock.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
