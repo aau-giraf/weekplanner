@@ -20,8 +20,6 @@ import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
-import '../copy_to_citizens_screen_test.dart';
-import '../edit_weekplan_screen_test.dart';
 SettingsModel mockSettings;
 
 class MockUserApi extends Mock implements UserApi {
@@ -135,7 +133,8 @@ void main() {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
         expect(find.text('Bruger indstillinger'), findsOneWidget);
-        expect(find.text('Giv borger adgang til deres indstillinger.'), findsOneWidget);
+        expect(find.text('Giv borger adgang til deres indstillinger.')
+        , findsOneWidget);
   });
 
  
