@@ -51,7 +51,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   }
 }
 
-class MockChangeUsernameScreen extends ChangeUsernameScreen{
+class MockChangeUsernameScreen extends ChangeUsernameScreen{ //ignore: must_be_immutable
   MockChangeUsernameScreen(DisplayNameModel user) : super(user);
 
     @override
