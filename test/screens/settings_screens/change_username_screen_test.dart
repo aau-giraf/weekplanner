@@ -116,7 +116,7 @@ void main() {
   testWidgets('Checks if the button is present', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChangeUsernameScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.byType(RaisedButton), findsOneWidget);
+    expect(find.byType(MaterialButton), findsOneWidget);
   });
 
   testWidgets('EMPTY new Username, causing error pop-up',

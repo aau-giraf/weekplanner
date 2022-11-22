@@ -1,38 +1,20 @@
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/complete_mark_enum.dart';
-import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/change_password_screen.dart';
 import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'number_of_days_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'color_theme_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'privacy_information_screen.dart';
-import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_arrow_button.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
-    'settings_section_checkboxButton.dart';
-import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_item.dart';
-import 'package:weekplanner/widgets/settings_widgets/'
-    'settings_theme_display_box.dart';
 import '../../di.dart';
 import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
-import 'completed_activity_icon_selection_screen.dart';
 
+/// Shows all the Guardian and Trustee users settings, and lets them change them
 class UserSettingsScreen extends StatelessWidget {
   final ChooseCitizenBloc _cBloc = di.getDependency<ChooseCitizenBloc>();
 
@@ -57,8 +39,8 @@ class UserSettingsScreen extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<GirafUserModel> snapshot) {
           if (snapshot.hasData) {
-            print("Snapshot has Girafuser: " + snapshot.data.username);
-            DisplayNameModel user =
+            print('Snapshot has Girafuser: ' + snapshot.data.username);
+            final DisplayNameModel user =
                 DisplayNameModel.fromGirafUser(snapshot.data);
             return SettingsSection(
                 snapshot.data.username + ' - skift personlig information',

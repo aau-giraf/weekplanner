@@ -1,5 +1,3 @@
-import 'package:api_client/api/account_api.dart';
-import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
@@ -15,7 +13,6 @@ import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'time_representation_screen.dart';
-import 'package:weekplanner/screens/settings_screens/user_settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'

@@ -96,17 +96,17 @@ class MockChangePasswordScreen extends ChangePasswordScreen {
     authBloc.loggedIn.listen((bool snapshot) {
       loginStatus = snapshot;
       if (snapshot == false) {
-        CreateDialog('Forkert adgangskode.', 'The old password is wrong',
+        createDialog('Forkert adgangskode.', 'The old password is wrong',
             Key("WrongPassword"));
       } else if (snapshot) {
         account
             .changePasswordWithOld(user.id, oldPassword, newPassword)
             .listen((bool response) {
           if (response) {
-            CreateDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
+            createDialog("Kodeord ændret", "Dit kodeord er blevet ændret",
                 Key("PasswordChanged"));
           } else {
-            CreateDialog('Forkert adgangskode.', 'The old password is wrong',
+            createDialog('Forkert adgangskode.', 'The old password is wrong',
                 Key("WrongPassword"));
           }
         });
@@ -148,7 +148,7 @@ void main() {
   testWidgets("Checks if the button is present", (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChangePasswordScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.byType(RaisedButton), findsOneWidget);
+    expect(find.byType(MaterialButton), findsOneWidget);
   });
 
   testWidgets("EMPTY new password ERROR", (WidgetTester tester) async {

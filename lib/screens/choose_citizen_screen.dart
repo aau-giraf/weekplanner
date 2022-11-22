@@ -12,7 +12,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/screens/settings_screens/user_settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
-import 'package:weekplanner/screens/settings_screens/user_settings_screen.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/style/font_size.dart';
@@ -108,7 +107,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
     /// Checks user role and gives option to add Citizen if user is Guardian
     if (role == Role.Guardian.index) {
-      list.insert(0, FlatButton(
+      list.insert(0, MaterialButton(
         onPressed: () async {
           final Object result =
           await Routes.push(context, NewCitizenScreen());

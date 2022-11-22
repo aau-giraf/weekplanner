@@ -11,9 +11,9 @@ import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Screen for changing password
-class ChangePasswordScreen extends StatelessWidget {
+class ChangePasswordScreen extends StatelessWidget { //ignore: must_be_immutable
   /// Constructor
-  ChangePasswordScreen(DisplayNameModel user) : _user = user {}
+  ChangePasswordScreen(DisplayNameModel user) : _user = user;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -156,7 +156,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       child: Container(
                         child: Transform.scale(
                           scale: 1.5,
-                          child: RaisedButton(
+                          child: MaterialButton(
                             key: const Key('ChangePasswordBtnKey'),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
@@ -184,7 +184,6 @@ class ChangePasswordScreen extends StatelessWidget {
   /// After authentication, the method changes the password to the new password.
   void changePassword(
       DisplayNameModel user, String oldPassword, String newPassword) {
-    bool loginStatus = false;
     //Checks if user is logged in
     authBloc
         .authenticate(authBloc.loggedInUsername, oldPassword)
@@ -197,7 +196,7 @@ class ChangePasswordScreen extends StatelessWidget {
               .changePasswordWithOld(user.id, oldPassword, newPassword)
               .listen((_) {})
               .onDone(() {
-            CreateDialog('Kodeord ændret', 'Dit kodeord er blevet ændret',
+            createDialog('Kodeord ændret', 'Dit kodeord er blevet ændret',
                 const Key('PasswordChanged'));
           });
         }
@@ -207,12 +206,12 @@ class ChangePasswordScreen extends StatelessWidget {
       });
     }).catchError((Object error) {
       if (error is ApiException) {
-        CreateDialog('Forkert adgangskode',
+        createDialog('Forkert adgangskode',
             'Den nuværende adgangskode er forkert',
             const Key('WrongPassword'));
       } else {
         print(error.toString());
-        CreateDialog(
+        createDialog(
             'Fejl', 'Der skete en ukendt fejl',
             const Key('UnknownErrorOccured'));
       }
@@ -226,16 +225,17 @@ class ChangePasswordScreen extends StatelessWidget {
     currentContext = context;
 
     if (newPasswordCtrl.text != repeatNewPasswordCtrl.text) {
-      CreateDialog('Fejl', 'Den gentagne adgangskode stemmer ikke overens',
+      createDialog('Fejl', 'Den gentagne adgangskode stemmer ikke overens',
           const Key('NewPasswordNotRepeated'));
     }
     else if (currentPasswordCtrl.text == '' ||
         newPasswordCtrl.text == '' ||
-        repeatNewPasswordCtrl == '') {
-      CreateDialog(
-          'Fejl', 'Udfyld venligst alle felterne', Key('NewPasswordEmpty'));
+        repeatNewPasswordCtrl.text == '') {
+      createDialog(
+          'Fejl', 'Udfyld venligst alle felterne',
+          const Key('NewPasswordEmpty'));
     } else if (newPasswordCtrl.text == currentPasswordCtrl.text) {
-      CreateDialog(
+      createDialog(
           'Fejl',
           'Det nye kodeord må ikke være det samme som det gamle',
           const Key('NewPasswordSameAsOld'));
@@ -246,7 +246,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
   /// Dialog for notifying the user if the occurrs an error or
   /// if the password has been changed
-  void CreateDialog(String title, String description, Key key) {
+  void createDialog(String title, String description, Key key) {
     /// Show the new NotifyDialog
     showDialog<Center>(
         barrierDismissible: false,

@@ -20,7 +20,7 @@ import '../../style/custom_color.dart' as theme;
 
 
 /// Change username screen
-class ChangeUsernameScreen extends StatelessWidget {
+class ChangeUsernameScreen extends StatelessWidget { //ignore: must_be_immutable
   /// Constructor
   ChangeUsernameScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
@@ -109,7 +109,7 @@ class ChangeUsernameScreen extends StatelessWidget {
                       child: Container(
                         child: Transform.scale(
                           scale: 1.5,
-                          child: RaisedButton(
+                          child: MaterialButton(
                             key: const Key('SaveUsernameKey'),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
@@ -147,7 +147,7 @@ class ChangeUsernameScreen extends StatelessWidget {
               key: _innerForm,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: [ //ignore: always_specify_types
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: Text('For at skifte brugernavn, indtast dit '
@@ -171,7 +171,7 @@ class ChangeUsernameScreen extends StatelessWidget {
                     EdgeInsets.fromLTRB(0, 15, 0, 0)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: [ //ignore: always_specify_types
                       GirafButton(
                           key: const Key(
                               'UsernameConfirmationDialogCancelButton'),
@@ -297,7 +297,9 @@ class ChangeUsernameScreen extends StatelessWidget {
   /// This method is used to extract a GirafUserModel object from the stream.
   Future<GirafUserModel> getGirafUser(Stream<GirafUserModel> stream) async {
     GirafUserModel girafUser;
-    await for(GirafUserModel value in stream) { girafUser = value; }
+    await for(GirafUserModel value in stream) {
+      girafUser = value;
+    }
     return girafUser;
   }
 
@@ -308,6 +310,7 @@ class ChangeUsernameScreen extends StatelessWidget {
   }
 
   /// Updates the user with new username
+  //ignore: always_specify_types
   Future updateUser(Stream<GirafUserModel> userStream) async{
     await for (final GirafUserModel value in userStream){
       value.username = newUsernameCtrl.text;
