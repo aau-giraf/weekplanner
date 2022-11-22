@@ -56,12 +56,14 @@ class _PictogramChoiceState extends State<PictogramChoices> {
   ///and adds it to the code
   void addToPass(PictogramModel pictogram) {
     final int index = _inputCode.indexOf(null);
-    if (index != -1) {
-      _inputCode[index] = pictogram;
+    if (index == -1) {
+      return;
     }
-    widget.onPasswordChanged(validateAndConvertPass());
-    //Reloads the widget with the new input
-    setState(() {});
+      _inputCode[index] = pictogram;
+      widget.onPasswordChanged(validateAndConvertPass());
+      //Reloads the widget with the new input
+      setState(() {});
+
   }
 
   ///Called when a pictogram is pressed in the code and removes the pressed icon
@@ -132,9 +134,10 @@ class _PictogramChoiceState extends State<PictogramChoices> {
           ),
         );
       } else if (pictogram.id == -1){
+        // For testing purposes
         widget = const Text(
             'LoginPictogram',
-            key: Key('LoginPictogram')
+            //key: Key('LoginPictogram')
         );
       }
       else
@@ -208,6 +211,7 @@ class _PictogramChoiceState extends State<PictogramChoices> {
         color: Colors.grey,
         width: MediaQuery.of(context).size.width,
         height: 120,
+        key: const Key('InputPasswordContainer'),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
