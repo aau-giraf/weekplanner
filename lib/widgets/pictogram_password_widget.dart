@@ -12,14 +12,17 @@ import 'giraf_notify_dialog.dart';
 class PictogramChoices extends StatefulWidget {
   ///Widget with the possible pictograms in the code and the currently picked
   /// pictograms in the code.
-  // const PictogramChoices({
-  //   Key key,
-  //   @required this.api,
-  // }) : super(key: key);
 
-  const PictogramChoices(this.api);
+  const PictogramChoices({Key key,
+    @required this.onPasswordChanged, @required this.api})
+      : super(key: key);
+
+  /// This function returns the new password every time the password has been
+  /// changed by adding or removing pictogram.
+  final Function onPasswordChanged;
 
   final Api api;
+
   @override
   _PictogramChoiceState createState() => _PictogramChoiceState(api);
 }
@@ -34,7 +37,7 @@ const double MAXWIDTH = 500;
 class _PictogramChoiceState extends State<PictogramChoices> {
   _PictogramChoiceState(this._api);
   /// Api to use for pictogram calls
-  Api _api;
+  final Api _api;
   /// List of currently chosen pictograms for the code
   List<PictogramModel> _inputCode;
 
@@ -44,7 +47,7 @@ class _PictogramChoiceState extends State<PictogramChoices> {
   @override
   void initState() {
     _inputCode = List<PictogramModel>.filled(4, null);
-    //_api = di.getDependency<Api>();
+
     _pictogramChoices = getStream();
     super.initState();
   }
@@ -56,6 +59,7 @@ class _PictogramChoiceState extends State<PictogramChoices> {
     if (index != -1) {
       _inputCode[index] = pictogram;
     }
+    widget.onPasswordChanged(validateAndConvertPass());
     //Reloads the widget with the new input
     setState(() {});
   }
@@ -63,8 +67,25 @@ class _PictogramChoiceState extends State<PictogramChoices> {
   ///Called when a pictogram is pressed in the code and removes the pressed icon
   void removeFromPass(int index) {
     _inputCode[index] = null;
+    widget.onPasswordChanged(validateAndConvertPass());
     //Reloads the widget with the new code
     setState(() {});
+  }
+
+  /// Validates the chosen pictograms and converts them into a string.
+  /// If the input is invalid, null is return. This means that one must
+  /// null-check when using this widget.
+  String validateAndConvertPass() {
+    String output = '';
+    bool valid = true;
+    passwordList().forEach((Widget w) {
+      if (w is PictogramImage) {
+        output += w.pictogram.id.toString();
+      } else {
+        valid = false;
+      }
+    });
+    return (valid == true) ? output : null;
   }
 
   ///
@@ -106,12 +127,20 @@ class _PictogramChoiceState extends State<PictogramChoices> {
       Widget widget;
       if (pictogram == null) {
         widget = Container(
+          key: const Key('Empty password container'),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: const Color(0xFFe0dede),
           ),
         );
-      } else {
+      } else if (pictogram.id == -1){
+        widget = const Text(
+            'LoginPictogram',
+            key: Key('LoginPictogram')
+        );
+      }
+      else
+      {
         widget = PictogramImage(
             pictogram: pictogram, onPressed: () => removeFromPass(i));
       }
@@ -150,7 +179,17 @@ class _PictogramChoiceState extends State<PictogramChoices> {
                                 child: const Center(
                                     child: CircularProgressIndicator()),
                               );
-                            } else {
+                            }
+                            // This is here to allow for testing.
+                            else if (pictogram.id == -1){
+                              return GestureDetector(
+                                onTap: () => addToPass(pictogram),
+                                child: const Text('Error'),
+                                key: const Key('TestPictogram'),
+                              );
+                            }
+                            else
+                            {
                               return PictogramImage(
                                   pictogram: pictogram,
                                   onPressed: () => addToPass(pictogram));

@@ -19,9 +19,9 @@ class PictogramImage extends StatelessWidget {
     Key key,
     @required this.pictogram,
     @required this.onPressed,
-    this.haveRights = false
+    this.haveRights = false,
   }) : super(key: key) {
-    _bloc.load(pictogram);
+    bloc.load(pictogram);
   }
 
   /// Provided Pictogram to load
@@ -34,7 +34,7 @@ class PictogramImage extends StatelessWidget {
   /// every press of the image
   final VoidCallback onPressed;
 
-  final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
+  final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
   final Widget _loading = Center(
       child: Container(
           width: 100, height: 100, child: const CircularProgressIndicator()
@@ -52,10 +52,11 @@ class PictogramImage extends StatelessWidget {
               title: 'Slet piktogram',
               description: 'Vil du slette det markerede piktogram?',
               confirmButtonText: 'Slet',
-              confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
+              confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: (){
 
-                if (!_bloc.delete(pictogram)){
+                if (!bloc.delete(pictogram)){
                   _notifyErrorOnDeleteDialog(context);
                 }
                 Routes.pop(context);
@@ -92,7 +93,7 @@ class PictogramImage extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                    StreamBuilder<Image>(
-                    stream: _bloc.image,
+                    stream: bloc.image,
                     builder:
                       (BuildContext context, AsyncSnapshot<Image> snapshot) =>
                       snapshot.data ?? _loading),

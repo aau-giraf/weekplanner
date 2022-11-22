@@ -32,6 +32,17 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:api_client/api/api.dart';
 
 import '../blocs/pictogram_bloc_test.dart';
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:mockito/mockito.dart';
+import 'package:api_client/api/api.dart';
+import 'package:api_client/api/pictogram_api.dart';
+import 'package:async_test/async_test.dart';
+
+import '../test_image.dart';
 
 SettingsModel mockSettings;
 
@@ -50,19 +61,41 @@ class MockUserApi extends Mock implements UserApi {
 
 void main(){
   Api api;
-
+  MockPictogramApi pictogramApi;
   setUp(() {
     di.clearAll();
     api = Api('any');
     di.registerDependency((_) => api);
-    api.pictogram = MockPictogramApi();
+    pictogramApi = MockPictogramApi();
+    api.pictogram = pictogramApi;
   });
 
-  testWidgets('Test1', (WidgetTester tester) async {
+  testWidgets('Shows 10 "pictogram" options', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: PictogramChoices(api)));
+        MaterialApp(home:
+        PictogramChoices(
+            api: api)
+        )
+    );
+    await tester.pumpAndSettle();
+    // Because of dependencies it shows 10 text boxes when testing
+    expect(find.byKey(const Key('TestPictogram')),findsNWidgets(10));
+    // Shows 4 empty boxes because no password has been input yet
+    expect(find.byKey(const Key('Empty password container')), findsNWidgets(4));
+  });
+
+  testWidgets('Adds pictogram to login when "Pictogram is pressed',
+          (WidgetTester tester) async {
+    await tester.pumpWidget(
+        MaterialApp(home:
+        PictogramChoices(
+            api: api)
+        )
+    );
     await tester.pumpAndSettle();
 
-    expect(find.byType(PictogramImage),findsOneWidget);
+    await tester.tap(find.byKey(const Key('TestPictogram')).first);
+    // Because of dependencies it shows 10 text boxes when testing
+    expect(find.byKey(const Key('LoginPictogram')),findsNWidgets(1));
   });
 }

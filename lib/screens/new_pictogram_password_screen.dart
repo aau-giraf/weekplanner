@@ -10,6 +10,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/pictogram_password_widget.dart';
 
+
 /// Screen for the creation of a pictogram password
 class NewPictogramPasswordScreen extends StatelessWidget {
   /// Constructor for the new pictogram password screen
@@ -20,8 +21,9 @@ class NewPictogramPasswordScreen extends StatelessWidget {
 
   final NewPictogramPasswordBloc _bloc;
 
-  final PictogramChoices _pictogramChoices =
-      PictogramChoices(di.getDependency<Api>());
+
+  //final PictogramChoices pictogramChoices =
+  //    PictogramChoices(di.getDependency<Api>());
 
   final ApiErrorTranslator _translator = ApiErrorTranslator();
 
@@ -32,7 +34,8 @@ class NewPictogramPasswordScreen extends StatelessWidget {
         body: ListView(shrinkWrap: true, children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            child: StreamBuilder<bool>(builder: (context, snapshot) {
+            child: StreamBuilder<bool>(
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return Text('Opret piktogram kode til ${_bloc.displayName}',
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
@@ -45,18 +48,24 @@ class NewPictogramPasswordScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _pictogramChoices,
+              PictogramChoices(
+                onPasswordChanged: (String pass) {
+                  _bloc.onPictogramPasswordChanged.add(pass);
+                },
+                api: di.getDependency<Api>(),
+              ),
             ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: StreamBuilder<bool>(
-              builder: (context, snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                 return GirafButton(
                   key: const Key('saveButton'),
                   icon: const ImageIcon(AssetImage('assets/icons/save.png')),
                   text: 'Gem bruger',
-                  isEnabled: true,
+                  isEnabled: false,
+                  isEnabledStream: _bloc.validPictogramPasswordStream,
                   onPressed: () {
                     _bloc.createCitizen().listen((GirafUserModel response) {
                       if (response != null) {

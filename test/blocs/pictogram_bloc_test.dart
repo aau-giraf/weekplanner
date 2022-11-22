@@ -1,3 +1,4 @@
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
@@ -7,7 +8,14 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
 import 'package:async_test/async_test.dart';
 
-class MockPictogramApi extends Mock implements PictogramApi {}
+class MockPictogramApi extends Mock implements PictogramApi {
+  @override
+  Stream<PictogramModel> get(int id) async* {
+    final PictogramModel mockModel = PictogramModel(id: -1, title: 'test1',
+        accessLevel: AccessLevel.PUBLIC);
+    yield mockModel;
+  }
+}
 
 void main() {
   PictogramBloc bloc;
@@ -21,10 +29,6 @@ void main() {
     bloc = PictogramBloc(api);
   });
 
-  @override
-  Stream<PictogramModel> get(int id) {
-    print("hej");
-  }
   test('Should be able to search for pictograms', async((DoneFn done) {
     const String query = 'Kat';
     int count = 0;
