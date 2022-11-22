@@ -31,9 +31,6 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
   final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
-
-  final Api _api = di.getDependency<Api>();
-
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
