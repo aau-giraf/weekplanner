@@ -23,8 +23,7 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 /// where listen().onError could catch it
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
-      : super(
-        HttpClient(baseUrl: null, persist: persist), persist);
+      : super(HttpClient(baseUrl: null, persist: persist), persist);
 
   /// override of the register function, which returns an error
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
@@ -104,12 +103,10 @@ class MockNewCitizenBloc extends NewCitizenBloc {
       Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validUsernameStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validUsernameStream => Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validPasswordStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validPasswordStream => Stream<bool>.value(acceptAllInputs);
 
   @override
   Stream<bool> get validPasswordVerificationStream =>
@@ -163,10 +160,16 @@ void main() {
     expect(find.byType(TextFormField), findsNWidgets(4));
   });
 
+  testWidgets('Switch is rendered', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+
+    expect(find.byType(Switch), findsOneWidget);
+  });
+
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
 
-    expect(find.byType(GirafButton), findsNWidgets(1));
+    expect(find.byType(GirafButton), findsNWidgets(2));
   });
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
@@ -271,5 +274,39 @@ void main() {
     await tester.tap(find.byKey(const Key('saveButton')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
+  });
+
+  testWidgets('"Videre" button should be disabled by default',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    expect(
+        tester
+            .widget<GirafButton>(find.byKey(const Key('nextButton')))
+            .isEnabled,
+        isFalse);
+  });
+
+  testWidgets('"Videre" button should be enabled', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    await tester.enterText(
+        find.byKey(const Key('displayNameField')), 'mockDisplayName');
+    await tester.enterText(
+        find.byKey(const Key('usernameField')), 'mockUserName');
+
+    await tester.tap(find.byKey(const Key('citizenRadioButton')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('usePictogramSwitch')));
+    await tester.pumpAndSettle();
+
+    expect(
+        tester
+            .widget<GirafButton>(find.byKey(const Key('nextButton')))
+            .isEnabled,
+        isTrue);
   });
 }

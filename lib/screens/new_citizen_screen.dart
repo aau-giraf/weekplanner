@@ -73,6 +73,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                         children: <Widget>[
                           Expanded(
                             child: ListTile(
+                              key: const Key('guardianRadioButton'),
                               title: const Text('Guardian'),
                               leading: Radio<Roles>(
                                 value: Roles.guardian,
@@ -89,6 +90,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           ),
                           Expanded(
                             child: ListTile(
+                              key: const Key('trusteeRadioButton'),
                               title: const Text('Trustee'),
                               leading: Radio<Roles>(
                                 value: Roles.trustee,
@@ -105,6 +107,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                           ),
                           Expanded(
                             child: ListTile(
+                              key: const Key('citizenRadioButton'),
                               title: const Text('Citizen'),
                               leading: Radio<Roles>(
                                 value: Roles.citizen,
@@ -112,8 +115,6 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                                 onChanged: (Roles value) {
                                   setState(() {
                                     _role = value;
-                                    widget._bloc.onUsePictogramPasswordChange
-                                        .add(value == Roles.citizen);
                                   });
                                 },
                               ),
@@ -158,6 +159,7 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       stream: null,
                       builder: (context, snapshot) {
                         return Switch.adaptive(
+                            key: const Key('usePictogramSwitch'),
                             value: widget
                                 ._bloc.usePictogramPasswordController.value,
                             onChanged: _role == Roles.citizen
