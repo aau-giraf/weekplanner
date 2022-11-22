@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:api_client/models/displayname_model.dart';
@@ -23,7 +24,7 @@ class CitizenAvatar extends StatelessWidget {
   bool _isTablet(MediaQueryData query) {
     final Size size = query.size;
     final double diagonal =
-    sqrt((size.width * size.width) + (size.height * size.height));
+        sqrt((size.width * size.width) + (size.height * size.height));
     return diagonal > 1100.0;
   }
 
@@ -36,53 +37,56 @@ class CitizenAvatar extends StatelessWidget {
         onTap: onPressed,
         child: Container(
             child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Container(
-                              child: const CircleAvatar(
-                                key: Key('WidgetAvatar'),
-                                radius: 20,
-                                backgroundImage: AssetImage(
+          children: <Widget>[
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          child: CircleAvatar(
+                            key: const Key('WidgetAvatar'),
+                            radius: 20,
+                            backgroundImage: displaynameModel.icon != null
+                                ? MemoryImage(
+                                    base64.decode(displaynameModel.icon))
+                                : const AssetImage(
                                     'assets/login_screen_background_image.png'),
-                              ),
-                            ),
                           ),
                         ),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minWidth: 200.0,
-                            maxWidth: 200.0,
-                            minHeight: 15.0,
-                            maxHeight: _isTablet(query) ? 50.0 : 15.0,
-                          ),
-                          child: Center(
-                            child: !hideName ? AutoSizeText(
-                              displaynameModel.displayName.length <= 15
-                                  ? displaynameModel.displayName
-                                  : displaynameModel.displayName
-                                                    .substring(0, 14) + '..',
-                              key: const Key('WidgetText'),
-                              style:
-                              TextStyle(fontSize: _isTablet(query) ?
-                              GirafFont.large : GirafFont.small),
-                            ) : Container(width: 0, height: 0),
-                          ),
-                        )
-                      ],
+                      ),
                     ),
-                  ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 200.0,
+                        maxWidth: 200.0,
+                        minHeight: 15.0,
+                        maxHeight: _isTablet(query) ? 50.0 : 15.0,
+                      ),
+                      child: Center(
+                        child: !hideName ? AutoSizeText(
+                          displaynameModel.displayName.length <= 15
+                              ? displaynameModel.displayName
+                              : displaynameModel.displayName.substring(0, 14) +
+                                  '..',
+                          key: const Key('WidgetText'),
+                          style: TextStyle(
+                              fontSize: _isTablet(query)
+                                  ? GirafFont.large
+                                  : GirafFont.small),
+                        ) : Container(width: 0, height: 0),
+                      ),
+                    )
+                  ],
                 ),
-              ],
-            )),
-      )
-      ,
+              ),
+            ),
+          ],
+        )),
+      ),
     );
   }
 }
