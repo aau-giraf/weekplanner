@@ -8,6 +8,7 @@ import 'package:weekplanner/screens/new_pictogram_password_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
+/// Enum for the possible user roles
 enum Roles { guardian, trustee, citizen }
 
 /// Screen for creating a new citizen

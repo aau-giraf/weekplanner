@@ -21,7 +21,7 @@ class PictogramImage extends StatelessWidget {
     @required this.onPressed,
     this.haveRights = false,
   }) : super(key: key) {
-    bloc.load(pictogram);
+    _bloc.load(pictogram);
   }
 
   /// Provided Pictogram to load
@@ -34,7 +34,9 @@ class PictogramImage extends StatelessWidget {
   /// every press of the image
   final VoidCallback onPressed;
 
-  final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+  /// Bloc for handling api contact
+  final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
+
   final Widget _loading = Center(
       child: Container(
           width: 100, height: 100, child: const CircularProgressIndicator()
@@ -56,7 +58,7 @@ class PictogramImage extends StatelessWidget {
                 const ImageIcon(AssetImage('assets/icons/delete.png')),
               confirmOnPressed: (){
 
-                if (!bloc.delete(pictogram)){
+                if (!_bloc.delete(pictogram)){
                   _notifyErrorOnDeleteDialog(context);
                 }
                 Routes.pop(context);
@@ -93,7 +95,7 @@ class PictogramImage extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                    StreamBuilder<Image>(
-                    stream: bloc.image,
+                    stream: _bloc.image,
                     builder:
                       (BuildContext context, AsyncSnapshot<Image> snapshot) =>
                       snapshot.data ?? _loading),
