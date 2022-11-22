@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:weekplanner/api/errorcode_translater.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
 import 'package:weekplanner/di.dart';

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/'
-    'number_of_days_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
     'color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/'
+    'number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
