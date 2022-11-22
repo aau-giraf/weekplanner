@@ -5,20 +5,26 @@ import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:api_client/api/api.dart';
 
+import 'giraf_notify_dialog.dart';
+
 ///Widget to show possible pictograms for pictogram password
 ///and the currently input pictograms
 class PictogramChoices extends StatefulWidget {
   ///Widget with the possible pictograms in the code and the currently picked
   /// pictograms in the code.
-  const PictogramChoices({Key key, @required this.onPasswordChanged})
+
+  const PictogramChoices({Key key,
+    @required this.onPasswordChanged, @required this.api})
       : super(key: key);
 
   /// This function returns the new password every time the password has been
   /// changed by adding or removing pictogram.
   final Function onPasswordChanged;
 
+  final Api api;
+
   @override
-  _PictogramChoiceState createState() => _PictogramChoiceState();
+  _PictogramChoiceState createState() => _PictogramChoiceState(api);
 }
 
 /// The pictograms to choose between for the code.
@@ -29,9 +35,9 @@ const List<int> CHOSENPICTOGRAMS = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const double MAXWIDTH = 500;
 
 class _PictogramChoiceState extends State<PictogramChoices> {
+  _PictogramChoiceState(this._api);
   /// Api to use for pictogram calls
-  Api _api;
-
+  final Api _api;
   /// List of currently chosen pictograms for the code
   List<PictogramModel> _inputCode;
 
@@ -41,7 +47,7 @@ class _PictogramChoiceState extends State<PictogramChoices> {
   @override
   void initState() {
     _inputCode = List<PictogramModel>.filled(4, null);
-    _api = di.getDependency<Api>();
+
     _pictogramChoices = getStream();
     super.initState();
   }
@@ -86,13 +92,31 @@ class _PictogramChoiceState extends State<PictogramChoices> {
     final List<PictogramModel> list =
         List<PictogramModel>.filled(CHOSENPICTOGRAMS.length, null);
     yield list;
-    for (int i = 0; i < list.length; i++) {
-      final int index = CHOSENPICTOGRAMS[i];
-      await for (final PictogramModel model in _api.pictogram.get(index)) {
-        list[i] = model;
-        yield list;
+    try{
+      for (int i = 0; i < list.length; i++) {
+        final int index = CHOSENPICTOGRAMS[i];
+        await for (final PictogramModel model in _api.pictogram.get(index)) {
+          list[i] = model;
+          yield list;
+        }
       }
+    }catch(e){
+      showErrorMessage(e, context);
     }
+  }
+
+  void showErrorMessage(Object error, BuildContext context) {
+    showDialog<Center>(
+
+      /// exception handler to handle web_api exceptions
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return const GirafNotifyDialog(
+              title: 'Fejl',
+              description: 'Fejl i forbindelse med at vise piktogrammer',
+              key: Key('ErrorMessageDialog'));
+        });
   }
 
   List<Widget> passwordList() {
@@ -102,12 +126,20 @@ class _PictogramChoiceState extends State<PictogramChoices> {
       Widget widget;
       if (pictogram == null) {
         widget = Container(
+          key: const Key('Empty password container'),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: const Color(0xFFe0dede),
           ),
         );
-      } else {
+      } else if (pictogram.id == -1){
+        widget = const Text(
+            'LoginPictogram',
+            key: Key('LoginPictogram')
+        );
+      }
+      else
+      {
         widget = PictogramImage(
             pictogram: pictogram, onPressed: () => removeFromPass(i));
       }
@@ -146,7 +178,17 @@ class _PictogramChoiceState extends State<PictogramChoices> {
                                 child: const Center(
                                     child: CircularProgressIndicator()),
                               );
-                            } else {
+                            }
+                            // This is here to allow for testing.
+                            else if (pictogram.id == -1){
+                              return GestureDetector(
+                                onTap: () => addToPass(pictogram),
+                                child: const Text('Error'),
+                                key: const Key('TestPictogram'),
+                              );
+                            }
+                            else
+                            {
                               return PictogramImage(
                                   pictogram: pictogram,
                                   onPressed: () => addToPass(pictogram));

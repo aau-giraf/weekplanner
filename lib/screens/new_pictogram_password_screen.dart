@@ -1,13 +1,15 @@
+import 'package:api_client/api/api.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/api/errorcode_translater.dart';
+import 'package:weekplanner/api/errorcode_translator.dart';
 import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/pictogram_widgets/pictogram_password_choices.dart';
+import 'package:weekplanner/widgets/pictogram_password_widget.dart';
+
 
 /// Screen for the creation of a pictogram password
 class NewPictogramPasswordScreen extends StatelessWidget {
@@ -19,7 +21,11 @@ class NewPictogramPasswordScreen extends StatelessWidget {
 
   final NewPictogramPasswordBloc _bloc;
 
-  final ApiErrorTranslater _translator = ApiErrorTranslater();
+
+  //final PictogramChoices pictogramChoices =
+  //    PictogramChoices(di.getDependency<Api>());
+
+  final ApiErrorTranslator _translator = ApiErrorTranslator();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +52,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                 onPasswordChanged: (String pass) {
                   _bloc.onPictogramPasswordChanged.add(pass);
                 },
+                api: di.getDependency<Api>(),
               ),
             ],
           ),
