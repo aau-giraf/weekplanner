@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -8,7 +7,6 @@ import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
