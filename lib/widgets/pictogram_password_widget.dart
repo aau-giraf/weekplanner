@@ -126,7 +126,6 @@ class _PictogramChoiceState extends State<PictogramChoices> {
       Widget widget;
       if (pictogram == null) {
         widget = Container(
-          key: const Key('Empty password container'),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: const Color(0xFFe0dede),
