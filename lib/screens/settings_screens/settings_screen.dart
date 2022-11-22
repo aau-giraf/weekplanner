@@ -216,7 +216,7 @@ class SettingsScreen extends StatelessWidget {
                 color: Colors.black,
                 fontSize: 18,
                 fontFamily: 'Quicksand'),
-            children: [
+            children: <TextSpan>[
               const TextSpan(text: 'For at slette denne bruger, indtast '),
               TextSpan(text: _user.displayName,
                   style: const TextStyle(fontWeight: FontWeight.bold)),

@@ -15,7 +15,6 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
-import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
@@ -226,12 +225,13 @@ void main() {
         );
   });
 
-  testWidgets('confirm dialog provides an error, if the user wrote the wrong name',
+  testWidgets('confirm dialog provides an error,'
+      ' if the user wrote the wrong name',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField), "test");
+    await tester.enterText(find.byType(TextField), 'test');
     await tester.tap(find.text('Slet'));
     await tester.pumpAndSettle();
 
