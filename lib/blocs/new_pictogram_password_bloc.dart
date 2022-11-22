@@ -4,8 +4,9 @@ import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
+import 'package:weekplanner/widgets/pictogram_widgets/pictogram_password_choices.dart';
 
-/// Used to create a new pictogram password for a citizen
+/// Used to create a new pictogram password for a citizen.
 class NewPictogramPasswordBloc extends BlocBase {
   /// Constructor
   NewPictogramPasswordBloc(this._api);
@@ -19,17 +20,20 @@ class NewPictogramPasswordBloc extends BlocBase {
   /// The display name for the citizen that one is creating a password for.
   String displayName;
 
-  ///
+  /// Controller that contains the stream & sink of the pictogram password.
   final rx_dart.BehaviorSubject<String> pictogramPasswordController =
       rx_dart.BehaviorSubject<String>();
 
-  /// To be called whenever somethings needs to be added to the controller
+  /// To be called whenever somethings needs to be added to the controller.
   Sink<String> get onPictogramPasswordChanged =>
       pictogramPasswordController.sink;
 
+  /// Streams a bool that tells whether the password is valid.
   Stream<bool> get validPictogramPasswordStream =>
       pictogramPasswordController.stream.transform(_passwordValidation);
 
+  /// This validation method just null-checks, as there is validation
+  /// in the [PictogramChoices] widget.
   final StreamTransformer<String, bool> _passwordValidation =
       StreamTransformer<String, bool>.fromHandlers(
           handleData: (String input, EventSink<bool> sink) {

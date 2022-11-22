@@ -31,7 +31,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: GirafAppBar(title: 'Ny bruger'),
-        body: ListView(shrinkWrap: true, children: <Widget>[
+        body: ListView(shrinkWrap: false, children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: StreamBuilder<bool>(
@@ -69,6 +69,8 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                   onPressed: () {
                     _bloc.createCitizen().listen((GirafUserModel response) {
                       if (response != null) {
+                        // Pop twice, because this screen is on top
+                        // of the NewCitizenScreen.
                         Routes.pop(context, response);
                         Routes.pop(context, response);
 
