@@ -20,7 +20,7 @@ packages:
     description:
       path: "."
       ref: settingsForWeekplanner571
-      resolved-ref: d9e0deb1ad6f84976f8c22b7e7b9c954a9daf8ec
+      resolved-ref: c2aa54d132e7f4e04dc7e5c6a11ca1cb74f3c53f
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"

@@ -121,6 +121,10 @@ void main() {
         findsOneWidget);
     expect(find.text('Antal dage der vises når enheden er på langs'),
         findsOneWidget);
+    expect(find.text('Piktogram tekst er synlig'),
+        findsOneWidget);
+    expect(find.text('Vis bekræftelse popups'),
+        findsOneWidget);
   });
 
   testWidgets('Settings has Brugerindstillinger section',
@@ -165,7 +169,7 @@ void main() {
         expect(true, mockSettings.showPopup);
   });
 
-  testWidgets('Settings has TimerControl checkbox without an checkmark',
+  testWidgets('Settings has TimerControl checkbox without a checkmark',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pump();
@@ -177,22 +181,69 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Tapping the TimerControl checkbox changes the current value',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    await tester.pump();
+  testWidgets('Tapping the piktogram tekst checkbox changes the current value',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pump();
 
-    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+
+        await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-        widget.current == 2 &&
-        widget.text == 'Lås tidsstyring'));
-    await tester.pump();
+            widget.current == 2 &&
+            widget.text == 'Piktogram tekst er synlig'));
+        await tester.pump();
 
-    expect(
-        find.byWidgetPredicate((Widget widget) =>
+        expect(
+            find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&
-            widget.current == 1 &&
+                widget.current == 1 &&
+                widget.text == 'Piktogram tekst er synlig'),
+            findsOneWidget);
+      });
+
+  testWidgets('Tapping the popup checkbox changes the current value',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pump();
+
+        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
+            widget.text == 'Vis bekræftelse popups'));
+        await tester.pump();
+        expect(
+            find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+                widget.current == 1 &&
+                widget.text == 'Vis bekræftelse popups'),
+            findsOneWidget);
+      });
+
+  testWidgets('Tapping the TimerControl checkbox changes the current value',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pump();
+
+        //this drags the page down making sure that when tapping the
+        // checkbox afterwards, we are actually tapping the correct checkbox
+        await tester.dragUntilVisible(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
             widget.text == 'Lås tidsstyring'),
-        findsOneWidget);
-  });
+            find.byType(SettingsScreen), Offset(0, 200));
+
+        await tester.pump();
+
+        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
+            widget.text == 'Lås tidsstyring'));
+        await tester.pump();
+        expect(
+            find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+                widget.current == 1 &&
+                widget.text == 'Lås tidsstyring'),
+            findsOneWidget);
+      });
 }
