@@ -38,7 +38,14 @@ void main() {
   });
 
   testWidgets('Shows 10 "pictogram" options', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: PictogramChoices(api: api)));
+    void onPasswordChangeDummy(String pass){
+      return;
+    }
+    await tester.pumpWidget(MaterialApp(home: PictogramChoices(
+      api: api, onPasswordChanged: (String pass) {
+      onPasswordChangeDummy(pass);
+      },
+    )));
     await tester.pumpAndSettle();
     // Because of dependencies it shows 10 text boxes when testing
     expect(find.byKey(const Key('TestPictogram')), findsNWidgets(10));
@@ -55,8 +62,8 @@ void main() {
       api: api, onPasswordChanged: (String pass) {
         onPasswordChangeDummy(pass);
       },
-    ))
-    );
+    )));
+
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('TestPictogram')).first);
