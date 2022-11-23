@@ -193,14 +193,6 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                                   initialData: WeekplanMode.guardian,
                                   builder: (BuildContext context,
                                       AsyncSnapshot<WeekplanMode> snapshot) {
-                                    if (snapshot.data ==
-                                        WeekplanMode.guardian) {
-                                      return _dragTargetPictogram(
-                                          index,
-                                          weekday,
-                                          editModeSnapshot.data,
-                                          context);
-                                    }
                                     return _pictogramIconStack(context, index,
                                         weekday, editModeSnapshot.data);
                                   });
@@ -240,50 +232,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
     );
   }
 
-  // Returns the draggable pictograms, which also function as drop targets.
-  DragTarget<Tuple2<ActivityModel, Weekday>> _dragTargetPictogram(
-      int index, WeekdayModel weekday, bool inEditMode, BuildContext context) {
-    return DragTarget<Tuple2<ActivityModel, Weekday>>(
-      key: const Key('DragTarget'),
-      builder: (BuildContext context,
-          List<Tuple2<ActivityModel, Weekday>> candidateData,
-          List<dynamic> rejectedData) {
-        return LongPressDraggable<Tuple2<ActivityModel, Weekday>>(
-          data: Tuple2<ActivityModel, Weekday>(
-              weekday.activities[index], weekday.day),
-          dragAnchor: DragAnchor.pointer,
-          child: _pictogramIconStack(context, index, weekday, inEditMode),
-          childWhenDragging: Opacity(
-              opacity: 0.5,
-              child: _pictogramIconStack(context, index, weekday, inEditMode)),
-          onDragStarted: () => weekplanBloc.setActivityPlaceholderVisible(true),
-          onDragCompleted: () =>
-              weekplanBloc.setActivityPlaceholderVisible(false),
-          onDragEnd: (DraggableDetails details) =>
-              weekplanBloc.setActivityPlaceholderVisible(false),
-          feedback: Container(
-              height: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? MediaQuery.of(context).size.width * 0.4
-                  : MediaQuery.of(context).size.height * 0.4,
-              width: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? MediaQuery.of(context).size.width * 0.4
-                  : MediaQuery.of(context).size.height * 0.4,
-              child: _pictogramIconStack(context, index, weekday, inEditMode)),
-        );
-      },
-      onWillAccept: (Tuple2<ActivityModel, Weekday> data) {
-        // Draggable can be dropped on every drop target
-        return true;
-      },
-      onAccept: (Tuple2<ActivityModel, Weekday> data) {
-        weekplanBloc
-            .reorderActivities(data.item1, data.item2, weekday.day, index)
-            .catchError((Object error) {
-          creatingNotifyDialog(error, context);
-        });
-      },
-    );
-  }
+
 
   // Returning a widget that stacks a pictogram and an status icon
   FittedBox _pictogramIconStack(
