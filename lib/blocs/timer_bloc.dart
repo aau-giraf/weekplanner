@@ -7,11 +7,9 @@ import 'package:api_client/models/timer_model.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
-import 'package:weekplanner/blocs/activity_bloc.dart';
-
-import '../models/enums/timer_running_mode.dart';
 
 /// Logic for activities
 class TimerBloc extends BlocBase {
@@ -78,11 +76,11 @@ class TimerBloc extends BlocBase {
 
     _timerInstantiatedStream.add(_activityModel.timer != null);
   }
-
+  /// Sets the _activityBloc to the current activityBloc
   void setActivityBloc(ActivityBloc activityBloc) {
     _activityBloc = activityBloc;
   }
-
+  /// Checks if subscription is not null
   void addHandlerToRunningModeOnce() {
     if(_subscription != null) {
       return;

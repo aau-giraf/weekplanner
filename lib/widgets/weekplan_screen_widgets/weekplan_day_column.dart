@@ -60,6 +60,7 @@ class WeekplanDayColumn extends StatelessWidget {
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
   final ActivityBloc _activityBloc = di.get<ActivityBloc>();
   final List<TimerBloc> _timerBloc = <TimerBloc>[];
+  /// Method used to create TimerBlocs.
   void createTimerBlocs(int numOfTimeBlocs) {
     for (int i = 0; i  < numOfTimeBlocs- _timerBloc.length; i++) {
       _timerBloc.add(di.get<TimerBloc>());

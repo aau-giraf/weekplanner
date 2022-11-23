@@ -682,37 +682,7 @@ class ShowActivityScreen extends StatelessWidget {
           return GirafActivityTimerPickerDialog(_activity, _timerBloc);
         });
   }
-
-
-  /// Returns a dialog where the timer can be restarted.
-  void _buildRestartTimerDialog(BuildContext context) {
-    showDialog<Center>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return GirafConfirmDialog(
-            key: const Key('TimerRestartDialogKey'),
-            title: 'Genstart Timer',
-            description: 'Vil du genstarte '
-                'timeren?',
-            confirmButtonText: 'Genstart',
-            confirmButtonIcon:
-                const ImageIcon(AssetImage('assets/icons/play.png')),
-            confirmOnPressed: () {
-              _timerBloc.stopTimer();
-              _timerBloc.playTimer();
-              Routes().pop(context);
-            },
-          );
-        });
-  }
-
-  /// Restarts timer.
-  void _restartTimer() {
-    _timerBloc.stopTimer();
-    _timerBloc.playTimer();
-  }
-
+  
   /// Builds the button that changes the state of the activity. The content
   /// of the button depends on whether it is in guardian or citizen mode.
   ButtonBar buildButtonBar() {

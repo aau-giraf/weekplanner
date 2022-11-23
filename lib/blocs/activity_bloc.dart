@@ -4,13 +4,10 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/alternate_name_model.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:api_client/models/activity_model.dart';
-import 'package:api_client/api/api.dart';
-import 'package:api_client/models/enums/activity_state_enum.dart';
-import 'package:api_client/models/alternate_name_model.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 
 /// Logic for activities
@@ -39,7 +36,7 @@ class ActivityBloc extends BlocBase {
     _user = user;
     _activityModelStream.add(activityModel);
   }
-  
+  /// Method used to access the WeekPlanBlock
   void accesWeekPlanBloc(WeekplanBloc weekplanBloc, WeekdayModel weekday) {
     _weekplanBloc = weekplanBloc;
     _weekday = weekday;
@@ -49,7 +46,7 @@ class ActivityBloc extends BlocBase {
   ActivityModel getActivity(){
     return _activityModel;
   }
-
+  /// Checks if subscription is not null
   void addHandlerToActivityStateOnce() {
     if (_subscription != null ) {
       return;
