@@ -55,9 +55,9 @@ class WeekplanActivitiesColumn extends StatelessWidget {
   /// is enabled
   final int activitiesToDisplay;
 
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final ActivityBloc _activityBloc = di.get<ActivityBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -402,7 +402,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                 activities[index], _activityBloc, user);
           });
     } else if (!inEditMode) {
-      Routes.push(context, ShowActivityScreen(activities[index], user))
+      Routes().push(context, ShowActivityScreen(activities[index], user))
           .whenComplete(() {
         weekplanBloc.getWeekday(weekday.day).catchError((Object error) {
           creatingNotifyDialog(error, context);
