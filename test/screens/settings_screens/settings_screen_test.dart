@@ -224,14 +224,13 @@ void main() {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pump();
 
-        //this drags the page down making sure that when tapping the
-        // checkbox afterwards, we are actually tapping the correct checkbox
-        await tester.dragUntilVisible(find.byWidgetPredicate((Widget widget) =>
-        widget is SettingsCheckMarkButton &&
+        //this scrolls the page down making sure that when tapping the
+        //checkbox afterwards, we are actually tapping the correct one.
+        //For some reason it doesn't matter what the delta value is
+        await tester.scrollUntilVisible(find.byWidgetPredicate(
+                (Widget widget) => widget is SettingsCheckMarkButton &&
             widget.current == 2 &&
-            widget.text == 'Lås tidsstyring'),
-            find.byType(SettingsScreen), Offset(0, 200));
-
+            widget.text == 'Lås tidsstyring'),0);
         await tester.pump();
 
         await tester.tap(find.byWidgetPredicate((Widget widget) =>
