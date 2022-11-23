@@ -3,9 +3,9 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
-import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -53,9 +53,9 @@ void main() {
     settingsBloc = SettingsBloc(api);
     settingsBloc.loadSettings(user);
 
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<SettingsBloc>((_) => settingsBloc);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<SettingsBloc>(() => settingsBloc);
 
     mockObserver = MockUserApi();
   });

@@ -18,7 +18,7 @@ class EditWeekPlanScreen extends StatelessWidget {
     @required DisplayNameModel user,
     @required this.weekModel,
     @required this.selectorBloc,
-  }) : _bloc = di.getDependency<EditWeekplanBloc>() {
+  }) : _bloc = di.get<EditWeekplanBloc>() {
     _bloc.initializeEditBloc(user, weekModel);
   }
 
@@ -46,7 +46,7 @@ class EditWeekPlanScreen extends StatelessWidget {
 
         try {
           if (result != null) {
-            Routes.pop<WeekModel>(context, result);
+            Routes().pop<WeekModel>(context, result);
           }
         } catch (Err) {
           throw EditWeekplanButtonException(

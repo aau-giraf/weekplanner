@@ -21,7 +21,7 @@ class LoginScreen extends StatefulWidget {
 /// This is the login state
 class LoginScreenState extends State<LoginScreen> {
   /// AuthBloC used to communicate with API
-  final AuthBloc authBloc = di.getDependency<AuthBloc>();
+  final AuthBloc authBloc = di.get<AuthBloc>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -51,7 +51,7 @@ class LoginScreenState extends State<LoginScreen> {
         // Return if logging out
         if (snapshot) {
           // Pop the loading spinner
-          Routes.pop(context);
+          Routes().pop(context);
         }
         // Stop listening for future logins
         loginListener.cancel();
@@ -104,7 +104,7 @@ class LoginScreenState extends State<LoginScreen> {
   /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
     /// Remove the loading spinner
-    Routes.pop(currentContext);
+    Routes().pop(currentContext);
 
     /// Show the new NotifyDialog
     showDialog<Center>(
@@ -132,6 +132,13 @@ class LoginScreenState extends State<LoginScreen> {
 
     ///Used to check if the keyboard is visible
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
+
+    final ButtonStyle girafButtonStyle = ElevatedButton.styleFrom(
+      backgroundColor: theme.GirafColors.loginButtonColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+    );
 
     return Scaffold(
       body: Container(
@@ -212,10 +219,9 @@ class LoginScreenState extends State<LoginScreen> {
                       child: Container(
                         child: Transform.scale(
                           scale: 1.5,
-                          child: RaisedButton(
+                          child: ElevatedButton(
                             key: const Key('LoginBtnKey'),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
+                            style: girafButtonStyle,
                             child: const Text(
                               'Login',
                               style: TextStyle(color: theme.GirafColors.white),
@@ -223,7 +229,6 @@ class LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               loginAction(context);
                             },
-                            color: theme.GirafColors.loginButtonColor,
                           ),
                         ),
                       ),
@@ -233,9 +238,8 @@ class LoginScreenState extends State<LoginScreen> {
                         ? Container(
                             child: Transform.scale(
                               scale: 1.2,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
+                              child: ElevatedButton(
+                                style: girafButtonStyle,
                                 child: const Text(
                                   'Auto-Login',
                                   key: Key('AutoLoginKey'),
@@ -249,7 +253,6 @@ class LoginScreenState extends State<LoginScreen> {
                                       environment.getVar<String>('PASSWORD');
                                   loginAction(context);
                                 },
-                                color: theme.GirafColors.loginButtonColor,
                               ),
                             ),
                           )

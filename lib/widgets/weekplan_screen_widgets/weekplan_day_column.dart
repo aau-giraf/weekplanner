@@ -54,9 +54,9 @@ class WeekplanDayColumn extends StatelessWidget {
   /// Index of the weekday in the weekdayStreams list
   final int streamIndex;
 
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final ActivityBloc _activityBloc = di.get<ActivityBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -289,7 +289,7 @@ class WeekplanDayColumn extends StatelessWidget {
         return LongPressDraggable<Tuple2<ActivityModel, Weekday>>(
           data: Tuple2<ActivityModel, Weekday>(
               weekday.activities[index], weekday.day),
-          dragAnchor: DragAnchor.pointer,
+          dragAnchorStrategy: pointerDragAnchorStrategy,
           child: _pictogramIconStack(context, index, weekday, inEditMode),
           childWhenDragging: Opacity(
               opacity: 0.5,
@@ -442,7 +442,7 @@ class WeekplanDayColumn extends StatelessWidget {
           });
     }
     else if(!inEditMode){
-      Routes.push(context, ShowActivityScreen(activities[index], user))
+      Routes().push(context, ShowActivityScreen(activities[index], user))
           .whenComplete(() {weekplanBloc.getWeekday(weekday.day)
           .catchError((Object error) {
             creatingNotifyDialog(error, context);
@@ -474,6 +474,11 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
+  /// Button style for the add activity screen
+  final ButtonStyle addActivityStyle = ElevatedButton.styleFrom(
+    backgroundColor: theme.GirafColors.buttonColor,
+  );
+
   Container _buildAddActivityButton(WeekdayModel weekday, BuildContext context){
     return Container(
         padding: EdgeInsets.symmetric(
@@ -490,12 +495,12 @@ class WeekplanDayColumn extends StatelessWidget {
                     AsyncSnapshot<WeekplanMode> snapshot) {
                   return Visibility(
                     visible: snapshot.data == WeekplanMode.guardian,
-                    child: RaisedButton(
+                    child: ElevatedButton(
+                      style: addActivityStyle,
                         key: const Key('AddActivityButton'),
                         child: Image.asset('assets/icons/add.png'),
-                        color: theme.GirafColors.buttonColor,
                         onPressed: () async {
-                          Routes.push(context, PictogramSearch(user: user,))
+                          Routes().push(context, PictogramSearch(user: user,))
                               .then((Object object) {
                             if (object is PictogramModel) {
                               final PictogramModel newPictogram = object;

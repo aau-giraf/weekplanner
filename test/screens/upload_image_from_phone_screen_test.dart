@@ -61,9 +61,9 @@ void main() {
     bloc = UploadMock(api);
 
     di.clearAll();
-    di.registerDependency<UploadFromGalleryBloc>((_) => bloc);
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<UploadFromGalleryBloc>(() => bloc);
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
   });
 
   testWidgets('Tests error dialog pops up on upload error',

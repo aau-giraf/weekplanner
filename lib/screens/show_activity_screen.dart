@@ -43,12 +43,11 @@ class ShowActivityScreen extends StatelessWidget {
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
 
-  final PictogramImageBloc _pictoImageBloc =
-      di.getDependency<PictogramImageBloc>();
-  final TimerBloc _timerBloc = di.getDependency<TimerBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final PictogramImageBloc _pictoImageBloc = di.get<PictogramImageBloc>();
+  final TimerBloc _timerBloc = di.get<TimerBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final ActivityBloc _activityBloc = di.get<ActivityBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
 
   /// Textfield controller
   final TextEditingController tec = TextEditingController();
@@ -208,11 +207,13 @@ class ShowActivityScreen extends StatelessWidget {
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
                       onTap: () async {
-                        await Routes.push(
-                            context,
-                            PictogramSearch(
-                              user: _girafUser,
-                            )).then((Object object) {
+                        await Routes()
+                            .push(
+                                context,
+                                PictogramSearch(
+                                  user: _girafUser,
+                                ))
+                            .then((Object object) {
                           if (object is PictogramModel) {
                             _activityBloc.load(_activity, _girafUser);
                             final PictogramModel newPictogram = object;
@@ -340,6 +341,16 @@ class ShowActivityScreen extends StatelessWidget {
         });
   }
 
+  /// Button style for the choice board
+  final ButtonStyle choiceBoardStyle = ElevatedButton.styleFrom(
+    backgroundColor: theme.GirafColors.gradientDefaultOrange,
+    disabledForegroundColor:
+        theme.GirafColors.gradientDisabledOrange.withOpacity(0.38),
+    disabledBackgroundColor:
+        theme.GirafColors.gradientDisabledOrange.withOpacity(0.12),
+    padding: const EdgeInsets.all(8.0),
+  );
+
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
     String inputtext = _activity.choiceBoardName;
@@ -370,16 +381,15 @@ class ShowActivityScreen extends StatelessWidget {
                 ),
               ),
             ),
-            RaisedButton(
+            ElevatedButton(
+              style: choiceBoardStyle,
               key: const Key('ChoiceBoardNameButton'),
-              color: theme.GirafColors.gradientDefaultOrange,
-              disabledColor: theme.GirafColors.gradientDisabledOrange,
-              padding: const EdgeInsets.all(8.0),
               onPressed: () {
                 _activity.choiceBoardName = inputtext;
                 _activityBloc.update();
               },
-              child: const Text('Godkend'),
+              child:
+                  const Text('Godkend', style: TextStyle(color: Colors.black)),
             ),
           ],
         ),
@@ -589,7 +599,7 @@ class ShowActivityScreen extends StatelessWidget {
                         const ImageIcon(AssetImage('assets/icons/stop.png')),
                     confirmOnPressed: () {
                       _timerBloc.stopTimer();
-                      Routes.pop(context);
+                      Routes().pop(context);
                     },
                   );
                 });
@@ -628,7 +638,7 @@ class ShowActivityScreen extends StatelessWidget {
                         const ImageIcon(AssetImage('assets/icons/delete.png')),
                     confirmOnPressed: () {
                       _timerBloc.deleteTimer();
-                      Routes.pop(context);
+                      Routes().pop(context);
                     },
                   );
                 });
@@ -666,7 +676,7 @@ class ShowActivityScreen extends StatelessWidget {
             confirmOnPressed: () {
               _timerBloc.stopTimer();
               _timerBloc.playTimer();
-              Routes.pop(context);
+              Routes().pop(context);
             },
           );
         });
@@ -702,7 +712,7 @@ class ShowActivityScreen extends StatelessWidget {
                         key: const Key('CompleteStateToggleButton'),
                         onPressed: () {
                           _activityBloc.completeActivity();
-                          Routes.pop(context);
+                          Routes().pop(context);
                           //This removes current context
                           // so back button correctly navigates
                           Navigator.pushAndRemoveUntil(
@@ -736,7 +746,7 @@ class ShowActivityScreen extends StatelessWidget {
                         onPressed: () {
                           _activityBloc.cancelActivity();
                           _activity.state = _activityBloc.getActivity().state;
-                          Routes.pop(context);
+                          Routes().pop(context);
                           //This removes current context
                           // so back button correctly navigates
                           Navigator.pushAndRemoveUntil(

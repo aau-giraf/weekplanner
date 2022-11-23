@@ -16,7 +16,7 @@ class NewWeekplanScreen extends StatelessWidget {
   NewWeekplanScreen({
     @required DisplayNameModel user,
     @required this.existingWeekPlans,
-  }) : _bloc = di.getDependency<NewWeekplanBloc>() {
+  }) : _bloc = di.get<NewWeekplanBloc>() {
     _bloc.initialize(user);
   }
 
@@ -39,7 +39,7 @@ class NewWeekplanScreen extends StatelessWidget {
         );
         try {
           if (newWeekPlan != null) {
-            Routes.pop<WeekModel>(context, newWeekPlan);
+            Routes().pop<WeekModel>(context, newWeekPlan);
           }
         } catch (Err) {
           print('No new weekplan exists' '\n Error: ' + Err);
