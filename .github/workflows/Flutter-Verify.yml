@@ -4,7 +4,7 @@ on: [push]
 
 env:
   flutter_channel: 'stable'
-  flutter_version: '3.3.7'
+  flutter_version: '3.3.8'
   java_version: '12.x'
 
 jobs:
