@@ -19,6 +19,7 @@ class CitizenAvatar extends StatelessWidget {
   /// Callback when pressed
   final VoidCallback onPressed;
 
+  /// Flag for hiding the username underneath the avatar
   final bool hideName;
 
   bool _isTablet(MediaQueryData query) {
