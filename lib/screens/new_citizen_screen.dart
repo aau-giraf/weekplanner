@@ -9,7 +9,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 
 /// Enum for the possible user roles
-enum Roles { guardian, trustee, citizen }
+enum Roles { guardian, trustee, citizen } // ignore: public_member_api_docs
 
 /// Screen for creating a new citizen
 class NewCitizenScreen extends StatefulWidget {
@@ -158,7 +158,8 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                   child: StreamBuilder<Object>(
                       stream: null,
-                      builder: (context, snapshot) {
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Object> snapshot) {
                         return Switch.adaptive(
                             key: const Key('usePictogramSwitch'),
                             value: widget
@@ -290,9 +291,10 @@ class _NewCitizenScreenState extends State<NewCitizenScreen> {
                       context,
                       // ignore: always_specify_types
                       MaterialPageRoute<void>(
-                          builder: (context) => NewPictogramPasswordScreen(
-                              widget._bloc.usernameController.value,
-                              widget._bloc.displayNameController.value)),
+                          builder: (BuildContext context) =>
+                              NewPictogramPasswordScreen(
+                                  widget._bloc.usernameController.value,
+                                  widget._bloc.displayNameController.value)),
                     );
                   },
                 ),

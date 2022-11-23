@@ -22,7 +22,6 @@ import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
 import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
-import 'package:weekplanner/widgets/pictogram_password_widget.dart';
 
 /// Bootstrap the project
 class Bootstrap {
