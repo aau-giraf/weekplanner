@@ -98,7 +98,8 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         // We have to null-check, because the user can just return
         // to this screen without saving a new user.
         if (result != null) {
-            final DisplayNameModel newUser = DisplayNameModel.fromGirafUser(result);
+            final DisplayNameModel newUser = 
+              DisplayNameModel.fromGirafUser(result);
             list.add(CitizenAvatar(
                   displaynameModel: newUser,
                   onPressed: () => _pushWeekplanSelector(newUser)
