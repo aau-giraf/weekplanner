@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:api_client/api/api_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/exceptions/custom_exceptions.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
-import 'package:weekplanner/exceptions/custom_exceptions.dart';
+
 import '../style/custom_color.dart' as theme;
 
 /// Logs the user in
@@ -87,10 +89,10 @@ class LoginScreenState extends State<LoginScreen> {
                       ' til internettet.',
                   'NoConnectionToInternet');
             }
-          } catch (Err) {
+          } catch (err) {
             throw ServerException(
                 'There was an error with the server' '\n Error: ',
-                Err.toString());
+                err.toString());
           }
         });
       } else {

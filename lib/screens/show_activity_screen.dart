@@ -11,6 +11,7 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/exceptions/custom_exceptions.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -26,7 +27,6 @@ import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_countdown.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_hourglass.dart';
 import 'package:weekplanner/widgets/timer_widgets/timer_piechart.dart';
-import 'package:weekplanner/exceptions/custom_exceptions.dart';
 
 import '../style/custom_color.dart' as theme;
 
@@ -88,11 +88,11 @@ class ShowActivityScreen extends StatelessWidget {
           children: buildScreen(context, mode),
         );
       }
-    } catch (Err) {
+    } catch (err) {
       throw OrientationException(
           'Something is wrong with the screen orientation'
           '\n Error: ',
-          Err.toString());
+          err.toString());
     }
     return Scaffold(
         resizeToAvoidBottomInset: false,
