@@ -20,7 +20,7 @@ packages:
     description:
       path: "."
       ref: settingsForWeekplanner571
-      resolved-ref: c2aa54d132e7f4e04dc7e5c6a11ca1cb74f3c53f
+      resolved-ref: "7b59b5710f4250b170c18c76b572ae8acbf2873f"
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"
@@ -30,7 +30,7 @@ packages:
       name: archive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.4"
+    version: "3.3.5"
   args:
     dependency: transitive
     description:
@@ -446,7 +446,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.21"
+    version: "2.0.22"
   path_provider_ios:
     dependency: transitive
     description:

@@ -1,6 +1,5 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -27,7 +26,7 @@ class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
 
   bool _isPortrait;
   final DisplayNameModel _user;
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
 
   @override
@@ -55,26 +54,26 @@ class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
                           1, _numberOfDaysToDisplay, 'Vis i dag',
                               () {
                                 setDisplayDaysRelative(_settingsModel, true);
-                            Routes.pop(context, 1);
+                            Routes().pop(context, 1);
                           }),
                       SettingsCheckMarkButton(
                           2, _numberOfDaysToDisplay, 'Vis to dage',
                               () {
                                 setDisplayDaysRelative(_settingsModel, true);
-                            Routes.pop(context, 2);
+                            Routes().pop(context, 2);
                           }),
 
                       SettingsCheckMarkButton(
                           5, _numberOfDaysToDisplay, 'Vis mandag til fredag',
                               () {
                                 setDisplayDaysRelative(_settingsModel, false);
-                        Routes.pop(context, 5);
+                            Routes().pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
                           7, _numberOfDaysToDisplay,
                           'Vis mandag til søndag', () {
                               setDisplayDaysRelative(_settingsModel, false);
-                        Routes.pop(context, 7);
+                            Routes().pop(context, 7);
                       }),
                     ]),
                   ],
