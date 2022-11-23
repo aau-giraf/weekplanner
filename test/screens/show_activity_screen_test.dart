@@ -352,22 +352,14 @@ void main() {
     setupApiCalls();
 
     di.clearAll();
-<<<<<<< HEAD
-    di.registerDependency<ActivityBloc>((_) => bloc);
-    di.registerDependency<AuthBloc>((_) => authBloc);
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<TimerBloc>((_) => timerBloc);
-    di.registerDependency<WeekplanBloc>((_) => weekplanBloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-=======
     di.registerDependency<ActivityBloc>(() => bloc);
     di.registerDependency<AuthBloc>(() => authBloc);
     di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<TimerBloc>(() => timerBloc);
+    di.registerDependency<WeekplanBloc>(() => weekplanBloc);
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
->>>>>>> develop
+
   });
 
   testWidgets('renders', (WidgetTester tester) async {
