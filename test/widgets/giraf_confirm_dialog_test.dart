@@ -32,7 +32,7 @@ class MockScreen extends StatelessWidget {
               confirmButtonText: 'test',
               confirmButtonIcon: const ImageIcon(null),
               confirmOnPressed: () {
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }

@@ -28,8 +28,8 @@ class ActivityCard extends StatelessWidget {
   final ActivityModel _activity;
   final TimerBloc _timerBloc;
   final DisplayNameModel _user;
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +185,7 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _getPictogram(PictogramModel _pictogram) {
-    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    final PictogramImageBloc bloc = di.get<PictogramImageBloc>();
     bloc.loadPictogramById(_pictogram.id);
     return StreamBuilder<Image>(
       stream: bloc.image,
@@ -301,7 +301,7 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
-    final TimerBloc timerBloc = di.getDependency<TimerBloc>();
+    final TimerBloc timerBloc = di.get<TimerBloc>();
     timerBloc.load(activity, user: _user);
     return StreamBuilder<bool>(
         stream: timerBloc.timerIsInstantiated,

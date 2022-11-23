@@ -1,4 +1,8 @@
 import 'dart:async';
+
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/activity_model.dart';
+import 'package:api_client/models/alternate_name_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;

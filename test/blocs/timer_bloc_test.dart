@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -7,9 +8,9 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:async_test/async_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
-import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
@@ -22,9 +23,54 @@ class MockActivityApi extends Mock implements ActivityApi {
     return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
 
+<<<<<<< HEAD
   @override
   Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
     return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+=======
+void main() {
+  Api api;
+  MockActivityApi mockActivityApi;
+  TimerBloc timerMock;
+  ActivityModel activityModel;
+  final DisplayNameModel mockUser =
+  DisplayNameModel(displayName: 'test', role: 'test', id: 'test');
+
+  setUp(() {
+    api = Api('any');
+    mockActivityApi = MockActivityApi();
+    api.activity = mockActivityApi;
+    timerMock = TimerBloc(api);
+
+    TestWidgetsFlutterBinding.ensureInitialized();
+
+    di.clearAll();
+    di.registerDependency<TimerBloc>(() => timerMock);
+  });
+
+  tearDown(() {
+    api = null;
+    mockActivityApi = null;
+    timerMock = null;
+    activityModel = null;
+
+    di.clearAll();
+  });
+  
+  ActivityModel createActivityModel(int fullLength, int progress,
+      {bool paused = false}) {
+    return ActivityModel(
+        id: 1,
+        pictograms: null,
+        order: 1,
+        state: ActivityState.Normal,
+        timer: TimerModel(
+            startTime: DateTime.now(),
+            fullLength: fullLength,
+            paused: paused,
+            progress: progress),
+        isChoiceBoard: false);
+>>>>>>> develop
   }
 }
 

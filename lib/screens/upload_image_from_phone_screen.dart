@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
@@ -20,7 +19,7 @@ class UploadImageFromPhone extends StatelessWidget {
   UploadImageFromPhone({Key key}) : super(key: key);
 
   final UploadFromGalleryBloc _uploadFromGallery =
-  di.getDependency<UploadFromGalleryBloc>();
+  di.get<UploadFromGalleryBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
 
@@ -85,7 +84,7 @@ class UploadImageFromPhone extends StatelessWidget {
             text: 'Gem',
             onPressed: () {
               _uploadFromGallery.createPictogram().listen((PictogramModel p) {
-                Routes.pop(context, p);
+                Routes().pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
               });
@@ -101,7 +100,7 @@ class UploadImageFromPhone extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
-          child: FlatButton(
+          child: TextButton(
             onPressed: _uploadFromGallery.chooseImageFromGallery,
             child: StreamBuilder<File>(
                 stream: _uploadFromGallery.file,

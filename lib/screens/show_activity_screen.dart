@@ -52,12 +52,13 @@ class ShowActivityScreen extends StatelessWidget {
   final DisplayNameModel _girafUser;
   final ActivityModel _activity;
 
-  final PictogramImageBloc _pictoImageBloc =
-      di.getDependency<PictogramImageBloc>();
+
+  final PictogramImageBloc _pictoImageBloc = di.get<PictogramImageBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final ActivityBloc _activityBloc = di.get<ActivityBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
   final TimerBloc _timerBloc;
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final ActivityBloc _activityBloc = di.getDependency<ActivityBloc>();
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+
   final WeekplanBloc _weekplanBloc;
   final WeekdayModel _weekday;
 
@@ -134,8 +135,10 @@ class ShowActivityScreen extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<ActivityModel> activitySnapshot) {
             return (activitySnapshot.hasData &&
+
                   (activitySnapshot.data.state == ActivityState.Canceled ||
                    activitySnapshot.data.state == ActivityState.Completed))
+
                 ? _resetTimerAndBuildEmptyContainer()
                 : _buildTimer(context);
           }),
@@ -212,7 +215,7 @@ class ShowActivityScreen extends StatelessWidget {
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
                       onTap: () async {
-                        await Routes.push(
+                        await Routes().push(
                             context,
                             PictogramSearch(
                               user: _girafUser,
@@ -344,6 +347,16 @@ class ShowActivityScreen extends StatelessWidget {
         });
   }
 
+  /// Button style for the choice board
+  final ButtonStyle choiceBoardStyle = ElevatedButton.styleFrom(
+    backgroundColor: theme.GirafColors.gradientDefaultOrange,
+    disabledForegroundColor:
+        theme.GirafColors.gradientDisabledOrange.withOpacity(0.38),
+    disabledBackgroundColor:
+        theme.GirafColors.gradientDisabledOrange.withOpacity(0.12),
+    padding: const EdgeInsets.all(8.0),
+  );
+
   /// Builds the activity widget.
   Card buildActivity(BuildContext context) {
     String inputtext = _activity.choiceBoardName;
@@ -374,16 +387,15 @@ class ShowActivityScreen extends StatelessWidget {
                 ),
               ),
             ),
-            RaisedButton(
+            ElevatedButton(
+              style: choiceBoardStyle,
               key: const Key('ChoiceBoardNameButton'),
-              color: theme.GirafColors.gradientDefaultOrange,
-              disabledColor: theme.GirafColors.gradientDisabledOrange,
-              padding: const EdgeInsets.all(8.0),
               onPressed: () {
                 _activity.choiceBoardName = inputtext;
                 _activityBloc.update();
               },
-              child: const Text('Godkend'),
+              child:
+                  const Text('Godkend', style: TextStyle(color: Colors.black)),
             ),
           ],
         ),
@@ -611,7 +623,7 @@ class ShowActivityScreen extends StatelessWidget {
                         const ImageIcon(AssetImage('assets/icons/stop.png')),
                     confirmOnPressed: () {
                       _timerBloc.stopTimer();
-                      Routes.pop(context);
+                      Routes().pop(context);
                     },
                   );
                 });
@@ -650,7 +662,7 @@ class ShowActivityScreen extends StatelessWidget {
                         const ImageIcon(AssetImage('assets/icons/delete.png')),
                     confirmOnPressed: () {
                       _timerBloc.deleteTimer();
-                      Routes.pop(context);
+                      Routes().pop(context);
                     },
                   );
                 });
@@ -669,6 +681,36 @@ class ShowActivityScreen extends StatelessWidget {
         builder: (BuildContext context) {
           return GirafActivityTimerPickerDialog(_activity, _timerBloc);
         });
+  }
+
+
+  /// Returns a dialog where the timer can be restarted.
+  void _buildRestartTimerDialog(BuildContext context) {
+    showDialog<Center>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return GirafConfirmDialog(
+            key: const Key('TimerRestartDialogKey'),
+            title: 'Genstart Timer',
+            description: 'Vil du genstarte '
+                'timeren?',
+            confirmButtonText: 'Genstart',
+            confirmButtonIcon:
+                const ImageIcon(AssetImage('assets/icons/play.png')),
+            confirmOnPressed: () {
+              _timerBloc.stopTimer();
+              _timerBloc.playTimer();
+              Routes().pop(context);
+            },
+          );
+        });
+  }
+
+  /// Restarts timer.
+  void _restartTimer() {
+    _timerBloc.stopTimer();
+    _timerBloc.playTimer();
   }
 
   /// Builds the button that changes the state of the activity. The content
@@ -693,46 +735,50 @@ class ShowActivityScreen extends StatelessWidget {
 
                     final GirafButton completeButton = GirafButton(
                         key: const Key('CompleteStateToggleButton'),
-                        onPressed:  () {
+                        onPressed: () {
                           _activityBloc.completeActivity();
+
+
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Canceled,
                         text: activitySnapshot.data.state !=
-                            ActivityState.Completed
+                                ActivityState.Completed
                             ? 'Afslut'
                             : 'Fortryd',
                         icon: activitySnapshot.data.state !=
-                            ActivityState.Completed
+                                ActivityState.Completed
                             ? const ImageIcon(
-                            AssetImage('assets/icons/accept.png'),
-                            color: theme.GirafColors.green)
+                                AssetImage('assets/icons/accept.png'),
+                                color: theme.GirafColors.green)
                             : const ImageIcon(
-                            AssetImage('assets/icons/undo.png'),
-                            color: theme.GirafColors.blue));
+                                AssetImage('assets/icons/undo.png'),
+                                color: theme.GirafColors.blue));
 
                     if (weekplanModeSnapshot.data == WeekplanMode.guardian) {
                       final GirafButton cancelButton = GirafButton(
                         key: const Key('CancelStateToggleButton'),
                         onPressed: () {
                           _activityBloc.cancelActivity();
+         _activity.state = _activityBloc.getActivity().state;
+                          //This removes current context
+                          // so back button correctly navigates
 
-                          _activity.state = _activityBloc.getActivity().state;
                         },
                         isEnabled: activitySnapshot.data.state !=
                             ActivityState.Completed,
                         text: activitySnapshot.data.state !=
-                            ActivityState.Canceled
+                                ActivityState.Canceled
                             ? 'Aflys'
                             : 'Fortryd',
                         icon: activitySnapshot.data.state !=
-                            ActivityState.Canceled
+                                ActivityState.Canceled
                             ? const ImageIcon(
-                            AssetImage('assets/icons/cancel.png'),
-                            color: theme.GirafColors.red)
+                                AssetImage('assets/icons/cancel.png'),
+                                color: theme.GirafColors.red)
                             : const ImageIcon(
-                            AssetImage('assets/icons/undo.png'),
-                            color: theme.GirafColors.blue),
+                                AssetImage('assets/icons/undo.png'),
+                                color: theme.GirafColors.blue),
                       );
 
                       if (_activity.isChoiceBoard) {
