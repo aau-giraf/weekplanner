@@ -4,7 +4,6 @@ import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/weekday_color_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -40,9 +39,9 @@ class WeekplanScreen extends StatelessWidget {
     _settingsBloc.loadSettings(_user);
   }
 
-  final WeekplanBloc _weekplanBloc = di.getDependency<WeekplanBloc>();
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final WeekplanBloc _weekplanBloc = di.get<WeekplanBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
   final DisplayNameModel _user;
   final WeekModel _week;
 
@@ -68,7 +67,7 @@ class WeekplanScreen extends StatelessWidget {
                   AppBarIcon.changeToCitizen: () {},
                   AppBarIcon.logout: () {},
                   AppBarIcon.settings: () =>
-                      Routes.push<WeekModel>(context,
+                      Routes().push<WeekModel>(context,
                           SettingsScreen(_user)).then((WeekModel newWeek) =>
                           _settingsBloc.loadSettings(_user))
                 }
@@ -78,7 +77,7 @@ class WeekplanScreen extends StatelessWidget {
                   AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
                   AppBarIcon.changeToCitizen: () {},
                   AppBarIcon.settings: () =>
-                      Routes.push<WeekModel>(context,
+                      Routes().push<WeekModel>(context,
                           SettingsScreen(_user)).then((WeekModel newWeek) =>
                           _settingsBloc.loadSettings(_user))
                 }
@@ -198,7 +197,7 @@ class WeekplanScreen extends StatelessWidget {
   void _copyActivities(List<bool> days, BuildContext context) {
     _weekplanBloc.copyMarkedActivities(days)
         .catchError((Object error){buildErrorDialog(context, error);});
-    Routes.pop(context);
+    Routes().pop(context);
     _weekplanBloc.toggleEditMode();
   }
 
@@ -243,7 +242,7 @@ class WeekplanScreen extends StatelessWidget {
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }
@@ -271,7 +270,7 @@ class WeekplanScreen extends StatelessWidget {
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }
@@ -305,7 +304,7 @@ class WeekplanScreen extends StatelessWidget {
                 _weekplanBloc.toggleEditMode();
 
                 // Closes the dialog box
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }

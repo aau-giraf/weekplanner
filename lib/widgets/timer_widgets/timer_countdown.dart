@@ -1,5 +1,6 @@
-import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
+
 import '../../style/custom_color.dart' as theme;
 
 /// Class for drawing a timer, Countdown timer

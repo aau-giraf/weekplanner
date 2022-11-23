@@ -49,7 +49,7 @@ ext.getKeystorePassword = {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -61,11 +61,13 @@ android {
 
     defaultConfig {
         applicationId "dk.aau.cs.giraf.weekplanner"
-        minSdkVersion 23
-        targetSdkVersion 29
+        minSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders['appAuthRedirectScheme'] = "dk.aau.cs.giraf";
+        manifestPlaceholders['applicationName'] = "dk.aau.cs.giraf.weekplanner";
     }
     signingConfigs {
         release {

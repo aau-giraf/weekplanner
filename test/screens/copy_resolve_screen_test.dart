@@ -1,3 +1,4 @@
+import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/api/week_api.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -19,7 +20,6 @@ import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/copy_resolve_screen.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
@@ -127,14 +127,14 @@ void main() {
     });
 
     di.clearAll();
-    di.registerDependency<EditWeekplanBloc>((_) => EditWeekplanBloc(api));
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<CopyResolveBloc>((_) => bloc);
-    di.registerDependency<CopyWeekplanBloc>((_) => CopyWeekplanBloc(api));
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
+    di.registerDependency<EditWeekplanBloc>(() => EditWeekplanBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<CopyResolveBloc>(() => bloc);
+    di.registerDependency<CopyWeekplanBloc>(() => CopyWeekplanBloc(api));
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<WeekplansBloc>(() => WeekplansBloc(api));
   });
 
   testWidgets('Renders CopyResolveScreen', (WidgetTester tester) async {
