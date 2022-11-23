@@ -287,26 +287,4 @@ void main() {
             .isEnabled,
         isFalse);
   });
-
-  testWidgets('"Videre" button should be enabled', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-    await tester.pump();
-
-    await tester.enterText(
-        find.byKey(const Key('displayNameField')), 'mockDisplayName');
-    await tester.enterText(
-        find.byKey(const Key('usernameField')), 'mockUserName');
-
-    await tester.tap(find.byKey(const Key('citizenRadioButton')));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byKey(const Key('usePictogramSwitch')));
-    await tester.pumpAndSettle();
-
-    expect(
-        tester
-            .widget<GirafButton>(find.byKey(const Key('nextButton')))
-            .isEnabled,
-        isTrue);
-  });
 }
