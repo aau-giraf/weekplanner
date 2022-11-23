@@ -43,6 +43,16 @@ class SettingsBloc extends BlocBase {
     return _api.user.updateSettings(userId, settingsModel);
   }
 
+  void deleteUser(String userId){
+    _api.account
+        .delete(userId)
+        .listen((bool deleted) {
+      if (deleted) {
+        print(deleted);
+      }
+    });
+  }
+
   /// Set the theme to be used
   void setTheme(GirafTheme theme) {
     _theme.add(theme);

@@ -240,6 +240,7 @@ class SettingsScreen extends StatelessWidget {
       //if the correct name is written delete the user, else provide an error
     if(input==_user.displayName){
       //delete the user here
+      _settingsBloc.deleteUser(_user.id);
       Routes.goHome(context);
     }
     else{
