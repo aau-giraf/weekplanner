@@ -69,6 +69,7 @@ void main() {
       cancelMark: null,
       defaultTimer: null,
       theme: null,
+      nrOfDaysToDisplay: 1,
       weekDayColors: null,
       lockTimerControl: false,
       pictogramText: false,
@@ -77,11 +78,11 @@ void main() {
     api.user = MockUserApi();
     settingsBloc = SettingsBloc(api);
     activityBloc = ActivityBloc(api);
-    di.registerDependency<SettingsBloc>((_) => settingsBloc);
-    di.registerDependency<ActivityBloc>((_) => activityBloc);
+    di.registerDependency<SettingsBloc>(() => settingsBloc);
+    di.registerDependency<ActivityBloc>(() => activityBloc);
 
     authBloc = AuthBloc(api);
-    di.registerDependency<AuthBloc>((_) => authBloc);
+    di.registerDependency<AuthBloc>(() => authBloc);
   });
 
   testWidgets('Pictogram text is not displayed when false and in Citizen mode',

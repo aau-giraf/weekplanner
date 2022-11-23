@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'package:api_client/models/displayname_model.dart';
-import 'package:flutter/material.dart';
+
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
+import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 

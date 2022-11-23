@@ -14,9 +14,9 @@ void main() {
   setUp(() {
     di.clearAll();
     api = Api('any');
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
     bloc = ToolbarBloc();
-    di.registerDependency<ToolbarBloc>((_) => bloc);
+    di.registerDependency<ToolbarBloc>(() => bloc);
   });
 
   test('Should insert log out icon when none are defined',

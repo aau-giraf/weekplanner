@@ -23,9 +23,9 @@ class CopyResolveScreen extends StatelessWidget {
     @required this.weekModel,
     @required this.forThisCitizen,
     this.copyBloc,
-  }) : _bloc = di.getDependency<CopyResolveBloc>() {
+  }) : _bloc = di.get<CopyResolveBloc>() {
     _bloc.initializeCopyResolverBloc(currentUser, weekModel);
-    copyBloc ??= di.getDependency<CopyWeekplanBloc>();
+    copyBloc ??= di.get<CopyWeekplanBloc>();
   }
 
   final CopyResolveBloc _bloc;
@@ -72,8 +72,8 @@ class CopyResolveScreen extends StatelessWidget {
               .copyWeekplan(
               <WeekModel>[newWeekModel], currentUser, forThisCitizen)
               .then((_) {
-            Routes.goHome(context);
-            Routes.push(context, WeekplanSelectorScreen(currentUser));
+            Routes().goHome(context);
+            Routes().push(context, WeekplanSelectorScreen(currentUser));
           });
         }
       },

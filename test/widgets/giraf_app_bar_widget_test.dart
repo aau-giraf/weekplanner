@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -10,7 +11,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:mockito/mockito.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 
@@ -61,7 +61,7 @@ class MockScreen extends StatelessWidget {
 class MockScreenForErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ToolbarBloc bloc = di.getDependency<ToolbarBloc>();
+    final ToolbarBloc bloc = di.get<ToolbarBloc>();
     return Scaffold(
       body: GirafButton(
         key: const Key('IconChangeToGuardian'),
@@ -81,9 +81,9 @@ void main() {
   setUp(() {
     di.clearAll();
     authBloc = MockAuth();
-    di.registerDependency<AuthBloc>((_) => authBloc);
+    di.registerDependency<AuthBloc>(() => authBloc);
     bloc = ToolbarBloc();
-    di.registerDependency<ToolbarBloc>((_) => bloc);
+    di.registerDependency<ToolbarBloc>(() => bloc);
   });
 
   // Used to wrap a widget into a materialapp, otherwise the widget is not
@@ -95,8 +95,8 @@ void main() {
   }
 
   void setupAlternativeDependencies() {
-    di.registerDependency<AuthBloc>((_) => MockAuthBloc(api), override: true);
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc(), override: true);
+    di.registerDependency<AuthBloc>(() => MockAuthBloc(api), override: true);
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc(), override: true);
   }
 
 

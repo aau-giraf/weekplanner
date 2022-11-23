@@ -1,15 +1,16 @@
+import 'dart:typed_data';
+
 import 'package:api_client/api/account_api.dart';
-import 'package:api_client/api_client.dart';
-import 'package:api_client/persistence/persistence_client.dart';
-import 'package:http/http.dart' as http;
-import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/api_client.dart';
 import 'package:api_client/http/http.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:api_client/persistence/persistence_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
@@ -23,14 +24,13 @@ import 'package:weekplanner/widgets/giraf_button_widget.dart';
 /// where listen().onError could catch it
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
-      : super(
-        HttpClient(baseUrl: null, persist: persist), persist);
+      : super(HttpClient(baseUrl: null, persist: persist), persist);
 
   /// override of the register function, which returns an error
   /// if 'username' == alreadyExists. Returns a normal GirafUserModel otherwise
   @override
-  Stream<GirafUserModel> register(
-      String username, String password, String displayName,
+  Stream<GirafUserModel> register(String username, String password,
+      String displayName, Uint8List profilePicture,
       {@required int departmentId, @required Role role}) {
     final Map<String, dynamic> body = <String, dynamic>{
       'username': username,
@@ -104,12 +104,10 @@ class MockNewCitizenBloc extends NewCitizenBloc {
       Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validUsernameStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validUsernameStream => Stream<bool>.value(acceptAllInputs);
 
   @override
-  Stream<bool> get validPasswordStream =>
-      Stream<bool>.value(acceptAllInputs);
+  Stream<bool> get validPasswordStream => Stream<bool>.value(acceptAllInputs);
 
   @override
   Stream<bool> get validPasswordVerificationStream =>
@@ -141,9 +139,9 @@ void main() {
     mockNewCitizenBloc = MockNewCitizenBloc(api);
 
     di.clearAll();
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<NewCitizenBloc>((_) => mockNewCitizenBloc);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<NewCitizenBloc>(() => mockNewCitizenBloc);
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {
@@ -165,8 +163,11 @@ void main() {
 
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
+    await tester.pump();
 
-    expect(find.byType(GirafButton), findsNWidgets(1));
+    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
   });
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
@@ -213,32 +214,18 @@ void main() {
   testWidgets('Save button is disabled by default',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
     await tester.pump();
 
     expect(
         tester
-            .widget<GirafButton>(find.byKey(const Key('saveButton')))
+            .widget<GirafButton>(
+                find.byKey(const Key('saveButton'), skipOffstage: false))
             .isEnabled,
         isFalse);
   });
 
-  testWidgets('"Brugernavnet eksisterer allerede" error message',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-    await tester.pump();
-
-    await tester.enterText(
-        find.byKey(const Key('displayNameField')), 'mockDisplayName');
-    await tester.enterText(
-        find.byKey(const Key('usernameField')), 'alreadyExists');
-    await tester.enterText(find.byKey(const Key('passwordField')), 'password');
-    await tester.enterText(
-        find.byKey(const Key('passwordVerifyField')), 'password');
-
-    await tester.tap(find.byKey(const Key('saveButton')));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
-  });
   testWidgets('New user so, no error message should appear',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
@@ -251,25 +238,12 @@ void main() {
     await tester.enterText(
         find.byKey(const Key('passwordVerifyField')), 'password');
 
-    await tester.tap(find.byKey(const Key('saveButton')));
+    final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
+    await gesture.moveBy(const Offset(0, -300));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
-  });
-  testWidgets('Unexpected error from the api_client',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-    await tester.pump();
-
-    await tester.enterText(
-        find.byKey(const Key('displayNameField')), 'mockDisplayName');
-    await tester.enterText(
-        find.byKey(const Key('usernameField')), 'defaultError');
-    await tester.enterText(find.byKey(const Key('passwordField')), 'password');
-    await tester.enterText(
-        find.byKey(const Key('passwordVerifyField')), 'password');
-
-    await tester.tap(find.byKey(const Key('saveButton')));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
   });
 }
