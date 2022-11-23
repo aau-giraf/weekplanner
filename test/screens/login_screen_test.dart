@@ -41,7 +41,7 @@ class MockLoginScreenState extends LoginScreenState {
   @override
   void creatingNotifyDialog(String description, String key) {
     /// Remove the loading spinner
-    Routes.pop(currentContext);
+    Routes().pop(currentContext);
     /// Show the new NotifyDialog
     showDialog<Center>(
         barrierDismissible: false,
@@ -107,9 +107,9 @@ void main() {
   setUp(() {
     bloc = MockAuthBloc();
     di.clearAll();
-    di.registerDependency<AuthBloc>((_) => bloc);
+    di.registerDependency<AuthBloc>(() => bloc);
     di.registerDependency<ChooseCitizenBloc>(
-            (_) => ChooseCitizenBloc(Api('Any')));
+            () => ChooseCitizenBloc(Api('Any')));
   });
 
   testWidgets('Has Auto-Login button in DEBUG mode',

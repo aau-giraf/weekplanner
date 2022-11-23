@@ -1,13 +1,13 @@
 import 'dart:async';
+
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/activity_model.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/timer_model.dart';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:quiver/async.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:api_client/models/activity_model.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 
 /// Logic for activities
@@ -60,10 +60,7 @@ class TimerBloc extends BlocBase {
   // Audio player used for ding sound.
   static final AudioPlayer _volumePlayer = AudioPlayer();
 
-  final AudioCache _audioPlayer =
-      AudioCache(prefix: 'audio/', fixedPlayer: _volumePlayer);
-
-  final String _audioFile = 'dingSound.wav';
+  final AssetSource _audioFile = AssetSource('audio/dingSound.wav');
   final int _updatePeriod = 1000;
 
   /// Loads the activity that should be used in the timerBloc
@@ -96,10 +93,15 @@ class TimerBloc extends BlocBase {
   }
 
   List<int> _durationToTimestamp(Duration duration) {
-    final List<int> timestamp = List<int>(3);
-    timestamp[0] = duration.inHours;
-    timestamp[1] = duration.inMinutes.remainder(60);
-    timestamp[2] = duration.inSeconds.remainder(60);
+    final int _inHours = duration.inHours;
+    final int _inMinutes = duration.inMinutes.remainder(60);
+    final int _inSeconds = duration.inSeconds.remainder(60);
+
+    final List<int> timestamp = <int>[
+      _inHours,
+      _inMinutes,
+      _inSeconds
+    ];
     timestamp[2] += _checkAndAddRemainingSecond(duration);
     return timestamp;
   }
@@ -226,9 +228,8 @@ class TimerBloc extends BlocBase {
 
   /// Plays ding sound from mp3 file.
   Future<void> playSound() async {
-    _audioPlayer.load(_audioFile);
     _volumePlayer.setVolume(500);
-    _audioPlayer.play(_audioFile);
+    _volumePlayer.play(_audioFile);
   }
 
   /// Pauses the timer and updates the timer in the database accordingly.

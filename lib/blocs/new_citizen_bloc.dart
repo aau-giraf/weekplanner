@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:image/image.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:image/image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 
@@ -79,9 +79,9 @@ class NewCitizenBloc extends BlocBase {
   /// pushes an imagePicker screen, then sets the pictogram image,
   /// to the selected image from the gallery
   void takePictureWithCamera() {
-    ImagePicker.pickImage(source: ImageSource.camera).then((File f) {
+    ImagePicker().pickImage(source: ImageSource.camera).then((XFile f) {
       if (f != null) {
-        _publishImage(f);
+        _publishImage(File(f.path));
         _checkInput();
       }
     });
@@ -90,9 +90,9 @@ class NewCitizenBloc extends BlocBase {
   /// pushes an imagePicker screen, then sets the profile picture image,
   /// to the selected image from the gallery
   void chooseImageFromGallery() {
-    ImagePicker.pickImage(source: ImageSource.gallery).then((File f) {
+    ImagePicker().pickImage(source: ImageSource.gallery).then((XFile f) {
       if (f != null) {
-        _publishImage(f);
+        _publishImage(File(f.path));
         _checkInput();
       }
     });

@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
+import 'package:image/image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:image/image.dart';
 
 /// Bloc for retrieving an image from a phones gallery,
 /// and send it to the pictogram database
@@ -30,19 +31,21 @@ class TakePictureWithCameraBloc extends BlocBase {
   Stream<bool> get isInputValid => _isInputValid.stream;
 
   final rx_dart.BehaviorSubject<bool> _isInputValid =
-  rx_dart.BehaviorSubject<bool>.seeded(false);
+      rx_dart.BehaviorSubject<bool>.seeded(false);
   final rx_dart.BehaviorSubject<File> _file = rx_dart.BehaviorSubject<File>();
   final rx_dart.BehaviorSubject<String> _accessString =
-  rx_dart.BehaviorSubject<String>.seeded('Institution');
+      rx_dart.BehaviorSubject<String>.seeded('Institution');
   final rx_dart.BehaviorSubject<bool> _isUploading =
-  rx_dart.BehaviorSubject<bool>.seeded(false);
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// pushes an imagePicker screen, then sets the pictogram image,
   /// to the selected image from the gallery
   void takePictureWithCamera() {
-    ImagePicker.pickImage(source: ImageSource.camera).then((File f) {
+    ImagePicker()
+        .pickImage(source: ImageSource.camera)
+        .then<dynamic>((XFile f) {
       if (f != null) {
-        _publishImage(f);
+        _publishImage(File(f.path));
         _checkInput();
       }
     });
@@ -50,7 +53,8 @@ class TakePictureWithCameraBloc extends BlocBase {
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null && _pictogramName != null &&
+    if (_file.value != null &&
+        _pictogramName != null &&
         _pictogramName.isNotEmpty) {
       _isInputValid.add(true);
     } else {
