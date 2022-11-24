@@ -21,10 +21,6 @@ class NewPictogramPasswordScreen extends StatelessWidget {
 
   final NewPictogramPasswordBloc _bloc;
 
-
-  //final PictogramChoices pictogramChoices =
-  //    PictogramChoices(di.getDependency<Api>());
-
   final ApiErrorTranslator _translator = ApiErrorTranslator();
 
   @override
