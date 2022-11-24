@@ -91,7 +91,7 @@ void main() {
   setUp(() {
     di.clearAll();
     api = Api('any');
-    di.registerDependency<Api>((_) => api);
+    di.registerDependency<Api>(() => api);
     api.user = MockUserApi();
     api.week = MockWeekApi();
 
