@@ -87,7 +87,7 @@ void main() {
       });
     }
 
-    bloc.copyWeekplan(weekplan1, user, false);
+    bloc.copyWeekplan(<WeekModel>[weekplan1], user, false);
 
     bloc.markedUserModels.listen((List<DisplayNameModel> markedUsers) {
       for (DisplayNameModel user in markedUsers){
@@ -98,4 +98,5 @@ void main() {
     });
 
   }));
+  
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -40,17 +41,20 @@ void main() {
   ChooseCitizenBloc bloc;
   ToolbarBloc toolbarBloc;
   Api api;
+  AuthBloc authBloc;
   setUp(() {
     di.clearAll();
     api = Api('any');
+    authBloc = AuthBloc(api);
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
     toolbarBloc = ToolbarBloc();
-    di.registerDependency<ChooseCitizenBloc>((_) => bloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
+    di.registerDependency<ChooseCitizenBloc>(() => bloc);
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => toolbarBloc);
   });
+
 
   testWidgets('Renders ChooseCitizenScreen', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
@@ -85,9 +89,16 @@ void main() {
   });
 
   testWidgets('Has add citizen button', (WidgetTester tester) async {
+    final int role = authBloc.loggedInRole;
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
-
-    expect(find.byType(FlatButton), findsNWidgets(1));
+    if(role == Role.Guardian.index) {
+      expect(find.byType(TextButton), findsNWidgets(1));
+    } else {
+      expect(find.byType(TextButton), findsNWidgets(0));
+    }
   });
 }
+
+
+

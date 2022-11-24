@@ -1,7 +1,10 @@
-import 'package:injector/injector.dart';
+import 'package:api_client/api/api.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
+import 'package:weekplanner/blocs/add_activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/choose_citizen_bloc.dart';
+import 'package:weekplanner/blocs/copy_activities_bloc.dart';
+import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
@@ -11,17 +14,13 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
-import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
-import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
-import 'package:weekplanner/blocs/add_activity_bloc.dart';
+import 'package:weekplanner/blocs/upload_from_gallery_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/api/api.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
-import 'package:weekplanner/blocs/copy_activities_bloc.dart';
-import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 
 /// Bootstrap the project
 class Bootstrap {
@@ -30,88 +29,90 @@ class Bootstrap {
   ///
   /// NB:
   /// Singleton restricts the instantiation of a class to one 'single' instance
-  static void register() {
-    di.registerSingleton((_) {
+  void register() {
+
+    di.registerSingleton(() {
       return Api(environment.getVar('SERVER_HOST'));
     });
 
-    di.registerSingleton((Injector i) {
-      return AuthBloc(i.getDependency<Api>());
+    di.registerSingleton<AuthBloc>(() {
+
+      return AuthBloc(di.get<Api>());
     });
 
-    di.registerDependency<WeekplanBloc>((Injector i) {
-      return WeekplanBloc(i.getDependency<Api>());
+    di.registerDependency<WeekplanBloc>(() {
+      return WeekplanBloc(di.get<Api>());
     });
 
-    di.registerDependency<WeekplansBloc>((Injector i) {
-      return WeekplansBloc(i.getDependency<Api>());
+    di.registerDependency<WeekplansBloc>(() {
+      return WeekplansBloc(di.get<Api>());
     });
 
-    di.registerDependency<ToolbarBloc>((_) {
+    di.registerDependency<ToolbarBloc>(() {
       return ToolbarBloc();
     });
-    di.registerDependency<ChooseCitizenBloc>((Injector i) {
-      return ChooseCitizenBloc(i.getDependency<Api>());
+    di.registerDependency<ChooseCitizenBloc>(() {
+      return ChooseCitizenBloc(di.get<Api>());
     });
 
-    di.registerDependency<PictogramBloc>((Injector i) {
-      return PictogramBloc(i.getDependency<Api>());
+    di.registerDependency<PictogramBloc>(() {
+      return PictogramBloc(di.get<Api>());
     });
 
-    di.registerDependency<PictogramImageBloc>((Injector i) {
-      return PictogramImageBloc(i.getDependency<Api>());
+    di.registerDependency<PictogramImageBloc>(() {
+      return PictogramImageBloc(di.get<Api>());
     });
 
-    di.registerSingleton<NewWeekplanBloc>((Injector i) {
-      return NewWeekplanBloc(i.getDependency<Api>());
+    di.registerSingleton<NewWeekplanBloc>(() {
+      return NewWeekplanBloc(di.get<Api>());
     });
 
-    di.registerSingleton<NewCitizenBloc>((Injector i) {
-      return NewCitizenBloc(i.getDependency<Api>());
+    di.registerSingleton<NewCitizenBloc>(() {
+      return NewCitizenBloc(di.get<Api>());
     });
 
-    di.registerSingleton<NewPictogramPasswordBloc>((Injector i) {
-      return NewPictogramPasswordBloc(i.getDependency<Api>());
+    di.registerSingleton<NewPictogramPasswordBloc>(() {
+      return NewPictogramPasswordBloc(di.get<Api>());
     });
 
-    di.registerDependency<EditWeekplanBloc>((Injector i) {
-      return EditWeekplanBloc(i.getDependency<Api>());
+    di.registerDependency<EditWeekplanBloc>(() {
+      return EditWeekplanBloc(di.get<Api>());
     });
 
-    di.registerDependency<AddActivityBloc>((_) {
+    di.registerDependency<AddActivityBloc>(() {
       return AddActivityBloc();
     });
 
-    di.registerDependency<ActivityBloc>((Injector i) {
-      return ActivityBloc(i.getDependency<Api>());
+    di.registerDependency<ActivityBloc>(() {
+      return ActivityBloc(di.get<Api>());
     });
 
-    di.registerDependency<SettingsBloc>((Injector i) {
-      return SettingsBloc(i.getDependency());
+    di.registerDependency<SettingsBloc>(() {
+      return SettingsBloc(di.get<Api>());
     });
 
-    di.registerDependency((Injector i) {
-      return UploadFromGalleryBloc(i.getDependency<Api>());
+    di.registerDependency<UploadFromGalleryBloc>(() {
+      return UploadFromGalleryBloc(di.get<Api>());
     });
 
-    di.registerDependency<CopyActivitiesBloc>((_) {
+    di.registerDependency<CopyActivitiesBloc>(() {
       return CopyActivitiesBloc();
     });
 
-    di.registerDependency<TimerBloc>((Injector i) {
-      return TimerBloc(i.getDependency<Api>());
+    di.registerDependency<TimerBloc>(() {
+      return TimerBloc(di.get<Api>());
     });
 
-    di.registerDependency<CopyWeekplanBloc>((Injector i) {
-      return CopyWeekplanBloc(i.getDependency<Api>());
+    di.registerDependency<CopyWeekplanBloc>(() {
+      return CopyWeekplanBloc(di.get<Api>());
     });
 
-    di.registerDependency<CopyResolveBloc>((Injector i) {
-      return CopyResolveBloc(i.getDependency<Api>());
+    di.registerDependency<CopyResolveBloc>(() {
+      return CopyResolveBloc(di.get<Api>());
     });
 
-    di.registerDependency((Injector i) {
-      return TakePictureWithCameraBloc(i.getDependency<Api>());
+    di.registerDependency<TakePictureWithCameraBloc>(() {
+      return TakePictureWithCameraBloc(di.get<Api>());
     });
   }
 }

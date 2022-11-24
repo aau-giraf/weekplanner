@@ -99,28 +99,30 @@ void main() {
     });
 
     bloc = CopyWeekplanBloc(api);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
     toolbarBloc = ToolbarBloc();
-    di.registerDependency<CopyWeekplanBloc>((_) => bloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
-    di.registerDependency<EditWeekplanBloc>((_) => EditWeekplanBloc(api));
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
+    di.registerDependency<CopyWeekplanBloc>(() => bloc);
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => toolbarBloc);
+    di.registerDependency<EditWeekplanBloc>(() => EditWeekplanBloc(api));
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<WeekplansBloc>(() => WeekplansBloc(api));
   });
 
   testWidgets('Renders CopyToCitizenScreen', (WidgetTester tester) async {
     final WeekModel weekplan1 = WeekModel(
         thumbnail: null, name: 'weekplan1', weekYear: 2020, weekNumber: 32);
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(weekplan1, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen(
+            <WeekModel>[weekplan1], mockUser)));
     expect(find.byType(CopyToCitizensScreen), findsOneWidget);
   });
 
   testWidgets('Has Citizens Avatar', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen(
+            <WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
     bloc.citizen.listen((List<DisplayNameModel> response) {
       expect(find.byType(CircleAvatar), findsNWidgets(response.length));
@@ -131,7 +133,8 @@ void main() {
 
   testWidgets('Has Accept and Cancel buttons', (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen(
+            <WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('AcceptButton')), findsOneWidget);
@@ -142,7 +145,8 @@ void main() {
       'Test whether it copies to citizens when pressing the accept button',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen(
+            <WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     bloc.toggleMarkedUserModel(user1);
@@ -164,7 +168,8 @@ void main() {
       'Testing that it launches the conflict dialog when there are conflicts',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-        MaterialApp(home: CopyToCitizensScreen(mockWeek, mockUser)));
+        MaterialApp(home: CopyToCitizensScreen(
+            <WeekModel>[mockWeek], mockUser)));
     await tester.pumpAndSettle();
 
     bloc.toggleMarkedUserModel(user1);

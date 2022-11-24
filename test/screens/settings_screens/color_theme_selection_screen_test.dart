@@ -77,16 +77,17 @@ void main() {
         nrOfDaysToDisplay: 1,
         pictogramText: false,
         weekDayColors: MockUserApi.createWeekDayColors(),
-        lockTimerControl: false);
+        lockTimerControl: false,
+        showPopup: false);
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
       return Stream<bool>.value(true);
     });
 
     di.clearAll();
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<SettingsBloc>((_) => settingsBloc);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<SettingsBloc>(() => settingsBloc);
   });
 
   testWidgets('Renders  ColorThemeSelectorScreen', (WidgetTester tester) async {

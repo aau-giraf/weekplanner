@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/api/api.dart';
 
 /// For how long the debouncer should wait
 const int _debounceTime = 250;
@@ -15,10 +15,12 @@ const int pageSize = 24;
 
 /// Pictogram Business Logic Component
 class PictogramBloc extends BlocBase {
+
   /// Pictogram Business Logic Component
   ///
   /// Gives the ability to search for pictograms and await the results.
   PictogramBloc(this._api){
+
     // Listens for if view is scrolled to the bottom
     sc.addListener(() {
       if (sc.position.pixels >= sc.position.maxScrollExtent) {
@@ -70,9 +72,9 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void search(String query) {
-    if (query.isEmpty) {
-      return;
-    }
+
+    //ensures that it always shows the first pictograms in the database
+    latestPage = 1;
 
     loadingPictograms = true;
     if (_debounceTimer != null) {
@@ -83,6 +85,7 @@ class PictogramBloc extends BlocBase {
     List<PictogramModel> _resultPlaceholder;
     _debounceTimer = Timer(const Duration(milliseconds: _debounceTime), () {
       //Timer for sending an error if getting pictogram results takes too long
+
       Timer(const Duration(milliseconds: _timeoutTime), () {
         if (_resultPlaceholder == null || _resultPlaceholder.isEmpty) {
           _pictograms.addError('Søgningen gav ingen resultater. '
@@ -107,7 +110,7 @@ class PictogramBloc extends BlocBase {
   ///
   /// The results are published in [pictograms].
   void extendSearch() {
-    if (reachedLastPictogram || latestQuery == null || latestQuery.isEmpty) {
+    if (reachedLastPictogram || latestQuery == null) {
       return;
     }
 

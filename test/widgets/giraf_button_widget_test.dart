@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:flutter/material.dart';
 
 
 const ImageIcon acceptIcon = ImageIcon(AssetImage('assets/icons/accept.png'));

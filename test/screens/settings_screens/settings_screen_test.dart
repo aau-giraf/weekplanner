@@ -13,8 +13,8 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/screens/settings_screens/color_theme_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
@@ -81,13 +81,14 @@ void main() {
       weekDayColors: MockUserApi.createWeekDayColors(),
       lockTimerControl: false,
       pictogramText: false,
+      showPopup: false,
     );
 
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     settingsBloc = SettingsBloc(api);
     settingsBloc.loadSettings(user);
-    di.registerDependency<SettingsBloc>((_) => settingsBloc);
+    di.registerDependency<SettingsBloc>(() => settingsBloc);
   });
 
   testWidgets('Has GirafAppBar', (WidgetTester tester) async {
@@ -149,6 +150,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(true, mockSettings.pictogramText);
+  });
+
+  testWidgets('Vis popup knap opdaterer indstillinger',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+
+        expect(false, mockSettings.showPopup);
+
+        await tester.tap(find.text('Vis bekræftelse popups'));
+        await tester.pumpAndSettle();
+
+        expect(true, mockSettings.showPopup);
   });
 
   testWidgets('Settings has TimerControl checkbox without an checkmark',

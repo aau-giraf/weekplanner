@@ -1,29 +1,43 @@
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/take_picture_with_camera_screen.dart';
 import 'package:weekplanner/screens/upload_image_from_phone_screen.dart';
-import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/bottom_app_bar_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
+
 import '../style/custom_color.dart' as theme;
 
 /// Screen for searching for pictograms
 ///
 /// This screen will return `null` back is pressed, otherwise it will return the
 /// chosen pictogram.
-class PictogramSearch extends StatelessWidget {
+class PictogramSearch extends StatefulWidget {
 
   /// Constructor
-  PictogramSearch({@required this.user});
-
-  final PictogramBloc _bloc = di.getDependency<PictogramBloc>();
+  const PictogramSearch({@required this.user});
 
   /// The current authenticated user
   final DisplayNameModel user;
+
+  @override
+  _PictogramSearchState createState() => _PictogramSearchState();
+}
+
+class _PictogramSearchState extends State<PictogramSearch> {
+  final PictogramBloc _bloc = di.get<PictogramBloc>();
+
+
+  //Search after pictograms when the page loads
+  @override
+  void initState(){
+    super.initState();
+    _bloc.search('');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +80,13 @@ class PictogramSearch extends StatelessWidget {
                                     .map((PictogramModel pictogram)
                                 => PictogramImage(
                                     pictogram: pictogram,
-                                    haveRights: user == null || pictogram.userId
+                                    haveRights: widget.user == null
+                                        || pictogram.userId
                                         == null ? false :
-                                    pictogram.userId == user.id,
+                                    pictogram.userId == widget.user.id,
+                                    needsTitle: true,
                                     onPressed: () =>
-                                        Routes.pop(context, pictogram)))
+                                        Routes().pop(context, pictogram)))
                                     .toList(),
                                 controller: _bloc.sc
                             )
@@ -128,7 +144,7 @@ class PictogramSearch extends StatelessWidget {
                             buttonKey: 'TilføjFraGalleriButton',
                             assetPath: 'assets/icons/gallery.png',
                             dialogFunction: (BuildContext context) {
-                              Routes.push(
+                              Routes().push(
                                   context, UploadImageFromPhone());
                             }
                           ),
@@ -137,7 +153,7 @@ class PictogramSearch extends StatelessWidget {
                               buttonKey: 'TagBilledeButton',
                               assetPath: 'assets/icons/camera.png',
                               dialogFunction: (BuildContext context) {
-                                Routes.push(
+                                Routes().push(
                                     context, TakePictureWithCamera());
                               }
                           )

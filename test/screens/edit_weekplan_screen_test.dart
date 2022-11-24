@@ -58,7 +58,7 @@ class MockPictogramApi extends Mock implements PictogramApi {}
 final PictogramModel mockPictogram = PictogramModel(
     id: 1,
     lastEdit: null,
-    title: null,
+    title: 'title',
     accessLevel: null,
     imageUrl: 'http://any.tld',
     imageHash: null);
@@ -115,13 +115,13 @@ void main() {
     mockWeekplanSelector.load(mockUser);
 
     di.clearAll();
-    di.registerDependency<WeekplansBloc>((_) => mockWeekplanSelector);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<WeekplansBloc>(() => mockWeekplanSelector);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<PictogramBloc>(() => PictogramBloc(api));
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     mockBloc = MockEditWeekplanBloc(api);
-    di.registerDependency<EditWeekplanBloc>((_) => mockBloc);
+    di.registerDependency<EditWeekplanBloc>(() => mockBloc);
   });
 
   group('EditWeekplanScreen rendering', () {
@@ -320,6 +320,11 @@ void main() {
 
     testWidgets('Click on thumbnail redirects to pictogram search screen',
         (WidgetTester tester) async {
+
+          when(api.pictogram.getAll(page: 1,
+              pageSize: pageSize, query: '')).thenAnswer(
+                  (_) => rx_dart.BehaviorSubject<List<PictogramModel>>.seeded(
+                  <PictogramModel>[mockPictogram]));
       mockBloc.acceptAllInputs = true;
       await tester.pumpWidget(
         MaterialApp(
@@ -334,7 +339,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(PictogramSearch), findsOneWidget);
-    });
+
+          await tester.pump(const Duration(milliseconds: 11000));
+
+        });
   });
 
   group('Edit weekplan overwriting', () {

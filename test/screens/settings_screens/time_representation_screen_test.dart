@@ -51,9 +51,9 @@ void main() {
     api.user = MockUserApi();
     mockObserver = MockUserApi();
 
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
   });
 
   testWidgets('Has GirafToolBar', (WidgetTester tester) async {

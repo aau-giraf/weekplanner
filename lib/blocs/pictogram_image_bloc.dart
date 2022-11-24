@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
+
+import 'package:api_client/api/api.dart';
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
+import 'package:mutex/mutex.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:api_client/api/api.dart';
-import 'package:mutex/mutex.dart';
 
 /// Pictogram-Image Business Logic Component
 class PictogramImageBloc extends BlocBase {
@@ -25,6 +26,7 @@ class PictogramImageBloc extends BlocBase {
   static final Map<int, Image> _cache = <int, Image>{};
   static final Queue<int> _cacheQueue = Queue<int>();
   static const int _cacheMaxSize = 100;
+
 
   /// Lock for adding pictograms to cache
   static Mutex lock = Mutex();
