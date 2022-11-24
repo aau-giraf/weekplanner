@@ -19,7 +19,7 @@ class PictogramImage extends StatelessWidget {
     Key key,
     @required this.pictogram,
     @required this.onPressed,
-    this.haveRights = false,
+    this.haveRights = false
   }) : super(key: key) {
     _bloc.load(pictogram);
   }
