@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api_client.dart';
 import 'package:api_client/persistence/persistence_client.dart';
@@ -6,6 +8,7 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -58,28 +61,31 @@ void main() {
     mockNewPictogramPasswordBloc = MockNewPictogramPasswordBloc(api);
 
     di.clearAll();
-    di.registerDependency((_) => api);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency(() => api);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<NewPictogramPasswordBloc>(
-        (_) => mockNewPictogramPasswordBloc);
+        () => mockNewPictogramPasswordBloc);
   });
 
   testWidgets('Screen renders', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName')));
+        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName', 
+                                        Uint8List(1))));
   });
 
   testWidgets('The screen has a Giraf App Bar', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName')));
+        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName', 
+                                        Uint8List(1))));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Text is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName')));
+        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName',
+                                        Uint8List(1))));
 
     expect(
         find.text('Opret piktogram kode til testDisplayName'), findsOneWidget);
@@ -88,14 +94,16 @@ void main() {
   testWidgets('Pictogram password widget is rendered',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName')));
+        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName',
+                                        Uint8List(1))));
 
     expect(find.byType(PictogramPassword), findsOneWidget);
   });
 
   testWidgets('Save button is rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
-        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName')));
+        home: NewPictogramPasswordScreen('testUserName', 'testDisplayName',
+                                        Uint8List(1))));
 
     expect(find.byType(GirafButton), findsOneWidget);
   });

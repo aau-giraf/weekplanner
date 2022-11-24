@@ -4,6 +4,7 @@ import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:async_test/async_test.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
@@ -40,9 +41,9 @@ void main() {
     api.user = MockUserApi();
     api.account = MockAccountApi();
     bloc = NewPictogramPasswordBloc(api);
-    bloc.initialize('testUser', 'testName');
+    bloc.initialize('testUser', 'testName', Uint8List(1));
 
-    when(api.account.register(any, any, any,
+    when(api.account.register(any, any, any, any,
             departmentId: anyNamed('departmentId'), role: anyNamed('role')))
         .thenAnswer((_) {
       return Stream<GirafUserModel>.value(user);

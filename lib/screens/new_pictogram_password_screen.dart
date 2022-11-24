@@ -1,6 +1,7 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weekplanner/api/errorcode_translator.dart';
 import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -14,9 +15,10 @@ import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_passwor
 /// Screen for the creation of a pictogram password
 class NewPictogramPasswordScreen extends StatelessWidget {
   /// Constructor for the new pictogram password screen
-  NewPictogramPasswordScreen(String userName, String displayName)
-      : _bloc = di.getDependency<NewPictogramPasswordBloc>() {
-    _bloc.initialize(userName, displayName);
+  NewPictogramPasswordScreen(String userName, String displayName,
+                             Uint8List profilePicture )
+      : _bloc = di.get<NewPictogramPasswordBloc>() {
+    _bloc.initialize(userName, displayName, profilePicture);
   }
 
   final NewPictogramPasswordBloc _bloc;
@@ -48,7 +50,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                 onPasswordChanged: (String pass) {
                   _bloc.onPictogramPasswordChanged.add(pass);
                 },
-                api: di.getDependency<Api>(),
+                api: di.get<Api>(),
               ),
             ],
           ),
@@ -67,8 +69,8 @@ class NewPictogramPasswordScreen extends StatelessWidget {
                       if (response != null) {
                         // Pop twice, because this screen is on top
                         // of the NewCitizenScreen.
-                        Routes.pop(context, response);
-                        Routes.pop(context, response);
+                        Routes().pop(context, response);
+                        Routes().pop(context, response);
 
                         // Maybe not needed, as the
                         // initialize method already resets

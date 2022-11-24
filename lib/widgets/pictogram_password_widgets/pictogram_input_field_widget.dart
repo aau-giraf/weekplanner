@@ -1,5 +1,4 @@
 import 'package:api_client/models/pictogram_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 

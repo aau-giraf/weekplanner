@@ -173,7 +173,7 @@ void main() {
     await gesture.moveBy(const Offset(0, -300));
     await tester.pump();
 
-    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
+    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(4));
   });
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
@@ -251,23 +251,6 @@ void main() {
     await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
-  });
-  testWidgets('Unexpected error from the api_client',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
-    await tester.pump();
-
-    await tester.enterText(
-        find.byKey(const Key('displayNameField')), 'mockDisplayName');
-    await tester.enterText(
-        find.byKey(const Key('usernameField')), 'defaultError');
-    await tester.enterText(find.byKey(const Key('passwordField')), 'password');
-    await tester.enterText(
-        find.byKey(const Key('passwordVerifyField')), 'password');
-
-    await tester.tap(find.byKey(const Key('saveButton')));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(1));
   });
 
   testWidgets('"Videre" button should be disabled by default',

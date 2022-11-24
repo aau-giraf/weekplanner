@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
+import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_password_widget.dart';
@@ -19,6 +20,9 @@ class NewPictogramPasswordBloc extends BlocBase {
 
   /// The display name for the citizen that one is creating a password for.
   String displayName;
+
+  /// The profile picture for the citizen that one is creating a password for.
+  Uint8List profilePicture;
 
   /// Controller that contains the stream & sink of the pictogram password.
   final rx_dart.BehaviorSubject<String> pictogramPasswordController =
@@ -48,14 +52,16 @@ class NewPictogramPasswordBloc extends BlocBase {
   Stream<GirafUserModel> createCitizen() {
     return _api.account.register(
         userName, pictogramPasswordController.value, displayName,
-        departmentId: _user.department, role: Role.Citizen);
+        profilePicture, departmentId: _user.department, role: Role.Citizen);
   }
 
   /// Initializes the bloc.
-  void initialize(String _userName, String _displayName) {
+  void initialize(String _userName, String _displayName,
+                  Uint8List _profilePicture) {
     reset();
     userName = _userName;
     displayName = _displayName;
+    profilePicture = _profilePicture;
     _api.user.me().listen((GirafUserModel user) {
       _user = user;
     });

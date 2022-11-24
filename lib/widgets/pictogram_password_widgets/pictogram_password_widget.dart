@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:weekplanner/di.dart';
-import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_input_field_widget.dart';
-import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:api_client/api/api.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:flutter/material.dart';
+import 'package:weekplanner/di.dart';
+import 'package:weekplanner/widgets/pictogram_image.dart';
+import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_input_field_widget.dart';
+
 import '../giraf_notify_dialog.dart';
 
 
@@ -48,7 +48,7 @@ class PictogramPassword extends StatelessWidget {
         }
       }
     } catch (e) {
-      showErrorMessage(e, di.getDependency<BuildContext>());
+      showErrorMessage(e, di.get<BuildContext>());
     }
   }
   /// Shows error message in case of any pictogram being unobtainable

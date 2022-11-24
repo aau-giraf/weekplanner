@@ -38,9 +38,12 @@ class NewCitizenBloc extends BlocBase {
   final rx_dart.BehaviorSubject<bool> usePictogramPasswordController =
       rx_dart.BehaviorSubject<bool>();
   
-  final rx_dart.BehaviorSubject<File> _file = rx_dart.BehaviorSubject<File>();
+  /// This controller handles the profile picture
+  final rx_dart.BehaviorSubject<File> fileController = 
+      rx_dart.BehaviorSubject<File>();
+      
   /// Publishes the image file, while it is not null
-  Stream<File> get file => _file.stream.where((File f) => f != null);
+  Stream<File> get file => fileController.stream.where((File f) => f != null);
   /// Publishes if the input fields are filled
   Stream<bool> get isInputValid => _isInputValid.stream;
 
@@ -118,19 +121,20 @@ class NewCitizenBloc extends BlocBase {
   }
 
   void _publishImage(File file) {
-    _file.add(file);
+    fileController.add(file);
   }
 
   /// Checks if the input fields are filled out
   void _checkInput() {
-    if (_file.value != null) {
+    if (fileController.value != null) {
       _isInputValid.add(true);
     } else {
       _isInputValid.add(false);
     }
   }
 
-  Uint8List _encodePng(File file) {
+  /// Encodes the given file into an integer list.
+  Uint8List encodePicture(File file) {
     return file != null
       ? encodePng(copyResize(decodeImage(file.readAsBytesSync()),
           width: 512)) // 512 bytes chosen as a reasonable input size.
@@ -143,7 +147,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value,
         passwordController.value,
         displayNameController.value,
-        _encodePng(_file.value),
+        encodePicture(fileController.value),
         departmentId: _user.department,
         role: Role.Citizen,
     );
@@ -155,7 +159,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value,
         passwordController.value,
         displayNameController.value,
-        _encodePng(_file.value),
+        encodePicture(fileController.value),
         departmentId: _user.department,
         role: Role.Trustee
     );
@@ -167,7 +171,7 @@ class NewCitizenBloc extends BlocBase {
         usernameController.value,
         passwordController.value,
         displayNameController.value,
-         _encodePng(_file.value),
+         encodePicture(fileController.value),
         departmentId: _user.department,
         role: Role.Guardian
     );
@@ -245,7 +249,7 @@ class NewCitizenBloc extends BlocBase {
     passwordVerifyController.sink.add(null);
     usePictogramPasswordController.sink.add(false);
     _user = null;
-    _file.add(null);
+    fileController.add(null);
   }
 
   @override
@@ -255,7 +259,7 @@ class NewCitizenBloc extends BlocBase {
     passwordController.close();
     passwordVerifyController.close();
     usePictogramPasswordController.close();
-    _file.close();
+    fileController.close();
     _isInputValid.close();
   }
 }
