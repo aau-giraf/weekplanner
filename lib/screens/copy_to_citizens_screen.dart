@@ -22,7 +22,7 @@ class CopyToCitizensScreen extends StatelessWidget {
 
 
   final List<WeekModel> _copiedWeekModelList;
-  final CopyWeekplanBloc _bloc = di.getDependency<CopyWeekplanBloc>();
+  final CopyWeekplanBloc _bloc = di.get<CopyWeekplanBloc>();
   final DisplayNameModel _currentUser;
 
   @override
@@ -63,7 +63,7 @@ class CopyToCitizensScreen extends StatelessWidget {
                           child: GirafButton(
                             key: const Key('CancelButton'),
                             onPressed: () {
-                              Routes.pop(context);
+                              Routes().pop(context);
                             },
                             icon: const ImageIcon(
                               AssetImage('assets/icons/cancel.png')),
@@ -100,8 +100,8 @@ class CopyToCitizensScreen extends StatelessWidget {
                                   } else {
                                     _bloc.copyWeekplan(_copiedWeekModelList,
                                       _currentUser, false);
-                                    Routes.goHome(context);
-                                    Routes.push(context,
+                                    Routes().goHome(context);
+                                    Routes().push(context,
                                       WeekplanSelectorScreen(_currentUser));
                                     _showCopySuccessDialog(context);
                                   }
@@ -193,8 +193,8 @@ class CopyToCitizensScreen extends StatelessWidget {
               'er' : ''}.',
               option1Text: 'Rediger',
               option1OnPressed: () {
-                Routes.pop(context);
-                Routes.push(
+                Routes().pop(context);
+                Routes().push(
                     context,
                     CopyResolveScreen(
                       currentUser: _currentUser,
@@ -208,8 +208,8 @@ class CopyToCitizensScreen extends StatelessWidget {
               option2OnPressed: () {
                 _bloc.copyWeekplan(_copiedWeekModelList, _currentUser, false)
                     .then((_) {
-                  Routes.goHome(context);
-                  Routes.push(context,
+                  Routes().goHome(context);
+                  Routes().push(context,
                       WeekplanSelectorScreen(_currentUser));
                 });
               },
@@ -246,8 +246,8 @@ class CopyToCitizensScreen extends StatelessWidget {
             confirmOnPressed: () {
               _bloc.copyWeekplan(_copiedWeekModelList, _currentUser, false)
                   .then((_) {
-                Routes.goHome(context);
-                Routes.push(context,
+                Routes().goHome(context);
+                Routes().push(context,
                     WeekplanSelectorScreen(_currentUser));
               });
             },

@@ -116,7 +116,7 @@ class GirafConfirmDialog extends StatelessWidget {
                             cancelOnPressed();
                           }
                           
-                          Routes.pop(context);
+                          Routes().pop(context);
                         }),
                   ),
                 ),

@@ -1,10 +1,11 @@
+import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+
 import '../routes.dart';
 
 /// Widget for rendering pictogram models as images
@@ -39,7 +40,7 @@ class PictogramImage extends StatelessWidget {
   /// every press of the image
   final VoidCallback onPressed;
 
-  final PictogramImageBloc _bloc = di.getDependency<PictogramImageBloc>();
+  final PictogramImageBloc _bloc = di.get<PictogramImageBloc>();
 
   final Widget _loading = Center(
       child: Container(
@@ -60,7 +61,7 @@ class PictogramImage extends StatelessWidget {
                 if (!_bloc.delete(pictogram)) {
                   _notifyErrorOnDeleteDialog(context);
                 }
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }

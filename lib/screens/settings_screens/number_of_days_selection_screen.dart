@@ -1,6 +1,5 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
@@ -21,7 +20,7 @@ class NumberOfDaysScreen extends StatelessWidget {
   }
 
   final DisplayNameModel _user;
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,25 +41,25 @@ class NumberOfDaysScreen extends StatelessWidget {
                       SettingsCheckMarkButton(
                           1, _settingsModel.nrOfDaysToDisplay, 'Vis kun i dag',
                           () {
-                  Routes.pop(context, 1);
+                  Routes().pop(context, 1);
                           }),
                       SettingsCheckMarkButton(
                           2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
                               () {
-                            Routes.pop(context, 2);
+                            Routes().pop(context, 2);
                           }),
 
                       SettingsCheckMarkButton(
                           5,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til fredag', () {
-                            Routes.pop(context, 5);
+                            Routes().pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
                           7,
                           _settingsModel.nrOfDaysToDisplay,
                           'Vis mandag til søndag', () {
-                        Routes.pop(context, 7);
+                        Routes().pop(context, 7);
                       }),
                     ]),
                   ],

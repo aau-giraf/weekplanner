@@ -2,7 +2,6 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -29,7 +28,7 @@ class WeekplanSelectorScreen extends StatefulWidget {
   /// Constructor for weekplan selector screen.
   /// Requires a user to load weekplans
   WeekplanSelectorScreen(this._user)
-      : _weekBloc = di.getDependency<WeekplansBloc>() {
+      : _weekBloc = di.get<WeekplansBloc>() {
     _weekBloc.load(_user, true);
   }
 
@@ -60,7 +59,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
             AppBarIcon.edit: () => widget._weekBloc.toggleEditMode(),
             AppBarIcon.logout: () {},
             AppBarIcon.settings: () =>
-                Routes.push(context, SettingsScreen(widget._user))
+                Routes().push(context, SettingsScreen(widget._user))
           },
         ),
         bottomNavigationBar: StreamBuilder<bool>(
@@ -193,7 +192,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   Widget _buildWeekPlanSelector(
       BuildContext context, WeekModel weekplan, bool isMarked, bool current) {
-    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
+    final PictogramImageBloc bloc = di.get<PictogramImageBloc>();
 
     if (weekplan.thumbnail != null) {
       bloc.loadPictogramById(weekplan.thumbnail.id);
@@ -298,7 +297,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
 
   /// Handles on tap on a add new weekplan card
   void handleOnTapWeekPlanAdd(BuildContext context) {
-    Routes.push<WeekModel>(
+    Routes().push<WeekModel>(
       context,
       NewWeekplanScreen(
         user: widget._user,
@@ -314,7 +313,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     if (inEditMode) {
       widget._weekBloc.toggleMarkedWeekModel(weekplan);
     } else {
-      Routes.push(context, WeekplanScreen(weekplan, widget._user))
+      Routes().push(context, WeekplanScreen(weekplan, widget._user))
           .then((_) => widget._weekBloc.load(widget._user, true));
     }
   }
@@ -403,7 +402,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
     if (markedCount < 1) {
       return;
     }
-    await Routes.push<WeekModel>(
+    await Routes().push<WeekModel>(
       context,
       EditWeekPlanScreen(
         user: widget._user,
@@ -415,7 +414,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
       widget._weekBloc.toggleEditMode();
       widget._weekBloc.clearMarkedWeekModels();
       if (reload) {
-        Routes.pop<bool>(context, true);
+        Routes().pop<bool>(context, true);
       }
     });
   }
@@ -439,7 +438,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               confirmButtonIcon:
                 const ImageIcon(AssetImage('assets/icons/copy.png')),
               confirmOnPressed: () {
-                Routes.push(
+                Routes().push(
                     context, CopyToCitizensScreen(
                     weekModelList, widget._user));
               },
@@ -459,7 +458,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               description: 'Hvor vil du kopiére den valgte ugeplan hen? ',
               option1Text: 'Andre borgere',
               option1OnPressed: () {
-                Routes.push(
+                Routes().push(
                     context, CopyToCitizensScreen(
                     weekModelList, widget._user));
               },
@@ -468,7 +467,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
               option2OnPressed: () {
                   widget._weekBloc.getMarkedWeekModel().then((
                       WeekModel weekmodel) {
-                    Routes.push(
+                    Routes().push(
                     context,
                     CopyResolveScreen(
                     currentUser: widget._user,
@@ -507,7 +506,7 @@ class _WeekplanSelectorScreenState extends State<WeekplanSelectorScreen> {
                 widget._weekBloc.toggleEditMode();
 
                 // Closes the dialog box
-                Routes.pop(context);
+                Routes().pop(context);
               });
         });
   }

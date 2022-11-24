@@ -9,7 +9,7 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
   GirafAppBar({Key key, this.title, this.appBarIcons, this.isGuardian = true})
-      : toolbarBloc = di.getDependency<ToolbarBloc>(),
+      : toolbarBloc = di.get<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 
