@@ -15,7 +15,6 @@ import 'package:weekplanner/widgets/pictogram_text.dart';
 
 import '../../di.dart';
 import '../../style/custom_color.dart' as theme;
-import '../citizen_avatar_widget.dart';
 
 /// Widget used for activities in the weekplan screen.
 class ActivityCard extends StatelessWidget {
@@ -356,6 +355,7 @@ class ActivityCard extends StatelessWidget {
         width: 400,
         height: 400,
         child: Container(
+          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
           child: const CircleAvatar(
               key: Key('PlaceholderAvatar'),
               radius: 20,
