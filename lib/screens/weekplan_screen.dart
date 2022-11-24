@@ -60,92 +60,106 @@ class WeekplanScreen extends StatelessWidget {
               stream: _settingsBloc.settings,
               builder: (BuildContext context,
                   AsyncSnapshot<SettingsModel> settingsSnapshot) {
-                  final SettingsModel _settingsModel = settingsSnapshot.data;
-          return WillPopScope(
-            onWillPop: () async =>
-                weekModeSnapshot.data == WeekplanMode.guardian,
-            child: Scaffold(
-            appBar: GirafAppBar(
-                title: _user.displayName + ' - ' + _week.name,
-                appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
-                    ? <AppBarIcon, VoidCallback> {
-                  // Show icons for guardian role
-                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                  AppBarIcon.changeToCitizen: () {},
-                  AppBarIcon.settings: () =>
-                      Routes().push<WeekModel>(context,
-                          SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user)),
-                  AppBarIcon.logout: () {}
-
-                }
-                : (weekModeSnapshot.data == WeekplanMode.trustee)
-                    ? <AppBarIcon, VoidCallback> {
-                  // Show icons for trustee role
-                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                  AppBarIcon.changeToCitizen: () {},
-                  AppBarIcon.settings: () =>
-                      Routes().push<WeekModel>(context,
-                          SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user)),
-                  AppBarIcon.logout: () {}
-                }
-                :(weekModeSnapshot.data == WeekplanMode.citizen &&
-                    _settingsModel.showSettingsForCitizen == true)
-                    ? <AppBarIcon, VoidCallback> {
-                      AppBarIcon.changeToGuardian: () {},
-                  AppBarIcon.settings: () =>
-                      Routes().push<WeekModel>(context,
-                          SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user)),
-                  AppBarIcon.logout: () {}
-                }
-                : <AppBarIcon, VoidCallback> {
-                  // Show icons for citizen role
-                  AppBarIcon.changeToGuardian: () {},
-                  AppBarIcon.logout: () {},
-                },
-                isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
-              ),
-              body: StreamBuilder<UserWeekModel>(
-                stream: _weekplanBloc.userWeek,
-                initialData: null,
-                builder: (BuildContext context,
-                    AsyncSnapshot<UserWeekModel> snapshot) {
-                  if (snapshot.hasData) {
-                    return _buildWeeks(snapshot.data.week, context);
-                } else {
+                  if(settingsSnapshot.hasData) {
+                    final SettingsModel _settingsModel = settingsSnapshot.data;
+                    return WillPopScope(
+                      onWillPop: () async =>
+                      weekModeSnapshot.data == WeekplanMode.guardian,
+                      child: Scaffold(
+                        appBar: GirafAppBar(
+                          title: _user.displayName + ' - ' + _week.name,
+                          appBarIcons: (weekModeSnapshot.data ==
+                              WeekplanMode.guardian)
+                              ? <AppBarIcon, VoidCallback>{
+                            // Show icons for guardian role
+                            AppBarIcon.edit: () =>
+                                _weekplanBloc.toggleEditMode(),
+                            AppBarIcon.changeToCitizen: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : (weekModeSnapshot.data == WeekplanMode.trustee)
+                              ? <AppBarIcon, VoidCallback>{
+                            // Show icons for trustee role
+                            AppBarIcon.edit: () =>
+                                _weekplanBloc.toggleEditMode(),
+                            AppBarIcon.changeToCitizen: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : (weekModeSnapshot.data ==
+                              WeekplanMode.citizen &&
+                              _settingsModel.showSettingsForCitizen == true)
+                              ? <AppBarIcon, VoidCallback>{
+                            AppBarIcon.changeToGuardian: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : <AppBarIcon, VoidCallback>{
+                            // Show icons for citizen role
+                            AppBarIcon.changeToGuardian: () {},
+                            AppBarIcon.logout: () {},
+                          },
+                          isGuardian: weekModeSnapshot.data ==
+                              WeekplanMode.guardian,
+                        ),
+                        body: StreamBuilder<UserWeekModel>(
+                          stream: _weekplanBloc.userWeek,
+                          initialData: null,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<UserWeekModel> snapshot) {
+                            if (snapshot.hasData) {
+                              return _buildWeeks(snapshot.data.week, context);
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                        bottomNavigationBar: StreamBuilder<WeekplanMode>(
+                          stream: _authBloc.mode,
+                          initialData: WeekplanMode.guardian,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<WeekplanMode> snapshot) {
+                            return Visibility(
+                              visible: snapshot.data == WeekplanMode.guardian,
+                              child: StreamBuilder<bool>(
+                                stream: _weekplanBloc.editMode,
+                                initialData: false,
+                                builder:
+                                    (BuildContext context,
+                                    AsyncSnapshot<bool> snapshot) {
+                                  if (snapshot.data) {
+                                    return buildBottomAppBar(context);
+                                  } else {
+                                    return Container(width: 0.0, height: 0.0);
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  }else {
                     return const Center(
                       child: CircularProgressIndicator(),
-                        );
+                    );
                   }
-                },
-              ),
-              bottomNavigationBar: StreamBuilder<WeekplanMode>(
-                stream: _authBloc.mode,
-                initialData: WeekplanMode.guardian,
-                builder: (BuildContext context,
-                    AsyncSnapshot<WeekplanMode> snapshot) {
-                  return Visibility(
-                    visible: snapshot.data == WeekplanMode.guardian,
-                    child: StreamBuilder<bool>(
-                      stream: _weekplanBloc.editMode,
-                      initialData: false,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                        if (snapshot.data) {
-                          return buildBottomAppBar(context);
-                        } else {
-                          return Container(width: 0.0, height: 0.0);
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        });
+              });
     });
   }
 
