@@ -74,6 +74,7 @@ void main() {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
+        nrOfDaysToDisplay: 1,
         pictogramText: false,
         weekDayColors: MockUserApi.createWeekDayColors(),
         lockTimerControl: false,

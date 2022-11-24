@@ -2,9 +2,9 @@ import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
-import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
@@ -30,10 +30,7 @@ class MockUserApi extends Mock implements UserApi, NavigatorObserver {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
-        nrOfDaysToDisplayPortrait: 1,
-        displayDaysRelativePortrait: true,
-        nrOfDaysToDisplayLandscape: 7,
-        displayDaysRelativeLandscape: false,
+        nrOfDaysToDisplay: 1,
         weekDayColors: null);
 
     return Stream<SettingsModel>.value(settingsModel);
@@ -58,9 +55,8 @@ void main() {
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
   });
 
-  testWidgets('Portrait settings screen has GirafAppBar',
-        (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, true)));
+  testWidgets('Has GirafAppBar', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is GirafAppBar &&
@@ -69,126 +65,58 @@ void main() {
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
-  testWidgets('Landscape settings screen has GirafAppBar',
+  testWidgets('Has 3 options, SettingsCheckMarkButton',
       (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home:
-      NumberOfDaysScreen(user, false)));
-    expect(
-        find.byWidgetPredicate((Widget widget) =>
-        widget is GirafAppBar &&
-            widget.title == user.displayName + ': indstillinger'),
-        findsOneWidget);
-    expect(find.byType(GirafAppBar), findsOneWidget);
-  });
-
-  testWidgets('Portrait settings screen has 4 options, SettingsCheckMarkButton',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, true)));
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
     expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
   });
 
-  testWidgets('Landscape settings screen has 4 options, '
-      'SettingsCheckMarkButton', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, false)));
+  testWidgets('Has option, Vis kun i dag', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
-    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
+    expect(find.text('Vis kun i dag'), findsOneWidget);
   });
 
-  testWidgets('Portrait settings screen has option: "Vis i dag"',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, true)));
-    await tester.pumpAndSettle();
-    expect(find.text('Vis i dag'), findsOneWidget);
-  });
-
-  testWidgets('Landscape settings screen has option: "Vis i dag"',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, false)));
-    await tester.pumpAndSettle();
-    expect(find.text('Vis i dag'), findsOneWidget);
-  });
-
-  testWidgets('Portrait settings screen has option: "Vis to dage"',
-          (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, true)));
+  testWidgets('Has option, Vis to dage', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Vis to dage'), findsOneWidget);
   });
 
-  testWidgets('Landscape settings screen has option: "Vis to dage"',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, false)));
-    await tester.pumpAndSettle();
-    expect(find.text('Vis to dage'), findsOneWidget);
-  });
-
-  testWidgets('Portrait settings screen has option: "Vis mandag til fredag"',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, true)));
+  testWidgets('Has option, Vis mandag til fredag', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Vis mandag til fredag'), findsOneWidget);
   });
 
-  testWidgets('Landscape settings screen has option: "Vis mandag til fredag"',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, false)));
-    await tester.pumpAndSettle();
-    expect(find.text('Vis mandag til fredag'), findsOneWidget);
-  });
-
-  testWidgets('Portrait settings screen has option: "Vis mandag til søndag"',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, true)));
+  testWidgets('Has option, Vis mandag til søndag', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Vis mandag til søndag'), findsOneWidget);
   });
 
-  testWidgets('Landscape settings screen has option: "Vis mandag til søndag"',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, false)));
-    await tester.pumpAndSettle();
-    expect(find.text('Vis mandag til søndag'), findsOneWidget);
-  });
-
-  testWidgets('Portrait settings screen has only one selected option',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user, true)));
+  testWidgets('Has only one selected option', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NumberOfDaysScreen(user)));
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.check), findsOneWidget);
   });
 
-  testWidgets('Portrait settings screen has been popped',
-      (WidgetTester tester) async{
-    await tester.pumpWidget(MaterialApp(
-        home: NumberOfDaysScreen(user, true),
-        navigatorObservers: [mockObserver] //ignore: always_specify_types
-    ));
-    verify(mockObserver.didPush(any, any));
+  testWidgets('Has number of days screen been popped',
+          (WidgetTester tester) async{
+        await tester.pumpWidget(MaterialApp(
+            home: NumberOfDaysScreen(user),
+            // ignore: always_specify_types
+            navigatorObservers: [mockObserver]
+        ));
+        verify(mockObserver.didPush(any, any));
 
-    await tester.pumpAndSettle();
-    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
 
-    await tester.pump();
-    await tester.tap(find.byType(SettingsCheckMarkButton).last);
-    await tester.pump();
-    verify(mockObserver.didPop(any, any));
-  });
-
-  testWidgets('Landscape settings screen has been popped',
-      (WidgetTester tester) async{
-    await tester.pumpWidget(MaterialApp(
-        home: NumberOfDaysScreen(user, false),
-        navigatorObservers: [mockObserver] //ignore: always_specify_types
-    ));
-    verify(mockObserver.didPush(any, any));
-
-    await tester.pumpAndSettle();
-    expect(find.byType(SettingsCheckMarkButton), findsNWidgets(4));
-
-    await tester.pump();
-    await tester.tap(find.byType(SettingsCheckMarkButton).last);
-    await tester.pump();
-    verify(mockObserver.didPop(any, any));
-  });
+        await tester.pump();
+        await tester.tap(find.byType(SettingsCheckMarkButton).last);
+        await tester.pump();
+        verify(mockObserver.didPop(any, any));
+      });
 }
