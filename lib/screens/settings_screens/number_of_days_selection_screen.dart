@@ -86,8 +86,8 @@ class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
             }));
   }
 
-  // Sets whether the number of days should be displayed relative to the
-  // current day
+  /// Sets whether the number of days should be displayed relative to the
+  /// current day
   void setDisplayDaysRelative(SettingsModel settingsModel, bool isRelative)
   {
     _isPortrait ? settingsModel.displayDaysRelativePortrait = isRelative
