@@ -38,6 +38,7 @@ class SettingsBloc extends BlocBase {
     });
   }
 
+  /// Load the settings for a giraf user
   void loadSettingsGirafUser(GirafUserModel user) {
     _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
       _settings.add(settingsModel);

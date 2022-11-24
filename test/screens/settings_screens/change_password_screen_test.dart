@@ -1,23 +1,22 @@
 import 'dart:async';
-import 'package:api_client/http/http.dart';
-import 'package:http/http.dart' as http;
 import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
+import 'package:api_client/http/http.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/change_password_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
 
 class MockUserApi extends Mock implements UserApi, NavigatorObserver {
   @override
@@ -75,8 +74,7 @@ class MockAuthBloc extends Mock implements AuthBloc {
   }
 }
 
-class MockChangePasswordScreen extends ChangePasswordScreen {
-  //ignore: must_be_immutable
+class MockChangePasswordScreen extends ChangePasswordScreen {//ignore: must_be_immutable
   MockChangePasswordScreen(DisplayNameModel user) : super(user);
   @override
   void changePassword(

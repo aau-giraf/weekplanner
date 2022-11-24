@@ -17,8 +17,7 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Change username screen
-class ChangeUsernameScreen extends StatelessWidget {
-  //ignore: must_be_immutable
+class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
   /// Constructor
   ChangeUsernameScreen(DisplayNameModel user) : _user = user {
     _settingsBloc.loadSettings(_user);
@@ -148,8 +147,7 @@ class ChangeUsernameScreen extends StatelessWidget {
               key: _innerForm,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  //ignore: always_specify_types
+                children: [//ignore: always_specify_types
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: Text(
@@ -173,8 +171,7 @@ class ChangeUsernameScreen extends StatelessWidget {
                   const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //ignore: always_specify_types
+                    children: [//ignore: always_specify_types
                       GirafButton(
                           key: const Key(
                               'UsernameConfirmationDialogCancelButton'),

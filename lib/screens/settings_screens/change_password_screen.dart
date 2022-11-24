@@ -11,8 +11,7 @@ import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Screen for changing password
-class ChangePasswordScreen extends StatelessWidget {
-  //ignore: must_be_immutable
+class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
   /// Constructor
   ChangePasswordScreen(DisplayNameModel user) : _user = user;
 
