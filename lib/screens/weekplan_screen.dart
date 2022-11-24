@@ -95,10 +95,10 @@ class WeekplanScreen extends StatelessWidget {
                     ? <AppBarIcon, VoidCallback> {
                       AppBarIcon.changeToGuardian: () {},
                   AppBarIcon.settings: () =>
-                      Routes.push<WeekModel>(context,
+                      Routes().push<WeekModel>(context,
                           SettingsScreen(_user)).then((WeekModel newWeek) =>
                           _settingsBloc.loadSettings(_user)),
-                      AppBarIcon.logout: () {}
+                  AppBarIcon.logout: () {}
                 }
                 : <AppBarIcon, VoidCallback> {
                   // Show icons for citizen role
