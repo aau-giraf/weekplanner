@@ -18,15 +18,11 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
-
   @override
   _ChooseCitizenScreenState createState() => _ChooseCitizenScreenState();
 }
 
 class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
-
-
-
   final ChooseCitizenBloc _bloc = di.get<ChooseCitizenBloc>();
   final AuthBloc _authBloc = di.get<AuthBloc>();
 
@@ -55,7 +51,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
               appBarIcons: <AppBarIcon, VoidCallback>{
                 AppBarIcon.logout: null,
                 AppBarIcon.settings: () =>
-                    Routes.push(context, UserSettingsScreen())
+                    Routes().push(context, UserSettingsScreen())
               },
             ),
             body: Padding(
@@ -91,96 +87,84 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     );
   }
 
-  /// Builds the list of citizens together with the "add citizen" button
-  List<Widget> _buildCitizenSelectionList(BuildContext context,
-      AsyncSnapshot<List<DisplayNameModel>> snapshot) {
-    final List<Widget> list = snapshot.data
-        .map<Widget>((DisplayNameModel user) =>
-        CitizenAvatar(
-          displaynameModel: user,
-          onPressed: () => _pushWeekplanSelector(user),
+  Future<void> _pushWeekplanSelector(DisplayNameModel user) async {
+    bool repush = true;
+    while (repush) {
+      final bool result =
+          await Routes().push<bool>(context, WeekplanSelectorScreen(user));
+      repush = result ?? false;
+    }
+    return;
+  }
 
-        )).toList();
+  /// Builds the list of citizens together with the "add citizen" button
+  List<Widget> _buildCitizenSelectionList(
+      BuildContext context, AsyncSnapshot<List<DisplayNameModel>> snapshot) {
+    final List<Widget> list = snapshot.data
+        .map<Widget>((DisplayNameModel user) => CitizenAvatar(
+              displaynameModel: user,
+              onPressed: () => _pushWeekplanSelector(user),
+            ))
+        .toList();
 
     /// Defines variables needed to check user role
     final int role = _authBloc.loggedInRole;
 
-    final ButtonStyle brugerStyle = TextButton.styleFrom(
-      foregroundColor: Colors.black
-    );
+    final ButtonStyle brugerStyle =
+        TextButton.styleFrom(foregroundColor: Colors.black);
 
     /// Checks user role and gives option to add Citizen if user is Guardian
     if (role == Role.Guardian.index) {
-<<<<<<< HEAD
-      list.insert(0, MaterialButton(
-        onPressed: () async {
-=======
-      list.insert(0, TextButton(
-          style: brugerStyle,
-          onPressed: () async {
->>>>>>> develop
-          final Object result =
-          await Routes().push(context, NewCitizenScreen());
-          final DisplayNameModel newUser =
-          DisplayNameModel.fromGirafUser(result);
-          list.add(CitizenAvatar(
-              displaynameModel: newUser,
-              onPressed: () => _pushWeekplanSelector(newUser)
-          )
-          );
+      list.insert(0, MaterialButton(onPressed: () async {
+        list.insert(
+            0,
+            TextButton(
+              style: brugerStyle,
+              onPressed: () async {
+                final Object result =
+                    await Routes().push(context, NewCitizenScreen());
+                final DisplayNameModel newUser =
+                    DisplayNameModel.fromGirafUser(result);
+                list.add(CitizenAvatar(
+                    displaynameModel: newUser,
+                    onPressed: () => _pushWeekplanSelector(newUser)));
 
-          ///Update the screen with the new citizen
-          _bloc.updateBloc();
-          setState(() {});
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  return Icon(
-                    Icons.person_add,
-                    size: constraints.biggest.height,
-                  );
-                }),
-              ),
-
-              ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minWidth: 200.0,
-                    maxWidth: 200.0,
-                    minHeight: 15.0,
-                    maxHeight: 50.0,
-                  ),
-                  child: const Center(
-                    child: AutoSizeText(
-                        'Tilføj Bruger',
-                        style: TextStyle(fontSize: GirafFont.large,
-                            color: Colors.black)
+                ///Update the screen with the new citizen
+                _bloc.updateBloc();
+                setState(() {});
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: LayoutBuilder(builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return Icon(
+                          Icons.person_add,
+                          size: constraints.biggest.height,
+                        );
+                      }),
                     ),
-                  )
-              )
-            ],
-          ),
-        ),
-      )
-      );
+                    ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: 200.0,
+                          maxWidth: 200.0,
+                          minHeight: 15.0,
+                          maxHeight: 50.0,
+                        ),
+                        child: const Center(
+                          child: AutoSizeText('Tilføj Bruger',
+                              style: TextStyle(
+                                  fontSize: GirafFont.large,
+                                  color: Colors.black)),
+                        ))
+                  ],
+                ),
+              ),
+            ));
+      }));
     }
-
-
-
     return list;
-  }
-
-  Future<void> _pushWeekplanSelector(DisplayNameModel user) async{
-    bool repush = true;
-    while (repush) {
-      final bool result = await Routes().push<bool>(context,
-          WeekplanSelectorScreen(user));
-      repush = result?? false;
-    }
-    return;
   }
 }

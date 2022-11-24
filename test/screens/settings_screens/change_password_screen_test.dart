@@ -75,7 +75,8 @@ class MockAuthBloc extends Mock implements AuthBloc {
   }
 }
 
-class MockChangePasswordScreen extends ChangePasswordScreen { //ignore: must_be_immutable
+class MockChangePasswordScreen extends ChangePasswordScreen {
+  //ignore: must_be_immutable
   MockChangePasswordScreen(DisplayNameModel user) : super(user);
   @override
   void changePassword(
@@ -116,10 +117,10 @@ void main() {
     api.user = MockUserApi();
     api.account = MockAccountApi();
 
-    di.registerDependency<AuthBloc>((_) => MockAuthBloc());
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<Api>((_) => api);
+    di.registerDependency<AuthBloc>(() => MockAuthBloc());
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<Api>(() => api);
   });
 
   testWidgets('Checks if textfield is present', (WidgetTester tester) async {

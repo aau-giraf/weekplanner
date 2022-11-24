@@ -11,7 +11,8 @@ import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import '../../style/custom_color.dart' as theme;
 
 /// Screen for changing password
-class ChangePasswordScreen extends StatelessWidget { //ignore: must_be_immutable
+class ChangePasswordScreen extends StatelessWidget {
+  //ignore: must_be_immutable
   /// Constructor
   ChangePasswordScreen(DisplayNameModel user) : _user = user;
 
@@ -22,15 +23,19 @@ class ChangePasswordScreen extends StatelessWidget { //ignore: must_be_immutable
 
   /// This is the password control, that allows for password extraction
   final TextEditingController currentPasswordCtrl = TextEditingController();
+
   /// Password controller, that allows for extracting the new password
   final TextEditingController newPasswordCtrl = TextEditingController();
+
   /// Controller for the repeated new password.
   final TextEditingController repeatNewPasswordCtrl = TextEditingController();
 
   final DisplayNameModel _user;
+
   /// authbloc
-  final AuthBloc authBloc = di.getDependency<AuthBloc>();
-  final Api _api = di.getDependency<Api>();
+  final AuthBloc authBloc = di.get<AuthBloc>();
+  final Api _api = di.get<Api>();
+
   /// used for popping the dialog
   BuildContext currentContext;
   bool loginStatus = false; //ignore: public_member_api_docs
@@ -207,12 +212,10 @@ class ChangePasswordScreen extends StatelessWidget { //ignore: must_be_immutable
     }).catchError((Object error) {
       if (error is ApiException) {
         createDialog('Forkert adgangskode',
-            'Den nuværende adgangskode er forkert',
-            const Key('WrongPassword'));
+            'Den nuværende adgangskode er forkert', const Key('WrongPassword'));
       } else {
         print(error.toString());
-        createDialog(
-            'Fejl', 'Der skete en ukendt fejl',
+        createDialog('Fejl', 'Der skete en ukendt fejl',
             const Key('UnknownErrorOccured'));
       }
     });
@@ -227,12 +230,10 @@ class ChangePasswordScreen extends StatelessWidget { //ignore: must_be_immutable
     if (newPasswordCtrl.text != repeatNewPasswordCtrl.text) {
       createDialog('Fejl', 'Den gentagne adgangskode stemmer ikke overens',
           const Key('NewPasswordNotRepeated'));
-    }
-    else if (currentPasswordCtrl.text == '' ||
+    } else if (currentPasswordCtrl.text == '' ||
         newPasswordCtrl.text == '' ||
         repeatNewPasswordCtrl.text == '') {
-      createDialog(
-          'Fejl', 'Udfyld venligst alle felterne',
+      createDialog('Fejl', 'Udfyld venligst alle felterne',
           const Key('NewPasswordEmpty'));
     } else if (newPasswordCtrl.text == currentPasswordCtrl.text) {
       createDialog(
