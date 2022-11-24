@@ -115,55 +115,53 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
     /// Checks user role and gives option to add Citizen if user is Guardian
     if (role == Role.Guardian.index) {
-      list.insert(0, MaterialButton(onPressed: () async {
-        list.insert(
-            0,
-            TextButton(
-              style: brugerStyle,
-              onPressed: () async {
-                final Object result =
-                    await Routes().push(context, NewCitizenScreen());
-                final DisplayNameModel newUser =
-                    DisplayNameModel.fromGirafUser(result);
-                list.add(CitizenAvatar(
-                    displaynameModel: newUser,
-                    onPressed: () => _pushWeekplanSelector(newUser)));
+      list.insert(
+          0,
+          TextButton(
+            style: brugerStyle,
+            onPressed: () async {
+              final Object result =
+                  await Routes().push(context, NewCitizenScreen());
+              final DisplayNameModel newUser =
+                  DisplayNameModel.fromGirafUser(result);
+              list.add(CitizenAvatar(
+                  displaynameModel: newUser,
+                  onPressed: () => _pushWeekplanSelector(newUser)));
 
-                ///Update the screen with the new citizen
-                _bloc.updateBloc();
-                setState(() {});
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: LayoutBuilder(builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        return Icon(
-                          Icons.person_add,
-                          size: constraints.biggest.height,
-                        );
-                      }),
-                    ),
-                    ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          minWidth: 200.0,
-                          maxWidth: 200.0,
-                          minHeight: 15.0,
-                          maxHeight: 50.0,
-                        ),
-                        child: const Center(
-                          child: AutoSizeText('Tilføj Bruger',
-                              style: TextStyle(
-                                  fontSize: GirafFont.large,
-                                  color: Colors.black)),
-                        ))
-                  ],
-                ),
+              ///Update the screen with the new citizen
+              _bloc.updateBloc();
+              setState(() {});
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return Icon(
+                        Icons.person_add,
+                        size: constraints.biggest.height,
+                      );
+                    }),
+                  ),
+                  ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 200.0,
+                        maxWidth: 200.0,
+                        minHeight: 15.0,
+                        maxHeight: 50.0,
+                      ),
+                      child: const Center(
+                        child: AutoSizeText('Tilføj Bruger',
+                            style: TextStyle(
+                                fontSize: GirafFont.large,
+                                color: Colors.black)),
+                      ))
+                ],
               ),
-            ));
-      }));
+            ),
+          ));
     }
     return list;
   }
