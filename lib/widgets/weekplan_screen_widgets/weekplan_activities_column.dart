@@ -65,7 +65,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
         stream: weekplanBloc.getWeekdayStream(streamIndex),
         builder: (BuildContext context, AsyncSnapshot<WeekdayModel> snapshot) {
           if (snapshot.hasData) {
-            final WeekdayModel _dayModel = snapshot.data;
+            final WeekdayModel _dayModel = trimToActive(snapshot.data);
 
             return Card(color: color, child: _day(_dayModel, context));
           } else {
@@ -122,7 +122,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
     int index = 0;
     for (ActivityModel activity in weekdayModel.activities) {
       if (activity.state == ActivityState.Active) {
-        break;
+        return index;
       }
       index++;
     }
@@ -154,7 +154,6 @@ class WeekplanActivitiesColumn extends StatelessWidget {
 
   /// Builds a day's activities
   StreamBuilder<List<ActivityModel>> _buildDayActivities(WeekdayModel weekday) {
-    weekday = trimToActive(weekday);
     return StreamBuilder<List<ActivityModel>>(
         stream: weekplanBloc.markedActivities,
         builder: (BuildContext context,

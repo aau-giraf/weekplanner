@@ -943,51 +943,6 @@ api.pictogram=MockPictogramApi();
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
-  testWidgets('Check number of activities to display displays the correct '
-      'number of activities', (WidgetTester tester) async{
-    authBloc.setMode(WeekplanMode.citizen);
-    mockSettings.showOnlyActivities = true;
-    mockSettings.nrOfActivitiesToDisplay = 2;
-    final int weekDay = DateTime.now().weekday.toInt()-1;
-    mockWeek.days[weekDay].activities.add(mockActivities[0]);
-    mockWeek.days[weekDay].activities.add(mockActivities[1]);
-    mockWeek.days[weekDay].activities.add(mockActivities[2]);
-    mockWeek.days[weekDay].activities.add(mockActivities[3]);
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ActivityCard), findsNWidgets(2));
-
-    mockActivities[0].state = ActivityState.Canceled;
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ActivityCard), findsNWidgets(1));
-
-    mockActivities[2].state = ActivityState.Canceled;
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ActivityCard), findsNWidgets(1));
-
-    mockActivities[1].state = ActivityState.Completed;
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ActivityCard), findsOneWidget);
-
-    mockActivities[3].state = ActivityState.Completed;
-
-    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ActivityCard), findsNothing);
-  });
-
   testWidgets('Tests if the correct number of activities'
       ' is displayed', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
