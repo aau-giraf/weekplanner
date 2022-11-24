@@ -15,7 +15,7 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/new_pictogram_password_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/pictogram_password_widget.dart';
+import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_password_widget.dart';
 
 class MockAccountApi extends AccountApi {
   MockAccountApi(PersistenceClient persist)
@@ -90,7 +90,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: NewPictogramPasswordScreen('testUserName', 'testDisplayName')));
 
-    expect(find.byType(PictogramChoices), findsOneWidget);
+    expect(find.byType(PictogramPassword), findsOneWidget);
   });
 
   testWidgets('Save button is rendered', (WidgetTester tester) async {

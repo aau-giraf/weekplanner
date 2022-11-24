@@ -4,7 +4,7 @@ import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
-import 'package:weekplanner/widgets/pictogram_password_widget.dart';
+import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_password_widget.dart';
 
 /// Used to create a new pictogram password for a citizen.
 class NewPictogramPasswordBloc extends BlocBase {
@@ -33,7 +33,7 @@ class NewPictogramPasswordBloc extends BlocBase {
       pictogramPasswordController.stream.transform(_passwordValidation);
 
   /// This validation method just null-checks, as there is validation
-  /// in the [PictogramChoices] widget.
+  /// in the [PictogramPassword] widget.
   final StreamTransformer<String, bool> _passwordValidation =
       StreamTransformer<String, bool>.fromHandlers(
           handleData: (String input, EventSink<bool> sink) {

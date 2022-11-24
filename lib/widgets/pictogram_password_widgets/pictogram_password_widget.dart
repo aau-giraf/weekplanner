@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:weekplanner/di.dart';
-import 'package:weekplanner/widgets/paswordInputField.dart';
+import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_input_field_widget.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
 import 'package:api_client/api/api.dart';
-import 'giraf_notify_dialog.dart';
+import '../giraf_notify_dialog.dart';
 
 
 /// The pictograms to choose between for the code.
@@ -17,11 +17,11 @@ const double MAXWIDTH = 500;
 
 ///Widget to show possible pictograms for pictogram password
 ///and the currently input pictograms
-class PictogramChoices extends StatelessWidget {
+class PictogramPassword extends StatelessWidget {
   ///Widget with the possible pictograms in the code and the currently picked
   /// pictograms in the code.
 
-  const PictogramChoices({Key key,
+  const PictogramPassword({Key key,
     @required this.onPasswordChanged,
     @required this.api})
       : super(key: key);
@@ -49,7 +49,6 @@ class PictogramChoices extends StatelessWidget {
       }
     } catch (e) {
       showErrorMessage(e, di.getDependency<BuildContext>());
-
     }
   }
   /// Shows error message in case of any pictogram being unobtainable
@@ -70,8 +69,8 @@ class PictogramChoices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Stream<List<PictogramModel>> _pictogramChoices = getStream();
-    final GlobalKey<PasswordInputFieldState> inputFieldKey = GlobalKey();
-    final PasswordInputField password = PasswordInputField(
+    final GlobalKey<PictogramInputFieldState> inputFieldKey = GlobalKey();
+    final PictogramInputField password = PictogramInputField(
         key: inputFieldKey,
         onPasswordChanged: onPasswordChanged);
     return Column(children: <Widget>[
@@ -101,16 +100,6 @@ class PictogramChoices extends StatelessWidget {
                                 height: 80,
                                 child: const Center(
                                     child: CircularProgressIndicator()),
-                              );
-                            }
-                            // This is here to allow for testing.
-                            else if (pictogram.id == -1) {
-                              return GestureDetector(
-                                onTap: () =>
-                                    inputFieldKey.
-                                    currentState.addToPass(pictogram),
-                                child: const Text('Error'),
-                                key: const Key('TestPictogram'),
                               );
                             }
                             else {

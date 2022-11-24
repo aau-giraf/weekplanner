@@ -5,11 +5,11 @@ import 'package:weekplanner/widgets/pictogram_image.dart';
 
 /// Shows the currently picked pictograms in either making pictogram code
 /// or logging in with it
-class PasswordInputField  extends StatefulWidget {
+class PictogramInputField  extends StatefulWidget {
 
   /// Shows the currently picked pictograms in either making pictogram code
   /// or logging in with it
-  const PasswordInputField({Key key, @required this.onPasswordChanged})
+  const PictogramInputField({Key key, @required this.onPasswordChanged})
   : super(key: key);
 
   /// Function called when an input is changed to update save button
@@ -17,20 +17,19 @@ class PasswordInputField  extends StatefulWidget {
   final Function onPasswordChanged;
 
   @override
-  PasswordInputFieldState createState() => PasswordInputFieldState();
+  PictogramInputFieldState createState() => PictogramInputFieldState();
 }
 
 /// The maximum width that is shared by both gridviews
 const double MAXWIDTH = 500;
 
 /// State for PassWordInputField
-class PasswordInputFieldState extends State<PasswordInputField> {
+class PictogramInputFieldState extends State<PictogramInputField> {
 
   List<PictogramModel> _inputCode;
   @override
   void initState() {
     _inputCode = List<PictogramModel>.filled(4, null);
-
     super.initState();
   }
 
@@ -74,12 +73,6 @@ class PasswordInputFieldState extends State<PasswordInputField> {
             borderRadius: BorderRadius.circular(20),
             color: const Color(0xFFe0dede),
           ),
-        );
-      } else if (pictogram.id == -1){
-        // For testing purposes
-        widget = const Text(
-          'LoginPictogram',
-          //key: Key('LoginPictogram')
         );
       }
       else

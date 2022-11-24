@@ -8,7 +8,7 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/style/custom_color.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
-import 'package:weekplanner/widgets/pictogram_password_widget.dart';
+import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_password_widget.dart';
 
 
 /// Screen for the creation of a pictogram password
@@ -48,7 +48,7 @@ class NewPictogramPasswordScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              PictogramChoices(
+              PictogramPassword(
                 onPasswordChanged: (String pass) {
                   _bloc.onPictogramPasswordChanged.add(pass);
                 },
