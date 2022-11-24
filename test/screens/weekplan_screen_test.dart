@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/copy_activities_bloc.dart';
@@ -35,7 +36,6 @@ import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/activity_card.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
 
 import '../mock_data.dart';
 
@@ -67,15 +67,15 @@ api.pictogram=MockPictogramApi();
 
     di.clearAll();
     // We register the dependencies needed to build different widgets
-    di.registerDependency<AuthBloc>((_) => authBloc);
-    di.registerDependency<WeekplanBloc>((_) => weekplanBloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<TimerBloc>((_) => TimerBloc(api));
-    di.registerDependency<ActivityBloc>((_) => ActivityBloc(api));
-    di.registerDependency<PictogramBloc>((_) => PictogramBloc(api));
-    di.registerDependency<CopyActivitiesBloc>((_) => CopyActivitiesBloc());
+    di.registerDependency<AuthBloc>(() => authBloc);
+    di.registerDependency<WeekplanBloc>(() => weekplanBloc);
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<TimerBloc>(() => TimerBloc(api));
+    di.registerDependency<ActivityBloc>(() => ActivityBloc(api));
+    di.registerDependency<PictogramBloc>(() => PictogramBloc(api));
+    di.registerDependency<CopyActivitiesBloc>(() => CopyActivitiesBloc());
   });
 
   testWidgets('WeekplanScreen renders', (WidgetTester tester) async {
@@ -754,9 +754,9 @@ api.pictogram=MockPictogramApi();
     await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
     await tester.pumpAndSettle();
 
-    expect(find.byType(RaisedButton), findsNWidgets(7));
+    expect(find.byType(ElevatedButton), findsNWidgets(7));
 
-    await tester.tap(find.byType(RaisedButton).first);
+    await tester.tap(find.byType(ElevatedButton).first);
     await tester.pumpAndSettle();
 
     expect(find.byType(PictogramSearch), findsOneWidget);

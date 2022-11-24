@@ -99,14 +99,14 @@ void main() {
     });
 
     bloc = CopyWeekplanBloc(api);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
     toolbarBloc = ToolbarBloc();
-    di.registerDependency<CopyWeekplanBloc>((_) => bloc);
-    di.registerDependency<SettingsBloc>((_) => SettingsBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => toolbarBloc);
-    di.registerDependency<EditWeekplanBloc>((_) => EditWeekplanBloc(api));
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<WeekplansBloc>((_) => WeekplansBloc(api));
+    di.registerDependency<CopyWeekplanBloc>(() => bloc);
+    di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+    di.registerDependency<ToolbarBloc>(() => toolbarBloc);
+    di.registerDependency<EditWeekplanBloc>(() => EditWeekplanBloc(api));
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<WeekplansBloc>(() => WeekplansBloc(api));
   });
 
   testWidgets('Renders CopyToCitizenScreen', (WidgetTester tester) async {
