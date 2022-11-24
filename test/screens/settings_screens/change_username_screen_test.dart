@@ -5,10 +5,10 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -16,7 +16,6 @@ import 'package:weekplanner/di.dart';
 import 'package:weekplanner/screens/settings_screens/change_username_screen.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/giraf_title_header.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
 
 SettingsModel mockSettings;
 
@@ -92,12 +91,12 @@ void main() {
    api = Api('any');
    api.user = MockUserApi();
 
-   di.registerDependency<AuthBloc>((_) => MockAuthBloc());
-   di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+   di.registerDependency<AuthBloc>(() => MockAuthBloc());
+   di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
    settingsBloc = SettingsBloc(api);
    settingsBloc.loadSettings(user);
-   di.registerDependency<SettingsBloc>((_) => settingsBloc);
-   di.registerDependency<Api>((_) => api);
+   di.registerDependency<SettingsBloc>(() => settingsBloc);
+   di.registerDependency<Api>(() => api);
   });
 
   testWidgets('Checks if text is present', (WidgetTester tester) async {

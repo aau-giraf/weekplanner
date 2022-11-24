@@ -35,7 +35,7 @@ class ChangePasswordScreen extends StatelessWidget {
   /// authbloc
   final AuthBloc authBloc = di.get<AuthBloc>();
   final Api _api = di.get<Api>();
-
+  
   /// used for popping the dialog
   BuildContext currentContext;
   bool loginStatus = false; //ignore: public_member_api_docs

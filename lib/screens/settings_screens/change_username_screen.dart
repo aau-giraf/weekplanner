@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/giraf_user_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';

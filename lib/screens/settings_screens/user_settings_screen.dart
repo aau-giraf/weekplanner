@@ -12,11 +12,10 @@ import 'package:weekplanner/widgets/settings_widgets/'
 import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_item.dart';
 import '../../di.dart';
-import '../../widgets/settings_widgets/settings_section_arrow_button.dart';
 
 /// Shows all the Guardian and Trustee users settings, and lets them change them
 class UserSettingsScreen extends StatelessWidget {
-  final ChooseCitizenBloc _cBloc = di.getDependency<ChooseCitizenBloc>();
+  final ChooseCitizenBloc _cBloc = di.get<ChooseCitizenBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +45,10 @@ class UserSettingsScreen extends StatelessWidget {
                 snapshot.data.username + ' - skift personlig information',
                 <SettingsSectionItem>[
                   SettingsArrowButton('Skift brugernavn', () {
-                    Routes.push(context, ChangeUsernameScreen(user));
+                    Routes().push(context, ChangeUsernameScreen(user));
                   }),
                   SettingsArrowButton('Skift kodeord', () {
-                    Routes.push(context, ChangePasswordScreen(user));
+                    Routes().push(context, ChangePasswordScreen(user));
                   }),
                 ]);
           } else {

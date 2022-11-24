@@ -20,13 +20,9 @@ class NumberOfDaysScreen extends StatelessWidget {
   }
 
   final DisplayNameModel _user;
-<<<<<<< HEAD
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
-  //Dette er en kommentar:)
-=======
+
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
->>>>>>> develop
   @override
   Widget build(BuildContext context) {
     return Scaffold(
