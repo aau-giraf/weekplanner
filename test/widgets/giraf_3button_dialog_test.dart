@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/routes.dart';
-import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
+import 'package:weekplanner/widgets/giraf_3button_dialog.dart';
 
 class MockScreen extends StatelessWidget {
   @override
@@ -32,12 +32,12 @@ class MockScreen extends StatelessWidget {
             option1Text: 'testOpt1',
             option1Icon: const ImageIcon(null),
             option1OnPressed: () {
-              Routes().pop(context);
+              Routes.pop(context);
             },
             option2Text: 'testOpt2',
             option2Icon: const ImageIcon(null),
             option2OnPressed: () {
-              Routes().pop(context);
+              Routes.pop(context);
             });
         });
   }

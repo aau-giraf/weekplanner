@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/week_api.dart';
@@ -8,9 +7,9 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/activity_state_enum.dart';
 import 'package:api_client/models/timer_model.dart';
 import 'package:async_test/async_test.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
@@ -41,7 +40,7 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
 
     di.clearAll();
-    di.registerDependency<TimerBloc>(() => timerMock);
+    di.registerDependency<TimerBloc>((_) => timerMock);
   });
 
   tearDown(() {

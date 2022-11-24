@@ -77,11 +77,11 @@ void main() {
     api.user = MockUserApi();
     settingsBloc = SettingsBloc(api);
     activityBloc = ActivityBloc(api);
-    di.registerDependency<SettingsBloc>(() => settingsBloc);
-    di.registerDependency<ActivityBloc>(() => activityBloc);
+    di.registerDependency<SettingsBloc>((_) => settingsBloc);
+    di.registerDependency<ActivityBloc>((_) => activityBloc);
 
     authBloc = AuthBloc(api);
-    di.registerDependency<AuthBloc>(() => authBloc);
+    di.registerDependency<AuthBloc>((_) => authBloc);
   });
 
   testWidgets('Pictogram text is not displayed when false and in Citizen mode',

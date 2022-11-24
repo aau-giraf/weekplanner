@@ -6,7 +6,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 class WeekplanColorTheme {
 
   /// Standard color setting
-  List<WeekdayColorModel> standardColorSetting() {
+  static List<WeekdayColorModel> standardColorSetting() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
     weekDayColors.add(WeekdayColorModel(
         hexColor: '#08A045',
@@ -41,7 +41,7 @@ class WeekplanColorTheme {
   }
 
   /// Standard blue white color setting
-  List<WeekdayColorModel> blueWhiteColorSetting() {
+  static List<WeekdayColorModel> blueWhiteColorSetting() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
     weekDayColors.add(WeekdayColorModel(
         hexColor: '#2196F3',
@@ -76,7 +76,7 @@ class WeekplanColorTheme {
   }
 
   /// Standard grey white color setting
-  List<WeekdayColorModel> greyWhiteColorSetting() {
+  static List<WeekdayColorModel> greyWhiteColorSetting() {
     final List<WeekdayColorModel> weekDayColors = <WeekdayColorModel>[];
     weekDayColors.add(WeekdayColorModel(
         hexColor: '#9E9E9E',

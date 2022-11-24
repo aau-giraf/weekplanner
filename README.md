@@ -1,5 +1,5 @@
 # Weekplanner
-This repository contains the frontend part of the weekplanner-app, which communicates with the api-client-repository to communicate with the backend (web-api-repository). 
+This repository contains the frontend part of the weekplanner-app, which communicates with uses the api-client-repository to communicate with the backend (web-api-repository). 
 
 The frontend uses the Flutter framework to maintain the UI, it is currently running on Flutter version 2.0.5. The language used in this repository is Dart, which is the language the Flutter framework uses.
 

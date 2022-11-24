@@ -1,5 +1,6 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/settings_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/di.dart';
@@ -17,7 +18,7 @@ class ColorThemeSelectorScreen extends StatelessWidget {
     _settingsBloc.loadSettings(_user);
   }
 
-  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
   final DisplayNameModel _user;
 
   @override
@@ -51,23 +52,23 @@ class ColorThemeSelectorScreen extends StatelessWidget {
     final List<SettingsSectionItem> settingsList = <SettingsSectionItem>[];
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
-        WeekplanColorTheme().standardColorSetting(),
+        WeekplanColorTheme.standardColorSetting(),
         _settingsModel.weekDayColors,
         'Standard', () {
-          Routes().pop(context, WeekplanColorTheme().standardColorSetting());
+          Routes.pop(context, WeekplanColorTheme.standardColorSetting());
     }));
 
     settingsList.add(SettingsColorThemeCheckMarkButton(
-        WeekplanColorTheme().blueWhiteColorSetting(),
+        WeekplanColorTheme.blueWhiteColorSetting(),
         _settingsModel.weekDayColors,
         'Blå/Hvid', () {
-      Routes().pop(context, WeekplanColorTheme().blueWhiteColorSetting());
+      Routes.pop(context, WeekplanColorTheme.blueWhiteColorSetting());
     }));
     settingsList.add(SettingsColorThemeCheckMarkButton(
-        WeekplanColorTheme().greyWhiteColorSetting(),
+        WeekplanColorTheme.greyWhiteColorSetting(),
         _settingsModel.weekDayColors,
         'Grå/Hvid', () {
-      Routes().pop(context, WeekplanColorTheme().greyWhiteColorSetting());
+      Routes.pop(context, WeekplanColorTheme.greyWhiteColorSetting());
     }));
 
     return settingsList;

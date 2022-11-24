@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/take_image_with_camera_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
@@ -19,7 +20,7 @@ class TakePictureWithCamera extends StatelessWidget {
   TakePictureWithCamera({Key key}) : super(key: key);
 
   final TakePictureWithCameraBloc _takePictureWithCamera =
-  di.get<TakePictureWithCameraBloc>();
+  di.getDependency<TakePictureWithCameraBloc>();
 
   final BorderRadius _imageBorder = BorderRadius.circular(25);
   ///height of screen
@@ -89,7 +90,7 @@ class TakePictureWithCamera extends StatelessWidget {
             onPressed: () {
               _takePictureWithCamera.createPictogram().listen((PictogramModel p)
               {
-                Routes().pop(context, p);
+                Routes.pop(context, p);
               }, onError: (Object error) {
                 _showUploadError(context);
               });
@@ -105,7 +106,7 @@ class TakePictureWithCamera extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Container(
-          child: TextButton(
+          child: FlatButton(
             onPressed: _takePictureWithCamera.takePictureWithCamera,
             child: StreamBuilder<File>(
                 stream: _takePictureWithCamera.file,

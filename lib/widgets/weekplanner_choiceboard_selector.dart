@@ -3,9 +3,10 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
-import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -31,7 +32,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
   /// The settings bloc which we get the settings from, you need to make sure
   /// you have loaded settings into it before hand otherwise text is never build
-  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
                         child: GirafButton(
                           key: const Key('ChoiceBoardDialogCancelButton'),
-                          onPressed: () => Routes().pop(context),
+                          onPressed: () => Routes.pop(context),
                           icon: const ImageIcon(
                               AssetImage('assets/icons/cancel.png')),
                         )),
@@ -78,7 +79,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
   }
 
   Widget _getPictogram(PictogramModel pictogram) {
-    final PictogramImageBloc bloc = di.get<PictogramImageBloc>();
+    final PictogramImageBloc bloc = di.getDependency<PictogramImageBloc>();
     bloc.loadPictogramById(pictogram.id);
     return StreamBuilder<Image>(
       stream: bloc.image,
@@ -131,7 +132,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
                    _selectPictogramFromChoiceBoardPopup(context,
                      pictograms, index)
                        .then((_) {
-                   Routes().pop(context);
+                   Routes.pop(context);
                  });
                  }
                  else{
@@ -188,7 +189,7 @@ class WeekplannerChoiceboardSelector extends StatelessWidget {
 
       _activityBloc.update();
       _activityBloc.activityModelStream.skip(1).take(1).listen((_) {
-        Routes().pop(context);
+        Routes.pop(context);
       });
       //Closes the dialog box
     }

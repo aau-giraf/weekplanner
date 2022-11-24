@@ -10,18 +10,16 @@ class MockScreen extends StatelessWidget {
       body: Container(
           child: Column(
         children: <Widget>[
-          ElevatedButton(
+          RaisedButton(
               key: const Key('FirstButton'),
               onPressed: () {
                 loadingSpinner(context);
-              },
-              child: const Text('')),
-          ElevatedButton(
+              }),
+          RaisedButton(
               key: const Key('SecondButton'),
               onPressed: () {
-                Routes().pop(context);
-              },
-              child: const Text('')),
+                Routes.pop(context);
+              }),
         ],
       )),
     );
@@ -47,8 +45,7 @@ void main() {
     await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     await tester.pump();
-    await tester.tap(find.byKey(const Key('SecondButton')),
-        warnIfMissed: false);
+    await tester.tap(find.byKey(const Key('SecondButton')));
     await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });

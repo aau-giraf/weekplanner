@@ -21,10 +21,10 @@ class PictogramText extends StatelessWidget {
 
   /// The settings bloc which we get the settings from, you need to make sure
   /// you have loaded settings into it before hand otherwise text is never build
-  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   /// The authentication bloc that we get the current mode from (guardian/citizen)
-  final AuthBloc _authBloc = di.get<AuthBloc>();
+  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
 
   /// Determines the minimum font size that text can scale down to
   final double minFontSize;

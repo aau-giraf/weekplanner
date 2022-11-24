@@ -214,7 +214,7 @@ class NewWeekplanBloc extends BlocBase {
                 const ImageIcon(AssetImage('assets/icons/accept.png')),
             confirmOnPressed: () {
               dialogCompleter.complete(true);
-              Routes().pop(context);
+              Routes.pop(context);
             },
             cancelOnPressed: () {
               dialogCompleter.complete(false);

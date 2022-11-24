@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../style/custom_color.dart' as theme;
@@ -21,8 +20,7 @@ class GirafButton extends StatefulWidget {
     this.height = 40.0,
     @required this.onPressed,
     this.isEnabled = true,
-    // ignore: avoid_unused_constructor_parameters
-    this.isEnabledStream, StreamBuilder<File> child,
+    this.isEnabledStream,
   }) : super(key: key);
 
   /// The text placed at the center of the button.

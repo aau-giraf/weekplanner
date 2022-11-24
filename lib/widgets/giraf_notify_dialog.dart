@@ -65,7 +65,7 @@ class GirafNotifyDialog extends StatelessWidget implements PreferredSizeWidget {
                     icon: const ImageIcon(
                       AssetImage('assets/icons/accept.png'),
                       color: theme.GirafColors.transparentBlack,),
-                    onPressed: (){Routes().pop(context);},
+                    onPressed: (){Routes.pop(context);},
                   )
                 ],
               )

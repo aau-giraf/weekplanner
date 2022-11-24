@@ -24,7 +24,7 @@ class GirafCopyActivitiesDialog extends StatelessWidget {
 
   /// Bloc to keep track of which checkboxes are marked
   final CopyActivitiesBloc copyActivitiesBloc =
-      di.get<CopyActivitiesBloc>();
+      di.getDependency<CopyActivitiesBloc>();
 
   /// title of the [dialogBox], displayed in the header of the [dialogBox]
   final String title;

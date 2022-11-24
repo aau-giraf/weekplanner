@@ -6,11 +6,11 @@ import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/week_model.dart';
 import 'package:api_client/models/week_name_model.dart';
 import 'package:async_test/async_test.dart';
-import 'package:csv/csv.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
+import 'package:flutter_test/flutter_test.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
+import 'package:csv/csv.dart';
 
 class MockWeekApi extends Mock implements WeekApi {}
 
@@ -452,7 +452,7 @@ void main() {
           fieldDelimiter: ',', textDelimiter: '"',
           textEndDelimiter: '"', eol: ';');
 
-      final List<List<dynamic>> datesAndWeeks = converter.convert<dynamic>(csv);
+      final List<List<dynamic>> datesAndWeeks = converter.convert(csv);
 
       for (int i = 0; i < datesAndWeeks.length; i++) {
 

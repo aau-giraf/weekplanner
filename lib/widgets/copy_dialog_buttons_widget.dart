@@ -42,7 +42,7 @@ class CopyDialogButtons extends StatelessWidget {
                 text: 'Fortryd',
                 icon: const ImageIcon(AssetImage('assets/icons/cancel.png')),
                 onPressed: () {
-                  Routes().pop(context);
+                  Routes.pop(context);
                 },
               ),
             ),

@@ -18,7 +18,7 @@ class ChoiceBoardPart extends StatelessWidget {
   }
 
   final PictogramImageBloc _pictogramImageBloc =
-      di.get<PictogramImageBloc>();
+      di.getDependency<PictogramImageBloc>();
 
   final PictogramModel _pictogramModel;
 

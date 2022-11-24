@@ -20,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 /// This is the login state
 class LoginScreenState extends State<LoginScreen> {
   /// AuthBloC used to communicate with API
-  final AuthBloc authBloc = di.get<AuthBloc>();
+  final AuthBloc authBloc = di.getDependency<AuthBloc>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -41,39 +41,40 @@ class LoginScreenState extends State<LoginScreen> {
     showLoadingSpinner(context, true);
     currentContext = context;
     loginStatus = false;
-    authBloc
-        .authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
-        .then((dynamic result) {
+    authBloc.authenticate(usernameCtrl.value.text, passwordCtrl.value.text)
+      .then((dynamic result) {
       StreamSubscription<bool> loginListener;
-      loginListener = authBloc.loggedIn.listen((bool snapshot) {
-        loginStatus = snapshot;
-        // Return if logging out
-        if (snapshot) {
-          // Pop the loading spinner
-          Routes().pop(context);
-        }
-        // Stop listening for future logins
-        loginListener.cancel();
-      });
+         loginListener = authBloc.loggedIn.listen((bool snapshot) {
+          loginStatus = snapshot;
+          // Return if logging out
+          if (snapshot) {
+            // Pop the loading spinner
+            Routes.pop(context);
+          }
+          // Stop listening for future logins
+          loginListener.cancel();
+         });
     }).catchError((Object error) {
-      if (error is ApiException) {
+      if(error is ApiException){
         creatingNotifyDialog('Forkert brugernavn og/eller adgangskode.',
             error.errorKey.toString());
-      } else if (error is SocketException) {
+      }
+      else if(error is SocketException){
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
           if (hasInternetConnection) {
             // Checking server connection, if true check username/password
             authBloc.getApiConnection().then((bool hasServerConnection) {
               if (hasServerConnection) {
                 unknownErrorDialog(error.message);
-              } else {
+              }
+              else{
                 creatingNotifyDialog(
                     'Der er i øjeblikket'
                         ' ikke forbindelse til serveren.',
                     'ServerConnectionError');
               }
-            }).catchError((Object error) {
-              unknownErrorDialog(error.toString());
+            }).catchError((Object error){
+             unknownErrorDialog(error.toString());
             });
           } else {
             creatingNotifyDialog(
@@ -82,17 +83,17 @@ class LoginScreenState extends State<LoginScreen> {
                 'NoConnectionToInternet');
           }
         });
-      } else {
+      }
+      else {
         unknownErrorDialog('UnknownError');
       }
     });
   }
-
   /// Function that creates the notify dialog,
   /// depeninding which login error occured
   void creatingNotifyDialog(String description, String key) {
     /// Remove the loading spinner
-    Routes().pop(currentContext);
+    Routes.pop(currentContext);
 
     /// Show the new NotifyDialog
     showDialog<Center>(
@@ -103,13 +104,10 @@ class LoginScreenState extends State<LoginScreen> {
               title: 'Fejl', description: description, key: Key(key));
         });
   }
-
   /// Create an unknown error dialog
-  void unknownErrorDialog(String key) {
-    creatingNotifyDialog(
-        'Der skete en ukendt fejl, prøv igen eller '
-            'kontakt en administrator',
-        'key');
+  void unknownErrorDialog(String key){
+    creatingNotifyDialog('Der skete en ukendt fejl, prøv igen eller '
+        'kontakt en administrator', 'key');
   }
 
   @override
@@ -121,14 +119,8 @@ class LoginScreenState extends State<LoginScreen> {
     ///Used to check if the keyboard is visible
     final bool keyboard = MediaQuery.of(context).viewInsets.bottom > 0;
 
-    final ButtonStyle girafButtonStyle = ElevatedButton.styleFrom(
-      backgroundColor: theme.GirafColors.loginButtonColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ),
-    );
-
     return Scaffold(
+    
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
@@ -207,9 +199,10 @@ class LoginScreenState extends State<LoginScreen> {
                       child: Container(
                         child: Transform.scale(
                           scale: 1.5,
-                          child: ElevatedButton(
+                          child: RaisedButton(
                             key: const Key('LoginBtnKey'),
-                            style: girafButtonStyle,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
                             child: const Text(
                               'Login',
                               style: TextStyle(color: theme.GirafColors.white),
@@ -217,6 +210,7 @@ class LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               loginAction(context);
                             },
+                            color: theme.GirafColors.loginButtonColor,
                           ),
                         ),
                       ),
@@ -226,8 +220,9 @@ class LoginScreenState extends State<LoginScreen> {
                         ? Container(
                             child: Transform.scale(
                               scale: 1.2,
-                              child: ElevatedButton(
-                                style: girafButtonStyle,
+                              child: RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
                                 child: const Text(
                                   'Auto-Login',
                                   key: Key('AutoLoginKey'),
@@ -241,6 +236,7 @@ class LoginScreenState extends State<LoginScreen> {
                                       environment.getVar<String>('PASSWORD');
                                   loginAction(context);
                                 },
+                                color: theme.GirafColors.loginButtonColor,
                               ),
                             ),
                           )
@@ -266,4 +262,5 @@ class LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.only(bottom: 10),
     );
   }
+
 }

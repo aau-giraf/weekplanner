@@ -1,9 +1,10 @@
-import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
+import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/settings_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
@@ -22,7 +23,7 @@ class CompletedActivityIconScreen extends StatelessWidget {
   }
 
   final DisplayNameModel _user;
-  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +45,19 @@ class CompletedActivityIconScreen extends StatelessWidget {
                           0,
                           _settingsModel.completeMark,
                           'Fjern aktiviteten for borgeren', () {
-                              Routes().pop(context, CompleteMark.Removed);
+                              Routes.pop(context, CompleteMark.Removed);
                           }),
                       SettingsCheckMarkButton(
                           1,
                           _settingsModel.completeMark,
                           'Flueben', () {
-                        Routes().pop(context, CompleteMark.Checkmark);
+                        Routes.pop(context, CompleteMark.Checkmark);
                       }),
                       SettingsCheckMarkButton(
                           2,
                           _settingsModel.completeMark,
                           'Lav aktiviteten grå', () {
-                        Routes().pop(context, CompleteMark.MovedRight);
+                        Routes.pop(context, CompleteMark.MovedRight);
                       }),
                     ]),
                   ],

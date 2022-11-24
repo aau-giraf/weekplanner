@@ -130,7 +130,7 @@ class Giraf3ButtonDialog extends StatelessWidget {
                           cancelOnPressed();
                         }
 
-                        Routes().pop(context);
+                        Routes.pop(context);
                       }),
                 ),
               ],

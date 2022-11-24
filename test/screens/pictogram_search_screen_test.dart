@@ -1,8 +1,5 @@
 import 'dart:async';
-
-import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/pictogram_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -14,11 +11,12 @@ import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:api_client/models/pictogram_model.dart';
+import 'package:api_client/api/api.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/pictogram_image.dart';
-
 import '../blocs/pictogram_bloc_test.dart';
 import '../test_image.dart';
 
@@ -52,11 +50,11 @@ void main() {
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
-    di.registerDependency<PictogramBloc>(() => bloc);
-    di.registerDependency<AuthBloc>(() => AuthBloc(api));
-    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
-    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
-    di.registerDependency<NewCitizenBloc>(() => NewCitizenBloc(api));
+    di.registerDependency<PictogramBloc>((_) => bloc);
+    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
+    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
+    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
+    di.registerDependency<NewCitizenBloc>((_) => NewCitizenBloc(api));
   });
 
   testWidgets('Camera button shows', (WidgetTester tester) async {

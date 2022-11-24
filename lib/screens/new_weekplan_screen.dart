@@ -16,7 +16,7 @@ class NewWeekplanScreen extends StatelessWidget {
   NewWeekplanScreen({
     @required DisplayNameModel user,
     @required this.existingWeekPlans,
-  }) : _bloc = di.get<NewWeekplanBloc>() {
+  }) : _bloc = di.getDependency<NewWeekplanBloc>() {
     _bloc.initialize(user);
   }
 
@@ -38,7 +38,7 @@ class NewWeekplanScreen extends StatelessWidget {
           existingWeekPlans: existingWeekPlans,
         );
         if (newWeekPlan != null) {
-          Routes().pop<WeekModel>(context, newWeekPlan);
+          Routes.pop<WeekModel>(context, newWeekPlan);
         }
       },
     );

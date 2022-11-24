@@ -71,7 +71,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(10, 0, 5, 10),
                       child: GirafButton(
                         key: const Key('TimePickerDialogCancelButton'),
-                        onPressed: () => Routes().pop(context),
+                        onPressed: () => Routes.pop(context),
                         icon: const ImageIcon(
                             AssetImage('assets/icons/cancel.png')),
                       )),
@@ -149,7 +149,7 @@ class GirafActivityTimerPickerDialog extends StatelessWidget {
 
     if (duration.inSeconds != 0 && hours >= 0 && minutes >= 0 && seconds >= 0) {
       _timerBloc.addTimer(duration);
-      Routes().pop(context);
+      Routes.pop(context);
     } else {
       showDialog<Center>(
           context: context,
