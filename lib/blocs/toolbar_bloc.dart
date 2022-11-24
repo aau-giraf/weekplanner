@@ -1,8 +1,4 @@
 import 'dart:async';
-import 'package:api_client/api/api.dart';
-import 'package:api_client/models/displayname_model.dart';
-import 'package:api_client/models/enums/role_enum.dart';
-import 'package:api_client/models/giraf_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
@@ -30,10 +26,6 @@ class ToolbarBloc extends BlocBase {
   Stream<List<IconButton>> get visibleButtons => _visibleButtons.stream;
 
   final AuthBloc _authBloc = di.get<AuthBloc>();
-  final Api _api = di.get<Api>();
-
-  /// Store guardian user name related to logged in user.
-  String _userNameOfGuardian;
 
   //// Based on a list of the enum AppBarIcon this method populates a list of IconButtons to render in the nav-bar
   void updateIcons(Map<AppBarIcon, VoidCallback> icons, BuildContext context) {
@@ -81,7 +73,6 @@ class ToolbarBloc extends BlocBase {
         _iconsToAdd.add(_createIconChangeToCitizen(context));
         break;
       case AppBarIcon.changeToGuardian:
-        await _setUserNameOfGuardian();
         _iconsToAdd.add(_createIconChangeToGuardian(context));
         break;
       case AppBarIcon.copy:
@@ -233,9 +224,11 @@ class ToolbarBloc extends BlocBase {
 
   /// Return the dialog of the popup.
   Alert createPopupDialog(BuildContext context){
-    /// Password controller for passing information from a text field
+    /// UserName/Password controller for passing information from a text field
     /// to the authenticator.
+    final TextEditingController userNameCtrl = TextEditingController();
     final TextEditingController passwordCtrl = TextEditingController();
+
     return Alert(
         context: context,
         style: _alertStyle,
@@ -244,15 +237,19 @@ class ToolbarBloc extends BlocBase {
           children: <Widget>[
             RichText(
               text: TextSpan(
-                text: 'Logget ind som ',
+                text: 'Log ind som værger',
                 style: DefaultTextStyle
                     .of(context)
                     .style,
-                children: <TextSpan>[
-                  TextSpan(
-                      text: _userNameOfGuardian,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
+              ),
+            ),
+            TextField(
+              key: const Key('SwitchToGuardianUserName'),
+              controller: userNameCtrl,
+              obscureText: true,
+              decoration: const InputDecoration(
+                icon: Icon(Icons.lock),
+                labelText: 'Bruger navn',
               ),
             ),
             TextField(
@@ -275,7 +272,7 @@ class ToolbarBloc extends BlocBase {
                 ? () {
               if (_clickable) {
                 _clickable = false;
-                loginFromPopUp(context, _userNameOfGuardian,
+                loginFromPopUp(context, userNameCtrl.value.text,
                     passwordCtrl.value.text);
                 // Timer makes it clicable again after 2 seconds.
                 Timer(const Duration(milliseconds: 2000), () {
@@ -292,40 +289,6 @@ class ToolbarBloc extends BlocBase {
             color: theme.GirafColors.dialogButton,
           )
         ]);
-  }
-
-  /// Set user name of the guardian that is related to logged in user
-  Future<void> _setUserNameOfGuardian() async {
-    final Completer<void> completer = Completer<void>();
-
-    if (_authBloc.loggedInUser?.role != null) {
-      switch (_authBloc.loggedInUser.role) {
-        case Role.Citizen:
-          // Get guardians for logged in citizen
-          _api.user.getGuardians(_authBloc.loggedInUser.id)
-            .listen((List<DisplayNameModel> event) {
-              // DisplayNameModel does not have userName, only displayName
-              // Therefore use id to set userName of guardian
-              _api.user.get(event.first.id).listen((GirafUserModel event) {
-                _userNameOfGuardian = event.username;  
-              }).onError((Object error) {
-                completer.completeError(error);
-              });
-          }).onError((Object error) {
-            completer.completeError(error);
-          });
-          break;
-        case Role.Guardian:
-          _userNameOfGuardian = _authBloc.loggedInUser.username;
-          break;
-        default:
-          break;
-      }
-    }
-
-    completer.complete();
-    Future.wait(<Future<void>>[completer.future]);
-    return completer.future;
   }
 
   IconButton _createIconCopy(VoidCallback callback) {

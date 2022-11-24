@@ -137,6 +137,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
                     return Icon(
                       Icons.person_add,
                       size: constraints.biggest.height,
+                      color: Colors.black,
                     );
                   }),
                 ),
