@@ -104,10 +104,6 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     /// Defines variables needed to check user role
     final Role role = _authBloc.loggedInUser?.role;
 
-    final ButtonStyle brugerStyle = TextButton.styleFrom(
-      foregroundColor: Colors.black
-    );
-
     if (role != null) {
       /// Checks user role and gives option to add Citizen if user is Guardian
       if (role == Role.Guardian) {

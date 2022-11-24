@@ -46,7 +46,7 @@ class ToolbarBloc extends BlocBase {
 
   /// Find the icon picture based on the input enum
   void _addIconButton(List<IconButton> _iconsToAdd, AppBarIcon icon,
-      VoidCallback callback, BuildContext context) async {
+      VoidCallback callback, BuildContext context) {
     switch (icon) {
       case AppBarIcon.accept:
         _iconsToAdd.add(_createIconAccept(callback));
