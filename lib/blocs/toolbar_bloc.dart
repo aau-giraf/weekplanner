@@ -246,10 +246,10 @@ class ToolbarBloc extends BlocBase {
             TextField(
               key: const Key('SwitchToGuardianUserName'),
               controller: userNameCtrl,
-              obscureText: true,
+              obscureText: false,
               decoration: const InputDecoration(
-                icon: Icon(Icons.lock),
-                labelText: 'Bruger navn',
+                icon: Icon(Icons.person),
+                labelText: 'Brugernavn',
               ),
             ),
             TextField(
