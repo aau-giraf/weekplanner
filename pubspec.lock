@@ -30,7 +30,11 @@ packages:
       name: archive
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< Updated upstream
     version: "2.0.13"
+=======
+    version: "3.3.5"
+>>>>>>> Stashed changes
   args:
     dependency: transitive
     description:
@@ -390,8 +394,13 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< Updated upstream
     version: "1.8.0"
   path_provider:
+=======
+    version: "2.0.22"
+  path_provider_ios:
+>>>>>>> Stashed changes
     dependency: transitive
     description:
       name: path_provider
