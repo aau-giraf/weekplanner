@@ -87,12 +87,13 @@ class MockData {
         activitiesCount: null,
         theme: GirafTheme.GirafYellow,
         nrOfDaysToDisplay: 7,
+        showPopup: false,
         weekDayColors: _createWeekDayColors(),
         nrOfActivitiesToDisplay: null,
         showOnlyActivities: false,
         showSettingsForCitizen: true,
         lockTimerControl: false,
-        pictogramText: true);
+        pictogramText: false);
   }
 
   List<WeekdayColorModel> _createWeekDayColors() {

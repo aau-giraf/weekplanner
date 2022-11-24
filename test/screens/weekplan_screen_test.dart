@@ -103,7 +103,6 @@ void main() {
         mockActivities[0].isChoiceBoard = true;
         mockActivities[0].pictograms = mockPictograms;
         mockWeek.days[0].activities.add(mockActivities[0]);
-
         await tester.pumpWidget(MaterialApp(
             home: WeekplanScreen(mockWeek, user)));
         await tester.pumpAndSettle();
