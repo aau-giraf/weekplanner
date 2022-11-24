@@ -1,11 +1,6 @@
-import 'package:api_client/models/enums/access_level_enum.dart';
-import 'package:rxdart/rxdart.dart' as rx_dart;
-import 'package:flutter_test/flutter_test.dart';
-import 'package:weekplanner/blocs/pictogram_bloc.dart';
-import 'package:api_client/models/pictogram_model.dart';
-import 'package:mockito/mockito.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
+import 'package:api_client/models/enums/access_level_enum.dart';
 import 'package:api_client/models/pictogram_model.dart';
 import 'package:async_test/async_test.dart';
 import 'package:flutter_test/flutter_test.dart';
