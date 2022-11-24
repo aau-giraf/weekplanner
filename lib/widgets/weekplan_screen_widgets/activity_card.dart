@@ -271,7 +271,7 @@ class ActivityCard extends StatelessWidget {
           );
           break;
         case ActivityState.Active:
-          if(role == WeekplanMode.guardian || role == WeekplanMode.trustee){
+          if (role == WeekplanMode.guardian || role == WeekplanMode.trustee) {
             return Icon(
               Icons.brightness_1_outlined,
               key: const Key('IconActive'),
@@ -279,16 +279,15 @@ class ActivityCard extends StatelessWidget {
               size: MediaQuery.of(context).size.width,
             );
           }
-          if(role == WeekplanMode.citizen
-              && settings.nrOfActivitiesToDisplay > 1){
+          if (role == WeekplanMode.citizen &&
+              settings.nrOfActivitiesToDisplay > 1) {
             return Icon(
               Icons.brightness_1_outlined,
               key: const Key('IconActive'),
               color: theme.GirafColors.amber,
               size: MediaQuery.of(context).size.width,
             );
-          }
-          else{
+          } else {
             return Container(
               width: 0,
               height: 0,
@@ -356,10 +355,12 @@ class ActivityCard extends StatelessWidget {
     return Container(
         width: 400,
         height: 400,
-        child: CitizenAvatar(
-          displaynameModel: _user,
-          hideName: true,
-        )
-    );
+        child: Container(
+          child: const CircleAvatar(
+              key: Key('PlaceholderAvatar'),
+              radius: 20,
+              backgroundImage:
+                  AssetImage('assets/login_screen_background_image.png')),
+        ));
   }
 }
