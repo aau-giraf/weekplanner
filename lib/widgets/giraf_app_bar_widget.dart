@@ -8,15 +8,13 @@ import 'package:weekplanner/widgets/giraf_title_header.dart';
 /// Toolbar of the application.
 class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Toolbar of the application.
-  GirafAppBar({Key key, this.title, this.appBarIcons, this.isGuardian = true})
+  GirafAppBar({Key key, this.title, this.appBarIcons})
       : toolbarBloc = di.get<ToolbarBloc>(),
         preferredSize = const Size.fromHeight(56.0),
         super(key: key);
 
   /// Used to store the title of the toolbar.
   final String title;
-  /// Used to decide if there should be a back button on the AppBar
-  final bool isGuardian;
 
   /// Used to store the icons that should be displayed in the appbar.
   final Map<AppBarIcon, VoidCallback> appBarIcons;
@@ -48,7 +46,6 @@ class GirafAppBar extends StatelessWidget implements PreferredSizeWidget {
                 );
               }),
         ],
-        automaticallyImplyLeading: isGuardian,
     );
   }
 }
