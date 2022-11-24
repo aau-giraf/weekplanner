@@ -90,7 +90,7 @@ void main() {
   });
 
   testWidgets('Has add citizen button', (WidgetTester tester) async {
-    final Role role = authBloc.loggedInUser.role;
+    final Role role = authBloc.loggedInUser?.role;
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
     if(role == Role.Guardian) {
