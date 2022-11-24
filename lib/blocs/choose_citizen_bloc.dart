@@ -15,8 +15,6 @@ class ChooseCitizenBloc extends BlocBase {
   /// The stream holding the citizens
   Stream<List<DisplayNameModel>> get citizen => _citizens.stream;
 
-  //Stream<GirafUserModel> get guardian => _currentUser.stream;
-
   /// Update the block with current users
   void updateBloc() {
     _api.user.me().flatMap((GirafUserModel user) {
