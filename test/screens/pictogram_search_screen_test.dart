@@ -52,12 +52,12 @@ void main() {
         .thenAnswer((_) => rx_dart.BehaviorSubject<Image>.seeded(sampleImage));
 
     di.clearAll();
-    di.registerDependency<PictogramBloc>((_) => bloc);
-    di.registerDependency<Api>((_) => api);
-    di.registerDependency<AuthBloc>((_) => AuthBloc(api));
-    di.registerDependency<PictogramImageBloc>((_) => PictogramImageBloc(api));
-    di.registerDependency<ToolbarBloc>((_) => ToolbarBloc());
-    di.registerDependency<NewCitizenBloc>((_) => NewCitizenBloc(api));
+    di.registerDependency<PictogramBloc>(() => bloc);
+    di.registerDependency<Api>(() => api);
+    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
+    di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
+    di.registerDependency<NewCitizenBloc>(() => NewCitizenBloc(api));
   });
 
   testWidgets('Camera button shows', (WidgetTester tester) async {
