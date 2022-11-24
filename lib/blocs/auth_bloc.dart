@@ -1,10 +1,11 @@
 import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
 
 /// All about Authentication. Login, logout, etc.
 class AuthBloc extends BlocBase {
@@ -12,9 +13,14 @@ class AuthBloc extends BlocBase {
   AuthBloc(this._api);
 
   /// String is used then changing from citizen to guardian mode
-  /// the username is saved so only the password is needed.
   String loggedInUsername;
+<<<<<<< HEAD
   int loggedInRole; //ignore: public_member_api_docs
+=======
+
+  /// the username is saved so only the password is needed.
+  int loggedInRole;
+>>>>>>> develop
 
   final Api _api;
 

@@ -12,9 +12,9 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/new_citizen_screen.dart';
 import 'package:weekplanner/screens/settings_screens/user_settings_screen.dart';
 import 'package:weekplanner/screens/weekplan_selector_screen.dart';
+import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
-import 'package:weekplanner/style/font_size.dart';
 
 /// The screen to choose a citizen
 class ChooseCitizenScreen extends StatefulWidget {
@@ -27,8 +27,8 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
 
 
 
-  final ChooseCitizenBloc _bloc = di.getDependency<ChooseCitizenBloc>();
-  final AuthBloc _authBloc = di.getDependency<AuthBloc>();
+  final ChooseCitizenBloc _bloc = di.get<ChooseCitizenBloc>();
+  final AuthBloc _authBloc = di.get<AuthBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +105,22 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     /// Defines variables needed to check user role
     final int role = _authBloc.loggedInRole;
 
+    final ButtonStyle brugerStyle = TextButton.styleFrom(
+      foregroundColor: Colors.black
+    );
+
     /// Checks user role and gives option to add Citizen if user is Guardian
     if (role == Role.Guardian.index) {
+<<<<<<< HEAD
       list.insert(0, MaterialButton(
         onPressed: () async {
+=======
+      list.insert(0, TextButton(
+          style: brugerStyle,
+          onPressed: () async {
+>>>>>>> develop
           final Object result =
-          await Routes.push(context, NewCitizenScreen());
+          await Routes().push(context, NewCitizenScreen());
           final DisplayNameModel newUser =
           DisplayNameModel.fromGirafUser(result);
           list.add(CitizenAvatar(
@@ -167,7 +177,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
   Future<void> _pushWeekplanSelector(DisplayNameModel user) async{
     bool repush = true;
     while (repush) {
-      final bool result = await Routes.push<bool>(context,
+      final bool result = await Routes().push<bool>(context,
           WeekplanSelectorScreen(user));
       repush = result?? false;
     }

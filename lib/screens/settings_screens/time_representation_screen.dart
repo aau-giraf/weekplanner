@@ -1,7 +1,6 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
 import 'package:api_client/models/settings_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
@@ -20,7 +19,7 @@ class TimeRepresentationScreen extends StatelessWidget {
   }
 
   final DisplayNameModel _user;
-  final SettingsBloc _settingsBloc = di.getDependency<SettingsBloc>();
+  final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +40,18 @@ class TimeRepresentationScreen extends StatelessWidget {
                         'Vælg Tidsrepræsentation', <SettingsSectionItem>[
                       SettingsCheckMarkButton(DefaultTimer.PieChart,
                           _settingsModel.defaultTimer, 'Standard', () {
-                            Routes.pop(context, DefaultTimer.PieChart);
+                            Routes().pop(context, DefaultTimer.PieChart);
                       }, DefaultTimer.PieChart),
                       SettingsCheckMarkButton(DefaultTimer.Hourglass,
                           _settingsModel.defaultTimer, 'Timeglas', () {
-                            Routes.pop(context, DefaultTimer.Hourglass);
+                            Routes().pop(context, DefaultTimer.Hourglass);
                       }, DefaultTimer.Hourglass),
                       SettingsCheckMarkButton(DefaultTimer.Numeric,
                           _settingsModel.defaultTimer, 'Nedtælling', () {
                         _settingsModel.defaultTimer = DefaultTimer.Numeric;
                         _settingsBloc.updateSettings(_user.id, _settingsModel)
                             .listen((_) {
-                          Routes.pop(context, DefaultTimer.Numeric);
+                          Routes().pop(context, DefaultTimer.Numeric);
                         });
                       }, DefaultTimer.Numeric)
                     ]),
