@@ -122,12 +122,13 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
             onPressed: () async {
               final Object result =
                   await Routes().push(context, NewCitizenScreen());
-              final DisplayNameModel newUser =
-                  DisplayNameModel.fromGirafUser(result);
-              list.add(CitizenAvatar(
-                  displaynameModel: newUser,
-                  onPressed: () => _pushWeekplanSelector(newUser)));
-
+              if (result != null) {
+                final DisplayNameModel newUser =
+                    DisplayNameModel.fromGirafUser(result);
+                list.add(CitizenAvatar(
+                    displaynameModel: newUser,
+                    onPressed: () => _pushWeekplanSelector(newUser)));
+              }
               ///Update the screen with the new citizen
               _bloc.updateBloc();
               setState(() {});
