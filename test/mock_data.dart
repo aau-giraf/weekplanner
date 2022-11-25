@@ -90,6 +90,7 @@ class MockData {
         displayDaysRelativePortrait: true,
         nrOfDaysToDisplayLandscape: 7,
         displayDaysRelativeLandscape: false,
+        showOnlyActivities: false,
         weekDayColors: _createWeekDayColors(),
         lockTimerControl: false,
         pictogramText: false);

@@ -19,6 +19,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_activities_column.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../style/custom_color.dart' as theme;
@@ -275,11 +276,6 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-
-
-
-
-
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildRemoveDialog(BuildContext context) {
     return showDialog<Center>(
@@ -324,7 +320,10 @@ class WeekplanScreen extends StatelessWidget {
     final Orientation orientation = MediaQuery.of(context).orientation;
     final int _weekday = DateTime.now().weekday - 1;// monday = 0, sunday = 6
 
-    int _weekdayCounter;
+    final List<Widget> dailyActivities = <Widget>[];
+    final int _weekday = DateTime.now().weekday.toInt();
+    int _weekdayCounter = 0;
+
     return StreamBuilder<WeekplanMode>(
         stream: _authBloc.mode,
         builder: (BuildContext context,
@@ -389,22 +388,45 @@ class WeekplanScreen extends StatelessWidget {
                          */
                       }
                     }
-                  }
-                  // if only 1 day should be displayed,
-                  // add padding to both sides
-                  if (weekDays.length == 1) {
-                    return Row(
-                      key: const Key('SingleWeekdayRow'),
-                      children: <Widget>[
-                        const Spacer(flex: 1),
-                        weekDays.first,
-                        const Spacer(flex: 1),
-                      ],
-                    );
-                  } else {
-                    //otherwise just display the selected days in order
-                    // without padding
-                    return Row(children: weekDays);
+                    if (_settingsModel.showOnlyActivities == false) {
+                      if (weekDays.length == 1) {
+                        return Row(
+                          key: const Key('SingleWeekdayRow'),
+                          children: <Widget>[
+                            const Spacer(flex: 1),
+                            weekDays.first,
+                            const Spacer(flex: 1),
+                          ],
+                        );
+                      } else {
+                        return Row(children: weekDays);
+                      }
+                    } else {
+                      final int today = DateTime.now().weekday-1;
+                      dailyActivities.add(Expanded(
+                        child: WeekplanActivitiesColumn(
+                          dayOfTheWeek: Weekday.values[today],
+                          color: Colors.amber,
+                          weekplanBloc: _weekplanBloc,
+                          user: _user,
+                          streamIndex: today,
+                          activitiesToDisplay: _activitiesToDisplay,
+                        )
+                      )
+                      );
+                      return Row(
+                        key: const Key('SingleWeekdayRow'),
+                        children: <Widget>[
+                          const Spacer(flex: 1),
+                          dailyActivities.first,
+                          const Spacer(flex: 1),
+                        ],
+                      );
+                    }
+                    } else {
+                  return const Center(
+                  child: CircularProgressIndicator(),
+                  );
                   }
                 },
               );
