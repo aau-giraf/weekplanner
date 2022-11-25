@@ -22,21 +22,21 @@ class AuthBloc extends BlocBase {
   Stream<bool> get loggedIn => _loggedIn.stream;
 
   /// Start with providing false as the logged in status
-  final rx_dart.BehaviorSubject<bool> _loggedIn
-  = rx_dart.BehaviorSubject<bool>.seeded(false);
+  final rx_dart.BehaviorSubject<bool> _loggedIn =
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Reflect the current clearence level of the user
   final rx_dart.BehaviorSubject<WeekplanMode> _mode =
-  rx_dart.BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
+      rx_dart.BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
   /// The stream that emits the current clearance level
   Stream<WeekplanMode> get mode => _mode.stream;
 
   /// Stream that streams status of last login attemp from popup.
-  Stream<bool> get loginAttempt =>_loginAttempt.stream;
+  Stream<bool> get loginAttempt => _loginAttempt.stream;
 
   final rx_dart.BehaviorSubject<bool> _loginAttempt =
-  rx_dart.BehaviorSubject<bool>.seeded(false);
+      rx_dart.BehaviorSubject<bool>.seeded(false);
 
   /// Authenticates the user with the given [username] and [password]
   Future<void> authenticate(String username, String password) async {
@@ -66,11 +66,9 @@ class AuthBloc extends BlocBase {
         _api.user.role(username).listen((int role) async {
           if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
-          }
-          else if(role == Role.Trustee.index) {
+          } else if (role == Role.Trustee.index) {
             setMode(WeekplanMode.trustee);
-          }
-          else {
+          } else {
             setMode(WeekplanMode.citizen);
           }
           _loggedIn.add(status);
@@ -80,7 +78,7 @@ class AuthBloc extends BlocBase {
         });
 
       }
-    }).onError((Object error){
+    }).onError((Object error) {
       completer.completeError(error);
     });
 
@@ -102,11 +100,9 @@ class AuthBloc extends BlocBase {
         _api.user.role(username).listen((int role) async {
           if (role == Role.Guardian.index) {
             setMode(WeekplanMode.guardian);
-          }
-          else if(role == Role.Trustee.index) {
+          } else if (role == Role.Trustee.index) {
             setMode(WeekplanMode.trustee);
-          }
-          else {
+          } else {
             setMode(WeekplanMode.citizen);
           }
           _loginAttempt.add(status);
@@ -124,18 +120,19 @@ class AuthBloc extends BlocBase {
   }
 
   ///Checks if theres is a connection to the api server
-  Future<bool> getApiConnection(){
+  Future<bool> getApiConnection() {
     final Completer<bool> completer = Completer<bool>();
     _api.status.status().listen((bool status) {
       completer.complete(status);
-    }).onError((Object error){
+    }).onError((Object error) {
       completer.complete(false);
     });
     Future.wait(<Future<bool>>[completer.future]);
     return completer.future;
   }
+
   /// Checks if there is an internet connection
-  Future<bool> checkInternetConnection() async{
+  Future<bool> checkInternetConnection() async {
     final bool hasConnection = await DataConnectionChecker().hasConnection;
     return Future<bool>.value(hasConnection);
   }
@@ -153,7 +150,7 @@ class AuthBloc extends BlocBase {
   }
 
   /// Set status of last login attempt
-  void setAttempt(bool attempt){
+  void setAttempt(bool attempt) {
     _loginAttempt.add(attempt);
   }
 

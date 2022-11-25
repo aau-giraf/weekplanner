@@ -20,6 +20,7 @@ class NumberOfDaysScreen extends StatelessWidget {
   }
 
   final DisplayNameModel _user;
+
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
   @override
