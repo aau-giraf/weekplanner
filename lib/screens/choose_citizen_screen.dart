@@ -108,7 +108,7 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
         .toList();
 
     /// Defines variables needed to check user role
-    final Role role = _authBloc.loggedInUser?.role;
+    final Role role = _authBloc.loggedInUser.role;
 
     if (role != null) {
       /// Checks user role and gives option to add Citizen if user is Guardian

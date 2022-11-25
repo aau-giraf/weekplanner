@@ -46,10 +46,13 @@ void main() {
     di.clearAll();
     api = Api('any');
     authBloc = AuthBloc(api);
+    authBloc.loggedInUser = GirafUserModel(id: '1', role: Role.Guardian, 
+                              roleName: 'guardian', username: 'testUsername', 
+                              displayName: 'testDisplayname', department: 1);
     api.user = MockUserApi();
     bloc = ChooseCitizenBloc(api);
     di.registerDependency<Api>(() => api);
-    di.registerDependency<AuthBloc>(() => AuthBloc(api));
+    di.registerDependency<AuthBloc>(() => authBloc);
     toolbarBloc = ToolbarBloc();
     di.registerDependency<ChooseCitizenBloc>(() => bloc);
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
@@ -90,7 +93,7 @@ void main() {
   });
 
   testWidgets('Has add citizen button', (WidgetTester tester) async {
-    final Role role = authBloc.loggedInUser?.role;
+    final Role role = authBloc.loggedInUser.role;
     await tester.pumpWidget(MaterialApp(home: ChooseCitizenScreen()));
     await tester.pumpAndSettle();
     if(role == Role.Guardian) {
