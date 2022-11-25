@@ -7,11 +7,11 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'color_theme_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/number_of_days_selection_screen.dart';
+import 'package:weekplanner/screens/settings_screens/'
+    'number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'time_representation_screen.dart';
+import 'package:weekplanner/screens/settings_screens/time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
@@ -20,10 +20,11 @@ import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_checkboxButton.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_item.dart';
-import 'package:weekplanner/widgets/settings_widgets/'
-    'settings_theme_display_box.dart';
-
 import '../../di.dart';
+import '../../widgets/settings_widgets/settings_theme_display_box.dart';
+import 'change_password_screen.dart';
+import 'change_username_screen.dart';
+import 'color_theme_selection_screen.dart';
 import 'completed_activity_icon_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
@@ -98,8 +99,8 @@ class SettingsScreen extends StatelessWidget {
                       settingsModel.completeMark == CompleteMark.Checkmark
                       ? 'Flueben'
                       : settingsModel.completeMark == CompleteMark.MovedRight
-                      ? 'Lav aktiviteten grå'
-                      : 'Fjern aktiviteten'))
+                          ? 'Lav aktiviteten grå'
+                          : 'Fjern aktiviteten'))
             ]);
           } else {
             return const Center(
@@ -231,9 +232,55 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildUserSettings() {
-    return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-      SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-    ]);
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            final SettingsModel settingsModel = settingsSnapshot.data;
+            return SettingsSection(
+                'Bruger indstillinger', <SettingsSectionItem>[
+              SettingsArrowButton('Skift brugernavn',
+                    () async {
+                final Object result =
+                await Routes().push(context, ChangeUsernameScreen(_user));
+                if (result != null) {
+                  settingsModel.nrOfDaysToDisplay = result;
+                  _settingsBloc
+                      .updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  });
+                }
+              },),
+              SettingsArrowButton(
+                'Skift kodeord',
+                () async {
+                  final Object result =
+                      await Routes().push(context, ChangePasswordScreen(_user));
+                  if (result != null) {
+                    settingsModel.nrOfDaysToDisplay = result;
+                    _settingsBloc
+                        .updateSettings(_user.id, settingsModel)
+                        .listen((_) {
+                      _settingsBloc.loadSettings(_user);
+                    });
+                  }
+                },
+              ),
+            ]);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+
+    /*
+        return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
+          SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
+        ]);
+              */
   }
 
   Widget _buildPrivacySection() {
@@ -267,16 +314,16 @@ class SettingsScreen extends StatelessWidget {
                 _settingsBloc.updateSettings(_user.id, settingsModel)
                   .listen((_) {
                     _settingsBloc.loadSettings(_user);
-                });
-              },
-              titleTrailing: Image(
-                  width: 50,
-                  height: 50,
-                  image: AssetImage(userTimer == DefaultTimer.PieChart
-                      ? 'assets/timer/piechart_icon.png'
-                      : userTimer == DefaultTimer.Hourglass
-                      ? 'assets/timer/hourglass_icon.png'
-                      : 'assets/timer/countdowntimer_icon.png')),
+                  });
+                },
+                titleTrailing: Image(
+                    width: 50,
+                    height: 50,
+                    image: AssetImage(userTimer == DefaultTimer.PieChart
+                        ? 'assets/timer/piechart_icon.png'
+                        : userTimer == DefaultTimer.Hourglass
+                            ? 'assets/timer/hourglass_icon.png'
+                            : 'assets/timer/countdowntimer_icon.png')),
               )
             ]);
           } else {

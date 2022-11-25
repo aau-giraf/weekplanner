@@ -19,6 +19,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_activities_column.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../style/custom_color.dart' as theme;
@@ -274,11 +275,6 @@ class WeekplanScreen extends StatelessWidget {
               });
         });
   }
-
-
-
-
-
 
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildRemoveDialog(BuildContext context) {
