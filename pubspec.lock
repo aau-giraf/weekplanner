@@ -19,8 +19,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: settingsForWeekplanner571
-      resolved-ref: "7b59b5710f4250b170c18c76b572ae8acbf2873f"
+      ref: develop
+      resolved-ref: b003b038dbb0f79df428b644d86f34048d2c0d55
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"
