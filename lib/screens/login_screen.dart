@@ -64,7 +64,7 @@ class LoginScreenState extends State<LoginScreen> {
             error.errorKey.toString());
       } else if (error is SocketException) {
         authBloc.checkInternetConnection().then((bool hasInternetConnection) {
-          //Er ikke sikker på den her try-catch nogen sinde "catcher"
+          //Not sure this try-catch statement will ever fail and therefore catch anything
           try {
             if (hasInternetConnection) {
               // Checking server connection, if true check username/password
