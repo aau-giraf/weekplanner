@@ -1,9 +1,7 @@
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
+    localProperties.load(new FileInputStream(localPropertiesFile))
 }
 
 def keystoreProperties = new Properties()
@@ -12,17 +10,17 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
+def flutterRoot = localProperties['flutter.sdk']
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+def flutterVersionCode = localProperties['flutter.versionCode']
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
+def flutterVersionName = localProperties['flutter.versionName']
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
@@ -36,13 +34,13 @@ ext.getKeystorePassword = {
         return System.getenv('GIRAF_KEYSTORE_PASSWORD')
     }
 
-    if (localProperties.getProperty('giraf.keystore_password')) {
-        return localProperties.getProperty('giraf.keystore_password')
+    if (localProperties['giraf.keystore_password']) {
+        return localProperties['giraf.keystore_password']
     }
 
     // Fallback. Avoid using
-    if (keystoreProperties.getProperty('keyPassword')) {
-        return keystoreProperties.getProperty('keyPassword')
+    if (keystoreProperties['keyPassword']) {
+        return keystoreProperties['keyPassword']
     }
 
     return null // Silently fail to allow debug-mode without keysigning
