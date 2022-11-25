@@ -245,7 +245,6 @@ class SettingsScreen extends StatelessWidget {
                 final Object result =
                 await Routes().push(context, ChangeUsernameScreen(_user));
                 if (result != null) {
-                  settingsModel.nrOfDaysToDisplay = result;
                   _settingsBloc
                       .updateSettings(_user.id, settingsModel)
                       .listen((_) {
@@ -259,7 +258,6 @@ class SettingsScreen extends StatelessWidget {
                   final Object result =
                       await Routes().push(context, ChangePasswordScreen(_user));
                   if (result != null) {
-                    settingsModel.nrOfDaysToDisplay = result;
                     _settingsBloc
                         .updateSettings(_user.id, settingsModel)
                         .listen((_) {

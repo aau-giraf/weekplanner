@@ -321,7 +321,6 @@ class WeekplanScreen extends StatelessWidget {
     final int _weekday = DateTime.now().weekday - 1;// monday = 0, sunday = 6
 
     final List<Widget> dailyActivities = <Widget>[];
-    final int _weekday = DateTime.now().weekday.toInt();
     int _weekdayCounter = 0;
 
     return StreamBuilder<WeekplanMode>(
@@ -359,7 +358,8 @@ class WeekplanScreen extends StatelessWidget {
                         _displayDaysRelative =
                             _settingsModel.displayDaysRelativeLandscape;
                     }
-
+                    final int _activitiesToDisplay =
+                        _settingsModel.nrOfActivitiesToDisplay;
                     // If the option of showing 1 or 2 days is chosen the
                     // _weekdayCounter must start from today's date
                     if (_displayDaysRelative) {
