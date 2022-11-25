@@ -465,6 +465,62 @@ api.pictogram=MockPictogramApi();
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
   });
 
+  testWidgets('Marking an activity as current and updating work',
+          (WidgetTester tester) async {
+    mockSettings.nrOfDaysToDisplay = 1;
+    final int weekDay = DateTime.now().weekday.toInt()-1;
+    mockWeek.days[weekDay].activities.add(mockActivities[0]);
+    mockWeek.days[weekDay].activities.add(mockActivities[1]);
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconActive')), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    await tester.tap(find.byType(ActivityCard).first);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
+        widget.buttonText == 'Aflys' &&
+        widget.buttonKey == 'CancelActivtiesButton'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsNothing);
+    expect(find.byKey(const Key('IconActive')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+    expect(find.byKey(const Key('IconActive')), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Rediger'));
+    await tester.pump();
+
+    await tester.tap(find.byType(ActivityCard).first);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+    widget is BottomAppBarButton &&
+        widget is BottomAppBarButton &&
+        widget.buttonText == 'Genoptag' &&
+        widget.buttonKey == 'GenoptagActivtiesButton'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
+    expect(find.byKey(const Key('IconActive')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('ConfirmDialogConfirmButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('IconCanceled')), findsNothing);
+    expect(find.byKey(const Key('IconActive')), findsOneWidget);
+  });
+
   ///Testing the undo button works "Genoptag" - knap
   testWidgets('Resuming an activity works', (WidgetTester tester) async {
     //Create a cancel activity
@@ -885,6 +941,95 @@ api.pictogram=MockPictogramApi();
 
     // Find checkmark icon by key
     expect(find.byKey(const Key('IconComplete')), findsOneWidget);
+  });
+
+  testWidgets('Tests if the correct number of activities'
+      ' is displayed', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.showOnlyActivities = true;
+    mockSettings.nrOfActivitiesToDisplay = 2;
+    final int weekDay = DateTime
+        .now()
+        .weekday
+        .toInt() - 1;
+    mockWeek.days[weekDay].activities.add(mockActivities[0]);
+    mockWeek.days[weekDay].activities.add(mockActivities[1]);
+    mockWeek.days[weekDay].activities.add(mockActivities[2]);
+    mockWeek.days[weekDay].activities.add(mockActivities[3]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ActivityCard), findsNWidgets(2));
+  });
+
+  testWidgets('Tests if two activities still show up after completing and '
+      'cancelling first and last activity', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.showOnlyActivities = true;
+    mockSettings.nrOfActivitiesToDisplay = 2;
+    final int weekDay = DateTime
+        .now()
+        .weekday
+        .toInt() - 1;
+    mockActivities[0].state = ActivityState.Completed;
+    mockActivities[2].state = ActivityState.Canceled;
+    mockWeek.days[weekDay].activities.add(mockActivities[0]);
+    mockWeek.days[weekDay].activities.add(mockActivities[1]);
+    mockWeek.days[weekDay].activities.add(mockActivities[2]);
+    mockWeek.days[weekDay].activities.add(mockActivities[3]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ActivityCard), findsNWidgets(2));
+  });
+
+  testWidgets('Tests if two activities still show up after completing and '
+      'cancelling first and last activity', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.showOnlyActivities = true;
+    mockSettings.nrOfActivitiesToDisplay = 2;
+    final int weekDay = DateTime
+        .now()
+        .weekday
+        .toInt() - 1;
+    mockActivities[0].state = ActivityState.Completed;
+    mockActivities[1].state = ActivityState.Completed;
+    mockActivities[2].state = ActivityState.Canceled;
+    mockWeek.days[weekDay].activities.add(mockActivities[0]);
+    mockWeek.days[weekDay].activities.add(mockActivities[1]);
+    mockWeek.days[weekDay].activities.add(mockActivities[2]);
+    mockWeek.days[weekDay].activities.add(mockActivities[3]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ActivityCard), findsOneWidget);
+  });
+
+  testWidgets('Tests if two activities still show up after completing and '
+      'cancelling first and last activity', (WidgetTester tester) async {
+    authBloc.setMode(WeekplanMode.citizen);
+    mockSettings.showOnlyActivities = true;
+    mockSettings.nrOfActivitiesToDisplay = 2;
+    final int weekDay = DateTime
+        .now()
+        .weekday
+        .toInt() - 1;
+    mockActivities[0].state = ActivityState.Completed;
+    mockActivities[1].state = ActivityState.Completed;
+    mockActivities[2].state = ActivityState.Canceled;
+    mockActivities[3].state = ActivityState.Canceled;
+    mockWeek.days[weekDay].activities.add(mockActivities[0]);
+    mockWeek.days[weekDay].activities.add(mockActivities[1]);
+    mockWeek.days[weekDay].activities.add(mockActivities[2]);
+    mockWeek.days[weekDay].activities.add(mockActivities[3]);
+
+    await tester.pumpWidget(MaterialApp(home: WeekplanScreen(mockWeek, user)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ActivityCard), findsNothing);
   });
 
   testWidgets('Activity lists changed name', (WidgetTester tester) async {

@@ -87,6 +87,7 @@ class MockData {
         activitiesCount: 1,
         theme: GirafTheme.GirafYellow,
         nrOfDaysToDisplay: 7,
+        showOnlyActivities: false,
         weekDayColors: _createWeekDayColors(),
         lockTimerControl: false,
         pictogramText: false);
