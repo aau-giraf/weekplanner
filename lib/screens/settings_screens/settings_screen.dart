@@ -126,7 +126,7 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                 'Antal dage der vises når enheden er på højkant', () async {
                   final Object result = await Routes().push(
-                      context, NumberOfDaysScreen(_user, true));
+                      context, NumberOfDaysScreen(_user, true, settingsModel));
                   if(result != null) {
                     settingsModel.nrOfDaysToDisplayPortrait = result;
                     _settingsBloc.updateSettings(
@@ -143,7 +143,7 @@ class SettingsScreen extends StatelessWidget {
               SettingsArrowButton(
                 'Antal dage der vises når enheden er på langs', () async {
                 final Object result = await Routes().push(
-                    context, NumberOfDaysScreen(_user, false));
+                    context, NumberOfDaysScreen(_user, false, settingsModel));
                 if(result != null) {
                   settingsModel.nrOfDaysToDisplayLandscape = result;
                   _settingsBloc.updateSettings(

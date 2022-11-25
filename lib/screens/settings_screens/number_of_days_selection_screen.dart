@@ -17,13 +17,15 @@ import '../../routes.dart';
 /// landscape mode
 class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
   /// Constructor
-  NumberOfDaysScreen(DisplayNameModel user, bool isPortrait) : _user = user {
+  NumberOfDaysScreen(DisplayNameModel user, bool isPortrait,
+      SettingsModel settingsModel) : _user = user {
     // Determines whether this settings screen is the one for portrait mode or
     // the one for landscape mode
     _isPortrait = isPortrait;
+    _settingsModel = settingsModel;
     _settingsBloc.loadSettings(_user);
   }
-
+  SettingsModel _settingsModel;
   bool _isPortrait;
   final DisplayNameModel _user;
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
@@ -40,7 +42,6 @@ class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
             builder: (BuildContext context,
                 AsyncSnapshot<SettingsModel> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
-                final SettingsModel _settingsModel = settingsSnapshot.data;
                 final int _numberOfDaysToDisplay = _isPortrait
                     ? _settingsModel.nrOfDaysToDisplayPortrait
                     : _settingsModel.nrOfDaysToDisplayLandscape;
