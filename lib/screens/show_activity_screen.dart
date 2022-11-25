@@ -18,7 +18,6 @@ import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/choiceboard_widgets/choice_board.dart';
-import 'package:weekplanner/widgets/citizen_avatar_widget.dart';
 import 'package:weekplanner/widgets/giraf_activity_time_picker_dialog.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -103,31 +102,19 @@ class ShowActivityScreen extends StatelessWidget {
     final List<Widget> list = <Widget>[];
     list.add(Expanded(
       flex: 2,
-      child:
-        Center(
-          child:
-            AspectRatio(
-              aspectRatio: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: buildActivity(context),
-              ),
-            ),
+      child: Center(
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: buildActivity(context),
           ),
         ),
-      );
+      ),
+    ));
 
     // All the buttons excluding the activity itself
     final List<Widget> buttons = <Widget>[];
-    buttons.add(Container(
-      margin: const EdgeInsets.all(10),
-      width: 150,
-      height: 150,
-      child:
-      CitizenAvatar(
-        displaynameModel: _girafUser,
-      )
-    ));
     buttons.add(
       StreamBuilder<ActivityModel>(
           stream: _activityBloc.activityModelStream,
@@ -876,7 +863,7 @@ class ShowActivityScreen extends StatelessWidget {
       },
     );
   }
-  
+
   /// Builds the icon that displays the activity's state
   Stack _buildActivityStateIcon(BuildContext context, ActivityState state) {
     if (state == ActivityState.Completed) {

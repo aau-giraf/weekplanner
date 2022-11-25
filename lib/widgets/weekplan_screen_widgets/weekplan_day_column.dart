@@ -115,39 +115,14 @@ class WeekplanDayColumn extends StatelessWidget {
       color: theme.GirafColors.buttonColor,
       child: ListTile(
         contentPadding: const EdgeInsets.all(0.0), // Sets padding in cards
-        title: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            // Stroked text as border.
-            AutoSizeText(
-              translation,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: isToday(day) ? 40 : 30,
-                foreground: Paint()
-                  ..style = isToday(day)
-                      ? PaintingStyle.stroke
-                      : PaintingStyle.fill
-                  ..strokeWidth = 5
-                  ..color = Colors.black,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-            ),
-            // Solid text as fill.
-            AutoSizeText(
-              translation,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: isToday(day) ? 40 : 30,
-                color: isToday(day)
-                    ? Color(int.parse('0xffffffff'))
-                    : Colors.black,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-            ),
-          ],
+        title: AutoSizeText(
+          translation,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 30.0,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
         ),
       ),
     );
@@ -214,38 +189,11 @@ class WeekplanDayColumn extends StatelessWidget {
     }
   }
 
-  /// Returns true if the field dayOfTheWeek matches with today's date
-  /// This function is mainly used for highlighting today's date on the weekplan
-  bool isToday(Weekday weekday){
-    return DateTime.now().weekday.toInt()-1 == weekday.index;
-  }
-
   /// Unmarks all activities for a given day
   void unmarkAllDayActivities(WeekdayModel weekdayModel) {
     for (ActivityModel activity in weekdayModel.activities) {
       if (weekplanBloc.isActivityMarked(activity) == true) {
         weekplanBloc.removeMarkedActivity(activity);
-      }
-    }
-  }
-
-  /// Marks the first Normal activity to Active
-  void markCurrent(WeekdayModel weekdayModel){
-    if(isToday(weekdayModel.day)){
-      for (ActivityModel activity in weekdayModel.activities){
-        if(activity.state == ActivityState.Normal){
-          activity.state = ActivityState.Active;
-          break;
-        }
-      }
-    }
-  }
-
-  /// Sets all activites to Normal state
-  void resetActiveMarks(WeekdayModel weekdayModel){
-    for (ActivityModel activity in weekdayModel.activities){
-      if(activity.state == ActivityState.Active){
-        activity.state = ActivityState.Normal;
       }
     }
   }
@@ -262,53 +210,39 @@ class WeekplanDayColumn extends StatelessWidget {
               stream: weekplanBloc.editMode,
               builder:
                   (BuildContext context, AsyncSnapshot<bool> editModeSnapshot) {
-                    return StreamBuilder<SettingsModel>(
-                        stream: _settingsBloc.settings,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<SettingsModel> settingsSnapshot)
-                      {
-                      return Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (BuildContext context, int index) {
-                            resetActiveMarks(weekday);
-                            markCurrent(weekday);
-                            if (index >= weekday.activities.length) {
-                              return StreamBuilder<bool>(
-                                  stream: weekplanBloc
-                                      .activityPlaceholderVisible,
-                                  initialData: false,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<bool> snapshot) {
-                                    return Visibility(
-                                      key: const Key('GreyDragVisibleKey'),
-                                      visible: snapshot.data,
-                                      child: _dragTargetPlaceholder(
-                                          index, weekday),
-                                    );
-                                  });
-                            }
-                            else {
-                              return StreamBuilder<WeekplanMode>(
-                                  stream: _authBloc.mode,
-                                  initialData: WeekplanMode.guardian,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<WeekplanMode> snapshot) {
-                                    if (snapshot.data ==
-                                        WeekplanMode.guardian) {
-                                      return _dragTargetPictogram(
-                                          index, weekday,
-                                          editModeSnapshot.data, context);
-                                    }
-                                    return _pictogramIconStack(context, index,
-                                        weekday, editModeSnapshot.data);
-                                  }
+                return Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      if ( index >= weekday.activities.length ) {
+                        return StreamBuilder<bool>(
+                            stream: weekplanBloc.activityPlaceholderVisible,
+                            initialData: false,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<bool> snapshot) {
+                              return Visibility(
+                                key: const Key('GreyDragVisibleKey'),
+                                visible: snapshot.data,
+                                child: _dragTargetPlaceholder(index, weekday),
                               );
-                            }
-                          },
-                          itemCount: weekday.activities.length + 1,
-                        ),
-                      );
-                    });
+                            });
+                      } else {
+                        return StreamBuilder<WeekplanMode>(
+                            stream: _authBloc.mode,
+                            initialData: WeekplanMode.guardian,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<WeekplanMode> snapshot) {
+                              if (snapshot.data == WeekplanMode.guardian) {
+                                return _dragTargetPictogram(index, weekday,
+                                    editModeSnapshot.data, context);
+                              }
+                              return _pictogramIconStack(context, index,
+                                  weekday, editModeSnapshot.data);
+                            });
+                      }
+                    },
+                    itemCount: weekday.activities.length + 1,
+                  ),
+                );
               });
         });
   }
@@ -389,6 +323,7 @@ class WeekplanDayColumn extends StatelessWidget {
   FittedBox _pictogramIconStack(
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final ActivityModel currActivity = weekday.activities[index];
+
 
     final bool isMarked = weekplanBloc.isActivityMarked(currActivity);
 
@@ -552,7 +487,7 @@ class WeekplanDayColumn extends StatelessWidget {
                                         newPictogram
                                       ],
                                       order: weekday.activities.length,
-                                      state: ActivityState.Normal,
+                                      state: ActivityState.Active,
                                       isChoiceBoard: false),
                                   weekday.day.index);
                             }

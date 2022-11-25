@@ -9,18 +9,13 @@ import 'package:weekplanner/style/font_size.dart';
 /// Citizen avatar used for choose citizen screen
 class CitizenAvatar extends StatelessWidget {
   /// Constructor for the citizens avatar
-  const CitizenAvatar({this.displaynameModel,
-    this.onPressed,
-    this.hideName = false});
+  const CitizenAvatar({this.displaynameModel, this.onPressed});
 
   /// Usermodel for displaying a user
   final DisplayNameModel displaynameModel;
 
   /// Callback when pressed
   final VoidCallback onPressed;
-
-  /// Flag for hiding the username underneath the avatar
-  final bool hideName;
 
   bool _isTablet(MediaQueryData query) {
     final Size size = query.size;
@@ -68,7 +63,7 @@ class CitizenAvatar extends StatelessWidget {
                         maxHeight: _isTablet(query) ? 50.0 : 15.0,
                       ),
                       child: Center(
-                        child: !hideName ? AutoSizeText(
+                        child: AutoSizeText(
                           displaynameModel.displayName.length <= 15
                               ? displaynameModel.displayName
                               : displaynameModel.displayName.substring(0, 14) +
@@ -78,7 +73,7 @@ class CitizenAvatar extends StatelessWidget {
                               fontSize: _isTablet(query)
                                   ? GirafFont.large
                                   : GirafFont.small),
-                        ) : Container(width: 0, height: 0),
+                        ),
                       ),
                     )
                   ],

@@ -1,7 +1,6 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/giraf_theme_enum.dart';
-import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -38,15 +37,9 @@ class SettingsBloc extends BlocBase {
     });
   }
 
-  /// Load the settings for a giraf user
-  void loadSettingsGirafUser(GirafUserModel user) {
-    _api.user.getSettings(user.id).listen((SettingsModel settingsModel) {
-      _settings.add(settingsModel);
-    });
-  }
-
   /// Update an existing settingsModel
-  Stream<void> updateSettings(String userId, SettingsModel settingsModel) {
+  Stream<void> updateSettings(
+      String userId, SettingsModel settingsModel) {
     return _api.user.updateSettings(userId, settingsModel);
   }
 

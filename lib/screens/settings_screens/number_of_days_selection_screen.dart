@@ -28,7 +28,6 @@ class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
   SettingsModel _settingsModel;
   bool _isPortrait;
   final DisplayNameModel _user;
-
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
 
 

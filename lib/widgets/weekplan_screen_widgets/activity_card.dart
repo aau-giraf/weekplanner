@@ -62,28 +62,18 @@ class ActivityCard extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Stack(
+                    alignment: AlignmentDirectional.topEnd,
                     children: <Widget>[
-                      Stack(
-                        alignment: AlignmentDirectional.topEnd,
-                        children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width,
-                            child: FittedBox(
-                              child: _getPictogram(_activity.pictograms.first),
-                            ),
-                          ),
-                          _buildActivityStateIcon(context, _activityState,
-                              weekModeSnapShot, settingsSnapShot),
-                          _buildTimerIcon(context, _activity),
-                        ],
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width,
+                        child: FittedBox(
+                          child: _getPictogram(_activity.pictograms.first),
+                        ),
                       ),
-                      Stack(
-                        alignment: AlignmentDirectional.topStart,
-                        children: <Widget>[
-                          _buildAvatarIcon(context),
-                        ],
-                      ),
+                      _buildActivityStateIcon(context, _activityState,
+                          weekModeSnapShot, settingsSnapShot),
+                      _buildTimerIcon(context, _activity),
                     ],
                   ),
                   PictogramText(_activity, _user),
@@ -138,35 +128,26 @@ class ActivityCard extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Stack(
+                alignment: AlignmentDirectional.topEnd,
                 children: <Widget>[
-                  Stack(
-                    alignment: AlignmentDirectional.topEnd,
-                    children: <Widget>[
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width,
-                        child: FittedBox(
-                            child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: <Widget>[
-                            SizedBox(
-                                key: const Key('WeekPlanScreenChoiceBoard'),
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                                child: returnGridView(pictograms)),
-                          ],
-                        )),
-                      ),
-                      _buildActivityStateIcon(context, _activityState,
-                          weekModeSnapShot, settingsSnapShot),
-                      _buildTimerIcon(context, _activity),
-                    ],
-                  ),
-                  Stack(
-                      alignment: AlignmentDirectional.topStart,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    child: FittedBox(
+                        child: Stack(
+                      alignment: AlignmentDirectional.center,
                       children: <Widget>[
-                        _buildAvatarIcon(context),
-                      ])
+                        SizedBox(
+                            key: const Key('WeekPlanScreenChoiceBoard'),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                            child: returnGridView(pictograms)),
+                      ],
+                    )),
+                  ),
+                  _buildActivityStateIcon(context, _activityState,
+                      weekModeSnapShot, settingsSnapShot),
+                  _buildTimerIcon(context, _activity),
                 ],
               ),
               PictogramText(_activity, _user),
@@ -268,31 +249,6 @@ class ActivityCard extends StatelessWidget {
             color: theme.GirafColors.red,
             size: MediaQuery.of(context).size.width,
           );
-          break;
-        case ActivityState.Active:
-          if (role == WeekplanMode.guardian || role == WeekplanMode.trustee) {
-            return Icon(
-              Icons.brightness_1_outlined,
-              key: const Key('IconActive'),
-              color: theme.GirafColors.amber,
-              size: MediaQuery.of(context).size.width,
-            );
-          }
-          if (role == WeekplanMode.citizen &&
-              settings.nrOfActivitiesToDisplay > 1) {
-            return Icon(
-              Icons.brightness_1_outlined,
-              key: const Key('IconActive'),
-              color: theme.GirafColors.amber,
-              size: MediaQuery.of(context).size.width,
-            );
-          } else {
-            return Container(
-              width: 0,
-              height: 0,
-            );
-          }
-          break;
         default:
           return Container(
             width: 0,
@@ -348,19 +304,5 @@ class ActivityCard extends StatelessWidget {
             width: 250,
           );
         });
-  }
-
-  Widget _buildAvatarIcon(BuildContext context) {
-    return Container(
-        width: 400,
-        height: 400,
-        child: Container(
-          margin: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          child: const CircleAvatar(
-              key: Key('PlaceholderAvatar'),
-              radius: 20,
-              backgroundImage:
-                  AssetImage('assets/login_screen_background_image.png')),
-        ));
   }
 }

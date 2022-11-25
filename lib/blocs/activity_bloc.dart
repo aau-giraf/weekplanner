@@ -56,15 +56,6 @@ class ActivityBloc extends BlocBase {
     update();
   }
 
-  /// Mark the selected activity as active. Toggle function, if activity is
-  /// Active, it will become Normal
-  void activateActivity(){
-    _activityModel.state = _activityModel.state == ActivityState.Active
-        ? ActivityState.Normal
-        : ActivityState.Active;
-    update();
-  }
-
   /// Update the Activity with the new state.
   void update() {
     _api.activity

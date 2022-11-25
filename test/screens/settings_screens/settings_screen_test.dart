@@ -130,9 +130,8 @@ void main() {
   testWidgets('Settings has Brugerindstillinger section',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    await tester.pumpAndSettle();
-    expect(find.text('Bruger indstillinger', skipOffstage: false),
-        findsOneWidget);
+    expect(find.text('Bruger indstillinger'), findsOneWidget);
+    expect(find.text(user.displayName + ' indstillinger'), findsOneWidget);
   });
 
   testWidgets('Farver på ugeplan button changes screen',
