@@ -22,7 +22,7 @@ void main() {
    * Use the "environments.local.json" for running against your local web-api
    * For IOS users: change the SERVER_HOST in the environment.local file to "http://localhost:5000"
    */
-  environment.setFile('assets/environments.local.json').whenComplete(() {
+  environment.setFile('assets/environments.dev.json').whenComplete(() {
     _runApp();
   });
 }
