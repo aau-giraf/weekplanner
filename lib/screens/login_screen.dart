@@ -6,6 +6,7 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/providers/environment_provider.dart' as environment;
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/pictogram_login_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 import 'package:weekplanner/widgets/loading_spinner_widget.dart';
@@ -218,6 +219,31 @@ class LoginScreenState extends State<LoginScreen> {
                               loginAction(context);
                             },
                           ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Transform.scale(
+                        scale: 1.2,
+                        child: ElevatedButton(
+                          style: girafButtonStyle,
+                          child: const Text(
+                            'Brug piktogram adgangskode',
+                            key: Key('UsePictogramLoginKey'),
+                            style:
+                            TextStyle(color: theme.GirafColors.white),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                    PictogramLoginScreen()
+                                )
+                            );
+
+                          },
                         ),
                       ),
                     ),
