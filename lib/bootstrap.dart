@@ -8,6 +8,7 @@ import 'package:weekplanner/blocs/copy_resolve_bloc.dart';
 import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/new_citizen_bloc.dart';
+import 'package:weekplanner/blocs/new_pictogram_password_bloc.dart';
 import 'package:weekplanner/blocs/new_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
@@ -70,6 +71,10 @@ class Bootstrap {
       return NewCitizenBloc(di.get<Api>());
     });
 
+    di.registerSingleton<NewPictogramPasswordBloc>(() {
+      return NewPictogramPasswordBloc(di.get<Api>());
+    });
+
     di.registerDependency<EditWeekplanBloc>(() {
       return EditWeekplanBloc(di.get<Api>());
     });
@@ -109,6 +114,5 @@ class Bootstrap {
     di.registerDependency<TakePictureWithCameraBloc>(() {
       return TakePictureWithCameraBloc(di.get<Api>());
     });
-
   }
 }

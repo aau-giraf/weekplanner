@@ -131,9 +131,16 @@ void main() {
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
-        expect(find.text('Bruger indstillinger'), findsOneWidget);
         expect(find.text('Giv borger adgang til deres indstillinger.')
         , findsOneWidget);
+  });
+
+  testWidgets('Settings has Brugerindstillinger section',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    expect(find.text('Bruger indstillinger', skipOffstage: false),
+        findsOneWidget);
   });
 
  

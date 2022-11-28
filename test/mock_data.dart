@@ -89,7 +89,7 @@ class MockData {
         nrOfDaysToDisplay: 7,
         showPopup: false,
         weekDayColors: _createWeekDayColors(),
-        nrOfActivitiesToDisplay: null,
+        nrOfActivitiesToDisplay: 2,
         showOnlyActivities: false,
         showSettingsForCitizen: true,
         lockTimerControl: false,
