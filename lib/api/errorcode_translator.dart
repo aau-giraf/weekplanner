@@ -34,7 +34,8 @@ class ApiErrorTranslater {
             '\nDetails: ' +
             error.errorDetails;
       default:
-        return 'Fejl: ' + error.errorMessage +
+        return 'Fejl: ' +
+            error.errorMessage +
             '\nDetails: ' +
             error.errorDetails;
     }
