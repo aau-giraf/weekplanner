@@ -119,7 +119,6 @@ class ToolbarBloc extends BlocBase {
         break;
     }
   }
-
   IconButton _createIconAccept(VoidCallback callback) {
     return IconButton(
       icon: Image.asset('assets/icons/accept.png'),
