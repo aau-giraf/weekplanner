@@ -52,8 +52,9 @@ class SettingsScreen extends StatelessWidget {
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
         _buildTimerSection(context),
+        _buildUserSettings(context),
         _buildTimeRepresentationSettings(context),
-        _buildUserSettings(),
+
         _buildPrivacySection()
       ],
     );
@@ -110,11 +111,13 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
+
   Widget _buildOrientationSection() {
     return SettingsSection('Orientering', <SettingsSectionItem>[
       SettingsCheckMarkButton(5, 5, 'Landskab', () {}),
     ]);
   }
+
 
   Widget _buildWeekPlanSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
@@ -231,15 +234,26 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
-  Widget _buildUserSettings() {
+
+  Widget _buildUserSettings(BuildContext context) {
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
             AsyncSnapshot<SettingsModel> settingsSnapshot) {
           if (settingsSnapshot.hasData) {
             final SettingsModel settingsModel = settingsSnapshot.data;
-            return SettingsSection(
-                'Bruger indstillinger', <SettingsSectionItem>[
+            return SettingsSection('Bruger indstillinger',
+                <SettingsSectionItem>[
+              SettingsCheckMarkButton.fromBoolean(
+                  settingsModel.showSettingsForCitizen,
+                    'Giv borger adgang til deres indstillinger.', () {
+                  settingsModel.showSettingsForCitizen =
+                    !settingsModel.showSettingsForCitizen;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                });
+              }),
               SettingsArrowButton('Skift brugernavn',
                     () async {
                 final Object result =
@@ -266,6 +280,7 @@ class SettingsScreen extends StatelessWidget {
                   }
                 },
               ),
+
             ]);
           } else {
             return const Center(
@@ -273,12 +288,6 @@ class SettingsScreen extends StatelessWidget {
             );
           }
         });
-
-    /*
-        return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-          SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-        ]);
-              */
   }
 
   Widget _buildPrivacySection() {

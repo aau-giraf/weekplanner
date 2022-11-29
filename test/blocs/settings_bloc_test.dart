@@ -49,6 +49,9 @@ void main() {
       theme: GirafTheme.GirafYellow,
       weekDayColors: null,
       pictogramText: false,
+      nrOfActivitiesToDisplay: null,
+      showOnlyActivities: false,
+      showSettingsForCitizen: false,
   );
 
   final SettingsModel updatedSettings = SettingsModel(
