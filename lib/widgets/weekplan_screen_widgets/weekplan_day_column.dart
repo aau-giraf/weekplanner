@@ -413,7 +413,6 @@ class WeekplanDayColumn extends StatelessWidget {
                         double _width = 1;
                         final int _daysToDisplay =
                             settingsSnapshot.data.nrOfDaysToDisplay;
-
                         if (MediaQuery.of(context).orientation ==
                             Orientation.portrait) {
                           if (modeSnapshot.data == WeekplanMode.citizen) {
@@ -577,7 +576,8 @@ class WeekplanDayColumn extends StatelessWidget {
                                       ],
                                       order: weekday.activities.length,
                                       state: ActivityState.Normal,
-                                      isChoiceBoard: false),
+                                      isChoiceBoard: false,
+                                      title: object.title),
                                   weekday.day.index);
                             }
                           });
