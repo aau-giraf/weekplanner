@@ -152,7 +152,7 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: Text(
                       'For at skifte brugernavn, indtast dit '
-                      'kodeord for \n${authBloc.loggedInUsername}',
+                      'kodeord for \n${authBloc.loggedInUser.username}',
                       style: const TextStyle(
                         fontSize: GirafFont.small,
                       ),
@@ -212,7 +212,7 @@ class ChangeUsernameScreen extends StatelessWidget {//ignore: must_be_immutable
     /// This authenticates the user with username and password.
     authBloc
         .authenticateFromPopUp(
-            authBloc.loggedInUsername, confirmUsernameCtrl.text)
+            authBloc.loggedInUser.username, confirmUsernameCtrl.text)
         .then((dynamic result) {
       StreamSubscription<bool> loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {

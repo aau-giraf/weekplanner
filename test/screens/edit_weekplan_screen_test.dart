@@ -116,6 +116,7 @@ void main() {
 
     di.clearAll();
     di.registerDependency<WeekplansBloc>(() => mockWeekplanSelector);
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<PictogramBloc>(() => PictogramBloc(api));
     di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));

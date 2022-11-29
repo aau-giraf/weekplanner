@@ -222,6 +222,7 @@ void main() {
     di.clearAll();
     di.registerDependency<WeekplansBloc>(() => bloc);
     di.registerDependency<EditWeekplanBloc>(() => editBloc);
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
