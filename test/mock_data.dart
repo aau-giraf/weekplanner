@@ -85,11 +85,14 @@ class MockData {
         cancelMark: CancelMark.Cross,
         defaultTimer: DefaultTimer.PieChart,
         timerSeconds: 1,
-        activitiesCount: 1,
+        activitiesCount: null,
         theme: GirafTheme.GirafYellow,
         nrOfDaysToDisplay: 7,
-        showOnlyActivities: false,
+        showPopup: false,
         weekDayColors: _createWeekDayColors(),
+        nrOfActivitiesToDisplay: 2,
+        showOnlyActivities: false,
+        showSettingsForCitizen: true,
         lockTimerControl: false,
         pictogramText: false);
   }
@@ -196,7 +199,7 @@ class MockData {
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: true,
-          choiceBoardName: 'nametest',
+          choiceBoardName: 'NameTest',
           pictograms: <PictogramModel>[
             PictogramModel(
                 id: 25,

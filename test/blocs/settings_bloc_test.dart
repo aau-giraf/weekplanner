@@ -50,6 +50,9 @@ void main() {
       nrOfDaysToDisplay: 1,
       weekDayColors: null,
       pictogramText: false,
+      nrOfActivitiesToDisplay: null,
+      showOnlyActivities: false,
+      showSettingsForCitizen: false,
   );
 
   final SettingsModel updatedSettings = SettingsModel(
