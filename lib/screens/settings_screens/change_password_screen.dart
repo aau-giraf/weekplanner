@@ -190,7 +190,7 @@ class ChangePasswordScreen extends StatelessWidget {//ignore: must_be_immutable
       DisplayNameModel user, String oldPassword, String newPassword) {
     //Checks if user is logged in
     authBloc
-        .authenticate(authBloc.loggedInUsername, oldPassword)
+        .authenticate(authBloc.loggedInUser.username, oldPassword)
         .then((dynamic result) {
       StreamSubscription<bool> loginListener;
       loginListener = authBloc.loggedIn.listen((bool snapshot) {

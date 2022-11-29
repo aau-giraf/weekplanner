@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/enums/role_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/bloc_base.dart';
@@ -12,11 +13,8 @@ class AuthBloc extends BlocBase {
   /// Default Constructor
   AuthBloc(this._api);
 
-  /// String is used then changing from citizen to guardian mode
-  String loggedInUsername;
-
-  /// the username is saved so only the password is needed.
-  int loggedInRole;
+  /// Store logged in user data.
+  GirafUserModel loggedInUser;
 
   final Api _api;
 
@@ -52,6 +50,18 @@ class AuthBloc extends BlocBase {
       // If there is a successful login, remove the loading spinner,
       // and push the status to the stream
       if (status) {
+
+        // Store the logged in user data
+        _api.user.me().listen((GirafUserModel event) {
+          loggedInUser = GirafUserModel(
+              username: event.username,
+              displayName: event.displayName,
+              role: event.role,
+              id: event.id);
+        }).onError((Object error) {
+          completer.completeError(error);
+        });
+
         // Get the role of a specific user
         _api.user.role(username).listen((int role) async {
           if (role == Role.Guardian.index) {
@@ -62,12 +72,11 @@ class AuthBloc extends BlocBase {
             setMode(WeekplanMode.citizen);
           }
           _loggedIn.add(status);
-          loggedInUsername = username;
-          loggedInRole = role;
           completer.complete();
         }).onError((Object error) {
           completer.completeError(error);
         });
+
       }
     }).onError((Object error) {
       completer.completeError(error);
