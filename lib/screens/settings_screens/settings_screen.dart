@@ -1,6 +1,7 @@
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/complete_mark_enum.dart';
 import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/giraf_user_model.dart';
 import 'package:api_client/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
@@ -239,7 +240,6 @@ class SettingsScreen extends StatelessWidget {
     confirmOnPressed: () {
       //if the correct name is written delete the user, else provide an error
     if(input==_user.displayName){
-      //delete the user here
       _settingsBloc.deleteUser(_user.id);
       Routes().goHome(context);
     }
