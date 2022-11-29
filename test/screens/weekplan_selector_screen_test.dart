@@ -24,6 +24,7 @@ import 'package:weekplanner/blocs/copy_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
@@ -230,6 +231,7 @@ void main() {
     di.registerDependency<WeekplanBloc>(() => WeekplanBloc(api));
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
     di.registerDependency<ActivityBloc>(() => ActivityBloc(api));
+    di.registerDependency<TimerBloc>(() => TimerBloc(api));
   });
   //endregion
 
