@@ -1,11 +1,13 @@
 import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/screens/login_screen.dart';
+import 'package:weekplanner/blocs/auth_bloc.dart';
+import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/style/font_size.dart';
+import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_password_widget.dart';
 import '../di.dart';
 import '../style/custom_color.dart' as theme;
 import '../style/custom_color.dart';
-import '../widgets/giraf_button_widget.dart';
 
 /// The screen that contains functionality for logging in with pictograms.
 class PictogramLoginScreen extends StatefulWidget {
@@ -14,149 +16,124 @@ class PictogramLoginScreen extends StatefulWidget {
 }
 
 class _PictogramLoginState extends State<PictogramLoginScreen> {
-  final ButtonStyle girafButtonStyle = ElevatedButton.styleFrom(
-    backgroundColor: theme.GirafColors.loginButtonColor,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-    ),
-  );
-  void onPasswordUpdate(String password){
-    return;
+  final AuthBloc authBloc = di.get<AuthBloc>();
+  final TextEditingController usernameController = TextEditingController();
+
+  String inputPass;
+
+  void onPasswordUpdate(String password) {
+    if (password != null) {
+      inputPass = password;
+    }
+  }
+
+  void login(BuildContext context) {
+    showLoadingSpinner(context, true);
   }
 
   @override
-  // Widget build(BuildContext context) {
-  //   final Size screenSize = MediaQuery.of(context).size;
-  //   return Scaffold(
-  //       body: Container(
-  //     width: screenSize.width,
-  //     height: screenSize.height,
-  //     alignment: Alignment.center,
-  //     decoration: const BoxDecoration(
-  //       // The background of the login-screen
-  //       image: DecorationImage(
-  //         image: AssetImage('assets/login_screen_background_image.png'),
-  //         fit: BoxFit.cover,
-  //       ),
-  //     ),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //         // Container(
-  //         //   child: Transform.scale(
-  //         //     scale: 0.8,
-  //         //     child: const Image(
-  //         //       image: AssetImage('assets/giraf_splash_logo.png'),
-  //         //     ),
-  //         //   ),
-  //         //  ),
-  //           children: <Widget>[
-  //             Expanded(
-  //               child: PictogramPassword(
-  //                 onPasswordChanged: (String pass) {
-  //                   onPasswordUpdate(pass);
-  //                   },
-  //                 api: di.get<Api>()),
-  //             ),
-  //         // Spacer(),
-  //         Stack(
-  //           // crossAxisAlignment: CrossAxisAlignment.center,
-  //           // mainAxisAlignment: MainAxisAlignment.center,
-  //           children: <Widget>[
-  //             Container(
-  //               alignment: Alignment.centerRight,
-  //               padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-  //               child: Transform.scale(
-  //                 scale: 1.2,
-  //                 child: ElevatedButton(
-  //                   style: girafButtonStyle,
-  //                   child: const Text(
-  //                     'Brug standard adgangskode',
-  //                     key: Key('UseNormalPasswordKey'),
-  //                     style:
-  //                     TextStyle(color: theme.GirafColors.white),
-  //                   ),
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                     Navigator.push(
-  //                         context,
-  //                         MaterialPageRoute<void>(
-  //                             builder: (BuildContext context) =>
-  //                                 LoginScreen()
-  //                         )
-  //                     );
-  //                   },
-  //                 ),
-  //               ),
-  //             ),
-  //             const Spacer(),
-  //             Center(
-  //               child: Container(
-  //                 child: ElevatedButton(
-  //                     style: girafButtonStyle,
-  //                     child: const Text(
-  //                   'Login',
-  //                   key: Key('PictogramLoginKey'),
-  //                   style:
-  //                   TextStyle(color: theme.GirafColors.white),
-  //                   ),
-  //                   onPressed: () {
-  //
-  //                   }
-  //               )),
-  //             )
-  //           ]
-  //         )
-  //       ],
-  //     ),
-  //   ));
-  // }
-
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-
-        //appBar: GirafAppBar(title: 'Ny bruger'),
-        body: ListView(shrinkWrap: false, children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            child: StreamBuilder<bool>(
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  return const Text('Opret piktogram kode til ',
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: GirafColors.grey,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold));
-                }),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              PictogramPassword(
-                onPasswordChanged: (String pass) {
-                  onPasswordUpdate(pass);
-                },
-                api: di.get<Api>(),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            child: StreamBuilder<bool>(
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                return const GirafButton(
-                  key: const Key('saveButton'),
-                  icon: const ImageIcon(AssetImage('assets/icons/save.png')),
-                  text: 'Gem bruger',
-                  isEnabled: false,
-                  onPressed: null,
-
-
-                );
-              },
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          width: screenSize.width,
+          height: screenSize.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/login_screen_background_image.png'),
+              fit: BoxFit.cover,
             ),
           ),
-        ]));
+          child: ListView(shrinkWrap: false, children: <Widget>[
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: MediaQuery.of(context).orientation ==
+                              Orientation.portrait
+                          ? const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 52)
+                          : const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 230),
+                      child: TextField(
+                        key: const Key('usernameField'),
+                        style: const TextStyle(fontSize: GirafFont.large),
+                        controller: usernameController,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration.collapsed(
+                            filled: true,
+                            fillColor: GirafColors.white,
+                            hintText: 'Brugernavn',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide())),
+                      ),
+                    ),
+                  ),
+                ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                PictogramPassword(
+                  onPasswordChanged: (String pass) {
+                    onPasswordUpdate(pass);
+                  },
+                  api: di.get<Api>(),
+                ),
+              ],
+            ),
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Transform.scale(
+                      scale: 1.2,
+                      child: ElevatedButton(
+                        key: const Key('useNormalCodeButton'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.GirafColors.loginButtonColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                        ),
+                        onPressed: () {
+                          Routes().pop(context);
+                        },
+                        child: const Text(
+                          'Brug normal kode',
+                          style: TextStyle(color: theme.GirafColors.white),
+                        ),
+                      ),
+                    ),
+                    Transform.scale(
+                      scale: 1.5,
+                      child: ElevatedButton(
+                        key: const Key('picLoginButton'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.GirafColors.loginButtonColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                        ),
+                        onPressed: () {
+                          login(context);
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(color: theme.GirafColors.white),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          ]),
+        ));
   }
 }

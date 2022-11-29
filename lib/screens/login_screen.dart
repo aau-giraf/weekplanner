@@ -230,19 +230,15 @@ class LoginScreenState extends State<LoginScreen> {
                           child: const Text(
                             'Brug piktogram adgangskode',
                             key: Key('UsePictogramLoginKey'),
-                            style:
-                            TextStyle(color: theme.GirafColors.white),
+                            style: TextStyle(color: theme.GirafColors.white),
                           ),
                           onPressed: () {
-                            Navigator.pop(context);
+                            //Navigator.pop(context);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute<void>(
                                     builder: (BuildContext context) =>
-                                    PictogramLoginScreen()
-                                )
-                            );
-
+                                        PictogramLoginScreen()));
                           },
                         ),
                       ),
