@@ -119,6 +119,7 @@ class ToolbarBloc extends BlocBase {
         break;
     }
   }
+
   IconButton _createIconAccept(VoidCallback callback) {
     return IconButton(
       icon: Image.asset('assets/icons/accept.png'),
@@ -223,9 +224,11 @@ class ToolbarBloc extends BlocBase {
 
   /// Return the dialog of the popup.
   Alert createPopupDialog(BuildContext context){
-    /// Password controller for passing information from a text field
+    /// UserName/Password controller for passing information from a text field
     /// to the authenticator.
+    final TextEditingController userNameCtrl = TextEditingController();
     final TextEditingController passwordCtrl = TextEditingController();
+
     return Alert(
         context: context,
         style: _alertStyle,
@@ -234,15 +237,19 @@ class ToolbarBloc extends BlocBase {
           children: <Widget>[
             RichText(
               text: TextSpan(
-                text: 'Logget ind som ',
+                text: 'Log ind som værger',
                 style: DefaultTextStyle
                     .of(context)
                     .style,
-                children: <TextSpan>[
-                  TextSpan(
-                      text: _authBloc.loggedInUsername,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
+              ),
+            ),
+            TextField(
+              key: const Key('SwitchToGuardianUserName'),
+              controller: userNameCtrl,
+              obscureText: false,
+              decoration: const InputDecoration(
+                icon: Icon(Icons.person),
+                labelText: 'Brugernavn',
               ),
             ),
             TextField(
@@ -265,7 +272,7 @@ class ToolbarBloc extends BlocBase {
                 ? () {
               if (_clickable) {
                 _clickable = false;
-                loginFromPopUp(context, _authBloc.loggedInUsername,
+                loginFromPopUp(context, userNameCtrl.value.text,
                     passwordCtrl.value.text);
                 // Timer makes it clicable again after 2 seconds.
                 Timer(const Duration(milliseconds: 2000), () {

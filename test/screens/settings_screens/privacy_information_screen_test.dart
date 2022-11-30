@@ -52,6 +52,7 @@ void main() {
     });
 
     di.clearAll();
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<SettingsBloc>(() => settingsBloc);

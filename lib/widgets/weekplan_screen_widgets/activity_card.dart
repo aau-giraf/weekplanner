@@ -10,8 +10,10 @@ import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
+import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/widgets/pictogram_text.dart';
+import 'package:weekplanner/widgets/timer_widgets/timer_piechart.dart';
 
 import '../../di.dart';
 import '../../style/custom_color.dart' as theme;
@@ -19,12 +21,12 @@ import '../../style/custom_color.dart' as theme;
 /// Widget used for activities in the weekplan screen.
 class ActivityCard extends StatelessWidget {
   /// Constructor
-  ActivityCard(this._activity, this._user) {
+  ActivityCard(this._activity,this._timerBloc, this._user) {
     _settingsBloc.loadSettings(_user);
   }
 
   final ActivityModel _activity;
-
+  final TimerBloc _timerBloc;
   final DisplayNameModel _user;
   final AuthBloc _authBloc = di.get<AuthBloc>();
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
@@ -221,90 +223,135 @@ class ActivityCard extends StatelessWidget {
       ActivityState state,
       AsyncSnapshot<WeekplanMode> weekModeSnapShot,
       AsyncSnapshot<SettingsModel> settingsSnapShot) {
-    if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
-      final WeekplanMode role = weekModeSnapShot.data;
-      final SettingsModel settings = settingsSnapShot.data;
+    return StreamBuilder<TimerRunningMode>(
+        stream: _timerBloc.timerRunningMode,
+        builder: (BuildContext context,
+            AsyncSnapshot<TimerRunningMode> snapshot1) {
+          if (weekModeSnapShot.hasData && settingsSnapShot.hasData) {
+            final WeekplanMode role = weekModeSnapShot.data;
+            final SettingsModel settings = settingsSnapShot.data;
 
-      switch (state) {
-        case ActivityState.Completed:
-          if (role == WeekplanMode.guardian) {
-            return Icon(
-              Icons.check,
-              key: const Key('IconComplete'),
-              color: theme.GirafColors.green,
-              size: MediaQuery.of(context).size.width,
-            );
-          } else if (role == WeekplanMode.citizen) {
-            if (settings.completeMark == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (settings.completeMark == CompleteMark.Checkmark) {
-              return Icon(
-                Icons.check,
-                key: const Key('IconComplete'),
-                color: theme.GirafColors.green,
-                size: MediaQuery.of(context).size.width,
-              );
-            } else if (settings.completeMark == CompleteMark.MovedRight) {
-              return Container(
-                  key: const Key('GreyOutBox'),
-                  color: theme.GirafColors.transparentGrey,
-                  height: MediaQuery.of(context).size.width,
-                  width: MediaQuery.of(context).size.width);
-            } else if (settings.completeMark == CompleteMark.Removed) {
-              //This case should be handled by _shouldActivityBeVisible
-              return Container(
-                width: 0,
-                height: 0,
-              );
-            }
-          }
-          return const Center(child: CircularProgressIndicator());
-        case ActivityState.Canceled:
-          return Icon(
-            Icons.clear,
-            key: const Key('IconCanceled'),
-            color: theme.GirafColors.red,
-            size: MediaQuery.of(context).size.width,
-          );
-          break;
-        case ActivityState.Active:
-          if (role == WeekplanMode.guardian || role == WeekplanMode.trustee) {
-            return Icon(
-              Icons.brightness_1_outlined,
-              key: const Key('IconActive'),
-              color: theme.GirafColors.amber,
-              size: MediaQuery.of(context).size.width,
-            );
-          }
-          if (role == WeekplanMode.citizen &&
-              settings.nrOfActivitiesToDisplay > 1) {
-            return Icon(
-              Icons.brightness_1_outlined,
-              key: const Key('IconActive'),
-              color: theme.GirafColors.amber,
-              size: MediaQuery.of(context).size.width,
-            );
-          } else {
-            return Container(
-              width: 0,
-              height: 0,
-            );
-          }
-          break;
-        default:
+            switch (state) {
+              case ActivityState.Normal:
+                if (snapshot1.hasData &&
+                    snapshot1.data != TimerRunningMode.running) {
+                  break;
+                }
+                return Container(child: TimerPiechart(_timerBloc),
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height);
+              case ActivityState.Completed:
+                if (role == WeekplanMode.guardian) {
+                  return Icon(
+                    Icons.check,
+                    key: const Key('IconComplete'),
+                    color: theme.GirafColors.green,
+                    size: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                  );
+                } else if (role == WeekplanMode.citizen) {
+                  if (settings.completeMark == null) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (settings.completeMark == CompleteMark.Checkmark) {
+                    return Icon(
+                      Icons.check,
+                      key: const Key('IconComplete'),
+                      color: theme.GirafColors.green,
+                      size: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                    );
+                  } else if (settings.completeMark == CompleteMark.MovedRight) {
+                    return Container(
+                        key: const Key('GreyOutBox'),
+                        color: theme.GirafColors.transparentGrey,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width);
+                  } else if (settings.completeMark == CompleteMark.Removed) {
+                    //This case should be handled by _shouldActivityBeVisiblei
+                    return Container(
+                      width: 0,
+                      height: 0,
+                    );
+                  }
+                }
+
+
+                return const Center(child: CircularProgressIndicator());
+              case ActivityState.Canceled:
+                return Icon(
+                  Icons.clear,
+                  key: const Key('IconCanceled'),
+                  color: theme.GirafColors.red,
+                  size: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                );
+                break;
+              case ActivityState.Active:
+                if (role == WeekplanMode.guardian ||
+                    role == WeekplanMode.trustee) {
+                  return Icon(
+                    Icons.brightness_1_outlined,
+                    key: const Key('IconActive'),
+                    color: theme.GirafColors.amber,
+                    size: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                  );
+                }
+                if (role == WeekplanMode.citizen &&
+                    settings.nrOfActivitiesToDisplay > 1) {
+                  return Icon(
+                    Icons.brightness_1_outlined,
+                    key: const Key('IconActive'),
+                    color: theme.GirafColors.amber,
+                    size: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                  );
+                } else {
+                  return Container(
+                    width: 0,
+                    height: 0,
+                  );
+                }
+
+            break;
+          default:
           return Container(
-            width: 0,
-            height: 0,
+          width: 0,
+          height: 0
+          ,
           );
-      }
-    }
-    //If no settings/role have been loaded then we just make an empty overlay
-    return Container(
-      width: 0,
-      height: 0,
-    );
+        }
+        }
+      //If no settings/role have been loaded then we just make an empty overlay
+      return Container(
+        width: 0,
+        height: 0,
+      );
+    });
   }
 
   Widget _buildTimerIcon(BuildContext context, ActivityModel activity) {
