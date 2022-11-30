@@ -46,11 +46,7 @@ class SettingsBloc extends BlocBase {
   void deleteUser(String userId){
     _api.account
         .delete(userId)
-        .listen((bool deleted) {
-      if (deleted) {
-        print(deleted);
-      }
-    });
+        .listen((bool deleted){});
   }
 
   /// Set the theme to be used
