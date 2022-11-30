@@ -53,6 +53,7 @@ void main() {
 
     di.clearAll();
     di.registerDependency<PictogramBloc>(() => bloc);
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
