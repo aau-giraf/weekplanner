@@ -21,13 +21,22 @@ class ChooseCitizenBloc extends BlocBase {
       return _api.user.getCitizens(user.id);
     }).listen((List<DisplayNameModel> citizens) {
       _citizens.add(citizens);
+    }).onError((Object error) {
+      if (error.toString() == '[ApiException]: UserHasNoCitizens') {
+        // Do not return any citizens if the web-api throws UserHasNoCitzens.
+        // See issue #826 on GitHub for more info.
+        return null;
+      } else {
+        // Return the error if it is not a UserHasNoCitzens error.
+        return Future<void>.error(error);
+      }
     });
   }
 
   final Api _api;
   final rx_dart.BehaviorSubject<List<DisplayNameModel>> _citizens =
-  rx_dart.BehaviorSubject<List<DisplayNameModel>>.seeded(
-      <DisplayNameModel>[]);
+      rx_dart.BehaviorSubject<List<DisplayNameModel>>.seeded(
+          <DisplayNameModel>[]);
 
   @override
   void dispose() {
