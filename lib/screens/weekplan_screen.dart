@@ -64,8 +64,7 @@ class WeekplanScreen extends StatelessWidget {
                   if(settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     return WillPopScope(
-                      onWillPop: () async =>
-                      weekModeSnapshot.data == WeekplanMode.guardian,
+                      onWillPop: () async => true,
                       child: Scaffold(
                         appBar: GirafAppBar(
                           title: _user.displayName + ' - ' + _week.name,
@@ -113,8 +112,6 @@ class WeekplanScreen extends StatelessWidget {
                             AppBarIcon.changeToGuardian: () {},
                             AppBarIcon.logout: () {},
                           },
-                          isGuardian: weekModeSnapshot.data ==
-                              WeekplanMode.guardian,
                         ),
                         body: StreamBuilder<UserWeekModel>(
                           stream: _weekplanBloc.userWeek,

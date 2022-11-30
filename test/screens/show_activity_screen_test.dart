@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:api_client/api/activity_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/pictogram_api.dart';
@@ -32,6 +31,7 @@ import 'package:weekplanner/blocs/pictogram_image_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
+import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -62,7 +62,6 @@ class MockAuth extends Mock implements AuthBloc {
   final rx_dart.BehaviorSubject<WeekplanMode> _mode =
       rx_dart.BehaviorSubject<WeekplanMode>.seeded(WeekplanMode.guardian);
 
-  @override
   String loggedInUsername = 'Graatand';
 
   @override
@@ -86,11 +85,11 @@ class MockAuth extends Mock implements AuthBloc {
   }
 }
 
-class MockActivityBloc extends Mock implements ActivityBloc{
+class MockActivityBloc extends Mock implements ActivityBloc {
   MockActivityBloc();
 
   @override
-  void setAlternateName(String name){
+  void setAlternateName(String name) {
     mockActivity.title = name;
   }
 
@@ -101,8 +100,9 @@ class MockActivityBloc extends Mock implements ActivityBloc{
 
   @override
   void completeActivity() {
-    mockActivity.state = mockActivity.state == ActivityState.Completed ?
-      ActivityState.Normal : ActivityState.Completed;
+    mockActivity.state = mockActivity.state == ActivityState.Completed
+        ? ActivityState.Normal
+        : ActivityState.Completed;
     _activityModelStream.add(mockActivity);
   }
 
@@ -110,7 +110,7 @@ class MockActivityBloc extends Mock implements ActivityBloc{
   Stream<ActivityModel> get activityModelStream => _activityModelStream.stream;
 
   final rx_dart.BehaviorSubject<ActivityModel> _activityModelStream =
-  rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity);
+      rx_dart.BehaviorSubject<ActivityModel>.seeded(mockActivity);
 
   /// Mark the selected activity as cancelled.Toggle function, if activity is
   /// Canceled, it will become Normal
@@ -122,10 +122,9 @@ class MockActivityBloc extends Mock implements ActivityBloc{
     _activityModelStream.add(mockActivity);
   }
 
-
   ///Method to get the standard tile from the pictogram
   @override
-  void getStandardTitle(){
+  void getStandardTitle() {
     mockActivity.title = mockActivity.pictograms.first.title;
     update();
   }
@@ -134,12 +133,16 @@ class MockActivityBloc extends Mock implements ActivityBloc{
   void dispose() {
     _activityModelStream.close();
   }
-
 }
 
 class MockActivityApi extends Mock implements ActivityApi {
   @override
   Stream<ActivityModel> update(ActivityModel activity, String userId) {
+    return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
+  }
+
+  @override
+  Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
     return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
 }
@@ -209,14 +212,30 @@ final DisplayNameModel mockUser2 =
     DisplayNameModel(id: '43', displayName: 'mockUser2', role: null);
 final ActivityModel mockActivity = mockWeek.days[0].activities[0];
 
+WeekdayModel mockWeekDayModel() {
+  return WeekdayModel(activities: <ActivityModel>[
+    ActivityModel(
+        id: 1381,
+        state: ActivityState.Normal,
+        order: 0,
+        isChoiceBoard: false,
+        pictograms: <PictogramModel>[mockPictograms[1]],
+        title: mockPictograms[1].title)
+  ], day: Weekday.Monday);
+}
+
 class MockScreen extends StatelessWidget {
-  const MockScreen(this.activity);
+  const MockScreen(
+      this.activity, this.weekplanBloc, this.timerBloc, this.weekdayModel);
 
   final ActivityModel activity;
-
+  final WeekplanBloc weekplanBloc;
+  final WeekdayModel weekdayModel;
+  final TimerBloc timerBloc;
   @override
   Widget build(BuildContext context) {
-    return ShowActivityScreen(activity, mockUser);
+    return ShowActivityScreen(
+        activity, mockUser, weekplanBloc, timerBloc, weekdayModel);
   }
 }
 
@@ -224,6 +243,16 @@ ActivityModel makeNewActivityModel() {
   return ActivityModel(
       id: 1381,
       state: ActivityState.Normal,
+      order: 0,
+      isChoiceBoard: false,
+      pictograms: <PictogramModel>[mockPictograms.first],
+      title: mockPictograms.first.title);
+}
+
+ActivityModel makeNewCompletedActitvyModel() {
+  return ActivityModel(
+      id: 1381,
+      state: ActivityState.Completed,
       order: 0,
       isChoiceBoard: false,
       pictograms: <PictogramModel>[mockPictograms.first],
@@ -292,6 +321,7 @@ void main() {
   MockWeekApi weekApi;
   AuthBloc authBloc;
   TimerBloc timerBloc;
+  WeekplanBloc weekplanBloc;
 
   void setupApiCalls() {
     when(weekApi.update(
@@ -313,6 +343,7 @@ void main() {
     authBloc = AuthBloc(api);
     bloc = MockActivityBloc();
     timerBloc = TimerBloc(api);
+    weekplanBloc = WeekplanBloc(api);
     timerBloc.load(mockActivity,
         user: DisplayNameModel(id: '10', displayName: 'Test', role: ''));
     setupApiCalls();
@@ -320,35 +351,42 @@ void main() {
     di.clearAll();
     di.registerDependency<ActivityBloc>(() => bloc);
     di.registerDependency<AuthBloc>(() => authBloc);
+    di.registerDependency<Api>(() => api);
     di.registerDependency<PictogramImageBloc>(() => PictogramImageBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<TimerBloc>(() => timerBloc);
+    di.registerDependency<WeekplanBloc>(() => weekplanBloc);
     di.registerDependency<SettingsBloc>(() => SettingsBloc(api));
+
   });
 
   testWidgets('renders', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
   });
 
   testWidgets('Has Giraf App Bar', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
 
     expect(find.byType(GirafAppBar), findsOneWidget);
   });
 
   testWidgets('Activity pictogram is rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump(Duration.zero);
 
     expect(find.byKey(Key(mockActivity.id.toString())), findsOneWidget);
   });
 
   testWidgets('ButtonBar is rendered', (WidgetTester tester) async {
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('ButtonBarRender')), findsOneWidget);
@@ -357,8 +395,9 @@ void main() {
   testWidgets('Cancel activity button is rendered in guardian mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsOneWidget);
@@ -367,8 +406,9 @@ void main() {
   testWidgets('Complete activity button is rendered in guardian mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('CompleteStateToggleButton')), findsOneWidget);
@@ -377,8 +417,9 @@ void main() {
   testWidgets('Cancel activity button is NOT rendered in citizen mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('CancelStateToggleButton')), findsNothing);
@@ -387,18 +428,20 @@ void main() {
   testWidgets('Activity has checkmark icon when completed',
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Completed;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
-    expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
   testWidgets('Activity has cancel icon when canceled',
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCanceled')), findsOneWidget);
@@ -407,8 +450,9 @@ void main() {
   testWidgets('Activity has no checkmark when Normal',
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('IconCompleted')), findsNothing);
@@ -418,21 +462,23 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('IconCompleted')), findsOneWidget);
+    expect(find.byKey(const Key('IconComplete')), findsOneWidget);
   });
 
   testWidgets('Activity is set to canceled and an activity cross is shown',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
@@ -445,22 +491,23 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.state = ActivityState.Completed;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CompleteStateToggleButton')));
 
     await tester.pump();
-    expect(find.byKey(const Key('IconCompleted')), findsNothing);
-    expect(find.byKey(const Key('IconCanceled')), findsNothing);
+    expect(find.byKey(const Key('IconComplete')), findsNothing);
   });
 
   testWidgets('Add ChoiceBoard button is visible in guardian mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsOneWidget);
@@ -469,8 +516,9 @@ void main() {
   testWidgets('Add ChoiceBoard button is not visible in citizen mode',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsNothing);
@@ -481,8 +529,9 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Canceled;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsNothing);
@@ -492,8 +541,9 @@ void main() {
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('AddChoiceBoardButtonKey')), findsOneWidget);
@@ -506,8 +556,9 @@ void main() {
     mockActivity.isChoiceBoard = false;
     mockActivity.state = ActivityState.Normal;
 
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump(const Duration(milliseconds: 100));
 
     expect(find.text('Tilføj Valgmulighed'), findsOneWidget);
@@ -520,8 +571,9 @@ void main() {
     mockActivity.isChoiceBoard = true;
     mockActivity.state = ActivityState.Normal;
 
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -535,8 +587,9 @@ void main() {
     mockActivity.state = ActivityState.Normal;
     mockActivity.pictograms = <PictogramModel>[mockPictograms.first];
 
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNothing);
@@ -549,8 +602,9 @@ void main() {
     mockActivity.state = ActivityState.Normal;
     mockActivity.pictograms = mockPictograms.sublist(0, 2); // 2 parts in list
 
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(2));
@@ -563,8 +617,9 @@ void main() {
     mockActivity.state = ActivityState.Normal;
     mockActivity.pictograms = mockPictograms.sublist(0, 3); // 3 parts in list
 
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(3));
@@ -577,16 +632,18 @@ void main() {
     mockActivity.state = ActivityState.Normal;
     mockActivity.pictograms = mockPictograms;
 
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
 
     expect(find.byKey(const Key('ChoiceBoardPart')), findsNWidgets(4));
   });
 
   testWidgets('Test if timer box is shown.', (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pump();
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
   });
@@ -594,16 +651,18 @@ void main() {
   testWidgets('Test that timer box is not shown in citizen mode.',
       (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pump();
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
   });
 
   testWidgets('Test rendering of content of non-initialized timer box',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pump();
     expect(find.byKey(const Key('TimerTitleKey')), findsOneWidget);
     expect(find.byKey(const Key('TimerNotInitGuardianKey')), findsOneWidget);
@@ -631,8 +690,9 @@ void main() {
   testWidgets(
       'Test rendering of content of initialized timer box guardian mode',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pump();
     expect(find.byKey(const Key('AddTimerButtonKey')), findsOneWidget);
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
@@ -643,8 +703,9 @@ void main() {
 
   testWidgets('Test rendering of content of initialized timer box citizen mode',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pump();
     expect(find.byKey(const Key('AddTimerButtonKey')), findsOneWidget);
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
@@ -659,8 +720,9 @@ void main() {
   testWidgets(
       'Test rendering of content of initialized timer buttons guardian mode',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(
+            mockActivity, weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
@@ -677,8 +739,9 @@ void main() {
   testWidgets(
       'Test rendering of content of initialized timer buttons citizen mode',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     authBloc.setMode(WeekplanMode.citizen);
@@ -696,8 +759,9 @@ void main() {
 
   testWidgets('Test that timer stop button probs a confirm dialog',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     await tester.tap(find.byKey(const Key('TimerStopButtonKey')));
@@ -707,8 +771,9 @@ void main() {
 
   testWidgets('Test that timer delete button probs a confirm dialog',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     await tester.tap(find.byKey(const Key('TimerDeleteButtonKey')));
@@ -720,8 +785,9 @@ void main() {
   testWidgets('Test that timerbloc registers the timer initlization',
       (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pumpAndSettle();
     final StreamSubscription<bool> listenForFalse =
         timerBloc.timerIsInstantiated.listen((bool init) {
@@ -742,13 +808,14 @@ void main() {
       (WidgetTester tester) async {
     final Completer<bool> checkNotRun = Completer<bool>();
     final Completer<bool> checkRunning = Completer<bool>();
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+            mockWeekDayModel())));
     await tester.pumpAndSettle();
     await _openTimePickerAndConfirm(tester, 3, 2, 1);
     final StreamSubscription<TimerRunningMode> listenForNotInitialized =
         timerBloc.timerRunningMode.listen((TimerRunningMode running) {
-      expect(running, TimerRunningMode.not_initialized);
+      expect(running, TimerRunningMode.initialized);
       checkNotRun.complete();
     });
     await checkNotRun.future;
@@ -774,8 +841,9 @@ void main() {
       (WidgetTester tester) async {
     mockActivity.state = ActivityState.Canceled;
 
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
 
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsNothing);
 
@@ -785,52 +853,60 @@ void main() {
     expect(find.byKey(const Key('OverallTimerBoxKey')), findsOneWidget);
   });
 
-  testWidgets('Test that play button appears when timer is complete',
+  testWidgets('Test that play button does not appear when timer is complete',
       (WidgetTester tester) async {
-    final Completer<bool> checkCompleted = Completer<bool>();
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
-    await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester, 1, 0, 0);
-    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-    sleep(const Duration(seconds: 2));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.runAsync(() async {
+      authBloc.setMode(WeekplanMode.guardian);
+      final Completer<bool> checkCompleted = Completer<bool>();
+      await tester.pumpWidget(MaterialApp(
+          home: MockScreen(makeNewActivityModel(), weekplanBloc, timerBloc,
+              mockWeekDayModel())));
+      await tester.pumpAndSettle();
+      await _openTimePickerAndConfirm(tester, 1, 0, 0);
+      await tester.pumpAndSettle();
 
-    final StreamSubscription<TimerRunningMode> listenForCompleted =
-        timerBloc.timerRunningMode.listen((TimerRunningMode m) {
-      expect(m, TimerRunningMode.completed);
-      checkCompleted.complete();
+      await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
+
+      await tester.pumpAndSettle();
+      // ignore: always_specify_types
+       Future.delayed(const Duration(seconds: 2), () async {
+        final StreamSubscription<TimerRunningMode> listenForCompleted =
+            timerBloc.timerRunningMode.skip(1).listen((TimerRunningMode m) {
+          expect(m, TimerRunningMode.completed);
+          checkCompleted.complete();
+        });
+        await checkCompleted.future;
+        listenForCompleted.cancel();
+        expect(find.byKey(const Key('TimerPlayButtonKey')), findsNothing);
+      });
     });
-    await checkCompleted.future;
-    listenForCompleted.cancel();
-
-    expect(find.byKey(const Key('TimerPlayButtonKey')), findsOneWidget);
   });
 
-  testWidgets('Test that restart dialog pops up when timer is restarted',
+  testWidgets('Test that Stop dialog pops up when timer is stopped',
       (WidgetTester tester) async {
-    await tester
-        .pumpWidget(MaterialApp(home: MockScreen(makeNewActivityModel())));
-    await tester.pumpAndSettle();
-    await _openTimePickerAndConfirm(tester, 1, 0, 0);
-    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-    sleep(const Duration(seconds: 2));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-    await tester.pumpAndSettle();
+    authBloc.setMode(WeekplanMode.guardian);
 
-    expect(find.byKey(const Key('TimerRestartDialogKey')), findsOneWidget);
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(makeNewActivityModel(), weekplanBloc, TimerBloc(api),
+            mockWeekDayModel())));
+
+    await tester.pumpAndSettle();
+    await _openTimePickerAndConfirm(tester, 1, 1, 1);
+    await tester.tap(find.byKey(const Key('TimerStopButtonKey')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('TimerStopConfirmDialogKey')), findsOneWidget);
   });
 
   testWidgets('Only have a play button for timer when lockTimerControl is true',
       (WidgetTester tester) async {
-    when(api.user.getSettings(any)).thenAnswer((_) {
-      return Stream<SettingsModel>.value(mockSettings2);
-    });
     await tester.runAsync(() async {
+      when(api.user.getSettings(any)).thenAnswer((_) {
+        return Stream<SettingsModel>.value(mockSettings2);
+      });
       authBloc.setMode(WeekplanMode.citizen);
-      await tester.pumpWidget(
-          MaterialApp(home: MockScreen(mockActivityModelWithTimer())));
+      await tester.pumpWidget(MaterialApp(
+          home: MockScreen(mockActivityModelWithTimer(), weekplanBloc,
+              timerBloc, mockWeekDayModel())));
 
       await tester.pumpAndSettle();
       expect(
@@ -859,7 +935,7 @@ void main() {
               widget.key == const Key('TimerDeleteButtonKey')),
           findsNothing);
       await tester.tap(find.byKey(const Key('TimerPlayButtonKey')));
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 1));
 
       expect(
           find.byWidgetPredicate((Widget widget) =>
@@ -895,69 +971,76 @@ void main() {
     when(api.user.getSettings(any)).thenAnswer((_) {
       return Stream<SettingsModel>.value(mockSettings2);
     });
-    await tester.runAsync(() async {
-      authBloc.setMode(WeekplanMode.citizen);
-      await tester.pumpWidget(
-          MaterialApp(home: MockScreen(mockActivityModelWithCompletedTimer())));
-      await tester.pumpAndSettle();
+    authBloc.setMode(WeekplanMode.citizen);
+    await tester.pumpWidget(MaterialApp(
+        home: MockScreen(mockActivityModelWithCompletedTimer(), weekplanBloc,
+            timerBloc, mockWeekDayModel())));
+    await tester.pumpAndSettle();
 
-      expect(
-          find.byWidgetPredicate((Widget widget) =>
-              widget is GirafButton &&
-              widget.icon.image == const AssetImage('assets/icons/play.png') &&
-              widget.key == const Key('TimerPlayButtonKey')),
-          findsNothing);
-      expect(
-          find.byWidgetPredicate((Widget widget) =>
-              widget is GirafButton &&
-              widget.icon.image == const AssetImage('assets/icons/pause.png') &&
-              widget.key == const Key('TimerPauseButtonKey')),
-          findsNothing);
-      expect(
-          find.byWidgetPredicate((Widget widget) =>
-              widget is GirafButton &&
-              widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
-              widget.key == const Key('TimerStopButtonKey')),
-          findsNothing);
-      expect(
-          find.byWidgetPredicate((Widget widget) =>
-              widget is GirafButton &&
-              widget.icon.image ==
-                  const AssetImage('assets/icons/delete.png') &&
-              widget.key == const Key('TimerDeleteButtonKey')),
-          findsNothing);
-    });
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is GirafButton &&
+            widget.icon.image == const AssetImage('assets/icons/play.png') &&
+            widget.key == const Key('TimerPlayButtonKey')),
+        findsNothing);
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is GirafButton &&
+            widget.icon.image == const AssetImage('assets/icons/pause.png') &&
+            widget.key == const Key('TimerPauseButtonKey')),
+        findsNothing);
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is GirafButton &&
+            widget.icon.image == const AssetImage('assets/icons/Stop.png') &&
+            widget.key == const Key('TimerStopButtonKey')),
+        findsNothing);
+    expect(
+        find.byWidgetPredicate((Widget widget) =>
+            widget is GirafButton &&
+            widget.icon.image == const AssetImage('assets/icons/delete.png') &&
+            widget.key == const Key('TimerDeleteButtonKey')),
+        findsNothing);
   });
 
-  testWidgets('Choiceboard textfield loads', (WidgetTester tester) async{
+  testWidgets('Choiceboard textfield loads', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    await tester.pumpWidget(MaterialApp(home:
-    ShowActivityScreen(mockActivity, mockUser)));
+    mockActivity.isChoiceBoard = true;
+    mockActivity.state = ActivityState.Normal;
+    mockActivity.pictograms = mockPictograms;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
     expect(find.byKey(const Key('ChoiceBoardNameText')), findsOneWidget);
   });
 
-  testWidgets('ChoiceBoard name can be changed', (WidgetTester tester)
-  async {
+  testWidgets('ChoiceBoard name can be changed', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    await tester.pumpWidget(MaterialApp(home:
-    ShowActivityScreen(mockActivity, mockUser)));
+    mockActivity.isChoiceBoard = true;
+    mockActivity.state = ActivityState.Normal;
+    mockActivity.pictograms = mockPictograms;
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivity, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
     await tester.pump();
     await tester.enterText(
         find.byKey(const Key('ChoiceBoardNameText')), 'nametest');
     expect(find.text('nametest'), findsOneWidget);
-    await tester.tap(
-        find.byKey(const Key('ChoiceBoardNameButton')));
+    await tester.tap(find.byKey(const Key('ChoiceBoardNameButton')));
     await tester.pumpAndSettle();
     expect(find.text('nametest'), findsOneWidget);
   });
 
-  testWidgets('Activity state is normal when an activity has been cancelled '
-      'and non-cancelled and timer added', (WidgetTester tester) async {
+  testWidgets(
+      'Activity state is normal when an activity has been cancelled and'
+          ' non-cancelled and timer added', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
-    mockActivity.state = ActivityState.Normal;
-    await tester.pumpWidget(
-        MaterialApp(home: ShowActivityScreen(mockActivity, mockUser)));
+
+    final ActivityModel activistModel = makeNewActivityModel();
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(activistModel, mockUser, weekplanBloc,
+            timerBloc, mockWeekDayModel())));
 
     await tester.pump();
     await tester.tap(find.byKey(const Key('CancelStateToggleButton')));
@@ -967,130 +1050,153 @@ void main() {
     await tester.tap(find.byKey(const Key('AddTimerButtonKey')));
     await tester.pumpAndSettle();
 
-    expect(mockActivity.state, ActivityState.Normal);
+    expect(activistModel.state, ActivityState.Normal);
   });
-  
-  testWidgets('Button for save alternate name to'
+
+  testWidgets(
+      'Button for save alternate name to'
       ' activity is rendered in guardian mode', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
-    await tester.pumpWidget(MaterialApp(home:
-        ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
 
-    expect(find.byKey
-        (const Key('SavePictogramTextForCitizenBtn')), findsOneWidget);
+    expect(find.byKey(const Key('SavePictogramTextForCitizenBtn')),
+        findsOneWidget);
   });
 
-  testWidgets('Button for update activity title to pictogram title'
+  testWidgets(
+      'Button for update activity title to pictogram title'
       ' is rendered in guaridan mode', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
-    await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
 
-    expect(find.byKey
-      (const Key('GetStandardPictogramTextForCitizenBtn')), findsOneWidget);
+    expect(find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')),
+        findsOneWidget);
   });
 
-  testWidgets('Textfield for typing alternate name is rendered in guardian'
+  testWidgets(
+      'Textfield for typing alternate name is rendered in guardian'
       ' mode and isChoiceBoard is false', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
-    await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('AlternateNameTextField')), findsOneWidget);
   });
 
-  testWidgets('Button for save alternate name to activity title'
+  testWidgets(
+      'Button for save alternate name to activity title'
       ' is not rendered in citizen mode', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.isChoiceBoard = false;
-    await tester.pumpWidget(MaterialApp(home:
-    ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
 
-    expect(find.byKey
-      (const Key('SavePictogramTextForCitizenBtn')), findsNothing);
+    expect(
+        find.byKey(const Key('SavePictogramTextForCitizenBtn')), findsNothing);
   });
 
-  testWidgets('Button for update activity title to pictogram title'
-      ' is not rendered in citizen mode', (WidgetTester tester) async {
+  testWidgets(
+      'Button for update activity title to pictogram title'
+          ' is not rendered in citizen mode', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.citizen);
     mockActivity.isChoiceBoard = false;
-    await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
 
-    expect(find.byKey
-      (const Key('GetStandardPictogramTextForCitizenBtn')), findsNothing);
+    expect(find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')),
+        findsNothing);
   });
 
-  testWidgets('Button for save alternate name to activity title is not rendered'
-      ' while isChoiceBoard is true', (WidgetTester tester) async {
+  testWidgets(
+      'Button for save alternate name to activity title is not rendered'
+          ' while isChoiceBoard is true', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = true;
-    await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
 
-    expect(find.byKey
-      (const Key('SavePictogramTextForCitizenBtn')), findsNothing);
+    expect(
+        find.byKey(const Key('SavePictogramTextForCitizenBtn')), findsNothing);
   });
 
-  testWidgets('Button for update activity title to pictogram title is not '
-      'rendered while isChoiceBoard is true', (WidgetTester tester) async {
+  testWidgets('Button for update activity title to pictogram title is not'
+      ' rendered while isChoiceBoard is true', (WidgetTester tester) async {
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = true;
-    await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
     await tester.pumpAndSettle();
 
-    expect(find.byKey
-      (const Key('GetStandardPictogramTextForCitizenBtn')), findsNothing);
+    expect(find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')),
+        findsNothing);
   });
 
   testWidgets('Activity title is updated on button press',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
+        await tester.runAsync(() async {
+          authBloc.setMode(WeekplanMode.guardian);
+          mockActivity.isChoiceBoard = false;
+
+          await tester.pumpWidget(MaterialApp(
+              home: ShowActivityScreen(mockActivity, mockUser2, weekplanBloc,
+                  timerBloc, mockWeekDayModel())));
+
+          await tester.pump();
+
+          expect(bloc
+              .getActivity()
+              .title, 'blå');
+          await tester.enterText(
+              find.byKey(const Key('AlternateNameTextField')), 'test');
+          await tester.pumpAndSettle();
+          await tester.tap(
+              find.byKey(const Key('SavePictogramTextForCitizenBtn')));
+          await tester.pumpAndSettle();
+
+          expect(bloc
+              .getActivity()
+              .title, 'test');
+        });
+  });
+
+  testWidgets('Activity title is set to pictogram title on button press',
+      (WidgetTester tester) async {
+
     authBloc.setMode(WeekplanMode.guardian);
     mockActivity.isChoiceBoard = false;
 
-    await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser2)));
+    await tester.pumpWidget(MaterialApp(
+        home: ShowActivityScreen(mockActivityModelWithTimer(), mockUser2,
+            weekplanBloc, timerBloc, mockWeekDayModel())));
 
+    // Change activity title before getting original
     await tester.pump();
-
-    expect(bloc.getActivity().title,'blå');
     await tester.enterText(
         find.byKey(const Key('AlternateNameTextField')), 'test');
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
-    await tester.pumpAndSettle();
-
-    expect(bloc.getActivity().title,'test');
-  });
-
-  testWidgets('Activity title is set to pictogram title on button press',
-          (WidgetTester tester) async {
-    authBloc.setMode(WeekplanMode.guardian);
-    mockActivity.isChoiceBoard = false;
-
-    await tester.pumpWidget(MaterialApp(home:
-      ShowActivityScreen(mockActivity, mockUser2)));
-
-    // Change activity title before getting original
-    await tester.pump();
-    await tester.enterText(find.byKey(
-        const Key('AlternateNameTextField')), 'test');
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('SavePictogramTextForCitizenBtn')));
 
     // Get original title
-    await tester.tap(
-        find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')));
+    await tester
+        .tap(find.byKey(const Key('GetStandardPictogramTextForCitizenBtn')));
     await tester.pumpAndSettle();
 
     expect(mockActivity.title, mockPictograms.first.title);

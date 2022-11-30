@@ -12,6 +12,7 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/pictogram_search_screen.dart';
@@ -50,9 +51,20 @@ class WeekplanDayColumn extends StatelessWidget {
   /// Index of the weekday in the weekdayStreams list
   final int streamIndex;
 
+
   final AuthBloc _authBloc = di.get<AuthBloc>();
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
   final ActivityBloc _activityBloc = di.get<ActivityBloc>();
+  final List<TimerBloc> _timerBloc = <TimerBloc>[];
+  /// Method used to create TimerBlocs.
+  void createTimerBlocs(int numOfTimeBlocs) {
+    for (int i = 0; i  <= numOfTimeBlocs- _timerBloc.length; i++) {
+      _timerBloc.add(di.get<TimerBloc>());
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +73,7 @@ class WeekplanDayColumn extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<WeekdayModel> snapshot) {
           if (snapshot.hasData) {
             final WeekdayModel _dayModel = snapshot.data;
-
+            createTimerBlocs(_dayModel.activities.length);
             return Card(color: color, child: _day(_dayModel, context));
           } else {
             return const Center(child: CircularProgressIndicator());
@@ -390,6 +402,7 @@ class WeekplanDayColumn extends StatelessWidget {
       BuildContext context, int index, WeekdayModel weekday, bool inEditMode) {
     final ActivityModel currActivity = weekday.activities[index];
 
+
     final bool isMarked = weekplanBloc.isActivityMarked(currActivity);
 
     return FittedBox(
@@ -414,8 +427,10 @@ class WeekplanDayColumn extends StatelessWidget {
                                 key: Key(weekday.day.index.toString() +
                                     currActivity.id.toString()),
                                 onTap: () {
-                                  if (modeSnapshot.data ==
-                                      WeekplanMode.guardian) {
+                                  if (modeSnapshot.data == WeekplanMode.guardian
+                                      ||
+                                      modeSnapshot.data == WeekplanMode.trustee)
+                                  {
                                     _handleOnTapActivity(
                                         inEditMode,
                                         isMarked,
@@ -454,6 +469,30 @@ class WeekplanDayColumn extends StatelessWidget {
       ),
     );
   }
+  void _handleActivity(
+      List<ActivityModel> activities,
+      int index,
+      WeekdayModel weekday) {
+    final ActivityModel activistModel = activities[index];
+    if(activistModel.state == ActivityState.Completed ||
+        (activistModel.timer != null &&
+            activistModel.timer.paused == false)) {
+        return;
+    }
+    _activityBloc.load(activistModel, user);
+    _activityBloc.accesWeekPlanBloc(weekplanBloc, weekday);
+    _timerBloc[index].load(activistModel,user: user);
+    _timerBloc[index].setActivityBloc(_activityBloc);
+    _activityBloc.addHandlerToActivityStateOnce();
+    _timerBloc[index].addHandlerToRunningModeOnce();
+    _timerBloc[index].initTimer();
+
+    if (activistModel.timer == null) {
+      _activityBloc.completeActivity();
+    } else {
+      _timerBloc[index].playTimer();
+    }
+  }
 
   /// Handles tap on an activity
   void _handleOnTapActivity(
@@ -481,16 +520,21 @@ class WeekplanDayColumn extends StatelessWidget {
             return WeekplannerChoiceboardSelector(
                 activities[index], _activityBloc, user);
           });
+    } else if (isCitizen) {
+      _handleActivity(activities,index,weekday);
     }
     else if(!inEditMode){
-      Routes().push(context, ShowActivityScreen(activities[index], user))
+
+      Routes().push(context, ShowActivityScreen(activities[index],
+          user, weekplanBloc,_timerBloc[index], weekday))
+
+
           .whenComplete(() {weekplanBloc.getWeekday(weekday.day)
           .catchError((Object error) {
             creatingNotifyDialog(error, context);
         });
       });
     }
-
   }
 
   /// Builds activity card with a status icon if it is marked
@@ -509,9 +553,9 @@ class WeekplanDayColumn extends StatelessWidget {
               border: Border.all(
                   color: Colors.black,
                   width: MediaQuery.of(context).size.width * 0.1)),
-          child: ActivityCard(activities[index], user));
+          child: ActivityCard(activities[index], _timerBloc[index], user));
     } else {
-      return ActivityCard(activities[index], user);
+      return ActivityCard(activities[index], _timerBloc[index], user);
     }
   }
 

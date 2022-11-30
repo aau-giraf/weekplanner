@@ -37,8 +37,12 @@ class MockAuthBloc extends Mock implements AuthBloc {
   Stream<bool> get loggedIn => _loggedIn.stream;
   final rx_dart.BehaviorSubject<bool> _loggedIn = rx_dart.BehaviorSubject<bool>
       .seeded(false);
-
-  @override String loggedInUsername = 'testUsername';
+  @override
+  GirafUserModel get loggedInUser {
+    return GirafUserModel(id: '1', role: Role.Guardian, roleName: 'guardan', 
+    username: 'testUsername', displayName: 'testDisplayName', department: 1);
+  }
+  //loggedInUsername = 'testUsername';
 
   @override
   Future<void> authenticateFromPopUp(String username, String password) async {
@@ -56,7 +60,7 @@ class MockChangeUsernameScreen extends ChangeUsernameScreen{ //ignore: must_be_i
     @override
     void confirmUser(Stream<GirafUserModel> girafUser) {
         authBloc.authenticateFromPopUp(
-            authBloc.loggedInUsername, confirmUsernameCtrl.text);
+            authBloc.loggedInUser.username, confirmUsernameCtrl.text);
 
         authBloc.loggedIn.listen((bool snapshot) {
           loginStatus = snapshot;

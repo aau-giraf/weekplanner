@@ -87,6 +87,7 @@ void main() {
         weekDayColors: MockUserApi.createWeekDayColors(),
     );
 
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     settingsBloc = SettingsBloc(api);
