@@ -51,7 +51,7 @@ class LoginScreenState extends State<LoginScreen> {
         // Return if logging out
         if (snapshot) {
           // Pop the loading spinner
-          Routes().pop(context);
+          Routes().goHome(context);
         }
         // Stop listening for future logins
         loginListener.cancel();
@@ -233,12 +233,7 @@ class LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(color: theme.GirafColors.white),
                           ),
                           onPressed: () {
-                            //Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute<void>(
-                                    builder: (BuildContext context) =>
-                                        PictogramLoginScreen()));
+                            Routes().push(context, PictogramLoginScreen());
                           },
                         ),
                       ),

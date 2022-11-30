@@ -1,56 +1,26 @@
-import 'dart:async';
-
 import 'package:api_client/api/api.dart';
 import 'package:flutter/material.dart';
-import 'package:weekplanner/api/errorcode_translator.dart';
-import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/routes.dart';
+import 'package:weekplanner/screens/login_screen.dart';
 import 'package:weekplanner/style/font_size.dart';
-import 'package:weekplanner/widgets/loading_spinner_widget.dart';
 import 'package:weekplanner/widgets/pictogram_password_widgets/pictogram_password_widget.dart';
 import '../di.dart';
 import '../style/custom_color.dart' as theme;
 import '../style/custom_color.dart';
 
 /// The screen that contains functionality for logging in with pictograms.
-class PictogramLoginScreen extends StatefulWidget {
+class PictogramLoginScreen extends LoginScreen {
   @override
   _PictogramLoginState createState() => _PictogramLoginState();
 }
 
-class _PictogramLoginState extends State<PictogramLoginScreen> {
-  final AuthBloc _authBloc = di.get<AuthBloc>();
+class _PictogramLoginState extends LoginScreenState {
   final Api _api = di.get<Api>();
-  final ApiErrorTranslator _translator = ApiErrorTranslator();
-  final TextEditingController usernameController = TextEditingController();
   PictogramPassword pictogramPassword;
-
-  String inputPass;
-
   void onPasswordUpdate(String password) {
     if (password != null) {
-      inputPass = password;
+      passwordCtrl.text = password;
     }
-  }
-
-  void login(BuildContext context) {
-    showLoadingSpinner(context, true);
-    _authBloc
-        .authenticate(usernameController.value.text, inputPass)
-        .then((dynamic result) {
-      StreamSubscription<bool> loginListener;
-      loginListener = _authBloc.loggedIn.listen((bool snapshot) {
-        // Return if logging out
-        if (snapshot) {
-          // Pop the loading spinner
-          Routes().pop(context);
-        }
-        // Stop listening for future logins
-        loginListener.cancel();
-      });
-    }).onError((Object error, StackTrace stackTrace) {
-      _translator.catchApiError(error, context);
-    });
   }
 
   @override
@@ -92,7 +62,7 @@ class _PictogramLoginState extends State<PictogramLoginScreen> {
                   child: TextFormField(
                     key: const Key('usernameField'),
                     style: const TextStyle(fontSize: GirafFont.large),
-                    controller: usernameController,
+                    controller: usernameCtrl,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                         filled: true,
@@ -146,7 +116,7 @@ class _PictogramLoginState extends State<PictogramLoginScreen> {
                       ),
                     ),
                     onPressed: () {
-                      login(context);
+                      loginAction(context);
                     },
                     child: const Text(
                       'Login',
