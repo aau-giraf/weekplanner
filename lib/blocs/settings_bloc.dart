@@ -43,6 +43,7 @@ class SettingsBloc extends BlocBase {
     return _api.user.updateSettings(userId, settingsModel);
   }
 
+  ///Deletes the user
   void deleteUser(String userId){
     _api.account
         .delete(userId)

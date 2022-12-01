@@ -1,3 +1,4 @@
+import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
@@ -9,6 +10,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/toolbar_bloc.dart';
@@ -20,6 +22,7 @@ import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
 
 SettingsModel mockSettings;
+class MockAccountApi extends Mock implements AccountApi {}
 
 class MockUserApi extends Mock implements UserApi {
   @override
@@ -62,14 +65,17 @@ class MockUserApi extends Mock implements UserApi {
 
 void main() {
   Api api;
+  MockAccountApi accountApi;
   SettingsBloc settingsBloc;
 
-  final DisplayNameModel user = DisplayNameModel(
+  DisplayNameModel user = DisplayNameModel(
       displayName: 'Anders And', id: '101', role: Role.Guardian.toString());
 
   setUp(() {
     di.clearAll();
     api = Api('any');
+    accountApi=MockAccountApi();
+    api.account=accountApi;
     api.user = MockUserApi();
 
     mockSettings = SettingsModel(
@@ -236,6 +242,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Det indtastede navn er forkert!'), findsOneWidget);
+      }
+  );
+
+
+  testWidgets('when user is deleted, display no error, and remove user',
+          (WidgetTester tester) async {
+            when(accountApi.delete(user.id)).thenAnswer((_) =>
+            rx_dart.BehaviorSubject<bool>.seeded(user=null));
+
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.tap(find.text('Slet bruger'));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField), user.displayName);
+        await tester.tap(find.text('Slet'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Det indtastede navn er forkert!'), findsNothing);
+        expect(user,null);
       }
   );
 

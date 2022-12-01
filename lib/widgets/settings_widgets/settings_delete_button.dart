@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_item.dart';
 import '../../style/custom_color.dart' as theme;
