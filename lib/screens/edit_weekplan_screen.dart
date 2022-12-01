@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/edit_weekplan_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_selector_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/exceptions/custom_exceptions.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_button_widget.dart';
@@ -43,8 +44,15 @@ class EditWeekPlanScreen extends StatelessWidget {
             oldWeekModel: weekModel,
             selectorBloc: selectorBloc);
 
-        if (result != null) {
-          Routes().pop<WeekModel>(context, result);
+        try {
+          if (result != null) {
+            Routes().pop<WeekModel>(context, result);
+          }
+        } catch (err) {
+          throw EditWeekplanButtonException(
+              'Something went wrong while building the edit week plan button'
+              '\n Error: ',
+              err.toString());
         }
       },
     );

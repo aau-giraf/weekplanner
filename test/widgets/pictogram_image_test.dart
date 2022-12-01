@@ -24,6 +24,7 @@ class MockUserApi extends Mock implements UserApi {
         GirafUserModel(id: '1', username: 'test', role: Role.Guardian));
   }
 }
+
 void main() {
   PictogramImageBloc bloc;
   Api api;
@@ -53,12 +54,12 @@ void main() {
   });
 
   testWidgets('takes PictogramModel and VoidCallback',
-          (WidgetTester tester) async {
-        await tester.pumpWidget(PictogramImage(
-          pictogram: pictogramModel,
-          onPressed: () {},
-        ));
-      });
+      (WidgetTester tester) async {
+    await tester.pumpWidget(PictogramImage(
+      pictogram: pictogramModel,
+      onPressed: () {},
+    ));
+  });
 
   testWidgets('loads renders given image', (WidgetTester tester) async {
     await tester.pumpWidget(PictogramImage(
@@ -84,7 +85,7 @@ void main() {
   testWidgets('triggers callback on tap', (WidgetTester tester) async {
     final Completer<bool> done = Completer<bool>();
 
-     await tester.pumpWidget(PictogramImage(
+    await tester.pumpWidget(PictogramImage(
       pictogram: pictogramModel,
       onPressed: () {
         done.complete(true);
@@ -123,19 +124,18 @@ void main() {
     await waiter.future;
   });
 
-  testWidgets('shows delete button when haveRights ', (WidgetTester tester)
-  async{
+  testWidgets('shows delete button when haveRights ',
+      (WidgetTester tester) async {
     await tester.pumpWidget(PictogramImage(
       pictogram: pictogramModel,
-      onPressed: () {  },
+      onPressed: () {},
       haveRights: true,
     ));
-    expect(find.byType(GirafButton),findsOneWidget);
-
+    expect(find.byType(GirafButton), findsOneWidget);
   });
 
-  testWidgets('show delete button when comparing ids', (WidgetTester tester)
-  async {
+  testWidgets('show delete button when comparing ids',
+      (WidgetTester tester) async {
     String id;
     final Completer<bool> done = Completer<bool>();
     api.user.me().listen((GirafUserModel model) {
@@ -146,22 +146,19 @@ void main() {
     await done.future;
     await tester.pumpWidget(PictogramImage(
       pictogram: pictogramModel,
-      onPressed: () {  },
+      onPressed: () {},
       haveRights: pictogramModel.userId == id,
     ));
-    expect(find.byType(GirafButton),findsOneWidget);
-
+    expect(find.byType(GirafButton), findsOneWidget);
   });
 
   testWidgets('deletebutton is not shown when image is not owned',
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
     await tester.pumpWidget(PictogramImage(
       pictogram: pictogramModel,
-      onPressed: () {  },
+      onPressed: () {},
       haveRights: false,
     ));
-    expect(find.byType(GirafButton),findsNothing);
+    expect(find.byType(GirafButton), findsNothing);
   });
-
-
 }
