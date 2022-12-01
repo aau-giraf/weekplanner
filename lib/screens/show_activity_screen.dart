@@ -13,6 +13,7 @@ import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/di.dart';
+import 'package:weekplanner/exceptions/custom_exceptions.dart';
 import 'package:weekplanner/models/enums/app_bar_icons_enum.dart';
 import 'package:weekplanner/models/enums/timer_running_mode.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
@@ -91,15 +92,22 @@ class ShowActivityScreen extends StatelessWidget {
       Orientation orientation, BuildContext context, WeekplanMode mode) {
     Widget childContainer;
 
-    if (orientation == Orientation.portrait) {
-      childContainer = Column(
-        children: buildScreen(context, mode),
-      );
-    } else if (orientation == Orientation.landscape) {
-      childContainer = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: buildScreen(context, mode),
-      );
+    try {
+      if (orientation == Orientation.portrait) {
+        childContainer = Column(
+          children: buildScreen(context, mode),
+        );
+      } else if (orientation == Orientation.landscape) {
+        childContainer = Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: buildScreen(context, mode),
+        );
+      }
+    } catch (err) {
+      throw OrientationException(
+          'Something is wrong with the screen orientation'
+          '\n Error: ',
+          err.toString());
     }
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -228,11 +236,13 @@ class ShowActivityScreen extends StatelessWidget {
                     key: const Key('AddChoiceBoardButtonKey'),
                     child: InkWell(
                       onTap: () async {
-                        await Routes().push(
-                            context,
-                            PictogramSearch(
-                              user: _girafUser,
-                            )).then((Object object) {
+                        await Routes()
+                            .push(
+                                context,
+                                PictogramSearch(
+                                  user: _girafUser,
+                                ))
+                            .then((Object object) {
                           if (object is PictogramModel) {
                             _activityBloc.load(_activity, _girafUser);
                             final PictogramModel newPictogram = object;

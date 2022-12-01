@@ -38,7 +38,6 @@ bool lastState = false;
 /// since this fixes a bug with logging in first time
 bool firstTimeLogIn = true;
 
-
 void _runApp() {
   runApp(MaterialApp(
       title: 'Weekplanner',
@@ -46,11 +45,8 @@ void _runApp() {
       //debugShowCheckedModeBanner: false,
       home: StreamBuilder<bool>(
           initialData: false,
-          stream: di
-              .get<AuthBloc>()
-              .loggedIn
-              .where((bool currentState) =>
-                      lastState != currentState || firstTimeLogIn),
+          stream: di.get<AuthBloc>().loggedIn.where((bool currentState) =>
+              lastState != currentState || firstTimeLogIn),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             lastState = snapshot.data;
             //To make sure we only listen to the stream once we take advantage
@@ -86,10 +82,10 @@ void _runApp() {
 /// Lost connection dialog
 void lostConnectionDialog(BuildContext context) {
   showDialog<Center>(
-    context: context,
-    builder: (BuildContext context) {
-      return const GirafNotifyDialog(
-          title: 'Mistet forbindelse',
-          description: 'Ændringer bliver gemt når du får forbindelse igen');
-    });
+      context: context,
+      builder: (BuildContext context) {
+        return const GirafNotifyDialog(
+            title: 'Mistet forbindelse',
+            description: 'Ændringer bliver gemt når du får forbindelse igen');
+      });
 }
