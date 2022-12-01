@@ -2,6 +2,8 @@ import 'package:api_client/api/account_api.dart';
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
@@ -20,7 +22,6 @@ import 'package:weekplanner/screens/settings_screens/settings_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section_checkboxButton.dart';
-
 SettingsModel mockSettings;
 class MockAccountApi extends Mock implements AccountApi {}
 
@@ -79,18 +80,22 @@ void main() {
     api.user = MockUserApi();
 
     mockSettings = SettingsModel(
-      orientation: null,
-      completeMark: null,
-      cancelMark: null,
-      defaultTimer: null,
-      theme: null,
-      nrOfDaysToDisplay: 1,
-      weekDayColors: MockUserApi.createWeekDayColors(),
-      lockTimerControl: false,
-      pictogramText: false,
-      showPopup: false,
+        orientation: null,
+        completeMark: null,
+        cancelMark: null,
+        theme: GirafTheme.AndroidBlue,
+        defaultTimer: DefaultTimer.Hourglass,
+        nrOfDaysToDisplay: 1,
+        lockTimerControl: false,
+        pictogramText: false,
+        showPopup: false,
+        nrOfActivitiesToDisplay: null,
+        showOnlyActivities: false,
+        showSettingsForCitizen: false,
+        weekDayColors: MockUserApi.createWeekDayColors(),
     );
 
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     settingsBloc = SettingsBloc(api);
@@ -130,13 +135,23 @@ void main() {
     expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
   });
 
+  testWidgets('Settings has Bruger indstillinger section',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+        expect(find.text('Giv borger adgang til deres indstillinger.')
+        , findsOneWidget);
+  });
+
   testWidgets('Settings has Brugerindstillinger section',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    expect(find.text('Bruger indstillinger'), findsOneWidget);
-    expect(find.text(user.displayName + ' indstillinger'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Bruger indstillinger', skipOffstage: false),
+        findsOneWidget);
   });
 
+ 
   testWidgets('Farver på ugeplan button changes screen',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
@@ -167,15 +182,16 @@ void main() {
         expect(false, mockSettings.showPopup);
 
         await tester.tap(find.text('Vis bekræftelse popups'));
-        await tester.pumpAndSettle();
 
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
         expect(true, mockSettings.showPopup);
   });
 
   testWidgets('Settings has TimerControl checkbox without an checkmark',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&

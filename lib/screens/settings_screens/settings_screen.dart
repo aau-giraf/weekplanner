@@ -6,13 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
 import 'package:weekplanner/routes.dart';
 import 'package:weekplanner/screens/settings_screens/'
-    'color_theme_selection_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
     'number_of_days_selection_screen.dart';
 import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
-import 'package:weekplanner/screens/settings_screens/'
-    'time_representation_screen.dart';
+import 'package:weekplanner/screens/settings_screens/time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
@@ -24,10 +21,11 @@ import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_checkboxButton.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_item.dart';
-import 'package:weekplanner/widgets/settings_widgets/'
-    'settings_theme_display_box.dart';
-
 import '../../di.dart';
+import '../../widgets/settings_widgets/settings_theme_display_box.dart';
+import 'change_password_screen.dart';
+import 'change_username_screen.dart';
+import 'color_theme_selection_screen.dart';
 import 'completed_activity_icon_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
@@ -55,9 +53,9 @@ class SettingsScreen extends StatelessWidget {
         _buildOrientationSection(),
         _buildWeekPlanSection(context),
         _buildTimerSection(context),
-        _buildTimeRepresentationSettings(context),
         _buildUserSettings(context),
-        _buildPrivacySection()
+        _buildTimeRepresentationSettings(context),
+        _buildPrivacySection(),
       ],
     );
   }
@@ -102,8 +100,8 @@ class SettingsScreen extends StatelessWidget {
                       settingsModel.completeMark == CompleteMark.Checkmark
                       ? 'Flueben'
                       : settingsModel.completeMark == CompleteMark.MovedRight
-                      ? 'Lav aktiviteten grå'
-                      : 'Fjern aktiviteten'))
+                          ? 'Lav aktiviteten grå'
+                          : 'Fjern aktiviteten'))
             ]);
           } else {
             return const Center(
@@ -113,11 +111,13 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
+
   Widget _buildOrientationSection() {
     return SettingsSection('Orientering', <SettingsSectionItem>[
       SettingsCheckMarkButton(5, 5, 'Landskab', () {}),
     ]);
   }
+
 
   Widget _buildWeekPlanSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
@@ -174,6 +174,7 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
+
   Widget _buildTimerSection(BuildContext context) {
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
@@ -200,64 +201,119 @@ class SettingsScreen extends StatelessWidget {
         });
   }
 
+
   Widget _buildUserSettings(BuildContext context) {
     String input='';
-    return SettingsSection('Bruger indstillinger', <SettingsSectionItem>[
-      SettingsArrowButton(_user.displayName + ' indstillinger', () {}),
-      SettingsDeleteButton('Slet bruger', () {showDialog<Center>(
-    barrierDismissible: false,
-    context: context,
-    builder: (BuildContext context) {
-    return GirafConfirmDialog(
-    title: 'Slet bruger',
-    descriptionRichText: RichText(
-        text: TextSpan(
-            style: const TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontFamily: 'Quicksand'),
-            children: <TextSpan>[
-              const TextSpan(text: 'For at slette denne bruger, indtast '),
-              TextSpan(text: _user.displayName,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              const TextSpan(text: ' i feltet herunder')
+    return StreamBuilder<SettingsModel>(
+        stream: _settingsBloc.settings,
+        builder: (BuildContext context,
+            AsyncSnapshot<SettingsModel> settingsSnapshot) {
+          if (settingsSnapshot.hasData) {
+            final SettingsModel settingsModel = settingsSnapshot.data;
+            return SettingsSection('Bruger indstillinger',
+                <SettingsSectionItem>[
+              SettingsCheckMarkButton.fromBoolean(
+                  settingsModel.showSettingsForCitizen,
+                    'Giv borger adgang til deres indstillinger.', () {
+                  settingsModel.showSettingsForCitizen =
+                    !settingsModel.showSettingsForCitizen;
+                  _settingsBloc.updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                        _settingsBloc.loadSettings(_user);
+                });
+              }),
+              SettingsArrowButton('Skift brugernavn',
+                    () async {
+                final Object result =
+                await Routes().push(context, ChangeUsernameScreen(_user));
+                if (result != null) {
+                  settingsModel.nrOfDaysToDisplay = result;
+                  _settingsBloc
+                      .updateSettings(_user.id, settingsModel)
+                      .listen((_) {
+                    _settingsBloc.loadSettings(_user);
+                  });
+                }
+              },),
+              SettingsArrowButton(
+                'Skift kodeord',
+                () async {
+                  final Object result =
+                      await Routes().push(context, ChangePasswordScreen(_user));
+                  if (result != null) {
+                    settingsModel.nrOfDaysToDisplay = result;
+                    _settingsBloc
+                        .updateSettings(_user.id, settingsModel)
+                        .listen((_) {
+                      _settingsBloc.loadSettings(_user);
+                    });
+                  }
+                },
+              ),
+    //Code for delete button
+                  SettingsDeleteButton('Slet bruger', () {showDialog<Center>(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return GirafConfirmDialog(
+                          title: 'Slet bruger',
+                          descriptionRichText: RichText(
+                            text: TextSpan(
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontFamily: 'Quicksand'),
+                                children: <TextSpan>[
+                                  const TextSpan(text: 'For at slette denne bruger, indtast '),
+                                  TextSpan(text: _user.displayName,
+                                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextSpan(text: ' i feltet herunder')
+                                ]
+                            ),
+                          ),
+                          inputField: TextField(
+                            onChanged: (String text) {input=text;},
+                            style: const TextStyle(fontSize: 20),
+                            textAlign: TextAlign. center,
+                            decoration:  const InputDecoration(
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              border: OutlineInputBorder(),
+                              hintText: 'Indtast navn',
+                            ),
+                          ),
+                          confirmButtonText: 'Slet',
+                          confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
+                          confirmOnPressed: () {
+                            //if the correct name is written delete the user, else provide an error
+                            if(input==_user.displayName){
+                              _settingsBloc.deleteUser(_user.id);
+                              Routes().goHome(context);
+                            }
+                            else{
+                              showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                  const GirafNotifyDialog(title: 'Fejl',
+                                      description: 'Det indtastede navn er forkert!')
+                              );
+                            }
+                          },
+                        );
+                      }
+                  );
+                  }
+                  )
             ]
-        ),
-    ),
-    inputField: TextField(
-      onChanged: (String text) {input=text;},
-      style: const TextStyle(fontSize: 20),
-      textAlign: TextAlign. center,
-      decoration:  const InputDecoration(
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        border: OutlineInputBorder(),
-        hintText: 'Indtast navn',
-      ),
-    ),
-    confirmButtonText: 'Slet',
-    confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
-    confirmOnPressed: () {
-      //if the correct name is written delete the user, else provide an error
-    if(input==_user.displayName){
-      _settingsBloc.deleteUser(_user.id);
-      Routes().goHome(context);
-    }
-    else{
-      showDialog<String>(
-        context: context,
-        builder: (BuildContext context) =>
-        const GirafNotifyDialog(title: 'Fejl',
-            description: 'Det indtastede navn er forkert!')
-      );
-    }
-    },
+
+
     );
-    }
-    );
-      }
-      ),
-    ]
-    );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+
   }
 
 
@@ -292,16 +348,16 @@ class SettingsScreen extends StatelessWidget {
                 _settingsBloc.updateSettings(_user.id, settingsModel)
                   .listen((_) {
                     _settingsBloc.loadSettings(_user);
-                });
-              },
-              titleTrailing: Image(
-                  width: 50,
-                  height: 50,
-                  image: AssetImage(userTimer == DefaultTimer.PieChart
-                      ? 'assets/timer/piechart_icon.png'
-                      : userTimer == DefaultTimer.Hourglass
-                      ? 'assets/timer/hourglass_icon.png'
-                      : 'assets/timer/countdowntimer_icon.png')),
+                  });
+                },
+                titleTrailing: Image(
+                    width: 50,
+                    height: 50,
+                    image: AssetImage(userTimer == DefaultTimer.PieChart
+                        ? 'assets/timer/piechart_icon.png'
+                        : userTimer == DefaultTimer.Hourglass
+                            ? 'assets/timer/hourglass_icon.png'
+                            : 'assets/timer/countdowntimer_icon.png')),
               )
             ]);
           } else {

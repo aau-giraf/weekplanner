@@ -139,6 +139,7 @@ void main() {
     mockNewCitizenBloc = MockNewCitizenBloc(api);
 
     di.clearAll();
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<NewCitizenBloc>(() => mockNewCitizenBloc);
@@ -161,13 +162,19 @@ void main() {
     expect(find.byType(TextFormField), findsNWidgets(4));
   });
 
+  testWidgets('Switch is rendered', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+
+    expect(find.byType(Switch), findsOneWidget);
+  });
+
   testWidgets('Buttons are rendered', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
     final TestGesture gesture = await tester.startGesture(const Offset(0, 300));
     await gesture.moveBy(const Offset(0, -300));
     await tester.pump();
 
-    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(3));
+    expect(find.byType(GirafButton, skipOffstage: false), findsNWidgets(4));
   });
 
   testWidgets('You can input a display name', (WidgetTester tester) async {
@@ -245,5 +252,17 @@ void main() {
     await tester.tap(find.byKey(const Key('saveButton'), skipOffstage: false));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('ErrorMessageDialog')), findsNWidgets(0));
+  });
+
+  testWidgets('"Videre" button should be disabled by default',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: NewCitizenScreen()));
+    await tester.pump();
+
+    expect(
+        tester
+            .widget<GirafButton>(find.byKey(const Key('nextButton')))
+            .isEnabled,
+        isFalse);
   });
 }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
 
 /// Class for translating error codes to readable messages for the users
-class ApiErrorTranslater {
-  /// Catch errors thrown by the api_clien
+class ApiErrorTranslator {
+  /// Catch errors thrown by the api_client
   /// (Can only handle ApiExceptions for now)
   void catchApiError(Object error, BuildContext context) {
     showDialog<Center>(
@@ -34,7 +34,10 @@ class ApiErrorTranslater {
             '\nDetails: ' +
             error.errorDetails;
       default:
-        return 'Ukendt fejl';
+        return 'Fejl: ' +
+            error.errorMessage +
+            '\nDetails: ' +
+            error.errorDetails;
     }
   }
 }

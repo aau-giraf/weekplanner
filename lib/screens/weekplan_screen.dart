@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -19,6 +20,7 @@ import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
 import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
 import 'package:weekplanner/widgets/giraf_copy_activities_dialog.dart';
 import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_activities_column.dart';
 import 'package:weekplanner/widgets/weekplan_screen_widgets/weekplan_day_column.dart';
 
 import '../style/custom_color.dart' as theme;
@@ -45,6 +47,7 @@ class WeekplanScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final WeekModel _week;
 
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekplanMode>(
@@ -54,79 +57,108 @@ class WeekplanScreen extends StatelessWidget {
           if (weekModeSnapshot.data == WeekplanMode.citizen) {
             _weekplanBloc.setEditMode(false);
           }
-          return WillPopScope(
-            onWillPop: () async =>
-                weekModeSnapshot.data == WeekplanMode.guardian,
-            child: Scaffold(
-              appBar: GirafAppBar(
-                title: _user.displayName + ' - ' + _week.name,
-                appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
-                    ? <AppBarIcon, VoidCallback> {
-                  // Show icons for guardian role
-                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                  AppBarIcon.changeToCitizen: () {},
-                  AppBarIcon.logout: () {},
-                  AppBarIcon.settings: () =>
-                      Routes().push<WeekModel>(context,
-                          SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user))
-                }
-                : (weekModeSnapshot.data == WeekplanMode.trustee)
-                    ? <AppBarIcon, VoidCallback> {
-                  // Show icons for trustee role
-                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                  AppBarIcon.changeToCitizen: () {},
-                  AppBarIcon.settings: () =>
-                      Routes().push<WeekModel>(context,
-                          SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user))
-                }
-                : <AppBarIcon, VoidCallback> {
-                  // Show icons for citizen role
-                  AppBarIcon.changeToGuardian: () {},
-                  AppBarIcon.logout: () {}
-                },
-                isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
-              ),
-              body: StreamBuilder<UserWeekModel>(
-                stream: _weekplanBloc.userWeek,
-                initialData: null,
-                builder: (BuildContext context,
-                    AsyncSnapshot<UserWeekModel> snapshot) {
-                  if (snapshot.hasData) {
-                    return _buildWeeks(snapshot.data.week, context);
-                  } else {
+          return StreamBuilder<SettingsModel>(
+              stream: _settingsBloc.settings,
+              builder: (BuildContext context,
+                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                  if(settingsSnapshot.hasData) {
+                    final SettingsModel _settingsModel = settingsSnapshot.data;
+                    return WillPopScope(
+                      onWillPop: () async => true,
+                      child: Scaffold(
+                        appBar: GirafAppBar(
+                          title: _user.displayName + ' - ' + _week.name,
+                          appBarIcons: (weekModeSnapshot.data ==
+                              WeekplanMode.guardian)
+                              ? <AppBarIcon, VoidCallback>{
+                            // Show icons for guardian role
+                            AppBarIcon.edit: () =>
+                                _weekplanBloc.toggleEditMode(),
+                            AppBarIcon.changeToCitizen: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : (weekModeSnapshot.data == WeekplanMode.trustee)
+                              ? <AppBarIcon, VoidCallback>{
+                            // Show icons for trustee role
+                            AppBarIcon.edit: () =>
+                                _weekplanBloc.toggleEditMode(),
+                            AppBarIcon.changeToCitizen: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : (weekModeSnapshot.data ==
+                              WeekplanMode.citizen &&
+                              _settingsModel.showSettingsForCitizen == true)
+                              ? <AppBarIcon, VoidCallback>{
+                            AppBarIcon.changeToGuardian: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : <AppBarIcon, VoidCallback>{
+                            // Show icons for citizen role
+                            AppBarIcon.changeToGuardian: () {},
+                            AppBarIcon.logout: () {},
+                          },
+                        ),
+                        body: StreamBuilder<UserWeekModel>(
+                          stream: _weekplanBloc.userWeek,
+                          initialData: null,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<UserWeekModel> snapshot) {
+                            if (snapshot.hasData) {
+                              return _buildWeeks(snapshot.data.week, context);
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                        bottomNavigationBar: StreamBuilder<WeekplanMode>(
+                          stream: _authBloc.mode,
+                          initialData: WeekplanMode.guardian,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<WeekplanMode> snapshot) {
+                            return Visibility(
+                              visible: snapshot.data == WeekplanMode.guardian,
+                              child: StreamBuilder<bool>(
+                                stream: _weekplanBloc.editMode,
+                                initialData: false,
+                                builder:
+                                    (BuildContext context,
+                                    AsyncSnapshot<bool> snapshot) {
+                                  if (snapshot.data) {
+                                    return buildBottomAppBar(context);
+                                  } else {
+                                    return Container(width: 0.0, height: 0.0);
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  }else {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                },
-              ),
-              bottomNavigationBar: StreamBuilder<WeekplanMode>(
-                stream: _authBloc.mode,
-                initialData: WeekplanMode.guardian,
-                builder: (BuildContext context,
-                    AsyncSnapshot<WeekplanMode> snapshot) {
-                  return Visibility(
-                    visible: snapshot.data == WeekplanMode.guardian,
-                    child: StreamBuilder<bool>(
-                      stream: _weekplanBloc.editMode,
-                      initialData: false,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                        if (snapshot.data) {
-                          return buildBottomAppBar(context);
-                        } else {
-                          return Container(width: 0.0, height: 0.0);
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        });
+              });
+    });
   }
 
   /// Builds the BottomAppBar when in edit mode
@@ -275,11 +307,6 @@ class WeekplanScreen extends StatelessWidget {
         });
   }
 
-
-
-
-
-
   /// Builds dialog box to confirm/cancel deletion
   Future<Center> _buildRemoveDialog(BuildContext context) {
     return showDialog<Center>(
@@ -322,6 +349,7 @@ class WeekplanScreen extends StatelessWidget {
     ];
     final List<Widget> weekDays = <Widget>[];
 
+    final List<Widget> dailyActivities = <Widget>[];
     final int _weekday = DateTime.now().weekday.toInt();
     int _weekdayCounter = 0;
 
@@ -356,6 +384,8 @@ class WeekplanScreen extends StatelessWidget {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
                     final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
+                    final int _activitiesToDisplay =
+                        _settingsModel.nrOfActivitiesToDisplay;
 
                     _weekdayCounter = 0;
                     // If the option of showing 1 or 2 days is chosen the
@@ -399,18 +429,45 @@ class WeekplanScreen extends StatelessWidget {
                         _weekdayCounter += 1;
                       }
                     }
-                  }
-                  if (weekDays.length == 1) {
-                    return Row(
-                      key: const Key('SingleWeekdayRow'),
-                      children: <Widget>[
-                        const Spacer(flex: 2),
-                        weekDays.first,
-                        const Spacer(flex: 2),
-                      ],
-                    );
-                  } else {
-                    return Row(children: weekDays);
+                    if (_settingsModel.showOnlyActivities == false) {
+                      if (weekDays.length == 1) {
+                        return Row(
+                          key: const Key('SingleWeekdayRow'),
+                          children: <Widget>[
+                            const Spacer(flex: 1),
+                            weekDays.first,
+                            const Spacer(flex: 1),
+                          ],
+                        );
+                      } else {
+                        return Row(children: weekDays);
+                      }
+                    } else {
+                      final int today = DateTime.now().weekday-1;
+                      dailyActivities.add(Expanded(
+                        child: WeekplanActivitiesColumn(
+                          dayOfTheWeek: Weekday.values[today],
+                          color: Colors.amber,
+                          weekplanBloc: _weekplanBloc,
+                          user: _user,
+                          streamIndex: today,
+                          activitiesToDisplay: _activitiesToDisplay,
+                        )
+                      )
+                      );
+                      return Row(
+                        key: const Key('SingleWeekdayRow'),
+                        children: <Widget>[
+                          const Spacer(flex: 1),
+                          dailyActivities.first,
+                          const Spacer(flex: 1),
+                        ],
+                      );
+                    }
+                    } else {
+                  return const Center(
+                  child: CircularProgressIndicator(),
+                  );
                   }
                 },
               );
