@@ -222,12 +222,16 @@ void main() {
   testWidgets('Settings has Slet bruger button',
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
         expect(find.text('Slet bruger'), findsOneWidget);
       });
 
   testWidgets('Slet bruger show popup on click',
           (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible( find.text('Slet bruger'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
     expect(find.byType(GirafConfirmDialog), findsOneWidget);
@@ -236,6 +240,9 @@ void main() {
   testWidgets('Delete confirm dialog display the right name',
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible( find.text('Slet bruger'));
+        await tester.pumpAndSettle();
         await tester.tap(find.text('Slet bruger'));
         await tester.pumpAndSettle();
         expect(
@@ -251,8 +258,12 @@ void main() {
       ' if the user wrote the wrong name',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible( find.text('Slet bruger'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
+
     await tester.enterText(find.byType(TextField), 'test');
     await tester.tap(find.text('Slet'));
     await tester.pumpAndSettle();
@@ -268,7 +279,10 @@ void main() {
             rx_dart.BehaviorSubject<bool>.seeded(user=null));
 
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-        await tester.tap(find.text('Slet bruger'));
+            await tester.pumpAndSettle();
+            await tester.ensureVisible( find.text('Slet bruger'));
+            await tester.pumpAndSettle();
+            await tester.tap(find.text('Slet bruger'));
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), user.displayName);
         await tester.tap(find.text('Slet'));

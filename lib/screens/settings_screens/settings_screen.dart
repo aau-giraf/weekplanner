@@ -250,59 +250,63 @@ class SettingsScreen extends StatelessWidget {
                   }
                 },
               ),
-    //Code for delete button
-                  SettingsDeleteButton('Slet bruger', () {showDialog<Center>(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return GirafConfirmDialog(
-                          title: 'Slet bruger',
-                          descriptionRichText: RichText(
-                            text: TextSpan(
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontFamily: 'Quicksand'),
-                                children: <TextSpan>[
-                                  const TextSpan(text: 'For at slette denne bruger, indtast '),
-                                  TextSpan(text: _user.displayName,
-                                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  const TextSpan(text: ' i feltet herunder')
-                                ]
-                            ),
-                          ),
-                          inputField: TextField(
-                            onChanged: (String text) {input=text;},
-                            style: const TextStyle(fontSize: 20),
-                            textAlign: TextAlign. center,
-                            decoration:  const InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              border: OutlineInputBorder(),
-                              hintText: 'Indtast navn',
-                            ),
-                          ),
-                          confirmButtonText: 'Slet',
-                          confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
-                          confirmOnPressed: () {
-                            //if the correct name is written delete the user, else provide an error
-                            if(input==_user.displayName){
-                              _settingsBloc.deleteUser(_user.id);
-                              Routes().goHome(context);
-                            }
-                            else{
-                              showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                  const GirafNotifyDialog(title: 'Fejl',
-                                      description: 'Det indtastede navn er forkert!')
-                              );
-                            }
-                          },
-                        );
-                      }
-                  );
+             //Code for delete button
+              SettingsDeleteButton('Slet bruger', () {showDialog<Center>(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return GirafConfirmDialog(
+                      title: 'Slet bruger',
+                      descriptionRichText: RichText(
+                        text: TextSpan(
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontFamily: 'Quicksand'),
+                            children: <TextSpan>[
+                              const TextSpan(text: 'For at slette denne bruger,'
+                                  ' indtast '),
+                              TextSpan(text: _user.displayName,
+                                  style: const TextStyle(fontWeight:
+                                  FontWeight.bold)),
+                              const TextSpan(text: ' i feltet herunder')
+                            ]
+                        ),
+                      ),
+                      inputField: TextField(
+                        onChanged: (String text) {input=text;},
+                        style: const TextStyle(fontSize: 20),
+                        textAlign: TextAlign. center,
+                        decoration:  const InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          border: OutlineInputBorder(),
+                          hintText: 'Indtast navn',
+                        ),
+                      ),
+                      confirmButtonText: 'Slet',
+                      confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
+                      confirmOnPressed: () {
+                        //if the correct name is written delete the user,
+                        // else provide an error
+                        if(input==_user.displayName){
+                          _settingsBloc.deleteUser(_user.id);
+                          Routes().goHome(context);
+                        }
+                        else{
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                              const GirafNotifyDialog(title: 'Fejl',
+                                  description: 'Det indtastede navn'
+                                      ' er forkert!')
+                          );
+                        }
+                      },
+                    );
                   }
-                  )
+              );
+              }
+              )
             ]
 
 
