@@ -142,7 +142,8 @@ void main() {
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
-        expect(find.text('Giv borger adgang til deres indstillinger.')
+        expect(find.text('Giv borger adgang til deres indstillinger.',
+            skipOffstage: false)
         , findsOneWidget);
   });
 
@@ -269,14 +270,14 @@ void main() {
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
-        expect(find.text('Slet bruger'), findsOneWidget);
+        expect(find.text('Slet bruger',skipOffstage: false), findsOneWidget);
       });
 
   testWidgets('Slet bruger show popup on click',
           (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
-    await tester.ensureVisible( find.text('Slet bruger'));
+    await tester.ensureVisible( find.text('Slet bruger',skipOffstage: false));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
@@ -287,7 +288,8 @@ void main() {
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
-        await tester.ensureVisible( find.text('Slet bruger'));
+        await tester.ensureVisible( find.text('Slet bruger',
+            skipOffstage: false));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Slet bruger'));
         await tester.pumpAndSettle();
@@ -305,7 +307,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
-    await tester.ensureVisible( find.text('Slet bruger'));
+    await tester.ensureVisible( find.text('Slet bruger',skipOffstage: false));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
@@ -325,7 +327,8 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
             await tester.pumpAndSettle();
-            await tester.ensureVisible( find.text('Slet bruger'));
+            await tester.ensureVisible( find.text('Slet bruger',
+                skipOffstage: false));
             await tester.pumpAndSettle();
             await tester.tap(find.text('Slet bruger'));
         await tester.pumpAndSettle();
