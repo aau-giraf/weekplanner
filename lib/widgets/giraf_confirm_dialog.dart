@@ -15,6 +15,8 @@ class GirafConfirmDialog extends StatelessWidget {
       {Key key,
       @required this.title,
       this.description,
+        this.descriptionRichText,
+        this.inputField,
       @required this.confirmButtonText,
       @required this.confirmButtonIcon,
       @required this.confirmOnPressed,
@@ -27,6 +29,15 @@ class GirafConfirmDialog extends StatelessWidget {
   ///description of the dialogBox, displayed under the header, describing the
   ///encountered problem
   final String description;
+
+
+  ///description of the dialogBox, displayed under the header, describing the
+  ///encountered problem
+  ///this version allows for formatting, such as text styling
+  final RichText descriptionRichText;
+
+  ///text field for optional input
+  final TextField inputField;
 
   ///text on the confirm button, describing the confirmed action
   final String confirmButtonText;
@@ -62,14 +73,29 @@ class GirafConfirmDialog extends StatelessWidget {
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Text(
-                  //if description is null, its replaced with empty.
+                child: descriptionRichText ?? Text(
+                  //if description is null, its replaced with an empty string.
                   description ?? '',
                   textAlign: TextAlign.center,
                 ),
-              ))
+              )),
+
             ],
           ),
+          //if an inputfield is provided, display it
+          inputField != null?
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+          Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child:inputField
+              )
+          )
+                  ]
+              ):Container(),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             child: Row(
