@@ -76,7 +76,6 @@ void main() {
       cancelMark: null,
       theme: GirafTheme.AndroidBlue,
       defaultTimer: DefaultTimer.Hourglass,
-      nrOfDaysToDisplay: 1,
       lockTimerControl: false,
       pictogramText: false,
       showPopup: false,
