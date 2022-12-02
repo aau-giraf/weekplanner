@@ -597,7 +597,8 @@ class WeekplanDayColumn extends StatelessWidget {
                                       ],
                                       order: weekday.activities.length,
                                       state: ActivityState.Normal,
-                                      isChoiceBoard: false),
+                                      isChoiceBoard: false,
+                                      title: object.title),
                                   weekday.day.index);
                             }
                           });
