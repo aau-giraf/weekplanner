@@ -11,6 +11,9 @@ import 'package:weekplanner/screens/settings_screens/'
     'privacy_information_screen.dart';
 import 'package:weekplanner/screens/settings_screens/time_representation_screen.dart';
 import 'package:weekplanner/widgets/giraf_app_bar_widget.dart';
+import 'package:weekplanner/widgets/giraf_confirm_dialog.dart';
+import 'package:weekplanner/widgets/giraf_notify_dialog.dart';
+import 'package:weekplanner/widgets/settings_widgets/settings_delete_button.dart';
 import 'package:weekplanner/widgets/settings_widgets/settings_section.dart';
 import 'package:weekplanner/widgets/settings_widgets/'
     'settings_section_arrow_button.dart';
@@ -52,8 +55,7 @@ class SettingsScreen extends StatelessWidget {
         _buildTimerSection(context),
         _buildUserSettings(context),
         _buildTimeRepresentationSettings(context),
-
-        _buildPrivacySection()
+        _buildPrivacySection(),
       ],
     );
   }
@@ -201,6 +203,7 @@ class SettingsScreen extends StatelessWidget {
 
 
   Widget _buildUserSettings(BuildContext context) {
+    String input='';
     return StreamBuilder<SettingsModel>(
         stream: _settingsBloc.settings,
         builder: (BuildContext context,
@@ -247,15 +250,76 @@ class SettingsScreen extends StatelessWidget {
                   }
                 },
               ),
+             //Code for delete button
+              SettingsDeleteButton('Slet bruger', () {showDialog<Center>(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return GirafConfirmDialog(
+                      title: 'Slet bruger',
+                      descriptionRichText: RichText(
+                        text: TextSpan(
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontFamily: 'Quicksand'),
+                            children: <TextSpan>[
+                              const TextSpan(text: 'For at slette denne bruger,'
+                                  ' indtast '),
+                              TextSpan(text: _user.displayName,
+                                  style: const TextStyle(fontWeight:
+                                  FontWeight.bold)),
+                              const TextSpan(text: ' i feltet herunder')
+                            ]
+                        ),
+                      ),
+                      inputField: TextField(
+                        onChanged: (String text) {input=text;},
+                        style: const TextStyle(fontSize: 20),
+                        textAlign: TextAlign. center,
+                        decoration:  const InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          border: OutlineInputBorder(),
+                          hintText: 'Indtast navn',
+                        ),
+                      ),
+                      confirmButtonText: 'Slet',
+                      confirmButtonIcon: const ImageIcon(AssetImage('assets/icons/delete.png')),
+                      confirmOnPressed: () {
+                        //if the correct name is written delete the user,
+                        // else provide an error
+                        if(input==_user.displayName){
+                          _settingsBloc.deleteUser(_user.id);
+                          Routes().goHome(context);
+                        }
+                        else{
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) =>
+                              const GirafNotifyDialog(title: 'Fejl',
+                                  description: 'Det indtastede navn'
+                                      ' er forkert!')
+                          );
+                        }
+                      },
+                    );
+                  }
+              );
+              }
+              )
+            ]
 
-            ]);
+
+    );
           } else {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
         });
+
   }
+
 
   Widget _buildPrivacySection() {
     return StreamBuilder<SettingsModel>(
