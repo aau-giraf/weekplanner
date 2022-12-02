@@ -85,11 +85,9 @@ void main() {
         cancelMark: null,
         theme: GirafTheme.AndroidBlue,
         defaultTimer: DefaultTimer.Hourglass,
-        nrOfDaysToDisplay: 1,
         lockTimerControl: false,
         pictogramText: false,
         showPopup: false,
-        nrOfActivitiesToDisplay: null,
         showOnlyActivities: false,
         showSettingsForCitizen: false,
         weekDayColors: MockUserApi.createWeekDayColors(),
@@ -130,16 +128,22 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
     expect(find.text('Ugeplan'), findsOneWidget);
-    expect(find.text('Antal dage'), findsOneWidget);
-    expect(find.text('En dag'), findsOneWidget);
-    expect(find.text('Piktogram tekst er synlig'), findsOneWidget);
+    expect(find.text('Antal dage der vises når enheden er på højkant'),
+        findsOneWidget);
+    expect(find.text('Antal dage der vises når enheden er på langs'),
+        findsOneWidget);
+    expect(find.text('Piktogram tekst er synlig'),
+        findsOneWidget);
+    expect(find.text('Vis bekræftelse popups'),
+        findsOneWidget);
   });
 
   testWidgets('Settings has Bruger indstillinger section',
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
-        expect(find.text('Giv borger adgang til deres indstillinger.')
+        expect(find.text('Giv borger adgang til deres indstillinger.',
+            skipOffstage: false)
         , findsOneWidget);
   });
 
@@ -188,7 +192,7 @@ void main() {
         expect(true, mockSettings.showPopup);
   });
 
-  testWidgets('Settings has TimerControl checkbox without an checkmark',
+  testWidgets('Settings has TimerControl checkbox without a checkmark',
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
@@ -200,19 +204,62 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('Tapping the TimerControl checkbox changes the current value',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
-    await tester.pump();
+  testWidgets('Tapping the piktogram tekst checkbox changes the current value',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pump();
 
-    await tester.tap(find.byWidgetPredicate((Widget widget) =>
+
+        await tester.tap(find.byWidgetPredicate((Widget widget) =>
         widget is SettingsCheckMarkButton &&
-        widget.current == 2 &&
-        widget.text == 'Lås tidsstyring'));
-    await tester.pump();
+            widget.current == 2 &&
+            widget.text == 'Piktogram tekst er synlig'));
+        await tester.pump();
 
-    expect(
-        find.byWidgetPredicate((Widget widget) =>
+        expect(
+            find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+                widget.current == 1 &&
+                widget.text == 'Piktogram tekst er synlig'),
+            findsOneWidget);
+      });
+
+  testWidgets('Tapping the popup checkbox changes the current value',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pump();
+
+        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
+            widget.text == 'Vis bekræftelse popups'));
+        await tester.pump();
+        expect(
+            find.byWidgetPredicate((Widget widget) =>
+            widget is SettingsCheckMarkButton &&
+                widget.current == 1 &&
+                widget.text == 'Vis bekræftelse popups'),
+            findsOneWidget);
+      });
+
+  testWidgets('Tapping the TimerControl checkbox changes the current value',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
+        await tester.pump();
+
+        await tester.ensureVisible(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
+            widget.text == 'Lås tidsstyring'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byWidgetPredicate((Widget widget) =>
+        widget is SettingsCheckMarkButton &&
+            widget.current == 2 &&
+            widget.text == 'Lås tidsstyring'));
+        await tester.pump();
+        expect(
+            find.byWidgetPredicate((Widget widget) =>
             widget is SettingsCheckMarkButton &&
             widget.current == 1 &&
             widget.text == 'Lås tidsstyring'),
@@ -223,14 +270,14 @@ void main() {
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
-        expect(find.text('Slet bruger'), findsOneWidget);
+        expect(find.text('Slet bruger',skipOffstage: false), findsOneWidget);
       });
 
   testWidgets('Slet bruger show popup on click',
           (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
-    await tester.ensureVisible( find.text('Slet bruger'));
+    await tester.ensureVisible( find.text('Slet bruger',skipOffstage: false));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
@@ -241,7 +288,8 @@ void main() {
           (WidgetTester tester) async {
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
         await tester.pumpAndSettle();
-        await tester.ensureVisible( find.text('Slet bruger'));
+        await tester.ensureVisible( find.text('Slet bruger',
+            skipOffstage: false));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Slet bruger'));
         await tester.pumpAndSettle();
@@ -259,11 +307,10 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
     await tester.pumpAndSettle();
-    await tester.ensureVisible( find.text('Slet bruger'));
+    await tester.ensureVisible( find.text('Slet bruger',skipOffstage: false));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Slet bruger'));
     await tester.pumpAndSettle();
-
     await tester.enterText(find.byType(TextField), 'test');
     await tester.tap(find.text('Slet'));
     await tester.pumpAndSettle();
@@ -280,7 +327,8 @@ void main() {
 
         await tester.pumpWidget(MaterialApp(home: SettingsScreen(user)));
             await tester.pumpAndSettle();
-            await tester.ensureVisible( find.text('Slet bruger'));
+            await tester.ensureVisible( find.text('Slet bruger',
+                skipOffstage: false));
             await tester.pumpAndSettle();
             await tester.tap(find.text('Slet bruger'));
         await tester.pumpAndSettle();
@@ -292,8 +340,6 @@ void main() {
         expect(user,null);
       }
   );
-
-
 
 
 }
