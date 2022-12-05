@@ -26,6 +26,7 @@ class _PictogramLoginState extends LoginScreenState {
   @override
   void initState() {
     pictogramPassword = PictogramPassword(
+      key: const Key('pictogramPasswordWidget'),
       onPasswordChanged: (String pass) {
         onPasswordUpdate(pass);
       },
@@ -39,6 +40,7 @@ class _PictogramLoginState extends LoginScreenState {
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
         body: Container(
+      key: const Key('backgroundContainer'),
       width: screenSize.width,
       height: screenSize.height,
       decoration: const BoxDecoration(
@@ -68,6 +70,8 @@ class _PictogramLoginState extends LoginScreenState {
                         filled: true,
                         fillColor: GirafColors.white,
                         hintText: 'Brugernavn',
+                        hintStyle: const TextStyle(
+                            color: theme.GirafColors.loginFieldText),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             borderSide: const BorderSide())),
@@ -89,7 +93,7 @@ class _PictogramLoginState extends LoginScreenState {
                 Transform.scale(
                   scale: 1.2,
                   child: ElevatedButton(
-                    key: const Key('useNormalCodeButton'),
+                    key: const Key('backButton'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.GirafColors.loginButtonColor,
                       shape: const RoundedRectangleBorder(
@@ -100,7 +104,7 @@ class _PictogramLoginState extends LoginScreenState {
                       Routes().pop(context);
                     },
                     child: const Text(
-                      'Brug normal kode',
+                      'Tilbage',
                       style: TextStyle(color: theme.GirafColors.white),
                     ),
                   ),

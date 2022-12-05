@@ -145,6 +145,7 @@ class LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: screenSize.width,
         height: screenSize.height,
@@ -243,7 +244,7 @@ class LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           style: girafButtonStyle,
                           child: const Text(
-                            'Brug piktogram adgangskode',
+                            'Piktogram login',
                             key: Key('UsePictogramLoginKey'),
                             style: TextStyle(color: theme.GirafColors.white),
                           ),
