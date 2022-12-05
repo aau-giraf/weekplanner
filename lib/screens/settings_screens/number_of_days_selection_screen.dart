@@ -13,15 +13,24 @@ import '../../di.dart';
 import '../../routes.dart';
 
 /// Screen where the user can select how many days to show for a citizen
-class NumberOfDaysScreen extends StatelessWidget {
+/// This class is used for both the settings screen for portrait mode and for
+/// landscape mode
+class NumberOfDaysScreen extends StatelessWidget { //ignore: must_be_immutable
   /// Constructor
-  NumberOfDaysScreen(DisplayNameModel user) : _user = user {
+  NumberOfDaysScreen(DisplayNameModel user, bool isPortrait,
+      SettingsModel settingsModel) : _user = user {
+    // Determines whether this settings screen is the one for portrait mode or
+    // the one for landscape mode
+    _isPortrait = isPortrait;
+    _settingsModel = settingsModel;
     _settingsBloc.loadSettings(_user);
   }
-
+  SettingsModel _settingsModel;
+  bool _isPortrait;
   final DisplayNameModel _user;
 
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,33 +43,39 @@ class NumberOfDaysScreen extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<SettingsModel> settingsSnapshot) {
               if (settingsSnapshot.hasData) {
-                final SettingsModel _settingsModel = settingsSnapshot.data;
+                final int _numberOfDaysToDisplay = _isPortrait
+                    ? _settingsModel.nrOfDaysToDisplayPortrait
+                    : _settingsModel.nrOfDaysToDisplayLandscape;
 
                 return ListView(
                   children: <Widget>[
-                    SettingsSection('Antal dage', <SettingsSectionItem>[
+                    SettingsSection(
+                        'Antal dage der vises når enheden er på langs',
+                        <SettingsSectionItem>[
                       SettingsCheckMarkButton(
-                          1, _settingsModel.nrOfDaysToDisplay, 'Vis kun i dag',
-                          () {
-                  Routes().pop(context, 1);
+                          1, _numberOfDaysToDisplay, 'Vis i dag',
+                              () {
+                                setDisplayDaysRelative(_settingsModel, true);
+                            Routes().pop(context, 1);
                           }),
                       SettingsCheckMarkButton(
-                          2, _settingsModel.nrOfDaysToDisplay, 'Vis to dage',
+                          2, _numberOfDaysToDisplay, 'Vis to dage',
                               () {
+                                setDisplayDaysRelative(_settingsModel, true);
                             Routes().pop(context, 2);
                           }),
 
                       SettingsCheckMarkButton(
-                          5,
-                          _settingsModel.nrOfDaysToDisplay,
-                          'Vis mandag til fredag', () {
+                          5, _numberOfDaysToDisplay, 'Vis mandag til fredag',
+                              () {
+                                setDisplayDaysRelative(_settingsModel, false);
                             Routes().pop(context, 5);
                       }),
                       SettingsCheckMarkButton(
-                          7,
-                          _settingsModel.nrOfDaysToDisplay,
+                          7, _numberOfDaysToDisplay,
                           'Vis mandag til søndag', () {
-                        Routes().pop(context, 7);
+                              setDisplayDaysRelative(_settingsModel, false);
+                            Routes().pop(context, 7);
                       }),
                     ]),
                   ],
@@ -72,4 +87,13 @@ class NumberOfDaysScreen extends StatelessWidget {
               }
             }));
   }
+
+  /// Sets whether the number of days should be displayed relative to the
+  /// current day
+  void setDisplayDaysRelative(SettingsModel settingsModel, bool isRelative)
+  {
+    _isPortrait ? settingsModel.displayDaysRelativePortrait = isRelative
+        : settingsModel.displayDaysRelativeLandscape = isRelative;
+  }
 }
+

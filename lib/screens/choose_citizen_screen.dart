@@ -103,9 +103,11 @@ class _ChooseCitizenScreenState extends State<ChooseCitizenScreen> {
     final List<Widget> list = snapshot.data
         .map<Widget>((DisplayNameModel user) => CitizenAvatar(
               displaynameModel: user,
-              onPressed: () => _pushWeekplanSelector(user),
-            ))
-        .toList();
+     onPressed: () async {
+             await Routes().push(context,
+                 WeekplanSelectorScreen(user));
+             _bloc.updateBloc();
+           })).toList();
 
     /// Defines variables needed to check user role
     final Role role = _authBloc.loggedInUser.role;
