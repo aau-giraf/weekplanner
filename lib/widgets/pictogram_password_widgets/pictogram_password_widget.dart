@@ -35,7 +35,7 @@ class PictogramPassword extends StatelessWidget {
 
   /// Returns the list of possible pictograms for use in the password
   /// as a stream
-  Stream<List<PictogramModel>> getStream() async* {
+  Stream<List<PictogramModel>> getStream(BuildContext context) async* {
     final List<PictogramModel> list =
     List<PictogramModel>.filled(CHOSENPICTOGRAMS.length, null);
     yield list;
@@ -48,7 +48,7 @@ class PictogramPassword extends StatelessWidget {
         }
       }
     } catch (e) {
-      showErrorMessage(e, di.get<BuildContext>());
+      showErrorMessage(e, context);
     }
   }
   /// Shows error message in case of any pictogram being unobtainable
@@ -68,7 +68,7 @@ class PictogramPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<List<PictogramModel>> _pictogramChoices = getStream();
+    final Stream<List<PictogramModel>> _pictogramChoices = getStream(context);
     final GlobalKey<PictogramInputFieldState> inputFieldKey = GlobalKey();
     final PictogramInputField password = PictogramInputField(
         key: inputFieldKey,
