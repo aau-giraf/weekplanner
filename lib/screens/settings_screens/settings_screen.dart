@@ -27,7 +27,6 @@ import '../../di.dart';
 import '../../widgets/settings_widgets/settings_theme_display_box.dart';
 import 'change_password_screen.dart';
 import 'change_username_screen.dart';
-import 'color_theme_selection_screen.dart';
 import 'completed_activity_icon_selection_screen.dart';
 
 /// Shows all the users settings, and lets them change them
