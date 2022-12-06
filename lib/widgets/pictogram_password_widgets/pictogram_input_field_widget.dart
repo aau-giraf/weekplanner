@@ -48,15 +48,14 @@ class PictogramInputFieldState extends State<PictogramInputField> {
   /// value of password
   String validateAndConvertPass() {
     String output = '';
-    bool valid = true;
-    passwordList().forEach((Widget w) {
-      if (w is PictogramImage) {
-        output += w.pictogram.id.toString();
+    for (PictogramModel m in _inputCode) {
+      if (m != null) {
+        output += m.id.toString();
       } else {
-        valid = false;
+        return null;
       }
-    });
-    return (valid == true) ? output : null;
+    }
+    return output;
   }
 
   /// Returns the list of widgets that is the currently input pictograms
