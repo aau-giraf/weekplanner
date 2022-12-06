@@ -1,6 +1,8 @@
 import 'package:api_client/api/api.dart';
 import 'package:api_client/api/user_api.dart';
 import 'package:api_client/models/displayname_model.dart';
+import 'package:api_client/models/enums/default_timer_enum.dart';
+import 'package:api_client/models/enums/giraf_theme_enum.dart';
 import 'package:api_client/models/enums/role_enum.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
 import 'package:api_client/models/giraf_user_model.dart';
@@ -69,22 +71,24 @@ void main() {
     mockObserver = MockUserApi();
 
     mockSettings = SettingsModel(
-        orientation: null,
-        completeMark: null,
-        cancelMark: null,
-        defaultTimer: null,
-        theme: null,
-        nrOfDaysToDisplay: 1,
-        pictogramText: false,
-        weekDayColors: MockUserApi.createWeekDayColors(),
-        lockTimerControl: false,
-        showPopup: false);
+      orientation: null,
+      completeMark: null,
+      cancelMark: null,
+      theme: GirafTheme.AndroidBlue,
+      defaultTimer: DefaultTimer.Hourglass,
+      lockTimerControl: false,
+      pictogramText: false,
+      showPopup: false,
+      showOnlyActivities: false,
+      showSettingsForCitizen: false,
+      weekDayColors: MockUserApi.createWeekDayColors(),);
 
     when(api.user.updateSettings(any, any)).thenAnswer((_) {
       return Stream<bool>.value(true);
     });
 
     di.clearAll();
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<SettingsBloc>(() => settingsBloc);

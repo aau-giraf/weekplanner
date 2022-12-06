@@ -10,6 +10,7 @@ import 'package:tuple/tuple.dart';
 import 'package:weekplanner/blocs/activity_bloc.dart';
 import 'package:weekplanner/blocs/auth_bloc.dart';
 import 'package:weekplanner/blocs/settings_bloc.dart';
+import 'package:weekplanner/blocs/timer_bloc.dart';
 import 'package:weekplanner/blocs/weekplan_bloc.dart';
 import 'package:weekplanner/models/enums/weekplan_mode.dart';
 import 'package:weekplanner/screens/show_activity_screen.dart';
@@ -58,7 +59,7 @@ class WeekplanActivitiesColumn extends StatelessWidget {
   final AuthBloc _authBloc = di.get<AuthBloc>();
   final SettingsBloc _settingsBloc = di.get<SettingsBloc>();
   final ActivityBloc _activityBloc = di.get<ActivityBloc>();
-
+  final TimerBloc _timerBloc = di.get<TimerBloc>();
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekdayModel>(
@@ -254,25 +255,8 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<SettingsModel> settingsSnapshot) {
                       if (settingsSnapshot.hasData && modeSnapshot.hasData) {
-                        double _width = 1;
-                        final int _daysToDisplay =
-                            settingsSnapshot.data.nrOfDaysToDisplay;
+                        const double _width = 1;
 
-                        if (MediaQuery.of(context).orientation ==
-                            Orientation.portrait) {
-                          if (modeSnapshot.data == WeekplanMode.citizen) {
-                            if (_daysToDisplay == 1) {
-                              _width = 1;
-                            }
-                          }
-                        } else if (MediaQuery.of(context).orientation ==
-                            Orientation.landscape) {
-                          if (modeSnapshot.data == WeekplanMode.citizen) {
-                            if (_daysToDisplay == 1) {
-                              _width = 1;
-                            }
-                          }
-                        }
                         return SizedBox(
                             // MediaQuery.of(context).size.width / 3,
                             width: MediaQuery.of(context).size.width / _width,
@@ -350,7 +334,9 @@ class WeekplanActivitiesColumn extends StatelessWidget {
                 activities[index], _activityBloc, user);
           });
     } else if (!inEditMode) {
-      Routes().push(context, ShowActivityScreen(activities[index], user))
+      Routes().push(context, ShowActivityScreen(activities[index], user,
+          weekplanBloc,
+          _timerBloc,weekday))
           .whenComplete(() {
         weekplanBloc.getWeekday(weekday.day).catchError((Object error) {
           creatingNotifyDialog(error, context);
@@ -373,9 +359,9 @@ class WeekplanActivitiesColumn extends StatelessWidget {
               border: Border.all(
                   color: Colors.black,
                   width: MediaQuery.of(context).size.width * 0.1)),
-          child: ActivityCard(activities[index], user));
+          child: ActivityCard(activities[index],_timerBloc, user));
     } else {
-      return ActivityCard(activities[index], user);
+      return ActivityCard(activities[index],_timerBloc, user);
     }
   }
 

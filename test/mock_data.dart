@@ -24,6 +24,7 @@ import 'package:api_client/models/weekday_color_model.dart';
 import 'package:api_client/models/weekday_model.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart' as rx_dart;
 
 import 'test_image.dart';
 
@@ -84,11 +85,17 @@ class MockData {
         cancelMark: CancelMark.Cross,
         defaultTimer: DefaultTimer.PieChart,
         timerSeconds: 1,
-        activitiesCount: 1,
+        activitiesCount: null,
         theme: GirafTheme.GirafYellow,
-        nrOfDaysToDisplay: 7,
+        nrOfDaysToDisplayPortrait: 1,
+        displayDaysRelativePortrait: true,
+        nrOfDaysToDisplayLandscape: 7,
+        displayDaysRelativeLandscape: false,
         showOnlyActivities: false,
+        showPopup: false,
         weekDayColors: _createWeekDayColors(),
+        nrOfActivitiesToDisplay: 2,
+        showSettingsForCitizen: true,
         lockTimerControl: false,
         pictogramText: false);
   }
@@ -195,7 +202,7 @@ class MockData {
           state: ActivityState.Normal,
           order: 0,
           isChoiceBoard: true,
-          choiceBoardName: 'nametest',
+          choiceBoardName: 'NameTest',
           pictograms: <PictogramModel>[
             PictogramModel(
                 id: 25,
@@ -311,6 +318,11 @@ class MockActivityApi extends Mock implements ActivityApi {
     }
     // Else we just return the activity put in as input
     return Stream<ActivityModel>.value(activity);
+  }
+
+  @override
+  Stream<ActivityModel> updateTimer(ActivityModel activity, String userId) {
+      return rx_dart.BehaviorSubject<ActivityModel>.seeded(activity);
   }
 
   @override

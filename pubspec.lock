@@ -20,7 +20,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: b003b038dbb0f79df428b644d86f34048d2c0d55
+      resolved-ref: b206c139e8cf0fb917be97f693864a81aa19bb28
       url: "https://github.com/aau-giraf/api_client.git"
     source: git
     version: "0.0.1"

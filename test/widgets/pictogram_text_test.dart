@@ -69,7 +69,6 @@ void main() {
       cancelMark: null,
       defaultTimer: null,
       theme: null,
-      nrOfDaysToDisplay: 1,
       weekDayColors: null,
       lockTimerControl: false,
       pictogramText: false,

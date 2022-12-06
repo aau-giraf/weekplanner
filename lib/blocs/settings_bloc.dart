@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api/api.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/giraf_theme_enum.dart';
@@ -48,6 +50,13 @@ class SettingsBloc extends BlocBase {
   /// Update an existing settingsModel
   Stream<void> updateSettings(String userId, SettingsModel settingsModel) {
     return _api.user.updateSettings(userId, settingsModel);
+  }
+
+  ///Deletes the user
+  void deleteUser(String userId){
+    _api.account
+        .delete(userId)
+        .listen((bool deleted){});
   }
 
   /// Set the theme to be used

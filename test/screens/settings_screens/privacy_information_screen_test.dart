@@ -43,7 +43,6 @@ void main() {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
-        nrOfDaysToDisplay: 1,
         pictogramText: false,
         lockTimerControl: false);
 
@@ -52,6 +51,7 @@ void main() {
     });
 
     di.clearAll();
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<SettingsBloc>(() => settingsBloc);

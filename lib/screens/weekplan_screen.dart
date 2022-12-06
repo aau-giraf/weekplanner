@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:api_client/api/api_exception.dart';
 import 'package:api_client/models/displayname_model.dart';
 import 'package:api_client/models/enums/weekday_enum.dart';
@@ -46,6 +47,7 @@ class WeekplanScreen extends StatelessWidget {
   final DisplayNameModel _user;
   final WeekModel _week;
 
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WeekplanMode>(
@@ -55,79 +57,108 @@ class WeekplanScreen extends StatelessWidget {
           if (weekModeSnapshot.data == WeekplanMode.citizen) {
             _weekplanBloc.setEditMode(false);
           }
-          return WillPopScope(
-            onWillPop: () async =>
-                weekModeSnapshot.data == WeekplanMode.guardian,
-            child: Scaffold(
-              appBar: GirafAppBar(
-                title: _user.displayName + ' - ' + _week.name,
-                appBarIcons: (weekModeSnapshot.data == WeekplanMode.guardian)
-                    ? <AppBarIcon, VoidCallback> {
-                  // Show icons for guardian role
-                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                  AppBarIcon.changeToCitizen: () {},
-                  AppBarIcon.logout: () {},
-                  AppBarIcon.settings: () =>
-                      Routes().push<WeekModel>(context,
-                          SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user))
-                }
-                : (weekModeSnapshot.data == WeekplanMode.trustee)
-                    ? <AppBarIcon, VoidCallback> {
-                  // Show icons for trustee role
-                  AppBarIcon.edit: () => _weekplanBloc.toggleEditMode(),
-                  AppBarIcon.changeToCitizen: () {},
-                  AppBarIcon.settings: () =>
-                      Routes().push<WeekModel>(context,
-                          SettingsScreen(_user)).then((WeekModel newWeek) =>
-                          _settingsBloc.loadSettings(_user))
-                }
-                : <AppBarIcon, VoidCallback> {
-                  // Show icons for citizen role
-                  AppBarIcon.changeToGuardian: () {},
-                  AppBarIcon.logout: () {}
-                },
-                isGuardian: weekModeSnapshot.data == WeekplanMode.guardian,
-              ),
-              body: StreamBuilder<UserWeekModel>(
-                stream: _weekplanBloc.userWeek,
-                initialData: null,
-                builder: (BuildContext context,
-                    AsyncSnapshot<UserWeekModel> snapshot) {
-                  if (snapshot.hasData) {
-                    return _buildWeeks(snapshot.data.week, context);
-                  } else {
+          return StreamBuilder<SettingsModel>(
+              stream: _settingsBloc.settings,
+              builder: (BuildContext context,
+                  AsyncSnapshot<SettingsModel> settingsSnapshot) {
+                  if(settingsSnapshot.hasData) {
+                    final SettingsModel _settingsModel = settingsSnapshot.data;
+                    return WillPopScope(
+                      onWillPop: () async => true,
+                      child: Scaffold(
+                        appBar: GirafAppBar(
+                          title: _user.displayName + ' - ' + _week.name,
+                          appBarIcons: (weekModeSnapshot.data ==
+                              WeekplanMode.guardian)
+                              ? <AppBarIcon, VoidCallback>{
+                            // Show icons for guardian role
+                            AppBarIcon.edit: () =>
+                                _weekplanBloc.toggleEditMode(),
+                            AppBarIcon.changeToCitizen: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : (weekModeSnapshot.data == WeekplanMode.trustee)
+                              ? <AppBarIcon, VoidCallback>{
+                            // Show icons for trustee role
+                            AppBarIcon.edit: () =>
+                                _weekplanBloc.toggleEditMode(),
+                            AppBarIcon.changeToCitizen: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : (weekModeSnapshot.data ==
+                              WeekplanMode.citizen &&
+                              _settingsModel.showSettingsForCitizen == true)
+                              ? <AppBarIcon, VoidCallback>{
+                            AppBarIcon.changeToGuardian: () {},
+                            AppBarIcon.settings: () =>
+                                Routes().push<WeekModel>(context,
+                                    SettingsScreen(_user)).then((
+                                    WeekModel newWeek) =>
+                                    _settingsBloc.loadSettings(_user)),
+                            AppBarIcon.logout: () {}
+                          }
+                              : <AppBarIcon, VoidCallback>{
+                            // Show icons for citizen role
+                            AppBarIcon.changeToGuardian: () {},
+                            AppBarIcon.logout: () {},
+                          },
+                        ),
+                        body: StreamBuilder<UserWeekModel>(
+                          stream: _weekplanBloc.userWeek,
+                          initialData: null,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<UserWeekModel> snapshot) {
+                            if (snapshot.hasData) {
+                              return _buildWeeks(snapshot.data.week, context);
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                        bottomNavigationBar: StreamBuilder<WeekplanMode>(
+                          stream: _authBloc.mode,
+                          initialData: WeekplanMode.guardian,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<WeekplanMode> snapshot) {
+                            return Visibility(
+                              visible: snapshot.data == WeekplanMode.guardian,
+                              child: StreamBuilder<bool>(
+                                stream: _weekplanBloc.editMode,
+                                initialData: false,
+                                builder:
+                                    (BuildContext context,
+                                    AsyncSnapshot<bool> snapshot) {
+                                  if (snapshot.data) {
+                                    return buildBottomAppBar(context);
+                                  } else {
+                                    return Container(width: 0.0, height: 0.0);
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  }else {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                },
-              ),
-              bottomNavigationBar: StreamBuilder<WeekplanMode>(
-                stream: _authBloc.mode,
-                initialData: WeekplanMode.guardian,
-                builder: (BuildContext context,
-                    AsyncSnapshot<WeekplanMode> snapshot) {
-                  return Visibility(
-                    visible: snapshot.data == WeekplanMode.guardian,
-                    child: StreamBuilder<bool>(
-                      stream: _weekplanBloc.editMode,
-                      initialData: false,
-                      builder:
-                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                        if (snapshot.data) {
-                          return buildBottomAppBar(context);
-                        } else {
-                          return Container(width: 0.0, height: 0.0);
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        });
+              });
+    });
   }
 
   /// Builds the BottomAppBar when in edit mode
@@ -317,9 +348,10 @@ class WeekplanScreen extends StatelessWidget {
       theme.GirafColors.sundayColor
     ];
     final List<Widget> weekDays = <Widget>[];
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    final int _weekday = DateTime.now().weekday - 1;// monday = 0, sunday = 6
 
     final List<Widget> dailyActivities = <Widget>[];
-    final int _weekday = DateTime.now().weekday.toInt();
     int _weekdayCounter = 0;
 
     return StreamBuilder<WeekplanMode>(
@@ -330,19 +362,11 @@ class WeekplanScreen extends StatelessWidget {
             final WeekplanMode role = weekModeSnapshot.data;
 
             if (role == WeekplanMode.guardian) {
-              weekDays.clear();
               _weekplanBloc.clearWeekdayStreams();
               _weekplanBloc.setDaysToDisplay(7, 0);
+
               for (int i = 0; i < weekModel.days.length; i++) {
-                weekDays.add(Expanded(
-                    child: WeekplanDayColumn(
-                  dayOfTheWeek: Weekday.values[i],
-                  color: defaultWeekColors[i],
-                  weekplanBloc: _weekplanBloc,
-                  user: _user,
-                  streamIndex: i,
-                )));
-                _weekplanBloc.addWeekdayStream();
+                addDayToWeek(weekDays,i,defaultWeekColors[i]);
               }
               return Row(children: weekDays);
             } else if (role == WeekplanMode.citizen) {
@@ -352,22 +376,34 @@ class WeekplanScreen extends StatelessWidget {
                     AsyncSnapshot<SettingsModel> settingsSnapshot) {
                   if (settingsSnapshot.hasData) {
                     final SettingsModel _settingsModel = settingsSnapshot.data;
-                    final int _daysToDisplay = _settingsModel.nrOfDaysToDisplay;
+                    int _daysToDisplay;
+                    bool _displayDaysRelative;
+                    if (orientation == Orientation.portrait) {
+                        _daysToDisplay =
+                            _settingsModel.nrOfDaysToDisplayPortrait;
+                        _displayDaysRelative =
+                            _settingsModel.displayDaysRelativePortrait;
+                    } else if (orientation == Orientation.landscape) {
+                        _daysToDisplay =
+                            _settingsModel.nrOfDaysToDisplayLandscape;
+                        _displayDaysRelative =
+                            _settingsModel.displayDaysRelativeLandscape;
+                    }
                     final int _activitiesToDisplay =
                         _settingsModel.nrOfActivitiesToDisplay;
-
-                    _weekdayCounter = 0;
                     // If the option of showing 1 or 2 days is chosen the
                     // _weekdayCounter must start from today's date
-                    if (_daysToDisplay == 1 || _daysToDisplay == 2) {
-                      _weekdayCounter = _weekday - 1; // monday = 0, sunday = 6
+                    if (_displayDaysRelative) {
+                      _weekdayCounter = _weekday;
+                    } else { //otherwise it starts from monday
+                      _weekdayCounter = 0;
                     }
                     // Adding the selected number of days to weekDays
-                    weekDays.clear();
                     _weekplanBloc.clearWeekdayStreams();
                     _weekplanBloc.setDaysToDisplay(_daysToDisplay,
                         _weekdayCounter);
-                    for (int i = 0; i < _daysToDisplay; i++) {
+                    for (int i = 0; i < _daysToDisplay;
+                    i++, _weekdayCounter++) {
                       // Get color from the citizen's chosen color theme
                       final String dayColor = _settingsModel.weekDayColors
                           .where((WeekdayColorModel w) =>
@@ -375,27 +411,12 @@ class WeekplanScreen extends StatelessWidget {
                           .single
                           .hexColor
                           .replaceFirst('#', '0xff');
-                      weekDays.add(Expanded(
-                        child: WeekplanDayColumn(
-                          dayOfTheWeek: Weekday.values[_weekdayCounter],
-                          color: Color(int.parse(dayColor)),
-                          weekplanBloc: _weekplanBloc,
-                          user: _user,
-                          streamIndex: i,
-                          )
-                        )
-                      );
-                      _weekplanBloc.addWeekdayStream();
+                      addDayToWeek(weekDays,i,Color(int.parse(dayColor)));
                       if (_daysToDisplay == 2 && _weekdayCounter == 6) {
                         break;
                         /* If the user wants two days to display
                          * and today is sunday then it only shows one day
                          */
-                      }
-                      if (_weekdayCounter == 6) {
-                        _weekdayCounter = 0;
-                      } else {
-                        _weekdayCounter += 1;
                       }
                     }
                     if (_settingsModel.showOnlyActivities == false) {
@@ -470,5 +491,19 @@ class WeekplanScreen extends StatelessWidget {
           return GirafNotifyDialog(
               title: 'Fejl', description: message, key: key);
         });
+  }
+  /// adds a single day to a week based on the specific day
+  /// and the specified color
+  void addDayToWeek(List<Widget> weekDays, int nthDayToAdd, Color dayColor) {
+    weekDays.add(Expanded(
+        child: WeekplanDayColumn(
+          color: dayColor,
+          weekplanBloc: _weekplanBloc,
+          user: _user,
+          streamIndex: nthDayToAdd,
+        )
+      )
+    );
+    _weekplanBloc.addWeekdayStream();
   }
 }

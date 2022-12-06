@@ -30,7 +30,6 @@ class MockUserApi extends Mock implements NavigatorObserver, UserApi {
         cancelMark: null,
         defaultTimer: null,
         theme: null,
-        nrOfDaysToDisplay: null,
         weekDayColors: null);
 
     return Stream<SettingsModel>.value(settingsModel);
@@ -53,6 +52,7 @@ void main() {
     settingsBloc = SettingsBloc(api);
     settingsBloc.loadSettings(user);
 
+    di.registerDependency<Api>(() => api);
     di.registerDependency<AuthBloc>(() => AuthBloc(api));
     di.registerDependency<ToolbarBloc>(() => ToolbarBloc());
     di.registerDependency<SettingsBloc>(() => settingsBloc);
